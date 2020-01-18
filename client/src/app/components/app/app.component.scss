@@ -1,0 +1,25 @@
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 75px minmax(min-content, 15%) minmax(min-content, 100%);
+  grid-template-rows: minmax(min-content, 100%);
+  grid-template-areas:
+  'grid-side-bar grid-panel grid-drawing'
+  'grid-side-bar grid-panel grid-drawing';
+
+  .grid-side-bar{
+    background-color: red;
+  }
+
+  .grid-panel{
+    background-color: yellow;
+  }
+
+  .grid-drawing{
+    background-color: blue;
+  }
+
+}
+
