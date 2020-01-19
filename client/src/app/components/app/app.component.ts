@@ -21,7 +21,7 @@ export class AppComponent {
         new ToolTest()
     ]
 
-    selectedTool: Tool;    
+    selectedTool: Tool;
 
     constructor() {
         this.selectedTool = this.availableTools[0];

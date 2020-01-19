@@ -16,4 +16,8 @@
     <br>
     <input [ngModel]="this.selectedTool.toolSettings.get(ToolSetting.PenColor)" (ngModelChange)="this.selectedTool.toolSettings.set(ToolSetting.PenColor, $event)"/>
     {{this.selectedTool.toolSettings.get(ToolSetting.PenColor)}}
+    <mat-slider 
+      (input)="this.selectedTool.toolSettings.set(ToolSetting.PenColor, $event.value)" 
+      [value]="this.selectedTool.toolSettings.get(ToolSetting.PenColor)">
+    </mat-slider>
 </li>
