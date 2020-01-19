@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Message } from '../../../../../common/communication/message';
-import { IndexService } from '../../services/index/index.service';
+import { Tool } from 'src/app/classes/tools/tool';
+import { InputLogger } from 'src/app/classes/tools/input-logger';
 
 @Component({
     selector: 'app-root',
@@ -13,10 +12,8 @@ export class AppComponent {
     readonly title: string = 'LOG2990';
     message = new BehaviorSubject<string>('');
 
-    constructor(private basicService: IndexService) {
-        this.basicService
-            .basicGet()
-            .pipe(map((message: Message) => `${message.title} ${message.body}`))
-            .subscribe(this.message);
+    tool: Tool = new InputLogger();
+
+    constructor() {
     }
 }
