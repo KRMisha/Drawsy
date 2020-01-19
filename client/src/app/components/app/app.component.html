@@ -1,1 +1,19 @@
 <div style="height: 500px"></div>
+
+<div *ngFor="let tool of availableTools; let i = index" (click)="setSelectedTool(i)">
+    Tool # {{ i + 1 }}
+</div>
+<br>
+<li *ngIf="this.selectedTool.toolSettings.has(ToolSetting.PenWidth)">
+    This tool has PenWidth attribute
+    <br>
+    <input [ngModel]="this.selectedTool.toolSettings.get(ToolSetting.PenWidth)" (ngModelChange)="this.selectedTool.toolSettings.set(ToolSetting.PenWidth, $event)"/>
+    {{this.selectedTool.toolSettings.get(ToolSetting.PenWidth)}}
+</li>
+
+<li *ngIf="this.selectedTool.toolSettings.has(ToolSetting.PenColor)">
+    This tool has PenColor attribute
+    <br>
+    <input [ngModel]="this.selectedTool.toolSettings.get(ToolSetting.PenColor)" (ngModelChange)="this.selectedTool.toolSettings.set(ToolSetting.PenColor, $event)"/>
+    {{this.selectedTool.toolSettings.get(ToolSetting.PenColor)}}
+</li>

@@ -1,7 +1,15 @@
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators'
 
+export enum ToolSetting {
+    PenWidth = 1,
+    PenColor
+}
+
 export abstract class Tool {
+
+    toolSettings = new Map();
+
     drawingSurface = document.body;
 
     mouseMoveSubscription = fromEvent(this.drawingSurface, 'mousemove')

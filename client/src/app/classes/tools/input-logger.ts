@@ -1,6 +1,13 @@
-import { Tool } from './tool'
+import { Tool, ToolSetting} from './tool'
 
 export class InputLogger extends Tool {
+
+    penWidth: string = "bonjour";
+
+    constructor() {
+        super();
+        this.toolSettings.set(ToolSetting.PenWidth, this.penWidth);
+    }
 
     onMouseMove(x: number, y: number): void {
         console.log(`Mouse move -> X: ${x} Y: ${y}`);
