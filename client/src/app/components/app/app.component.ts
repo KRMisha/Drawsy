@@ -10,6 +10,7 @@ import { ToolTest } from 'src/app/classes/tools/tool-test';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
+
 export class AppComponent {
     readonly title: string = 'LOG2990';
     message = new BehaviorSubject<string>('');
