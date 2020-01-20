@@ -1,7 +1,12 @@
+.title {
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  text-align: center;
+}
+
 .tool-button {
-    background-color: rgb(133, 133, 133);
     color: rgb(255, 255, 255);
-    border-color: rgb(0, 0, 0);
+    border-color: rgb(255, 255, 255);
     width: 60px;
     height: 60px;
     padding: 10px 10px;
@@ -11,12 +16,12 @@
 }
 
 .tool-settings {
-    background-color: rgb(63, 63, 71);
-    border-right: solid;
-    border-width: 1px;
-    border-right-color: rgb(0, 0, 0);
-    flex-direction: column;
-    width: 280px;
+  background-color: rgb(63, 63, 71);
+  border-right: solid;
+  border-width: 1px;
+  border-right-color: rgb(0, 0, 0);
+  flex-direction: column;
+  width: 280px;
 }
 
 .tool-selection {
@@ -26,4 +31,8 @@
     flex-direction: column;
     margin: auto;
     // justify-content: center;
+}
+
+.mat-icon {
+  transform: scale(1.8);
 }

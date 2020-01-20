@@ -1,14 +1,25 @@
-<div class="container">
-    <div class="tool-selection">
-        <p>Outils</p>
-        <button *ngFor="let button of buttons; let i = index" (click)="setSelectedTool(i)" class="tool-button">
-            {{ button.name }}
-        </button>
+<mat-drawer-container class="container">
+
+  <div class="tool-selection">
+
+    <button mat-stroked-button class="tool-button" (click)="drawer.toggle()">
+      <mat-icon class="mat-icon">dehaze</mat-icon>
+    </button>
+
+    <p class="title">Outils</p>
+
+    <button mat-stroked-button *ngFor="let button of buttons; let i = index" (click)="setSelectedTool(i)"
+      class="tool-button">
+      <mat-icon class="mat-icon">{{button.icon}}</mat-icon>
+    </button>
+
+  </div>
+
+  <mat-drawer #drawer mode="side" position="end" opened class="tool-settings">
+    <div>
+      <app-panel-color></app-panel-color>
+      <app-panel-settings [selectedButton]="this.selectedButton"></app-panel-settings>
     </div>
-    
-    <div class="tool-settings">
-        <app-panel-color></app-panel-color>
-        <app-panel-settings [selectedButton]="this.selectedButton"></app-panel-settings>
-        
-    </div>
-</div>
+  </mat-drawer>
+
+</mat-drawer-container>
