@@ -1,0 +1,28 @@
+.tool-button {
+    background-color: rgb(133, 133, 133);
+    color: rgb(255, 255, 255);
+    border-color: rgb(0, 0, 0);
+    width: 60px;
+    height: 60px;
+    padding: 10px 10px;
+    font-size: 12px;
+    margin: 4px 4px;
+    cursor: pointer;
+}
+
+.tool-settings {
+    background-color: rgb(63, 63, 71);
+    border-right: solid;
+    border-width: 1px;
+    border-right-color: rgb(0, 0, 0);
+    flex-direction: column;
+}
+
+.tool-selection {
+    background-color: rgb(38, 38, 43);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    // justify-content: center;
+}

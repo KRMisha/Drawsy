@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="tool-selection">
+        <p>Outils</p>
+        <button *ngFor="let button of buttons; let i = index" (click)="setSelectedTool(i)" class="tool-button">
+            {{ button.name }}
+        </button>
+    </div>
+
+    <div class="tool-settings">
+        <app-panel-color></app-panel-color>
+        <app-panel-settings [tool]="selectedTool"></app-panel-settings>
+        <div *ngIf="this.selectedButton.tool.toolSettings.has(ToolSetting.Size)">
+            This tool has Size attribute
+            <br />
+            <input
+                [ngModel]="this.selectedButton.tool.toolSettings.get(ToolSetting.Size)"
+                (ngModelChange)="this.selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"
+            />
+            {{ this.selectedButton.tool.toolSettings.get(ToolSetting.Size) }}
+        </div>
+
+        <div *ngIf="this.selectedButton.tool.toolSettings.has(ToolSetting.Color)">
+            This tool has Color attribute
+            <br />
+            <input
+                [ngModel]="this.selectedButton.tool.toolSettings.get(ToolSetting.Color)"
+                (ngModelChange)="this.selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"
+            />
+            {{ this.selectedButton.tool.toolSettings.get(ToolSetting.Color) }}
+            <mat-slider
+                min="1"
+                max="100"
+                (input)="this.selectedButton.tool.toolSettings.set(ToolSetting.Color, $event.value)"
+                [value]="this.selectedButton.tool.toolSettings.get(ToolSetting.Color)"
+            >
+            </mat-slider>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="grid-panel-settings">
+    <app-panel-settings [tool]="selectedTool"></app-panel-settings>
+</div>
+
+-->

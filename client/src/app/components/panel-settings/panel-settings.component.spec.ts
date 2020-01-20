@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DrawingComponent } from './drawing.component';
+import { PanelSettingsComponent } from './panel-settings.component';
 
-describe('DrawingComponent', () => {
-    let component: DrawingComponent;
-    let fixture: ComponentFixture<DrawingComponent>;
+describe('PanelSettingsComponent', () => {
+    let component: PanelSettingsComponent;
+    let fixture: ComponentFixture<PanelSettingsComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawingComponent],
+            declarations: [PanelSettingsComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DrawingComponent);
+        fixture = TestBed.createComponent(PanelSettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
