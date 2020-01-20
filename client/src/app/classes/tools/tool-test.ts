@@ -8,7 +8,9 @@ export class ToolTest extends Tool {
         this.toolSettings.set(ToolSetting.Color, this.penColor);
     }
 
-    onMouseMove(x: number, y: number): void {}
+    onMouseMove(x: number, y: number): void {
+        console.log('penis');
+    }
 
     onMouseDown(x: number, y: number, button: number): void {}
 

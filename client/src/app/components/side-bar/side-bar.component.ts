@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Button, BUTTONS } from '../../classes/button/button-data';
-import { ToolSetting } from 'src/app/classes/tools/tool';
+import { ToolInputProviderService } from '../../services/tool-input-provider/tool-input-provider.service';
 
 @Component({
     selector: 'app-side-bar',
     templateUrl: './side-bar.component.html',
     styleUrls: ['./side-bar.component.scss'],
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
     buttons: Button[] = BUTTONS;
-
-    ToolSetting = ToolSetting; // Make enum available to template
 
     selectedButton: Button;
 
-    constructor() {
+    constructor(private toolInputProviderService: ToolInputProviderService) {}
+
+    ngOnInit() {
         this.selectedButton = this.buttons[0];
+        this.toolInputProviderService.setTool(this.selectedButton.tool);
     }
 
     setSelectedTool(toolIndex: number): void {
@@ -23,5 +24,6 @@ export class SideBarComponent {
             return;
         }
         this.selectedButton = this.buttons[toolIndex];
+        this.toolInputProviderService.setTool(this.selectedButton.tool);
     }
 }
