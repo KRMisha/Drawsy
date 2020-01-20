@@ -1,5 +1,5 @@
-import { Tool } from '../tools/tool';
 import { InputLogger } from '../tools/input-logger';
+import { Tool } from '../tools/tool';
 import { ToolTest } from '../tools/tool-test';
 
 export class Button {

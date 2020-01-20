@@ -9,9 +9,10 @@ export class ToolTest extends Tool {
     }
 
     onMouseMove(x: number, y: number): void {
-        console.log('penis');
+        console.log('test');
     }
 
+    /* tslint:disable:no-empty */
     onMouseDown(x: number, y: number, button: number): void {}
 
     onMouseUp(x: number, y: number, button: number): void {}
