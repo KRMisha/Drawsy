@@ -1,0 +1,28 @@
+h1, h2 {
+    color: rgb(255, 255, 255); 
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    padding: 0px;
+    margin: 0px;
+}
+
+.option {
+    width: 90%;
+    margin-left: 5%;
+    display: flex;
+    justify-content: space-between;
+    
+    input {
+        width: 20%;
+    }
+}
+
+.mat-slider {
+    width: 90%;
+    margin-left: 5%;
+}

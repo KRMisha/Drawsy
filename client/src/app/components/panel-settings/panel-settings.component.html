@@ -1,25 +1,30 @@
-<p>Partie selection parametres</p>
-
-{{ selectedButton.name }}
+<h1>{{ selectedButton.name }}</h1>
 
 <div *ngIf="selectedButton.tool.toolSettings.has(ToolSetting.Size)">
-    This tool has Size attribute
-    <br />
-    <input
-        [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
-        (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"
-    />
-    {{ selectedButton.tool.toolSettings.get(ToolSetting.Size) }}
+    <div class="option">
+        <h2>Taille</h2>
+        <input
+            [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"
+        />
+    </div>
+    <mat-slider
+        min="1"
+        max="100"
+        (input)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event.value)"
+        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
+    >
+    </mat-slider>
 </div>
 
 <div *ngIf="selectedButton.tool.toolSettings.has(ToolSetting.Color)">
-    This tool has Color attribute
-    <br />
-    <input
-        [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
-        (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"
-    />
-    {{ selectedButton.tool.toolSettings.get(ToolSetting.Color) }}
+    <div class="option">
+        <h2>Couleur</h2>
+        <input
+            [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"
+        />
+    </div>
     <mat-slider
         min="1"
         max="100"

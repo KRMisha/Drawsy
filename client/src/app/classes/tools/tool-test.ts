@@ -1,11 +1,13 @@
 import { Tool, ToolSetting } from './tool';
 
 export class ToolTest extends Tool {
-    penColor: string;
+    penColor = 5;
+    penSize = 5;
 
     constructor() {
         super();
         this.toolSettings.set(ToolSetting.Color, this.penColor);
+        this.toolSettings.set(ToolSetting.Size, this.penSize);
     }
 
     onMouseMove(x: number, y: number): void {

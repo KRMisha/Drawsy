@@ -1,7 +1,7 @@
 import { Tool, ToolSetting } from './tool';
 
 export class InputLogger extends Tool {
-    penSize: number;
+    penSize = 5;
 
     constructor() {
         super();

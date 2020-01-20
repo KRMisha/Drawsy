@@ -9,5 +9,5 @@ export class Button {
 
 export const BUTTONS: Button[] = [
     { name: 'Crayon', tool: new InputLogger() },
-    { name: 'Pinceau', tool: new ToolTest() },
+    { name: 'Pinceau', tool: new ToolTest() }
 ];
