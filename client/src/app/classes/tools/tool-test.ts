@@ -1,4 +1,6 @@
 import { Tool, ToolSetting } from './tool';
+import { DrawingService } from 'src/app/services/drawing/drawing.service';
+import { Rectangle } from '../shapes/rectangle';
 
 export class ToolTest extends Tool {
     penColor = 5;
@@ -10,16 +12,19 @@ export class ToolTest extends Tool {
         this.toolSettings.set(ToolSetting.Size, this.penSize);
     }
 
-    onMouseMove(x: number, y: number): void {
-        console.log('test');
+    onMouseMove(event: MouseEvent, drawingService: DrawingService): void {
     }
 
-    /* tslint:disable:no-empty */
-    onMouseDown(x: number, y: number, button: number): void {}
+    onMouseDown(event: MouseEvent, drawingService: DrawingService): void {
+        drawingService.addShape(new Rectangle);
+    }
 
-    onMouseUp(x: number, y: number, button: number): void {}
+    onMouseUp(event: MouseEvent, drawingService: DrawingService): void {
+    }
 
-    onKeyDown(key: string): void {}
+    onKeyDown(event: KeyboardEvent, drawingService: DrawingService): void {
+    }
 
-    onKeyUp(key: string): void {}
+    onKeyUp(event: KeyboardEvent, drawingService: DrawingService): void {
+    }
 }
