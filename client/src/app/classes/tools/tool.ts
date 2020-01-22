@@ -5,7 +5,6 @@ export enum ToolSetting {
 }
 
 export abstract class Tool {
-
     toolSettings = new Map();
 
     abstract onMouseMove(x: number, y: number): void;

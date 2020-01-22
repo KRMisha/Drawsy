@@ -14,7 +14,7 @@ export class ToolTest extends Tool {
         console.log('test');
     }
 
-    /* tslint:disable:no-empty */
+    // tslint:disable:no-empty
     onMouseDown(x: number, y: number, button: number): void {}
 
     onMouseUp(x: number, y: number, button: number): void {}

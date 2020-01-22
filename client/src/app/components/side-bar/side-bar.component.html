@@ -8,9 +8,12 @@
 
     <p class="title">Outils</p>
 
-    <button [class.selected]="button===selectedButton" mat-stroked-button *ngFor="let button of buttons; let i = index" (click)="setSelectedTool(i)"
-      class="tool-button" (click)="drawer.open()" title={{button.name}}>
-      <mat-icon  class="mat-icon">{{button.icon}}</mat-icon>
+    <button [class.selected]="button === selectedButton"
+            mat-stroked-button *ngFor="let button of buttons; let i = index"
+            (click)="setSelectedTool(i); drawer.open()"
+            class="tool-button"
+            title={{button.name}}>
+      <mat-icon class="mat-icon">{{button.icon}}</mat-icon>
     </button>
 
   </div>
