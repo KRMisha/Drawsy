@@ -7,11 +7,7 @@
 .tool-button {
     color: rgb(255, 255, 255);
     border-color: rgb(255, 255, 255);
-    width: 60px;
-    height: 60px;
-    padding: 10px 10px;
-    font-size: 12px;
-    margin: 4px 4px;
+    height: 6%;
     cursor: pointer;
 }
 
@@ -30,14 +26,19 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    // justify-content: center;
-}
+    align-items: center;}
 
 .mat-icon {
-  transform: scale(1.8);
+  transform: scale(1.4);
 }
 
 .selected {
   border-color: #ff4081 !important;
   color: #ffd4e2;
 }
+
+.mat-stroked-button {
+  transform: scale(0.8);
+}
+
+

@@ -2,14 +2,14 @@
 
   <div class="tool-selection">
 
-    <button mat-stroked-button class="tool-button" (click)="drawer.toggle()">
+    <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
       <mat-icon class="mat-icon">dehaze</mat-icon>
     </button>
 
     <p class="title">Outils</p>
 
     <button [class.selected]="button===selectedButton" mat-stroked-button *ngFor="let button of buttons; let i = index" (click)="setSelectedTool(i)"
-      class="tool-button">
+      class="tool-button" (click)="drawer.open()" title={{button.name}}>
       <mat-icon  class="mat-icon">{{button.icon}}</mat-icon>
     </button>
 

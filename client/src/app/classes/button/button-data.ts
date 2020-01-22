@@ -10,5 +10,10 @@ export class Button {
 
 export const BUTTONS: Button[] = [
     { name: 'Crayon', icon: 'create', tool: new InputLogger() },
-    { name: 'Pinceau', icon: 'brush', tool: new ToolTest() }
+    { name: 'Pinceau', icon: 'brush', tool: new ToolTest() },
+    { name: 'Ligne', icon: 'timeline', tool: new ToolTest() },
+    { name: 'Rectangle', icon: 'crop_5_4', tool: new ToolTest() },
+    { name: 'Pipette', icon: 'colorize', tool: new ToolTest() },
+    { name: 'Remplisseur', icon: 'opacity', tool: new ToolTest() },
+    { name: 'Aerosol', icon: 'blur_on', tool: new ToolTest() }
 ];
