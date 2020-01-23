@@ -12,4 +12,8 @@ export class EntryPointComponent implements OnInit {
   ngOnInit() {
   }
 
+  doStuff(): void {
+    console.log("lmao");
+  }
+
 }
