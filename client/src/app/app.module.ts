@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -42,6 +43,7 @@ import { CreateDrawingComponent } from './components/entry-point/create-drawing/
         MatSidenavModule,
         MatListModule,
         AppRoutingModule,
+        MatCardModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
