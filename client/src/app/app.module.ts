@@ -18,6 +18,7 @@ import { PanelColorComponent } from './components/panel-color/panel-color.compon
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { CreateDrawingComponent } from './components/entry-point/create-drawing/create-drawing.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         EntryPointComponent,
         EditorComponent,
         SidebarComponent,
+        CreateDrawingComponent,
     ],
     imports: [
         BrowserModule,
