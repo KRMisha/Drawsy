@@ -42,3 +42,17 @@
     width: 20vw;
     height: 20vw;
 }
+
+.exit-button {
+    float: right;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+
+    :hover {
+        color: rgb(255,0,0);
+    }
+}
+
+.icon {
+    transform: scale(2);
+}
