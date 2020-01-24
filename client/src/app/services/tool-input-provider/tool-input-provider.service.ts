@@ -1,39 +1,41 @@
 import { Injectable } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { InputLogger } from '../../classes/tools/input-logger';
 import { Tool } from '../../classes/tools/tool';
+import { DrawingService } from '../drawing/drawing.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolInputProviderService {
-    tool: Tool = new InputLogger();
+    tool: Tool;
 
     drawingSurface = document.body;
 
+    constructor(private drawingService: DrawingService) {}
+
     mouseMoveSubscription = fromEvent(this.drawingSurface, 'mousemove').subscribe((event: MouseEvent) => {
-        this.tool.onMouseMove(event.clientX, event.clientY);
+        this.tool.onMouseMove(event, this.drawingService);
     });
 
     mouseDownSubscription = fromEvent(this.drawingSurface, 'mousedown').subscribe((event: MouseEvent) => {
-        this.tool.onMouseDown(event.clientX, event.clientY, event.button);
+        this.tool.onMouseDown(event, this.drawingService);
     });
 
     mouseUpSubscription = fromEvent(this.drawingSurface, 'mouseup').subscribe((event: MouseEvent) => {
-        this.tool.onMouseUp(event.clientX, event.clientY, event.button);
+        this.tool.onMouseUp(event, this.drawingService);
     });
 
     keyDownSubscription = fromEvent(this.drawingSurface, 'keydown')
         .pipe(distinctUntilChanged()) // Avoid key repeats
         .subscribe((event: KeyboardEvent) => {
-            this.tool.onKeyDown(event.key);
+            this.tool.onKeyDown(event, this.drawingService);
         });
 
     keyUpSubscription = fromEvent(this.drawingSurface, 'keyup')
         .pipe(distinctUntilChanged()) // Avoid key repeats
         .subscribe((event: KeyboardEvent) => {
-            this.tool.onKeyUp(event.key);
+            this.tool.onKeyUp(event, this.drawingService);
         });
 
     setTool(tool: Tool): void {

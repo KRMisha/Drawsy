@@ -1,3 +1,5 @@
+import { DrawingService } from '../../services/drawing/drawing.service';
+
 export enum ToolSetting {
     Size = 1,
     Color,
@@ -6,9 +8,11 @@ export enum ToolSetting {
 export abstract class Tool {
     toolSettings = new Map();
 
-    abstract onMouseMove(x: number, y: number): void;
-    abstract onMouseDown(x: number, y: number, button: number): void;
-    abstract onMouseUp(x: number, y: number, button: number): void;
-    abstract onKeyDown(key: string): void;
-    abstract onKeyUp(key: string): void;
+    constructor() {}
+
+    abstract onMouseMove(event: MouseEvent, drawingService: DrawingService): void;
+    abstract onMouseDown(event: MouseEvent, drawingService: DrawingService): void;
+    abstract onMouseUp(event: MouseEvent, drawingService: DrawingService): void;
+    abstract onKeyDown(event: KeyboardEvent, drawingService: DrawingService): void;
+    abstract onKeyUp(event: KeyboardEvent, drawingService: DrawingService): void;
 }

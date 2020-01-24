@@ -1,4 +1,6 @@
 import { Tool, ToolSetting } from './tool';
+import { DrawingService } from 'src/app/services/drawing/drawing.service';
+// import { DrawingService } from 'src/app/services/drawing/drawing.service';
 
 export class InputLogger extends Tool {
     penSize = 5;
@@ -8,23 +10,15 @@ export class InputLogger extends Tool {
         this.toolSettings.set(ToolSetting.Size, this.penSize);
     }
 
-    onMouseMove(x: number, y: number): void {
-        console.log(`Mouse move -> X: ${x} Y: ${y}`);
+    onMouseMove(event: MouseEvent, drawingService: DrawingService): void {
+        console.log(`Mouse move -> X: ${event.clientX} Y: ${event.clientY}`);
     }
 
-    onMouseDown(x: number, y: number, button: number): void {
-        console.log(`Mouse down -> X: ${x} Y: ${y} Btn: ${button}`);
-    }
+    onMouseDown(event: MouseEvent, drawingService: DrawingService): void {}
 
-    onMouseUp(x: number, y: number, button: number): void {
-        console.log(`Mouse up -> X: ${x} Y: ${y} Btn: ${button}`);
-    }
+    onMouseUp(event: MouseEvent, drawingService: DrawingService): void {}
 
-    onKeyDown(key: string): void {
-        console.log(`Key down: ${key}`);
-    }
+    onKeyDown(event: KeyboardEvent, drawingService: DrawingService): void {}
 
-    onKeyUp(key: string): void {
-        console.log(`Key up: ${key}`);
-    }
+    onKeyUp(event: KeyboardEvent, drawingService: DrawingService): void {}
 }
