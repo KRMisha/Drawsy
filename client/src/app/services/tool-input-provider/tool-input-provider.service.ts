@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { InputLogger } from '../../classes/tools/input-logger'
-import { Tool } from '../../classes/tools/tool'
+import { InputLogger } from '../../classes/tools/input-logger';
+import { Tool } from '../../classes/tools/tool';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolInputProviderService {
+    tool: Tool = new InputLogger();
 
-  tool: Tool = new InputLogger();
-
-  drawingSurface = document.body;
+    drawingSurface = document.body;
 
     mouseMoveSubscription = fromEvent(this.drawingSurface, 'mousemove').subscribe((event: MouseEvent) => {
         this.tool.onMouseMove(event.clientX, event.clientY);
@@ -37,8 +36,7 @@ export class ToolInputProviderService {
             this.tool.onKeyUp(event.key);
         });
 
-  setTool(tool: Tool): void {
-    this.tool = tool;
-  }
-
+    setTool(tool: Tool): void {
+        this.tool = tool;
+    }
 }

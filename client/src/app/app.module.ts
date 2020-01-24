@@ -20,9 +20,27 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { EditorComponent } from './components/editor/editor.component';
 
 @NgModule({
-    declarations: [AppComponent, DrawingComponent, PanelColorComponent, PanelSettingsComponent, SideBarComponent, EntryPointComponent, EditorComponent],
-    imports: [BrowserModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatSliderModule, MatButtonModule,
-              MatIconModule, MatSidenavModule, MatListModule, AppRoutingModule],
+    declarations: [
+        AppComponent,
+        DrawingComponent,
+        PanelColorComponent,
+        PanelSettingsComponent,
+        SideBarComponent,
+        EntryPointComponent,
+        EditorComponent,
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatSliderModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        AppRoutingModule,
+    ],
     providers: [],
     bootstrap: [AppComponent],
 })

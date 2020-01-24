@@ -1,7 +1,7 @@
 .title {
-  color: rgb(255, 255, 255);
-  font-weight: bold;
-  text-align: center;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-align: center;
 }
 
 .tool-button {
@@ -16,12 +16,12 @@
 }
 
 .tool-settings {
-  background-color: rgb(63, 63, 71);
-  border-right: solid;
-  border-width: 1px;
-  border-right-color: rgb(0, 0, 0);
-  flex-direction: column;
-  width: 280px;
+    background-color: rgb(63, 63, 71);
+    border-right: solid;
+    border-width: 1px;
+    border-right-color: rgb(0, 0, 0);
+    flex-direction: column;
+    width: 280px;
 }
 
 .tool-selection {
@@ -34,10 +34,10 @@
 }
 
 .mat-icon {
-  transform: scale(1.8);
+    transform: scale(1.8);
 }
 
 .selected {
-  border-color: rgb(255,64,129) !important; 
-  color: rgb(255, 212, 226);
+    border-color: rgb(255, 64, 129) !important;
+    color: rgb(255, 212, 226);
 }
