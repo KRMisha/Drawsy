@@ -3,11 +3,11 @@ import { Button, BUTTONS } from '../../classes/button/button-data';
 import { ToolInputProviderService } from '../../services/tool-input-provider/tool-input-provider.service';
 
 @Component({
-    selector: 'app-side-bar',
-    templateUrl: './side-bar.component.html',
-    styleUrls: ['./side-bar.component.scss'],
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.scss'],
 })
-export class SideBarComponent implements OnInit {
+export class SidebarComponent implements OnInit {
     buttons: Button[] = BUTTONS;
 
     selectedButton: Button;
