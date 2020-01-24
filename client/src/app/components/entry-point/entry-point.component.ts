@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./entry-point.component.scss'],
 })
 export class EntryPointComponent implements OnInit {
-    constructor() {}
+    continueDrawing: boolean;
+
+    constructor() {
+        this.continueDrawing = false; // TODO: Service which checks if we can continue drawing
+    }
 
     ngOnInit() {}
-
-    doStuff(): void {
-        console.log('lmao');
-    }
 }
