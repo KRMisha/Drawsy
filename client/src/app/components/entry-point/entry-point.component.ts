@@ -7,13 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EntryPointComponent implements OnInit {
 
-  constructor() { }
+  continueDrawing: boolean;
+
+  constructor() {}
 
   ngOnInit() {
-  }
-
-  doStuff(): void {
-    console.log("lmao");
+    this.continueDrawing = false; /// TODO: Service which checks if we can continue drawing
   }
 
 }

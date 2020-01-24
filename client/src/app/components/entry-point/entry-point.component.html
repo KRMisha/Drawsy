@@ -10,7 +10,9 @@
         </div>
         <div class="button-list">
             <a mat-stroked-button routerLink="/editor">CRÉER UN NOUVEAU DESSIN</a>
-            <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
+            <div *ngIf="continueDrawing">
+                <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
+            </div>
             <a mat-stroked-button>GALERIE DE DESSIN</a>
             <a mat-stroked-button>GUIDE D'UTILISATION</a>
         </div>
