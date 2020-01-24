@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Button, BUTTONS } from '../../classes/button/button-data';
-import { ToolInputProviderService } from '../../services/tool-input-provider/tool-input-provider.service';
+import { ToolService } from '../../services/tool/tool.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -12,11 +12,10 @@ export class SidebarComponent implements OnInit {
 
     selectedButton: Button;
 
-    constructor(private toolInputProviderService: ToolInputProviderService) {}
+    constructor(private toolService: ToolService) {}
 
     ngOnInit() {
         this.selectedButton = this.buttons[0];
-        this.toolInputProviderService.setTool(this.selectedButton.tool);
     }
 
     setSelectedTool(toolIndex: number): void {
@@ -24,6 +23,6 @@ export class SidebarComponent implements OnInit {
             return;
         }
         this.selectedButton = this.buttons[toolIndex];
-        this.toolInputProviderService.setTool(this.selectedButton.tool);
+        this.toolService.tool = this.selectedButton.tool;
     }
 }

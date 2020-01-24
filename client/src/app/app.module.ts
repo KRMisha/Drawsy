@@ -13,10 +13,10 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './components/app/app.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
 import { PanelColorComponent } from './components/panel-color/panel-color.component';
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
-import { EditorComponent } from './components/editor/editor.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
