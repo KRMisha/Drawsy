@@ -1,17 +1,19 @@
-<h1>{{selectedButton.name}}</h1>
+<h1>{{ selectedButton.name }}</h1>
 
 <div *ngIf="selectedButton.tool.toolSettings.has(ToolSetting.Size)">
     <div class="option">
         <h2>Taille</h2>
         <input
             [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
-            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"/>
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"
+        />
     </div>
     <mat-slider
         min="1"
         max="100"
         (input)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event.value)"
-        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Size)">
+        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
+    >
     </mat-slider>
 </div>
 
@@ -20,12 +22,14 @@
         <h2>Couleur</h2>
         <input
             [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
-            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"/>
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"
+        />
     </div>
     <mat-slider
         min="1"
         max="100"
         (input)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event.value)"
-        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Color)">
+        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
+    >
     </mat-slider>
 </div>

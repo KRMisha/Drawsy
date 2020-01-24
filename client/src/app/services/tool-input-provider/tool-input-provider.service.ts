@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { InputLogger } from '../../classes/tools/input-logger'
-import { Tool } from '../../classes/tools/tool'
+import { InputLogger } from '../../classes/tools/input-logger';
+import { Tool } from '../../classes/tools/tool';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolInputProviderService {
     tool: Tool = new InputLogger();
@@ -39,5 +39,4 @@ export class ToolInputProviderService {
     setTool(tool: Tool): void {
         this.tool = tool;
     }
-
 }

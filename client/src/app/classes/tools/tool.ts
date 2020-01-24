@@ -1,4 +1,3 @@
-
 export enum ToolSetting {
     Size = 1,
     Color,

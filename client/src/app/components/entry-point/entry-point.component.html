@@ -1,0 +1,19 @@
+<div class="entry-point-window">
+    <button mat-icon-button class="exit-button">
+        <mat-icon class="icon">close</mat-icon>
+    </button>
+    <h1 class="title">PolyDessin</h1>
+    <div class="horizontal-container">
+        <div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Google_fuchsia3.svg/1200px-Google_fuchsia3.svg.png" class="logo" />
+        </div>
+        <div class="button-list">
+            <a mat-stroked-button routerLink="/editor">CRÉER UN NOUVEAU DESSIN</a>
+            <div *ngIf="continueDrawing">
+                <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
+            </div>
+            <a mat-stroked-button>GALERIE DE DESSIN</a>
+            <a mat-stroked-button>GUIDE D'UTILISATION</a>
+        </div>
+    </div>
+</div>

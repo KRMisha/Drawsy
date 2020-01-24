@@ -1,0 +1,57 @@
+.entry-point-window {
+    background-size: auto;
+    background-color: rgb(63, 63, 71);
+    padding: 1vw;
+}
+
+.title {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-align: center;
+    font-size: 48px;
+}
+
+.button-list {
+    a {
+        color: rgb(255, 255, 255);
+        border-color: rgb(255, 255, 255);
+        background-color: rgb(38, 38, 43);
+        border-style: solid;
+        font-size: 18px;
+        text-align: center;
+        display: flex;
+        margin: 12px;
+        cursor: pointer;
+    }
+
+    :hover {
+        border-color: rgb(255, 64, 129);
+        color: rgb(255, 64, 129);
+    }
+}
+
+.horizontal-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 20vw;
+    height: 20vw;
+}
+
+.exit-button {
+    float: right;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+
+    :hover {
+        color: rgb(255, 0, 0);
+    }
+}
+
+.icon {
+    transform: scale(2);
+}
