@@ -1,3 +1,4 @@
-<p>Partie selection couleur</p>
+<h1>Couleur</h1>
 
 <canvas #saturationValuePicker class="color-picker"></canvas>
+<mat-slider min="0" max="360" [(ngModel)]="hue" (ngModelChange)="draw()"> </mat-slider>

@@ -1,6 +1,6 @@
-import { Tool, ToolSetting } from './tool';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { Rectangle } from '../shapes/rectangle';
+import { Tool, ToolSetting } from './tool';
 
 export class ToolTest extends Tool {
     penColor = 5;

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Color } from 'src/app/classes/color/color';
 
 @Component({
     selector: 'app-panel-color',
@@ -6,11 +7,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
     styleUrls: ['./panel-color.component.scss'],
 })
 export class PanelColorComponent implements AfterViewInit {
+    @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
-    @ViewChild('saturationValuePicker', {static: false}) saturationValueCanvas: ElementRef;
     private context: CanvasRenderingContext2D;
-
-    constructor(){}
+    @Input() hue = 0;
 
     ngAfterViewInit(): void {
         this.context = this.saturationValueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -18,12 +18,18 @@ export class PanelColorComponent implements AfterViewInit {
     }
 
     draw(): void {
-        const width = 100;
-        const height = 100;
+        const canvas = this.saturationValueCanvas.nativeElement;
+        const width = canvas.width;
+        const height = canvas.height;
 
-        const bgColor = 'rgba(255, 0, 0, 1)';
-        this.context.fillStyle = bgColor;
+        const color = new Color();
+        color.setHsv(this.hue, 1, 1);
+        const colorStr = color.toString();
+        console.log(colorStr);
+
+        this.context.fillStyle = colorStr;
         this.context.fillRect(0, 0, width, height);
+
         const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
         horizontalGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
         horizontalGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -36,5 +42,4 @@ export class PanelColorComponent implements AfterViewInit {
         this.context.fillStyle = verticalGradient;
         this.context.fillRect(0, 0, width, height);
     }
-
 }
