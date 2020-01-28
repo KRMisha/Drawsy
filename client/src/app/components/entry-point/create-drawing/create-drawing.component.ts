@@ -15,7 +15,7 @@ export class CreateDrawingComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // this.drawingColor.b = Color(255,255,255);
+    this.drawingColor = new Color(255, 255, 255);
     this.drawingHeigth = 0; // TODO: fit to window size
     this.drawingWidth = 0; // TODO: fit to window size
   }

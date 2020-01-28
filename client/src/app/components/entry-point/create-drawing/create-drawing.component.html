@@ -4,7 +4,7 @@
     </button>
     <h1>Création de dessin</h1>
     <div class="vertical-container">
-        <input matInput type="number" placeholder="Hauteur">
-        <input matInput type="number" placeholder="Largeur">
+        <input matInput type="number" placeholder="Hauteur" class="number-input" [(ngModel)]="drawingHeigth">
+        <input matInput type="number" placeholder="Largeur" class="number-input" [(ngModel)]="drawingWidth">
     </div>
 </mat-form-field>

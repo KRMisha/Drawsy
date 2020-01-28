@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CreateDrawingComponent } from './create-drawing/create-drawing.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Color } from '../../classes/color';
 
 @Component({
     selector: 'app-entry-point',
