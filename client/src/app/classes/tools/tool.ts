@@ -8,8 +8,6 @@ export enum ToolSetting {
 export abstract class Tool {
     toolSettings = new Map();
 
-    constructor() {}
-
     abstract onMouseMove(event: MouseEvent, drawingService: DrawingService): void;
     abstract onMouseDown(event: MouseEvent, drawingService: DrawingService): void;
     abstract onMouseUp(event: MouseEvent, drawingService: DrawingService): void;
