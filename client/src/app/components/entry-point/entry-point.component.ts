@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CreateDrawingComponent } from './create-drawing/create-drawing.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-entry-point',
@@ -7,10 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EntryPointComponent implements OnInit {
     continueDrawing: boolean;
+    drawingWidth: number;
+    drawingHeight: number;
+    drawingBackgroundColor: Color;
 
-    constructor() {
+    constructor(private dialog: MatDialog) { }
+
+    ngOnInit() {
         this.continueDrawing = false; // TODO: Service which checks if we can continue drawing
     }
 
-    ngOnInit() {}
+    openCreateDrawing(): void {
+        this.dialog.open(CreateDrawingComponent, {
+            width: '500px',
+            height: '500px'
+            //data: {drawingWidth: this.drawingWidth, drawingHeight: this.drawingHeight, drawingColor: this.drawingBackgroundColor}
+        });
+    }
 }

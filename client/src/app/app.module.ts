@@ -8,7 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material'
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -44,8 +47,12 @@ import { CreateDrawingComponent } from './components/entry-point/create-drawing/
         MatListModule,
         AppRoutingModule,
         MatCardModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatInputModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
+    entryComponents: [CreateDrawingComponent]
 })
 export class AppModule {}
