@@ -1,0 +1,31 @@
+<div class="stuff">
+    <nav>
+        <ul class="main-menu">
+            <li class="menu-item" (click)="selectGuide.emit(0)">
+                <a>Bienvenue</a>
+            </li>
+            <li>
+                <div class="collapse-button">
+                    <h4>Outils</h4>
+                </div>
+                <ul class="category-menu-open">
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(1)"><a>Crayon</a></li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(2)"><a>Pinceau</a></li>
+                    <li class="collapse-menu-item"><a>Ligne</a></li>
+                    <li class="collapse-menu-item"><a>Rectangle</a></li>
+                    <li class="collapse-menu-item"><a>Couleur</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="collapse-button">
+                    <h4>Fichiers</h4>
+                </div>
+            </li>
+            <li>
+                <div class="collapse-button">
+                    <h4>Exporter</h4>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>

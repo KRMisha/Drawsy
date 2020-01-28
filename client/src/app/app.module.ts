@@ -1,22 +1,29 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatListModule } from '@angular/material/list';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './components/app/app.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
+import { GuideBrushComponent } from './components/guide/guide-brush/guide-brush.component';
+import { GuideDirective } from './components/guide/guide-directive/guide.directive';
+import { GuidePencilComponent } from './components/guide/guide-pencil/guide-pencil.component';
+import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
+import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
+import { GuideComponent } from './components/guide/guide.component';
 import { PanelColorComponent } from './components/panel-color/panel-color.component';
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
-import { EditorComponent } from './components/editor/editor.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
@@ -28,6 +35,12 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         EntryPointComponent,
         EditorComponent,
         SidebarComponent,
+        GuideComponent,
+        GuideSidebarComponent,
+        GuideWelcomeComponent,
+        GuideBrushComponent,
+        GuideDirective,
+        GuidePencilComponent,
     ],
     imports: [
         BrowserModule,
@@ -40,6 +53,12 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         MatSidenavModule,
         MatListModule,
         AppRoutingModule,
+        MatExpansionModule,
+    ],
+    entryComponents: [
+        GuideWelcomeComponent,
+        GuideBrushComponent,
+        GuidePencilComponent
     ],
     providers: [],
     bootstrap: [AppComponent],
