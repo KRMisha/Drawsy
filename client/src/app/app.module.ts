@@ -13,11 +13,11 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './components/app/app.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
 import { PanelColorComponent } from './components/panel-color/panel-color.component';
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
-import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { EditorComponent } from './components/editor/editor.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
     declarations: [
@@ -25,9 +25,9 @@ import { EditorComponent } from './components/editor/editor.component';
         DrawingComponent,
         PanelColorComponent,
         PanelSettingsComponent,
-        SideBarComponent,
         EntryPointComponent,
         EditorComponent,
+        SidebarComponent,
     ],
     imports: [
         BrowserModule,

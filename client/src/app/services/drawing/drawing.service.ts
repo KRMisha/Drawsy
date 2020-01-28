@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Shape } from 'src/app/classes/shapes/shape';
-// import { Rectangle } from 'src/app/classes/shapes/rectangle';
 
 @Injectable({
     providedIn: 'root',

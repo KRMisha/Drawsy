@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- <div class="drawing">
 
      <svg version="1.1"
@@ -7,3 +8,10 @@
         (mousedown)="onClick()">
     </svg>
 </div> -->
+=======
+<div class="drawing">
+    <ng-container *ngFor="let shape of drawingService.getShapes()">
+        {{ shape.render() }}
+    </ng-container>
+</div>
+>>>>>>> f616af7925df84220eaa66602e2d4b519ad9992a
