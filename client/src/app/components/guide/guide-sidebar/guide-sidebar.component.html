@@ -1,4 +1,4 @@
-<div class="stuff">
+<div class="sidebar">
     <nav>
         <ul class="main-menu">
             <li class="menu-item" (click)="selectGuide.emit(0)">
@@ -11,9 +11,9 @@
                 <ul class="category-menu-open">
                     <li class="collapse-menu-item" (click)="selectGuide.emit(1)"><a>Crayon</a></li>
                     <li class="collapse-menu-item" (click)="selectGuide.emit(2)"><a>Pinceau</a></li>
-                    <li class="collapse-menu-item"><a>Ligne</a></li>
-                    <li class="collapse-menu-item"><a>Rectangle</a></li>
-                    <li class="collapse-menu-item"><a>Couleur</a></li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(3)"><a>Ligne</a></li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(4)"><a>Rectangle</a></li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(5)"><a>Couleur</a></li>
                 </ul>
             </li>
             <li>
