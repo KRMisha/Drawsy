@@ -6,5 +6,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
     styleUrls: ['./guide-sidebar.component.scss'],
 })
 export class GuideSidebarComponent {
+    isClosed: boolean = true;
+
     @Output() selectGuide = new EventEmitter<number>();
+
+    public toggleCollapseMenu() {
+      this.isClosed = !this.isClosed;
+    }
 }

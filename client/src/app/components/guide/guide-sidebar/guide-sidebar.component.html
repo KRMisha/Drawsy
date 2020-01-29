@@ -1,19 +1,17 @@
 <div class="sidebar">
     <nav>
         <ul class="main-menu">
-            <li class="menu-item" (click)="selectGuide.emit(0)">
-                <a>Bienvenue</a>
-            </li>
+            <li class="menu-item" (click)="selectGuide.emit(0)">Bienvenue</li>
             <li>
-                <div class="collapse-button">
+                <div class="collapse-button" (click)="toggleCollapseMenu()">
                     <h4>Outils</h4>
                 </div>
-                <ul class="category-menu-open">
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(1)"><a>Crayon</a></li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(2)"><a>Pinceau</a></li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(3)"><a>Ligne</a></li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(4)"><a>Rectangle</a></li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(5)"><a>Couleur</a></li>
+                <ul [class.category-menu-hidden]="isClosed">
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(1)">Crayon</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(2)">Pinceau</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(3)">Ligne</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(4)">Rectangle</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(5)">Couleur</li>
                 </ul>
             </li>
             <li>

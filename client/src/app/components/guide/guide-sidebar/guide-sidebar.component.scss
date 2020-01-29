@@ -41,12 +41,9 @@ ul {
     padding-left: 0;
     margin: 0px;
 }
-​ .category-menu-open {
-    height: 100%;
-    list-style: none;
-    text-align: left;
-    background-color: rgb(230, 230, 230);
-    padding-left: 10px;
+
+ul, li {
+  user-select: none;
 }
 
 .category-menu-hidden {
