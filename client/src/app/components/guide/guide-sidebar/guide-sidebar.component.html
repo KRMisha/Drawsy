@@ -6,7 +6,7 @@
                 <div class="collapse-button" (click)="toggleCollapseMenu()">
                     <h4>Outils</h4>
                 </div>
-                <ul [class.category-menu-hidden]="isClosed">
+                <ul *ngIf="isOpen">
                     <li class="collapse-menu-item" (click)="selectGuide.emit(1)">Crayon</li>
                     <li class="collapse-menu-item" (click)="selectGuide.emit(2)">Pinceau</li>
                     <li class="collapse-menu-item" (click)="selectGuide.emit(3)">Ligne</li>
