@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
-
+import { MatDialogRef } from '@angular/material/dialog'
 import { GuideService } from '../../services/guide/guide.service';
 import { GuideDirective } from './guide-directive/guide.directive';
 
@@ -12,7 +12,8 @@ export class GuideComponent implements OnInit, AfterViewInit {
     guides: Type<any>[];
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
-    constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
+    constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver,
+                public dialogRef: MatDialogRef<GuideComponent>) {}
 
     ngOnInit() {
         this.guides = this.guideService.getGuides();

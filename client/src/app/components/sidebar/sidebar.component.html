@@ -1,5 +1,6 @@
 <mat-drawer-container class="container">
-    <div class="tool-selection">
+  <div class="button-selection">
+    <div class="option-selection">
         <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
             <mat-icon class="mat-icon">dehaze</mat-icon>
         </button>
@@ -17,7 +18,13 @@
             <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
         </button>
     </div>
+    <div class="option-selection">
 
+      <button mat-stroked-button class="guide-button"
+      (click)="openGuideModal()" title="Guide d'utilisation">?</button>
+
+    </div>
+  </div>
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings">
         <div>
             <app-panel-color></app-panel-color>

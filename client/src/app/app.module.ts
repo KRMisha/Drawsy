@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -60,6 +61,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         MatListModule,
         AppRoutingModule,
         MatExpansionModule,
+        MatDialogModule,
     ],
     entryComponents: [
         GuideWelcomeComponent,
