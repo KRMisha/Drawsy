@@ -10,6 +10,9 @@ import { GuideDirective } from './guide-directive/guide.directive';
 })
 export class GuideComponent implements OnInit, AfterViewInit {
     guides: Type<any>[];
+    index: number;
+    hasPreviousGuide: boolean;
+    hasNextGuide: boolean;
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver,
@@ -17,18 +20,44 @@ export class GuideComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.guides = this.guideService.getGuides();
+        this.index = 0;
+        this.hasPreviousGuide = false;
+        this.hasNextGuide = true;
     }
 
     ngAfterViewInit() {
-        this.selectGuide(0);
+        this.selectGuide(this.index);
+    }
+
+    updateIndex(newIndex: number) {
+      this.index = newIndex;
+      this.hasNextGuide = this.index < this.guides.length - 1;
+      this.hasPreviousGuide = this.index > 0;
     }
 
     selectGuide(index: number) {
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[index]);
+        this.updateIndex(index);
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.index]);
 
         const viewContainerRef = this.guideHost.viewContainerRef;
         viewContainerRef.clear();
 
         viewContainerRef.createComponent(componentFactory);
+    }
+
+    selectNextGuide(): void {
+      if (this.hasNextGuide) {
+        this.selectGuide(++this.index);
+      }
+    }
+
+    selectPreviousGuide(): void {
+      if (this.hasPreviousGuide) {
+        this.selectGuide(--this.index);
+      }
+    }
+
+    closeModal(): void {
+      this.dialogRef.close();
     }
 }
