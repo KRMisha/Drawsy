@@ -20,9 +20,11 @@ import { EntryPointComponent } from './components/entry-point/entry-point.compon
 import { GuideBrushComponent } from './components/guide/guide-brush/guide-brush.component';
 import { GuideColorComponent } from './components/guide/guide-color/guide-color.component';
 import { GuideDirective } from './components/guide/guide-directive/guide.directive';
+import { GuideExportDrawingComponent } from './components/guide/guide-export-drawing/guide-export-drawing.component';
 import { GuideLineComponent } from './components/guide/guide-line/guide-line.component';
 import { GuidePencilComponent } from './components/guide/guide-pencil/guide-pencil.component';
 import { GuideRectangleComponent } from './components/guide/guide-rectangle/guide-rectangle.component';
+import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing/guide-save-drawing.component';
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
@@ -48,6 +50,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         GuideLineComponent,
         GuideColorComponent,
         GuideRectangleComponent,
+        GuideExportDrawingComponent,
+        GuideSaveDrawingComponent,
     ],
     imports: [
         BrowserModule,
@@ -70,6 +74,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         GuideLineComponent,
         GuideRectangleComponent,
         GuideColorComponent,
+        GuideExportDrawingComponent,
+        GuideSaveDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

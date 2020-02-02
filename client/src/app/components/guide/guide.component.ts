@@ -30,9 +30,9 @@ export class GuideComponent implements OnInit, AfterViewInit {
     }
 
     updateIndex(newIndex: number) {
-      this.index = newIndex;
-      this.hasNextGuide = this.index < this.guides.length - 1;
-      this.hasPreviousGuide = this.index > 0;
+        this.index = newIndex;
+        this.hasNextGuide = this.index < this.guides.length - 1;
+        this.hasPreviousGuide = this.index > 0;
     }
 
     selectGuide(index: number) {
@@ -48,12 +48,14 @@ export class GuideComponent implements OnInit, AfterViewInit {
     selectNextGuide(): void {
       if (this.hasNextGuide) {
         this.selectGuide(++this.index);
+        this.guideService.openAllCollapseMenus();
       }
     }
 
     selectPreviousGuide(): void {
       if (this.hasPreviousGuide) {
         this.selectGuide(--this.index);
+        this.guideService.openAllCollapseMenus();
       }
     }
 
