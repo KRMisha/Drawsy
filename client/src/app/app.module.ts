@@ -2,6 +2,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -15,6 +17,17 @@ import { AppComponent } from './components/app/app.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
+import { GuideBrushComponent } from './components/guide/guide-brush/guide-brush.component';
+import { GuideColorComponent } from './components/guide/guide-color/guide-color.component';
+import { GuideDirective } from './components/guide/guide-directive/guide.directive';
+import { GuideExportDrawingComponent } from './components/guide/guide-export-drawing/guide-export-drawing.component';
+import { GuideLineComponent } from './components/guide/guide-line/guide-line.component';
+import { GuidePencilComponent } from './components/guide/guide-pencil/guide-pencil.component';
+import { GuideRectangleComponent } from './components/guide/guide-rectangle/guide-rectangle.component';
+import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing/guide-save-drawing.component';
+import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
+import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
+import { GuideComponent } from './components/guide/guide.component';
 import { PanelColorComponent } from './components/panel-color/panel-color.component';
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -28,6 +41,17 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         EntryPointComponent,
         EditorComponent,
         SidebarComponent,
+        GuideComponent,
+        GuideSidebarComponent,
+        GuideWelcomeComponent,
+        GuideBrushComponent,
+        GuideDirective,
+        GuidePencilComponent,
+        GuideLineComponent,
+        GuideColorComponent,
+        GuideRectangleComponent,
+        GuideExportDrawingComponent,
+        GuideSaveDrawingComponent,
     ],
     imports: [
         BrowserModule,
@@ -40,6 +64,18 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         MatSidenavModule,
         MatListModule,
         AppRoutingModule,
+        MatExpansionModule,
+        MatDialogModule,
+    ],
+    entryComponents: [
+        GuideWelcomeComponent,
+        GuideBrushComponent,
+        GuidePencilComponent,
+        GuideLineComponent,
+        GuideRectangleComponent,
+        GuideColorComponent,
+        GuideExportDrawingComponent,
+        GuideSaveDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

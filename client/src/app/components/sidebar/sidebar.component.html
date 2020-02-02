@@ -1,23 +1,27 @@
 <mat-drawer-container class="container">
-    <div class="tool-selection">
-        <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
-            <mat-icon class="mat-icon">dehaze</mat-icon>
-        </button>
+    <div class="button-selection">
+        <div class="option-selection">
+            <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
+                <mat-icon class="mat-icon">dehaze</mat-icon>
+            </button>
 
-        <p class="title">Outils</p>
+            <p class="title">Outils</p>
 
-        <button
-            [class.selected]="button === selectedButton"
-            mat-stroked-button
-            *ngFor="let button of buttons; let i = index"
-            (click)="setSelectedTool(i); drawer.open()"
-            class="tool-button"
-            title="{{ button.name }}"
-        >
-            <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
-        </button>
+            <button
+                mat-stroked-button
+                *ngFor="let button of buttons; let i = index"
+                class="tool-button"
+                [class.selected]="button === selectedButton"
+                (click)="setSelectedTool(i); drawer.open()"
+                title="{{ button.name }}"
+            >
+                <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
+            </button>
+        </div>
+        <div class="option-selection">
+            <button mat-stroked-button class="guide-button" (click)="openGuideModal()" title="Guide d'utilisation">?</button>
+        </div>
     </div>
-
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings">
         <div>
             <app-panel-color></app-panel-color>

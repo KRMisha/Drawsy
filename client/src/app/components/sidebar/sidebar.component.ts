@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Button, BUTTONS } from '../../classes/button/button-data';
 import { ToolInputProviderService } from '../../services/tool-input-provider/tool-input-provider.service';
+import { GuideComponent } from '../guide/guide.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -12,7 +14,7 @@ export class SidebarComponent implements OnInit {
 
     selectedButton: Button;
 
-    constructor(private toolInputProviderService: ToolInputProviderService) {}
+    constructor(private toolInputProviderService: ToolInputProviderService, private dialog: MatDialog) {}
 
     ngOnInit() {
         this.selectedButton = this.buttons[0];
@@ -25,5 +27,12 @@ export class SidebarComponent implements OnInit {
         }
         this.selectedButton = this.buttons[toolIndex];
         this.toolInputProviderService.setTool(this.selectedButton.tool);
+    }
+
+    openGuideModal(): void {
+        this.dialog.open(GuideComponent, {
+            width: '1920px',
+            height: '1080px',
+        });
     }
 }

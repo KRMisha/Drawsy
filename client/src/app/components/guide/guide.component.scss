@@ -1,0 +1,58 @@
+.guide {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.guide-content {
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.exit-button {
+    margin-right: 30px;
+    align-self: flex-end;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+
+    :hover {
+        color: rgb(255, 64, 129);
+    }
+}
+
+.sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 260px;
+}
+
+.button-container {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.navigation-button {
+    height: 60px;
+    width: auto;
+    margin-top: 10px;
+    margin-right: 50px;
+    margin-left: 50px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.previous-container,
+.next-container {
+    width: 270px;
+}
+
+.icon {
+    transform: scale(1.5);
+}
