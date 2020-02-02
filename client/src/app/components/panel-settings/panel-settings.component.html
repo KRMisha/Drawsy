@@ -1,35 +1,35 @@
 <h1>{{ selectedButton.name }}</h1>
 
-<div *ngIf="selectedButton.tool.toolSettings.has(ToolSetting.Size)">
+<div *ngIf="selectedButton.tool.toolSettings.has(ToolSettings.Size)">
     <div class="option">
         <h2>Taille</h2>
         <input
-            [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
-            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event)"
+            [ngModel]="selectedButton.tool.toolSettings.get(ToolSettings.Size)"
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSettings.Size, $event)"
         />
     </div>
     <mat-slider
         min="1"
         max="100"
-        (input)="selectedButton.tool.toolSettings.set(ToolSetting.Size, $event.value)"
-        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Size)"
+        (input)="selectedButton.tool.toolSettings.set(ToolSettings.Size, $event.value)"
+        [value]="selectedButton.tool.toolSettings.get(ToolSettings.Size)"
     >
     </mat-slider>
 </div>
 
-<div *ngIf="selectedButton.tool.toolSettings.has(ToolSetting.Color)">
+<div *ngIf="selectedButton.tool.toolSettings.has(ToolSettings.Color)">
     <div class="option">
         <h2>Couleur</h2>
         <input
-            [ngModel]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
-            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event)"
+            [ngModel]="selectedButton.tool.toolSettings.get(ToolSettings.Color)"
+            (ngModelChange)="selectedButton.tool.toolSettings.set(ToolSettings.Color, $event)"
         />
     </div>
     <mat-slider
         min="1"
         max="100"
-        (input)="selectedButton.tool.toolSettings.set(ToolSetting.Color, $event.value)"
-        [value]="selectedButton.tool.toolSettings.get(ToolSetting.Color)"
+        (input)="selectedButton.tool.toolSettings.set(ToolSettings.Color, $event.value)"
+        [value]="selectedButton.tool.toolSettings.get(ToolSettings.Color)"
     >
     </mat-slider>
 </div>

@@ -41,7 +41,6 @@ export class Color {
         } else if (hue <= 6) {
             this.setNormalizedColor(chroma + m, m, x + m);
         }
-        console.log();
     }
 
     toString(): string {

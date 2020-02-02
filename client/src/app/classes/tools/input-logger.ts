@@ -1,4 +1,4 @@
-import { Tool, ToolSetting } from './tool';
+import { Tool, ToolSettings } from './tool';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 // import { DrawingService } from 'src/app/services/drawing/drawing.service';
 
@@ -7,7 +7,7 @@ export class InputLogger extends Tool {
 
     constructor() {
         super();
-        this.toolSettings.set(ToolSetting.Size, this.penSize);
+        this.toolSettings.set(ToolSettings.Size, this.penSize);
     }
 
     onMouseMove(event: MouseEvent, drawingService: DrawingService): void {

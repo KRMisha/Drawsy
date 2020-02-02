@@ -1,6 +1,6 @@
 import { DrawingService } from '../../services/drawing/drawing.service';
 
-export enum ToolSetting {
+export enum ToolSettings {
     Size = 1,
     Color,
 }

@@ -1,6 +1,6 @@
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { Rectangle } from '../shapes/rectangle';
-import { Tool, ToolSetting } from './tool';
+import { Tool, ToolSettings } from './tool';
 
 export class ToolTest extends Tool {
     penColor = 5;
@@ -8,8 +8,8 @@ export class ToolTest extends Tool {
 
     constructor() {
         super();
-        this.toolSettings.set(ToolSetting.Color, this.penColor);
-        this.toolSettings.set(ToolSetting.Size, this.penSize);
+        this.toolSettings.set(ToolSettings.Color, this.penColor);
+        this.toolSettings.set(ToolSettings.Size, this.penSize);
     }
 
     onMouseMove(event: MouseEvent, drawingService: DrawingService): void {}
