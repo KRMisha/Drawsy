@@ -10,9 +10,16 @@ import { GuideRectangleComponent } from '../../components/guide/guide-rectangle/
 import { GuideSaveDrawingComponent } from '../../components/guide/guide-save-drawing/guide-save-drawing.component';
 import { GuideWelcomeComponent } from '../../components/guide/guide-welcome/guide-welcome.component';
 
-const guides: Type<any>[] = [GuideWelcomeComponent, GuidePencilComponent, GuideBrushComponent,
-                             GuideLineComponent, GuideRectangleComponent, GuideColorComponent,
-                             GuideExportDrawingComponent, GuideSaveDrawingComponent];
+const guides: Type<any>[] = [
+    GuideWelcomeComponent,
+    GuidePencilComponent,
+    GuideBrushComponent,
+    GuideLineComponent,
+    GuideRectangleComponent,
+    GuideColorComponent,
+    GuideExportDrawingComponent,
+    GuideSaveDrawingComponent,
+];
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +32,7 @@ export class GuideService {
     }
 
     openAllCollapseMenus(): Observable<boolean> {
-      this.shouldOpenAllMenus.next(true);
-      return this.shouldOpenAllMenus.asObservable();
+        this.shouldOpenAllMenus.next(true);
+        return this.shouldOpenAllMenus.asObservable();
     }
 }

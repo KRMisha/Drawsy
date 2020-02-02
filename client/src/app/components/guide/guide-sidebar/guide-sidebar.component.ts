@@ -1,8 +1,11 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { GuideService } from '../../../services/guide/guide.service'
+import { GuideService } from '../../../services/guide/guide.service';
 
-enum CollapseMenuButtons {tools, fileOptions};
+enum CollapseMenuButtons {
+    tools,
+    fileOptions,
+}
 
 @Component({
     selector: 'app-guide-sidebar',
@@ -17,16 +20,15 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     @Output() selectGuide = new EventEmitter<number>();
 
     constructor(private guideService: GuideService) {
-      this.isOpenedCollapseMenu = [false, false];
+        this.isOpenedCollapseMenu = [false, false];
     }
 
     ngOnInit() {
-      this.subscription = this.guideService.openAllCollapseMenus()
-      .subscribe((shouldOpenAllMenus) => {
-          if (shouldOpenAllMenus) {
-              this.openAllCollapseMenus();
-          }
-      });
+        this.subscription = this.guideService.openAllCollapseMenus().subscribe(shouldOpenAllMenus => {
+            if (shouldOpenAllMenus) {
+                this.openAllCollapseMenus();
+            }
+        });
     }
 
     public toggleCollapseMenu(index: number): void {
@@ -34,9 +36,9 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     }
 
     public openAllCollapseMenus(): void {
-      for (let i = 0; i < this.isOpenedCollapseMenu.length; i++) {
-        this.isOpenedCollapseMenu[i] = true;
-      }
+        for (let i = 0; i < this.isOpenedCollapseMenu.length; i++) {
+            this.isOpenedCollapseMenu[i] = true;
+        }
     }
 
     ngOnDestroy() {

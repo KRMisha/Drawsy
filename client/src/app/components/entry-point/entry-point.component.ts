@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GuideComponent } from '../guide/guide.component'
-
+import { GuideComponent } from '../guide/guide.component';
 
 @Component({
     selector: 'app-entry-point',
@@ -18,9 +17,9 @@ export class EntryPointComponent implements OnInit {
     ngOnInit() {}
 
     openGuideModal(): void {
-      this.dialog.open(GuideComponent, {
-          width: '1920px',
-          height: '1080px'
-      });
+        this.dialog.open(GuideComponent, {
+            width: '1920px',
+            height: '1080px',
+        });
     }
 }
