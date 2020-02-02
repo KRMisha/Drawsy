@@ -11,7 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material'
+import { MatInputModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -53,6 +53,6 @@ import { CreateDrawingComponent } from './components/entry-point/create-drawing/
     ],
     providers: [],
     bootstrap: [AppComponent],
-    entryComponents: [CreateDrawingComponent]
+    entryComponents: [CreateDrawingComponent],
 })
 export class AppModule {}

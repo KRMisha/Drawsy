@@ -14,7 +14,7 @@ export class EntryPointComponent implements OnInit {
     drawingHeight: number;
     drawingBackgroundColor: Color;
 
-    constructor(private dialog: MatDialog) { }
+    constructor(private dialog: MatDialog) {}
 
     ngOnInit() {
         this.continueDrawing = false; // TODO: Service which checks if we can continue drawing
@@ -23,7 +23,7 @@ export class EntryPointComponent implements OnInit {
     openCreateDrawing(): void {
         this.dialog.open(CreateDrawingComponent, {
             width: '700px',
-            height: '800px'
+            height: '800px',
         });
     }
 }
