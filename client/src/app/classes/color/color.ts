@@ -3,7 +3,7 @@ export class Color {
     green: number;
     blue: number;
 
-    setColor(red: number, green: number, blue: number): void {
+    constructor(red: number, green: number, blue: number) {
         this.red = red;
         this.green = green;
         this.blue = blue;

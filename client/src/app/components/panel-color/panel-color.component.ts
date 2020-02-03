@@ -22,7 +22,7 @@ export class PanelColorComponent implements AfterViewInit {
         const width = canvas.width;
         const height = canvas.height;
 
-        const color = new Color();
+        const color = new Color(0, 0, 0);
         color.setHsv(this.hue, 1, 1);
         const colorStr = color.toString();
         console.log(colorStr);
