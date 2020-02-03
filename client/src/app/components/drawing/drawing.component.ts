@@ -1,6 +1,9 @@
 import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { PencilService } from '../../services/pencil/pencil.service';
 
+const leftClick: number = 0;
+const rightClick: number = 2;
+
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
@@ -24,6 +27,7 @@ export class DrawingComponent {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
+      if (event.button === leftClick) {
         this.isMouseDown = true;
 
         this.path = this.renderer.createElement('path', 'svg');
@@ -37,6 +41,7 @@ export class DrawingComponent {
 
         this.renderer.setAttribute(this.path, 'd', this.pathString);
         this.renderer.appendChild(this.svg, this.path);
+      }
     }
 
     @HostListener('mouseup', ['$event'])
@@ -52,5 +57,20 @@ export class DrawingComponent {
             this.renderer.setAttribute(this.path, 'd', this.pathString);
             this.renderer.appendChild(this.svg, this.path);
         }
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    onLeave(event: MouseEvent): void {
+      if (this.isMouseDown) {
+          this.pathString += this.pencilService.pathLine(event.clientX - this.element.nativeElement.offsetLeft, event.clientY);
+          this.renderer.setAttribute(this.path, 'd', this.pathString);
+          this.renderer.appendChild(this.svg, this.path);
+          this.isMouseDown = false;
+      }
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onEnter(event: MouseEvent): void {
+            this.isMouseDown = false;
     }
 }
