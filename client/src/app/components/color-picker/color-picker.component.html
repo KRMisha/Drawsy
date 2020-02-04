@@ -1,1 +1,2 @@
-<app-color-field></app-color-field>
+<app-color-field [hue]="hue"></app-color-field>
+<app-color-slider (hueChange)="setHue($event)"></app-color-slider>

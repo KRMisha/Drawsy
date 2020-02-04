@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 enum ColorString {
@@ -13,7 +13,7 @@ enum ColorString {
     templateUrl: './color-field.component.html',
     styleUrls: ['./color-field.component.scss'],
 })
-export class PanelColorComponent implements AfterViewInit {
+export class PanelColorComponent implements AfterViewInit, OnChanges {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
@@ -35,6 +35,12 @@ export class PanelColorComponent implements AfterViewInit {
         this.canvas.width = 250;
         this.canvas.height = 160;
         this.draw();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.canvas !== undefined) {
+            this.draw();
+        }
     }
 
     draw(): void {
@@ -67,7 +73,7 @@ export class PanelColorComponent implements AfterViewInit {
         this.context.fillStyle = this.color.toString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
-        this.context.strokeStyle = 'rgb(255, 255, 255)';
+        this.context.strokeStyle = ColorString.OpaqueWhite;
         this.context.stroke(circle);
     }
 
@@ -88,7 +94,7 @@ export class PanelColorComponent implements AfterViewInit {
     }
 
     updateColor(event: MouseEvent): void {
-        if (this.isMouseDown === false || event.pageY - this.canvas.offsetTop > this.canvas.height) {
+        if (this.isMouseDown === false) {
             return;
         }
 
