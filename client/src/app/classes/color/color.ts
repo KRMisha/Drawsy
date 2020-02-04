@@ -21,8 +21,6 @@ export class Color {
         saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
         value = Math.min(Math.max(minValue, value), maxValue);
 
-        console.log(hue);
-
         hue /= 60;
         const chroma = value * saturation;
         const x = chroma * (1 - Math.abs((hue % 2) - 1));
