@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Button } from 'src/app/classes/button/button-data';
-import { ToolSettings } from '../../../classes/tools/tool';
+import { Tool, ToolSettings } from '../../../services/drawing/tools/tool';
 
 @Component({
     selector: 'app-panel-settings',
@@ -9,5 +8,5 @@ import { ToolSettings } from '../../../classes/tools/tool';
 })
 export class PanelSettingsComponent {
     ToolSettings = ToolSettings; // Make enum available to template
-    @Input() selectedButton: Button;
+    @Input() selectedTool: Tool;
 }
