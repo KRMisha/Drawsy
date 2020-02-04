@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PanelColorComponent } from './panel-color.component';
+import { PanelColorComponent } from './color-field.component';
 
 describe('PanelColorComponent', () => {
     let component: PanelColorComponent;

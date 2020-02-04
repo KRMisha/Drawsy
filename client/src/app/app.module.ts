@@ -32,9 +32,10 @@ import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
-import { PanelColorComponent } from './components/panel-color/panel-color.component';
+import { PanelColorComponent } from './components/color-field/color-field.component';
 import { PanelSettingsComponent } from './components/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 
 @NgModule({
     declarations: [
@@ -57,6 +58,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
         GuideExportDrawingComponent,
         GuideSaveDrawingComponent,
         CreateDrawingComponent,
+        ColorPickerComponent,
     ],
     imports: [
         BrowserModule,

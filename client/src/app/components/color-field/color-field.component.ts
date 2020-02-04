@@ -9,13 +9,12 @@ enum ColorString {
 }
 
 @Component({
-    selector: 'app-panel-color',
-    templateUrl: './panel-color.component.html',
-    styleUrls: ['./panel-color.component.scss'],
+    selector: 'app-color-field',
+    templateUrl: './color-field.component.html',
+    styleUrls: ['./color-field.component.scss'],
 })
 export class PanelColorComponent implements AfterViewInit {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
-
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
