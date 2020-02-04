@@ -2,10 +2,14 @@
     <mat-icon class="icon">close</mat-icon>
 </button>
 <h1 class="header">Création de dessin</h1>
+<h2>Dimensions du dessin</h2>
 <mat-form-field class="form">
-    <div class="vertical-container">
-        <input matInput type="number" placeholder="Hauteur" class="number-input" [(ngModel)]="drawingHeigth" />
-        <input matInput type="number" placeholder="Largeur" class="number-input" [(ngModel)]="drawingWidth" />
-    </div>
+        <input matInput type="number" placeholder="Hauteur" [(ngModel)]="drawingHeigth" />
 </mat-form-field>
+<mat-form-field class="form">
+    <input matInput type="number" placeholder="Largeur" [(ngModel)]="drawingWidth" />
+</mat-form-field>
+        
+<app-panel-color></app-panel-color>
+
 <button mat-stroked-button routerLink="/editor" class="confirm-button" (click)="close()">CONFIRMER</button>

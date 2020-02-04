@@ -1,6 +1,6 @@
 .form {
     width: 100%;
-    text-align: center;
+    height: auto;
 }
 
 .exit-button {
@@ -22,14 +22,4 @@
     flex-direction: column;
     padding-top: 5%;
     padding-bottom: 0px;
-}
-
-.number-input {
-    width: 80%;
-    padding-bottom: 30px;
-    padding-top: 0px;
-}
-
-.header {
-    font-size: 25px;
 }
