@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Button } from 'src/app/classes/button/button-data';
-import { ToolSettings } from '../../classes/tools/tool';
+import { ToolSettings } from '../../../classes/tools/tool';
 
 @Component({
     selector: 'app-panel-settings',

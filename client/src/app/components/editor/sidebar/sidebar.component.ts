@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Button, BUTTONS } from '../../classes/button/button-data';
-import { GuideComponent } from '../guide/guide.component';
-import { ToolService } from '../../services/tool/tool.service';
+import { Button, BUTTONS } from '../../../classes/button/button-data';
+import { ToolService } from '../../../services/tool/tool.service';
+import { GuideComponent } from '../../guide/guide.component';
 
 @Component({
     selector: 'app-sidebar',
