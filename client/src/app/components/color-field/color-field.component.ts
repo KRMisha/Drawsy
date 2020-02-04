@@ -26,6 +26,7 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     private isMouseDown = false;
     private mouseX = 0;
     private mouseY = 0;
+    private isMouseInside = false;
 
     private color = new Color(0, 0, 0);
 
@@ -93,8 +94,21 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
         this.updateColor(event);
     }
 
+    @HostListener('mouseleave', ['$event'])
+    onMouseLeave(event: MouseEvent): void {
+        this.isMouseInside = false;
+        this.isMouseDown = false;
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onMouseEnter(event: MouseEvent): void {
+        this.isMouseInside = true;
+        console.log('in')
+    }
+
     updateColor(event: MouseEvent): void {
-        if (this.isMouseDown === false) {
+        if (this.isMouseDown === false || this.isMouseInside === false
+            || event.offsetY >= this.canvas.height) {
             return;
         }
 

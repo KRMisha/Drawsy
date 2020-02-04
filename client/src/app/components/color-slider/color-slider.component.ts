@@ -18,6 +18,8 @@ export class ColorSliderComponent implements AfterViewInit {
     private isMouseDown = false;
     private mouseX = 0;
 
+    private isMouseInside = false;
+
     ngAfterViewInit(): void {
         this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas = this.hueCanvas.nativeElement;
@@ -73,8 +75,19 @@ export class ColorSliderComponent implements AfterViewInit {
         this.update(event);
     }
 
+    @HostListener('mouseleave', ['$event'])
+    onMouseLeave(event: MouseEvent): void {
+        this.isMouseInside = false;
+        this.isMouseDown = false;
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onMouseEnter(event: MouseEvent): void {
+        this.isMouseInside = true;
+    }
+
     update(event: MouseEvent): void {
-        if (this.isMouseDown === false) {
+        if (this.isMouseDown === false || this.isMouseInside === false) {
             return
         }
 
