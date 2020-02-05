@@ -60,7 +60,7 @@ export class ToolPencilService extends Tool {
         const path = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'stroke', 'black');
         this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke-width', '5');
+        this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         return path;
