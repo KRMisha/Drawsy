@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 

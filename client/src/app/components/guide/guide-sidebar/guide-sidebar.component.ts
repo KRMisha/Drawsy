@@ -13,9 +13,9 @@ enum CollapseMenuButtons {
     styleUrls: ['./guide-sidebar.component.scss'],
 })
 export class GuideSidebarComponent implements OnInit, OnDestroy {
+    menus = CollapseMenuButtons;
     private subscription: Subscription;
     private isOpenedCollapseMenu: boolean[];
-    public menus = CollapseMenuButtons;
 
     @Output() selectGuide = new EventEmitter<number>();
 
@@ -24,18 +24,18 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscription = this.guideService.openAllCollapseMenus().subscribe(shouldOpenAllMenus => {
+        this.subscription = this.guideService.openAllCollapseMenus().subscribe((shouldOpenAllMenus) => {
             if (shouldOpenAllMenus) {
                 this.openAllCollapseMenus();
             }
         });
     }
 
-    public toggleCollapseMenu(index: number): void {
+    toggleCollapseMenu(index: number): void {
         this.isOpenedCollapseMenu[index] = !this.isOpenedCollapseMenu[index];
     }
 
-    public openAllCollapseMenus(): void {
+    openAllCollapseMenus(): void {
         for (let i = 0; i < this.isOpenedCollapseMenu.length; i++) {
             this.isOpenedCollapseMenu[i] = true;
         }
