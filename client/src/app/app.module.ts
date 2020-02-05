@@ -25,7 +25,7 @@ import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { PanelSettingsComponent } from './components/editor/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/editor/sidebar/sidebar.component';
-import { CreateDrawingComponent } from './components/entry-point/create-drawing/create-drawing.component';
+import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
 import { GuideBrushComponent } from './components/guide/guide-brush/guide-brush.component';
 import { GuideColorComponent } from './components/guide/guide-color/guide-color.component';

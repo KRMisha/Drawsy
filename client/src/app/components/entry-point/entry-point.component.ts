@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Color } from '../../classes/color/color';
 import { GuideComponent } from '../guide/guide.component';
-import { CreateDrawingComponent } from './create-drawing/create-drawing.component';
+import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 
 @Component({
     selector: 'app-entry-point',
