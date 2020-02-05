@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color, MAX_HUE} from 'src/app/classes/color/color';
 
 @Component({
   selector: 'app-color-slider',
@@ -45,12 +45,12 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.fillStyle = horizontalGradient;
         this.context.fillRect(0, 7, width, height - 14);
 
-        const hueColor = new Color(0, 0, 0);
+        const hueColor = new Color(0, 0, 0, 1);
         hueColor.setHsv(this.hue, 1.0, 1.0);
 
         const circle = new Path2D();
         circle.arc(this.mouseX, height / 2, 8, 0, 2 * Math.PI);
-        this.context.fillStyle = hueColor.toString();
+        this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
         this.context.strokeStyle = 'white';
@@ -67,7 +67,7 @@ export class ColorSliderComponent implements AfterViewInit {
     onMouseUp(event: MouseEvent): void {
         this.isMouseDown = false;
         this.update(event);
-
+        
     }
 
     @HostListener('mousemove', ['$event'])
@@ -92,7 +92,7 @@ export class ColorSliderComponent implements AfterViewInit {
         }
 
         this.mouseX = event.offsetX;
-        this.hue = this.mouseX / this.canvas.width * 360;
+        this.hue = this.mouseX / this.canvas.width * MAX_HUE;
         this.draw();
         this.hueChange.emit(this.hue);
     }

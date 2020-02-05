@@ -15,7 +15,7 @@ export class CreateDrawingComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>) {}
 
     ngOnInit() {
-        this.drawingColor = new Color(255, 255, 255);
+        this.drawingColor = new Color(255, 255, 255, 1);
         this.drawingHeigth = 0; // TODO: fit to window size
         this.drawingWidth = 0; // TODO: fit to window size
     }

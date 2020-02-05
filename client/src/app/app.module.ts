@@ -37,6 +37,7 @@ import { PanelSettingsComponent } from './components/panel-settings/panel-settin
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './components/color-slider/color-slider.component';
+import { ColorContainerComponent } from './components/color-container/color-container.component';
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import { ColorSliderComponent } from './components/color-slider/color-slider.com
         CreateDrawingComponent,
         ColorPickerComponent,
         ColorSliderComponent,
+        ColorContainerComponent,
     ],
     imports: [
         BrowserModule,

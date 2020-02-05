@@ -28,7 +28,7 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     private mouseY = 0;
     private isMouseInside = false;
 
-    private color = new Color(0, 0, 0);
+    private color = new Color(0, 0, 0, 1);
 
     ngAfterViewInit(): void {
         this.context = this.saturationValueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -48,10 +48,10 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
-        const color = new Color(0, 0, 0);
+        const color = new Color(0, 0, 0, 1);
         color.setHsv(this.hue, 1, 1);
 
-        const colorStr = color.toString();
+        const colorStr = color.toRgbString();
         this.context.fillStyle = colorStr;
         this.context.fillRect(0, 0, width, height);
 
@@ -71,7 +71,7 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
 
         const circle = new Path2D();
         circle.arc(this.mouseX, this.mouseY, 10, 0, 2 * Math.PI);
-        this.context.fillStyle = this.color.toString();
+        this.context.fillStyle = this.color.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
         this.context.strokeStyle = ColorString.OpaqueWhite;
@@ -103,7 +103,6 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.isMouseInside = true;
-        console.log('in')
     }
 
     updateColor(event: MouseEvent): void {
