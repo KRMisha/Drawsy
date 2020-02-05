@@ -29,15 +29,22 @@ export class CreateDrawingComponent {
 
     newHeight(height: number) {
         // TODO: Sanitize input
-        this.drawingService.changeHeight(height);
+        this.drawingHeight = height;
     }
 
     newWidth(width: number) {
-        //TODO: Sanitize input
-        this.drawingService.changeWidth(width);
+        // TODO: Sanitize input
+        this.drawingWidth = width;
     }
 
     newColor(color: Color) {
-        this.drawingService.changeColor(color);
+        this.drawingColor = color;
+    }
+
+    sendData() {
+        this.drawingService.changeColor(this.drawingColor);
+        this.drawingService.changeHeight(this.drawingHeight);
+        this.drawingService.changeWidth(this.drawingWidth);
+        this.close();
     }
 }
