@@ -1,14 +1,15 @@
 import { Renderer2 } from '@angular/core';
+import { Color } from '../../../classes/color/color';
 import { DrawingService } from '../drawing.service';
 
-export enum ToolSettings {
+export enum ToolSetting {
     Size = 1,
     Color,
 }
 
 export abstract class Tool {
     renderer: Renderer2;
-    toolSettings = new Map();
+    toolSettings = new Map<ToolSetting, number | Color>();
     isMouseDown = false;
 
     constructor(protected drawingService: DrawingService) {}

@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Tool, ToolSettings } from '../../../services/drawing/tools/tool';
+import { SidebarButton } from '../../../classes/sidebar-button/sidebar-button';
+import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
+import { ToolSetting } from '../../../services/drawing/tools/tool';
 
 @Component({
     selector: 'app-panel-settings',
@@ -7,6 +9,8 @@ import { Tool, ToolSettings } from '../../../services/drawing/tools/tool';
     styleUrls: ['./panel-settings.component.scss'],
 })
 export class PanelSettingsComponent {
-    ToolSettings = ToolSettings; // Make enum available to template
-    @Input() selectedTool: Tool;
+    ToolSetting = ToolSetting; // Make enum available to template
+    @Input() selectedButton: SidebarButton;
+
+    constructor(public toolHolderService: ToolHolderService) {}
 }

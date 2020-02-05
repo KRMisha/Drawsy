@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Color } from '../../../../classes/color/color';
 import { DrawingService } from '../../drawing.service';
-import { Tool, ToolSettings } from '../tool';
+import { Tool, ToolSetting } from '../tool';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolPencilService extends Tool {
     private path: SVGPathElement;
-    private pathString: string;
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.toolSettings.set(ToolSettings.Color, new Color(0, 0, 0));
-        this.toolSettings.set(ToolSettings.Size, 1);
+        this.toolSettings.set(ToolSetting.Color, new Color(0, 0, 0));
+        this.toolSettings.set(ToolSetting.Size, 1);
     }
 
     onMouseMove(event: MouseEvent): void {

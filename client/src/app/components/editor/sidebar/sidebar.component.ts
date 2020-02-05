@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
-import { tools } from '../../../classes/tools/tools';
+import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
-import { Tool } from '../../../services/drawing/tools/tool';
 import { GuideComponent } from '../../guide/guide.component';
 
 @Component({
@@ -11,16 +10,16 @@ import { GuideComponent } from '../../guide/guide.component';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
     buttons: SidebarButton[] = sidebarButtons;
-    tools: typeof Tool[] = tools;
 
     selectedButton: SidebarButton;
 
-    constructor(private toolSelectorService: ToolSelectorService, private dialog: MatDialog) {}
-
-    ngOnInit() {
+    constructor(private toolSelectorService: ToolSelectorService,
+                public toolHolderService: ToolHolderService,
+                private dialog: MatDialog) {
         this.selectedButton = this.buttons[0];
+        this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
     setSelectedTool(toolIndex: number): void {

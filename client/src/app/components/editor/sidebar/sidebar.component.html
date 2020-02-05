@@ -25,7 +25,7 @@
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings">
         <div>
             <app-panel-color></app-panel-color>
-            <!-- <app-panel-settings [selectedTool]="tools[this.selectedButton.toolIndex]"></app-panel-settings> -->
+            <app-panel-settings [selectedButton]="selectedButton"></app-panel-settings>
         </div>
     </mat-drawer>
 </mat-drawer-container>

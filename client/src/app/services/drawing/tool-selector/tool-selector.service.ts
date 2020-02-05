@@ -1,5 +1,5 @@
-import { Injectable, Injector, Renderer2 } from '@angular/core';
-import { tools } from '../../../classes/tools/tools';
+import { Injectable, Renderer2 } from '@angular/core';
+import { ToolHolderService } from '../tool-holder/tool-holder.service'
 import { Tool } from '../tools/tool';
 
 @Injectable({
@@ -9,9 +9,7 @@ export class ToolSelectorService {
     renderer: Renderer2;
     selectedTool: Tool;
 
-    constructor(private injector: Injector) {
-        // const token = new InjectionToken<Tool>(tools[0]);
-        this.selectedTool = this.injector.get(tools[0]);
+    constructor(private toolHolderService: ToolHolderService) {
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -46,8 +44,14 @@ export class ToolSelectorService {
         this.selectedTool.setMouseDown(isMouseDown);
     }
 
+    setRenderer(renderer: Renderer2) {
+        this.renderer = renderer;
+        for (const tool of this.toolHolderService.tools) {
+            tool.renderer = this.renderer;
+        }
+    }
+
     setSelectedTool(toolIndex: number): void {
-        this.selectedTool = this.injector.get(tools[toolIndex]);
-        this.selectedTool.renderer = this.renderer;
+        this.selectedTool = this.toolHolderService.tools[toolIndex];
     }
 }
