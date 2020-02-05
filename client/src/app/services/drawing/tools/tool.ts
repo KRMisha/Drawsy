@@ -3,7 +3,7 @@ import { Color } from '../../../classes/color/color';
 import { DrawingService } from '../drawing.service';
 
 export enum ToolSetting {
-    Size = 1,
+    Size,
     Color,
 }
 
