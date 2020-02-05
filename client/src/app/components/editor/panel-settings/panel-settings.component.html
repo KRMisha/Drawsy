@@ -15,7 +15,7 @@
     Confirmer
 </button>
 
-<app-color-picker [style.display]="displayColorPicker ? 'block' : 'none'" (colorChanged)="updateColor($event)"> </app-color-picker>
+<app-color-picker class="color-picker" [style.display]="displayColorPicker ? 'block' : 'none'" (colorChanged)="updateColor($event)"> </app-color-picker>
 
 <h1>{{ selectedButton.name }}</h1>
 

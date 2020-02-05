@@ -41,7 +41,6 @@ export class ColorFieldComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('penis');
         if (this.canvas !== undefined) {
             this.draw();
         }
