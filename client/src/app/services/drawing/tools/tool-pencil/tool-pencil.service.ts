@@ -16,6 +16,39 @@ export class ToolPencilService extends Tool {
         this.toolSettings.set(ToolSettings.Size, 1);
     }
 
+    onMouseMove(event: MouseEvent): void {
+        if (this.isMouseDown) {
+            const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
+            this.renderer.setAttribute(this.path, 'd', pathString);
+        }
+    }
+
+    onMouseDown(event: MouseEvent) {
+        this.path = this.createNewPath();
+
+        const pathString = this.getPathStartString(event.offsetX, event.offsetY);
+        this.renderer.setAttribute(this.path, 'd', pathString);
+        this.drawingService.addElement(this.path);
+    }
+
+    onEnter(event: MouseEvent): void {
+        if (this.isMouseDown) {
+            this.path = this.createNewPath();
+
+            const pathString = this.getPathStartString(event.offsetX, event.offsetY);
+            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.drawingService.addElement(this.path);
+        }
+    }
+
+    onLeave(event: MouseEvent): void {
+        if (this.isMouseDown) {
+            const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
+            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.isMouseDown = false;
+        }
+    }
+
     private getPathStartString(x: number, y: number): string {
         return 'M' + String(x) + ' ' + String(y) + ' ' + 'L' + String(x) + ' ' + String(y) + ' ';
     }
@@ -24,32 +57,13 @@ export class ToolPencilService extends Tool {
         return 'L' + String(x) + ' ' + String(y) + ' ';
     }
 
-    onMouseDown(event: MouseEvent) {
-        this.path = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(this.path, 'stroke', 'black');
-        this.renderer.setAttribute(this.path, 'fill', 'none');
-        this.renderer.setAttribute(this.path, 'stroke-width', '5');
-        this.renderer.setAttribute(this.path, 'stroke-linecap', 'round');
-        this.renderer.setAttribute(this.path, 'stroke-linejoin', 'round');
-
-        this.pathString = this.getPathStartString(event.offsetX, event.clientY);
-        this.renderer.setAttribute(this.path, 'd', this.pathString);
-        this.drawingService.addElement(this.path);
-    }
-
-    onClick(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.pathString += this.getPathLineString(event.clientX - event.offsetX, event.clientY);
-            this.renderer.setAttribute(this.path, 'd', this.pathString);
-            this.drawingService.addElement(this.path);
-        }
-    }
-
-    onLeave(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.pathString += this.getPathLineString(event.clientX - event.offsetX, event.clientY);
-            this.renderer.setAttribute(this.path, 'd', this.pathString);
-            this.drawingService.addElement(this.path);
-        }
+    private createNewPath(): SVGPathElement {
+        const path = this.renderer.createElement('path', 'svg');
+        this.renderer.setAttribute(path, 'stroke', 'black');
+        this.renderer.setAttribute(path, 'fill', 'none');
+        this.renderer.setAttribute(path, 'stroke-width', '5');
+        this.renderer.setAttribute(path, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
+        return path;
     }
 }

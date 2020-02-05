@@ -21,12 +21,13 @@ export class DrawingComponent {
     ) {
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.renderer = this.renderer;
-        this.drawingService.element = this.svg;
+        this.toolSelectorService.selectedTool.renderer = this.renderer;
         this.createSvg();
+        this.drawingService.element = this.svg;
     }
 
     @HostListener('mousemove', ['$event'])
-    onClick(event: MouseEvent): void {
+    onMouseMove(event: MouseEvent): void {
         this.toolSelectorService.onMouseMove(event);
     }
 
@@ -58,13 +59,14 @@ export class DrawingComponent {
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        this.toolSelectorService.setMouseDown(false);
+        if (event.button === leftClick) {
+            this.toolSelectorService.setMouseDown(false);
+        }
         this.toolSelectorService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
-        this.toolSelectorService.setMouseDown(false);
         this.toolSelectorService.onLeave(event);
     }
 
