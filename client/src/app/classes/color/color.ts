@@ -54,20 +54,41 @@ export class Color {
         }
     }
 
-    getRed(): number {
-        return this.red;
+    getHsv(): [number, number, number] {
+
+        const redPrime = this.red / MAX_COLOR_VALUE;
+        const greenPrime = this.green / MAX_COLOR_VALUE;
+        const bluePrime = this.blue / MAX_COLOR_VALUE;
+
+        const cMax = Math.max(redPrime, greenPrime, bluePrime);
+        const cMin = Math.min(redPrime, greenPrime, bluePrime);
+        const deltaC = cMax - cMin;
+
+        const angleValue = 60;
+
+        let hue: number;
+        if (cMax === redPrime) {
+            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
+        } else if (cMax === greenPrime) {
+            hue = angleValue * (((bluePrime - redPrime) / deltaC) + 2);
+        } else {
+            hue = angleValue * (((redPrime - greenPrime) / deltaC) + 4);
+        }
+
+        let saturation: number;
+        if (cMax === 0) {
+            saturation = 0;
+        } else {
+            saturation = deltaC / cMax;
+        }
+
+        const value = cMax;
+
+        return [hue, saturation, value];
     }
 
-    getGreen(): number {
-        return this.green;
-    }
-
-    getBlue(): number {
-        return this.blue;
-    }
-
-    getAlpha(): number {
-        return this.alpha;
+    getRbga(): [number, number, number, number] {
+        return [this.red, this.green, this.blue, this.alpha];
     }
 
     toRgbaString(): string {
