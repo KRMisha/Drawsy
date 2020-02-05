@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
 import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
@@ -15,9 +15,7 @@ export class SidebarComponent {
 
     selectedButton: SidebarButton;
 
-    constructor(private toolSelectorService: ToolSelectorService,
-                public toolHolderService: ToolHolderService,
-                private dialog: MatDialog) {
+    constructor(private toolSelectorService: ToolSelectorService, public toolHolderService: ToolHolderService, private dialog: MatDialog) {
         this.selectedButton = this.buttons[0];
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }

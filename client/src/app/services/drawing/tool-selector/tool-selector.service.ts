@@ -1,5 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { ToolHolderService } from '../tool-holder/tool-holder.service'
+import { ToolHolderService } from '../tool-holder/tool-holder.service';
 import { Tool } from '../tools/tool';
 
 @Injectable({
@@ -9,8 +9,7 @@ export class ToolSelectorService {
     renderer: Renderer2;
     selectedTool: Tool;
 
-    constructor(private toolHolderService: ToolHolderService) {
-    }
+    constructor(private toolHolderService: ToolHolderService) {}
 
     onMouseMove(event: MouseEvent): void {
         this.selectedTool.onMouseMove(event);

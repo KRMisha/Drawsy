@@ -20,7 +20,7 @@ export class DrawingComponent {
         private toolSelectorService: ToolSelectorService,
     ) {
         this.drawingService.renderer = this.renderer;
-        this.toolSelectorService.setRenderer(renderer)
+        this.toolSelectorService.setRenderer(renderer);
         this.createSvg();
         this.drawingService.element = this.svg;
     }
