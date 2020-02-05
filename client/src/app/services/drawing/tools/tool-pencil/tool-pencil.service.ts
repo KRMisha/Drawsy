@@ -11,7 +11,7 @@ export class ToolPencilService extends Tool {
 
     constructor(drawingService: DrawingService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Color, new Color(0, 0, 0, MAX_COLOR_VALUE));
+        this.toolSettings.set(ToolSetting.Color, new Color(0, 0, 0, 1));
         this.toolSettings.set(ToolSetting.Size, 1);
     }
 
