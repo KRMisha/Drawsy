@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CreateDrawingService } from 'src/app/services/create-drawing.service';
+import { CreateDrawingService } from 'src/app/services/create-drawing/data-sharer/create-drawing.service';
 import { Color } from '../../../classes/color/color';
 
 @Component({
