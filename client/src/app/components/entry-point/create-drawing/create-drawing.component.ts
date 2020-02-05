@@ -9,18 +9,18 @@ import { Color } from '../../../classes/color/color';
     styleUrls: ['./create-drawing.component.scss'],
 })
 export class CreateDrawingComponent {
-    private drawingWidth: number;
-    private drawingHeight: number;
-    private drawingColor: Color;
+    drawingWidth: number;
+    drawingHeight: number;
+    drawingColor: Color;
 
     constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: CreateDrawingService) {
         this.drawingService.changeColor(new Color(255, 255, 255, 1));
         this.drawingService.changeHeight(0); // TODO: set to window size
         this.drawingService.changeWidth(0); // TODO: set to window size
 
-        drawingService.width$.subscribe((width) => this.drawingWidth = width);
-        drawingService.height$.subscribe((height) => this.drawingHeight = height);
-        drawingService.color$.subscribe((color) => this.drawingColor = color);
+        drawingService.width$.subscribe(width => (this.drawingWidth = width));
+        drawingService.height$.subscribe(height => (this.drawingHeight = height));
+        drawingService.color$.subscribe(color => (this.drawingColor = color));
     }
 
     close(): void {
@@ -33,7 +33,7 @@ export class CreateDrawingComponent {
     }
 
     newWidth(width: number) {
-        //TODO: Sanitize input
+        // TODO: Sanitize input
         this.drawingService.changeWidth(width);
     }
 

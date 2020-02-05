@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color, MAX_COLOR_VALUE } from '../../../../classes/color/color';
+import { Color } from '../../../../classes/color/color';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
 
