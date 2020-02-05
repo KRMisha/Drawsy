@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
-import { PencilService } from '../../services/pencil/pencil.service';
+import { DrawingService } from 'src/app/services/drawing/drawing.service';
+import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
 const leftClick = 0;
 // const rightClick = 2;
@@ -10,12 +11,66 @@ const leftClick = 0;
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent {
-    private isMouseDown = false;
-    private pathString: string;
-    private svg: SVGElement = this.renderer.createElement('svg', 'svg');
-    private path: SVGPathElement;
+    private svg: SVGElement;
 
-    constructor(private renderer: Renderer2, private element: ElementRef, private pencilService: PencilService) {
+    constructor(
+        private renderer: Renderer2,
+        private element: ElementRef,
+        private drawingService: DrawingService,
+        private toolSelectorService: ToolSelectorService,
+    ) {
+        this.drawingService.renderer = this.renderer;
+        this.toolSelectorService.setRenderer(renderer);
+        this.createSvg();
+        this.drawingService.element = this.svg;
+    }
+
+    @HostListener('mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        this.toolSelectorService.onMouseMove(event);
+    }
+
+    @HostListener('mousedown', ['$event'])
+    onMouseDown(event: MouseEvent) {
+        if (event.button === leftClick) {
+            this.toolSelectorService.setMouseDown(true);
+        }
+        this.toolSelectorService.onMouseDown(event);
+    }
+
+    @HostListener('mouseup', ['$event'])
+    onMouseUp(event: MouseEvent) {
+        if (event.button === leftClick) {
+            this.toolSelectorService.setMouseDown(false);
+        }
+        this.toolSelectorService.onMouseUp(event);
+    }
+
+    @HostListener('keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent): void {
+        this.toolSelectorService.onKeyDown(event);
+    }
+
+    @HostListener('keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        this.toolSelectorService.onKeyUp(event);
+    }
+
+    @HostListener('mouseenter', ['$event'])
+    onEnter(event: MouseEvent): void {
+        if (event.button === leftClick) {
+            this.toolSelectorService.setMouseDown(false);
+        }
+        this.toolSelectorService.onEnter(event);
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    onLeave(event: MouseEvent): void {
+        this.toolSelectorService.onLeave(event);
+    }
+
+    private createSvg() {
+        this.svg = this.renderer.createElement('svg', 'svg');
         this.renderer.setAttribute(this.svg, 'version', '1.1');
         this.renderer.setAttribute(this.svg, 'baseProfile', 'full');
         this.renderer.setAttribute(this.svg, 'width', '100%');
@@ -23,54 +78,5 @@ export class DrawingComponent {
         this.renderer.setAttribute(this.svg, 'stroke', 'white');
         this.renderer.setAttribute(this.svg, 'version', 'http://www.w3.org/2000/svg');
         this.renderer.appendChild(this.element.nativeElement, this.svg);
-    }
-
-    @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
-        if (event.button === leftClick) {
-            this.isMouseDown = true;
-
-            this.path = this.renderer.createElement('path', 'svg');
-            this.renderer.setAttribute(this.path, 'stroke', 'black');
-            this.renderer.setAttribute(this.path, 'fill', 'none');
-            this.renderer.setAttribute(this.path, 'stroke-width', '5');
-            this.renderer.setAttribute(this.path, 'stroke-linecap', 'round');
-            this.renderer.setAttribute(this.path, 'stroke-linejoin', 'round');
-
-            this.pathString = this.pencilService.pathBegin(event.clientX - this.element.nativeElement.offsetLeft, event.clientY);
-
-            this.renderer.setAttribute(this.path, 'd', this.pathString);
-            this.renderer.appendChild(this.svg, this.path);
-        }
-    }
-
-    @HostListener('mouseup', ['$event'])
-    onMouseUp(event: MouseEvent) {
-        this.isMouseDown = false;
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onClick(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.pathString += this.pencilService.pathLine(event.clientX - this.element.nativeElement.offsetLeft, event.clientY);
-
-            this.renderer.setAttribute(this.path, 'd', this.pathString);
-            this.renderer.appendChild(this.svg, this.path);
-        }
-    }
-
-    @HostListener('mouseleave', ['$event'])
-    onLeave(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.pathString += this.pencilService.pathLine(event.clientX - this.element.nativeElement.offsetLeft, event.clientY);
-            this.renderer.setAttribute(this.path, 'd', this.pathString);
-            this.renderer.appendChild(this.svg, this.path);
-            this.isMouseDown = false;
-        }
-    }
-
-    @HostListener('mouseenter', ['$event'])
-    onEnter(event: MouseEvent): void {
-        this.isMouseDown = false;
     }
 }

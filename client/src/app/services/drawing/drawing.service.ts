@@ -1,21 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Shape } from 'src/app/classes/shapes/shape';
+import { Injectable, Renderer2 } from '@angular/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingService {
-    private shapes: Shape[];
+    renderer: Renderer2;
+    element: SVGElement;
 
-    constructor() {
-        this.shapes = [];
-    }
-
-    addShape(shape: Shape): void {
-        this.shapes.push(shape);
-    }
-
-    getShapes(): Shape[] {
-        return this.shapes;
+    addElement(element: SVGElement): void {
+        this.renderer.appendChild(this.element, element);
     }
 }

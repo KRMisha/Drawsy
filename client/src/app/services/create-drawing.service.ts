@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { Color } from '../classes/color/color';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class CreateDrawingService {
     private height = new Subject<number>();
@@ -11,7 +11,7 @@ export class CreateDrawingService {
     private color = new Subject<Color>();
 
     height$ = this.height.asObservable();
-    width$ = this. width.asObservable();
+    width$ = this.width.asObservable();
     color$ = this.color.asObservable();
 
     changeWidth(width: number) {
