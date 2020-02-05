@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges,
+         Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 enum ColorString {
@@ -13,7 +14,7 @@ enum ColorString {
     templateUrl: './color-field.component.html',
     styleUrls: ['./color-field.component.scss'],
 })
-export class PanelColorComponent implements AfterViewInit, OnChanges {
+export class ColorFieldComponent implements AfterViewInit, OnChanges {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     @Output() saturationValueChange: EventEmitter<[number, number]> = new EventEmitter();
@@ -41,6 +42,7 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        console.log('penis');
         if (this.canvas !== undefined) {
             this.draw();
         }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ColorService {
     private MAX_RECENT_COLORS = 10;

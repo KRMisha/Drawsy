@@ -17,6 +17,6 @@
         <app-color-container [color]="getLastColors()[9]"></app-color-container>
     </div>
 
-    <app-color-field (saturationValueChange)="setSaturationAndValue($event)" [hue]="hue"></app-color-field>
+    <app-color-field [hue]="hue" (saturationValueChange)="setSaturationAndValue($event)"></app-color-field>
     <app-color-slider (hueChange)="setHue($event)"></app-color-slider>
 </div>

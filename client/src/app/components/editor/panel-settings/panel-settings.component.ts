@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Button } from 'src/app/classes/button/button-data';
 import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
-import { ToolSettings } from '../../classes/tools/tool';
+import { ToolSettings } from '../../../classes/tools/tool';
 
 @Component({
     selector: 'app-panel-settings',
