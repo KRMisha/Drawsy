@@ -17,9 +17,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './components/app/app.component';
+import { ColorContainerComponent } from './components/color-picker/color-container/color-container.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { ColorSliderComponent } from './components/color-picker/color-slider/color-slider.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
-import { PanelColorComponent } from './components/editor/panel-color/panel-color.component';
+import { ColorFieldComponent } from './components/color-picker/color-field/color-field.component'
 import { PanelSettingsComponent } from './components/editor/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/editor/sidebar/sidebar.component';
 import { CreateDrawingComponent } from './components/entry-point/create-drawing/create-drawing.component';
@@ -40,7 +43,6 @@ import { GuideComponent } from './components/guide/guide.component';
     declarations: [
         AppComponent,
         DrawingComponent,
-        PanelColorComponent,
         PanelSettingsComponent,
         EntryPointComponent,
         EditorComponent,
@@ -57,6 +59,10 @@ import { GuideComponent } from './components/guide/guide.component';
         GuideExportDrawingComponent,
         GuideSaveDrawingComponent,
         CreateDrawingComponent,
+        ColorPickerComponent,
+        ColorSliderComponent,
+        ColorContainerComponent,
+        ColorFieldComponent,
     ],
     imports: [
         BrowserModule,

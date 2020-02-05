@@ -1,0 +1,22 @@
+
+<h2>Couleurs récentes</h2>
+
+<div style="margin-left:14px">
+    <div class="recent-colors">
+        <app-color-container [color]="getLastColors()[0]"></app-color-container>
+        <app-color-container [color]="getLastColors()[1]"></app-color-container>
+        <app-color-container [color]="getLastColors()[2]"></app-color-container>
+        <app-color-container [color]="getLastColors()[3]"></app-color-container>
+        <app-color-container [color]="getLastColors()[4]"></app-color-container>
+    </div>
+    <div class="recent-colors">
+        <app-color-container [color]="getLastColors()[5]"></app-color-container>
+        <app-color-container [color]="getLastColors()[6]"></app-color-container>
+        <app-color-container [color]="getLastColors()[7]"></app-color-container>
+        <app-color-container [color]="getLastColors()[8]"></app-color-container>
+        <app-color-container [color]="getLastColors()[9]"></app-color-container>
+    </div>
+
+    <app-color-field [hue]="hue" (saturationValueChange)="setSaturationAndValue($event)"></app-color-field>
+    <app-color-slider (hueChange)="setHue($event)"></app-color-slider>
+</div>

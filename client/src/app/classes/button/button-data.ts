@@ -16,4 +16,5 @@ export const BUTTONS: Button[] = [
     { name: 'Pipette', icon: 'colorize', tool: new ToolTest() },
     { name: 'Remplisseur', icon: 'opacity', tool: new ToolTest() },
     { name: 'Aerosol', icon: 'blur_on', tool: new ToolTest() },
+    { name: 'Sam', icon: 'colorize', tool: new ToolTest() },
 ];
