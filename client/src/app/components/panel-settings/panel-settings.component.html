@@ -1,4 +1,22 @@
-<app-color-picker></app-color-picker>
+<h1>Couleur</h1>
+
+<div class="colors">
+    <div>
+        Primaire
+        <app-color-container (click)="selectPrimaryColor()" [color]="getPrimaryColor()"></app-color-container>
+    </div>
+    <div>
+        Secondaire
+        <app-color-container (click)="selectSecondaryColor()" [color]="getSecondaryColor()"></app-color-container>
+    </div>
+</div>
+
+<div [style.display]="displayColorPicker ? 'block': 'none'" (click)="confirmColor()">
+    Confirmer
+</div>
+
+<app-color-picker [style.display]="displayColorPicker ? 'block': 'none'" (colorChanged)="updateColor($event)">
+</app-color-picker>
 
 <h1>{{ selectedButton.name }}</h1>
 

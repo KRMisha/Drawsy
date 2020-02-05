@@ -100,13 +100,11 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     onMouseLeave(event: MouseEvent): void {
         this.isMouseInside = false;
         this.isMouseDown = false;
-        console.log('out')
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.isMouseInside = true;
-        console.log('in')
     }
 
     updateColor(event: MouseEvent): void {
@@ -121,5 +119,9 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
         this.mouseY = event.offsetY;
         this.draw();
         this.saturationValueChange.emit([this.saturation, this.value]);
+    }
+
+    confirmColor(): void {
+
     }
 }
