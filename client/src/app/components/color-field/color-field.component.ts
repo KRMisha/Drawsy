@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, HostListener, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 enum ColorString {
@@ -15,6 +15,8 @@ enum ColorString {
 })
 export class PanelColorComponent implements AfterViewInit, OnChanges {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
+
+    @Output() saturationValueChange: EventEmitter<[number, number]> = new EventEmitter();
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
@@ -98,11 +100,13 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
     onMouseLeave(event: MouseEvent): void {
         this.isMouseInside = false;
         this.isMouseDown = false;
+        console.log('out')
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.isMouseInside = true;
+        console.log('in')
     }
 
     updateColor(event: MouseEvent): void {
@@ -116,5 +120,6 @@ export class PanelColorComponent implements AfterViewInit, OnChanges {
         this.mouseX = event.offsetX;
         this.mouseY = event.offsetY;
         this.draw();
+        this.saturationValueChange.emit([this.saturation, this.value]);
     }
 }
