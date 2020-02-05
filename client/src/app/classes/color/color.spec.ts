@@ -3,7 +3,9 @@ import { Color } from './color';
 describe('Color', () => {
     let color: Color;
 
-    beforeEach(() => { color = new Color(0, 0, 0, 0); });
+    beforeEach(() => {
+        color = new Color(0, 0, 0, 0);
+    });
 
     it('#setRgb should be min 0', () => {
         color.setRgb(-1, -1, -1);
@@ -40,5 +42,4 @@ describe('Color', () => {
         color.setAlpha(10);
         expect(color.getAlpha).toBe(1);
     });
-
 });

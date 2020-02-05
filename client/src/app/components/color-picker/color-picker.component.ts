@@ -5,9 +5,8 @@ import { ColorService } from 'src/app/services/color/color.service';
 @Component({
     selector: 'app-color-picker',
     templateUrl: './color-picker.component.html',
-    styleUrls: ['./color-picker.component.scss']
+    styleUrls: ['./color-picker.component.scss'],
 })
-
 export class ColorPickerComponent {
     hue = 0.0;
     saturation = 0.0;
@@ -15,8 +14,7 @@ export class ColorPickerComponent {
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
 
-    constructor(private colorService: ColorService) {
-    }
+    constructor(private colorService: ColorService) {}
 
     private getColor(): Color {
         const color = new Color(0, 0, 0, 1);

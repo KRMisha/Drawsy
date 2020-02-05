@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges,
-         Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 enum ColorString {
@@ -110,8 +109,7 @@ export class ColorFieldComponent implements AfterViewInit, OnChanges {
     }
 
     updateColor(event: MouseEvent): void {
-        if (this.isMouseDown === false || this.isMouseInside === false
-            || event.offsetY >= this.canvas.height) {
+        if (this.isMouseDown === false || this.isMouseInside === false || event.offsetY >= this.canvas.height) {
             return;
         }
 
@@ -123,7 +121,5 @@ export class ColorFieldComponent implements AfterViewInit, OnChanges {
         this.saturationValueChange.emit([this.saturation, this.value]);
     }
 
-    confirmColor(): void {
-
-    }
+    confirmColor(): void {}
 }

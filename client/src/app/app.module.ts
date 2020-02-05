@@ -22,7 +22,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
 import { ColorSliderComponent } from './components/color-picker/color-slider/color-slider.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
-import { ColorFieldComponent } from './components/color-picker/color-field/color-field.component'
+import { ColorFieldComponent } from './components/color-picker/color-field/color-field.component';
 import { PanelSettingsComponent } from './components/editor/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/editor/sidebar/sidebar.component';
 import { CreateDrawingComponent } from './components/entry-point/create-drawing/create-drawing.component';

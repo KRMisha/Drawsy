@@ -11,12 +11,11 @@
     </div>
 </div>
 
-<div [style.display]="displayColorPicker ? 'block': 'none'" (click)="confirmColor()">
+<button mat-raised-button [style.display]="displayColorPicker ? 'block' : 'none'" (click)="confirmColor()">
     Confirmer
-</div>
+</button>
 
-<app-color-picker [style.display]="displayColorPicker ? 'block': 'none'" (colorChanged)="updateColor($event)">
-</app-color-picker>
+<app-color-picker [style.display]="displayColorPicker ? 'block' : 'none'" (colorChanged)="updateColor($event)"> </app-color-picker>
 
 <h1>{{ selectedButton.name }}</h1>
 

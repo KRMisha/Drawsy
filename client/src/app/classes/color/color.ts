@@ -79,8 +79,7 @@ export class Color {
     }
 
     equals(color: Color): boolean {
-        return this.red === color.red && this.green === color.green
-            && this.blue === color.blue;
+        return this.red === color.red && this.green === color.green && this.blue === color.blue;
     }
 
     private setNormalizedColor(red: number, green: number, blue: number) {

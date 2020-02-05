@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
-import { Color, MAX_HUE} from 'src/app/classes/color/color';
+import { Color, MAX_HUE } from 'src/app/classes/color/color';
 
 @Component({
-  selector: 'app-color-slider',
-  templateUrl: './color-slider.component.html',
-  styleUrls: ['./color-slider.component.scss']
+    selector: 'app-color-slider',
+    templateUrl: './color-slider.component.html',
+    styleUrls: ['./color-slider.component.scss'],
 })
 export class ColorSliderComponent implements AfterViewInit {
     @Output() hueChange: EventEmitter<number> = new EventEmitter();
@@ -25,7 +25,7 @@ export class ColorSliderComponent implements AfterViewInit {
         this.canvas = this.hueCanvas.nativeElement;
         this.canvas.width = 250;
         this.canvas.height = 21;
-        this.draw()
+        this.draw();
     }
 
     draw(): void {
@@ -87,11 +87,11 @@ export class ColorSliderComponent implements AfterViewInit {
 
     update(event: MouseEvent): void {
         if (this.isMouseDown === false || this.isMouseInside === false) {
-            return
+            return;
         }
 
         this.mouseX = event.offsetX;
-        this.hue = this.mouseX / this.canvas.width * MAX_HUE;
+        this.hue = (this.mouseX / this.canvas.width) * MAX_HUE;
         this.draw();
         this.hueChange.emit(this.hue);
     }
