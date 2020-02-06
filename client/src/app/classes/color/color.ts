@@ -75,6 +75,10 @@ export class Color {
             hue = angleValue * (((redPrime - greenPrime) / deltaC) + 4);
         }
 
+        if (hue < 0) {
+            hue += 360;
+        }
+
         let saturation: number;
         if (cMax === 0) {
             saturation = 0;

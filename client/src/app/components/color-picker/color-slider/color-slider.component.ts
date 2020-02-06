@@ -8,7 +8,6 @@ import { Color, MAX_HUE } from 'src/app/classes/color/color';
 })
 export class ColorSliderComponent implements AfterViewInit {
     @Output() hueChange: EventEmitter<number> = new EventEmitter();
-
     @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;

@@ -11,15 +11,25 @@
     </div>
 </div>
 
-<button mat-raised-button (click)="swapColors()">
-    Swap couleurs
-</button>
 
-<button mat-raised-button [style.display]="displayColorPicker ? 'block' : 'none'" (click)="confirmColor()">
-    Confirmer
-</button>
+<div class="color-picker">
 
-<app-color-picker class="color-picker" [style.display]="displayColorPicker ? 'block' : 'none'" (colorChanged)="updateColor($event)"> </app-color-picker>
+    <div class="color-buttons">
+        <button mat-raised-button (click)="swapColors()">
+            Swap couleurs
+        </button>
+        <button mat-raised-button [style.display]="displayColorPicker ? 'block' : 'none'" (click)="confirmColor()">
+            Confirmer
+        </button>
+    </div>
+    
+    <app-color-picker
+        (colorChanged)="updateColor($event)"
+        (previousColorSelected)="displayColorPicker=false"
+        [displayColorPicker]="displayColorPicker"
+        [colorToDisplay]="color">
+    </app-color-picker>
+</div>
 
 <h1>{{ selectedButton.name }}</h1>
 
