@@ -102,13 +102,15 @@ export class ColorFieldComponent implements AfterViewInit {
         this.context.stroke(circle);
     }
 
-    @HostListener('mousedown', ['$event'])
+    @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.isMouseDown = true;
-        this.updateColor(event);
+        if (this.isMouseInside) {
+            this.isMouseDown = true;
+            this.updateColor(event);
+        }
     }
 
-    @HostListener('mouseup', ['$event'])
+    @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.isMouseDown = false;
     }
@@ -121,7 +123,6 @@ export class ColorFieldComponent implements AfterViewInit {
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
         this.isMouseInside = false;
-        this.isMouseDown = false;
     }
 
     @HostListener('mouseenter', ['$event'])
