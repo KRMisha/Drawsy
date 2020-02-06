@@ -18,8 +18,17 @@ export class ToolRectangleService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown) {
-            this.renderer.setAttribute(this.rectangle, 'width', `${event.offsetX - this.rectangle.getBBox().x}`);
-            this.renderer.setAttribute(this.rectangle, 'height', `${event.offsetY - this.rectangle.getBBox().y}`);
+            if (event.shiftKey) {
+              const highestValue = Math.max(event.offsetX - this.rectangle.getBBox().x,
+                                          event.offsetY - this.rectangle.getBBox().y)
+
+              this.renderer.setAttribute(this.rectangle, 'width', `${highestValue}`);
+              this.renderer.setAttribute(this.rectangle, 'height', `${highestValue}`);
+            }
+            else {
+                this.renderer.setAttribute(this.rectangle, 'width', `${event.offsetX - this.rectangle.getBBox().x}`);
+                this.renderer.setAttribute(this.rectangle, 'height', `${event.offsetY - this.rectangle.getBBox().y}`);
+            }
         }
     }
 
