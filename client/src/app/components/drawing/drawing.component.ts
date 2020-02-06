@@ -34,7 +34,7 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (event.button === leftClick) {
             this.toolSelectorService.setMouseDown(true);
         }
@@ -42,19 +42,24 @@ export class DrawingComponent implements AfterViewInit {
     }
 
     @HostListener('mouseup', ['$event'])
-    onMouseUp(event: MouseEvent) {
+    onMouseUp(event: MouseEvent): void {
         if (event.button === leftClick) {
             this.toolSelectorService.setMouseDown(false);
         }
         this.toolSelectorService.onMouseUp(event);
     }
 
-    @HostListener('keydown', ['$event'])
+    @HostListener('dblclick', ['$event'])
+    onMouseDoubleClick(event: MouseEvent): void {
+        this.toolSelectorService.onMouseDoubleClick(event);
+    }
+
+    @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectorService.onKeyDown(event);
     }
 
-    @HostListener('keyup', ['$event'])
+    @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
         this.toolSelectorService.onKeyUp(event);
     }

@@ -23,6 +23,10 @@ export class ToolSelectorService {
         this.selectedTool.onMouseUp(event);
     }
 
+    onMouseDoubleClick(event: MouseEvent): void {
+        this.selectedTool.onMouseDoubleClick(event);
+    }
+
     onKeyDown(event: KeyboardEvent): void {
         this.selectedTool.onKeyDown(event);
     }
