@@ -26,7 +26,8 @@
     <app-color-picker
         (colorChanged)="updateColor($event)"
         (previousColorSelected)="displayColorPicker=false"
-        [displayColorPicker]="displayColorPicker">
+        [displayColorPicker]="displayColorPicker"
+        [setPaletteColor]="getSelectedColor()">
     </app-color-picker>
 </div>
 
