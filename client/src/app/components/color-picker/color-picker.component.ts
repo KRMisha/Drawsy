@@ -18,7 +18,7 @@ export class ColorPickerComponent {
     value = 0.0;
     hexString = '000000';
 
-    @Input() displayColorPicker = false;
+    @Input() displayColorPicker = true;
     @Input()
     set setPaletteColor(color: Color) {
         const hsv = color.getHsv();
