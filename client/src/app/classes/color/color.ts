@@ -54,6 +54,14 @@ export class Color {
         }
     }
 
+    setHex(hex: string) {
+        hex = hex.replace('#', '');
+        const red = parseInt(hex.substring(0, 2), 16);
+        const green = parseInt(hex.substring(2, 4), 16);
+        const blue = parseInt(hex.substring(4, 6), 16);
+        this.setRgb(red, green, blue);
+    }
+
     getHsv(): [number, number, number] {
 
         const redPrime = this.red / MAX_COLOR_VALUE;
@@ -89,6 +97,15 @@ export class Color {
         const value = cMax;
 
         return [hue, saturation, value];
+    }
+
+    private componentToHex(component: number) {
+        const hex = component.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    getHex(): string {
+        return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
     }
 
     getRbga(): [number, number, number, number] {
