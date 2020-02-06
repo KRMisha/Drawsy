@@ -110,7 +110,7 @@ export class Color {
         return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
     }
 
-    getRbga(): [number, number, number, number] {
+    getRgba(): [number, number, number, number] {
         return [this.red, this.green, this.blue, this.alpha];
     }
 

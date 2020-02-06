@@ -7,40 +7,23 @@ describe('Color', () => {
         color = new Color(0, 0, 0, 0);
     });
 
-    it('#setRgb should be min 0', () => {
+    it('#setRgb and #setAlpha should set to min 0', () => {
         color.setRgb(-1, -1, -1);
-        expect(color.getRed()).toEqual(0);
-        expect(color.getGreen()).toEqual(0);
-        expect(color.getBlue()).toEqual(0);
-    });
-
-    it('#setRgb should modify the value correctly', () => {
-        color.setRgb(10, 20, 30);
-        expect(color.getRed()).toEqual(10);
-        expect(color.getGreen()).toEqual(20);
-        expect(color.getBlue()).toEqual(30);
-    });
-
-    it('#setRgb should be max 255', () => {
-        color.setRgb(300, 300, 300);
-        expect(color.getRed()).toEqual(255);
-        expect(color.getGreen()).toEqual(255);
-        expect(color.getBlue()).toEqual(255);
-    });
-
-    it('#setAlpha should be min 0', () => {
         color.setAlpha(-1);
-        expect(color.getAlpha()).toEqual(0);
+        expect(color.getRgba()).toEqual([0, 0, 0, 0]);
     });
 
-    it('#setAlpha should modify the value correctly', () => {
-        color.setAlpha(0.3);
-        expect(color.getAlpha()).toEqual(0.3);
+    it('#setRgb and #setAlpha should modify the value correctly', () => {
+        color.setRgb(10, 20, 30);
+        color.setAlpha(0.2);
+        expect(color.getRgba()).toEqual([10, 20, 30, 0.2]);
     });
 
-    it('#setAlpha should be max 1', () => {
+    it('rgb should have a max value of 255 and alpha of 1', () => {
+        color.setRgb(300, 300, 300);
         color.setAlpha(10);
-        expect(color.getAlpha()).toEqual(1);
+        expect(color.getRgba()).toEqual([255, 255, 255, 1]);
+
     });
 
     it('#setNormalized Color should normalize on 255', () => {
