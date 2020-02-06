@@ -11,6 +11,10 @@
     </div>
 </div>
 
+<button mat-raised-button (click)="swapColors()">
+    Swap couleurs
+</button>
+
 <button mat-raised-button [style.display]="displayColorPicker ? 'block' : 'none'" (click)="confirmColor()">
     Confirmer
 </button>

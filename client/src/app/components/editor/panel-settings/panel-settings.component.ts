@@ -51,4 +51,8 @@ export class PanelSettingsComponent {
         }
         this.displayColorPicker = false;
     }
+
+    swapColors(): void {
+        this.colorService.swapPrimaryAndSecondaryColors();
+    }
 }
