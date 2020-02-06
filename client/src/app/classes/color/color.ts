@@ -54,20 +54,64 @@ export class Color {
         }
     }
 
-    getRed(): number {
-        return this.red;
+    setHex(hex: string) {
+        hex = hex.replace('#', '');
+        const red = parseInt(hex.substring(0, 2), 16);
+        const green = parseInt(hex.substring(2, 4), 16);
+        const blue = parseInt(hex.substring(4, 6), 16);
+        this.setRgb(red, green, blue);
     }
 
-    getGreen(): number {
-        return this.green;
+    getHsv(): [number, number, number] {
+
+        const redPrime = this.red / MAX_COLOR_VALUE;
+        const greenPrime = this.green / MAX_COLOR_VALUE;
+        const bluePrime = this.blue / MAX_COLOR_VALUE;
+
+        const cMax = Math.max(redPrime, greenPrime, bluePrime);
+        const cMin = Math.min(redPrime, greenPrime, bluePrime);
+        const deltaC = cMax - cMin;
+
+        const angleValue = 60;
+
+        let hue: number;
+        if (deltaC === 0) {
+            hue = 0;
+        } else if (cMax === redPrime) {
+            hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
+        } else if (cMax === greenPrime) {
+            hue = angleValue * (((bluePrime - redPrime) / deltaC) + 2);
+        } else {
+            hue = angleValue * (((redPrime - greenPrime) / deltaC) + 4);
+        }
+
+        if (hue < 0) {
+            hue += 360;
+        }
+
+        let saturation: number;
+        if (cMax === 0) {
+            saturation = 0;
+        } else {
+            saturation = deltaC / cMax;
+        }
+
+        const value = cMax;
+
+        return [hue, saturation, value];
     }
 
-    getBlue(): number {
-        return this.blue;
+    private componentToHex(component: number) {
+        const hex = Math.round(component).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
     }
 
-    getAlpha(): number {
-        return this.alpha;
+    getHex(): string {
+        return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
+    }
+
+    getRbga(): [number, number, number, number] {
+        return [this.red, this.green, this.blue, this.alpha];
     }
 
     toRgbaString(): string {

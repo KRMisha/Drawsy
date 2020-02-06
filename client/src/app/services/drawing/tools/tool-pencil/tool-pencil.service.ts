@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ColorService } from 'src/app/services/color/color.service';
 import { Color } from '../../../../classes/color/color';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
@@ -9,7 +10,7 @@ import { Tool, ToolSetting } from '../tool';
 export class ToolPencilService extends Tool {
     private path: SVGPathElement;
 
-    constructor(drawingService: DrawingService) {
+    constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Color, new Color(0, 0, 0, 1));
         this.toolSettings.set(ToolSetting.Size, 1);
@@ -58,7 +59,7 @@ export class ToolPencilService extends Tool {
 
     private createNewPath(): SVGPathElement {
         const path = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(path, 'stroke', 'black');
+        this.renderer.setAttribute(path, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');

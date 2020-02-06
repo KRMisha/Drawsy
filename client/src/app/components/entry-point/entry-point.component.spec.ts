@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AppModule } from 'src/app/app.module';
 import { EntryPointComponent } from './entry-point.component';
+
 
 describe('EntryPointComponent', () => {
     let component: EntryPointComponent;
@@ -8,7 +10,7 @@ describe('EntryPointComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [EntryPointComponent],
+            declarations: [EntryPointComponent, AppModule],
         }).compileComponents();
     }));
 

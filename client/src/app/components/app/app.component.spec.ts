@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
+import { AppModule } from 'src/app/app.module';
 import { IndexService } from '../../services/index/index.service';
 import { AppComponent } from './app.component';
 import SpyObj = jasmine.SpyObj;
@@ -17,7 +18,7 @@ describe('AppComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, HttpClientModule],
-            declarations: [AppComponent],
+            declarations: [AppModule],
             providers: [{ provide: IndexService, useValue: indexServiceSpy }],
         });
     }));

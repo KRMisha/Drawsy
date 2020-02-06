@@ -41,6 +41,7 @@ export class PanelSettingsComponent {
 
     updateColor(color: Color): void {
         this.color = color;
+        console.log(color);
     }
 
     confirmColor(): void {
@@ -50,5 +51,17 @@ export class PanelSettingsComponent {
             this.colorService.setSecondaryColor(this.color);
         }
         this.displayColorPicker = false;
+    }
+
+    swapColors(): void {
+        this.colorService.swapPrimaryAndSecondaryColors();
+    }
+
+    getSelectedColor(): Color {
+        if (this.isPrimarySelected) {
+            return this.colorService.getPrimaryColor();
+        } else {
+            return this.colorService.getSecondaryColor();
+        }
     }
 }

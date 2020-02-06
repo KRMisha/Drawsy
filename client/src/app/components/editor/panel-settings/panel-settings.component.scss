@@ -36,7 +36,19 @@ input {
 
 .colors {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     color: white;
     vertical-align: middle;
+    width: 250px;
+    margin-left: 13px;
+}
+
+.color-picker {
+    margin-left: 13px;
+}
+
+.color-buttons {
+    width: 250px;
+    display:flex;
+    justify-content: space-between;
 }
