@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
@@ -10,19 +10,22 @@ const leftClick = 0;
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent {
-    private svg: SVGElement;
+export class DrawingComponent implements AfterViewInit {
+    @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
+    width = '100%';
+    height = '100%';
+    backgroundColor = 'rgb(255, 255, 255)';
 
     constructor(
         private renderer: Renderer2,
-        private element: ElementRef,
         private drawingService: DrawingService,
         private toolSelectorService: ToolSelectorService,
-    ) {
+    ) {}
+
+    ngAfterViewInit() {
         this.drawingService.renderer = this.renderer;
-        this.toolSelectorService.setRenderer(renderer);
-        this.createSvg();
-        this.drawingService.element = this.svg;
+        this.toolSelectorService.setRenderer(this.renderer);
+        this.drawingService.element = this.svg.nativeElement;
     }
 
     @HostListener('mousemove', ['$event'])
@@ -67,16 +70,5 @@ export class DrawingComponent {
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
         this.toolSelectorService.onLeave(event);
-    }
-
-    private createSvg() {
-        this.svg = this.renderer.createElement('svg', 'svg');
-        this.renderer.setAttribute(this.svg, 'version', '1.1');
-        this.renderer.setAttribute(this.svg, 'baseProfile', 'full');
-        this.renderer.setAttribute(this.svg, 'width', '100%');
-        this.renderer.setAttribute(this.svg, 'height', '100%');
-        this.renderer.setAttribute(this.svg, 'stroke', 'white');
-        this.renderer.setAttribute(this.svg, 'version', 'http://www.w3.org/2000/svg');
-        this.renderer.appendChild(this.element.nativeElement, this.svg);
     }
 }

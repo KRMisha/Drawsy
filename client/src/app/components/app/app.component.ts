@@ -10,6 +10,6 @@ export class AppComponent {
 
     @HostListener('contextmenu', ['$event'])
     onRightClick(event: MouseEvent) {
-    event.preventDefault();
+        event.preventDefault();
     }
 }
