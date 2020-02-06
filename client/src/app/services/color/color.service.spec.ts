@@ -3,10 +3,15 @@ import { TestBed } from '@angular/core/testing';
 import { ColorService } from './color.service';
 
 describe('ColorService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
 
-    it('should be created', () => {
-        const service: ColorService = TestBed.get(ColorService);
-        expect(service).toBeTruthy();
-    });
+  let service: ColorService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({})
+    service = TestBed.get(ColorService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
 });
