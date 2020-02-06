@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CreateDrawingService } from 'src/app/services/create-drawing/data-sharer/create-drawing.service';
 import { Color } from '../../classes/color/color';
+import { ColorService } from 'src/app/services/color/color.service';
 
 @Component({
     selector: 'app-create-drawing',
@@ -11,16 +12,18 @@ import { Color } from '../../classes/color/color';
 export class CreateDrawingComponent {
     drawingWidth: number;
     drawingHeight: number;
-    drawingColor: Color;
+    drawingColor = new Color(255, 255, 255, 1);
 
-    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: CreateDrawingService) {
-        this.drawingService.changeColor(new Color(255, 255, 255, 1));
+    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>,
+                private drawingService: CreateDrawingService,
+                private colorService: ColorService) {
+        // this.drawingService.changeColor(new Color(255, 255, 255, 1));
         this.drawingService.changeHeight(0); // TODO: set to window size
         this.drawingService.changeWidth(0); // TODO: set to window size
 
-        drawingService.width$.subscribe(width => (this.drawingWidth = width));
-        drawingService.height$.subscribe(height => (this.drawingHeight = height));
-        drawingService.color$.subscribe(color => (this.drawingColor = color));
+        drawingService.width$.subscribe((width) => (this.drawingWidth = width));
+        drawingService.height$.subscribe((height) => (this.drawingHeight = height));
+        // drawingService.color$.subscribe(color => (this.drawingColor = color));
     }
 
     close(): void {
@@ -37,12 +40,13 @@ export class CreateDrawingComponent {
         this.drawingWidth = width;
     }
 
-    newColor(color: Color) {
+    updateColor(color: Color) {
         this.drawingColor = color;
     }
 
     sendData() {
-        this.drawingService.changeColor(this.drawingColor);
+        // this.drawingService.changeColor(this.drawingColor);
+        this.colorService.setBackroundColor(this.drawingColor);
         this.drawingService.changeHeight(this.drawingHeight);
         this.drawingService.changeWidth(this.drawingWidth);
         this.close();
