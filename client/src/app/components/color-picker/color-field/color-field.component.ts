@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
 enum ColorString {
@@ -8,12 +8,15 @@ enum ColorString {
     TransparentBlack = 'rgba(0, 0, 0, 0)',
 }
 
+const canvasWidth = 250;
+const canvasHeight = 160;
+
 @Component({
     selector: 'app-color-field',
     templateUrl: './color-field.component.html',
     styleUrls: ['./color-field.component.scss'],
 })
-export class ColorFieldComponent implements AfterViewInit, OnChanges {
+export class ColorFieldComponent implements AfterViewInit {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     @Output() saturationValueChange: EventEmitter<[number, number]> = new EventEmitter();
@@ -21,13 +24,38 @@ export class ColorFieldComponent implements AfterViewInit, OnChanges {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    @Input() hue = 0.0;
+    private hue = 0.0;
+    @Input()
+    set setHue(hue: number) {
+        this.hue = hue;
+        if (this.canvas !== undefined) {
+            this.draw();
+        }
+    }
+
     private saturation = 0.0;
+    @Input()
+    set setSaturation(saturation: number) {
+        this.saturation = saturation;
+        if (this.canvas !== undefined) {
+            this.mouseX = saturation * this.canvas.width;
+            this.draw();
+        }
+    }
+
     private value = 1.0;
+    @Input()
+    set setValue(value: number) {
+        this.value = value;
+        if (this.canvas !== undefined) {
+            this.mouseY = (1 - value) * this.canvas.height;
+            this.draw();
+        }
+    }
 
     private isMouseDown = false;
     private mouseX = 0;
-    private mouseY = 0;
+    private mouseY = canvasHeight;
     private isMouseInside = false;
 
     private color = new Color(0, 0, 0, 1);
@@ -35,15 +63,9 @@ export class ColorFieldComponent implements AfterViewInit, OnChanges {
     ngAfterViewInit(): void {
         this.context = this.saturationValueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas = this.saturationValueCanvas.nativeElement;
-        this.canvas.width = 250;
-        this.canvas.height = 160;
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
         this.draw();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (this.canvas !== undefined) {
-            this.draw();
-        }
     }
 
     draw(): void {
