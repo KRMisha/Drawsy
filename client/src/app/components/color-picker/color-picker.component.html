@@ -18,6 +18,19 @@
         <app-color-field [setHue]="hue" [setSaturation]="saturation" [setValue]="value" (saturationValueChange)="setSaturationAndValue($event)"></app-color-field>
         <app-color-slider [setHue]="hue" (hueChange)="setHue($event)"></app-color-slider>
 
+        <div class="alpha-slider">
+            <div class="alpha-text">
+                Alpha:
+            </div>
+            <mat-slider
+                min="0.0"
+                max="1.0"
+                step="0.01"
+                value="1.0"
+                [(ngModel)]="alpha"
+                (change)="setAlpha($event.value)">
+            </mat-slider>
+        </div>
         <input
             (input)="updateColorHex()"
             [(ngModel)]="hexString"
