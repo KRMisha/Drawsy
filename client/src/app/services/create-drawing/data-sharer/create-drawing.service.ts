@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Color } from '../classes/color/color';
+import { Color } from '../../../classes/color/color';
 
 @Injectable({
     providedIn: 'root',

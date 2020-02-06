@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CreateDrawingService } from 'src/app/services/create-drawing.service';
-import { Color } from '../../../classes/color/color';
+import { CreateDrawingService } from 'src/app/services/create-drawing/data-sharer/create-drawing.service';
+import { Color } from '../../classes/color/color';
 
 @Component({
     selector: 'app-create-drawing',
@@ -29,15 +29,22 @@ export class CreateDrawingComponent {
 
     newHeight(height: number) {
         // TODO: Sanitize input
-        this.drawingService.changeHeight(height);
+        this.drawingHeight = height;
     }
 
     newWidth(width: number) {
         // TODO: Sanitize input
-        this.drawingService.changeWidth(width);
+        this.drawingWidth = width;
     }
 
     newColor(color: Color) {
-        this.drawingService.changeColor(color);
+        this.drawingColor = color;
+    }
+
+    sendData() {
+        this.drawingService.changeColor(this.drawingColor);
+        this.drawingService.changeHeight(this.drawingHeight);
+        this.drawingService.changeWidth(this.drawingWidth);
+        this.close();
     }
 }
