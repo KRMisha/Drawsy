@@ -28,7 +28,7 @@ export class ToolLineService extends Tool {
     onMouseDown(event: MouseEvent): void {
         this.mouseX = event.offsetX;
         this.mouseY = event.offsetY;
-        this.calculatePointPosition();
+        this.updateNextPointPosition();
         this.lastPointX = this.nextPointX;
         this.lastPointY = this.nextPointY;
 
@@ -53,15 +53,14 @@ export class ToolLineService extends Tool {
 
         const polylineString = this.polyline.getAttribute('points') + ' ' + this.nextPointX + ' ' + this.nextPointY;
         this.renderer.setAttribute(this.polyline, 'points', polylineString);
-
-        this.calculatePointPosition();
+        this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
 
     onMouseMove(event: MouseEvent): void {
         this.mouseX = event.offsetX;
         this.mouseY = event.offsetY;
-        this.calculatePointPosition();
+        this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
 
@@ -74,7 +73,7 @@ export class ToolLineService extends Tool {
             this.stopDrawing();
         } else if (event.code === 'ShiftLeft') {
             this.isShiftDown = true;
-            this.calculatePointPosition();
+            this.updateNextPointPosition();
             this.updatePreviewLinePosition();
         }
     }
@@ -82,33 +81,52 @@ export class ToolLineService extends Tool {
     onKeyUp(event: KeyboardEvent): void {
         if (event.code === 'ShiftLeft') {
             this.isShiftDown = false;
-            this.calculatePointPosition();
+            this.updateNextPointPosition();
             this.updatePreviewLinePosition();
         }
     }
 
-    private calculatePointPosition() {
-        if (this.currentlyDrawing === false || this.isShiftDown === false) {
-            this.nextPointX = this.mouseX;
-            this.nextPointY = this.mouseY;
-        } else if (this.isShiftDown === true) {
-            let angle = Math.atan2((this.mouseY - this.lastPointY), (this.mouseX - this.lastPointX)) * 180 / Math.PI;
+    private updateNextPointPosition() {
+        let xy = this.calculateNextPointPosition(this.lastPointX,
+                                                 this.lastPointY,
+                                                 this.mouseX,
+                                                 this.mouseY,
+                                                 this.isShiftDown,
+                                                 this.currentlyDrawing);
+        this.nextPointX = xy[0];
+        this.nextPointY = xy[1];
+    }
+
+    private calculateNextPointPosition(lastX: number,
+                                       lastY: number,
+                                       currentX: number,
+                                       currentY: number,
+                                       isShiftDown: boolean,
+                                       currentlyDrawing: boolean): [number, number] {
+        let nextPointX: number;
+        let nextPointY: number;
+        if (currentlyDrawing === false || isShiftDown === false) {
+            nextPointX = currentX
+            nextPointY = currentY;
+        } else {
+            let angle = Math.atan2((currentY - lastY), (currentX - lastX)) * 180 / Math.PI;
             angle = Math.round(angle / 45) * 45;
             if (angle <= 0) {
                 angle += 360;
             }
 
             if (angle === 0 || angle === 180 || angle === 360) {
-                this.nextPointX = this.mouseX;
-                this.nextPointY = this.lastPointY;
+                nextPointX = currentX;
+                nextPointY = lastY;
             } else if (angle === 90 || angle === 270) {
-                this.nextPointX = this.lastPointX;
-                this.nextPointY = this.mouseY;
+                nextPointX = lastX;
+                nextPointY = currentY;
             } else {
-                this.nextPointX = this.mouseX;
-                this.nextPointY = Math.tan((angle / 180) * Math.PI) * (this.mouseX - this.lastPointX) + this.lastPointY;
+                nextPointX = currentX;
+                nextPointY = Math.tan((angle / 180) * Math.PI) * (currentX - lastX) + lastY;
             }
         }
+        return [nextPointX, nextPointY]
     }
 
     private stopDrawing(): void {
@@ -141,6 +159,6 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', this.polyline.getAttribute('strstroke-linejoinoke') as string);
+        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', this.polyline.getAttribute('stroke-linejoin') as string);
     }
 }
