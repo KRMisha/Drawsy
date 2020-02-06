@@ -4,6 +4,9 @@ import { Color } from '../../../../classes/color/color';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
 
+const minimumPointsToEnableBackspace = 4;
+const geometryDimension = 2;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -18,6 +21,8 @@ export class ToolLineService extends Tool {
     private lastPointX: number;
     private lastPointY: number;
     private isShiftDown = false;
+
+    private points: number[] = [];
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
@@ -51,8 +56,9 @@ export class ToolLineService extends Tool {
             this.drawingService.addElement(this.polyline);
         }
 
-        const polylineString = this.polyline.getAttribute('points') + ' ' + this.nextPointX + ' ' + this.nextPointY;
-        this.renderer.setAttribute(this.polyline, 'points', polylineString);
+        this.points.push(this.nextPointX);
+        this.points.push(this.nextPointY);
+        this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
         this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
@@ -75,6 +81,8 @@ export class ToolLineService extends Tool {
             this.isShiftDown = true;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
+        } else if (event.code === 'Backspace') {
+            this.removeLastPointFromLine();
         }
     }
 
@@ -86,8 +94,19 @@ export class ToolLineService extends Tool {
         }
     }
 
+    private removeLastPointFromLine(): void {
+        if (this.points.length >= minimumPointsToEnableBackspace) {
+            this.points.length = this.points.length - geometryDimension;
+            this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
+            this.lastPointX = this.points[this.points.length - geometryDimension];
+            this.lastPointY = this.points[this.points.length - 1];
+            this.renderer.setAttribute(this.previewLine, 'x1', '' + this.lastPointX);
+            this.renderer.setAttribute(this.previewLine, 'y1', '' + this.lastPointY);
+        }
+    }
+
     private updateNextPointPosition() {
-        let xy = this.calculateNextPointPosition(this.lastPointX,
+        const xy = this.calculateNextPointPosition(this.lastPointX,
                                                  this.lastPointY,
                                                  this.mouseX,
                                                  this.mouseY,
@@ -97,12 +116,9 @@ export class ToolLineService extends Tool {
         this.nextPointY = xy[1];
     }
 
-    private calculateNextPointPosition(lastX: number,
-                                       lastY: number,
-                                       currentX: number,
-                                       currentY: number,
-                                       isShiftDown: boolean,
-                                       currentlyDrawing: boolean): [number, number] {
+    private calculateNextPointPosition(lastX: number, lastY: number,
+                                       currentX: number, currentY: number,
+                                       isShiftDown: boolean, currentlyDrawing: boolean): [number, number] {
         let nextPointX: number;
         let nextPointY: number;
         if (currentlyDrawing === false || isShiftDown === false) {
@@ -132,6 +148,7 @@ export class ToolLineService extends Tool {
     private stopDrawing(): void {
         this.currentlyDrawing = false;
         this.renderer.setAttribute(this.previewLine, 'display', 'none');
+        this.points.length = 0;
     }
 
     private createNewPolyline(): SVGPolylineElement {
