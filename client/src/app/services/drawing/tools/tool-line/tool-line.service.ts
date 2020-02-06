@@ -6,6 +6,7 @@ import { Tool, ToolSetting } from '../tool';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
+const lineClosingTolerance = 3;
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,6 @@ export class ToolLineService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Color, new Color(0, 0, 0, 1));
         this.toolSettings.set(ToolSetting.Size, 1);
     }
 
@@ -71,12 +71,33 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        this.points.length = this.points.length - geometryDimension;
+
+        if (this.isShiftDown === false) {
+            const firstXIndex = 0;
+            const firstYIndex = 1;
+            const lastXIndex =  this.points.length - 2;
+            const lastYIndex = this.points.length - 1;
+
+            const deltaX = Math.abs(this.points[firstXIndex] - this.points[lastXIndex]);
+            const deltaY = Math.abs(this.points[firstYIndex] - this.points[lastYIndex]);
+
+            console.log(`${deltaX} ${deltaY}`)
+            console.log(this.points);
+            if (deltaX <= lineClosingTolerance && deltaY <= lineClosingTolerance) {
+                this.points[lastXIndex] = this.points[firstXIndex];
+                this.points[lastYIndex] = this.points[firstYIndex];
+                this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
+                console.log(this.points);
+            }
+        }
         this.stopDrawing();
     }
 
     onKeyDown(event: KeyboardEvent): void {
         if (event.code === 'Escape') {
             this.stopDrawing();
+            this.drawingService.removeElement(this.polyline);
         } else if (event.code === 'ShiftLeft') {
             this.isShiftDown = true;
             this.updateNextPointPosition();
