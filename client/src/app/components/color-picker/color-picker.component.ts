@@ -17,6 +17,7 @@ export class ColorPickerComponent {
     saturation = 0.0;
     value = 0.0;
     hexString = '000000';
+    alpha = 1;
 
     @Input() displayColorPicker = true;
     @Input()
@@ -25,6 +26,7 @@ export class ColorPickerComponent {
         this.hue = hsv[0];
         this.saturation = hsv[1];
         this.value = hsv[2];
+        this.alpha = color.getRgba()[3];
     }
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
@@ -33,7 +35,7 @@ export class ColorPickerComponent {
     constructor(private colorService: ColorService) {}
 
     private getColor(): Color {
-        const color = new Color(0, 0, 0, 1);
+        const color = new Color(0, 0, 0, this.alpha);
         color.setHsv(this.hue, this.saturation, this.value);
         return color;
     }
@@ -45,12 +47,15 @@ export class ColorPickerComponent {
         this.colorChanged.emit(color);
     }
 
+    setAlpha(alpha: number) {
+        this.alpha = alpha;
+        this.colorChanged.emit(this.getColor());
+    }
+
     setSaturationAndValue(saturationAndValue: [number, number]): void {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
-        const color = this.getColor();
-        this.hexString = color.getHex();
-        this.colorChanged.emit(color);
+        this.colorChanged.emit(this.getColor());
     }
 
     getLastColors(): Color[] {
@@ -69,7 +74,9 @@ export class ColorPickerComponent {
             this.hue = hsv[0];
             this.saturation = hsv[1];
             this.value = hsv[2];
-            this.colorChanged.emit(this.getColor());
+            this.alpha = color.getRgba()[3];
+            color.setAlpha(this.alpha);
+            this.colorChanged.emit(color);
         }
     }
 
@@ -77,7 +84,7 @@ export class ColorPickerComponent {
         if (this.hexString.length !== 6) {
             return;
         }
-        const color = new Color(255, 255, 255, 1);
+        const color = new Color(255, 255, 255, this.alpha);
         color.setHex(this.hexString);
         const hsv = color.getHsv();
         this.hue = hsv[0];
