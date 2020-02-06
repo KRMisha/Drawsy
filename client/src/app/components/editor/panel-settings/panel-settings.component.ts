@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Button } from 'src/app/classes/button/button-data';
 import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
-import { ToolSettings } from '../../../classes/tools/tool';
+import { SidebarButton } from '../../../classes/sidebar-button/sidebar-button';
+import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
+import { ToolSetting } from '../../../services/drawing/tools/tool';
 
 @Component({
     selector: 'app-panel-settings',
@@ -10,16 +11,15 @@ import { ToolSettings } from '../../../classes/tools/tool';
     styleUrls: ['./panel-settings.component.scss'],
 })
 export class PanelSettingsComponent {
-    ToolSettings = ToolSettings; // Make enum available to template
-    @Input() selectedButton: Button;
+    ToolSetting = ToolSetting; // Make enum available to template
+    @Input() selectedButton: SidebarButton;
 
     isPrimarySelected = true;
     displayColorPicker = false;
 
     private color = new Color(MAX_COLOR_VALUE, MAX_COLOR_VALUE, MAX_COLOR_VALUE, 1);
 
-    constructor(private colorService: ColorService) {
-    }
+    constructor(public toolHolderService: ToolHolderService, private colorService: ColorService) {}
 
     getPrimaryColor(): Color {
         return this.colorService.getPrimaryColor();
@@ -50,5 +50,9 @@ export class PanelSettingsComponent {
             this.colorService.setSecondaryColor(this.color);
         }
         this.displayColorPicker = false;
+    }
+
+    swapColors(): void {
+        this.colorService.swapPrimaryAndSecondaryColors();
     }
 }
