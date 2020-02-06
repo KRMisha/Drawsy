@@ -122,7 +122,7 @@ export class Color {
         return `rgb(${this.red}, ${this.green}, ${this.blue})`;
     }
 
-    equals(color: Color): boolean {
+    rgbEquals(color: Color): boolean {
         return this.red === color.red && this.green === color.green && this.blue === color.blue;
     }
 

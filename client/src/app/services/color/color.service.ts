@@ -22,7 +22,7 @@ export class ColorService {
 
     addColor(color: Color): void {
         for (const arrayColor of this.lastColors) {
-            if (color.equals(arrayColor)) {
+            if (color.rgbEquals(arrayColor)) {
                 return;
             }
         }
