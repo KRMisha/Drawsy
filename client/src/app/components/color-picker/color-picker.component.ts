@@ -14,6 +14,7 @@ export class ColorPickerComponent {
     hue = 0.0;
     saturation = 0.0;
     value = 0.0;
+    hexString = '';
 
     @Input() displayColorPicker = false;
 
@@ -21,7 +22,6 @@ export class ColorPickerComponent {
     @Output() previousColorSelected: EventEmitter<Color> = new EventEmitter();
 
     constructor(private colorService: ColorService) {}
-
 
     private getColor(): Color {
         const color = new Color(0, 0, 0, 1);
@@ -31,13 +31,17 @@ export class ColorPickerComponent {
 
     setHue(hue: number): void {
         this.hue = hue;
-        this.colorChanged.emit(this.getColor());
+        const color = this.getColor();
+        this.hexString = color.getHex();
+        this.colorChanged.emit(color);
     }
 
     setSaturationAndValue(saturationAndValue: [number, number]): void {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
-        this.colorChanged.emit(this.getColor());
+        const color = this.getColor();
+        this.hexString = color.getHex();
+        this.colorChanged.emit(color);
     }
 
     getLastColors(): Color[] {
@@ -52,5 +56,20 @@ export class ColorPickerComponent {
             this.colorService.setSecondaryColor(color);
             this.previousColorSelected.emit();
         }
+    }
+
+    updateColorHex() {
+        if (this.hexString.length !== 6) {
+            return;
+        }
+        const color = new Color(255, 255, 255, 1);
+        color.setHex(this.hexString);
+        const hsv = color.getHsv();
+        this.hue = hsv[0];
+        this.saturation = hsv[0];
+        this.value = hsv[0];
+        // console.log(color);
+        // console.log(color.getHsv());
+        this.colorChanged.emit(color);
     }
 }

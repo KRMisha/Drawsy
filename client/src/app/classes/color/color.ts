@@ -75,7 +75,9 @@ export class Color {
         const angleValue = 60;
 
         let hue: number;
-        if (cMax === redPrime) {
+        if (deltaC === 0) {
+            hue = 0;
+        } else if (cMax === redPrime) {
             hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
         } else if (cMax === greenPrime) {
             hue = angleValue * (((bluePrime - redPrime) / deltaC) + 2);
@@ -100,7 +102,7 @@ export class Color {
     }
 
     private componentToHex(component: number) {
-        const hex = component.toString(16);
+        const hex = Math.round(component).toString(16);
         return hex.length === 1 ? '0' + hex : hex;
     }
 
