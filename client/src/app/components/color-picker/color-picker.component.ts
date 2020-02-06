@@ -58,7 +58,6 @@ export class ColorPickerComponent {
     }
 
     setColor(event: MouseEvent, color: Color): void {
-        console.log('bonjour');
         if (event.button === Button.LeftClick || event.button === Button.RightClick) {
             if (event.button === Button.LeftClick) {
                 this.colorService.setPrimaryColor(color);
@@ -70,6 +69,7 @@ export class ColorPickerComponent {
             this.hue = hsv[0];
             this.saturation = hsv[1];
             this.value = hsv[2];
+            this.colorChanged.emit(this.getColor());
         }
     }
 
@@ -80,7 +80,6 @@ export class ColorPickerComponent {
         const color = new Color(255, 255, 255, 1);
         color.setHex(this.hexString);
         const hsv = color.getHsv();
-        console.log(hsv);
         this.hue = hsv[0];
         this.saturation = hsv[1];
         this.value = hsv[2];

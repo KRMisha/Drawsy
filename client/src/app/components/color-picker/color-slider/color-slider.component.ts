@@ -65,16 +65,17 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.stroke(circle);
     }
 
-    @HostListener('mousedown', ['$event'])
+    @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.isMouseDown = true;
-        this.update(event);
+        if (this.isMouseInside) {
+            this.isMouseDown = true;
+            this.update(event);
+        }
     }
 
-    @HostListener('mouseup', ['$event'])
+    @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.isMouseDown = false;
-        this.update(event);
     }
 
     @HostListener('mousemove', ['$event'])
@@ -85,7 +86,6 @@ export class ColorSliderComponent implements AfterViewInit {
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(event: MouseEvent): void {
         this.isMouseInside = false;
-        this.isMouseDown = false;
     }
 
     @HostListener('mouseenter', ['$event'])

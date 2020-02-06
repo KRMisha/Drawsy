@@ -41,7 +41,6 @@ export class PanelSettingsComponent {
 
     updateColor(color: Color): void {
         this.color = color;
-        console.log(color);
     }
 
     confirmColor(): void {
