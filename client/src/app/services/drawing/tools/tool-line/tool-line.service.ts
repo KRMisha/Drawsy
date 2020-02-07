@@ -6,7 +6,7 @@ import { Tool, ToolSetting } from '../tool';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
-const lineClosingTolerance = 50;
+const lineClosingTolerance = 3;
 
 @Injectable({
     providedIn: 'root',
@@ -58,6 +58,8 @@ export class ToolLineService extends Tool {
             this.renderer.setAttribute(this.previewLine, 'display', '');
             this.currentlyDrawing = true;
             this.drawingService.addElement(this.polyline);
+            this.drawingService.removeElement(this.previewLine);
+            this.drawingService.addElement(this.previewLine);
         }
 
         this.points.push(this.nextPointX);
@@ -104,7 +106,6 @@ export class ToolLineService extends Tool {
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
                 this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-                console.log(this.points);
             }
         }
         this.stopDrawing();
@@ -208,9 +209,10 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
+        console.log(this.polyline.getAttribute('fill'))
         const circle = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
-        this.renderer.setAttribute(circle, 'fill', '' + `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
         return circle;
     }
