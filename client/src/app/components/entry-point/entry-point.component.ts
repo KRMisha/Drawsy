@@ -1,25 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Color } from '../../classes/color/color';
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 import { GuideComponent } from '../guide/guide.component';
+import { DrawingService } from '../../services/drawing/drawing.service'
 
 @Component({
     selector: 'app-entry-point',
     templateUrl: './entry-point.component.html',
     styleUrls: ['./entry-point.component.scss'],
 })
-export class EntryPointComponent implements OnInit {
-    continueDrawing: boolean;
-    drawingWidth: number;
-    drawingHeight: number;
-    drawingBackgroundColor: Color;
-
-    constructor(private dialog: MatDialog) {}
-
-    ngOnInit() {
-        this.continueDrawing = false; // TODO: Service which checks if we can continue drawing
-    }
+export class EntryPointComponent  {
+    constructor(private dialog: MatDialog, public drawingService: DrawingService) {}
 
     openCreateDrawing(): void {
         this.dialog.open(CreateDrawingComponent, {
