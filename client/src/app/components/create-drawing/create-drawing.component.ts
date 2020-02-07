@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
+import { Color } from 'src/app/classes/color/color';
 
 @Component({
     selector: 'app-create-drawing',
@@ -13,6 +14,7 @@ export class CreateDrawingComponent implements OnInit {
     windowHeight: number;
     formWidth: number;
     formHeight: number;
+    backgroundColor: Color;
 
     drawingForm = new FormGroup({
         height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
@@ -24,23 +26,36 @@ export class CreateDrawingComponent implements OnInit {
     ngOnInit() {
         this.windowHeight = window.innerHeight;
         this.windowWidth = window.innerWidth;
-        this.formWidth = this.windowWidth;
+        this.formWidth = this.substractSidebarWidth(this.windowWidth);
         this.formHeight = this.windowHeight;
+        this.backgroundColor = new Color(255, 255, 255, 1);
     }
 
     onSubmit() {
         this.drawingService.changeHeight(this.drawingForm.controls.height.value);
         this.drawingService.changeWidth(this.drawingForm.controls.width.value);
+        this.drawingService.changeColor(this.backgroundColor);
         this.onClose();
     }
 
     onClose() {
         this.dialogRef.close();
     }
+
+    updateColor(color: Color) {
+        this.backgroundColor = color;
+    }
+
+    private substractSidebarWidth(totalWidth: number): number {
+        const sidebarWidth = 68;
+        const toolSettingWidth = 278;
+        return totalWidth - sidebarWidth - toolSettingWidth;
+    }
+
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
         if (this.formWidth === this.windowWidth) {
-            this.formWidth = (event.target as Window).innerWidth;
+            this.formWidth = this.substractSidebarWidth((event.target as Window).innerWidth);
         }
         if (this.formHeight === this.windowHeight) {
             this.formHeight = (event.target as Window).innerHeight;
