@@ -23,8 +23,8 @@ export class EntryPointComponent implements OnInit {
 
     openCreateDrawing(): void {
         this.dialog.open(CreateDrawingComponent, {
-            width: '700px',
-            height: '800px',
+            width: '500px',
+            height: '700px',
         });
     }
 
