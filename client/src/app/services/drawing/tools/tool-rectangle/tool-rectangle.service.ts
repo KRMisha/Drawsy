@@ -80,6 +80,7 @@ export class ToolRectangleService extends Tool {
         this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
+        this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
         return rectangle;
     }
 
