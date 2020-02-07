@@ -1,9 +1,15 @@
-form {
+:host {
     display: flex;
     flex-direction: column;
+    padding-top: 24px;
 }
-input {
-    height: 2em;
-    font-size: 1em;
-    padding-left: .4em;
+
+.exit-button {
+    float: right;
+    color: rgb(0, 0, 0);
+    cursor: hand;
+
+    :hover {
+        color: rgb(255, 0, 0);
+    }
 }
