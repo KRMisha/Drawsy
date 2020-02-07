@@ -5,6 +5,8 @@ import { SidebarButton } from '../../../classes/sidebar-button/sidebar-button';
 import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { Style, ToolSetting } from '../../../services/drawing/tools/tool';
 
+const numberRegex = new RegExp('^[0-9]+$');
+
 @Component({
     selector: 'app-panel-settings',
     templateUrl: './panel-settings.component.html',
@@ -27,6 +29,10 @@ export class PanelSettingsComponent {
     }
 
     setSetting(setting: ToolSetting, value: number | [boolean, number] | Style) {
+        if (setting === ToolSetting.Size && !numberRegex.test(value.toString())
+            || setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString())) {
+            return;
+        }
         this.toolHolderService.tools[this.selectedButton.toolIndex].toolSettings.set(setting, value);
     }
 
