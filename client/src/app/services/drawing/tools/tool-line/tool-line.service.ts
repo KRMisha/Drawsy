@@ -6,7 +6,7 @@ import { Tool, ToolSetting } from '../tool';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
-const lineClosingTolerance = 3;
+const lineClosingTolerance = 50;
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +24,10 @@ export class ToolLineService extends Tool {
     private isShiftDown = false;
 
     private points: number[] = [];
+    private junctionPoints: SVGCircleElement[] = [];
+
+    private hasJunction: boolean;
+    private junctionSize: number;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
@@ -59,6 +63,14 @@ export class ToolLineService extends Tool {
         this.points.push(this.nextPointX);
         this.points.push(this.nextPointY);
         this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
+
+        if (this.hasJunction) {
+            const circle = this.createNewJunction();
+            this.renderer.setAttribute(circle, 'cx', '' + this.nextPointX);
+            this.renderer.setAttribute(circle, 'cy', '' + this.nextPointY);
+            this.drawingService.addElement(circle);
+        }
+
         this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
@@ -71,7 +83,10 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
-        this.points.length = this.points.length - geometryDimension;
+        if (this.junctionPoints.length > 0) {
+            this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
+        }
+        this.points.length -= geometryDimension;
 
         if (this.isShiftDown === false) {
             const firstXIndex = 0;
@@ -82,9 +97,10 @@ export class ToolLineService extends Tool {
             const deltaX = Math.abs(this.points[firstXIndex] - this.points[lastXIndex]);
             const deltaY = Math.abs(this.points[firstYIndex] - this.points[lastYIndex]);
 
-            console.log(`${deltaX} ${deltaY}`)
-            console.log(this.points);
             if (deltaX <= lineClosingTolerance && deltaY <= lineClosingTolerance) {
+                if (this.junctionPoints.length > 0) {
+                    this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
+                }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
                 this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
@@ -98,6 +114,10 @@ export class ToolLineService extends Tool {
         if (event.code === 'Escape') {
             this.stopDrawing();
             this.drawingService.removeElement(this.polyline);
+            for (const circle of this.junctionPoints) {
+                this.drawingService.removeElement(circle);
+            }
+            this.junctionPoints.length = 0;
         } else if (event.code === 'ShiftLeft') {
             this.isShiftDown = true;
             this.updateNextPointPosition();
@@ -123,16 +143,18 @@ export class ToolLineService extends Tool {
             this.lastPointY = this.points[this.points.length - 1];
             this.renderer.setAttribute(this.previewLine, 'x1', '' + this.lastPointX);
             this.renderer.setAttribute(this.previewLine, 'y1', '' + this.lastPointY);
+
+            this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
     }
 
     private updateNextPointPosition() {
         const xy = this.calculateNextPointPosition(this.lastPointX,
-                                                 this.lastPointY,
-                                                 this.mouseX,
-                                                 this.mouseY,
-                                                 this.isShiftDown,
-                                                 this.currentlyDrawing);
+                                                   this.lastPointY,
+                                                   this.mouseX,
+                                                   this.mouseY,
+                                                   this.isShiftDown,
+                                                   this.currentlyDrawing);
         this.nextPointX = xy[0];
         this.nextPointY = xy[1];
     }
@@ -180,7 +202,17 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(polyline, 'stroke-linecap', 'round');
         this.renderer.setAttribute(polyline, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(polyline, 'points', '');
+        this.hasJunction = true;
+        this.junctionSize = 20;
         return polyline;
+    }
+
+    private createNewJunction(): SVGCircleElement {
+        const circle = this.renderer.createElement('circle', 'svg');
+        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
+        this.renderer.setAttribute(circle, 'fill', '' + `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        this.junctionPoints.push(circle);
+        return circle;
     }
 
     private updatePreviewLinePosition(): void {
