@@ -82,10 +82,12 @@ export class ToolLineService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.mouseX = event.offsetX;
-        this.mouseY = event.offsetY;
-        this.updateNextPointPosition();
-        this.updatePreviewLinePosition();
+        if (this.isMouseInside) {
+            this.mouseX = event.offsetX;
+            this.mouseY = event.offsetY;
+            this.updateNextPointPosition();
+            this.updatePreviewLinePosition();
+        }
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
