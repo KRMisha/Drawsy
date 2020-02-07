@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
 import { Color } from 'src/app/classes/color/color';
+import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
 
 @Component({
     selector: 'app-create-drawing',
@@ -54,8 +54,9 @@ export class CreateDrawingComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        if (this.formWidth === this.windowWidth) {
+        if (this.formWidth === this.substractSidebarWidth(this.windowWidth)) {
             this.formWidth = this.substractSidebarWidth((event.target as Window).innerWidth);
+            console.log('hello');
         }
         if (this.formHeight === this.windowHeight) {
             this.formHeight = (event.target as Window).innerHeight;
