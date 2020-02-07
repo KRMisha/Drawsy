@@ -36,6 +36,9 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (this.isMouseInside == false) {
+            return;
+        }
         this.mouseX = event.offsetX;
         this.mouseY = event.offsetY;
         this.updateNextPointPosition();
