@@ -5,7 +5,6 @@ import { SidebarButton } from '../../../classes/sidebar-button/sidebar-button';
 import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { ToolSetting } from '../../../services/drawing/tools/tool';
 
-
 @Component({
     selector: 'app-panel-settings',
     templateUrl: './panel-settings.component.html',

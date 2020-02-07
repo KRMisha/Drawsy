@@ -60,13 +60,15 @@
 </div>
 
 <div *ngIf="toolHolderService.tools[selectedButton.toolIndex].toolSettings.has(ToolSetting.StrokeType)">
-    <div class="option">
-        <div>
-            <h2>Type de tracé</h2>
-        </div>
-    </div>
-
-    <div class="type-picker">
-
+    <div class="rect-style">
+        <h2>Type de tracé</h2>
+        <mat-form-field>
+            <mat-label>Type de tracé</mat-label>
+            <mat-select>
+                <mat-option>Plein avec contour</mat-option>
+                <mat-option>Plein</mat-option>
+                <mat-option>Contour</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>

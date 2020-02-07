@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
@@ -82,6 +83,7 @@ import { GuideComponent } from './components/guide/guide.component';
         AppRoutingModule,
         MatExpansionModule,
         MatDialogModule,
+        MatSelectModule,
     ],
     entryComponents: [
         CreateDrawingComponent,
