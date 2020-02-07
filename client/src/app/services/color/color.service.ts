@@ -13,10 +13,10 @@ export class ColorService {
     private lastColors: Color[] = [];
 
     constructor() {
-        this.primaryColor = new Color(0, 0, 0, 1);
-        this.secondaryColor = new Color(0, 0, 0, 1);
+        this.primaryColor = new Color();
+        this.secondaryColor = new Color();
         for (let i = 0; i < this.MAX_RECENT_COLORS; i++) {
-            this.lastColors.push(new Color(0, 0, 0, 1));
+            this.lastColors.push(new Color());
         }
     }
 

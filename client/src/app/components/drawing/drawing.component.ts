@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
-import { ColorService } from 'src/app/services/color/color.service';
+// import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
@@ -21,7 +21,7 @@ export class DrawingComponent implements AfterViewInit {
         private renderer: Renderer2,
         private drawingService: DrawingService,
         private toolSelectorService: ToolSelectorService,
-        private colorService: ColorService,
+        // private colorService: ColorService,
     ) {}
 
     ngAfterViewInit() {

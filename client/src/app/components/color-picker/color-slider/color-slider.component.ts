@@ -53,7 +53,7 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.fillStyle = horizontalGradient;
         this.context.fillRect(0, 7, width, height - 14);
 
-        const hueColor = new Color(0, 0, 0, 1);
+        const hueColor = new Color();
         hueColor.setHsv(this.hue, 1.0, 1.0);
 
         const circle = new Path2D();

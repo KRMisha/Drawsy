@@ -242,7 +242,11 @@ export class ToolLineService extends Tool {
 
     private updatePreviewLine(): void {
         const rgba = this.colorService.getPrimaryColor().getRgba();
-        const previewColor = new Color(rgba[0], rgba[1], rgba[2], rgba[3] / 2);
+        const previewColor = new Color();
+        previewColor.red = rgba[0];
+        previewColor.green = rgba[1];
+        previewColor.blue = rgba[2];
+        previewColor.alpha = rgba[3] / 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', `${previewColor.toRgbaString()}`);
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);

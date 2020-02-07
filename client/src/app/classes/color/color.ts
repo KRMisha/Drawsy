@@ -2,24 +2,36 @@ export const MAX_COLOR_VALUE = 255;
 export const MAX_HUE = 360;
 
 export class Color {
-    private red: number;
-    private green: number;
-    private blue: number;
-    private alpha: number;
-
-    constructor(red: number, green: number, blue: number, alpha: number) {
-        this.setRgb(red, green, blue);
-        this.setAlpha(alpha);
+    private _red = 0;
+    get red(): number {
+        return this._red;
+    }
+    set red(red: number) {
+        this._red = this.clampValue(red, 0, MAX_COLOR_VALUE);
     }
 
-    setRgb(red: number, green: number, blue: number): void {
-        this.red = Math.min(Math.max(red, 0), MAX_COLOR_VALUE);
-        this.green = Math.min(Math.max(green, 0), MAX_COLOR_VALUE);
-        this.blue = Math.min(Math.max(blue, 0), MAX_COLOR_VALUE);
+    private _green = 0;
+    get green(): number {
+        return this._green;
+    }
+    set green(green: number) {
+        this._green = this.clampValue(green, 0, MAX_COLOR_VALUE);
     }
 
-    setAlpha(alpha: number): void {
-        this.alpha = Math.min(Math.max(alpha, 0), 1);
+    private _blue = 0;
+    get blue(): number {
+        return this._blue;
+    }
+    set blue(blue: number) {
+        this._blue = this.clampValue(blue, 0, MAX_COLOR_VALUE);
+    }
+
+    private _alpha = 1;
+    get alpha(): number {
+        return this._alpha;
+    }
+    set alpha(alpha: number) {
+        this._alpha = this.clampValue(alpha, 0, 1);
     }
 
     setHsv(hue: number, saturation: number, value: number): void {
@@ -56,10 +68,9 @@ export class Color {
 
     setHex(hex: string) {
         hex = hex.replace('#', '');
-        const red = parseInt(hex.substring(0, 2), 16);
-        const green = parseInt(hex.substring(2, 4), 16);
-        const blue = parseInt(hex.substring(4, 6), 16);
-        this.setRgb(red, green, blue);
+        this.red = parseInt(hex.substring(0, 2), 16);
+        this.green = parseInt(hex.substring(2, 4), 16);
+        this.blue = parseInt(hex.substring(4, 6), 16);
     }
 
     getHsv(): [number, number, number] {
@@ -100,11 +111,6 @@ export class Color {
         return [hue, saturation, value];
     }
 
-    private componentToHex(component: number) {
-        const hex = Math.round(component).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-    }
-
     getHex(): string {
         return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
     }
@@ -125,9 +131,18 @@ export class Color {
         return this.red === color.red && this.green === color.green && this.blue === color.blue;
     }
 
+    private componentToHex(component: number) {
+        const hex = Math.round(component).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
     private setNormalizedColor(red: number, green: number, blue: number) {
         this.red = red * MAX_COLOR_VALUE;
         this.green = green * MAX_COLOR_VALUE;
         this.blue = blue * MAX_COLOR_VALUE;
+    }
+
+    private clampValue(value: number, min: number, max: number): number {
+        return Math.min(Math.max(value, min), max);
     }
 }
