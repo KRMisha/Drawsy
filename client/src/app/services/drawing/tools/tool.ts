@@ -5,11 +5,12 @@ import { DrawingService } from '../drawing.service';
 export enum ToolSetting {
     Size,
     Color,
+    HasJunction,
 }
 
 export abstract class Tool {
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | Color>();
+    toolSettings = new Map<ToolSetting, number | Color | [boolean, number]>();
     isMouseDown = false;
 
     constructor(protected drawingService: DrawingService) {}

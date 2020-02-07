@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,11 +22,11 @@ import { ColorContainerComponent } from './components/color-picker/color-contain
 import { ColorFieldComponent } from './components/color-picker/color-field/color-field.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './components/color-picker/color-slider/color-slider.component';
+import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { PanelSettingsComponent } from './components/editor/panel-settings/panel-settings.component';
 import { SidebarComponent } from './components/editor/sidebar/sidebar.component';
-import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
 import { EntryPointComponent } from './components/entry-point/entry-point.component';
 import { GuideBrushComponent } from './components/guide/guide-brush/guide-brush.component';
 import { GuideColorComponent } from './components/guide/guide-color/guide-color.component';
@@ -74,6 +75,7 @@ import { GuideComponent } from './components/guide/guide.component';
         MatFormFieldModule,
         MatInputModule,
         MatSliderModule,
+        MatCheckboxModule,
         MatIconModule,
         MatSidenavModule,
         MatListModule,

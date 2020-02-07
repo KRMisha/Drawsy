@@ -31,7 +31,8 @@ export class ToolLineService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, 1);
+        this.toolSettings.set(ToolSetting.Size, 5);
+        this.toolSettings.set(ToolSetting.HasJunction, [false, 10]);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -108,6 +109,7 @@ export class ToolLineService extends Tool {
                 this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
             }
         }
+        this.junctionPoints.length = 0;
         this.stopDrawing();
     }
 
@@ -203,8 +205,10 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(polyline, 'stroke-linecap', 'round');
         this.renderer.setAttribute(polyline, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(polyline, 'points', '');
-        this.hasJunction = true;
-        this.junctionSize = 20;
+
+        const junction = this.toolSettings.get(ToolSetting.HasJunction) as [boolean, number];
+        this.hasJunction = junction[0];
+        this.junctionSize = junction[1];
         return polyline;
     }
 
