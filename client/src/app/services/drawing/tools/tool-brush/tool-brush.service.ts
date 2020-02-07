@@ -15,28 +15,24 @@ export class ToolBrushService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseDown) {
+        if (this.isMouseInside && this.isMouseDown) {
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
         }
     }
 
-    onMouseDown(event: MouseEvent) {
-        this.path = this.createNewPath();
-
-        const pathString = this.getPathStartString(event.offsetX, event.offsetY);
-        this.renderer.setAttribute(this.path, 'd', pathString);
-        this.drawingService.addElement(this.path);
-    }
-
-    onEnter(event: MouseEvent): void {
-        if (this.isMouseDown) {
+    onMouseDown(event: MouseEvent): void {
+        if (this.isMouseInside) {
             this.path = this.createNewPath();
 
             const pathString = this.getPathStartString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
             this.drawingService.addElement(this.path);
         }
+    }
+
+    onEnter(event: MouseEvent): void {
+        this.isMouseDown = false;
     }
 
     onLeave(event: MouseEvent): void {

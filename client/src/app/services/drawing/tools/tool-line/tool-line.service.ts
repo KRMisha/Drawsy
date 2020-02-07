@@ -155,7 +155,7 @@ export class ToolLineService extends Tool {
         }
     }
 
-    private updateNextPointPosition() {
+    private updateNextPointPosition(): void {
         const xy = this.calculateNextPointPosition(
             this.lastPointX,
             this.lastPointY,
