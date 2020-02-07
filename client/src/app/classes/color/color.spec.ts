@@ -19,7 +19,7 @@ describe('Color', () => {
         color.red = 10;
         color.green = 20;
         color.blue = 30;
-        color.alpha = 0.22;
+        color.alpha = 0.2;
         expect(color.getRgba()).toEqual([10, 20, 30, 0.2]);
     });
 

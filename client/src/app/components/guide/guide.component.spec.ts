@@ -1,49 +1,29 @@
-import { ComponentFactoryResolver, NgModule } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-// import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { of } from 'rxjs';
 import { GuideService } from '../../services/guide/guide.service';
-import { GuideSidebarComponent } from './guide-sidebar/guide-sidebar.component';
+import { GuideDirective } from './guide-directive/guide.directive';
 import { GuideComponent } from './guide.component';
-import { GuideWelcomeComponent } from './guide-welcome/guide-welcome.component';
-import { GuidePencilComponent } from './guide-pencil/guide-pencil.component';
-import { GuideBrushComponent } from './guide-brush/guide-brush.component';
-import { GuideLineComponent } from './guide-line/guide-line.component';
-import { GuideRectangleComponent } from './guide-rectangle/guide-rectangle.component';
-import { GuideColorComponent } from './guide-color/guide-color.component';
-import { GuideSaveDrawingComponent } from './guide-save-drawing/guide-save-drawing.component';
-import { GuideExportDrawingComponent } from './guide-export-drawing/guide-export-drawing.component';
+// import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
-@NgModule({
-    declarations: [
-        GuideWelcomeComponent,
-        GuideBrushComponent,
-        GuidePencilComponent,
-        GuideLineComponent,
-        GuideRectangleComponent,
-        GuideColorComponent,
-        GuideExportDrawingComponent,
-        GuideSaveDrawingComponent,
-    ],
-    entryComponents: [
-        GuideWelcomeComponent,
-        GuideBrushComponent,
-        GuidePencilComponent,
-        GuideLineComponent,
-        GuideRectangleComponent,
-        GuideColorComponent,
-        GuideExportDrawingComponent,
-        GuideSaveDrawingComponent,
-    ]
+@Component({
+    selector: 'app-guide-welcome',
+    template: '<p>Mock Welcome Guide</p>'
 })
-class GuideTestModule {}
+class MockGuideWelcomeComponent {}
 
 describe('GuideComponent', () => {
+    const MockGuides: Type<any>[] = [
+        MockGuideWelcomeComponent,
+        MockGuideWelcomeComponent
+    ];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
+    // let guideServiceSpyObj: jasmine.SpyObj<GuideService>;
 
     // let componentFactoryResolverSpyObj: jasmine.SpyObj<ComponentFactoryResolver>;
     beforeEach(async () => {
@@ -54,23 +34,27 @@ describe('GuideComponent', () => {
             close: null,
         });
 
+        const InjectedguideServiceSpyObj = jasmine.createSpyObj({getGuides: MockGuides});
         TestBed.configureTestingModule({
-            imports: [MatIconModule, MatDialogModule, GuideTestModule],
-            declarations: [GuideComponent, GuideSidebarComponent],
+            imports: [MatIconModule, MatDialogModule],
+            declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                ComponentFactoryResolver,
-                GuideService
+                { provide: GuideService, useValue: InjectedguideServiceSpyObj }
             ],
-        }).compileComponents();
+            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        }).overrideModule( BrowserDynamicTestingModule,
+                        { set: { entryComponents: [MockGuideWelcomeComponent]}})
+        .compileComponents();
 
-        // componentFactoryResolverSpy = spyOn<any>(componentFactoryResolverSpy, 'resolveComponentFactory').and.returnValue();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GuideComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        // guideServiceSpyObj = TestBed.get(GuideService);
+        // guideServiceSpyObj.getGuides.and.returnValue(MockGuides);
     });
 
     it('should create', () => {

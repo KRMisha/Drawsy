@@ -1,10 +1,7 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MatSliderModule } from '@angular/material/slider';
-import { ColorContainerComponent } from './color-container/color-container.component';
-import { ColorFieldComponent } from './color-field/color-field.component';
 import { ColorPickerComponent } from './color-picker.component';
-import { ColorSliderComponent } from './color-slider/color-slider.component';
 
 describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
@@ -13,12 +10,8 @@ describe('ColorPickerComponent', () => {
     beforeEach(async () => {
       TestBed.configureTestingModule({
         imports: [MatSliderModule],
-        declarations: [
-          ColorPickerComponent,
-          ColorContainerComponent,
-          ColorSliderComponent,
-          ColorFieldComponent
-        ]
+        declarations: [ColorPickerComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     });
 
