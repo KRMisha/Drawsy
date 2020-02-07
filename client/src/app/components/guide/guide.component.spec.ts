@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 import { GuideService } from '../../services/guide/guide.service';
 import { GuideDirective } from './guide-directive/guide.directive';
 import { GuideComponent } from './guide.component';
-// import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 @Component({
     selector: 'app-guide-welcome',
@@ -23,9 +22,7 @@ describe('GuideComponent', () => {
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
-    // let guideServiceSpyObj: jasmine.SpyObj<GuideService>;
 
-    // let componentFactoryResolverSpyObj: jasmine.SpyObj<ComponentFactoryResolver>;
     beforeEach(async () => {
         dialogRefSpyObj = jasmine.createSpyObj({
             afterClosed: of({}),

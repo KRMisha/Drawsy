@@ -10,7 +10,7 @@ import { CreateDrawingComponent } from './create-drawing.component';
 describe('CreateDrawingComponent', () => {
     let component: CreateDrawingComponent;
     let fixture: ComponentFixture<CreateDrawingComponent>;
-    
+
     beforeEach(async(() => {
         let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<CreateDrawingComponent>>;
         dialogRefSpyObj = jasmine.createSpyObj({
@@ -22,6 +22,9 @@ describe('CreateDrawingComponent', () => {
         TestBed.configureTestingModule({
             declarations: [CreateDrawingComponent],
             imports: [FormsModule, MatCardModule, MatIconModule],
+            providers: [
+                { provide: MatDialogRef, useValue: dialogRefSpyObj }
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     }));
