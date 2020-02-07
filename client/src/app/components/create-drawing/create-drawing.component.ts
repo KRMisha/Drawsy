@@ -1,56 +1,58 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Color } from '../../classes/color/color';
-import { ColorService } from '../../services/color/color.service';
-import { CreateDrawingService } from '../../services/create-drawing/data-sharer/create-drawing.service';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog'
+import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
+import { VirtualTimeScheduler } from 'rxjs';
 
 @Component({
     selector: 'app-create-drawing',
     templateUrl: './create-drawing.component.html',
     styleUrls: ['./create-drawing.component.scss'],
 })
-export class CreateDrawingComponent {
-    drawingWidth: number;
-    drawingHeight: number;
-    drawingColor = new Color(255, 255, 255, 1);
+export class CreateDrawingComponent implements OnInit{
+    windowWidth: number;
+    windowHeight: number;
+    formWidth: number;
+    formHeight: number;
+
+    drawingForm = new FormGroup({
+        height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        width: new FormControl(this.formWidth, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+    })
 
     constructor(
         public dialogRef: MatDialogRef<CreateDrawingComponent>,
         private drawingService: CreateDrawingService,
-        private colorService: ColorService,
-    ) {
-        // this.drawingService.changeColor(new Color(255, 255, 255, 1));
-        this.drawingService.changeHeight(0); // TODO: set to window size
-        this.drawingService.changeWidth(0); // TODO: set to window size
+        ) {}
 
-        drawingService.width$.subscribe(width => (this.drawingWidth = width));
-        drawingService.height$.subscribe(height => (this.drawingHeight = height));
-        // drawingService.color$.subscribe(color => (this.drawingColor = color));
+    ngOnInit() {
+        this.windowHeight = window.innerHeight;
+        this.windowWidth = window.innerWidth;
+        this.formWidth = this.windowWidth;
+        this.formHeight = this.windowHeight;
     }
 
-    close(): void {
+    onSubmit() {
+        this.drawingService.changeHeight(this.drawingForm.controls['height'].value);
+        this.drawingService.changeWidth(this.drawingForm.controls['width'].value);
+        // send the color
+        this.onClose();
+    }
+
+    onClose() {
         this.dialogRef.close();
     }
 
-    newHeight(height: number) {
-        // TODO: Sanitize input
-        this.drawingHeight = height;
-    }
+    onResize(event: object) {
+        if(this.formWidth === this.windowWidth) {
+            this.formWidth = event.target.innerWidth;
+        }
+        if(this.formHeight === this.windowHeight) {
+            this.formHeight = event.target.innerHeight;
+        }
+        this.windowWidth = event.target.innerWidth;
+        this.windowHeight = event.target.innerHeight;
 
-    newWidth(width: number) {
-        // TODO: Sanitize input
-        this.drawingWidth = width;
-    }
-
-    updateColor(color: Color) {
-        this.drawingColor = color;
-    }
-
-    sendData() {
-        // this.drawingService.changeColor(this.drawingColor);
-        this.colorService.setBackroundColor(this.drawingColor);
-        this.drawingService.changeHeight(this.drawingHeight);
-        this.drawingService.changeWidth(this.drawingWidth);
-        this.close();
+        
     }
 }
