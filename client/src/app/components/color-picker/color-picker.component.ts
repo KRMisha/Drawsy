@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { Color, hexRegexStr } from 'src/app/classes/color/color';
+import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 
 enum Button {
@@ -18,8 +17,7 @@ export class ColorPickerComponent {
     saturation = 0.0;
     value = 0.0;
     alpha = 1;
-
-    hexForm = new FormControl(this.getColor().getHex(), [Validators.required, Validators.pattern(hexRegexStr)]);
+    hexStr = '000000';
 
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
@@ -46,7 +44,7 @@ export class ColorPickerComponent {
     setHue(hue: number): void {
         this.hue = hue;
         const color = this.getColor();
-        this.hexForm.setValue(color.getHex());
+        this.hexStr = color.getHex();
         this.colorChanged.emit(color);
     }
 
@@ -59,7 +57,15 @@ export class ColorPickerComponent {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
         this.colorChanged.emit(this.getColor());
-        this.hexForm.setValue(this.getColor().getHex());
+        this.hexStr = this.getColor().getHex();
+    }
+
+    updateColorFromHex(color: Color) {
+        const hsv = color.getHsv();
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+        this.value = hsv[2];
+        this.alpha = color.alpha;
     }
 
     getLastColors(): Color[] {
@@ -79,17 +85,6 @@ export class ColorPickerComponent {
             this.saturation = hsv[1];
             this.value = hsv[2];
             this.alpha = color.alpha;
-            this.colorChanged.emit(color);
-        }
-    }
-
-    updateColorHex() {
-        const color = new Color();
-        if (color.setHex(this.hexForm.value)) {
-            const hsv = color.getHsv();
-            this.hue = hsv[0];
-            this.saturation = hsv[1];
-            this.value = hsv[2];
             this.colorChanged.emit(color);
         }
     }

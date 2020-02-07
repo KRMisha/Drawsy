@@ -40,6 +40,7 @@ import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
+import { ColorHexSelectorComponent } from './components/color-picker/color-hex-selector/color-hex-selector.component';
 
 @NgModule({
     declarations: [
@@ -65,6 +66,7 @@ import { GuideComponent } from './components/guide/guide.component';
         ColorSliderComponent,
         ColorContainerComponent,
         ColorFieldComponent,
+        ColorHexSelectorComponent,
     ],
     imports: [
         BrowserModule,
