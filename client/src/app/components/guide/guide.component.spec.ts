@@ -9,7 +9,7 @@ describe('GuideComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [AppModule],
-            declarations: [GuideComponent]
+            declarations: [GuideComponent],
         }).compileComponents();
     }));
 

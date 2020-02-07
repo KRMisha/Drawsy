@@ -23,7 +23,6 @@ describe('Color', () => {
         color.setRgb(300, 300, 300);
         color.setAlpha(10);
         expect(color.getRgba()).toEqual([255, 255, 255, 1]);
-
     });
 
     it('#setNormalized Color should normalize on 255', () => {

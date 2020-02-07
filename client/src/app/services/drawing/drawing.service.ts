@@ -10,4 +10,8 @@ export class DrawingService {
     addElement(element: SVGElement): void {
         this.renderer.appendChild(this.element, element);
     }
+
+    removeElement(element: SVGElement): void {
+        this.renderer.removeChild(this.element, element);
+    }
 }

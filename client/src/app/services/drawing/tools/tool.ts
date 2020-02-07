@@ -11,6 +11,7 @@ export abstract class Tool {
     renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | Color>();
     isMouseDown = false;
+    isMouseInside = false;
 
     constructor(protected drawingService: DrawingService) {}
 
@@ -20,13 +21,10 @@ export abstract class Tool {
     onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
+    onMouseDoubleClick(event: MouseEvent): void {}
     onKeyDown(event: KeyboardEvent): void {}
     onKeyUp(event: KeyboardEvent): void {}
     onEnter(event: MouseEvent): void {}
     onLeave(event: MouseEvent): void {}
     // tslint:enable: empty
-
-    setMouseDown(isMouseDown: boolean): void {
-        this.isMouseDown = isMouseDown;
-    }
 }
