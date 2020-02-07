@@ -17,8 +17,6 @@
                 required
                 min="0"
                 max="10000"
-                [value]="formHeight"
-                (onChange)="updateHeight()"
             />
         </mat-form-field>
         <mat-form-field>
@@ -30,8 +28,6 @@
                 required
                 min="0"
                 max="10000"
-                [value]="formWidth"
-                (onChange)="updateWidth()"
             />
         </mat-form-field>
         <app-color-picker (colorChanged)="updateColor($event)"></app-color-picker>
