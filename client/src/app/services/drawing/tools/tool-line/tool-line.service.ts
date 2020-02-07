@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
+import { Color } from 'src/app/classes/color/color';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
@@ -240,8 +241,12 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLine(): void {
-        const previewColor = this.colorService.getPrimaryColor();
-        previewColor.alpha /= 2;
+        const previewColor = new Color();
+        previewColor.red = this.colorService.getPrimaryColor().red;
+        previewColor.green = this.colorService.getPrimaryColor().green;
+        previewColor.blue = this.colorService.getPrimaryColor().blue;
+        previewColor.alpha = this.colorService.getPrimaryColor().alpha / 2;
+        
         this.renderer.setAttribute(this.previewLine, 'stroke', `${previewColor.toRgbaString()}`);
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);
