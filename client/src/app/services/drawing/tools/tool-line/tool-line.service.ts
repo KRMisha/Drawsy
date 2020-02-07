@@ -225,7 +225,6 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
-        console.log(this.polyline.getAttribute('fill'));
         const circle = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
@@ -247,7 +246,7 @@ export class ToolLineService extends Tool {
         previewColor.blue = this.colorService.getPrimaryColor().blue;
         previewColor.alpha = this.colorService.getPrimaryColor().alpha / 2;
         
-        this.renderer.setAttribute(this.previewLine, 'stroke', `${previewColor.toRgbaString()}`);
+        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);

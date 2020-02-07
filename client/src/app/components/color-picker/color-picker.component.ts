@@ -39,6 +39,7 @@ export class ColorPickerComponent {
     private getColor(): Color {
         const color = new Color();
         color.setHsv(this.hue, this.saturation, this.value);
+        color.alpha = this.alpha;
         return color;
     }
 
