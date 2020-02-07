@@ -8,10 +8,10 @@ describe('ColorPickerComponent', () => {
     let fixture: ComponentFixture<ColorPickerComponent>;
 
     beforeEach(async () => {
-      TestBed.configureTestingModule({
-        imports: [MatSliderModule],
-        declarations: [ColorPickerComponent],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        TestBed.configureTestingModule({
+            imports: [MatSliderModule],
+            declarations: [ColorPickerComponent],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     });
 
@@ -19,7 +19,7 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-      });
+    });
 
     it('should create', () => {
         expect(component).toBeTruthy();

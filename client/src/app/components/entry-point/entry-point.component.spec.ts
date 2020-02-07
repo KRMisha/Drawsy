@@ -11,11 +11,8 @@ describe('EntryPointComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [EntryPointComponent],
-            imports: [
-                MatSidenavModule,
-                MatCardModule
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            imports: [MatSidenavModule, MatCardModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

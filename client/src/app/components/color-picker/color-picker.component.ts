@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { FormControl, Validators } from '@angular/forms';
+import { Color, hexRegexStr } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 
 enum Button {
@@ -16,17 +17,18 @@ export class ColorPickerComponent {
     hue = 0.0;
     saturation = 0.0;
     value = 0.0;
-    hexString = '000000';
     alpha = 1;
 
-    @Input() displayColorPicker = true;
+    hexForm = new FormControl(this.getColor().getHex(), [Validators.required, Validators.pattern(hexRegexStr)]);
+
+    @Input() isColorPickerDisplayEnabled = true;
     @Input()
     set setPaletteColor(color: Color) {
         const hsv = color.getHsv();
         this.hue = hsv[0];
         this.saturation = hsv[1];
         this.value = hsv[2];
-        this.alpha = color.getRgba()[3];
+        this.alpha = color.alpha;
     }
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
@@ -43,7 +45,7 @@ export class ColorPickerComponent {
     setHue(hue: number): void {
         this.hue = hue;
         const color = this.getColor();
-        this.hexString = color.getHex();
+        this.hexForm.setValue(color.getHex());
         this.colorChanged.emit(color);
     }
 
@@ -56,6 +58,7 @@ export class ColorPickerComponent {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
         this.colorChanged.emit(this.getColor());
+        this.hexForm.setValue(this.getColor().getHex());
     }
 
     getLastColors(): Color[] {
@@ -80,15 +83,13 @@ export class ColorPickerComponent {
     }
 
     updateColorHex() {
-        if (this.hexString.length !== 6) {
-            return;
-        }
         const color = new Color();
-        color.setHex(this.hexString);
-        const hsv = color.getHsv();
-        this.hue = hsv[0];
-        this.saturation = hsv[1];
-        this.value = hsv[2];
-        this.colorChanged.emit(color);
+        if (color.setHex(this.hexForm.value)) {
+            const hsv = color.getHsv();
+            this.hue = hsv[0];
+            this.saturation = hsv[1];
+            this.value = hsv[2];
+            this.colorChanged.emit(color);
+        }
     }
 }

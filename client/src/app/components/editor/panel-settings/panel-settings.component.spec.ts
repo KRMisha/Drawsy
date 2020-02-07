@@ -9,7 +9,7 @@ describe('PanelSettingsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [PanelSettingsComponent],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

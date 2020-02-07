@@ -10,15 +10,12 @@ import { GuideComponent } from './guide.component';
 
 @Component({
     selector: 'app-guide-welcome',
-    template: '<p>Mock Welcome Guide</p>'
+    template: '<p>Mock Welcome Guide</p>',
 })
 class MockGuideWelcomeComponent {}
 
 describe('GuideComponent', () => {
-    const MockGuides: Type<any>[] = [
-        MockGuideWelcomeComponent,
-        MockGuideWelcomeComponent
-    ];
+    const MockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
@@ -31,19 +28,18 @@ describe('GuideComponent', () => {
             close: null,
         });
 
-        const InjectedguideServiceSpyObj = jasmine.createSpyObj({getGuides: MockGuides});
+        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: MockGuides });
         TestBed.configureTestingModule({
             imports: [MatIconModule, MatDialogModule],
             declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                { provide: GuideService, useValue: InjectedguideServiceSpyObj }
+                { provide: GuideService, useValue: InjectedguideServiceSpyObj },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
-        }).overrideModule( BrowserDynamicTestingModule,
-                        { set: { entryComponents: [MockGuideWelcomeComponent]}})
-        .compileComponents();
-
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        })
+            .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [MockGuideWelcomeComponent] } })
+            .compileComponents();
     });
 
     beforeEach(() => {

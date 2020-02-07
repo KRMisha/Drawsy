@@ -54,7 +54,7 @@
         ></app-color-container>
     </div>
 
-    <div [style.display]="displayColorPicker ? 'block' : 'none'">
+    <div *ngIf="isColorPickerDisplayEnabled">
         <app-color-field
             [setHue]="hue"
             [setSaturation]="saturation"
@@ -70,8 +70,9 @@
             <mat-slider min="0.0" max="1.0" step="0.01" value="1.0" [(ngModel)]="alpha" (change)="setAlpha($event.value)"> </mat-slider>
         </div>
         <mat-form-field>
-            <mat-label>Couleur (hex)</mat-label>
-            <input matInput (input)="updateColorHex()" [(ngModel)]="hexString" />
+            <mat-label>Hex: # </mat-label>
+            <input matInput (input)="updateColorHex()" [formControl]="hexForm" />
+            <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Couleur invalide</mat-error>
         </mat-form-field>
     </div>
 </div>

@@ -11,15 +11,9 @@ describe('EditorComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                EditorComponent
-            ],
-            imports: [
-                MatIconModule,
-                MatSidenavModule,
-                MatSliderModule
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            declarations: [EditorComponent],
+            imports: [MatIconModule, MatSidenavModule, MatSliderModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

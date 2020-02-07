@@ -23,9 +23,9 @@ describe('SidebarComponent', () => {
                 ColorPickerComponent,
                 ColorSliderComponent,
                 ColorFieldComponent,
-                ColorContainerComponent
+                ColorContainerComponent,
             ],
-            imports: [MatSidenavModule, MatIconModule, MatSliderModule, Input]
+            imports: [MatSidenavModule, MatIconModule, MatSliderModule, Input],
         }).compileComponents();
     }));
 

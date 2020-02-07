@@ -1,8 +1,4 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
-<<<<<<< HEAD
-=======
-// import { ColorService } from 'src/app/services/color/color.service';
->>>>>>> feature/color-picker
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 

@@ -1,8 +1,10 @@
 export const MAX_COLOR_VALUE = 255;
 export const MAX_HUE = 360;
+export const hexRegexStr = '^[0-9a-fA-F]{6}$';
+export const hexRegex = new RegExp(hexRegexStr);
 
 export class Color {
-    private _red = 0;
+    private _red = 0; // tslint:disable-line: variable-name
     get red(): number {
         return this._red;
     }
@@ -10,7 +12,7 @@ export class Color {
         this._red = this.clampValue(red, 0, MAX_COLOR_VALUE);
     }
 
-    private _green = 0;
+    private _green = 0; // tslint:disable-line: variable-name
     get green(): number {
         return this._green;
     }
@@ -18,7 +20,7 @@ export class Color {
         this._green = this.clampValue(green, 0, MAX_COLOR_VALUE);
     }
 
-    private _blue = 0;
+    private _blue = 0; // tslint:disable-line: variable-name
     get blue(): number {
         return this._blue;
     }
@@ -26,7 +28,7 @@ export class Color {
         this._blue = this.clampValue(blue, 0, MAX_COLOR_VALUE);
     }
 
-    private _alpha = 1;
+    private _alpha = 1; // tslint:disable-line: variable-name
     get alpha(): number {
         return this._alpha;
     }
@@ -66,11 +68,14 @@ export class Color {
         }
     }
 
-    setHex(hex: string) {
-        hex = hex.replace('#', '');
-        this.red = parseInt(hex.substring(0, 2), 16);
-        this.green = parseInt(hex.substring(2, 4), 16);
-        this.blue = parseInt(hex.substring(4, 6), 16);
+    setHex(hex: string): boolean {
+        if (hexRegex.test(hex)) {
+            this.red = parseInt(hex.substring(0, 2), 16);
+            this.green = parseInt(hex.substring(2, 4), 16);
+            this.blue = parseInt(hex.substring(4, 6), 16);
+            return true;
+        }
+        return false;
     }
 
     getHsv(): [number, number, number] {
@@ -113,10 +118,6 @@ export class Color {
 
     getHex(): string {
         return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
-    }
-
-    getRgba(): [number, number, number, number] {
-        return [this.red, this.green, this.blue, this.alpha];
     }
 
     toRgbaString(): string {

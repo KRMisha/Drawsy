@@ -31,7 +31,7 @@ describe('Color', () => {
         expect(color.getRgba()).toEqual([255, 255, 255, 1]);
     });
 
-    it('')
+    it('');
     it('#setNormalized Color should normalize on 255', () => {
         color['setNormalizedColor'](1, 1, 1);
         expect(color['red']).toEqual(255);
