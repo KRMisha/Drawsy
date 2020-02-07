@@ -27,8 +27,8 @@ export class DrawingComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
-        this.drawingService.element = this.svg.nativeElement;
-        // this.backgroundColor = this.colorService.getBackgroundColor().toRgbString();
+        this.drawingService.rootElement = this.svg.nativeElement;
+        this.drawingService.reappendStoredElements();
     }
 
     @HostListener('document:mousemove', ['$event'])

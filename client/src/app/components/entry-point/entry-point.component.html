@@ -10,7 +10,7 @@
             </div>
             <div class="button-list">
                 <a mat-stroked-button (click)="openCreateDrawing()">CRÉER UN NOUVEAU DESSIN</a>
-                <div *ngIf="continueDrawing">
+                <div *ngIf="this.drawingService.isDrawingStarted">
                     <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
                 </div>
                 <a mat-stroked-button>GALERIE DE DESSIN</a>
@@ -26,10 +26,10 @@
                 Développeurs:
             </mat-card-content>
             <div class="name-list">
-                <li>Samer Massaad</li>
+                <li>Francis "Chancellier Suprême des Stylesheets" Pepin</li>
                 <li>Justin van den Hanenberg</li>
                 <li>Misha Krieger-Raynauld</li>
-                <li>Francis Pepin</li>
+                <li>Samer Massaad</li>
                 <li>Simon Gauvin</li>
             </div>
         </mat-card>

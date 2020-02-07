@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
 import { Color } from 'src/app/classes/color/color';
+
 
 @Component({
     selector: 'app-create-drawing',
@@ -14,25 +14,18 @@ export class CreateDrawingComponent implements OnInit {
     windowHeight: number;
     formWidth: number;
     formHeight: number;
+    backgroundColor: Color;
 
     drawingForm = new FormGroup({
-        height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
         width: new FormControl(this.formWidth, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     });
 
-    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: CreateDrawingService) {}
+    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>) {}
 
     ngOnInit() {
-        this.windowHeight = window.innerHeight;
         this.windowWidth = window.innerWidth;
-        this.formWidth = this.windowWidth;
         this.formHeight = this.windowHeight;
-    }
-
-    onSubmit() {
-        this.drawingService.changeHeight(this.drawingForm.controls.height.value);
-        this.drawingService.changeWidth(this.drawingForm.controls.width.value);
-        this.onClose();
     }
 
     onClose() {
@@ -40,13 +33,14 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     updateColor(color: Color) {
-        console.log(color);
+        this.backgroundColor = color;
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        if (this.formWidth === this.windowWidth) {
-            this.formWidth = (event.target as Window).innerWidth;
+        if (this.formWidth === this.subtractSidebarWidth(this.windowWidth)) {
+            this.formWidth = this.subtractSidebarWidth((event.target as Window).innerWidth);
+            console.log('hello');
         }
         if (this.formHeight === this.windowHeight) {
             this.formHeight = (event.target as Window).innerHeight;
@@ -54,4 +48,10 @@ export class CreateDrawingComponent implements OnInit {
         this.windowWidth = (event.target as Window).innerWidth;
         this.windowHeight = (event.target as Window).innerHeight;
     }
+
+    private subtractSidebarWidth(totalWidth: number): number {
+        const sidebarWidth = 68;
+        const toolSettingWidth = 278;
+        return totalWidth - sidebarWidth - toolSettingWidth;
+  }
 }
