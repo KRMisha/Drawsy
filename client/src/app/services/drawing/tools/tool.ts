@@ -1,16 +1,21 @@
 import { Renderer2 } from '@angular/core';
-import { Color } from '../../../classes/color/color';
 import { DrawingService } from '../drawing.service';
 
 export enum ToolSetting {
     Size,
-    Color,
     HasJunction,
+    StrokeType,
 }
+
+export enum Style {
+  FillWithBorder,
+  FillOnly,
+  BorderOnly
+};
 
 export abstract class Tool {
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | Color | [boolean, number]>();
+    toolSettings = new Map<ToolSetting, number | [boolean, number] | Style>();
     isMouseDown = false;
     isMouseInside = false;
 
