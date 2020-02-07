@@ -1,20 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
+import { Vec2 } from '../../../../classes/vec2/vec2'
 import { DrawingService } from '../../drawing.service';
 import { Style, Tool, ToolSetting } from '../tool';
-
-interface Coords {
-    x: number;
-    y: number;
-}
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolRectangleService extends Tool {
     private rectangle: SVGPathElement;
-    private origin: Coords;
-    private mousePosition: Coords;
+    private origin: Vec2;
+    private mousePosition: Vec2;
     private isSquare = false;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
@@ -51,9 +47,7 @@ export class ToolRectangleService extends Tool {
     onKeyUp(event: KeyboardEvent) {
         if (event.key === 'Shift') {
             this.isSquare = false;
-            console.log(this.isSquare.toString());
             if (this.isMouseInside && this.isMouseDown) {
-                console.log(this.mousePosition.x, this.mousePosition.y);
                 this.updateRectanglePath();
             }
         }
@@ -80,6 +74,7 @@ export class ToolRectangleService extends Tool {
         this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
+        this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
         return rectangle;
     }
 
@@ -87,7 +82,7 @@ export class ToolRectangleService extends Tool {
         this.renderer.setAttribute(this.rectangle, 'd', this.getRectangleString(this.mousePosition));
     }
 
-    private getRectangleString(position: Coords): string {
+    private getRectangleString(position: Vec2): string {
         const positionCopy = { x: position.x, y: position.y };
         if (this.isSquare) {
             const maxSideLength: number = Math.max(Math.abs(positionCopy.x - this.origin.x), Math.abs(positionCopy.y - this.origin.y));
