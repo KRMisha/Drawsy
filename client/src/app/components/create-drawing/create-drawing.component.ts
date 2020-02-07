@@ -46,6 +46,14 @@ export class CreateDrawingComponent implements OnInit {
         this.backgroundColor = color;
     }
 
+    updateWidth() {
+        this.formWidth = this.drawingForm.controls.width.value;
+    }
+
+    updateHeight() {
+        this.formHeight = this.drawingForm.controls.height.value;
+    }
+
     private substractSidebarWidth(totalWidth: number): number {
         const sidebarWidth = 68;
         const toolSettingWidth = 278;
