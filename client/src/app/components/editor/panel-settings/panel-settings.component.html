@@ -21,8 +21,12 @@
         </button>
     </div>
 
-    <app-color-picker (colorChanged)="updateColor($event)" (previousColorSelected)="displayColorPicker = false"
-        [displayColorPicker]="displayColorPicker" [setPaletteColor]="getSelectedColor()">
+    <app-color-picker
+        (colorChanged)="updateColor($event)"
+        (previousColorSelected)="displayColorPicker = false"
+        [displayColorPicker]="displayColorPicker"
+        [setPaletteColor]="getSelectedColor()"
+    >
     </app-color-picker>
 </div>
 
@@ -31,12 +35,17 @@
 <div *ngIf="toolHolderService.tools[selectedButton.toolIndex].toolSettings.has(ToolSetting.Size)">
     <div class="option">
         <h2>Taille</h2>
-        <input [ngModel]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.Size)"
-            (ngModelChange)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.Size, $event)" />
+        <input
+            [ngModel]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.Size)"
+            (ngModelChange)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.Size, $event)"
+        />
     </div>
-    <mat-slider min="1" max="100"
+    <mat-slider
+        min="1"
+        max="100"
         (input)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.Size, $event.value)"
-        [value]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.Size)">
+        [value]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.Size)"
+    >
     </mat-slider>
 </div>
 
@@ -45,17 +54,37 @@
         <h2>Taille jonction</h2>
         <input
             [ngModel]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[1]"
-            (ngModelChange)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0], $event])"
-            [disabled]="!toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]" />
+            (ngModelChange)="
+                toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [
+                    toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0],
+                    $event
+                ])
+            "
+            [disabled]="!toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]"
+        />
         <mat-checkbox
             [ngModel]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]"
-            (ngModelChange)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [$event, toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[1]])">
+            (ngModelChange)="
+                toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [
+                    $event,
+                    toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[1]
+                ])
+            "
+        >
         </mat-checkbox>
     </div>
-    <mat-slider min="1" max="40"
-        (input)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0], $event.value])"
+    <mat-slider
+        min="1"
+        max="40"
+        (input)="
+            toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [
+                toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0],
+                $event.value
+            ])
+        "
         [value]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[1]"
-        [disabled]="!toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]">
+        [disabled]="!toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]"
+    >
     </mat-slider>
 </div>
 

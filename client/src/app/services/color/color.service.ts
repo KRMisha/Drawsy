@@ -20,19 +20,6 @@ export class ColorService {
         }
     }
 
-    addColor(color: Color): void {
-        for (const arrayColor of this.lastColors) {
-            if (color.rgbEquals(arrayColor)) {
-                return;
-            }
-        }
-
-        for (let i = this.lastColors.length - 1; i > 0; i--) {
-            this.lastColors[i] = this.lastColors[i - 1];
-        }
-        this.lastColors[0] = color;
-    }
-
     swapPrimaryAndSecondaryColors(): void {
         const temp = this.primaryColor;
         this.primaryColor = this.secondaryColor;
@@ -49,7 +36,7 @@ export class ColorService {
         this.addColor(color);
     }
 
-    setBackroundColor(color: Color): void {
+    setBackgroundColor(color: Color): void {
         this.backgroundColor = color;
         this.addColor(color);
     }
@@ -68,5 +55,18 @@ export class ColorService {
 
     getBackgroundColor(): Color {
         return this.backgroundColor;
+    }
+
+    private addColor(color: Color): void {
+        for (const arrayColor of this.lastColors) {
+            if (color.rgbEquals(arrayColor)) {
+                return;
+            }
+        }
+
+        for (let i = this.lastColors.length - 1; i > 0; i--) {
+            this.lastColors[i] = this.lastColors[i - 1];
+        }
+        this.lastColors[0] = color;
     }
 }

@@ -17,14 +17,18 @@ export class DrawingComponent implements AfterViewInit {
     height = '100%';
     backgroundColor = 'rgb(255, 255, 255)';
 
-    constructor(private renderer: Renderer2, private drawingService: DrawingService,
-                private toolSelectorService: ToolSelectorService, private colorService: ColorService) {}
+    constructor(
+        private renderer: Renderer2,
+        private drawingService: DrawingService,
+        private toolSelectorService: ToolSelectorService,
+        private colorService: ColorService,
+    ) {}
 
     ngAfterViewInit() {
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
         this.drawingService.element = this.svg.nativeElement;
-        this.backgroundColor = this.colorService.getBackgroundColor().toRgbString();
+        // this.backgroundColor = this.colorService.getBackgroundColor().toRgbString();
     }
 
     @HostListener('document:mousemove', ['$event'])

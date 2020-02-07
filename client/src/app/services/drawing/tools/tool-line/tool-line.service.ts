@@ -99,7 +99,7 @@ export class ToolLineService extends Tool {
         if (this.isShiftDown === false) {
             const firstXIndex = 0;
             const firstYIndex = 1;
-            const lastXIndex =  this.points.length - 2;
+            const lastXIndex = this.points.length - 2;
             const lastYIndex = this.points.length - 1;
 
             const deltaX = Math.abs(this.points[firstXIndex] - this.points[lastXIndex]);
@@ -157,26 +157,33 @@ export class ToolLineService extends Tool {
     }
 
     private updateNextPointPosition() {
-        const xy = this.calculateNextPointPosition(this.lastPointX,
-                                                   this.lastPointY,
-                                                   this.mouseX,
-                                                   this.mouseY,
-                                                   this.isShiftDown,
-                                                   this.currentlyDrawing);
+        const xy = this.calculateNextPointPosition(
+            this.lastPointX,
+            this.lastPointY,
+            this.mouseX,
+            this.mouseY,
+            this.isShiftDown,
+            this.currentlyDrawing,
+        );
         this.nextPointX = xy[0];
         this.nextPointY = xy[1];
     }
 
-    private calculateNextPointPosition(lastX: number, lastY: number,
-                                       currentX: number, currentY: number,
-                                       isShiftDown: boolean, currentlyDrawing: boolean): [number, number] {
+    private calculateNextPointPosition(
+        lastX: number,
+        lastY: number,
+        currentX: number,
+        currentY: number,
+        isShiftDown: boolean,
+        currentlyDrawing: boolean,
+    ): [number, number] {
         let nextPointX: number;
         let nextPointY: number;
         if (currentlyDrawing === false || isShiftDown === false) {
-            nextPointX = currentX
+            nextPointX = currentX;
             nextPointY = currentY;
         } else {
-            let angle = Math.atan2((currentY - lastY), (currentX - lastX)) * 180 / Math.PI;
+            let angle = (Math.atan2(currentY - lastY, currentX - lastX) * 180) / Math.PI;
             angle = Math.round(angle / 45) * 45;
             if (angle <= 0) {
                 angle += 360;
@@ -193,7 +200,7 @@ export class ToolLineService extends Tool {
                 nextPointY = Math.tan((angle / 180) * Math.PI) * (currentX - lastX) + lastY;
             }
         }
-        return [nextPointX, nextPointY]
+        return [nextPointX, nextPointY];
     }
 
     private stopDrawing(): void {
@@ -218,7 +225,7 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
-        console.log(this.polyline.getAttribute('fill'))
+        console.log(this.polyline.getAttribute('fill'));
         const circle = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);

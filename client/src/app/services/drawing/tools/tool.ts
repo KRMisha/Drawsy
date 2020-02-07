@@ -8,10 +8,10 @@ export enum ToolSetting {
 }
 
 export enum Style {
-  FillWithBorder,
-  FillOnly,
-  BorderOnly
-};
+    FillWithBorder,
+    FillOnly,
+    BorderOnly,
+}
 
 export abstract class Tool {
     renderer: Renderer2;

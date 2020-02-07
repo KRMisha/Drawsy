@@ -84,7 +84,7 @@ import { GuideComponent } from './components/guide/guide.component';
         MatExpansionModule,
         MatDialogModule,
         MatSelectModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     entryComponents: [
         CreateDrawingComponent,
