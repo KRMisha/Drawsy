@@ -94,7 +94,9 @@ export class ToolLineService extends Tool {
         if (this.junctionPoints.length > 0) {
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
-        this.points.length -= geometryDimension;
+        if (this.points.length > geometryDimension) {
+            this.points.length -= geometryDimension;
+        }
 
         if (this.isShiftDown === false) {
             const firstXIndex = 0;
@@ -111,9 +113,9 @@ export class ToolLineService extends Tool {
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
-                this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
             }
         }
+        this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
         this.junctionPoints.length = 0;
         this.stopDrawing();
     }
