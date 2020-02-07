@@ -17,9 +17,13 @@ export class PanelSettingsComponent {
     isPrimarySelected = true;
     displayColorPicker = false;
 
-    private color = new Color(MAX_COLOR_VALUE, MAX_COLOR_VALUE, MAX_COLOR_VALUE, 1);
+    private color = new Color();
 
-    constructor(public toolHolderService: ToolHolderService, private colorService: ColorService) {}
+    constructor(public toolHolderService: ToolHolderService, private colorService: ColorService) {
+        this.color.red = MAX_COLOR_VALUE;
+        this.color.green = MAX_COLOR_VALUE;
+        this.color.blue = MAX_COLOR_VALUE;
+    }
 
     getPrimaryColor(): Color {
         return this.colorService.getPrimaryColor();

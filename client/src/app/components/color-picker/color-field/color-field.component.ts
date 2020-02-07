@@ -58,7 +58,13 @@ export class ColorFieldComponent implements AfterViewInit {
     private mouseY = canvasHeight;
     private isMouseInside = false;
 
-    private color = new Color(0, 0, 0, 1);
+    private color = new Color();
+
+    constructor() {
+        this.color.red = 0;
+        this.color.green = 0;
+        this.color.blue = 0;
+    }
 
     ngAfterViewInit(): void {
         this.context = this.saturationValueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -72,7 +78,7 @@ export class ColorFieldComponent implements AfterViewInit {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
-        const color = new Color(0, 0, 0, 1);
+        const color = new Color();
         color.setHsv(this.hue, 1, 1);
 
         const colorStr = color.toRgbString();

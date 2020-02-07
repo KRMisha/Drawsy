@@ -35,7 +35,7 @@ export class ColorPickerComponent {
     constructor(private colorService: ColorService) {}
 
     private getColor(): Color {
-        const color = new Color(0, 0, 0, this.alpha);
+        const color = new Color();
         color.setHsv(this.hue, this.saturation, this.value);
         return color;
     }
@@ -74,8 +74,7 @@ export class ColorPickerComponent {
             this.hue = hsv[0];
             this.saturation = hsv[1];
             this.value = hsv[2];
-            this.alpha = color.getRgba()[3];
-            color.setAlpha(this.alpha);
+            this.alpha = color.alpha;
             this.colorChanged.emit(color);
         }
     }
@@ -84,7 +83,7 @@ export class ColorPickerComponent {
         if (this.hexString.length !== 6) {
             return;
         }
-        const color = new Color(255, 255, 255, this.alpha);
+        const color = new Color();
         color.setHex(this.hexString);
         const hsv = color.getHsv();
         this.hue = hsv[0];

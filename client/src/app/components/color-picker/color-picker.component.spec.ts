@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AppModule } from 'src/app/app.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSliderModule } from '@angular/material/slider';
 import { ColorPickerComponent } from './color-picker.component';
 
 describe('ColorPickerComponent', () => {
@@ -8,8 +8,10 @@ describe('ColorPickerComponent', () => {
     let fixture: ComponentFixture<ColorPickerComponent>;
 
     beforeEach(async () => {
-        TestBed.configureTestingModule({
-            declarations: [ColorPickerComponent, AppModule],
+      TestBed.configureTestingModule({
+        imports: [MatSliderModule],
+        declarations: [ColorPickerComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA]
         }).compileComponents();
     });
 
@@ -17,7 +19,7 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
+      });
 
     it('should create', () => {
         expect(component).toBeTruthy();
