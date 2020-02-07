@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
+import { Color } from 'src/app/classes/color/color';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
@@ -93,7 +94,9 @@ export class ToolLineService extends Tool {
         if (this.junctionPoints.length > 0) {
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
-        this.points.length -= geometryDimension;
+        if (this.points.length > geometryDimension) {
+            this.points.length -= geometryDimension;
+        }
 
         if (this.isShiftDown === false) {
             const firstXIndex = 0;
@@ -110,9 +113,9 @@ export class ToolLineService extends Tool {
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
-                this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
             }
         }
+        this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
         this.junctionPoints.length = 0;
         this.stopDrawing();
     }
@@ -224,7 +227,6 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
-        console.log(this.polyline.getAttribute('fill'));
         const circle = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
@@ -240,9 +242,13 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLine(): void {
-        const previewColor = this.colorService.getPrimaryColor();
-        previewColor.alpha /= 2;
-        this.renderer.setAttribute(this.previewLine, 'stroke', `${previewColor.toRgbaString()}`);
+        const previewColor = new Color();
+        previewColor.red = this.colorService.getPrimaryColor().red;
+        previewColor.green = this.colorService.getPrimaryColor().green;
+        previewColor.blue = this.colorService.getPrimaryColor().blue;
+        previewColor.alpha = this.colorService.getPrimaryColor().alpha / 2;
+        
+        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);

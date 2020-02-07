@@ -56,7 +56,6 @@ export class CreateDrawingComponent implements OnInit {
     onResize(event: Event) {
         if (this.formWidth === this.subtractSidebarWidth(this.windowWidth)) {
             this.formWidth = this.subtractSidebarWidth((event.target as Window).innerWidth);
-            console.log('hello');
         }
         if (this.formHeight === this.windowHeight) {
             this.formHeight = (event.target as Window).innerHeight;
