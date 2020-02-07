@@ -81,7 +81,7 @@
     </div>
     <mat-slider
         min="1"
-        max="25"
+        max="40"
         (input)="toolHolderService.tools[selectedButton.toolIndex].toolSettings.set(ToolSetting.HasJunction, [toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0], $event.value])"
         [value]="toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[1]"
         [disabled] = "!toolHolderService.tools[selectedButton.toolIndex].toolSettings.get(ToolSetting.HasJunction)[0]"
