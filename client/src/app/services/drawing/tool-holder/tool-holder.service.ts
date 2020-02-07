@@ -11,11 +11,7 @@ import { ToolRectangleService } from '../tools/tool-rectangle/tool-rectangle.ser
 export class ToolHolderService {
     tools: Tool[];
 
-    constructor(tool1: ToolPencilService,
-                tool2: ToolBrushService,
-                tool3: ToolLineService,
-                tool4: ToolRectangleService
-                ) {
+    constructor(tool1: ToolPencilService, tool2: ToolBrushService, tool3: ToolLineService, tool4: ToolRectangleService) {
         this.tools = [tool1, tool2, tool3, tool4];
     }
 }

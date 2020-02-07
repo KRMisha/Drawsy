@@ -40,7 +40,11 @@ export class ToolSelectorService {
     }
 
     setMouseDown(isMouseDown: boolean): void {
-        this.selectedTool.setMouseDown(isMouseDown);
+        this.selectedTool.isMouseDown = isMouseDown;
+    }
+
+    setMouseInside(isMouseInside: boolean): void {
+        this.selectedTool.isMouseInside = isMouseInside;
     }
 
     setRenderer(renderer: Renderer2) {

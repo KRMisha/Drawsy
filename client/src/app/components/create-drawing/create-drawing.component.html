@@ -10,6 +10,6 @@
     <input #width matInput type="number" placeholder="Largeur" (input)="newWidth(width.value)" [ngModel]="drawingWidth" />
 </mat-form-field>
 
-<app-color-picker (colorChanged)=updateColor($event)></app-color-picker>
+<app-color-picker (colorChanged)="updateColor($event)"></app-color-picker>
 
 <button mat-stroked-button routerLink="/editor" class="confirm-button" (click)="sendData()">CONFIRMER</button>

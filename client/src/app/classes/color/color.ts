@@ -63,7 +63,6 @@ export class Color {
     }
 
     getHsv(): [number, number, number] {
-
         const redPrime = this.red / MAX_COLOR_VALUE;
         const greenPrime = this.green / MAX_COLOR_VALUE;
         const bluePrime = this.blue / MAX_COLOR_VALUE;
@@ -80,9 +79,9 @@ export class Color {
         } else if (cMax === redPrime) {
             hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
         } else if (cMax === greenPrime) {
-            hue = angleValue * (((bluePrime - redPrime) / deltaC) + 2);
+            hue = angleValue * ((bluePrime - redPrime) / deltaC + 2);
         } else {
-            hue = angleValue * (((redPrime - greenPrime) / deltaC) + 4);
+            hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
         }
 
         if (hue < 0) {

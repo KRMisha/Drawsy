@@ -6,11 +6,11 @@ describe('ColorSliderComponent', () => {
     let component: ColorSliderComponent;
     let fixture: ComponentFixture<ColorSliderComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             declarations: [ColorSliderComponent],
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ColorSliderComponent);

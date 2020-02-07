@@ -17,18 +17,20 @@ export class ToolPencilService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseDown) {
+        if (this.isMouseInside && this.isMouseDown) {
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
         }
     }
 
     onMouseDown(event: MouseEvent) {
-        this.path = this.createNewPath();
+        if (this.isMouseInside) {
+            this.path = this.createNewPath();
 
-        const pathString = this.getPathStartString(event.offsetX, event.offsetY);
-        this.renderer.setAttribute(this.path, 'd', pathString);
-        this.drawingService.addElement(this.path);
+            const pathString = this.getPathStartString(event.offsetX, event.offsetY);
+            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.drawingService.addElement(this.path);
+        }
     }
 
     onEnter(event: MouseEvent): void {
@@ -50,17 +52,17 @@ export class ToolPencilService extends Tool {
     }
 
     private getPathStartString(x: number, y: number): string {
-        return 'M' + String(x) + ' ' + String(y) + ' ' + 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'M' + x.toString() + ' ' + y.toString() + ' ' + 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private getPathLineString(x: number, y: number): string {
-        return 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private createNewPath(): SVGPathElement {
-        const path = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(path, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
+        this.renderer.setAttribute(path, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
         this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
