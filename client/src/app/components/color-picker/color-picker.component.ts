@@ -4,7 +4,7 @@ import { ColorService } from 'src/app/services/color/color.service';
 
 enum Button {
     LeftClick = 0,
-    RightClick = 2
+    RightClick = 2,
 }
 
 @Component({

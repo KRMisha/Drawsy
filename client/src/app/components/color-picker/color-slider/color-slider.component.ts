@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Color, MAX_HUE } from 'src/app/classes/color/color';
 
 @Component({
@@ -18,7 +18,7 @@ export class ColorSliderComponent implements AfterViewInit {
     set setHue(hue: number) {
         if (this.canvas !== undefined) {
             this.hue = hue;
-            this.mouseX = hue / 360 * 250;
+            this.mouseX = (hue / 360) * 250;
             this.draw();
         }
     }

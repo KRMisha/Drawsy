@@ -7,12 +7,11 @@ describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
     let fixture: ComponentFixture<ColorPickerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ColorPickerComponent, AppModule]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            declarations: [ColorPickerComponent, AppModule],
+        }).compileComponents();
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ColorPickerComponent);

@@ -16,11 +16,7 @@ export class DrawingComponent implements AfterViewInit {
     height = '100%';
     backgroundColor = 'rgb(255, 255, 255)';
 
-    constructor(
-        private renderer: Renderer2,
-        private drawingService: DrawingService,
-        private toolSelectorService: ToolSelectorService,
-    ) {}
+    constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
     ngAfterViewInit() {
         this.drawingService.renderer = this.renderer;
@@ -28,21 +24,21 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.element = this.svg.nativeElement;
     }
 
-    @HostListener('mousemove', ['$event'])
+    @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         this.toolSelectorService.onMouseMove(event);
     }
 
-    @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent): void {
+    @HostListener('document:mousedown', ['$event'])
+    onMouseDown(event: MouseEvent) {
         if (event.button === leftClick) {
             this.toolSelectorService.setMouseDown(true);
         }
         this.toolSelectorService.onMouseDown(event);
     }
 
-    @HostListener('mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(event: MouseEvent) {
         if (event.button === leftClick) {
             this.toolSelectorService.setMouseDown(false);
         }
@@ -66,14 +62,13 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        if (event.button === leftClick) {
-            this.toolSelectorService.setMouseDown(false);
-        }
+        this.toolSelectorService.setMouseInside(true);
         this.toolSelectorService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
+        this.toolSelectorService.setMouseInside(false);
         this.toolSelectorService.onLeave(event);
     }
 }

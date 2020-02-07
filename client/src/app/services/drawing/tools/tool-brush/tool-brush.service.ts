@@ -5,7 +5,7 @@ import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolBrushService extends Tool {
     private path: SVGPathElement;
@@ -33,11 +33,11 @@ export class ToolBrushService extends Tool {
 
     onEnter(event: MouseEvent): void {
         if (this.isMouseDown) {
-          this.path = this.createNewPath();
+            this.path = this.createNewPath();
 
-          const pathString = this.getPathStartString(event.offsetX, event.offsetY);
-          this.renderer.setAttribute(this.path, 'd', pathString);
-          this.drawingService.addElement(this.path);
+            const pathString = this.getPathStartString(event.offsetX, event.offsetY);
+            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.drawingService.addElement(this.path);
         }
     }
 

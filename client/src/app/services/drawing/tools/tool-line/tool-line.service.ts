@@ -9,7 +9,7 @@ const geometryDimension = 2;
 const lineClosingTolerance = 3;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolLineService extends Tool {
     private polyline: SVGPolylineElement;
