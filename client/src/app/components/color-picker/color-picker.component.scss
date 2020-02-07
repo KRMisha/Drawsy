@@ -31,3 +31,21 @@ h3 {
     display: flex;
     width: 250px;
 }
+
+.hex-selector {
+    display: flex;
+    color: white;
+}
+
+.error-msg {
+    color:#ff2626;
+}
+
+input {
+    border-radius: 25px;
+    border-style: none;
+    text-align: center;
+    width: 70px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
