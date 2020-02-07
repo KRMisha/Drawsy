@@ -58,7 +58,7 @@ export class ColorFieldComponent implements AfterViewInit {
     private mouseY = canvasHeight;
     private isMouseInside = false;
 
-    private color: Color;
+    private color = new Color();
 
     constructor() {
         this.color.red = 0;

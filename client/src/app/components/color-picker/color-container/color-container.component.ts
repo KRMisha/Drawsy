@@ -7,7 +7,7 @@ import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
     styleUrls: ['./color-container.component.scss'],
 })
 export class ColorContainerComponent {
-    @Input() color: Color;
+    @Input() color = new Color();
 
     constructor() {
         this.color.red = MAX_COLOR_VALUE;
