@@ -12,10 +12,12 @@ import { VirtualTimeScheduler } from 'rxjs';
 export class CreateDrawingComponent implements OnInit{
     windowWidth: number;
     windowHeight: number;
+    formWidth: number;
+    formHeight: number;
 
     drawingForm = new FormGroup({
-        height: new FormControl('', Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
-        width: new FormControl('', Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        width: new FormControl(this.formWidth, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     })
 
     constructor(
@@ -26,6 +28,8 @@ export class CreateDrawingComponent implements OnInit{
     ngOnInit() {
         this.windowHeight = window.innerHeight;
         this.windowWidth = window.innerWidth;
+        this.formWidth = this.windowWidth;
+        this.formHeight = this.windowHeight;
     }
 
     onSubmit() {
@@ -40,7 +44,15 @@ export class CreateDrawingComponent implements OnInit{
     }
 
     onResize(event: object) {
+        if(this.formWidth === this.windowWidth) {
+            this.formWidth = event.target.innerWidth;
+        }
+        if(this.formHeight === this.windowHeight) {
+            this.formHeight = event.target.innerHeight;
+        }
         this.windowWidth = event.target.innerWidth;
         this.windowHeight = event.target.innerHeight;
+
+        
     }
 }
