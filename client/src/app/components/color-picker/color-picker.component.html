@@ -69,6 +69,9 @@
             </div>
             <mat-slider min="0.0" max="1.0" step="0.01" value="1.0" [(ngModel)]="alpha" (change)="setAlpha($event.value)"> </mat-slider>
         </div>
-        <input (input)="updateColorHex()" [(ngModel)]="hexString" />
+        <input (input)="updateColorHex()" [formControl]="hexForm" />
+        <div *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)" class="alert alert-danger">
+            Fuck 
+        </div>
     </div>
 </div>

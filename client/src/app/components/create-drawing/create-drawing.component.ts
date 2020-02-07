@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
+import { Color } from 'src/app/classes/color/color';
 
 @Component({
     selector: 'app-create-drawing',
@@ -37,6 +38,11 @@ export class CreateDrawingComponent implements OnInit {
     onClose() {
         this.dialogRef.close();
     }
+
+    updateColor(color: Color) {
+        console.log(color);
+    }
+
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
         if (this.formWidth === this.windowWidth) {

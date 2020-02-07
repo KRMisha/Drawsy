@@ -1,5 +1,7 @@
 export const MAX_COLOR_VALUE = 255;
 export const MAX_HUE = 360;
+export const hexRegexStr = '^[0-9a-fA-F]{6}$';
+export const hexRegex = new RegExp(hexRegexStr);
 
 export class Color {
     private red: number;
@@ -54,12 +56,15 @@ export class Color {
         }
     }
 
-    setHex(hex: string) {
-        hex = hex.replace('#', '');
-        const red = parseInt(hex.substring(0, 2), 16);
-        const green = parseInt(hex.substring(2, 4), 16);
-        const blue = parseInt(hex.substring(4, 6), 16);
-        this.setRgb(red, green, blue);
+    setHex(hex: string): boolean {
+        if (hexRegex.test(hex)) {
+            const red = parseInt(hex.substring(0, 2), 16);
+            const green = parseInt(hex.substring(2, 4), 16);
+            const blue = parseInt(hex.substring(4, 6), 16);
+            this.setRgb(red, green, blue);
+            return true;
+        }
+        return false;
     }
 
     getHsv(): [number, number, number] {
