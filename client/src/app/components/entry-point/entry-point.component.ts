@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 import { GuideComponent } from '../guide/guide.component';
-import { DrawingService } from '../../services/drawing/drawing.service'
+import { DrawingService } from '../../services/drawing/drawing.service';
 
 @Component({
     selector: 'app-entry-point',
     templateUrl: './entry-point.component.html',
     styleUrls: ['./entry-point.component.scss'],
 })
-export class EntryPointComponent  {
+export class EntryPointComponent {
     constructor(private dialog: MatDialog, public drawingService: DrawingService) {}
 
     openCreateDrawing(): void {

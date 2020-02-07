@@ -1,6 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { Color } from '../../classes/color/color'
-import { Vec2 } from '../../classes/vec2/vec2'
+import { Color } from '../../classes/color/color';
+import { Vec2 } from '../../classes/vec2/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -42,5 +42,4 @@ export class DrawingService {
             this.renderer.removeChild(this.rootElement, this.elements.pop());
         }
     }
-
 }

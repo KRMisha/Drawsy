@@ -2,9 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from 'src/app/classes/color/color';
-import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
-import { DrawingService } from '../../services/drawing/drawing.service'
-
+import { DrawingService } from '../../services/drawing/drawing.service';
 
 @Component({
     selector: 'app-create-drawing',
@@ -23,14 +21,24 @@ export class CreateDrawingComponent implements OnInit {
         height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     });
 
-    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: DrawingService) {}
+    constructor(private dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: DrawingService) {}
 
     ngOnInit() {
         this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
+        this.formWidth = this.windowWidth;
         this.formHeight = this.windowHeight;
+    }
+
+    onSubmit() {
+        this.drawingService.clearStoredElements();
+        this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
+        this.onClose();
+    }
 
     onClose() {
         this.dialogRef.close();
+    }
 
     updateColor(color: Color) {
         this.backgroundColor = color;
@@ -53,5 +61,5 @@ export class CreateDrawingComponent implements OnInit {
         const sidebarWidth = 68;
         const toolSettingWidth = 278;
         return totalWidth - sidebarWidth - toolSettingWidth;
-  }
+    }
 }
