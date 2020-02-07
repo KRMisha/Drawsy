@@ -1,25 +1,9 @@
-.form {
-    width: 100%;
-    height: auto;
-}
-
-.exit-button {
-    float: right;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-
-    :hover {
-        color: rgb(255, 0, 0);
-    }
-}
-
-.confirm-button {
-    float: right;
-}
-
-.vertical-container {
+form {
     display: flex;
     flex-direction: column;
-    padding-top: 5%;
-    padding-bottom: 0px;
+}
+input {
+    height: 2em;
+    font-size: 1em;
+    padding-left: .4em;
 }

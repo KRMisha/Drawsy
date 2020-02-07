@@ -1,15 +1,21 @@
 <button mat-icon-button class="exit-button" (click)="close()">
     <mat-icon class="icon">close</mat-icon>
 </button>
-<h1 class="header">Création de dessin</h1>
-<h2>Dimensions du dessin</h2>
-<mat-form-field class="form">
-    <input #height matInput type="number" placeholder="Hauteur" (input)="newHeight(height.value)" [ngModel]="drawingHeight" />
-</mat-form-field>
-<mat-form-field class="form">
-    <input #width matInput type="number" placeholder="Largeur" (input)="newWidth(width.value)" [ngModel]="drawingWidth" />
-</mat-form-field>
 
-<app-color-picker (colorChanged)="updateColor($event)"></app-color-picker>
+<mat-card>
+    <mat-card-title>
+        Création de dessin
+    </mat-card-title>
+    
+    <form [formGroup]="drawingForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <input matInput type="number" formControlName="height" placeholder="Hauteur" required min="0" max="10000">
+        </mat-form-field>
 
-<button mat-stroked-button routerLink="/editor" class="confirm-button" (click)="sendData()">CONFIRMER</button>
+        <mat-form-field>
+            <input matInput type="number" formControlName="width" placeholder="Largeur" required min="0" max="10000">
+        </mat-form-field>
+        <app-color-picker (colorChanged)="updateColor($event)"></app-color-picker>
+        <button mat-stroked-button  type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
+    </form>
+</mat-card>

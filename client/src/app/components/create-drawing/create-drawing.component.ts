@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
+<<<<<<< Updated upstream
 import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from '../../classes/color/color';
 import { ColorService } from '../../services/color/color.service';
 import { CreateDrawingService } from '../../services/create-drawing/data-sharer/create-drawing.service';
+=======
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
+>>>>>>> Stashed changes
 
 @Component({
     selector: 'app-create-drawing',
@@ -10,10 +15,8 @@ import { CreateDrawingService } from '../../services/create-drawing/data-sharer/
     styleUrls: ['./create-drawing.component.scss'],
 })
 export class CreateDrawingComponent {
-    drawingWidth: number;
-    drawingHeight: number;
-    drawingColor = new Color(255, 255, 255, 1);
 
+<<<<<<< Updated upstream
     constructor(
         public dialogRef: MatDialogRef<CreateDrawingComponent>,
         private drawingService: CreateDrawingService,
@@ -31,26 +34,20 @@ export class CreateDrawingComponent {
     close(): void {
         this.dialogRef.close();
     }
+=======
+    drawingForm = new FormGroup({
+        height: new FormControl('', Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)]) ),
+        width: new FormControl('', Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+    })
 
-    newHeight(height: number) {
-        // TODO: Sanitize input
-        this.drawingHeight = height;
+    constructor(private drawingService: CreateDrawingService) {}
+>>>>>>> Stashed changes
+
+    onSubmit() {
+        //this.drawingService.changeHeight(this.drawingForm.);
     }
 
-    newWidth(width: number) {
-        // TODO: Sanitize input
-        this.drawingWidth = width;
-    }
+    onClose() {
 
-    updateColor(color: Color) {
-        this.drawingColor = color;
-    }
-
-    sendData() {
-        // this.drawingService.changeColor(this.drawingColor);
-        this.colorService.setBackroundColor(this.drawingColor);
-        this.drawingService.changeHeight(this.drawingHeight);
-        this.drawingService.changeWidth(this.drawingWidth);
-        this.close();
     }
 }

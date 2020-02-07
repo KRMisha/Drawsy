@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -80,6 +80,7 @@ import { GuideComponent } from './components/guide/guide.component';
         AppRoutingModule,
         MatExpansionModule,
         MatDialogModule,
+        ReactiveFormsModule
     ],
     entryComponents: [
         CreateDrawingComponent,
