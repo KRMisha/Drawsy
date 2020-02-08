@@ -1,5 +1,5 @@
-export const MAX_COLOR_VALUE = 255;
-export const MAX_HUE = 360;
+export const maxColorValue = 255;
+export const maxHue = 360;
 export const hexRegexStr = '^[0-9a-fA-F]{6}$';
 export const hexRegex = new RegExp(hexRegexStr);
 
@@ -9,7 +9,7 @@ export class Color {
         return this._red;
     }
     set red(red: number) {
-        this._red = this.clampValue(red, 0, MAX_COLOR_VALUE);
+        this._red = this.clampValue(red, 0, maxColorValue);
     }
 
     private _green = 0; // tslint:disable-line: variable-name
@@ -17,7 +17,7 @@ export class Color {
         return this._green;
     }
     set green(green: number) {
-        this._green = this.clampValue(green, 0, MAX_COLOR_VALUE);
+        this._green = this.clampValue(green, 0, maxColorValue);
     }
 
     private _blue = 0; // tslint:disable-line: variable-name
@@ -25,7 +25,7 @@ export class Color {
         return this._blue;
     }
     set blue(blue: number) {
-        this._blue = this.clampValue(blue, 0, MAX_COLOR_VALUE);
+        this._blue = this.clampValue(blue, 0, maxColorValue);
     }
 
     private _alpha = 1; // tslint:disable-line: variable-name
@@ -44,7 +44,7 @@ export class Color {
         const maxValue = 1;
         const sectionSize = 60;
 
-        hue = Math.min(Math.max(minHue, hue), MAX_HUE);
+        hue = Math.min(Math.max(minHue, hue), maxHue);
         saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
         value = Math.min(Math.max(minValue, value), maxValue);
 
@@ -79,9 +79,9 @@ export class Color {
     }
 
     getHsv(): [number, number, number] {
-        const redPrime = this.red / MAX_COLOR_VALUE;
-        const greenPrime = this.green / MAX_COLOR_VALUE;
-        const bluePrime = this.blue / MAX_COLOR_VALUE;
+        const redPrime = this.red / maxColorValue;
+        const greenPrime = this.green / maxColorValue;
+        const bluePrime = this.blue / maxColorValue;
 
         const cMax = Math.max(redPrime, greenPrime, bluePrime);
         const cMin = Math.min(redPrime, greenPrime, bluePrime);
@@ -134,9 +134,9 @@ export class Color {
     }
 
     private setNormalizedColor(red: number, green: number, blue: number) {
-        this.red = red * MAX_COLOR_VALUE;
-        this.green = green * MAX_COLOR_VALUE;
-        this.blue = blue * MAX_COLOR_VALUE;
+        this.red = red * maxColorValue;
+        this.green = green * maxColorValue;
+        this.blue = blue * maxColorValue;
     }
 
     private clampValue(value: number, min: number, max: number): number {
