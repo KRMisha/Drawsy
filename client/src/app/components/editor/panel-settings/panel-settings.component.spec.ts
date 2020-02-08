@@ -8,7 +8,7 @@ import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
 import { ColorService } from 'src/app/services/color/color.service';
 import { PanelSettingsComponent } from './panel-settings.component';
 
-fdescribe('PanelSettingsComponent', () => {
+describe('PanelSettingsComponent', () => {
     let component: PanelSettingsComponent;
     let fixture: ComponentFixture<PanelSettingsComponent>;
 
