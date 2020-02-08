@@ -16,14 +16,14 @@ describe('SidebarComponent', () => {
     let toolHolderServiceSpyObj: jasmine.SpyObj<ToolHolderService>;
 
     beforeEach(async(() => {
-        toolSelectorServiceSpyObj = jasmine.createSpyObj({setSelectedTool: ''});
-        toolHolderServiceSpyObj = jasmine.createSpyObj({'': ''});
+        toolSelectorServiceSpyObj = jasmine.createSpyObj({ setSelectedTool: '' });
+        toolHolderServiceSpyObj = jasmine.createSpyObj({ '': '' });
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             imports: [BrowserAnimationsModule, MatSidenavModule, MatIconModule, MatSliderModule, MatDialogModule],
             providers: [
-                {provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj},
-                {provide: ToolHolderService, useValue: toolHolderServiceSpyObj}
+                { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
+                { provide: ToolHolderService, useValue: toolHolderServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

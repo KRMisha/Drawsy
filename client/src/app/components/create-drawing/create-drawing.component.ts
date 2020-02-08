@@ -24,7 +24,7 @@ export class CreateDrawingComponent implements OnInit {
     ngOnInit() {
         this.windowHeight = window.innerHeight;
         this.windowWidth = window.innerWidth;
-        this.drawingForm.controls.width.setValue(this.substractSidebarWidth(this.windowWidth));
+        this.drawingForm.controls.width.setValue(this.subtractSidebarWidth(this.windowWidth));
         this.drawingForm.controls.height.setValue(this.windowHeight);
         this.backgroundColor.red = 255;
         this.backgroundColor.green = 255;
@@ -46,7 +46,7 @@ export class CreateDrawingComponent implements OnInit {
         this.backgroundColor = color;
     }
 
-    private substractSidebarWidth(totalWidth: number): number {
+    private subtractSidebarWidth(totalWidth: number): number {
         const sidebarWidth = 68;
         const toolSettingWidth = 278;
         return totalWidth - sidebarWidth - toolSettingWidth;
@@ -54,10 +54,10 @@ export class CreateDrawingComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.substractSidebarWidth(this.windowWidth);
+        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.subtractSidebarWidth(this.windowWidth);
         const matchingHeight: boolean = this.drawingForm.controls.height.value === this.windowHeight;
         if (matchingWidth && matchingHeight) {
-            this.drawingForm.controls.width.setValue(this.substractSidebarWidth((event.target as Window).innerWidth));
+            this.drawingForm.controls.width.setValue(this.subtractSidebarWidth((event.target as Window).innerWidth));
             this.drawingForm.controls.height.setValue((event.target as Window).innerHeight);
         }
         this.windowWidth = (event.target as Window).innerWidth;

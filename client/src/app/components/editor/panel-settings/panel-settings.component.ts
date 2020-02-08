@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
-import { SidebarButton } from '../../../classes/sidebar-button/sidebar-button';
-import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
+import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
 import { Style, ToolSetting } from '../../../services/drawing/tools/tool';
 
 const numberRegex = new RegExp('^[0-9]+$');
@@ -23,21 +22,20 @@ enum Textures {
 export class PanelSettingsComponent {
     ToolSetting = ToolSetting; // Make enum available to template
     Textures = Textures;
-    @Input() selectedButton: SidebarButton;
 
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 
     private color = new Color();
 
-    constructor(public toolHolderService: ToolHolderService, private colorService: ColorService) {
+    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
         this.color.red = MAX_COLOR_VALUE;
         this.color.green = MAX_COLOR_VALUE;
         this.color.blue = MAX_COLOR_VALUE;
     }
 
     getSetting(setting: ToolSetting): number | [boolean, number] | Style {
-        const value = this.toolHolderService.tools[this.selectedButton.toolIndex].toolSettings.get(setting);
+        const value = this.toolSelectorService.selectedTool.toolSettings.get(setting);
         return value as number | [boolean, number] | Style;
     }
 
@@ -48,11 +46,11 @@ export class PanelSettingsComponent {
         ) {
             return;
         }
-        this.toolHolderService.tools[this.selectedButton.toolIndex].toolSettings.set(setting, value);
+        this.toolSelectorService.selectedTool.toolSettings.set(setting, value);
     }
 
     hasSetting(setting: ToolSetting): boolean {
-        return this.toolHolderService.tools[this.selectedButton.toolIndex].toolSettings.has(setting);
+        return this.toolSelectorService.selectedTool.toolSettings.has(setting);
     }
 
     getPrimaryColor(): Color {
