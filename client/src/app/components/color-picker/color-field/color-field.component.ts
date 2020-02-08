@@ -137,7 +137,7 @@ export class ColorFieldComponent implements AfterViewInit {
     }
 
     updateColor(event: MouseEvent): void {
-        if (this.isMouseDown === false || this.isMouseInside === false || event.offsetY >= this.canvas.height) {
+        if (!this.isMouseDown || !this.isMouseInside || event.offsetY >= this.canvas.height) {
             return;
         }
 

@@ -1,5 +1,14 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { Color, MAX_HUE } from 'src/app/classes/color/color';
+import { Color, maxHue } from 'src/app/classes/color/color';
+
+enum ColorGradient {
+    Red = 'rgb(255, 0, 0)',
+    Yellow = 'rgb(255, 255, 0)',
+    Green = 'rgb(0, 255, 0)',
+    Cyan = 'rgb(0, 255, 255)',
+    Blue = 'rgb(0, 0, 255)',
+    Pink = 'rgb(255, 0, 255)'
+}
 
 @Component({
     selector: 'app-color-slider',
@@ -43,13 +52,13 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.clearRect(0, 0, width, height);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
-        horizontalGradient.addColorStop(0 / 6, 'rgb(255, 0, 0)');
-        horizontalGradient.addColorStop(1 / 6, 'rgb(255, 255, 0)');
-        horizontalGradient.addColorStop(2 / 6, 'rgb(0, 255, 0)');
-        horizontalGradient.addColorStop(3 / 6, 'rgb(0, 255, 255)');
-        horizontalGradient.addColorStop(4 / 6, 'rgb(0, 0, 255)');
-        horizontalGradient.addColorStop(5 / 6, 'rgb(255, 0, 255)');
-        horizontalGradient.addColorStop(6 / 6, 'rgb(255, 0, 0)');
+        horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
+        horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
+        horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
+        horizontalGradient.addColorStop(3 / 6, ColorGradient.Cyan);
+        horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
+        horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
+        horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
         this.context.fillStyle = horizontalGradient;
         this.context.fillRect(0, 7, width, height - 14);
 
@@ -73,8 +82,8 @@ export class ColorSliderComponent implements AfterViewInit {
         }
     }
 
-    @HostListener('document:mouseup', ['$event'])
-    onMouseUp(event: MouseEvent): void {
+    @HostListener('document:mouseup')
+    onMouseUp(): void {
         this.isMouseDown = false;
     }
 
@@ -83,23 +92,23 @@ export class ColorSliderComponent implements AfterViewInit {
         this.update(event);
     }
 
-    @HostListener('mouseleave', ['$event'])
-    onMouseLeave(event: MouseEvent): void {
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
         this.isMouseInside = false;
     }
 
-    @HostListener('mouseenter', ['$event'])
-    onMouseEnter(event: MouseEvent): void {
+    @HostListener('mouseenter')
+    onMouseEnter(): void {
         this.isMouseInside = true;
     }
 
     update(event: MouseEvent): void {
-        if (this.isMouseDown === false || this.isMouseInside === false) {
+        if (!this.isMouseDown || !this.isMouseInside) {
             return;
         }
 
         this.mouseX = event.offsetX;
-        this.hue = (this.mouseX / this.canvas.width) * MAX_HUE;
+        this.hue = (this.mouseX / this.canvas.width) * maxHue;
         this.draw();
         this.hueChange.emit(this.hue);
     }

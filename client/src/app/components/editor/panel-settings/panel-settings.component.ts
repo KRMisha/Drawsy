@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
+import { Color, maxColorValue } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../services/drawing/tools/tool';
@@ -22,9 +22,9 @@ export class PanelSettingsComponent {
     private color = new Color();
 
     constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
-        this.color.red = MAX_COLOR_VALUE;
-        this.color.green = MAX_COLOR_VALUE;
-        this.color.blue = MAX_COLOR_VALUE;
+        this.color.red = maxColorValue;
+        this.color.green = maxColorValue;
+        this.color.blue = maxColorValue;
     }
 
     getToolName(): string {
