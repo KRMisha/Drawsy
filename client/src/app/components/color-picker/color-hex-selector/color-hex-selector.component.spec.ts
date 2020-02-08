@@ -1,25 +1,18 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ColorHexSelectorComponent } from './color-hex-selector.component';
-import { FormsModule } from '@angular/forms';
 
-<<<<<<< HEAD
 describe('ColorHexSelectorComponent', () => {
-=======
-fdescribe('ColorHexSelectorComponent', () => {
->>>>>>> origin/master
     let component: ColorHexSelectorComponent;
     let fixture: ComponentFixture<ColorHexSelectorComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ColorHexSelectorComponent],
-<<<<<<< HEAD
-=======
 			imports: [MatFormFieldModule, FormsModule],
 		    schemas: [CUSTOM_ELEMENTS_SCHEMA]
->>>>>>> origin/master
         }).compileComponents();
     }));
 

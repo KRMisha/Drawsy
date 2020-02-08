@@ -73,8 +73,7 @@ export class ToolRectangleService extends Tool {
 
         if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
             this.renderer.setAttribute(rectangle, 'stroke', 'none');
-        }
-        else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly){
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly) {
             this.renderer.setAttribute(rectangle, 'fill', 'none');
         }
         return rectangle;

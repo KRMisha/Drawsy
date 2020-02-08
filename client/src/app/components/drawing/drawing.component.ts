@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Color } from 'src/app/classes/color/color';
+import { Vec2 } from 'src/app/classes/vec2/vec2';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
-import { Vec2 } from 'src/app/classes/vec2/vec2';
-import { Color } from 'src/app/classes/color/color';
 
 const leftClick = 0;
-// const rightClick = 2;
 
 @Component({
     selector: 'app-drawing',
@@ -17,8 +16,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     dimensions: Vec2;
     backgroundColor: Color;
 
-    constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {
-    }
+    constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
     ngOnInit() {
         this.dimensions = this.drawingService.drawingDimensions;

@@ -16,11 +16,13 @@ describe('ColorPickerComponent', () => {
         for (let i = 0; i < 10; i++) {
             lastColorsMock.push(new Color());
         }
+        // tslint:disable: no-empty
         colorServiceSpyObj = jasmine.createSpyObj({
             getLastColors: lastColorsMock,
             setPrimaryColor: () => {},
             setSecondaryColor: () => {},
         });
+        // tslint:enable: no-empty
 
         TestBed.configureTestingModule({
             declarations: [ColorPickerComponent],
@@ -28,11 +30,7 @@ describe('ColorPickerComponent', () => {
             providers: [{ provide: ColorService, useValue: colorServiceSpyObj }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
-<<<<<<< HEAD
-    });
-=======
     }));
->>>>>>> origin/master
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ColorPickerComponent);

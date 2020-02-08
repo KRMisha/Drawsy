@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { of } from 'rxjs';
+import { Color } from 'src/app/classes/color/color';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { CreateDrawingComponent } from './create-drawing.component';
-import { Color } from 'src/app/classes/color/color';
 
 describe('CreateDrawingComponent', () => {
     let component: CreateDrawingComponent;
