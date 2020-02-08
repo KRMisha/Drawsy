@@ -128,10 +128,6 @@ export class Color {
         return `rgb(${this.red}, ${this.green}, ${this.blue})`;
     }
 
-    rgbEquals(color: Color): boolean {
-        return this.red === color.red && this.green === color.green && this.blue === color.blue;
-    }
-
     private componentToHex(component: number) {
         const hex = Math.round(component).toString(16);
         return hex.length === 1 ? '0' + hex : hex;

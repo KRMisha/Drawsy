@@ -1,6 +1,6 @@
 import { Color } from './color';
 
-fdescribe('Color', () => {
+describe('Color', () => {
     let color: Color;
 
     beforeEach(() => {
