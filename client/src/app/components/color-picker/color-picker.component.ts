@@ -22,11 +22,7 @@ export class ColorPickerComponent {
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
     set setPaletteColor(color: Color) {
-        const hsv = color.getHsv();
-        this.hue = hsv[0];
-        this.saturation = hsv[1];
-        this.value = hsv[2];
-        this.alpha = color.alpha;
+        this.setColor(color);
     }
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
@@ -41,11 +37,19 @@ export class ColorPickerComponent {
         return color;
     }
 
-    setHue(hue: number): void {
-        this.hue = hue;
-        const color = this.getColor();
+    private setColor(color: Color): void {
+        const hsv = color.getHsv();
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+        this.value = hsv[2];
+        this.alpha = color.alpha;
         this.hexStr = color.getHex();
         this.colorChanged.emit(color);
+    }
+
+    setHue(hue: number): void {
+        this.hue = hue;
+        this.setColor(this.getColor());
     }
 
     setAlpha(alpha: number) {
@@ -56,36 +60,26 @@ export class ColorPickerComponent {
     setSaturationAndValue(saturationAndValue: [number, number]): void {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
-        this.colorChanged.emit(this.getColor());
-        this.hexStr = this.getColor().getHex();
+        this.setColor(this.getColor());
     }
 
     updateColorFromHex(color: Color) {
-        const hsv = color.getHsv();
-        this.hue = hsv[0];
-        this.saturation = hsv[1];
-        this.value = hsv[2];
-        this.alpha = color.alpha;
+        this.setColor(color);
     }
 
     getLastColors(): Color[] {
         return this.colorService.getLastColors();
     }
 
-    setColor(event: MouseEvent, color: Color): void {
+    oldColorClick(event: MouseEvent, color: Color): void {
         if (event.button === Button.LeftClick || event.button === Button.RightClick) {
             if (event.button === Button.LeftClick) {
                 this.colorService.setPrimaryColor(color);
             } else {
                 this.colorService.setSecondaryColor(color);
             }
+            this.setColor(color);
             this.previousColorSelected.emit();
-            const hsv = color.getHsv();
-            this.hue = hsv[0];
-            this.saturation = hsv[1];
-            this.value = hsv[2];
-            this.alpha = color.alpha;
-            this.colorChanged.emit(color);
         }
     }
 }

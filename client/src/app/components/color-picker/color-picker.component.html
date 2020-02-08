@@ -2,59 +2,59 @@
     <div class="recent-colors">
         <app-color-container
             [color]="getLastColors()[0]"
-            (click)="setColor($event, getLastColors()[0])"
-            (contextmenu)="setColor($event, getLastColors()[0])"
+            (click)="oldColorClick($event, getLastColors()[0])"
+            (contextmenu)="oldColorClick($event, getLastColors()[0])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[1]"
-            (click)="setColor($event, getLastColors()[1])"
-            (contextmenu)="setColor($event, getLastColors()[1])"
+            (click)="oldColorClick($event, getLastColors()[1])"
+            (contextmenu)="oldColorClick($event, getLastColors()[1])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[2]"
-            (click)="setColor($event, getLastColors()[2])"
-            (contextmenu)="setColor($event, getLastColors()[2])"
+            (click)="oldColorClick($event, getLastColors()[2])"
+            (contextmenu)="oldColorClick($event, getLastColors()[2])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[3]"
-            (click)="setColor($event, getLastColors()[3])"
-            (contextmenu)="setColor($event, getLastColors()[3])"
+            (click)="oldColorClick($event, getLastColors()[3])"
+            (contextmenu)="oldColorClick($event, getLastColors()[3])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[4]"
-            (click)="setColor($event, getLastColors()[4])"
-            (contextmenu)="setColor($event, getLastColors()[4])"
+            (click)="oldColorClick($event, getLastColors()[4])"
+            (contextmenu)="oldColorClick($event, getLastColors()[4])"
         ></app-color-container>
     </div>
     <div class="recent-colors">
         <app-color-container
             [color]="getLastColors()[5]"
-            (click)="setColor($event, getLastColors()[5])"
-            (contextmenu)="setColor($event, getLastColors()[5])"
+            (click)="oldColorClick($event, getLastColors()[5])"
+            (contextmenu)="oldColorClick($event, getLastColors()[5])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[6]"
-            (click)="setColor($event, getLastColors()[6])"
-            (contextmenu)="setColor($event, getLastColors()[6])"
+            (click)="oldColorClick($event, getLastColors()[6])"
+            (contextmenu)="oldColorClick($event, getLastColors()[6])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[7]"
-            (click)="setColor($event, getLastColors()[7])"
-            (contextmenu)="setColor($event, getLastColors()[7])"
+            (click)="oldColorClick($event, getLastColors()[7])"
+            (contextmenu)="oldColorClick($event, getLastColors()[7])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[8]"
-            (click)="setColor($event, getLastColors()[8])"
-            (contextmenu)="setColor($event, getLastColors()[8])"
+            (click)="oldColorClick($event, getLastColors()[8])"
+            (contextmenu)="oldColorClick($event, getLastColors()[8])"
         ></app-color-container>
         <app-color-container
             [color]="getLastColors()[9]"
-            (click)="setColor($event, getLastColors()[9])"
-            (contextmenu)="setColor($event, getLastColors()[9])"
+            (click)="oldColorClick($event, getLastColors()[9])"
+            (contextmenu)="oldColorClick($event, getLastColors()[9])"
         ></app-color-container>
     </div>
 
-    <div *ngIf="isColorPickerDisplayEnabled">
+    <div [style.display]="isColorPickerDisplayEnabled? 'block' : 'none'">
         <app-color-field
             [setHue]="hue"
             [setSaturation]="saturation"

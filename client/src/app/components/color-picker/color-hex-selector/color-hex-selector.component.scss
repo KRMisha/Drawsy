@@ -1,0 +1,19 @@
+.container {
+    width: 100%;
+    display: flex;
+}
+
+.single-component {
+    width: 50px;
+}
+
+.all-components {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mat-raised-button {
+    height: 36px;
+    width: 64px;
+}
