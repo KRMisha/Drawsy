@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
 import { ColorService } from 'src/app/services/color/color.service';
+import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 import { PanelSettingsComponent } from './panel-settings.component';
 
 describe('PanelSettingsComponent', () => {
@@ -22,7 +23,7 @@ describe('PanelSettingsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [PanelSettingsComponent],
             imports: [MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
-            providers: [ToolHolderService, { provide: ColorService, useValue: colorServiceSpyObj }],
+            providers: [ToolSelectorService, { provide: ColorService, useValue: colorServiceSpyObj }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

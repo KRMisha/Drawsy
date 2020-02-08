@@ -1,26 +1,32 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Color } from 'src/app/classes/color/color';
+import { Vec2 } from 'src/app/classes/vec2/vec2';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
 const leftClick = 0;
-// const rightClick = 2;
 
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent implements AfterViewInit {
+export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
-    width = '100%';
-    height = '100%';
-    backgroundColor = 'rgb(255, 255, 255)';
+    dimensions: Vec2;
+    backgroundColor: Color;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
-    ngAfterViewInit() {
+    ngOnInit() {
+        this.dimensions = this.drawingService.drawingDimensions;
+        this.backgroundColor = this.drawingService.backgroundColor;
+
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
+    }
+
+    ngAfterViewInit() {
         this.drawingService.rootElement = this.svg.nativeElement;
         this.drawingService.reappendStoredElements();
     }

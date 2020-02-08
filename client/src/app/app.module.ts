@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { ColorContainerComponent } from './components/color-picker/color-container/color-container.component';
 import { ColorFieldComponent } from './components/color-picker/color-field/color-field.component';
+import { ColorHexSelectorComponent } from './components/color-picker/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './components/color-picker/color-slider/color-slider.component';
 import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
@@ -40,7 +41,6 @@ import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
-import { ColorHexSelectorComponent } from './components/color-picker/color-hex-selector/color-hex-selector.component';
 
 @NgModule({
     declarations: [

@@ -2,17 +2,9 @@ import { Component } from '@angular/core';
 import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
-import { Style, ToolSetting } from '../../../services/drawing/tools/tool';
+import { StrokeTypes, Textures, ToolSetting } from '../../../services/drawing/tools/tool';
 
 const numberRegex = new RegExp('^[0-9]+$');
-
-enum Textures {
-    Texture1 = 1,
-    Texture2,
-    Texture3,
-    Texture4,
-    Texture5,
-}
 
 @Component({
     selector: 'app-panel-settings',
@@ -20,8 +12,9 @@ enum Textures {
     styleUrls: ['./panel-settings.component.scss'],
 })
 export class PanelSettingsComponent {
-    ToolSetting = ToolSetting; // Make enum available to template
+    ToolSetting = ToolSetting; // Make enums available to template
     Textures = Textures;
+    StrokeTypes = StrokeTypes;
 
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
@@ -38,12 +31,12 @@ export class PanelSettingsComponent {
         return this.toolSelectorService.selectedTool.name;
     }
 
-    getSetting(setting: ToolSetting): number | [boolean, number] | Style {
+    getSetting(setting: ToolSetting): number | [boolean, number] | StrokeTypes | Textures {
         const value = this.toolSelectorService.selectedTool.toolSettings.get(setting);
-        return value as number | [boolean, number] | Style;
+        return value as number | [boolean, number] | StrokeTypes | Textures;
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | Style) {
+    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
         if (
             (setting === ToolSetting.Size && !numberRegex.test(value.toString())) ||
             (setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString()))
