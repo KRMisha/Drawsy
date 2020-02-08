@@ -7,7 +7,13 @@ import { Style, ToolSetting } from '../../../services/drawing/tools/tool';
 
 const numberRegex = new RegExp('^[0-9]+$');
 
-enum Textures {Texture1=1,Texture2, Texture3, Texture4, Texture5};
+enum Textures {
+    Texture1 = 1,
+    Texture2,
+    Texture3,
+    Texture4,
+    Texture5,
+}
 
 @Component({
     selector: 'app-panel-settings',

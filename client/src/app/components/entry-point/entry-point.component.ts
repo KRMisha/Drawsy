@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { DrawingService } from '../../services/drawing/drawing.service';
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 import { GuideComponent } from '../guide/guide.component';
-import { DrawingService } from '../../services/drawing/drawing.service';
 
 @Component({
     selector: 'app-entry-point',

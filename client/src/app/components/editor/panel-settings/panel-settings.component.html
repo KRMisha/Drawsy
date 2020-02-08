@@ -83,8 +83,7 @@
         <h2>Type de texture</h2>
         <mat-form-field class="select">
             <mat-label>Type de texture</mat-label>
-            <mat-select [value]="getSetting(ToolSetting.Texture)"
-                        (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
+            <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
                 <mat-option [value]="Textures.Texture1">Texture 1</mat-option>
                 <mat-option [value]="Textures.Texture2">Texture 2</mat-option>
                 <mat-option [value]="Textures.Texture3">Texture 3</mat-option>

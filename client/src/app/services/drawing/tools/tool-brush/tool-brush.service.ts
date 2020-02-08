@@ -60,7 +60,7 @@ export class ToolBrushService extends Tool {
         this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
-        this.renderer.setAttribute(path, 'filter', "url(#texture" + this.toolSettings.get(ToolSetting.Texture) + ")");
+        this.renderer.setAttribute(path, 'filter', 'url(#texture' + this.toolSettings.get(ToolSetting.Texture) + ')');
         return path;
     }
 }
