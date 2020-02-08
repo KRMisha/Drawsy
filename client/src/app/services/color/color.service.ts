@@ -59,7 +59,7 @@ export class ColorService {
 
     private addColor(color: Color): void {
         for (const arrayColor of this.lastColors) {
-            if (color.rgbEquals(arrayColor)) {
+            if (color.red === arrayColor.red && color.green === arrayColor.green && color.blue === arrayColor.blue) {
                 return;
             }
         }
