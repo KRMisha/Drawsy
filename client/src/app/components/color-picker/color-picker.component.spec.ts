@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { Color } from 'src/app/classes/color/color';
@@ -11,7 +11,7 @@ describe('ColorPickerComponent', () => {
     let fixture: ComponentFixture<ColorPickerComponent>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
 
-    beforeEach(async () => {
+    beforeEach(async(() => {
         const lastColorsMock: Color[] = [];
         for (let i = 0; i < 10; i++) {
             lastColorsMock.push(new Color());
@@ -23,12 +23,16 @@ describe('ColorPickerComponent', () => {
         });
 
         TestBed.configureTestingModule({
-            imports: [MatSliderModule, ReactiveFormsModule, FormsModule],
             declarations: [ColorPickerComponent],
+            imports: [MatSliderModule, ReactiveFormsModule, FormsModule],
             providers: [{ provide: ColorService, useValue: colorServiceSpyObj }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
+<<<<<<< HEAD
     });
+=======
+    }));
+>>>>>>> origin/master
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ColorPickerComponent);

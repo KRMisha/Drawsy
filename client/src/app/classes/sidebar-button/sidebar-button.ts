@@ -11,5 +11,5 @@ export const sidebarButtons: SidebarButton[] = [
     { name: 'Rectangle', icon: 'crop_5_4', toolIndex: 3 },
     { name: 'Pipette', icon: 'colorize', toolIndex: 4 },
     { name: 'Remplisseur', icon: 'opacity', toolIndex: 5 },
-    { name: 'Aerosol', icon: 'blur_on', toolIndex: 6 },
+    { name: 'Aérosol', icon: 'blur_on', toolIndex: 6 },
 ];

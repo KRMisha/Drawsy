@@ -33,6 +33,7 @@ export class ToolLineService extends Tool {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 5);
         this.toolSettings.set(ToolSetting.HasJunction, [false, 10]);
+        this.name = 'Ligne';
     }
 
     onMouseDown(event: MouseEvent): void {

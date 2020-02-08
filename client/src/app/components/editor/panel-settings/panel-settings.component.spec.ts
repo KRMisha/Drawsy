@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
 import { ColorService } from 'src/app/services/color/color.service';
+import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 import { PanelSettingsComponent } from './panel-settings.component';
 
 describe('PanelSettingsComponent', () => {
@@ -20,9 +21,9 @@ describe('PanelSettingsComponent', () => {
 
         colorServiceSpyObj = jasmine.createSpyObj({ '': '' });
         TestBed.configureTestingModule({
-            imports: [MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
             declarations: [PanelSettingsComponent],
-            providers: [{ provide: ColorService, useValue: colorServiceSpyObj }],
+            imports: [MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
+            providers: [ToolSelectorService, { provide: ColorService, useValue: colorServiceSpyObj }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

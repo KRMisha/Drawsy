@@ -13,6 +13,7 @@ export class ToolBrushService extends Tool {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
         this.toolSettings.set(ToolSetting.Texture, 1);
+        this.name = 'Pinceau';
     }
 
     onMouseMove(event: MouseEvent): void {

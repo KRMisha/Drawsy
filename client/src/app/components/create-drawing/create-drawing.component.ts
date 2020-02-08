@@ -25,8 +25,8 @@ export class CreateDrawingComponent implements OnInit {
     ngOnInit() {
         this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
-        this.drawingForm.controls.width.setValue(this.subtractSidebarWidth(this.windowWidth));
-        this.drawingForm.controls.height.setValue(this.windowHeight);
+        this.drawingForm.controls.width.setValue(this.subtractSidebarWidth(window.innerWidth));
+        this.drawingForm.controls.height.setValue(window.innerHeight);
         this.backgroundColor.red = 255;
         this.backgroundColor.green = 255;
         this.backgroundColor.blue = 255;
