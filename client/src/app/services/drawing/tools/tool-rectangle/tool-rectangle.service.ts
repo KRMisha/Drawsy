@@ -26,7 +26,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.rectangle = this.createNewRectangle();
             this.origin = { x: event.offsetX, y: event.offsetY };
@@ -35,7 +35,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isSquare = true;
             if (this.isMouseInside && this.isMouseDown) {
@@ -44,7 +44,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isSquare = false;
             if (this.isMouseInside && this.isMouseDown) {
@@ -54,13 +54,7 @@ export class ToolRectangleService extends Tool {
     }
 
     onEnter(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.rectangle = this.createNewRectangle();
-            this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.origin = this.mousePosition;
-            this.renderer.setAttribute(this.rectangle, 'd', this.getRectangleString(this.mousePosition));
-            this.drawingService.addElement(this.rectangle);
-        }
+        this.isMouseDown = false;
     }
 
     onLeave(event: MouseEvent): void {

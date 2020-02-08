@@ -15,7 +15,7 @@ import { GuideComponent } from './guide.component';
 class MockGuideWelcomeComponent {}
 
 describe('GuideComponent', () => {
-    const MockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
+    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
@@ -28,7 +28,8 @@ describe('GuideComponent', () => {
             close: null,
         });
 
-        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: MockGuides });
+        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: mockGuides });
+
         TestBed.configureTestingModule({
             imports: [MatIconModule, MatDialogModule],
             declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
@@ -47,7 +48,7 @@ describe('GuideComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         // guideServiceSpyObj = TestBed.get(GuideService);
-        // guideServiceSpyObj.getGuides.and.returnValue(MockGuides);
+        // guideServiceSpyObj.getGuides.and.returnValue(mockGuides);
     });
 
     it('should create', () => {

@@ -1,8 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EntryPointComponent } from './entry-point.component';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { EntryPointComponent } from './entry-point.component';
 
 describe('EntryPointComponent', () => {
     let component: EntryPointComponent;
@@ -11,7 +12,7 @@ describe('EntryPointComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [EntryPointComponent],
-            imports: [MatSidenavModule, MatCardModule],
+            imports: [MatSidenavModule, MatCardModule, MatDialogModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

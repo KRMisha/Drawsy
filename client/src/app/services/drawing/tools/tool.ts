@@ -5,6 +5,7 @@ export enum ToolSetting {
     Size,
     HasJunction,
     StrokeType,
+    Texture,
 }
 
 export enum Style {

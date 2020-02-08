@@ -7,6 +7,14 @@ import { Style, ToolSetting } from '../../../services/drawing/tools/tool';
 
 const numberRegex = new RegExp('^[0-9]+$');
 
+enum Textures {
+    Texture1 = 1,
+    Texture2,
+    Texture3,
+    Texture4,
+    Texture5,
+}
+
 @Component({
     selector: 'app-panel-settings',
     templateUrl: './panel-settings.component.html',
@@ -14,6 +22,7 @@ const numberRegex = new RegExp('^[0-9]+$');
 })
 export class PanelSettingsComponent {
     ToolSetting = ToolSetting; // Make enum available to template
+    Textures = Textures;
     @Input() selectedButton: SidebarButton;
 
     isPrimarySelected = true;

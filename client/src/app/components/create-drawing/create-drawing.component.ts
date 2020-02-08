@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from 'src/app/classes/color/color';
-import { DrawingService } from '../../services/drawing/drawing.service';
+import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
 
 @Component({
     selector: 'app-create-drawing',
@@ -12,27 +12,29 @@ import { DrawingService } from '../../services/drawing/drawing.service';
 export class CreateDrawingComponent implements OnInit {
     windowWidth: number;
     windowHeight: number;
-    formWidth: number;
-    formHeight: number;
     backgroundColor: Color;
 
     drawingForm = new FormGroup({
-        width: new FormControl(this.formWidth, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
-        height: new FormControl(this.formHeight, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        height: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        width: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     });
 
-    constructor(private dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: DrawingService) {}
+    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: CreateDrawingService) {}
 
     ngOnInit() {
-        this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
-        this.formWidth = this.windowWidth;
-        this.formHeight = this.windowHeight;
+        this.windowWidth = window.innerWidth;
+        this.drawingForm.controls.width.setValue(this.substractSidebarWidth(this.windowWidth));
+        this.drawingForm.controls.height.setValue(this.windowHeight);
+        this.backgroundColor.red = 255;
+        this.backgroundColor.green = 255;
+        this.backgroundColor.blue = 255;
     }
 
     onSubmit() {
-        this.drawingService.clearStoredElements();
-        this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
+        this.drawingService.changeHeight(this.drawingForm.controls.height.value);
+        this.drawingService.changeWidth(this.drawingForm.controls.width.value);
+        this.drawingService.changeColor(this.backgroundColor);
         this.onClose();
     }
 
@@ -44,29 +46,21 @@ export class CreateDrawingComponent implements OnInit {
         this.backgroundColor = color;
     }
 
-    updateWidth() {
-        this.formWidth = this.drawingForm.controls.width.value;
-    }
-
-    updateHeight() {
-        this.formHeight = this.drawingForm.controls.height.value;
+    private substractSidebarWidth(totalWidth: number): number {
+        const sidebarWidth = 68;
+        const toolSettingWidth = 278;
+        return totalWidth - sidebarWidth - toolSettingWidth;
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        if (this.formWidth === this.subtractSidebarWidth(this.windowWidth)) {
-            this.formWidth = this.subtractSidebarWidth((event.target as Window).innerWidth);
-        }
-        if (this.formHeight === this.windowHeight) {
-            this.formHeight = (event.target as Window).innerHeight;
+        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.substractSidebarWidth(this.windowWidth);
+        const matchingHeight: boolean = this.drawingForm.controls.height.value === this.windowHeight;
+        if (matchingWidth && matchingHeight) {
+            this.drawingForm.controls.width.setValue(this.substractSidebarWidth((event.target as Window).innerWidth));
+            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight);
         }
         this.windowWidth = (event.target as Window).innerWidth;
         this.windowHeight = (event.target as Window).innerHeight;
-    }
-
-    private subtractSidebarWidth(totalWidth: number): number {
-        const sidebarWidth = 68;
-        const toolSettingWidth = 278;
-        return totalWidth - sidebarWidth - toolSettingWidth;
     }
 }

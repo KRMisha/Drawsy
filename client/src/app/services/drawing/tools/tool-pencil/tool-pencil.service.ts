@@ -21,7 +21,7 @@ export class ToolPencilService extends Tool {
         }
     }
 
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.path = this.createNewPath();
 
@@ -32,13 +32,7 @@ export class ToolPencilService extends Tool {
     }
 
     onEnter(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.path = this.createNewPath();
-
-            const pathString = this.getPathStartString(event.offsetX, event.offsetY);
-            this.renderer.setAttribute(this.path, 'd', pathString);
-            this.drawingService.addElement(this.path);
-        }
+        this.isMouseDown = false;
     }
 
     onLeave(event: MouseEvent): void {
