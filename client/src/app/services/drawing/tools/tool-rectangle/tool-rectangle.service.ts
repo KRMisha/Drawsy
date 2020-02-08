@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { Vec2 } from '../../../../classes/vec2/vec2';
 import { DrawingService } from '../../drawing.service';
-import { Style, Tool, ToolSetting } from '../tool';
+import { StrokeTypes, Tool, ToolSetting } from '../tool';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,7 @@ export class ToolRectangleService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
-        this.toolSettings.set(ToolSetting.StrokeType, Style.FillWithBorder);
+        this.toolSettings.set(ToolSetting.StrokeType, StrokeTypes.FillWithBorder);
         this.name = 'Rectangle';
     }
 
@@ -66,10 +66,17 @@ export class ToolRectangleService extends Tool {
 
     private createNewRectangle(): SVGPathElement {
         const rectangle: SVGPathElement = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
-        this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
+        this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
+            this.renderer.setAttribute(rectangle, 'stroke', 'none');
+        }
+        else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly){
+            this.renderer.setAttribute(rectangle, 'fill', 'none');
+        }
         return rectangle;
     }
 

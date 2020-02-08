@@ -1,6 +1,6 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { hexRegexStr, Color } from 'src/app/classes/color/color';
+import { Color, hexRegexStr } from 'src/app/classes/color/color';
 
 const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 

@@ -65,14 +65,14 @@
 </div>
 
 <div *ngIf="hasSetting(ToolSetting.StrokeType)">
-    <div class="select-style">
+    <div class="dropdown-style">
         <h2>Type de tracé</h2>
-        <mat-form-field>
+        <mat-form-field class="select">
             <mat-label>Type de tracé</mat-label>
-            <mat-select>
-                <mat-option>Plein avec contour</mat-option>
-                <mat-option>Plein</mat-option>
-                <mat-option>Contour</mat-option>
+            <mat-select [value]="getSetting(ToolSetting.StrokeType)" (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)">
+                <mat-option [value]="StrokeTypes.FillWithBorder">Plein avec contour</mat-option>
+                <mat-option [value]="StrokeTypes.FillOnly">Plein</mat-option>
+                <mat-option [value]="StrokeTypes.BorderOnly">Contour</mat-option>
             </mat-select>
         </mat-form-field>
     </div>
