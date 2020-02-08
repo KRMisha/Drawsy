@@ -16,17 +16,13 @@ describe('PanelSettingsComponent', () => {
     let selectedButtonSpyObj: jasmine.SpyObj<SidebarButton>;
 
     beforeEach(async(() => {
-        selectedButtonSpyObj = jasmine.createSpyObj(
-            {toolIndex: 1}
-        );
+        selectedButtonSpyObj = jasmine.createSpyObj({ toolIndex: 1 });
 
-        colorServiceSpyObj = jasmine.createSpyObj({'': ''});
+        colorServiceSpyObj = jasmine.createSpyObj({ '': '' });
         TestBed.configureTestingModule({
-            imports: [MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
             declarations: [PanelSettingsComponent],
-            providers: [
-                { provide: ColorService, useValue: colorServiceSpyObj}
-            ],
+            imports: [MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
+            providers: [ToolHolderService, { provide: ColorService, useValue: colorServiceSpyObj }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

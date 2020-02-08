@@ -5,12 +5,11 @@ import { hexRegexStr, Color } from 'src/app/classes/color/color';
 const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 
 @Component({
-  selector: 'app-color-hex-selector',
-  templateUrl: './color-hex-selector.component.html',
-  styleUrls: ['./color-hex-selector.component.scss']
+    selector: 'app-color-hex-selector',
+    templateUrl: './color-hex-selector.component.html',
+    styleUrls: ['./color-hex-selector.component.scss'],
 })
 export class ColorHexSelectorComponent {
-
     hexForm = new FormControl('000000', [Validators.required, Validators.pattern(hexRegexStr)]);
     redHexForm = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     greenHexForm = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
@@ -35,9 +34,11 @@ export class ColorHexSelectorComponent {
     }
 
     updateColorRgb(): void {
-        if (singleComponentRegex.test(this.redHexForm.value) &&
+        if (
+            singleComponentRegex.test(this.redHexForm.value) &&
             singleComponentRegex.test(this.greenHexForm.value) &&
-            singleComponentRegex.test(this.blueHexForm.value)) {
+            singleComponentRegex.test(this.blueHexForm.value)
+        ) {
             this.hexForm.setValue(this.redHexForm.value + this.greenHexForm.value + this.blueHexForm.value);
             this.updateColorHex();
         }
@@ -51,5 +52,4 @@ export class ColorHexSelectorComponent {
             this.hex = this.hexForm.value;
         }
     }
-
 }

@@ -1,25 +1,28 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ColorHexSelectorComponent } from './color-hex-selector.component';
+import { FormsModule } from '@angular/forms';
 
-describe('ColorHexSelectorComponent', () => {
-  let component: ColorHexSelectorComponent;
-  let fixture: ComponentFixture<ColorHexSelectorComponent>;
+fdescribe('ColorHexSelectorComponent', () => {
+    let component: ColorHexSelectorComponent;
+    let fixture: ComponentFixture<ColorHexSelectorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ColorHexSelectorComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ColorHexSelectorComponent],
+			imports: [MatFormFieldModule, FormsModule],
+		    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ColorHexSelectorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ColorHexSelectorComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
