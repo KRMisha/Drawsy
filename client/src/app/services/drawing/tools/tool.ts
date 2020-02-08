@@ -17,6 +17,7 @@ export enum Style {
 export abstract class Tool {
     renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | [boolean, number] | Style>();
+    name: string;
     isMouseDown = false;
     isMouseInside = false;
 

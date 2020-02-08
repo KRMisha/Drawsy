@@ -17,6 +17,7 @@ export class ToolRectangleService extends Tool {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
         this.toolSettings.set(ToolSetting.StrokeType, Style.FillWithBorder);
+        this.name = 'Rectangle';
     }
 
     onMouseMove(event: MouseEvent): void {

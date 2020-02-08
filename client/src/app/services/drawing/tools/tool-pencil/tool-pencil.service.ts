@@ -12,6 +12,7 @@ export class ToolPencilService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
+        this.name = 'Crayon';
     }
 
     onMouseMove(event: MouseEvent): void {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
@@ -32,6 +32,10 @@ export class PanelSettingsComponent {
         this.color.red = MAX_COLOR_VALUE;
         this.color.green = MAX_COLOR_VALUE;
         this.color.blue = MAX_COLOR_VALUE;
+    }
+
+    getToolName(): string {
+        return this.toolSelectorService.selectedTool.name;
     }
 
     getSetting(setting: ToolSetting): number | [boolean, number] | Style {

@@ -30,7 +30,7 @@
     </app-color-picker>
 </div>
 
-<h1>{{ selectedButton.name }}</h1>
+<h1>{{ getToolName() }}</h1>
 
 <div *ngIf="hasSetting(ToolSetting.Size)">
     <div class="option">
