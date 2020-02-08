@@ -7,12 +7,15 @@ describe('Color', () => {
         color = new Color();
     });
 
-    it('#setRgb and #setAlpha should set to min 0', () => {
+    it('setters should clamp values to min 0', () => {
         color.red = -1;
         color.green = -1;
         color.blue = -1;
         color.alpha = -1;
-        expect(color.getRgba()).toEqual([0, 0, 0, 0]);
+        expect(color.red).toEqual(0);
+        expect(color.green).toEqual(0);
+        expect(color.blue).toEqual(0);
+        expect(color.alpha).toEqual(0);
     });
 
     it('#setRgb and #setAlpha should modify the value correctly', () => {
@@ -20,7 +23,10 @@ describe('Color', () => {
         color.green = 20;
         color.blue = 30;
         color.alpha = 0.2;
-        expect(color.getRgba()).toEqual([10, 20, 30, 0.2]);
+        expect(color.red).toEqual(10);
+        expect(color.green).toEqual(20);
+        expect(color.blue).toEqual(30);
+        expect(color.alpha).toEqual(0.2);
     });
 
     it('rgb should have a max value of 255 and alpha of 1', () => {
@@ -28,7 +34,10 @@ describe('Color', () => {
         color.green = 300;
         color.blue = 300;
         color.alpha = 10;
-        expect(color.getRgba()).toEqual([255, 255, 255, 1]);
+        expect(color.red).toEqual(255);
+        expect(color.green).toEqual(255);
+        expect(color.blue).toEqual(255);
+        expect(color.alpha).toEqual(1);
     });
 
     it('');
