@@ -14,13 +14,10 @@ const leftClick = 0;
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
-    dimensions: Vec2 = { x: 0, y: 0 };
-    backgroundColor: Color = new Color();
+    dimensions: Vec2;
+    backgroundColor: Color;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {
-        this.backgroundColor.red = 0;
-        this.backgroundColor.green = 0;
-        this.backgroundColor.blue = 0;
     }
 
     ngOnInit() {
