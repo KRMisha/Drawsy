@@ -41,6 +41,7 @@ import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-si
 import { GuideWelcomeComponent } from './components/guide/guide-content/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
 import { ColorHexSelectorComponent } from './components/color-picker/color-hex-selector/color-hex-selector.component';
+import { GuideCalligraphyComponent } from './components/guide/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
 
 @NgModule({
     declarations: [
@@ -67,6 +68,7 @@ import { ColorHexSelectorComponent } from './components/color-picker/color-hex-s
         ColorContainerComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
+        GuideCalligraphyComponent,
     ],
     imports: [
         BrowserModule,
