@@ -39,7 +39,7 @@ fdescribe('Color', () => {
         expect(color.blue).toEqual(255);
         expect(color.alpha).toEqual(1);
     });
-    
+
     it('color should be set correctly when sent a valid hex color', () => {
         color.setHex('f51d1d');
         expect([color.red, color.green, color.blue]).toEqual([245, 29, 29]);
@@ -92,19 +92,19 @@ fdescribe('Color', () => {
         color.blue = 50;
         hsv = color.getHsv();
         expect([Math.round(hsv[0] * 100) / 100, Math.round(hsv[1] * 100) / 100, Math.round(hsv[2] * 100) / 100]).toEqual([0, 0.09, 0.22]);
-        
+
         color.red = 50;
         color.green = 55;
         color.blue = 50;
         hsv = color.getHsv();
         expect([Math.round(hsv[0] * 100) / 100, Math.round(hsv[1] * 100) / 100, Math.round(hsv[2] * 100) / 100]).toEqual([120, 0.09, 0.22]);
-    
+
         color.red = 50;
         color.green = 50;
         color.blue = 55;
         hsv = color.getHsv();
         expect([Math.round(hsv[0] * 100) / 100, Math.round(hsv[1] * 100) / 100, Math.round(hsv[2] * 100) / 100]).toEqual([240, 0.09, 0.22]);
-    
+
         color.red = 0;
         color.green = 0;
         color.blue = 0;
@@ -114,18 +114,18 @@ fdescribe('Color', () => {
 
     it('color should return valid hex', () => {
         color.setHex('f51d1d');
-        expect(color.getHex()).toEqual('f51d1d')
+        expect(color.getHex()).toEqual('f51d1d');
         color.setHex('asdf');
-        expect(color.getHex()).toEqual('f51d1d')
+        expect(color.getHex()).toEqual('f51d1d');
         color.setHex('fefefe');
-        expect(color.getHex()).toEqual('fefefe')
+        expect(color.getHex()).toEqual('fefefe');
     });
 
     it('color should return valid rgb string', () => {
         color.red = 123;
         color.green = 124;
         color.blue = 125;
-        expect(color.toRgbString()).toEqual('rgb(123, 124, 125)')
+        expect(color.toRgbString()).toEqual('rgb(123, 124, 125)');
     });
 
     it('color should return valid rgba string', () => {
@@ -133,6 +133,6 @@ fdescribe('Color', () => {
         color.green = 124;
         color.blue = 125;
         color.alpha = 0.9;
-        expect(color.toRgbaString()).toEqual('rgba(123, 124, 125, 0.9)')
+        expect(color.toRgbaString()).toEqual('rgba(123, 124, 125, 0.9)');
     });
 });

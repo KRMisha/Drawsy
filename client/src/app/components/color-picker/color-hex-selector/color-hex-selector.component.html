@@ -7,17 +7,17 @@
     <div *ngIf="!isHex" class="all-components">
         <mat-form-field class="single-component">
             <mat-label>Rouge:</mat-label>
-            <input matInput (input)="updateColorRgb()" [formControl]="redHexForm"/>
+            <input matInput (input)="updateColorRgb()" [formControl]="redHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="single-component">
             <mat-label>Vert:</mat-label>
-            <input matInput (input)="updateColorRgb()" [formControl]="greenHexForm"/>
+            <input matInput (input)="updateColorRgb()" [formControl]="greenHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="single-component">
             <mat-label>Bleu:</mat-label>
-            <input matInput (input)="updateColorRgb()" [formControl]="blueHexForm"/>
+            <input matInput (input)="updateColorRgb()" [formControl]="blueHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>
     </div>

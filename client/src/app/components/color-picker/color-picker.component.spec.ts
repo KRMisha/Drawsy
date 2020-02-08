@@ -17,9 +17,9 @@ describe('ColorPickerComponent', () => {
             lastColorsMock.push(new Color());
         }
         colorServiceSpyObj = jasmine.createSpyObj({
-            getLastColors: lastColorsMock, 
+            getLastColors: lastColorsMock,
             setPrimaryColor: () => {},
-            setSecondaryColor: () => {} 
+            setSecondaryColor: () => {},
         });
 
         TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe('ColorPickerComponent', () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     });
-    
+
     beforeEach(() => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;

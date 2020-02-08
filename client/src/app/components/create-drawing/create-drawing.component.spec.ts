@@ -25,8 +25,7 @@ describe('CreateDrawingComponent', () => {
         TestBed.configureTestingModule({
             declarations: [CreateDrawingComponent],
             imports: [FormsModule, MatCardModule, MatIconModule, ReactiveFormsModule],
-            providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj },
-                        DrawingService],
+            providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj }, DrawingService],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
