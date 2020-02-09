@@ -35,8 +35,9 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     onSubmit() {
-        const confirmationMessage = 'Attention! Un dessin non-vide est déjà présent sur la zone de travail. '
-                                    + 'Désirez-vous continuer et abandonner vos changements?';
+        const confirmationMessage =
+            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
+            'Désirez-vous continuer et abandonner vos changements?';
         if (this.drawingService.isDrawingStarted && !confirm(confirmationMessage)) {
             return;
         }

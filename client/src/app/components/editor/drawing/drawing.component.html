@@ -20,7 +20,14 @@
 
     <filter id="texture4" filterUnits="userSpaceOnUse">
         <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur4" />
-        <feSpecularLighting in="blur4" surfaceScale="5" specularConstant=".17" specularExponent="50" lighting-color="#e4e4e4" result="specular4">
+        <feSpecularLighting
+            in="blur4"
+            surfaceScale="5"
+            specularConstant=".17"
+            specularExponent="50"
+            lighting-color="#e4e4e4"
+            result="specular4"
+        >
             <fePointLight x="10000" y="10000" z="30000" />
         </feSpecularLighting>
         <feComposite in="specular4" in2="SourceAlpha" operator="in" result="specular4" />
