@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { DrawingService } from '../../services/drawing/drawing.service';
+import { ModalService } from '../../services/modal/modal.service';
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 import { GuideComponent } from '../guide/guide.component';
 
@@ -10,16 +10,13 @@ import { GuideComponent } from '../guide/guide.component';
     styleUrls: ['./entry-point.component.scss'],
 })
 export class EntryPointComponent {
-    constructor(private dialog: MatDialog, public drawingService: DrawingService) {}
+    constructor(public drawingService: DrawingService, private modalService: ModalService) {}
 
     openCreateDrawing(): void {
-        this.dialog.open(CreateDrawingComponent, {});
+        this.modalService.openDialog(CreateDrawingComponent);
     }
 
     openGuideModal(): void {
-        this.dialog.open(GuideComponent, {
-            width: '1920px',
-            height: '1080px',
-        });
+        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
     }
 }

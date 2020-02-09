@@ -1,6 +1,8 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
+// Disable max line length for long imports due to detailed nesting
+// tslint:disable: max-line-length
 import { GuideGridComponent } from '../../components/guide/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '../../components/guide/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '../../components/guide/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -22,6 +24,7 @@ import { GuideRectangleComponent } from '../../components/guide/guide-content/gu
 import { GuideStampComponent } from '../../components/guide/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '../../components/guide/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '../../components/guide/guide-content/guide-welcome/guide-welcome.component';
+// tslint:enable: max-line-length
 
 const guides: Type<any>[] = [
     GuideWelcomeComponent,

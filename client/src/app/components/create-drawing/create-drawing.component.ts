@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Color } from '../../classes/color/color';
 import { DrawingService } from '../../services/drawing/drawing.service';
@@ -20,7 +19,7 @@ export class CreateDrawingComponent implements OnInit {
         height: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     });
 
-    constructor(private router: Router, private dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: DrawingService) {}
+    constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit() {
         this.windowWidth = window.innerWidth;
@@ -36,12 +35,7 @@ export class CreateDrawingComponent implements OnInit {
         this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
         this.drawingService.backgroundColor = this.backgroundColor;
         this.drawingService.clearStoredElements();
-        this.onClose();
         this.router.navigate(['/editor']);
-    }
-
-    onClose() {
-        this.dialogRef.close();
     }
 
     updateColor(color: Color) {

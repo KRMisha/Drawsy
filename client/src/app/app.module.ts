@@ -1,3 +1,6 @@
+// Disable max line length for long imports due to detailed nesting
+// tslint:disable: max-line-length
+
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +28,7 @@ import { ColorHexSelectorComponent } from './components/color-picker/color-hex-s
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './components/color-picker/color-slider/color-slider.component';
 import { CreateDrawingComponent } from './components/create-drawing/create-drawing.component';
+import { DrawingSettingsComponent } from './components/editor/drawing-settings/drawing-settings.component';
 import { DrawingComponent } from './components/editor/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { PanelSettingsComponent } from './components/editor/panel-settings/panel-settings.component';
@@ -54,7 +58,6 @@ import { GuideWelcomeComponent } from './components/guide/guide-content/guide-we
 import { GuideDirective } from './components/guide/guide-directive/guide.directive';
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from './components/guide/guide.component';
-import { DrawingSettingsComponent } from './components/editor/drawing-settings/drawing-settings.component';
 
 @NgModule({
     declarations: [
