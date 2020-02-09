@@ -74,12 +74,12 @@ export class ToolSelectorService {
     }
 
     setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
-        if (
-            (setting === ToolSetting.Size && !numberRegex.test(value.toString())) ||
-            (setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString()))
-        ) {
+        const isSizeTypeInvalid = setting === ToolSetting.Size && !numberRegex.test(value.toString());
+        const isJunctionTypeInvalid = setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString());
+        if (isSizeTypeInvalid || isJunctionTypeInvalid) {
             return;
         }
+
         this.selectedTool.toolSettings.set(setting, value);
     }
 
