@@ -82,11 +82,11 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     getWidth(): number {
         return this.drawingService.drawingDimensions.x;
     }
-    
+
     getHeight(): number {
         return this.drawingService.drawingDimensions.y;
     }
-    
+
     getBackgroundColor(): string {
         return this.drawingService.backgroundColor.toRgbaString();
     }

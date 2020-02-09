@@ -13,7 +13,7 @@ fdescribe('ColorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('colors should be added to the list if their rgb value does not match any color\'s rgb value in the array', () => {
+    it("colors should be added to the list if their rgb value does not match any color's rgb value in the array", () => {
         const color1 = new Color();
         color1.red = 1;
         const color2 = new Color();
