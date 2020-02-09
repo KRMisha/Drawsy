@@ -5,6 +5,7 @@ import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/s
 import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
 import { GuideComponent } from '../../guide/guide.component';
+import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -38,5 +39,9 @@ export class SidebarComponent {
 
     openCreateNewDrawingModal(): void {
         this.dialog.open(CreateDrawingComponent, {});
+    }
+
+    openSettings(): void {
+        this.dialog.open(DrawingSettingsComponent, {});
     }
 }

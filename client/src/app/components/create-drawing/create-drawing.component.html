@@ -16,7 +16,11 @@
                 <input matInput type="number" formControlName="height" placeholder="Hauteur" required min="0" max="10000" />
             </mat-form-field>
         </div>
-        <app-color-picker (colorChanged)="updateColor($event)"></app-color-picker>
+        <app-color-picker
+            (colorChanged)="updateColor($event)"
+            [isLastColorsDisplayedEnabled]="false"
+            [setPaletteColor]="backgroundColor"
+        ></app-color-picker>
         <button mat-stroked-button type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
     </form>
 </div>

@@ -41,6 +41,7 @@ import { GuideSaveDrawingComponent } from './components/guide/guide-save-drawing
 import { GuideSidebarComponent } from './components/guide/guide-sidebar/guide-sidebar.component';
 import { GuideWelcomeComponent } from './components/guide/guide-welcome/guide-welcome.component';
 import { GuideComponent } from './components/guide/guide.component';
+import { DrawingSettingsComponent } from './components/editor/drawing-settings/drawing-settings.component';
 
 @NgModule({
     declarations: [
@@ -67,6 +68,7 @@ import { GuideComponent } from './components/guide/guide.component';
         ColorContainerComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
+        DrawingSettingsComponent,
     ],
     imports: [
         BrowserModule,
@@ -99,6 +101,7 @@ import { GuideComponent } from './components/guide/guide.component';
         GuideColorComponent,
         GuideExportDrawingComponent,
         GuideSaveDrawingComponent,
+        DrawingSettingsComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

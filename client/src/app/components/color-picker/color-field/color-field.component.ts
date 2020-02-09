@@ -37,8 +37,8 @@ export class ColorFieldComponent implements AfterViewInit {
     @Input()
     set setSaturation(saturation: number) {
         this.saturation = saturation;
+        this.mouseX = saturation * canvasWidth;
         if (this.canvas !== undefined) {
-            this.mouseX = saturation * this.canvas.width;
             this.draw();
         }
     }
@@ -47,8 +47,8 @@ export class ColorFieldComponent implements AfterViewInit {
     @Input()
     set setValue(value: number) {
         this.value = value;
+        this.mouseY = (1 - value) * canvasHeight;
         if (this.canvas !== undefined) {
-            this.mouseY = (1 - value) * this.canvas.height;
             this.draw();
         }
     }

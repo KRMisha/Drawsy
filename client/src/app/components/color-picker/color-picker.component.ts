@@ -19,6 +19,9 @@ export class ColorPickerComponent {
     alpha = 1;
     hexStr = '000000';
 
+    @Input() isTextBlack = true;
+    @Input() isLastColorsDisplayedEnabled = true;
+
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
     set setPaletteColor(color: Color) {
