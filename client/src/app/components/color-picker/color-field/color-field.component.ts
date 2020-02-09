@@ -24,7 +24,7 @@ export class ColorFieldComponent implements AfterViewInit {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    private hue = 0.0;
+    private hue = 0;
     @Input()
     set setHue(hue: number) {
         this.hue = hue;
@@ -33,7 +33,7 @@ export class ColorFieldComponent implements AfterViewInit {
         }
     }
 
-    private saturation = 0.0;
+    private saturation = 0;
     @Input()
     set setSaturation(saturation: number) {
         this.saturation = saturation;
@@ -43,7 +43,7 @@ export class ColorFieldComponent implements AfterViewInit {
         }
     }
 
-    private value = 1.0;
+    private value = 1;
     @Input()
     set setValue(value: number) {
         this.value = value;

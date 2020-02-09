@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ButtonId } from 'src/app/classes/button-id/button-id';
 import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
-
-enum Button {
-    LeftClick = 0,
-    RightClick = 2,
-}
 
 @Component({
     selector: 'app-color-picker',
@@ -13,9 +9,9 @@ enum Button {
     styleUrls: ['./color-picker.component.scss'],
 })
 export class ColorPickerComponent {
-    hue = 0.0;
-    saturation = 0.0;
-    value = 0.0;
+    hue = 0;
+    saturation = 0;
+    value = 0;
     alpha = 1;
     hexStr = '000000';
 
@@ -77,8 +73,8 @@ export class ColorPickerComponent {
     }
 
     oldColorClick(event: MouseEvent, color: Color): void {
-        if (event.button === Button.LeftClick || event.button === Button.RightClick) {
-            if (event.button === Button.LeftClick) {
+        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
+            if (event.button === ButtonId.Left) {
                 this.colorService.setPrimaryColor(color);
             } else {
                 this.colorService.setSecondaryColor(color);

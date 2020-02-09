@@ -5,7 +5,7 @@ import { Color } from 'src/app/classes/color/color';
     providedIn: 'root',
 })
 export class ColorService {
-    private MAX_RECENT_COLORS = 10;
+    private maxRecentColors = 10;
     private primaryColor: Color;
     private secondaryColor: Color;
 
@@ -14,7 +14,7 @@ export class ColorService {
     constructor() {
         this.primaryColor = new Color();
         this.secondaryColor = new Color();
-        for (let i = 0; i < this.MAX_RECENT_COLORS; i++) {
+        for (let i = 0; i < this.maxRecentColors; i++) {
             this.lastColors.push(new Color());
         }
     }

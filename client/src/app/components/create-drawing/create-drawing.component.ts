@@ -54,9 +54,9 @@ export class CreateDrawingComponent implements OnInit {
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.windowWidth - widthMargin;
-        const matchingHeight: boolean = this.drawingForm.controls.height.value === this.windowHeight - heightMargin;
-        if (matchingWidth && matchingHeight) {
+        const isWidthMatching = this.drawingForm.controls.width.value === this.windowWidth - widthMargin;
+        const isHeightMatching = this.drawingForm.controls.height.value === this.windowHeight - heightMargin;
+        if (isWidthMatching && isHeightMatching) {
             this.drawingForm.controls.width.setValue((event.target as Window).innerWidth - widthMargin);
             this.drawingForm.controls.height.setValue((event.target as Window).innerHeight - heightMargin);
         }

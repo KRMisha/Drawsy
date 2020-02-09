@@ -34,11 +34,10 @@ export class ColorHexSelectorComponent {
     }
 
     updateColorRgb(): void {
-        if (
-            singleComponentRegex.test(this.redHexForm.value) &&
-            singleComponentRegex.test(this.greenHexForm.value) &&
-            singleComponentRegex.test(this.blueHexForm.value)
-        ) {
+        const isRedValid = singleComponentRegex.test(this.redHexForm.value);
+        const isGreenValid = singleComponentRegex.test(this.greenHexForm.value);
+        const isBlueValid = singleComponentRegex.test(this.blueHexForm.value);
+        if (isRedValid && isGreenValid && isBlueValid) {
             this.hexForm.setValue(this.redHexForm.value + this.greenHexForm.value + this.blueHexForm.value);
             this.updateColorHex();
         }

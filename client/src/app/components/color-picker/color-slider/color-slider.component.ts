@@ -17,25 +17,25 @@ enum ColorGradient {
 })
 export class ColorSliderComponent implements AfterViewInit {
     @Output() hueChange: EventEmitter<number> = new EventEmitter();
-    @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
-    hue = 0;
 
+    private isMouseDown = false;
+    private mouseXPosition = 0;
+
+    private isMouseInside = false;
+
+    hue = 0;
     @Input()
     set setHue(hue: number) {
         if (this.canvas !== undefined) {
             this.hue = hue;
-            this.mouseX = (hue / 360) * 250;
+            this.mouseXPosition = (hue / 360) * 250;
             this.draw();
         }
     }
-
-    private isMouseDown = false;
-    private mouseX = 0;
-
-    private isMouseInside = false;
 
     ngAfterViewInit(): void {
         this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -66,7 +66,7 @@ export class ColorSliderComponent implements AfterViewInit {
         hueColor.setHsv(this.hue, 1.0, 1.0);
 
         const circle = new Path2D();
-        circle.arc(this.mouseX, height / 2, 8, 0, 2 * Math.PI);
+        circle.arc(this.mouseXPosition, height / 2, 8, 0, 2 * Math.PI);
         this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
@@ -107,8 +107,8 @@ export class ColorSliderComponent implements AfterViewInit {
             return;
         }
 
-        this.mouseX = event.offsetX;
-        this.hue = (this.mouseX / this.canvas.width) * maxHue;
+        this.mouseXPosition = event.offsetX;
+        this.hue = (this.mouseXPosition / this.canvas.width) * maxHue;
         this.draw();
         this.hueChange.emit(this.hue);
     }
