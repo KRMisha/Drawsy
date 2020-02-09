@@ -229,7 +229,7 @@ export class ToolLineService extends Tool {
 
     private createNewJunction(): SVGCircleElement {
         const circle = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
+        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize / 2);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
         return circle;
