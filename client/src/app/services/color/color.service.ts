@@ -8,7 +8,6 @@ export class ColorService {
     private MAX_RECENT_COLORS = 10;
     private primaryColor: Color;
     private secondaryColor: Color;
-    private backgroundColor: Color;
 
     private lastColors: Color[] = [];
 
@@ -36,11 +35,6 @@ export class ColorService {
         this.addColor(color);
     }
 
-    setBackgroundColor(color: Color): void {
-        this.backgroundColor = color;
-        this.addColor(color);
-    }
-
     getLastColors(): Color[] {
         return this.lastColors;
     }
@@ -51,10 +45,6 @@ export class ColorService {
 
     getSecondaryColor(): Color {
         return this.secondaryColor;
-    }
-
-    getBackgroundColor(): Color {
-        return this.backgroundColor;
     }
 
     private addColor(color: Color): void {

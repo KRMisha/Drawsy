@@ -13,7 +13,7 @@ fdescribe('ColorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it("colors should be added to the list if their rgb value doesn't match any color's rgb value in the array", () => {
+    it('colors should be added to the list if their rgb value does not match any color\'s rgb value in the array', () => {
         const color1 = new Color();
         color1.red = 1;
         const color2 = new Color();
@@ -23,7 +23,7 @@ fdescribe('ColorService', () => {
         color3.alpha = 0.5;
         service.setPrimaryColor(color1);
         service.setSecondaryColor(color2);
-        service.setBackgroundColor(color3);
+        service.setPrimaryColor(color3);
         expect(service.getLastColors()[0]).toEqual(color2);
         expect(service.getLastColors()[1]).toEqual(color1);
         expect(service.getLastColors()[2]).toEqual(new Color());

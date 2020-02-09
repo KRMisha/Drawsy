@@ -8,8 +8,13 @@
     float: right;
     color: rgb(0, 0, 0);
     cursor: hand;
+}
 
-    :hover {
-        color: rgb(255, 0, 0);
-    }
+.exit-button:hover {
+    color: rgb(255, 0, 0);
+}
+
+.size-selection {
+    display: flex;
+    flex-direction: row;
 }
