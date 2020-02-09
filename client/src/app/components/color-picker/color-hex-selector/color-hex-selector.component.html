@@ -1,5 +1,5 @@
 <div class="container">
-    <mat-form-field *ngIf="isHex" style="margin: auto">
+    <mat-form-field *ngIf="isHex" class="form-field">
         <mat-label>Hex: # </mat-label>
         <input matInput (input)="updateColorHex()" [formControl]="hexForm" />
         <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>

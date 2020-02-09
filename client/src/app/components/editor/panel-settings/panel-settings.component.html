@@ -1,12 +1,12 @@
 <h1 (click)="getSetting()">Couleur</h1>
 
 <div class="colors">
-    <div>
-        Primaire
+    <div class="main-color">
+        <h4>Primaire</h4>
         <app-color-container (click)="selectPrimaryColor()" [color]="getPrimaryColor()"></app-color-container>
     </div>
-    <div>
-        Secondaire
+    <div class="main-color">
+        <h4>Secondaire</h4>
         <app-color-container (click)="selectSecondaryColor()" [color]="getSecondaryColor()"></app-color-container>
     </div>
 </div>
