@@ -19,8 +19,10 @@ describe('AppComponent', () => {
         TestBed.configureTestingModule({
             declarations: [AppComponent],
             imports: [RouterTestingModule, HttpClientModule],
-            providers: [{ provide: IndexService, useValue: indexServiceSpy },
-            {provide: ModalService, useValue: {} as ModalService}],
+            providers: [
+                { provide: IndexService, useValue: indexServiceSpy },
+                { provide: ModalService, useValue: {} as ModalService },
+            ],
         });
     }));
 

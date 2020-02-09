@@ -6,9 +6,9 @@ import { ToolPencilService } from '../tools/tool-pencil/tool-pencil.service';
 import { ToolRectangleService } from '../tools/tool-rectangle/tool-rectangle.service';
 import { ToolHolderService } from './tool-holder.service';
 
-class MockTool {};
+class MockTool {}
 
-fdescribe('ToolHolderService', () => {
+describe('ToolHolderService', () => {
     beforeEach(() => {
         const mockToolPencilService = new MockTool();
         const mockToolBrushService = new MockTool();
@@ -16,18 +16,16 @@ fdescribe('ToolHolderService', () => {
         const mockToolRectangleService = new MockTool();
         TestBed.configureTestingModule({
             providers: [
-                {provide: ToolPencilService, useValue: mockToolPencilService},
-                {provide: ToolBrushService, useValue: mockToolBrushService},
-                {provide: ToolLineService, useValue: mockToolLineService},
-                {provide: ToolRectangleService, useValue: mockToolRectangleService},
-            ]
-        })
+                { provide: ToolPencilService, useValue: mockToolPencilService },
+                { provide: ToolBrushService, useValue: mockToolBrushService },
+                { provide: ToolLineService, useValue: mockToolLineService },
+                { provide: ToolRectangleService, useValue: mockToolRectangleService },
+            ],
+        });
     });
 
     it('should be created', () => {
         const service: ToolHolderService = TestBed.get(ToolHolderService);
         expect(service).toBeTruthy();
     });
-
-
 });
