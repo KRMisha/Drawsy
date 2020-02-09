@@ -18,12 +18,12 @@ enum CollapseMenuButtons {
 export class GuideSidebarComponent implements OnInit, OnDestroy {
     menus = CollapseMenuButtons;
     private subscription: Subscription;
-    private isOpenedCollapseMenu: boolean[];
+    private isMenuExpanded: boolean[];
 
     @Output() selectGuide = new EventEmitter<number>();
 
     constructor(private guideService: GuideService) {
-        this.isOpenedCollapseMenu = [false, false, false, false, false];
+        this.isMenuExpanded = [false, false, false, false, false];
     }
 
     ngOnInit() {
@@ -35,12 +35,12 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     }
 
     toggleCollapseMenu(index: number): void {
-        this.isOpenedCollapseMenu[index] = !this.isOpenedCollapseMenu[index];
+        this.isMenuExpanded[index] = !this.isMenuExpanded[index];
     }
 
     openAllCollapseMenus(): void {
-        for (let i = 0; i < this.isOpenedCollapseMenu.length; i++) {
-            this.isOpenedCollapseMenu[i] = true;
+        for (let i = 0; i < this.isMenuExpanded.length; i++) {
+            this.isMenuExpanded[i] = true;
         }
     }
 
