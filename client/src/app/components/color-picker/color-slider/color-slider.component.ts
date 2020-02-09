@@ -17,7 +17,7 @@ enum ColorGradient {
 })
 export class ColorSliderComponent implements AfterViewInit {
     @Output() hueChange: EventEmitter<number> = new EventEmitter();
-    @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef;
+    @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef<HTMLCanvasElement>;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;

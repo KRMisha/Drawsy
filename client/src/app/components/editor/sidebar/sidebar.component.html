@@ -12,7 +12,7 @@
                 *ngFor="let button of buttons; let i = index"
                 class="tool-button"
                 [class.selected]="button === selectedButton"
-                (click)="setSelectedTool(i); drawer.open()"
+                (click)="setSelectedTool(i)"
                 title="{{ button.name }}"
             >
                 <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
