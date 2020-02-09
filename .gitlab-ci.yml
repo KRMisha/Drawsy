@@ -11,6 +11,8 @@ stages:
     - build
     - test
 install:
+    only:
+        - master
     stage: install
     script:
         - pushd client
@@ -26,18 +28,24 @@ install:
             - server/node_modules/
         policy: pull-push
 lint:client:
+    only:
+        - master
     stage: lint
     script:
         - pushd client
         - yarn lint
         - popd
-#lint:server:
+# lint:server:
+#    only:
+#        - master
 #    stage: lint
 #    script:
 #        - pushd server
 #        - yarn lint
 #        - popd
 build:client:
+    only:
+        - master
     stage: build
     script:
         - pushd client
@@ -46,7 +54,9 @@ build:client:
     artifacts:
         paths:
             - client/dist/
-#build:server:
+# build:server:
+#     only:
+#         - master
 #    stage: build
 #    script:
 #        - pushd server
@@ -56,6 +66,8 @@ build:client:
 #        paths:
 #            - server/out/
 test:client:
+    only:
+        - master
     stage: test
     script:
         - Xvfb :99 -ac -screen 0 1920x1080x24 &
@@ -67,7 +79,9 @@ test:client:
     artifacts:
         paths:
             - client/coverage/
-#test:server:
+# test:server:
+#     only:
+#         - master
 #    stage: test
 #    script:
 #        - pushd server
