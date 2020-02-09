@@ -1,9 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DrawingSettingsComponent } from './drawing-settings.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
+
+import { DrawingSettingsComponent } from './drawing-settings.component';
 
 describe('DrawingSettingsComponent', () => {
     let component: DrawingSettingsComponent;
