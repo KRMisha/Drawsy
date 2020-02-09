@@ -36,7 +36,12 @@
 <div *ngIf="hasSetting(ToolSetting.Size)">
     <div class="option">
         <h2>Taille</h2>
-        <input [ngModel]="getSetting(ToolSetting.Size)" (ngModelChange)="setSetting(ToolSetting.Size, $event)" />
+        <input
+            class="input-number"
+            type="number"
+            [ngModel]="getSetting(ToolSetting.Size)"
+            (ngModelChange)="setSetting(ToolSetting.Size, $event)"
+        />
     </div>
     <mat-slider min="1" max="100" (input)="setSetting(ToolSetting.Size, $event.value)" [value]="getSetting(ToolSetting.Size)"> </mat-slider>
 </div>
@@ -45,6 +50,8 @@
     <div class="option">
         <h2>Taille jonction</h2>
         <input
+            class="input-number"
+            type="number"
             [ngModel]="getSetting(ToolSetting.HasJunction)[1]"
             (ngModelChange)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event])"
             [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
