@@ -20,7 +20,7 @@ export class ColorPickerComponent {
     hexStr = '000000';
 
     @Input() isTextBlack = true;
-    @Input() isLastColorsDisplayedEnabled = true;
+    @Input() isLastColorsDisplayEnabled = true;
 
     @Input() isColorPickerDisplayEnabled = true;
     @Input()

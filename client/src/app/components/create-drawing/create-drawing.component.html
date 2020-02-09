@@ -18,7 +18,7 @@
         </div>
         <app-color-picker
             (colorChanged)="updateColor($event)"
-            [isLastColorsDisplayedEnabled]="false"
+            [isLastColorsDisplayEnabled]="false"
             [setPaletteColor]="backgroundColor"
         ></app-color-picker>
         <button mat-stroked-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
