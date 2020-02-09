@@ -9,7 +9,4 @@ export const sidebarButtons: SidebarButton[] = [
     { name: 'Pinceau', icon: 'brush', toolIndex: 1 },
     { name: 'Ligne', icon: 'timeline', toolIndex: 2 },
     { name: 'Rectangle', icon: 'crop_5_4', toolIndex: 3 },
-    { name: 'Pipette', icon: 'colorize', toolIndex: 4 },
-    { name: 'Remplisseur', icon: 'opacity', toolIndex: 5 },
-    { name: 'Aérosol', icon: 'blur_on', toolIndex: 6 },
 ];
