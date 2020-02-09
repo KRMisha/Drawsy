@@ -18,6 +18,8 @@ export class SidebarComponent {
 
     @ViewChild('drawer', { static: false }) drawer: MatDrawer;
 
+    private areShortcutsEnabled = true;
+
     constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {
         this.selectedButton = this.buttons[0];
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
@@ -25,19 +27,35 @@ export class SidebarComponent {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent) {
-        switch (event.key) {
-            case '1':
-                this.setSelectedTool(3);
-                break;
-            case 'c':
-                this.setSelectedTool(0);
-                break;
-            case 'l':
-                this.setSelectedTool(2);
-                break;
-            case 'w':
-                this.setSelectedTool(1);
-                break;
+        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
+            switch (event.key) {
+                case '1':
+                    this.setSelectedTool(3);
+                    break;
+                case 'c':
+                    this.setSelectedTool(0);
+                    break;
+                case 'l':
+                    this.setSelectedTool(2);
+                    break;
+                case 'w':
+                    this.setSelectedTool(1);
+                    break;
+            }
+        }
+    }
+
+    @HostListener('document:focusin', ['$event'])
+    onFocusIn(event: FocusEvent) {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = false;
+        }
+    }
+
+    @HostListener('document:focusout', ['$event'])
+    onFocusOut(event: FocusEvent) {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = true;
         }
     }
 
