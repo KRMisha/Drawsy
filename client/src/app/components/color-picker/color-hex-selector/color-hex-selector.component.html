@@ -1,22 +1,22 @@
 <div class="container">
     <mat-form-field *ngIf="isHex" class="form-field">
-        <mat-label>Hex: # </mat-label>
+        <mat-label>Hex # </mat-label>
         <input matInput (input)="updateColorHex()" [formControl]="hexForm" />
         <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
     </mat-form-field>
     <div *ngIf="!isHex" class="all-components">
         <mat-form-field class="single-component">
-            <mat-label>Rouge:</mat-label>
+            <mat-label>Rouge</mat-label>
             <input matInput (input)="updateColorRgb()" [formControl]="redHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="single-component">
-            <mat-label>Vert:</mat-label>
+            <mat-label>Vert</mat-label>
             <input matInput (input)="updateColorRgb()" [formControl]="greenHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="single-component">
-            <mat-label>Bleu:</mat-label>
+            <mat-label>Bleu</mat-label>
             <input matInput (input)="updateColorRgb()" [formControl]="blueHexForm" />
             <mat-error *ngIf="hexForm.invalid && (hexForm.dirty || hexForm.touched)">Invalide</mat-error>
         </mat-form-field>

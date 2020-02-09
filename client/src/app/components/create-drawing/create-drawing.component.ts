@@ -35,6 +35,12 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     onSubmit() {
+        const confirmationMessage = 'Attention! Un dessin non-vide est déjà présent sur la zone de travail. '
+                                    + 'Désirez-vous continuer et abandonner vos changements?';
+        if (this.drawingService.isDrawingStarted && !confirm(confirmationMessage)) {
+            return;
+        }
+
         this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
         this.drawingService.backgroundColor = this.backgroundColor;
         this.drawingService.clearStoredElements();
