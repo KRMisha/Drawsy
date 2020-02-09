@@ -57,7 +57,7 @@
     </div>
     <mat-slider
         min="1"
-        max="40"
+        max="100"
         (input)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event.value])"
         [value]="getSetting(ToolSetting.HasJunction)[1]"
         [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
