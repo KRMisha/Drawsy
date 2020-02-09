@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-guide-color-picker',
-  templateUrl: './guide-color-picker.component.html',
-  styleUrls: ['./guide-color-picker.component.scss']
+    selector: 'app-guide-color-picker',
+    templateUrl: './guide-color-picker.component.html',
+    styleUrls: ['./guide-color-picker.component.scss'],
 })
-export class GuideColorPickerComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class GuideColorPickerComponent {}

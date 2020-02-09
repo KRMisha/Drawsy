@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-guide-calligraphy',
-  templateUrl: './guide-calligraphy.component.html',
-  styleUrls: ['./guide-calligraphy.component.scss']
+    selector: 'app-guide-calligraphy',
+    templateUrl: './guide-calligraphy.component.html',
+    styleUrls: ['./guide-calligraphy.component.scss'],
 })
-export class GuideCalligraphyComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class GuideCalligraphyComponent {}

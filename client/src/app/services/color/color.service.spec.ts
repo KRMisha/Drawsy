@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ColorService } from './color.service';
 import { Color } from 'src/app/classes/color/color';
+import { ColorService } from './color.service';
 
 fdescribe('ColorService', () => {
     let service: ColorService;
@@ -14,7 +14,7 @@ fdescribe('ColorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('colors should be added to the list if their rgb value doesn\'t match any color\'s rgb value in the array', () => {
+    it("colors should be added to the list if their rgb value doesn't match any color's rgb value in the array", () => {
         const color1 = new Color();
         color1.red = 1;
         const color2 = new Color();
@@ -28,5 +28,5 @@ fdescribe('ColorService', () => {
         expect(service.getLastColors()[0]).toEqual(color2);
         expect(service.getLastColors()[1]).toEqual(color1);
         expect(service.getLastColors()[2]).toEqual(new Color());
-    }); 
+    });
 });
