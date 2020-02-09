@@ -8,7 +8,7 @@ import { DrawingSettingsComponent } from './drawing-settings.component';
 describe('DrawingSettingsComponent', () => {
     let component: DrawingSettingsComponent;
     let fixture: ComponentFixture<DrawingSettingsComponent>;
-    let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<DrawingSettingsComponent>>
+    let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<DrawingSettingsComponent>>;
     beforeEach(async(() => {
         dialogRefSpyObj = jasmine.createSpyObj({
             afterClosed: of({}),
@@ -20,7 +20,7 @@ describe('DrawingSettingsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DrawingSettingsComponent],
             providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj }],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

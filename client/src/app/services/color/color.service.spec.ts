@@ -29,7 +29,7 @@ describe('ColorService', () => {
         expect(service.getLastColors()[2]).toEqual(new Color());
     });
 
-    it("#swapPrimaryAndSecondaryColors should swap the primary and secondary color attribute", () => {
+    it('#swapPrimaryAndSecondaryColors should swap the primary and secondary color attribute', () => {
         const color1 = new Color();
         color1.red = 10;
         const color2 = new Color();
@@ -39,5 +39,5 @@ describe('ColorService', () => {
         service.swapPrimaryAndSecondaryColors();
         expect(service.getPrimaryColor()).toEqual(color2);
         expect(service.getSecondaryColor()).toEqual(color1);
-    })
+    });
 });
