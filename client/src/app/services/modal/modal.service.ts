@@ -7,7 +7,12 @@ import { Vec2 } from 'src/app/classes/vec2/vec2';
 })
 export class ModalService {
     private dialogRef: MatDialogRef<Type<any>>;
-    isModalPresent = false;
+
+    // tslint:disable-next-line: variable-name
+    private _isModalPresent = false;
+    get isModalPresent() {
+        return this._isModalPresent;
+    }
 
     constructor(private dialog: MatDialog) {}
 
@@ -22,9 +27,9 @@ export class ModalService {
                 });
             }
             this.dialogRef.afterClosed().subscribe(() => {
-                this.isModalPresent = false;
+                this._isModalPresent = false;
             });
-            this.isModalPresent = true;
+            this._isModalPresent = true;
         }
     }
 }
