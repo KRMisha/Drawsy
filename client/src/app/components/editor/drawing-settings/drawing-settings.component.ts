@@ -4,12 +4,11 @@ import { Color } from 'src/app/classes/color/color';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 
 @Component({
-  selector: 'app-drawing-settings',
-  templateUrl: './drawing-settings.component.html',
-  styleUrls: ['./drawing-settings.component.scss']
+    selector: 'app-drawing-settings',
+    templateUrl: './drawing-settings.component.html',
+    styleUrls: ['./drawing-settings.component.scss'],
 })
 export class DrawingSettingsComponent {
-
     color: Color;
 
     constructor(private dialogRef: MatDialogRef<DrawingSettingsComponent>, private drawingService: DrawingService) {
@@ -23,5 +22,4 @@ export class DrawingSettingsComponent {
         this.dialogRef.close();
         this.drawingService.backgroundColor = this.color;
     }
-
 }
