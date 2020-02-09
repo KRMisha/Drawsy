@@ -29,7 +29,7 @@ class MockToolHolderService {
         new MockTool({} as DrawingService)]
 }
 /* tslint:enable:max-classes-per-file */
-fdescribe('ToolSelectorService', () => {
+describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
     beforeEach(() => {
         TestBed.configureTestingModule({
