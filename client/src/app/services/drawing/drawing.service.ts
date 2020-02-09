@@ -37,7 +37,9 @@ export class DrawingService {
     }
 
     reappendStoredElements(): void {
-        this.isDrawingStarted = true;
+        if (this.elements.length > 0) {
+            this.isDrawingStarted = true;
+        }
         for (const element of this.elements) {
             this.renderer.appendChild(this.rootElement, element);
         }
