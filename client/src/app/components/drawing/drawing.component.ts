@@ -78,4 +78,16 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.toolSelectorService.setMouseInside(false);
         this.toolSelectorService.onLeave(event);
     }
+
+    getWidth(): number {
+        return this.drawingService.drawingDimensions.x;
+    }
+    
+    getHeight(): number {
+        return this.drawingService.drawingDimensions.y;
+    }
+    
+    getBackgroundColor(): string {
+        return this.drawingService.backgroundColor.toRgbaString();
+    }
 }
