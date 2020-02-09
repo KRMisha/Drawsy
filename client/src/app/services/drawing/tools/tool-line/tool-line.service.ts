@@ -190,7 +190,7 @@ export class ToolLineService extends Tool {
     }
 
     private createNewPolyline(): SVGPolylineElement {
-        const polyline = this.renderer.createElement('polyline', 'svg');
+        const polyline: SVGPolylineElement = this.renderer.createElement('polyline', 'svg');
         this.renderer.setAttribute(polyline, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(polyline, 'fill', 'none');
         this.renderer.setAttribute(polyline, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
@@ -205,7 +205,7 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
-        const circle = this.renderer.createElement('circle', 'svg');
+        const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize / 2);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);

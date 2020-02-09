@@ -54,7 +54,7 @@ export class ToolBrushService extends Tool {
     }
 
     private createNewPath(): SVGPathElement {
-        const path = this.renderer.createElement('path', 'svg');
+        const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
