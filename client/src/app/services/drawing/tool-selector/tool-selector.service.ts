@@ -74,9 +74,15 @@ export class ToolSelectorService {
     }
 
     setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
+<<<<<<< HEAD
         const isSizeTypeInvalid = setting === ToolSetting.Size && !numberRegex.test(value.toString());
         const isJunctionTypeInvalid = setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString());
         if (isSizeTypeInvalid || isJunctionTypeInvalid) {
+=======
+        const isSizeTypeValid = setting === ToolSetting.Size && numberRegex.test(value.toString());
+        const isJunctionTypeValid = setting === ToolSetting.HasJunction && numberRegex.test((value as [boolean, number])[1].toString())
+        if (!isSizeTypeValid || !isJunctionTypeValid) {
+>>>>>>> a9e31e9b310c23ebf40f4768cb0ee78183c4e240
             return;
         }
 
