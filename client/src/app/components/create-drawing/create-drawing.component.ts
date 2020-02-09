@@ -1,8 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Color } from 'src/app/classes/color/color';
-import { CreateDrawingService } from 'src/app/services/create-drawing/create-drawing.service';
+import { Router } from '@angular/router';
+import { Color } from '../../classes/color/color';
+import { DrawingService } from '../../services/drawing/drawing.service';
+
+const widthMargin = 348;
+const heightMargin = 4;
 
 @Component({
     selector: 'app-create-drawing',
@@ -12,53 +15,50 @@ import { CreateDrawingService } from 'src/app/services/create-drawing/create-dra
 export class CreateDrawingComponent implements OnInit {
     windowWidth: number;
     windowHeight: number;
-    backgroundColor: Color;
+    backgroundColor: Color = new Color();
 
     drawingForm = new FormGroup({
-        height: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
         width: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        height: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
     });
 
-    constructor(public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingService: CreateDrawingService) {}
+    constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit() {
-        this.windowHeight = window.innerHeight;
         this.windowWidth = window.innerWidth;
-        this.drawingForm.controls.width.setValue(this.subtractSidebarWidth(this.windowWidth));
-        this.drawingForm.controls.height.setValue(this.windowHeight);
+        this.windowHeight = window.innerHeight;
+        this.drawingForm.controls.width.setValue(window.innerWidth - widthMargin);
+        this.drawingForm.controls.height.setValue(window.innerHeight - heightMargin);
         this.backgroundColor.red = 255;
         this.backgroundColor.green = 255;
         this.backgroundColor.blue = 255;
     }
 
     onSubmit() {
-        this.drawingService.changeHeight(this.drawingForm.controls.height.value);
-        this.drawingService.changeWidth(this.drawingForm.controls.width.value);
-        this.drawingService.changeColor(this.backgroundColor);
-        this.onClose();
-    }
+        const confirmationMessage =
+            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
+            'Désirez-vous continuer et abandonner vos changements?';
+        if (this.drawingService.isDrawingStarted && !confirm(confirmationMessage)) {
+            return;
+        }
 
-    onClose() {
-        this.dialogRef.close();
+        this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
+        this.drawingService.backgroundColor = this.backgroundColor;
+        this.drawingService.clearStoredElements();
+        this.router.navigate(['/editor']);
     }
 
     updateColor(color: Color) {
         this.backgroundColor = color;
     }
 
-    private subtractSidebarWidth(totalWidth: number): number {
-        const sidebarWidth = 68;
-        const toolSettingWidth = 278;
-        return totalWidth - sidebarWidth - toolSettingWidth;
-    }
-
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
-        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.subtractSidebarWidth(this.windowWidth);
-        const matchingHeight: boolean = this.drawingForm.controls.height.value === this.windowHeight;
+        const matchingWidth: boolean = this.drawingForm.controls.width.value === this.windowWidth - widthMargin;
+        const matchingHeight: boolean = this.drawingForm.controls.height.value === this.windowHeight - heightMargin;
         if (matchingWidth && matchingHeight) {
-            this.drawingForm.controls.width.setValue(this.subtractSidebarWidth((event.target as Window).innerWidth));
-            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight);
+            this.drawingForm.controls.width.setValue((event.target as Window).innerWidth - widthMargin);
+            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight - heightMargin);
         }
         this.windowWidth = (event.target as Window).innerWidth;
         this.windowHeight = (event.target as Window).innerHeight;

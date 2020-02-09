@@ -43,6 +43,14 @@ input {
     margin-left: 13px;
 }
 
+.main-color {
+    display: flex;
+    align-items: center;
+    h4 {
+        margin: 10px;
+    }
+}
+
 .color-picker {
     margin-left: 13px;
 }
@@ -51,6 +59,8 @@ input {
     width: 250px;
     display: flex;
     justify-content: space-between;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .select-style {
@@ -68,4 +78,9 @@ input {
         align-self: center;
         margin-top: 10px;
     }
+}
+
+.swap {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

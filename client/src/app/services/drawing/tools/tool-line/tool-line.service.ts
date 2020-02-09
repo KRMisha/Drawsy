@@ -37,7 +37,7 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside === false) {
+        if (!this.isMouseInside) {
             return;
         }
         this.mouseX = event.offsetX;
@@ -57,7 +57,7 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPointX);
         this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPointY);
 
-        if (this.currentlyDrawing === false) {
+        if (!this.currentlyDrawing) {
             this.polyline = this.createNewPolyline();
             this.updatePreviewLine();
             this.renderer.setAttribute(this.previewLine, 'display', '');
@@ -99,7 +99,7 @@ export class ToolLineService extends Tool {
             this.points.length -= geometryDimension;
         }
 
-        if (this.isShiftDown === false) {
+        if (!this.isShiftDown) {
             const firstXIndex = 0;
             const firstYIndex = 1;
             const lastXIndex = this.points.length - 2;
@@ -182,7 +182,7 @@ export class ToolLineService extends Tool {
     ): [number, number] {
         let nextPointX: number;
         let nextPointY: number;
-        if (currentlyDrawing === false || isShiftDown === false) {
+        if (!currentlyDrawing || !isShiftDown) {
             nextPointX = currentX;
             nextPointY = currentY;
         } else {
@@ -229,7 +229,7 @@ export class ToolLineService extends Tool {
 
     private createNewJunction(): SVGCircleElement {
         const circle = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize);
+        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize / 2);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
         return circle;

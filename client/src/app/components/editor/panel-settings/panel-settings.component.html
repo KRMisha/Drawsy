@@ -1,12 +1,12 @@
 <h1 (click)="getSetting()">Couleur</h1>
 
 <div class="colors">
-    <div>
-        Primaire
+    <div class="main-color">
+        <h4>Primaire</h4>
         <app-color-container (click)="selectPrimaryColor()" [color]="getPrimaryColor()"></app-color-container>
     </div>
-    <div>
-        Secondaire
+    <div class="main-color">
+        <h4>Secondaire</h4>
         <app-color-container (click)="selectSecondaryColor()" [color]="getSecondaryColor()"></app-color-container>
     </div>
 </div>
@@ -26,6 +26,7 @@
         (previousColorSelected)="isColorPickerDisplayEnabled = false"
         [isColorPickerDisplayEnabled]="isColorPickerDisplayEnabled"
         [setPaletteColor]="getSelectedColor()"
+        [isTextBlack]="false"
     >
     </app-color-picker>
 </div>
@@ -56,7 +57,7 @@
     </div>
     <mat-slider
         min="1"
-        max="40"
+        max="100"
         (input)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event.value])"
         [value]="getSetting(ToolSetting.HasJunction)[1]"
         [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
@@ -65,14 +66,14 @@
 </div>
 
 <div *ngIf="hasSetting(ToolSetting.StrokeType)">
-    <div class="select-style">
+    <div class="dropdown-style">
         <h2>Type de tracé</h2>
-        <mat-form-field>
+        <mat-form-field class="select">
             <mat-label>Type de tracé</mat-label>
-            <mat-select>
-                <mat-option>Plein avec contour</mat-option>
-                <mat-option>Plein</mat-option>
-                <mat-option>Contour</mat-option>
+            <mat-select [value]="getSetting(ToolSetting.StrokeType)" (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)">
+                <mat-option [value]="StrokeTypes.FillWithBorder">Plein avec contour</mat-option>
+                <mat-option [value]="StrokeTypes.FillOnly">Plein</mat-option>
+                <mat-option [value]="StrokeTypes.BorderOnly">Contour</mat-option>
             </mat-select>
         </mat-form-field>
     </div>

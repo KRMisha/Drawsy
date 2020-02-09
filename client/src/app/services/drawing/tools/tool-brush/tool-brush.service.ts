@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
-import { Tool, ToolSetting } from '../tool';
+import { Textures, Tool, ToolSetting } from '../tool';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +12,7 @@ export class ToolBrushService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
-        this.toolSettings.set(ToolSetting.Texture, 1);
+        this.toolSettings.set(ToolSetting.Texture, Textures.Texture1);
         this.name = 'Pinceau';
     }
 
@@ -46,11 +46,11 @@ export class ToolBrushService extends Tool {
     }
 
     private getPathStartString(x: number, y: number): string {
-        return 'M' + String(x) + ' ' + String(y) + ' ' + 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'M' + x.toString() + ' ' + y.toString() + ' ' + 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private getPathLineString(x: number, y: number): string {
-        return 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private createNewPath(): SVGPathElement {

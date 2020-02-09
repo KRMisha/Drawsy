@@ -1,56 +1,11 @@
-<div style="width: 250px">
-    <div class="recent-colors">
+<div class="color-picker-container">
+    <div *ngIf="isLastColorsDisplayEnabled" class="recent-colors">
         <app-color-container
-            [color]="getLastColors()[0]"
-            (click)="oldColorClick($event, getLastColors()[0])"
-            (contextmenu)="oldColorClick($event, getLastColors()[0])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[1]"
-            (click)="oldColorClick($event, getLastColors()[1])"
-            (contextmenu)="oldColorClick($event, getLastColors()[1])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[2]"
-            (click)="oldColorClick($event, getLastColors()[2])"
-            (contextmenu)="oldColorClick($event, getLastColors()[2])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[3]"
-            (click)="oldColorClick($event, getLastColors()[3])"
-            (contextmenu)="oldColorClick($event, getLastColors()[3])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[4]"
-            (click)="oldColorClick($event, getLastColors()[4])"
-            (contextmenu)="oldColorClick($event, getLastColors()[4])"
-        ></app-color-container>
-    </div>
-    <div class="recent-colors">
-        <app-color-container
-            [color]="getLastColors()[5]"
-            (click)="oldColorClick($event, getLastColors()[5])"
-            (contextmenu)="oldColorClick($event, getLastColors()[5])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[6]"
-            (click)="oldColorClick($event, getLastColors()[6])"
-            (contextmenu)="oldColorClick($event, getLastColors()[6])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[7]"
-            (click)="oldColorClick($event, getLastColors()[7])"
-            (contextmenu)="oldColorClick($event, getLastColors()[7])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[8]"
-            (click)="oldColorClick($event, getLastColors()[8])"
-            (contextmenu)="oldColorClick($event, getLastColors()[8])"
-        ></app-color-container>
-        <app-color-container
-            [color]="getLastColors()[9]"
-            (click)="oldColorClick($event, getLastColors()[9])"
-            (contextmenu)="oldColorClick($event, getLastColors()[9])"
+            *ngFor="let color of getLastColors()"
+            [color]="color"
+            (click)="oldColorClick($event, color)"
+            (contextmenu)="oldColorClick($event, color)"
+            class="recent-colors-item"
         ></app-color-container>
     </div>
 
@@ -63,7 +18,7 @@
         ></app-color-field>
         <app-color-slider [setHue]="hue" (hueChange)="setHue($event)"></app-color-slider>
 
-        <div class="alpha-slider">
+        <div class="alpha-slider" [style.color]="isTextBlack ? 'black' : 'white'">
             <div class="alpha-text">
                 Alpha:
             </div>

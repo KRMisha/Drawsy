@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Color, MAX_COLOR_VALUE } from 'src/app/classes/color/color';
+import { Color, maxColorValue } from 'src/app/classes/color/color';
 
 @Component({
     selector: 'app-color-container',
@@ -10,8 +10,8 @@ export class ColorContainerComponent {
     @Input() color = new Color();
 
     constructor() {
-        this.color.red = MAX_COLOR_VALUE;
-        this.color.green = MAX_COLOR_VALUE;
-        this.color.blue = MAX_COLOR_VALUE;
+        this.color.red = maxColorValue;
+        this.color.green = maxColorValue;
+        this.color.blue = maxColorValue;
     }
 }

@@ -1,6 +1,8 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { ToolHolderService } from '../tool-holder/tool-holder.service';
-import { Tool } from '../tools/tool';
+import { StrokeTypes, Textures, Tool, ToolSetting } from '../tools/tool';
+
+const numberRegex = new RegExp('^[0-9]+$');
 
 @Injectable({
     providedIn: 'root',
@@ -60,5 +62,28 @@ export class ToolSelectorService {
 
     setSelectedTool(toolIndex: number): void {
         this.selectedTool = this.toolHolderService.tools[toolIndex];
+    }
+
+    getToolName(): string {
+        return this.selectedTool.name;
+    }
+
+    getSetting(setting: ToolSetting): number | [boolean, number] | StrokeTypes | Textures {
+        const value = this.selectedTool.toolSettings.get(setting);
+        return value as number | [boolean, number] | StrokeTypes | Textures;
+    }
+
+    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
+        const isSizeTypeInvalid = setting === ToolSetting.Size && !numberRegex.test(value.toString());
+        const isJunctionTypeInvalid = setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString());
+        if (isSizeTypeInvalid || isJunctionTypeInvalid) {
+            return;
+        }
+
+        this.selectedTool.toolSettings.set(setting, value);
+    }
+
+    hasSetting(setting: ToolSetting): boolean {
+        return this.selectedTool.toolSettings.has(setting);
     }
 }

@@ -1,5 +1,5 @@
-.color-picker {
-    margin-left: 14px;
+.color-picker-container {
+    width: 250px;
 }
 
 h1,
@@ -10,10 +10,16 @@ h3 {
 }
 
 .recent-colors {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    width: 250px;
+    grid-template-areas:
+        'color' 'color' 'color' 'color' 'color'
+        'color' 'color' 'color' 'color' 'color';
+    justify-content: space-around;
+    text-align: center;
+}
+
+.recent-colors-item {
+    grid-area: 'color';
+    margin: 10px;
 }
 
 .mat-slider {
@@ -22,7 +28,6 @@ h3 {
 }
 
 .alpha-text {
-    color: white;
     padding-top: 12px;
     padding-right: 5px;
 }

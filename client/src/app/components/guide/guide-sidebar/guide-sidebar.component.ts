@@ -27,7 +27,7 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscription = this.guideService.openAllCollapseMenus().subscribe(shouldOpenAllMenus => {
+        this.subscription = this.guideService.openAllCollapseMenus().subscribe((shouldOpenAllMenus) => {
             if (shouldOpenAllMenus) {
                 this.openAllCollapseMenus();
             }

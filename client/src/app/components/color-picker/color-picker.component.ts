@@ -19,6 +19,9 @@ export class ColorPickerComponent {
     alpha = 1;
     hexStr = '000000';
 
+    @Input() isTextBlack = true;
+    @Input() isLastColorsDisplayEnabled = true;
+
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
     set setPaletteColor(color: Color) {
@@ -49,7 +52,9 @@ export class ColorPickerComponent {
 
     setHue(hue: number): void {
         this.hue = hue;
-        this.setColor(this.getColor());
+        const color = this.getColor();
+        this.hexStr = color.getHex();
+        this.colorChanged.emit(color);
     }
 
     setAlpha(alpha: number) {
