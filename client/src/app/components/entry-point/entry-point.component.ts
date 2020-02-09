@@ -13,10 +13,7 @@ export class EntryPointComponent {
     constructor(private dialog: MatDialog, public drawingService: DrawingService) {}
 
     openCreateDrawing(): void {
-        this.dialog.open(CreateDrawingComponent, {
-            width: '500px',
-            height: '700px',
-        });
+        this.dialog.open(CreateDrawingComponent, {});
     }
 
     openGuideModal(): void {

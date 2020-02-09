@@ -44,12 +44,13 @@ export class ColorHexSelectorComponent {
         }
     }
 
-    swapMode(): void {
+    swapMode(event: MouseEvent): void {
         this.isHex = !this.isHex;
         if (this.isHex) {
             this.updateColorRgb();
         } else {
             this.hex = this.hexForm.value;
         }
+        event.preventDefault();
     }
 }

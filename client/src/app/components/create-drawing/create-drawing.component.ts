@@ -49,8 +49,8 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     private subtractSidebarWidth(totalWidth: number): number {
-        const sidebarWidth = 68;
-        const toolSettingWidth = 278;
+        const sidebarWidth = 70;
+        const toolSettingWidth = 290;
         return totalWidth - sidebarWidth - toolSettingWidth;
     }
 
