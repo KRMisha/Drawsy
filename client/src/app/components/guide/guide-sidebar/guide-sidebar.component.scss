@@ -12,7 +12,9 @@
 
 .menu-item,
 .collapse-menu-item,
-.collapse-button {
+.secondary-collapse-menu-item,
+.collapse-button,
+.secondary-collapse-button {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: rgb(110, 109, 109);
@@ -23,17 +25,24 @@
 
 .menu-item:hover,
 .collapse-menu-item:hover,
-.collapse-button:hover {
+.collapse-button:hover,
+.secondary-collapse-button:hover {
     color: rgb(255, 64, 129);
 }
 
-.collapse-button {
+.collapse-button,
+.secondary-collapse-button {
     padding-top: 0px;
     padding-bottom: 0px;
 }
 
-.collapse-menu-item {
+.collapse-menu-item,
+.secondary-collapse-button {
     padding-left: 20px;
+}
+
+.secondary-collapse-menu-item {
+    padding-left: 40px;
 }
 
 ul {

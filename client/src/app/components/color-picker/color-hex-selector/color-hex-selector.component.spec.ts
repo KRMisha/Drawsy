@@ -11,8 +11,8 @@ describe('ColorHexSelectorComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ColorHexSelectorComponent],
-			imports: [MatFormFieldModule, FormsModule],
-		    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            imports: [MatFormFieldModule, FormsModule],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 
