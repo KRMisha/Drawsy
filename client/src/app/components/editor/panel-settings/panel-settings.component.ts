@@ -4,8 +4,6 @@ import { ColorService } from 'src/app/services/color/color.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../services/drawing/tools/tool';
 
-const numberRegex = new RegExp('^[0-9]+$');
-
 @Component({
     selector: 'app-panel-settings',
     templateUrl: './panel-settings.component.html',
@@ -28,26 +26,19 @@ export class PanelSettingsComponent {
     }
 
     getToolName(): string {
-        return this.toolSelectorService.selectedTool.name;
+        return this.toolSelectorService.getToolName();
     }
 
     getSetting(setting: ToolSetting): number | [boolean, number] | StrokeTypes | Textures {
-        const value = this.toolSelectorService.selectedTool.toolSettings.get(setting);
-        return value as number | [boolean, number] | StrokeTypes | Textures;
+        return this.toolSelectorService.getSetting(setting);
     }
 
     setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
-        if (
-            (setting === ToolSetting.Size && !numberRegex.test(value.toString())) ||
-            (setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString()))
-        ) {
-            return;
-        }
-        this.toolSelectorService.selectedTool.toolSettings.set(setting, value);
+        this.toolSelectorService.setSetting(setting, value);
     }
 
     hasSetting(setting: ToolSetting): boolean {
-        return this.toolSelectorService.selectedTool.toolSettings.has(setting);
+        return this.toolSelectorService.hasSetting(setting);
     }
 
     getPrimaryColor(): Color {

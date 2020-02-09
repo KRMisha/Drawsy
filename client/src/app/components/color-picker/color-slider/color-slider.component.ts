@@ -7,7 +7,7 @@ enum ColorGradient {
     Green = 'rgb(0, 255, 0)',
     Cyan = 'rgb(0, 255, 255)',
     Blue = 'rgb(0, 0, 255)',
-    Pink = 'rgb(255, 0, 255)'
+    Pink = 'rgb(255, 0, 255)',
 }
 
 @Component({
