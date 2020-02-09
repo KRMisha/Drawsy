@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { Color, hexRegexStr } from 'src/app/classes/color/color';
+import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 
 enum Button {
@@ -18,17 +17,15 @@ export class ColorPickerComponent {
     saturation = 0.0;
     value = 0.0;
     alpha = 1;
+    hexStr = '000000';
 
-    hexForm = new FormControl(this.getColor().getHex(), [Validators.required, Validators.pattern(hexRegexStr)]);
+    @Input() isTextBlack = true;
+    @Input() isLastColorsDisplayedEnabled = true;
 
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
     set setPaletteColor(color: Color) {
-        const hsv = color.getHsv();
-        this.hue = hsv[0];
-        this.saturation = hsv[1];
-        this.value = hsv[2];
-        this.alpha = color.alpha;
+        this.setColor(color);
     }
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
@@ -43,10 +40,20 @@ export class ColorPickerComponent {
         return color;
     }
 
+    private setColor(color: Color): void {
+        const hsv = color.getHsv();
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+        this.value = hsv[2];
+        this.alpha = color.alpha;
+        this.hexStr = color.getHex();
+        this.colorChanged.emit(color);
+    }
+
     setHue(hue: number): void {
         this.hue = hue;
         const color = this.getColor();
-        this.hexForm.setValue(color.getHex());
+        this.hexStr = color.getHex();
         this.colorChanged.emit(color);
     }
 
@@ -58,39 +65,26 @@ export class ColorPickerComponent {
     setSaturationAndValue(saturationAndValue: [number, number]): void {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
-        this.colorChanged.emit(this.getColor());
-        this.hexForm.setValue(this.getColor().getHex());
+        this.setColor(this.getColor());
+    }
+
+    updateColorFromHex(color: Color) {
+        this.setColor(color);
     }
 
     getLastColors(): Color[] {
         return this.colorService.getLastColors();
     }
 
-    setColor(event: MouseEvent, color: Color): void {
+    oldColorClick(event: MouseEvent, color: Color): void {
         if (event.button === Button.LeftClick || event.button === Button.RightClick) {
             if (event.button === Button.LeftClick) {
                 this.colorService.setPrimaryColor(color);
             } else {
                 this.colorService.setSecondaryColor(color);
             }
+            this.setColor(color);
             this.previousColorSelected.emit();
-            const hsv = color.getHsv();
-            this.hue = hsv[0];
-            this.saturation = hsv[1];
-            this.value = hsv[2];
-            this.alpha = color.alpha;
-            this.colorChanged.emit(color);
-        }
-    }
-
-    updateColorHex() {
-        const color = new Color();
-        if (color.setHex(this.hexForm.value)) {
-            const hsv = color.getHsv();
-            this.hue = hsv[0];
-            this.saturation = hsv[1];
-            this.value = hsv[2];
-            this.colorChanged.emit(color);
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -15,12 +15,12 @@ import { GuideComponent } from './guide.component';
 class MockGuideWelcomeComponent {}
 
 describe('GuideComponent', () => {
-    const MockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
+    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
 
-    beforeEach(async () => {
+    beforeEach(async(() => {
         dialogRefSpyObj = jasmine.createSpyObj({
             afterClosed: of({}),
             afterOpened: of({}),
@@ -28,10 +28,11 @@ describe('GuideComponent', () => {
             close: null,
         });
 
-        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: MockGuides });
+        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: mockGuides });
+
         TestBed.configureTestingModule({
-            imports: [MatIconModule, MatDialogModule],
             declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
+            imports: [MatIconModule, MatDialogModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
                 { provide: GuideService, useValue: InjectedguideServiceSpyObj },
@@ -40,14 +41,14 @@ describe('GuideComponent', () => {
         })
             .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [MockGuideWelcomeComponent] } })
             .compileComponents();
-    });
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GuideComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         // guideServiceSpyObj = TestBed.get(GuideService);
-        // guideServiceSpyObj.getGuides.and.returnValue(MockGuides);
+        // guideServiceSpyObj.getGuides.and.returnValue(mockGuides);
     });
 
     it('should create', () => {

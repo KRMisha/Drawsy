@@ -1,10 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { of } from 'rxjs';
+import { Color } from 'src/app/classes/color/color';
+import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { CreateDrawingComponent } from './create-drawing.component';
 
 describe('CreateDrawingComponent', () => {
@@ -19,10 +21,11 @@ describe('CreateDrawingComponent', () => {
             open: null,
             close: null,
         });
+
         TestBed.configureTestingModule({
             declarations: [CreateDrawingComponent],
-            imports: [FormsModule, MatCardModule, MatIconModule],
-            providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj }],
+            imports: [FormsModule, MatCardModule, MatIconModule, ReactiveFormsModule],
+            providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj }, DrawingService],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
@@ -30,6 +33,7 @@ describe('CreateDrawingComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(CreateDrawingComponent);
         component = fixture.componentInstance;
+        component.backgroundColor = new Color();
         fixture.detectChanges();
     });
 

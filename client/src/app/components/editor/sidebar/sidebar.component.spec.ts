@@ -1,31 +1,31 @@
-import { Input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-// import { AppModule } from 'src/app/app.module';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { ColorContainerComponent } from '../../color-picker/color-container/color-container.component';
-import { ColorFieldComponent } from '../../color-picker/color-field/color-field.component';
-import { ColorPickerComponent } from '../../color-picker/color-picker.component';
-import { ColorSliderComponent } from '../../color-picker/color-slider/color-slider.component';
-import { PanelSettingsComponent } from '../panel-settings/panel-settings.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToolHolderService } from 'src/app/services/drawing/tool-holder/tool-holder.service';
+import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 import { SidebarComponent } from './sidebar.component';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
+    let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
+    let toolHolderServiceSpyObj: jasmine.SpyObj<ToolHolderService>;
 
     beforeEach(async(() => {
+        toolSelectorServiceSpyObj = jasmine.createSpyObj({ setSelectedTool: '' });
+        toolHolderServiceSpyObj = jasmine.createSpyObj({ '': '' });
         TestBed.configureTestingModule({
-            declarations: [
-                SidebarComponent,
-                PanelSettingsComponent,
-                ColorPickerComponent,
-                ColorSliderComponent,
-                ColorFieldComponent,
-                ColorContainerComponent,
+            declarations: [SidebarComponent],
+            imports: [BrowserAnimationsModule, MatSidenavModule, MatIconModule, MatSliderModule, MatDialogModule],
+            providers: [
+                { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
+                { provide: ToolHolderService, useValue: toolHolderServiceSpyObj },
             ],
-            imports: [MatSidenavModule, MatIconModule, MatSliderModule, Input],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 

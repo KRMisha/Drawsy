@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { Vec2 } from '../../../../classes/vec2/vec2';
 import { DrawingService } from '../../drawing.service';
-import { Style, Tool, ToolSetting } from '../tool';
+import { StrokeTypes, Tool, ToolSetting } from '../tool';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,8 @@ export class ToolRectangleService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 1);
-        this.toolSettings.set(ToolSetting.StrokeType, Style.FillWithBorder);
+        this.toolSettings.set(ToolSetting.StrokeType, StrokeTypes.FillWithBorder);
+        this.name = 'Rectangle';
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -26,7 +27,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.rectangle = this.createNewRectangle();
             this.origin = { x: event.offsetX, y: event.offsetY };
@@ -35,7 +36,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isSquare = true;
             if (this.isMouseInside && this.isMouseDown) {
@@ -44,7 +45,7 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         if (event.key === 'Shift') {
             this.isSquare = false;
             if (this.isMouseInside && this.isMouseDown) {
@@ -54,13 +55,7 @@ export class ToolRectangleService extends Tool {
     }
 
     onEnter(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.rectangle = this.createNewRectangle();
-            this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.origin = this.mousePosition;
-            this.renderer.setAttribute(this.rectangle, 'd', this.getRectangleString(this.mousePosition));
-            this.drawingService.addElement(this.rectangle);
-        }
+        this.isMouseDown = false;
     }
 
     onLeave(event: MouseEvent): void {
@@ -71,10 +66,16 @@ export class ToolRectangleService extends Tool {
 
     private createNewRectangle(): SVGPathElement {
         const rectangle: SVGPathElement = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
-        this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
         this.renderer.setAttribute(rectangle, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
         this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
+        this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
+            this.renderer.setAttribute(rectangle, 'stroke', 'none');
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly) {
+            this.renderer.setAttribute(rectangle, 'fill', 'none');
+        }
         return rectangle;
     }
 

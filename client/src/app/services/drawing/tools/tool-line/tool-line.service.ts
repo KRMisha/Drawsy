@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
-import { Color } from 'src/app/classes/color/color';
 
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
@@ -33,10 +33,11 @@ export class ToolLineService extends Tool {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, 5);
         this.toolSettings.set(ToolSetting.HasJunction, [false, 10]);
+        this.name = 'Ligne';
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside === false) {
+        if (!this.isMouseInside) {
             return;
         }
         this.mouseX = event.offsetX;
@@ -56,7 +57,7 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPointX);
         this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPointY);
 
-        if (this.currentlyDrawing === false) {
+        if (!this.currentlyDrawing) {
             this.polyline = this.createNewPolyline();
             this.updatePreviewLine();
             this.renderer.setAttribute(this.previewLine, 'display', '');
@@ -98,7 +99,7 @@ export class ToolLineService extends Tool {
             this.points.length -= geometryDimension;
         }
 
-        if (this.isShiftDown === false) {
+        if (!this.isShiftDown) {
             const firstXIndex = 0;
             const firstYIndex = 1;
             const lastXIndex = this.points.length - 2;
@@ -158,7 +159,7 @@ export class ToolLineService extends Tool {
         }
     }
 
-    private updateNextPointPosition() {
+    private updateNextPointPosition(): void {
         const xy = this.calculateNextPointPosition(
             this.lastPointX,
             this.lastPointY,
@@ -181,7 +182,7 @@ export class ToolLineService extends Tool {
     ): [number, number] {
         let nextPointX: number;
         let nextPointY: number;
-        if (currentlyDrawing === false || isShiftDown === false) {
+        if (!currentlyDrawing || !isShiftDown) {
             nextPointX = currentX;
             nextPointY = currentY;
         } else {
@@ -247,7 +248,7 @@ export class ToolLineService extends Tool {
         previewColor.green = this.colorService.getPrimaryColor().green;
         previewColor.blue = this.colorService.getPrimaryColor().blue;
         previewColor.alpha = this.colorService.getPrimaryColor().alpha / 2;
-        
+
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
         this.renderer.setAttribute(this.previewLine, 'stroke-width', this.polyline.getAttribute('stroke-width') as string);

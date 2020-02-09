@@ -5,9 +5,18 @@ export enum ToolSetting {
     Size,
     HasJunction,
     StrokeType,
+    Texture,
 }
 
-export enum Style {
+export enum Textures {
+    Texture1 = 1,
+    Texture2,
+    Texture3,
+    Texture4,
+    Texture5,
+}
+
+export enum StrokeTypes {
     FillWithBorder,
     FillOnly,
     BorderOnly,
@@ -15,7 +24,8 @@ export enum Style {
 
 export abstract class Tool {
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | [boolean, number] | Style>();
+    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeTypes | Textures>();
+    name: string;
     isMouseDown = false;
     isMouseInside = false;
 
