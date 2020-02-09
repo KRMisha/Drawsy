@@ -9,7 +9,7 @@ stages:
     - install
     - lint
     - build
-    - test
+#     - test
 install:
     only:
         - master
@@ -65,20 +65,20 @@ build:client:
 #    artifacts:
 #        paths:
 #            - server/out/
-test:client:
-    only:
-        - master
-    stage: test
-    script:
-        - Xvfb :99 -ac -screen 0 1920x1080x24 &
-        - pushd client
-        - yarn coverage --browsers ChromeHeadlessNoSandbox
-        - popd
-    dependencies:
-        - build:client
-    artifacts:
-        paths:
-            - client/coverage/
+# test:client:
+#     only:
+#         - master
+#     stage: test
+#     script:
+#         - Xvfb :99 -ac -screen 0 1920x1080x24 &
+#         - pushd client
+#         - yarn coverage --browsers ChromeHeadlessNoSandbox
+#         - popd
+#     dependencies:
+#         - build:client
+#     artifacts:
+#         paths:
+#             - client/coverage/
 # test:server:
 #     only:
 #         - master
