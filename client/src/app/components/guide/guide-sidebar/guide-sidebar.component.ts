@@ -4,6 +4,9 @@ import { GuideService } from '../../../services/guide/guide.service';
 
 enum CollapseMenuButtons {
     tools,
+    toolBrushes,
+    toolShapes,
+    drawingSurfaceOptions,
     fileOptions,
 }
 
@@ -20,7 +23,7 @@ export class GuideSidebarComponent implements OnInit, OnDestroy {
     @Output() selectGuide = new EventEmitter<number>();
 
     constructor(private guideService: GuideService) {
-        this.isOpenedCollapseMenu = [false, false];
+        this.isOpenedCollapseMenu = [false, false, false, false, false];
     }
 
     ngOnInit() {

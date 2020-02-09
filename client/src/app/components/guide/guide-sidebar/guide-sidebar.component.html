@@ -7,11 +7,42 @@
                     <h4>Outils</h4>
                 </div>
                 <ul *ngIf="isOpenedCollapseMenu[menus.tools]">
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(1)">Crayon</li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(2)">Pinceau</li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(3)">Ligne</li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(4)">Rectangle</li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(5)">Couleur</li>
+                    <div class="secondary-collapse-button" (click)="toggleCollapseMenu(menus.toolBrushes)">
+                        <h4>Outils de traçage</h4>
+                    </div>
+                    <ul *ngIf="isOpenedCollapseMenu[menus.toolBrushes]">
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(1)">Aérosol</li>
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(2)">Crayon</li>
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(3)">Pinceau</li>
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(4)">Plume</li>
+                    </ul>
+                    <div class="secondary-collapse-button" (click)="toggleCollapseMenu(menus.toolShapes)">
+                        <h4>Formes</h4>
+                    </div>
+                    <ul *ngIf="isOpenedCollapseMenu[menus.toolShapes]">
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(5)">Ellipse</li>
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(6)">Polygone</li>
+                        <li class="secondary-collapse-menu-item" (click)="selectGuide.emit(7)">Rectangle</li>
+                    </ul>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(8)">Applicateur de couleur</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(9)">Couleur</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(10)">Efface</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(11)">Étampe</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(12)">Ligne</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(13)">Pipette</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(14)">Seau de peinture</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(15)">Texte</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(16)">Sélection</li>
+                </ul>
+            </li>
+
+            <li>
+                <div class="collapse-button" (click)="toggleCollapseMenu(menus.drawingSurfaceOptions)">
+                    <h4>Surface de dessin</h4>
+                </div>
+                <ul *ngIf="isOpenedCollapseMenu[menus.drawingSurfaceOptions]">
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(17)">Grille</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(18)">Magnétisme</li>
                 </ul>
             </li>
             <li>
@@ -19,8 +50,8 @@
                     <h4>Options de fichiers</h4>
                 </div>
                 <ul *ngIf="isOpenedCollapseMenu[menus.fileOptions]">
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(6)">Exporter le dessin</li>
-                    <li class="collapse-menu-item" (click)="selectGuide.emit(7)">Sauvegarder le dessin</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(19)">Exporter le dessin</li>
+                    <li class="collapse-menu-item" (click)="selectGuide.emit(20)">Sauvegarder le dessin</li>
                 </ul>
             </li>
         </ul>

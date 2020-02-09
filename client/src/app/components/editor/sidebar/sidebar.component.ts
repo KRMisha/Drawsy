@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component'
+import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component';
 import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
 import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
