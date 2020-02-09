@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { GuideService } from '../../services/guide/guide.service';
 import { GuideDirective } from './guide-directive/guide.directive';
 
@@ -15,11 +14,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
     hasNextGuide: boolean;
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
-    constructor(
-        private guideService: GuideService,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        public dialogRef: MatDialogRef<GuideComponent>,
-    ) {}
+    constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
 
     ngOnInit() {
         this.guides = this.guideService.getGuides();
@@ -60,9 +55,5 @@ export class GuideComponent implements OnInit, AfterViewInit {
             this.selectGuide(--this.index);
             this.guideService.openAllCollapseMenus();
         }
-    }
-
-    closeModal(): void {
-        this.dialogRef.close();
     }
 }

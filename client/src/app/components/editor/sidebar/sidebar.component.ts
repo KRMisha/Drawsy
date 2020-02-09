@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component';
 import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
-import { ToolHolderService } from '../../../services/drawing/tool-holder/tool-holder.service';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
+import { ModalService } from '../../../services/modal/modal.service';
+import { CreateDrawingComponent } from '../../create-drawing/create-drawing.component';
 import { GuideComponent } from '../../guide/guide.component';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 
@@ -17,7 +16,7 @@ export class SidebarComponent {
 
     selectedButton: SidebarButton;
 
-    constructor(private toolSelectorService: ToolSelectorService, public toolHolderService: ToolHolderService, private dialog: MatDialog) {
+    constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {
         this.selectedButton = this.buttons[0];
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
@@ -31,17 +30,14 @@ export class SidebarComponent {
     }
 
     openGuideModal(): void {
-        this.dialog.open(GuideComponent, {
-            width: '1920px',
-            height: '1080px',
-        });
+        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
     }
 
-    openCreateNewDrawingModal(): void {
-        this.dialog.open(CreateDrawingComponent, {});
+    openCreateDrawingModal(): void {
+        this.modalService.openDialog(CreateDrawingComponent);
     }
 
-    openSettings(): void {
-        this.dialog.open(DrawingSettingsComponent, {});
+    openSettingsModal(): void {
+        this.modalService.openDialog(DrawingSettingsComponent);
     }
 }

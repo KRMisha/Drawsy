@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from 'src/app/classes/color/color';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 
@@ -11,7 +10,7 @@ import { DrawingService } from 'src/app/services/drawing/drawing.service';
 export class DrawingSettingsComponent {
     color: Color;
 
-    constructor(private dialogRef: MatDialogRef<DrawingSettingsComponent>, private drawingService: DrawingService) {
+    constructor(private drawingService: DrawingService) {
         this.color = new Color();
         this.color.red = 255;
         this.color.green = 255;
@@ -19,7 +18,6 @@ export class DrawingSettingsComponent {
     }
 
     confirmColor() {
-        this.dialogRef.close();
         this.drawingService.backgroundColor = this.color;
     }
 }

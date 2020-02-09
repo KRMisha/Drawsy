@@ -46,11 +46,11 @@ export class ToolBrushService extends Tool {
     }
 
     private getPathStartString(x: number, y: number): string {
-        return 'M' + String(x) + ' ' + String(y) + ' ' + 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'M' + x.toString() + ' ' + y.toString + ' ' + 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private getPathLineString(x: number, y: number): string {
-        return 'L' + String(x) + ' ' + String(y) + ' ';
+        return 'L' + x.toString() + ' ' + y.toString() + ' ';
     }
 
     private createNewPath(): SVGPathElement {

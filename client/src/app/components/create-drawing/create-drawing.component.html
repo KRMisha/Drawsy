@@ -1,5 +1,5 @@
 <div (window:resize)="onResize($event)">
-    <button mat-icon-button class="exit-button" (click)="onClose()" tabindex="-1">
+    <button mat-icon-button mat-dialog-close class="exit-button" tabindex="-1">
         <mat-icon class="icon">close</mat-icon>
     </button>
 
@@ -21,6 +21,6 @@
             [isLastColorsDisplayedEnabled]="false"
             [setPaletteColor]="backgroundColor"
         ></app-color-picker>
-        <button mat-stroked-button type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
+        <button mat-stroked-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
     </form>
 </div>

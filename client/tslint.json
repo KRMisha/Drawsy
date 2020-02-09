@@ -1,7 +1,7 @@
 {
     "extends": [
-        "../common/tslint.json",
-        "tslint-config-prettier"
+        "tslint-config-prettier",
+        "../common/tslint.json"
     ],
     "rulesDirectory": ["codelyzer"],
     "rules": {
