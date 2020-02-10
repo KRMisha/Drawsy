@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ButtonId } from 'src/app/classes/button-id/button-id';
 import { Color } from 'src/app/classes/color/color';
 import { Vec2 } from 'src/app/classes/vec2/vec2';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
-
-const leftClick = 0;
 
 @Component({
     selector: 'app-drawing',
@@ -38,7 +37,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
-        if (event.button === leftClick) {
+        if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(true);
         }
         this.toolSelectorService.onMouseDown(event);
@@ -46,7 +45,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent) {
-        if (event.button === leftClick) {
+        if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(false);
         }
         this.toolSelectorService.onMouseUp(event);

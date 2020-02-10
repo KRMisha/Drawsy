@@ -7,8 +7,8 @@ import { GuideGridComponent } from '../../components/guide/guide-content/guide-d
 import { GuideSnapToGridComponent } from '../../components/guide/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '../../components/guide/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
 import { GuideSaveDrawingComponent } from '../../components/guide/guide-content/guide-file-options/guide-save-drawing/guide-save-drawing.component';
-import { GuideBrushComponent } from '../../components/guide/guide-content/guide-tools/guide-brushes/guide-brush/guide-brush.component';
 import { GuideCalligraphyComponent } from '../../components/guide/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
+import { GuidePaintbrushComponent } from '../../components/guide/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
 import { GuidePencilComponent } from '../../components/guide/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
 import { GuideSpraypaintComponent } from '../../components/guide/guide-content/guide-tools/guide-brushes/guide-spraypaint/guide-spraypaint.component';
 import { GuideColorPickerComponent } from '../../components/guide/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
@@ -30,7 +30,7 @@ const guides: Type<any>[] = [
     GuideWelcomeComponent,
     GuideSpraypaintComponent,
     GuidePencilComponent,
-    GuideBrushComponent,
+    GuidePaintbrushComponent,
     GuideCalligraphyComponent,
     GuideEllipseComponent,
     GuidePolygonComponent,

@@ -10,36 +10,35 @@ const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
     styleUrls: ['./color-hex-selector.component.scss'],
 })
 export class ColorHexSelectorComponent {
-    hexForm = new FormControl('000000', [Validators.required, Validators.pattern(hexRegexStr)]);
-    redHexForm = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
-    greenHexForm = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
-    blueHexForm = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
+    hexRgb = new FormControl('000000', [Validators.required, Validators.pattern(hexRegexStr)]);
+    hexRed = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
+    hexGreen = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
+    hexBlue = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     isHex = true;
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
     @Input()
     set hex(hex: string) {
-        this.hexForm.setValue(hex);
-        this.redHexForm.setValue(hex.substring(0, 2));
-        this.greenHexForm.setValue(hex.substring(2, 4));
-        this.blueHexForm.setValue(hex.substring(4, 6));
+        this.hexRgb.setValue(hex);
+        this.hexRed.setValue(hex.substring(0, 2));
+        this.hexGreen.setValue(hex.substring(2, 4));
+        this.hexBlue.setValue(hex.substring(4, 6));
     }
 
     updateColorHex(): void {
         const color = new Color();
-        if (color.setHex(this.hexForm.value)) {
-            this.hex = this.hexForm.value;
+        if (color.setHex(this.hexRgb.value)) {
+            this.hex = this.hexRgb.value;
             this.colorChanged.emit(color);
         }
     }
 
     updateColorRgb(): void {
-        if (
-            singleComponentRegex.test(this.redHexForm.value) &&
-            singleComponentRegex.test(this.greenHexForm.value) &&
-            singleComponentRegex.test(this.blueHexForm.value)
-        ) {
-            this.hexForm.setValue(this.redHexForm.value + this.greenHexForm.value + this.blueHexForm.value);
+        const isRedValid = singleComponentRegex.test(this.hexRed.value);
+        const isGreenValid = singleComponentRegex.test(this.hexGreen.value);
+        const isBlueValid = singleComponentRegex.test(this.hexBlue.value);
+        if (isRedValid && isGreenValid && isBlueValid) {
+            this.hexRgb.setValue(this.hexRed.value + this.hexGreen.value + this.hexBlue.value);
             this.updateColorHex();
         }
     }
@@ -49,7 +48,7 @@ export class ColorHexSelectorComponent {
         if (this.isHex) {
             this.updateColorRgb();
         } else {
-            this.hex = this.hexForm.value;
+            this.hex = this.hexRgb.value;
         }
         event.preventDefault();
     }

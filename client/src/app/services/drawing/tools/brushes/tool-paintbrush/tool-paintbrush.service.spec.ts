@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ToolBrushService } from './tool-brush.service';
+import { ToolPaintbrushService } from './tool-paintbrush.service';
 
-describe('ToolBrushService', () => {
+describe('ToolPaintbrushService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ToolBrushService = TestBed.get(ToolBrushService);
+        const service: ToolPaintbrushService = TestBed.get(ToolPaintbrushService);
         expect(service).toBeTruthy();
     });
 });
