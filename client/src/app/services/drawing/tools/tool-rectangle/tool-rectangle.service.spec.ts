@@ -22,7 +22,7 @@ class MockSvgElement {
     }
 }
 
-fdescribe('ToolRectangleService', () => {
+describe('ToolRectangleService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let service: ToolRectangleService;
@@ -97,19 +97,19 @@ fdescribe('ToolRectangleService', () => {
 
     it('should update rectangle automaticaly when pressing shift and releasing shift', () => {
         spyOn(service.renderer, 'setAttribute');
-        
+
         service.onLeave({} as MouseEvent);
         service.onEnter({} as MouseEvent);
 
-        service.onMouseMove({offsetX: 20, offsetY: 20} as MouseEvent);
-        service.onMouseDown({offsetX: 20, offsetY: 20} as MouseEvent);
+        service.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         service.isMouseDown = true;
-        service.onMouseMove({offsetX: 40, offsetY: 45} as MouseEvent);
+        service.onMouseMove({ offsetX: 40, offsetY: 45 } as MouseEvent);
 
-        service.onKeyDown({key: 'Shift'} as KeyboardEvent);
-        service.onKeyUp({key: 'Shift'} as KeyboardEvent);
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        service.onKeyUp({ key: 'Shift' } as KeyboardEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['rectangle'], 'd', 'M20 20 H45 V45 H20 V20 ');
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['rectangle'], 'd', 'M20 20 H40 V45 H20 V20 ');
-    })
+    });
 });
