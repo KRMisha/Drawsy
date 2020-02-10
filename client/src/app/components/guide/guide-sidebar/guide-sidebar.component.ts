@@ -1,13 +1,11 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { GuideService } from '../../../services/guide/guide.service';
+import { Component, EventEmitter, Output } from '@angular/core';
 
-enum CollapseMenuButtons {
-    tools,
-    toolBrushes,
-    toolShapes,
-    drawingSurfaceOptions,
-    fileOptions,
+enum MenuSection {
+    Tools,
+    ToolBrushes,
+    ToolShapes,
+    DrawingSurfaceOptions,
+    FileOptions,
 }
 
 @Component({
@@ -15,36 +13,19 @@ enum CollapseMenuButtons {
     templateUrl: './guide-sidebar.component.html',
     styleUrls: ['./guide-sidebar.component.scss'],
 })
-export class GuideSidebarComponent implements OnInit, OnDestroy {
-    menus = CollapseMenuButtons;
-    private subscription: Subscription;
-    private isMenuExpanded: boolean[];
+export class GuideSidebarComponent {
+    MenuSection = MenuSection; // Make enum available to template
+    isEachMenuExpanded: boolean[] = [false, false, false, false, false];
 
     @Output() selectGuide = new EventEmitter<number>();
 
-    constructor(private guideService: GuideService) {
-        this.isMenuExpanded = [false, false, false, false, false];
+    toggleMenu(menuSection: MenuSection): void {
+        this.isEachMenuExpanded[menuSection] = !this.isEachMenuExpanded[menuSection];
     }
 
-    ngOnInit() {
-        this.subscription = this.guideService.openAllCollapseMenus().subscribe((shouldOpenAllMenus) => {
-            if (shouldOpenAllMenus) {
-                this.openAllCollapseMenus();
-            }
-        });
-    }
-
-    toggleCollapseMenu(index: number): void {
-        this.isMenuExpanded[index] = !this.isMenuExpanded[index];
-    }
-
-    openAllCollapseMenus(): void {
-        for (let i = 0; i < this.isMenuExpanded.length; i++) {
-            this.isMenuExpanded[i] = true;
+    expandAllMenus(): void {
+        for (let i = 0; i < this.isEachMenuExpanded.length; i++) {
+            this.isEachMenuExpanded[i] = true;
         }
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
     }
 }

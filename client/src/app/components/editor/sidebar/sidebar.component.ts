@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
 import { ToolSelectorService } from '../../../services/drawing/tool-selector/tool-selector.service';
@@ -12,16 +12,17 @@ import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.c
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
     buttons: SidebarButton[] = sidebarButtons;
-    selectedButton: SidebarButton;
+    selectedButton: SidebarButton = this.buttons[0];
 
     @ViewChild('drawer', { static: false }) drawer: MatDrawer;
 
     private areShortcutsEnabled = true;
 
-    constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {
-        this.selectedButton = this.buttons[0];
+    constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {}
+
+    ngOnInit() {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
