@@ -27,8 +27,7 @@ export class ColorSliderComponent implements AfterViewInit {
 
     private isMouseInside = false;
 
-    // tslint:disable-next-line: variable-name
-    _hue = 0;
+    _hue = 0; // tslint:disable-line: variable-name
     @Input()
     set hue(hue: number) {
         if (this.canvas !== undefined) {

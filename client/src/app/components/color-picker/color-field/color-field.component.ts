@@ -25,8 +25,7 @@ export class ColorFieldComponent implements AfterViewInit {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    // tslint:disable-next-line: variable-name
-    private _hue = 0;
+    private _hue = 0; // tslint:disable-line: variable-name
     @Input()
     set hue(hue: number) {
         this._hue = hue;
