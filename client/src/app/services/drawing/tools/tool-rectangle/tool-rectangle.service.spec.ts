@@ -22,7 +22,7 @@ class MockSvgElement {
     }
 }
 
-fdescribe('ToolRectangleService', () => {
+describe('ToolRectangleService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let service: ToolRectangleService;
