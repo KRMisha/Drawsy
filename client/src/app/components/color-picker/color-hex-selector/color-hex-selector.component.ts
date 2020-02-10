@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Color, hexRegexStr } from 'src/app/classes/color/color';
+import { Color, hexRegex } from 'src/app/classes/color/color';
 
 const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 
@@ -10,7 +10,7 @@ const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
     styleUrls: ['./color-hex-selector.component.scss'],
 })
 export class ColorHexSelectorComponent {
-    hexRgb = new FormControl('000000', [Validators.required, Validators.pattern(hexRegexStr)]);
+    hexRgb = new FormControl('000000', [Validators.required, Validators.pattern(hexRegex)]);
     hexRed = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     hexGreen = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     hexBlue = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
@@ -26,8 +26,9 @@ export class ColorHexSelectorComponent {
     }
 
     updateColorHex(): void {
-        const color = new Color();
-        if (color.setHex(this.hexRgb.value)) {
+        if (hexRegex.test(this.hexRgb.value)) {
+            const color = new Color();
+            color.setHex(this.hexRgb.value)
             this.hex = this.hexRgb.value;
             this.colorChanged.emit(color);
         }
