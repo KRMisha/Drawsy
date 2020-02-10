@@ -55,7 +55,7 @@ describe('ToolRectangleService', () => {
         service.isMouseInside = true;
     });
 
-    it('should be created', () => {=
+    it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
