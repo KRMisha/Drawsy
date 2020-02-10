@@ -99,7 +99,7 @@ describe('ToolLineService', () => {
         expect(drawingService.addElement).toHaveBeenCalledTimes(0);
     });
 
-    it('Two points must be rendered when user makes a two segment line and junctions are enabled', () => {
+    it('should render two point when user makes a two segment line and junctions are enabled', () => {
         const drawingService = TestBed.get(DrawingService);
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
 
@@ -133,7 +133,7 @@ describe('ToolLineService', () => {
         expect(service['junctionPoints'].length).toEqual(0);
     });
 
-    it('Line must follow x mouse position when in snap mode and angle is 0 degrees', () => {
+    it('should make line follow x mouse position when in snap mode while angle is 0', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
 
@@ -149,7 +149,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10 50 10');
     });
 
-    it('Line must follow x mouse position when in snap mode and angle is 180 degrees', () => {
+    it('should make line follow x mouse position when in snap mode while angle is 180', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
 
@@ -165,7 +165,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '50 50 20 50');
     });
 
-    it('Line must follow x mouse position when in snap mode and angle is 45, 135, 225 or 315', () => {
+    it('should make line follow x mouse position when in snap mode while angle is 45, 135, 225 or 315', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
 
@@ -181,7 +181,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '50 50 110 110');
     });
 
-    it('Line must follow y mouse position when in snap mode and angle 90 or 270', () => {
+    it('should make line follow y mouse position when in snap mode while angle is 90 of 270', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
 
@@ -197,7 +197,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '50 50 50 100');
     });
 
-    it('Preview should update automatically when pressing and releasing shift', () => {
+    it('should update preview automatically when pressing and releasing shift', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
 
@@ -216,7 +216,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['previewLine'], 'y2', '100');
     });
 
-    it('Current line should be removed when pressing escape', () => {
+    it('should remove current line when pressing escape', () => {
         const drawingService = TestBed.get(DrawingService);
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
@@ -230,7 +230,7 @@ describe('ToolLineService', () => {
         expect(service['junctionPoints'].length).toEqual(0);
     });
 
-    it('Nothing should happen if pressing escape with no current line being drawn', () => {
+    it('should do nothing if pressing escape when no current line is being drawn', () => {
         const drawingService = TestBed.get(DrawingService);
         service.isMouseInside = true;
 
@@ -240,7 +240,7 @@ describe('ToolLineService', () => {
         expect(drawingService.removeElement).toHaveBeenCalledTimes(0);
     });
 
-    it('Backspace should remove last point', () => {
+    it('should remove last point when backspace is hit', () => {
         service.isMouseInside = true;
 
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
@@ -267,7 +267,7 @@ describe('ToolLineService', () => {
         expect(service['points'].length).toEqual(2);
     });
 
-    it('Segment should close if double click is less than 3px away from original point', () => {
+    it('should make segment loop on itself if double click is less than 3px away from original point', () => {
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
@@ -289,7 +289,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '50 50 60 60 50 60 50 50');
     });
 
-    it('Junctions should be removed with the points of the line when the user presses backspace', () => {
+    it('should remove the line junctions when the user presses backspace', () => {
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
         service.isMouseInside = true;
 

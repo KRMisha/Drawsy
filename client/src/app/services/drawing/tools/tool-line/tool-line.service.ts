@@ -174,7 +174,7 @@ export class ToolLineService extends Tool {
                 angle += 360;
             }
 
-            if (angle === 0 || angle === 180 || angle === 360) {
+            if (angle === 180 || angle === 360) {
                 nextPoint.x = mousePosition.x;
                 nextPoint.y = lastPoint.y;
             } else if (angle === 90 || angle === 270) {
