@@ -45,8 +45,7 @@ describe('ModalService', () => {
 
     it('#openDialog should not open a dialog if a modal is already present', () => {
         spyOn(service, 'openDialog').and.callThrough();
-        // tslint:disable-next-line: no-string-literal
-        service['_isModalPresent'] = true;
+        service['_isModalPresent'] = true; // tslint:disable-line: no-string-literal
         service.openDialog({} as any);
         expect(matDialogSpyObj.open).toHaveBeenCalledTimes(0);
     });

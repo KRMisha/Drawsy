@@ -4,8 +4,7 @@ import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import 'zone.js/dist/zone-testing';
 
-// tslint:disable-next-line:no-any from cli
-declare const require: any;
+declare const require: any; // tslint:disable-line: no-any from cli
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());

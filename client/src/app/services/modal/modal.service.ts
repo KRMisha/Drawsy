@@ -8,8 +8,7 @@ import { Vec2 } from 'src/app/classes/vec2';
 export class ModalService {
     private dialogRef: MatDialogRef<Type<any>>;
 
-    // tslint:disable-next-line: variable-name
-    private _isModalPresent = false;
+    private _isModalPresent = false; // tslint:disable-line: variable-name
     get isModalPresent() {
         return this._isModalPresent;
     }
