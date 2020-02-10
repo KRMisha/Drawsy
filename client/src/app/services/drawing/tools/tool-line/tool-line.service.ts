@@ -47,9 +47,11 @@ export class ToolLineService extends Tool {
         this.lastPointY = this.nextPointY;
 
         if (this.previewLine === undefined) {
+            console.log('peni')
             this.previewLine = this.renderer.createElement('line', 'svg');
             this.renderer.setAttribute(this.previewLine, 'display', 'none');
             this.drawingService.addElement(this.previewLine);
+            console.log('xd')
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', '' + this.nextPointX);
@@ -125,9 +127,6 @@ export class ToolLineService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.shiftKey) {
-            this.isShiftDown = true;
-        }
         if (event.key === 'Escape') {
             if (this.currentlyDrawing) {
                 this.drawingService.removeElement(this.polyline);
