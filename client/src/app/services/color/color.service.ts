@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
 
+const maxRecentColors = 10;
+
 @Injectable({
     providedIn: 'root',
 })
 export class ColorService {
-    private maxRecentColors = 10;
     private primaryColor: Color;
     private secondaryColor: Color;
 
@@ -14,7 +15,7 @@ export class ColorService {
     constructor() {
         this.primaryColor = new Color();
         this.secondaryColor = new Color();
-        for (let i = 0; i < this.maxRecentColors; i++) {
+        for (let i = 0; i < maxRecentColors; i++) {
             this.lastColors.push(new Color());
         }
     }
