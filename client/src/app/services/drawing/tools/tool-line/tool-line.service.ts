@@ -92,6 +92,9 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        if (!this.isMouseInside) {
+            return;
+        }
         if (this.junctionPoints.length > 0) {
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
@@ -122,24 +125,29 @@ export class ToolLineService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.code === 'Escape') {
-            this.stopDrawing();
-            this.drawingService.removeElement(this.polyline);
-            for (const circle of this.junctionPoints) {
-                this.drawingService.removeElement(circle);
+        if (event.shiftKey) {
+            this.isShiftDown = true;
+        }
+        if (event.key === 'Escape') {
+            if (this.currentlyDrawing) {
+                this.drawingService.removeElement(this.polyline);
+                this.stopDrawing();
+                for (const circle of this.junctionPoints) {
+                    this.drawingService.removeElement(circle);
+                }
+                this.junctionPoints.length = 0;
             }
-            this.junctionPoints.length = 0;
-        } else if (event.code === 'ShiftLeft') {
+        } else if (event.key === 'Shift') {
             this.isShiftDown = true;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
-        } else if (event.code === 'Backspace') {
+        } else if (event.key === 'Backspace') {
             this.removeLastPointFromLine();
         }
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.code === 'ShiftLeft') {
+        if (event.key === 'Shift') {
             this.isShiftDown = false;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
