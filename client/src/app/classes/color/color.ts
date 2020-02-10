@@ -101,7 +101,7 @@ export class Color {
         }
 
         if (hue < 0) {
-            hue += 360;
+            hue += maxHue;
         }
 
         let saturation: number;
