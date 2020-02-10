@@ -28,6 +28,8 @@ export class ToolRectangleService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        this.mousePosition = { x: event.offsetX, y: event.offsetY };
+        console.log('hein');
         if (this.isMouseInside) {
             this.rectangle = this.createNewRectangle();
             this.origin = { x: event.offsetX, y: event.offsetY };
@@ -59,9 +61,7 @@ export class ToolRectangleService extends Tool {
     }
 
     onLeave(event: MouseEvent): void {
-        if (this.isMouseDown) {
-            this.isMouseDown = false;
-        }
+        this.isMouseDown = false;
     }
 
     private createNewRectangle(): SVGPathElement {
