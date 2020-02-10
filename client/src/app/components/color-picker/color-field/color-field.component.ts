@@ -56,7 +56,7 @@ export class ColorFieldComponent implements AfterViewInit {
     }
 
     private isMouseDown = false;
-    private mousePosition: Vec2 = {x: 0, y: canvasHeight};
+    private mousePosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
 
     private color = new Color();
