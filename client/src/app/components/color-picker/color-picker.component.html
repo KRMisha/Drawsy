@@ -11,12 +11,12 @@
 
     <div [style.display]="isColorPickerDisplayEnabled ? 'block' : 'none'">
         <app-color-field
-            [setHue]="hue"
+            [hue]="hue"
             [setSaturation]="saturation"
             [setValue]="value"
             (saturationValueChange)="setSaturationAndValue($event)"
         ></app-color-field>
-        <app-color-slider [setHue]="hue" (hueChange)="setHue($event)"></app-color-slider>
+        <app-color-slider [hue]="hue" (hueChange)="setHue($event)"></app-color-slider>
 
         <div class="alpha-slider" [style.color]="isTextBlack ? 'black' : 'white'">
             <div class="alpha-text">

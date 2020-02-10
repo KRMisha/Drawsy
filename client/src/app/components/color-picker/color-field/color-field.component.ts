@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
+import { Vec2 } from 'src/app/classes/vec2';
 
 enum ColorString {
     OpaqueWhite = 'rgba(255, 255, 255, 1)',
@@ -24,10 +25,11 @@ export class ColorFieldComponent implements AfterViewInit {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    private hue = 0;
+    // tslint:disable-next-line: variable-name
+    private _hue = 0;
     @Input()
-    set setHue(hue: number) {
-        this.hue = hue;
+    set hue(hue: number) {
+        this._hue = hue;
         if (this.canvas !== undefined) {
             this.draw();
         }
@@ -37,7 +39,7 @@ export class ColorFieldComponent implements AfterViewInit {
     @Input()
     set setSaturation(saturation: number) {
         this.saturation = saturation;
-        this.mouseX = saturation * canvasWidth;
+        this.mousePosition.x = saturation * canvasWidth;
         if (this.canvas !== undefined) {
             this.draw();
         }
@@ -47,15 +49,14 @@ export class ColorFieldComponent implements AfterViewInit {
     @Input()
     set setValue(value: number) {
         this.value = value;
-        this.mouseY = (1 - value) * canvasHeight;
+        this.mousePosition.y = (1 - value) * canvasHeight;
         if (this.canvas !== undefined) {
             this.draw();
         }
     }
 
     private isMouseDown = false;
-    private mouseX = 0;
-    private mouseY = canvasHeight;
+    private mousePosition: Vec2 = {x: 0, y: canvasHeight};
     private isMouseInside = false;
 
     private color = new Color();
@@ -79,7 +80,7 @@ export class ColorFieldComponent implements AfterViewInit {
         const height = this.canvas.height;
 
         const color = new Color();
-        color.setHsv(this.hue, 1, 1);
+        color.setHsv(this._hue, 1, 1);
 
         const colorStr = color.toRgbString();
         this.context.fillStyle = colorStr;
@@ -97,10 +98,10 @@ export class ColorFieldComponent implements AfterViewInit {
         this.context.fillStyle = verticalGradient;
         this.context.fillRect(0, 0, width, height);
 
-        this.color.setHsv(this.hue, this.saturation, this.value);
+        this.color.setHsv(this._hue, this.saturation, this.value);
 
         const circle = new Path2D();
-        circle.arc(this.mouseX, this.mouseY, 10, 0, 2 * Math.PI);
+        circle.arc(this.mousePosition.x, this.mousePosition.y, 10, 0, 2 * Math.PI);
         this.context.fillStyle = this.color.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
@@ -143,8 +144,8 @@ export class ColorFieldComponent implements AfterViewInit {
 
         this.saturation = event.offsetX / this.canvas.width;
         this.value = 1.0 - event.offsetY / this.canvas.height;
-        this.mouseX = event.offsetX;
-        this.mouseY = event.offsetY;
+        this.mousePosition.x = event.offsetX;
+        this.mousePosition.y = event.offsetY;
         this.draw();
         this.saturationValueChange.emit([this.saturation, this.value]);
     }

@@ -27,14 +27,18 @@ export class ColorSliderComponent implements AfterViewInit {
 
     private isMouseInside = false;
 
-    hue = 0;
+    // tslint:disable-next-line: variable-name
+    _hue = 0;
     @Input()
-    set setHue(hue: number) {
+    set hue(hue: number) {
         if (this.canvas !== undefined) {
-            this.hue = hue;
+            this._hue = hue;
             this.mouseXPosition = (hue / 360) * 250;
             this.draw();
         }
+    }
+    get hue(): number {
+        return this._hue;
     }
 
     ngAfterViewInit(): void {
@@ -108,7 +112,7 @@ export class ColorSliderComponent implements AfterViewInit {
         }
 
         this.mouseXPosition = event.offsetX;
-        this.hue = (this.mouseXPosition / this.canvas.width) * maxHue;
+        this._hue = (this.mouseXPosition / this.canvas.width) * maxHue;
         this.draw();
         this.hueChange.emit(this.hue);
     }
