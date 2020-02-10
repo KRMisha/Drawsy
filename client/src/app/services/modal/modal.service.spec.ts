@@ -35,19 +35,19 @@ describe('ModalService', () => {
         expect(service.isModalPresent).toEqual(true);
     });
 
-    it('#openDialog should open a dialog with the specified dimensions when they are provided', async(() => {
+    it('#openDialog should open a dialog with the specified dimensions when they are provided', () => {
         spyOn(service, 'openDialog').and.callThrough();
         service.openDialog({} as any, { x: 4, y: 4 } as Vec2);
         expect(service.openDialog).toHaveBeenCalled();
         expect(matDialogSpyObj.open).toHaveBeenCalledWith({} as any, { width: '4px', height: '4px' });
         expect(service.isModalPresent).toEqual(true);
-    }));
+    });
 
-    it('#openDialog should not open a dialog if a modal is already present', async(() => {
+    it('#openDialog should not open a dialog if a modal is already present', () => {
         spyOn(service, 'openDialog').and.callThrough();
         // tslint:disable-next-line: no-string-literal
         service['_isModalPresent'] = true;
         service.openDialog({} as any);
         expect(matDialogSpyObj.open).toHaveBeenCalledTimes(0);
-    }));
+    });
 });
