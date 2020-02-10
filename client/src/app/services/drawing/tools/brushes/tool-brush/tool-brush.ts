@@ -1,6 +1,6 @@
 import { ColorService } from 'src/app/services/color/color.service';
-import { DrawingService } from '../../drawing.service';
-import { Tool, ToolSetting } from '../tool';
+import { DrawingService } from '../../../drawing.service';
+import { Tool, ToolSetting } from '../../tool';
 
 export abstract class ToolBrush extends Tool {
     private path: SVGPathElement;

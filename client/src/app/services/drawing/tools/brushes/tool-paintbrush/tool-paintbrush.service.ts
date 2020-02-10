@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../../drawing.service';
 import { Textures, ToolSetting } from '../../tool';
-import { ToolBrush } from '../tool-brush';
+import { ToolBrush } from '../tool-brush/tool-brush';
 
 @Injectable({
     providedIn: 'root',
