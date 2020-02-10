@@ -10,6 +10,9 @@ enum ColorGradient {
     Pink = 'rgb(255, 0, 255)',
 }
 
+const canvasWidth = 250;
+const canvasHeight = 21;
+
 @Component({
     selector: 'app-color-slider',
     templateUrl: './color-slider.component.html',
@@ -32,10 +35,11 @@ export class ColorSliderComponent implements AfterViewInit {
     set hue(hue: number) {
         if (this.canvas !== undefined) {
             this._hue = hue;
-            this.mouseXPosition = (hue / 360) * 250;
+            this.mouseXPosition = (hue / maxHue) * canvasWidth;
             this.draw();
         }
     }
+
     get hue(): number {
         return this._hue;
     }
@@ -43,8 +47,8 @@ export class ColorSliderComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas = this.hueCanvas.nativeElement;
-        this.canvas.width = 250;
-        this.canvas.height = 21;
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
         this.draw();
     }
 
@@ -63,13 +67,15 @@ export class ColorSliderComponent implements AfterViewInit {
         horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
         horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
         this.context.fillStyle = horizontalGradient;
-        this.context.fillRect(0, 7, width, height - 14);
+        const padding = 7;
+        this.context.fillRect(0, padding, width, height - 2 * padding);
 
         const hueColor = new Color();
         hueColor.setHsv(this.hue, 1.0, 1.0);
 
         const circle = new Path2D();
-        circle.arc(this.mouseXPosition, height / 2, 8, 0, 2 * Math.PI);
+        const size = 8;
+        circle.arc(this.mouseXPosition, height / 2, size, 0, 2 * Math.PI);
         this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;

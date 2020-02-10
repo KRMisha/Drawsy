@@ -53,7 +53,6 @@ describe('ToolLineService', () => {
 
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
-
     });
 
     it('should be created', () => {

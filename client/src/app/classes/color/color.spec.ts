@@ -72,12 +72,16 @@ describe('Color', () => {
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([48, 17, 17]);
         color.setHsv(101, 0.66, 0.38);
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([53, 97, 33]);
+        color.setHsv(239, 0.66, 0.38);
+        expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([33, 34, 97]);
         color.setHsv(287, 0.66, 0.37);
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([81, 32, 94]);
         color.setHsv(70, 0.66, 0.37);
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([84, 94, 32]);
         color.setHsv(125, 0.66, 0.37);
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([32, 94, 37]);
+        color.setHsv(350, 0.66, 0.37);
+        expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([94, 32, 42]);
     });
 
     it('#getHsv should return corresponding hsv values', () => {
@@ -128,7 +132,7 @@ describe('Color', () => {
         expect(color.toRgbString()).toEqual('rgb(123, 124, 125)');
     });
 
-    it('#toRgbaString color should return a valid rgba color string', () => {
+    it('#toRgbaString should return a valid rgba color string', () => {
         color.red = 123;
         color.green = 124;
         color.blue = 125;

@@ -25,7 +25,8 @@ export class ColorFieldComponent implements AfterViewInit {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    private _hue = 0; // tslint:disable-line: variable-name
+    // tslint:disable-next-line: variable-name
+    private _hue = 0;
     @Input()
     set hue(hue: number) {
         this._hue = hue;
@@ -34,20 +35,22 @@ export class ColorFieldComponent implements AfterViewInit {
         }
     }
 
-    private saturation = 0;
+    // tslint:disable-next-line: variable-name
+    private _saturation = 0;
     @Input()
-    set setSaturation(saturation: number) {
-        this.saturation = saturation;
+    set saturation(saturation: number) {
+        this._saturation = saturation;
         this.mousePosition.x = saturation * canvasWidth;
         if (this.canvas !== undefined) {
             this.draw();
         }
     }
 
-    private value = 1;
+    // tslint:disable-next-line: variable-name
+    private _value = 1;
     @Input()
-    set setValue(value: number) {
-        this.value = value;
+    set value(value: number) {
+        this._value = value;
         this.mousePosition.y = (1 - value) * canvasHeight;
         if (this.canvas !== undefined) {
             this.draw();
@@ -97,7 +100,7 @@ export class ColorFieldComponent implements AfterViewInit {
         this.context.fillStyle = verticalGradient;
         this.context.fillRect(0, 0, width, height);
 
-        this.color.setHsv(this._hue, this.saturation, this.value);
+        this.color.setHsv(this._hue, this._saturation, this._value);
 
         const circle = new Path2D();
         circle.arc(this.mousePosition.x, this.mousePosition.y, 10, 0, 2 * Math.PI);
@@ -126,26 +129,25 @@ export class ColorFieldComponent implements AfterViewInit {
         this.updateColor(event);
     }
 
-    @HostListener('mouseleave', ['$event'])
-    onMouseLeave(event: MouseEvent): void {
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
         this.isMouseInside = false;
     }
 
-    @HostListener('mouseenter', ['$event'])
-    onMouseEnter(event: MouseEvent): void {
+    @HostListener('mouseenter')
+    onMouseEnter(): void {
         this.isMouseInside = true;
     }
 
     updateColor(event: MouseEvent): void {
-        if (!this.isMouseDown || !this.isMouseInside || event.offsetY >= this.canvas.height) {
+        if (!this.isMouseDown || !this.isMouseInside) {
             return;
         }
-
-        this.saturation = event.offsetX / this.canvas.width;
-        this.value = 1.0 - event.offsetY / this.canvas.height;
+        this._saturation = event.offsetX / this.canvas.width;
+        this._value = 1.0 - event.offsetY / this.canvas.height;
         this.mousePosition.x = event.offsetX;
         this.mousePosition.y = event.offsetY;
         this.draw();
-        this.saturationValueChange.emit([this.saturation, this.value]);
+        this.saturationValueChange.emit([this._saturation, this._value]);
     }
 }
