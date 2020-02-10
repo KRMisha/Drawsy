@@ -26,7 +26,6 @@ describe('ToolLineService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let service: ToolLineService;
-    let drawingService: DrawingService;
 
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj({
@@ -52,14 +51,12 @@ describe('ToolLineService', () => {
             },
         } as Renderer2;
 
-        drawingService = TestBed.get(DrawingService);
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
     });
 
     it('should be created', () => {
-        const toolLineService: ToolLineService = TestBed.get(ToolLineService);
-        expect(toolLineService).toBeTruthy();
+        expect(service).toBeTruthy();
     });
 
     it('should place line points where user is clicking when mouse is inside', () => {
@@ -83,7 +80,7 @@ describe('ToolLineService', () => {
         service.onMouseDoubleClick({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10 20 20');
-        expect(drawingService.addElement).toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
     it('should not place line points where user is clicking when mouse is outside', () => {
@@ -94,7 +91,7 @@ describe('ToolLineService', () => {
         service.onMouseDoubleClick({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledTimes(0);
-        expect(drawingService.addElement).toHaveBeenCalledTimes(0);
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(0);
     });
 
     it('should render two point when user makes a two segment line and junctions are enabled', () => {
@@ -123,7 +120,7 @@ describe('ToolLineService', () => {
         service.onMouseDoubleClick({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10 20 20');
-        expect(drawingService.addElement).toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
         expect(service['junctionPoints'].length).toEqual(0);
     });
 
@@ -202,7 +199,7 @@ describe('ToolLineService', () => {
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
         service.onKeyDown({ key: 'Escape' } as KeyboardEvent);
-        expect(drawingService.removeElement).toHaveBeenCalledWith(service['polyline']);
+        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(service['polyline']);
         expect(service['junctionPoints'].length).toEqual(0);
     });
 
@@ -210,7 +207,7 @@ describe('ToolLineService', () => {
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onKeyDown({ key: 'Escape' } as KeyboardEvent);
 
-        expect(drawingService.removeElement).toHaveBeenCalledTimes(0);
+        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledTimes(0);
     });
 
     it('should remove last point when backspace is hit', () => {
