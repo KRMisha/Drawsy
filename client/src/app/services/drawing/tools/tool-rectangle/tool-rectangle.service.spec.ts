@@ -22,7 +22,7 @@ class MockSvgElement {
     }
 }
 
-describe('ToolRectangleService', () => {
+fdescribe('ToolRectangleService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let service: ToolRectangleService;
@@ -55,9 +55,8 @@ describe('ToolRectangleService', () => {
         service.isMouseInside = true;
     });
 
-    it('should be created', () => {
-        const toolRectangleService: ToolRectangleService = TestBed.get(ToolRectangleService);
-        expect(toolRectangleService).toBeTruthy();
+    it('should be created', () => {=
+        expect(service).toBeTruthy();
     });
 
     it('should add a rectangle in drawing service on user click if mouse is inside canvas', () => {
