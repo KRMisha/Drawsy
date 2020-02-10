@@ -18,8 +18,8 @@ export class CreateDrawingComponent implements OnInit {
     backgroundColor: Color = new Color();
 
     drawingForm = new FormGroup({
-        width: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
-        height: new FormControl(0, Validators.compose([Validators.required, Validators.min(0), Validators.max(10000)])),
+        width: new FormControl(0, Validators.compose([Validators.required, Validators.min(1), Validators.max(10000)])),
+        height: new FormControl(0, Validators.compose([Validators.required, Validators.min(1), Validators.max(10000)])),
     });
 
     constructor(private router: Router, private drawingService: DrawingService) {}
