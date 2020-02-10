@@ -26,6 +26,7 @@ describe('ToolLineService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let service: ToolLineService;
+    let drawingService: DrawingService;
 
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj({
@@ -50,6 +51,11 @@ describe('ToolLineService', () => {
                 return new MockSvgElement();
             },
         } as Renderer2;
+
+        drawingService = TestBed.get(DrawingService);
+        spyOn(service.renderer, 'setAttribute');
+        service.isMouseInside = true;
+
     });
 
     it('should be created', () => {
@@ -58,10 +64,6 @@ describe('ToolLineService', () => {
     });
 
     it('should place line points where user is clicking when mouse is inside', () => {
-        const drawingService = TestBed.get(DrawingService);
-        spyOn(service.renderer, 'setAttribute');
-
-        service.isMouseInside = true;
         service.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
         service.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
 
@@ -86,9 +88,6 @@ describe('ToolLineService', () => {
     });
 
     it('should not place line points where user is clicking when mouse is outside', () => {
-        const drawingService = TestBed.get(DrawingService);
-        spyOn(service.renderer, 'setAttribute');
-
         service.isMouseInside = false;
         service.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
         service.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
@@ -100,11 +99,7 @@ describe('ToolLineService', () => {
     });
 
     it('should render two point when user makes a two segment line and junctions are enabled', () => {
-        const drawingService = TestBed.get(DrawingService);
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
-
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
 
         expect(service['junctionPoints'].length).toEqual(0);
 
@@ -134,9 +129,6 @@ describe('ToolLineService', () => {
     });
 
     it('should make line follow x mouse position when in snap mode while angle is 0', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
         service.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
 
@@ -150,9 +142,6 @@ describe('ToolLineService', () => {
     });
 
     it('should make line follow x mouse position when in snap mode while angle is 180', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
@@ -166,9 +155,6 @@ describe('ToolLineService', () => {
     });
 
     it('should make line follow x mouse position when in snap mode while angle is 45, 135, 225 or 315', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
@@ -182,9 +168,6 @@ describe('ToolLineService', () => {
     });
 
     it('should make line follow y mouse position when in snap mode while angle is 90 of 270', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
@@ -198,9 +181,6 @@ describe('ToolLineService', () => {
     });
 
     it('should update preview automatically when pressing and releasing shift', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
@@ -217,9 +197,6 @@ describe('ToolLineService', () => {
     });
 
     it('should remove current line when pressing escape', () => {
-        const drawingService = TestBed.get(DrawingService);
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
 
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
@@ -231,9 +208,6 @@ describe('ToolLineService', () => {
     });
 
     it('should do nothing if pressing escape when no current line is being drawn', () => {
-        const drawingService = TestBed.get(DrawingService);
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onKeyDown({ key: 'Escape' } as KeyboardEvent);
 
@@ -241,8 +215,6 @@ describe('ToolLineService', () => {
     });
 
     it('should remove last point when backspace is hit', () => {
-        service.isMouseInside = true;
-
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
@@ -268,8 +240,6 @@ describe('ToolLineService', () => {
     });
 
     it('should make segment loop on itself if double click is less than 3px away from original point', () => {
-        spyOn(service.renderer, 'setAttribute');
-        service.isMouseInside = true;
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
 
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
@@ -291,7 +261,6 @@ describe('ToolLineService', () => {
 
     it('should remove the line junctions when the user presses backspace', () => {
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
-        service.isMouseInside = true;
 
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
