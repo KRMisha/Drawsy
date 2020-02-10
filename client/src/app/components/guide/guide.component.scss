@@ -39,22 +39,30 @@
     height: 100px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 .navigation-button {
     height: 60px;
     width: auto;
     margin-top: 10px;
-    margin-right: 50px;
-    margin-left: 50px;
     font-size: 18px;
     cursor: pointer;
 }
 
 .previous-container,
 .next-container {
-    width: 270px;
+    width: 150px;
+}
+
+.previous-container {
+    text-align: right;
+    margin-right: 50px;
+}
+
+.next-container {
+    text-align: left;
+    margin-left: 50px;
 }
 
 .icon {
