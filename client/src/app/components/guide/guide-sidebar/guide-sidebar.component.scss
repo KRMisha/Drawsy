@@ -11,10 +11,10 @@
 }
 
 .menu-item,
-.collapse-menu-item,
-.secondary-collapse-menu-item,
-.collapse-button,
-.secondary-collapse-button {
+.menu-item,
+.secondary-menu-item,
+.menu-button,
+.secondary-menu-button {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: rgb(110, 109, 109);
@@ -24,25 +24,25 @@
 }
 
 .menu-item:hover,
-.collapse-menu-item:hover,
-.collapse-button:hover,
-.secondary-collapse-button:hover,
-.secondary-collapse-menu-item:hover {
+.menu-item:hover,
+.menu-button:hover,
+.secondary-menu-button:hover,
+.secondary-menu-item:hover {
     color: rgb(255, 64, 129);
 }
 
-.collapse-button,
-.secondary-collapse-button {
+.menu-button,
+.secondary-menu-button {
     padding-top: 0px;
     padding-bottom: 0px;
 }
 
-.collapse-menu-item,
-.secondary-collapse-button {
+.menu-item,
+.secondary-menu-button {
     padding-left: 20px;
 }
 
-.secondary-collapse-menu-item {
+.secondary-menu-item {
     padding-left: 40px;
 }
 

@@ -1,5 +1,4 @@
 import { Injectable, Type } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
 
 // Disable max line length for long imports due to detailed nesting
 // tslint:disable: max-line-length
@@ -54,14 +53,7 @@ const guides: Type<any>[] = [
     providedIn: 'root',
 })
 export class GuideService {
-    private shouldOpenAllMenus = new Subject<boolean>();
-
     getGuides(): Type<any>[] {
         return guides;
-    }
-
-    openAllCollapseMenus(): Observable<boolean> {
-        this.shouldOpenAllMenus.next(true);
-        return this.shouldOpenAllMenus.asObservable();
     }
 }

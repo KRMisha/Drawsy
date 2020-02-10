@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
 import { GuideService } from '../../services/guide/guide.service';
 import { GuideDirective } from './guide-directive/guide.directive';
+import { GuideSidebarComponent } from './guide-sidebar/guide-sidebar.component';
 
 @Component({
     selector: 'app-guide',
@@ -9,33 +10,34 @@ import { GuideDirective } from './guide-directive/guide.directive';
 })
 export class GuideComponent implements OnInit, AfterViewInit {
     guides: Type<any>[];
-    index: number;
+    selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
+    @ViewChild('sidebar', { static: false }) sidebar: GuideSidebarComponent;
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
 
     ngOnInit() {
         this.guides = this.guideService.getGuides();
-        this.index = 0;
+        this.selectedGuideIndex = 0;
         this.hasPreviousGuide = false;
         this.hasNextGuide = true;
     }
 
     ngAfterViewInit() {
-        this.selectGuide(this.index);
+        this.selectGuide(this.selectedGuideIndex);
     }
 
     updateIndex(newIndex: number) {
-        this.index = newIndex;
-        this.hasNextGuide = this.index < this.guides.length - 1;
-        this.hasPreviousGuide = this.index > 0;
+        this.selectedGuideIndex = newIndex;
+        this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
+        this.hasPreviousGuide = this.selectedGuideIndex > 0;
     }
 
     selectGuide(index: number) {
         this.updateIndex(index);
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.index]);
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.selectedGuideIndex]);
 
         const viewContainerRef = this.guideHost.viewContainerRef;
         viewContainerRef.clear();
@@ -45,15 +47,15 @@ export class GuideComponent implements OnInit, AfterViewInit {
 
     selectNextGuide(): void {
         if (this.hasNextGuide) {
-            this.selectGuide(++this.index);
-            this.guideService.openAllCollapseMenus();
+            this.selectGuide(++this.selectedGuideIndex);
         }
+        this.sidebar.expandAllMenus()
     }
 
     selectPreviousGuide(): void {
         if (this.hasPreviousGuide) {
-            this.selectGuide(--this.index);
-            this.guideService.openAllCollapseMenus();
+            this.selectGuide(--this.selectedGuideIndex);
         }
+        this.sidebar.expandAllMenus()
     }
 }
