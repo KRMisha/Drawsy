@@ -49,13 +49,13 @@ export class GuideComponent implements OnInit, AfterViewInit {
         if (this.hasNextGuide) {
             this.selectGuide(++this.selectedGuideIndex);
         }
-        this.sidebar.expandAllMenus()
+        this.sidebar.expandAllMenus();
     }
 
     selectPreviousGuide(): void {
         if (this.hasPreviousGuide) {
             this.selectGuide(--this.selectedGuideIndex);
         }
-        this.sidebar.expandAllMenus()
+        this.sidebar.expandAllMenus();
     }
 }
