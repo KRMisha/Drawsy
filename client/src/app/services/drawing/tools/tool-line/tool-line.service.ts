@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
+import { Vec2 } from 'src/app/classes/vec2';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
@@ -15,12 +16,9 @@ export class ToolLineService extends Tool {
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
     private currentlyDrawing = false;
-    private mouseX: number;
-    private mouseY: number;
-    private nextPointX: number;
-    private nextPointY: number;
-    private lastPointX: number;
-    private lastPointY: number;
+    private mousePosition: Vec2;
+    private nextPoint: Vec2;
+    private lastPoint: Vec2;
     private isShiftDown = false;
 
     private points: number[] = [];
@@ -40,11 +38,9 @@ export class ToolLineService extends Tool {
         if (!this.isMouseInside) {
             return;
         }
-        this.mouseX = event.offsetX;
-        this.mouseY = event.offsetY;
+        this.mousePosition = { x: event.offsetX, y: event.offsetY };
         this.updateNextPointPosition();
-        this.lastPointX = this.nextPointX;
-        this.lastPointY = this.nextPointY;
+        this.lastPoint = this.nextPoint;
 
         if (this.previewLine === undefined) {
             this.previewLine = this.renderer.createElement('line', 'svg');
@@ -52,10 +48,10 @@ export class ToolLineService extends Tool {
             this.drawingService.addElement(this.previewLine);
         }
 
-        this.renderer.setAttribute(this.previewLine, 'x1', '' + this.nextPointX);
-        this.renderer.setAttribute(this.previewLine, 'y1', '' + this.nextPointY);
-        this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPointX);
-        this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPointY);
+        this.renderer.setAttribute(this.previewLine, 'x1', '' + this.nextPoint.x);
+        this.renderer.setAttribute(this.previewLine, 'y1', '' + this.nextPoint.y);
+        this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPoint.x);
+        this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPoint.y);
 
         if (!this.currentlyDrawing) {
             this.polyline = this.createNewPolyline();
@@ -67,14 +63,14 @@ export class ToolLineService extends Tool {
             this.drawingService.addElement(this.previewLine);
         }
 
-        this.points.push(this.nextPointX);
-        this.points.push(this.nextPointY);
+        this.points.push(this.nextPoint.x);
+        this.points.push(this.nextPoint.y);
         this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
 
         if (this.hasJunction) {
             const circle = this.createNewJunction();
-            this.renderer.setAttribute(circle, 'cx', '' + this.nextPointX);
-            this.renderer.setAttribute(circle, 'cy', '' + this.nextPointY);
+            this.renderer.setAttribute(circle, 'cx', '' + this.nextPoint.x);
+            this.renderer.setAttribute(circle, 'cy', '' + this.nextPoint.y);
             this.drawingService.addElement(circle);
         }
 
@@ -84,14 +80,16 @@ export class ToolLineService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseInside) {
-            this.mouseX = event.offsetX;
-            this.mouseY = event.offsetY;
+            this.mousePosition = { x: event.offsetX, y: event.offsetY };
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
         }
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        if (!this.isMouseInside) {
+            return;
+        }
         if (this.junctionPoints.length > 0) {
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
@@ -122,24 +120,26 @@ export class ToolLineService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.code === 'Escape') {
-            this.stopDrawing();
-            this.drawingService.removeElement(this.polyline);
-            for (const circle of this.junctionPoints) {
-                this.drawingService.removeElement(circle);
+        if (event.key === 'Escape') {
+            if (this.currentlyDrawing) {
+                this.drawingService.removeElement(this.polyline);
+                this.stopDrawing();
+                for (const circle of this.junctionPoints) {
+                    this.drawingService.removeElement(circle);
+                }
+                this.junctionPoints.length = 0;
             }
-            this.junctionPoints.length = 0;
-        } else if (event.code === 'ShiftLeft') {
+        } else if (event.key === 'Shift') {
             this.isShiftDown = true;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
-        } else if (event.code === 'Backspace') {
+        } else if (event.key === 'Backspace') {
             this.removeLastPointFromLine();
         }
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (event.code === 'ShiftLeft') {
+        if (event.key === 'Shift') {
             this.isShiftDown = false;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
@@ -150,60 +150,42 @@ export class ToolLineService extends Tool {
         if (this.points.length >= minimumPointsToEnableBackspace) {
             this.points.length = this.points.length - geometryDimension;
             this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-            this.lastPointX = this.points[this.points.length - geometryDimension];
-            this.lastPointY = this.points[this.points.length - 1];
-            this.renderer.setAttribute(this.previewLine, 'x1', '' + this.lastPointX);
-            this.renderer.setAttribute(this.previewLine, 'y1', '' + this.lastPointY);
+            this.lastPoint.x = this.points[this.points.length - geometryDimension];
+            this.lastPoint.y = this.points[this.points.length - 1];
+            this.renderer.setAttribute(this.previewLine, 'x1', '' + this.lastPoint.x);
+            this.renderer.setAttribute(this.previewLine, 'y1', '' + this.lastPoint.y);
 
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
     }
 
     private updateNextPointPosition(): void {
-        const xy = this.calculateNextPointPosition(
-            this.lastPointX,
-            this.lastPointY,
-            this.mouseX,
-            this.mouseY,
-            this.isShiftDown,
-            this.currentlyDrawing,
-        );
-        this.nextPointX = xy[0];
-        this.nextPointY = xy[1];
+        this.nextPoint = this.calculateNextPointPosition(this.lastPoint, this.mousePosition, this.isShiftDown, this.currentlyDrawing);
     }
 
-    private calculateNextPointPosition(
-        lastX: number,
-        lastY: number,
-        currentX: number,
-        currentY: number,
-        isShiftDown: boolean,
-        currentlyDrawing: boolean,
-    ): [number, number] {
-        let nextPointX: number;
-        let nextPointY: number;
+    private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, currentlyDrawing: boolean): Vec2 {
+        let nextPoint: Vec2 = { x: 0, y: 0 };
         if (!currentlyDrawing || !isShiftDown) {
-            nextPointX = currentX;
-            nextPointY = currentY;
+            nextPoint = mousePosition;
         } else {
-            let angle = (Math.atan2(currentY - lastY, currentX - lastX) * 180) / Math.PI;
+            let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
             angle = Math.round(angle / 45) * 45;
             if (angle <= 0) {
                 angle += 360;
             }
 
             if (angle === 0 || angle === 180 || angle === 360) {
-                nextPointX = currentX;
-                nextPointY = lastY;
+                nextPoint.x = mousePosition.x;
+                nextPoint.y = lastPoint.y;
             } else if (angle === 90 || angle === 270) {
-                nextPointX = lastX;
-                nextPointY = currentY;
+                nextPoint.x = lastPoint.x;
+                nextPoint.y = mousePosition.y;
             } else {
-                nextPointX = currentX;
-                nextPointY = Math.tan((angle / 180) * Math.PI) * (currentX - lastX) + lastY;
+                nextPoint.x = mousePosition.x;
+                nextPoint.y = Math.tan((angle / 180) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
             }
         }
-        return [nextPointX, nextPointY];
+        return nextPoint;
     }
 
     private stopDrawing(): void {
@@ -213,10 +195,10 @@ export class ToolLineService extends Tool {
     }
 
     private createNewPolyline(): SVGPolylineElement {
-        const polyline = this.renderer.createElement('polyline', 'svg');
-        this.renderer.setAttribute(polyline, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
+        const polyline: SVGPolylineElement = this.renderer.createElement('polyline', 'svg');
+        this.renderer.setAttribute(polyline, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(polyline, 'fill', 'none');
-        this.renderer.setAttribute(polyline, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
+        this.renderer.setAttribute(polyline, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
         this.renderer.setAttribute(polyline, 'stroke-linecap', 'round');
         this.renderer.setAttribute(polyline, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(polyline, 'points', '');
@@ -228,7 +210,7 @@ export class ToolLineService extends Tool {
     }
 
     private createNewJunction(): SVGCircleElement {
-        const circle = this.renderer.createElement('circle', 'svg');
+        const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', '' + this.junctionSize / 2);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
@@ -237,8 +219,8 @@ export class ToolLineService extends Tool {
 
     private updatePreviewLinePosition(): void {
         if (this.currentlyDrawing) {
-            this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPointX);
-            this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPointY);
+            this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPoint.x);
+            this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPoint.y);
         }
     }
 

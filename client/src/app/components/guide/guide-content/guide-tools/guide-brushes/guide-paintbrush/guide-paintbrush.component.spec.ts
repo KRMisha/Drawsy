@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GuideBrushComponent } from './guide-brush.component';
+import { GuidePaintbrushComponent } from './guide-paintbrush.component';
 
-describe('GuideBrushComponent', () => {
-    let component: GuideBrushComponent;
-    let fixture: ComponentFixture<GuideBrushComponent>;
+describe('GuidePaintbrushComponent', () => {
+    let component: GuidePaintbrushComponent;
+    let fixture: ComponentFixture<GuidePaintbrushComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [GuideBrushComponent],
+            declarations: [GuidePaintbrushComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(GuideBrushComponent);
+        fixture = TestBed.createComponent(GuidePaintbrushComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

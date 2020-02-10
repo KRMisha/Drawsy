@@ -8,12 +8,12 @@ import { Message } from '../../../../../common/communication/message';
     providedIn: 'root',
 })
 export class IndexService {
-    private readonly BASE_URL: string = 'http://localhost:3000/api/index';
+    private readonly baseUrl: string = 'http://localhost:3000/api/index';
 
     constructor(private http: HttpClient) {}
 
     basicGet(): Observable<Message> {
-        return this.http.get<Message>(this.BASE_URL).pipe(catchError(this.handleError<Message>('basicGet')));
+        return this.http.get<Message>(this.baseUrl).pipe(catchError(this.handleError<Message>('basicGet')));
     }
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {

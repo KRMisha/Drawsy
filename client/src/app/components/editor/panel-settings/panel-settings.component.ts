@@ -10,7 +10,8 @@ import { StrokeTypes, Textures, ToolSetting } from '../../../services/drawing/to
     styleUrls: ['./panel-settings.component.scss'],
 })
 export class PanelSettingsComponent {
-    ToolSetting = ToolSetting; // Make enums available to template
+    // Make enums available to template
+    ToolSetting = ToolSetting;
     Textures = Textures;
     StrokeTypes = StrokeTypes;
 
