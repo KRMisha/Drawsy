@@ -18,7 +18,7 @@ describe('Color', () => {
         expect(color.alpha).toEqual(0);
     });
 
-    it('should modify the value correctly if values are in range', () => {
+    it('setters should modify the values correctly if values are in range', () => {
         color.red = 10;
         color.green = 20;
         color.blue = 30;
@@ -40,7 +40,7 @@ describe('Color', () => {
         expect(color.alpha).toEqual(1);
     });
 
-    it('color should be set correctly when sent a valid hex color', () => {
+    it('#setHex should set the color correctly when called with a valid hex color', () => {
         color.setHex('f51d1d');
         expect([color.red, color.green, color.blue]).toEqual([245, 29, 29]);
         color.setHex('f5b81d');
@@ -49,7 +49,7 @@ describe('Color', () => {
         expect([color.red, color.green, color.blue]).toEqual([144, 245, 29]);
     });
 
-    it('color should not change when sent an invalid hex color', () => {
+    it('#setHex should not change the color when called with an invalid hex color', () => {
         color.red = 0;
         color.green = 0;
         color.blue = 0;
@@ -63,7 +63,7 @@ describe('Color', () => {
         expect([color.red, color.green, color.blue]).toEqual([0, 0, 0]);
     });
 
-    it('setting color hsv should return corresponding rgb values', () => {
+    it('#setHsv should set valid corresponding rgb values', () => {
         color.setHsv(0, 0.2, 0.2);
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([51, 41, 41]);
         color.setHsv(0, 0.2, 0.46);
@@ -80,7 +80,7 @@ describe('Color', () => {
         expect([Math.round(color.red), Math.round(color.green), Math.round(color.blue)]).toEqual([32, 94, 37]);
     });
 
-    it('setting color values should return corresponding hsv values', () => {
+    it('#getHsv should return corresponding hsv values', () => {
         color.red = 50;
         color.green = 50;
         color.blue = 50;
@@ -112,7 +112,7 @@ describe('Color', () => {
         expect([Math.round(hsv[0] * 100) / 100, Math.round(hsv[1] * 100) / 100, Math.round(hsv[2] * 100) / 100]).toEqual([0, 0, 0]);
     });
 
-    it('color should return valid hex', () => {
+    it('#getHex should return a valid hex color string', () => {
         color.setHex('f51d1d');
         expect(color.getHex()).toEqual('f51d1d');
         color.setHex('asdf');
@@ -121,14 +121,14 @@ describe('Color', () => {
         expect(color.getHex()).toEqual('fefefe');
     });
 
-    it('color should return valid rgb string', () => {
+    it('#toRgbString should return a valid rgb color string', () => {
         color.red = 123;
         color.green = 124;
         color.blue = 125;
         expect(color.toRgbString()).toEqual('rgb(123, 124, 125)');
     });
 
-    it('color should return valid rgba string', () => {
+    it('#toRgbaString color should return a valid rgba color string', () => {
         color.red = 123;
         color.green = 124;
         color.blue = 125;
