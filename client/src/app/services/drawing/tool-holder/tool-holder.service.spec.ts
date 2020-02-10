@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ToolBrushService } from '../tools/tool-brush/tool-brush.service';
+import { ToolPaintbrushService } from '../tools/brushes/tool-paintbrush/tool-paintbrush.service';
+import { ToolPencilService } from '../tools/brushes/tool-pencil/tool-pencil.service';
 import { ToolLineService } from '../tools/tool-line/tool-line.service';
-import { ToolPencilService } from '../tools/tool-pencil/tool-pencil.service';
 import { ToolRectangleService } from '../tools/tool-rectangle/tool-rectangle.service';
 import { ToolHolderService } from './tool-holder.service';
 
@@ -16,8 +16,8 @@ describe('ToolHolderService', () => {
         const mockToolRectangleService = new MockTool();
         TestBed.configureTestingModule({
             providers: [
+                { provide: ToolPaintbrushService, useValue: mockToolBrushService },
                 { provide: ToolPencilService, useValue: mockToolPencilService },
-                { provide: ToolBrushService, useValue: mockToolBrushService },
                 { provide: ToolLineService, useValue: mockToolLineService },
                 { provide: ToolRectangleService, useValue: mockToolRectangleService },
             ],

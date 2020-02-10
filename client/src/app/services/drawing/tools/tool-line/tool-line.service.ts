@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Color } from 'src/app/classes/color/color';
-import { Vec2 } from 'src/app/classes/vec2/vec2';
+import { Vec2 } from 'src/app/classes/vec2';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { Tool, ToolSetting } from '../tool';
@@ -43,11 +43,9 @@ export class ToolLineService extends Tool {
         this.lastPoint = this.nextPoint;
 
         if (this.previewLine === undefined) {
-            console.log('peni')
             this.previewLine = this.renderer.createElement('line', 'svg');
             this.renderer.setAttribute(this.previewLine, 'display', 'none');
             this.drawingService.addElement(this.previewLine);
-            console.log('xd')
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', '' + this.nextPoint.x);
