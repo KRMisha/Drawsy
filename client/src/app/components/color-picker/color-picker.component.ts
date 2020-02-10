@@ -14,14 +14,23 @@ export class ColorPickerComponent {
     value = 0;
     alpha = 1;
     hexStr = '000000';
+    defaultColorSet = false;
 
     @Input() isTextBlack = true;
     @Input() isLastColorsDisplayEnabled = true;
 
     @Input() isColorPickerDisplayEnabled = true;
     @Input()
-    set setPaletteColor(color: Color) {
+    set paletteColor(color: Color) {
         this.setColor(color);
+    }
+
+    @Input()
+    set defaultColor(color: Color) {
+        if (!this.defaultColorSet) {
+            this.setColor(color);
+            this.defaultColorSet = true;
+        }
     }
 
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
@@ -61,7 +70,9 @@ export class ColorPickerComponent {
     setSaturationAndValue(saturationAndValue: [number, number]): void {
         this.saturation = saturationAndValue[0];
         this.value = saturationAndValue[1];
-        this.setColor(this.getColor());
+        const color = this.getColor();
+        this.hexStr = color.getHex();
+        this.colorChanged.emit(color);
     }
 
     updateColorFromHex(color: Color) {
