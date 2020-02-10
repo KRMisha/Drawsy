@@ -8,10 +8,9 @@ import { DrawingService } from 'src/app/services/drawing/drawing.service';
     styleUrls: ['./drawing-settings.component.scss'],
 })
 export class DrawingSettingsComponent {
-    color: Color;
+    color = new Color();
 
     constructor(private drawingService: DrawingService) {
-        this.color = new Color();
         this.color.red = 255;
         this.color.green = 255;
         this.color.blue = 255;
