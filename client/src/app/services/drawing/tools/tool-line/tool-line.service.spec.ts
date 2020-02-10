@@ -55,7 +55,6 @@ describe('ToolLineService', () => {
         drawingService = TestBed.get(DrawingService);
         spyOn(service.renderer, 'setAttribute');
         service.isMouseInside = true;
-
     });
 
     it('should be created', () => {

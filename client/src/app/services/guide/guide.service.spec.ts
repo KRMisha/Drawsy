@@ -1,6 +1,6 @@
+import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GuideService } from './guide.service';
-import { Type } from '@angular/core';
 
 // Disable max line length for long imports due to detailed nesting
 // tslint:disable: max-line-length
