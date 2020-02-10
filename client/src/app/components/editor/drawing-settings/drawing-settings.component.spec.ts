@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
+import { Color } from 'src/app/classes/color/color';
+import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { DrawingSettingsComponent } from './drawing-settings.component';
 
 describe('DrawingSettingsComponent', () => {
@@ -19,7 +21,10 @@ describe('DrawingSettingsComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [DrawingSettingsComponent],
-            providers: [{ provide: MatDialogRef, useValue: dialogRefSpyObj }],
+            providers: [
+                { provide: MatDialogRef, useValue: dialogRefSpyObj },
+                { provide: DrawingService, useValue: { backgroundColor: {} as any } as DrawingService },
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
@@ -32,5 +37,14 @@ describe('DrawingSettingsComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it("#confirmColor should update DrawingService's color", () => {
+        spyOn(component, 'confirmColor').and.callThrough();
+        component.color = { red: 10, blue: 10, green: 20, alpha: 0.1 } as Color;
+        component.confirmColor();
+        expect(component.confirmColor).toHaveBeenCalled();
+        const drawingService = TestBed.get(DrawingService);
+        expect(drawingService.backgroundColor).toEqual({ red: 10, blue: 10, green: 20, alpha: 0.1 } as Color);
     });
 });

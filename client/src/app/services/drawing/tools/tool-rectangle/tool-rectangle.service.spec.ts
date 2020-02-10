@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { Renderer2 } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
+import { StrokeTypes, ToolSetting } from '../tool';
 import { ToolRectangleService } from './tool-rectangle.service';
-import { ToolSetting, StrokeTypes } from '../tool';
 
 // tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
