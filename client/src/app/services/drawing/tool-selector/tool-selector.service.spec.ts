@@ -22,11 +22,12 @@ class MockTool extends Tool {
     toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeTypes | Textures>();
 }
 
-/* tslint:disable:max-classes-per-file */
+// tslint:disable: max-classes-per-file
 class MockToolHolderService {
     tools: Tool[] = [new MockTool({} as DrawingService), new MockTool({} as DrawingService), new MockTool({} as DrawingService)];
 }
-/* tslint:enable:max-classes-per-file */
+// tslint:enable: max-classes-per-file
+
 describe('ToolSelectorService', () => {
     let service: ToolSelectorService;
     beforeEach(() => {

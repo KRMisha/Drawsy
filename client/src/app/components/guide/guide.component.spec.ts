@@ -28,14 +28,14 @@ describe('GuideComponent', () => {
             close: null,
         });
 
-        const InjectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: mockGuides });
+        const injectedguideServiceSpyObj = jasmine.createSpyObj({ getGuides: mockGuides });
 
         TestBed.configureTestingModule({
             declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
             imports: [MatIconModule, MatDialogModule],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                { provide: GuideService, useValue: InjectedguideServiceSpyObj },
+                { provide: GuideService, useValue: injectedguideServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
