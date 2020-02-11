@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColorSliderComponent } from './color-slider.component';
 
+// tslint:disable: no-string-literal
+
 describe('ColorSliderComponent', () => {
     let component: ColorSliderComponent;
     let fixture: ComponentFixture<ColorSliderComponent>;
@@ -42,7 +44,6 @@ describe('ColorSliderComponent', () => {
 
     it('#set hue should redraw the canvas', () => {
         spyOn(component, 'draw');
-        // tslint:disable-next-line: no-string-literal
         component['canvas'] = {} as HTMLCanvasElement;
         component.hue = 3;
         expect(component.draw).toHaveBeenCalledTimes(1);
@@ -50,11 +51,9 @@ describe('ColorSliderComponent', () => {
 
     it('#set hue with undefined canvas should do nothing', () => {
         spyOn(component, 'draw');
-        // tslint:disable-next-line: no-string-literal
         component['canvas'] = {} as HTMLCanvasElement;
         component.hue = 5;
-        // tslint:disable-next-line: no-string-literal
-        component['canvas'] = undefined as unknown as HTMLCanvasElement;
+        component['canvas'] = (undefined as unknown) as HTMLCanvasElement;
         component.hue = 6;
         expect(component.hue).toEqual(5);
     });
