@@ -5,8 +5,8 @@ import { DrawingService } from '../../../drawing.service';
 import { ToolSetting } from '../../tool';
 import { ToolPaintbrushService } from './tool-paintbrush.service';
 
-// tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-empty
 // tslint:disable: no-string-literal
 
 class MockColor {

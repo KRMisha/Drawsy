@@ -5,8 +5,8 @@ import { DrawingService } from '../../drawing.service';
 import { StrokeTypes, ToolSetting } from '../tool';
 import { ToolRectangleService } from './tool-rectangle.service';
 
-// tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-empty
 // tslint:disable: no-string-literal
 
 class MockColor {
@@ -29,9 +29,6 @@ describe('ToolRectangleService', () => {
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj({
             addElement: (element: MockSvgElement) => {},
-            removeElement: (element: MockSvgElement) => {},
-            reappendStoredElements: () => {},
-            clearStoredElements: () => {},
         });
         colorServiceSpyObj = jasmine.createSpyObj({
             getPrimaryColor: new MockColor(),

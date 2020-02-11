@@ -4,8 +4,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalService } from '../../services/modal/modal.service';
 import { AppComponent } from './app.component';
 
-// tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-empty
 
 describe('AppComponent', () => {
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
