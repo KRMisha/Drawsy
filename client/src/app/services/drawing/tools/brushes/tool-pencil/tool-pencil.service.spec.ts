@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ToolPencilService } from './tool-pencil.service';
 
 describe('ToolPencilService', () => {

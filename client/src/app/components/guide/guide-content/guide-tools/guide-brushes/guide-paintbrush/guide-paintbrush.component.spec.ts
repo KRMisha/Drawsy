@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuidePaintbrushComponent } from './guide-paintbrush.component';
 
 describe('GuidePaintbrushComponent', () => {

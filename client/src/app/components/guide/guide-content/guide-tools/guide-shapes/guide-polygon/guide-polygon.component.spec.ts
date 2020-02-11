@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuidePolygonComponent } from './guide-polygon.component';
 
 describe('GuidePolygonComponent', () => {

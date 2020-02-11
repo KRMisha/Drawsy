@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideRecolorComponent } from './guide-recolor.component';
 
 describe('GuideRecolorComponent', () => {

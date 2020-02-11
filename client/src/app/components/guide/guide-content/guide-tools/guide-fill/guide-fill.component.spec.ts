@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideFillComponent } from './guide-fill.component';
 
 describe('GuideFillComponent', () => {
