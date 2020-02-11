@@ -41,7 +41,7 @@ describe('DrawingService', () => {
         service.removeElement(element);
         expect(service.renderer.removeChild).toHaveBeenCalledTimes(0);
     });
-    
+
     it('#clearStoredElements should remove all items from renderer', () => {
         for (let i = 0; i < 10; i++) {
             service.addElement({} as SVGElement);
@@ -68,5 +68,5 @@ describe('DrawingService', () => {
         expect(service.renderer.appendChild).toHaveBeenCalledTimes(10);
         service.reappendStoredElements();
         expect(service.renderer.appendChild).toHaveBeenCalledTimes(20);
-    })
+    });
 });
