@@ -96,4 +96,10 @@ describe('ColorPickerComponent', () => {
         expect(component.previousColorSelected.emit).toHaveBeenCalledTimes(1);
         expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
     });
+
+    it('#oldColorClick should do nothing if mouse button is not left or right click', () => {
+        component.oldColorClick({ button: 69 } as MouseEvent, new Color());
+        expect(component.previousColorSelected.emit).toHaveBeenCalledTimes(0);
+        expect(component.colorChanged.emit).toHaveBeenCalledTimes(0);
+    });
 });
