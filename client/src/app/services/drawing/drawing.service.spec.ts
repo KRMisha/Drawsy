@@ -6,7 +6,7 @@ import { DrawingService } from './drawing.service';
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
 
-fdescribe('DrawingService', () => {
+describe('DrawingService', () => {
     let service: DrawingService;
     beforeEach(() => {
         TestBed.configureTestingModule({});
