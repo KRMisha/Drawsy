@@ -35,6 +35,11 @@ describe('ColorFieldComponent', () => {
         expect(component.draw).toHaveBeenCalledTimes(1);
     });
 
+    it('#set value should redraw the canvas if it is not undefined', () => {
+        component.value = 12;
+        expect(component.draw).toHaveBeenCalledTimes(1);
+    });
+
     it('#onMouseDown should call updateColor if mouse is inside', () => {
         component.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.updateColor).toHaveBeenCalledTimes(1);
@@ -60,13 +65,13 @@ describe('ColorFieldComponent', () => {
 
     it('#updateColor should not emit saturationValueChange if the mouse is not inside and the mouse is down', () => {
         component.onMouseLeave();
-        // tslint:disable-next-line: no-string-literal
-        component['isMouseDown'] = true;
+        component.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(0);
     });
 
     it('#updateColor should not emit saturationValueChange if the mouse is inside and the mouse is not down', () => {
+        component.onMouseUp({} as MouseEvent);
         component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(0);
     });
