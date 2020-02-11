@@ -4,18 +4,46 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalService } from '../../services/modal/modal.service';
 import { AppComponent } from './app.component';
 
+// tslint:disable: no-empty
+// tslint:disable: max-classes-per-file
+
 describe('AppComponent', () => {
+    let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
+    let app: any;
     beforeEach(async(() => {
+        modalServiceSpyObject = jasmine.createSpyObj({
+            openDialog: (component: any) => {},
+        });
         TestBed.configureTestingModule({
             declarations: [AppComponent],
             imports: [RouterTestingModule, HttpClientModule],
-            providers: [{ provide: ModalService, useValue: {} as ModalService }],
+            providers: [{ provide: ModalService, useValue: modalServiceSpyObject as ModalService }],
         });
+
+        const fixture = TestBed.createComponent(AppComponent);
+        app = fixture.componentInstance;
     }));
 
     it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
         expect(app).toBeTruthy();
+    });
+
+    it('#onRightClick should prevent the default event', () => {
+        const event = new MouseEvent('');
+        spyOn(event, 'preventDefault');
+        app.onRightClick(event);
+        expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown CTRL + o should open dialog', () => {
+        const event = { key: 'o', ctrlKey: true, preventDefault: () => {} } as KeyboardEvent;
+        app.onKeyDown(event);
+        expect(modalServiceSpyObject.openDialog).toHaveBeenCalledTimes(1);
+    });
+
+    it('#onKeyDown anything else than CTRL + o should do nothing', () => {
+        const event = { key: 'o', ctrlKey: false } as KeyboardEvent;
+        app.onKeyDown(event);
+        expect(modalServiceSpyObject.openDialog).toHaveBeenCalledTimes(0);
     });
 });
