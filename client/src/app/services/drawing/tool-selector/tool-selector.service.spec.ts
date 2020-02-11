@@ -44,35 +44,35 @@ describe('ToolSelectorService', () => {
     it('should forward mouseEvents to the selected tool', async(() => {
         spyOn(service, 'onMouseMove').and.callThrough();
         service.onMouseMove({} as MouseEvent);
-        expect(service.onMouseMove).toHaveBeenCalled();
+        expect(service.selectedTool.onMouseMove).toHaveBeenCalled();
 
         spyOn(service, 'onMouseDown').and.callThrough();
         service.onMouseDown({} as MouseEvent);
-        expect(service.onMouseDown).toHaveBeenCalled();
+        expect(service.selectedTool.onMouseDown).toHaveBeenCalled();
 
         spyOn(service, 'onMouseUp').and.callThrough();
         service.onMouseUp({} as MouseEvent);
-        expect(service.onMouseUp).toHaveBeenCalled();
+        expect(service.selectedTool.onMouseUp).toHaveBeenCalled();
 
         spyOn(service, 'onMouseDoubleClick').and.callThrough();
         service.onMouseDoubleClick({} as MouseEvent);
-        expect(service.onMouseDoubleClick).toHaveBeenCalled();
+        expect(service.selectedTool.onMouseDoubleClick).toHaveBeenCalled();
 
         spyOn(service, 'onKeyDown').and.callThrough();
         service.onKeyDown({} as KeyboardEvent);
-        expect(service.onKeyDown).toHaveBeenCalled();
+        expect(service.selectedTool.onKeyDown).toHaveBeenCalled();
 
         spyOn(service, 'onKeyUp').and.callThrough();
         service.onKeyUp({} as KeyboardEvent);
-        expect(service.onKeyUp).toHaveBeenCalled();
+        expect(service.selectedTool.onKeyUp).toHaveBeenCalled();
 
         spyOn(service, 'onLeave').and.callThrough();
         service.onLeave({} as MouseEvent);
-        expect(service.onLeave).toHaveBeenCalled();
+        expect(service.selectedTool.onLeave).toHaveBeenCalled();
 
         spyOn(service, 'onEnter').and.callThrough();
         service.onEnter({} as MouseEvent);
-        expect(service.onEnter).toHaveBeenCalled();
+        expect(service.selectedTool.onEnter).toHaveBeenCalled();
     }));
 
     it('should set selected tool status boolean', async(() => {
