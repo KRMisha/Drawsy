@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideSaveDrawingComponent } from './guide-save-drawing.component';
 
 describe('GuideSaveDrawingComponent', () => {

@@ -1,6 +1,5 @@
 import { Renderer2 } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
-
 import { DrawingService } from '../drawing.service';
 import { ToolHolderService } from '../tool-holder/tool-holder.service';
 import { StrokeTypes, Textures, Tool, ToolSetting } from '../tools/tool';

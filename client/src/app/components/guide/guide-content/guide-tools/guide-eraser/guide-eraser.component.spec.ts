@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideEraserComponent } from './guide-eraser.component';
 
 describe('GuideEraserComponent', () => {

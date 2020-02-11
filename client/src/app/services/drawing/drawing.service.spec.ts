@@ -1,6 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-
 import { Renderer2 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable: max-classes-per-file

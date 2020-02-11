@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideSnapToGridComponent } from './guide-snap-to-grid.component';
 
 describe('GuideSnapToGridComponent', () => {

@@ -1,6 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GuideSidebarComponent } from './guide-sidebar.component';
+
+enum MenuSection {
+    Tools,
+    ToolBrushes,
+    ToolShapes,
+    DrawingSurfaceOptions,
+    FileOptions,
+}
 
 describe('GuideSidebarComponent', () => {
     let component: GuideSidebarComponent;
@@ -23,15 +30,14 @@ describe('GuideSidebarComponent', () => {
     });
 
     it('#toggleMenu should activate the good menu', () => {
-        // MenuSection.ToolShapes = 2
-        component.toggleMenu(2);
+        component.toggleMenu(MenuSection.ToolShapes);
         expect(component.isEachMenuExpanded).toEqual([false, false, true, false, false]);
     });
 
     it('#toggleMenu should close menu on second toggle', () => {
-        component.toggleMenu(1);
-        component.toggleMenu(4);
-        component.toggleMenu(1);
+        component.toggleMenu(MenuSection.ToolBrushes);
+        component.toggleMenu(MenuSection.FileOptions);
+        component.toggleMenu(MenuSection.ToolBrushes);
         expect(component.isEachMenuExpanded).toEqual([false, false, false, false, true]);
     });
 
