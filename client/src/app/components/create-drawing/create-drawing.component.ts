@@ -48,10 +48,6 @@ export class CreateDrawingComponent implements OnInit {
         this.router.navigate(['/editor']);
     }
 
-    updateColor(color: Color) {
-        this.backgroundColor = color;
-    }
-
     @HostListener('window:resize', ['$event'])
     onResize(event: Event) {
         const isWidthMatching = this.drawingForm.controls.width.value === this.windowWidth - widthMargin;
