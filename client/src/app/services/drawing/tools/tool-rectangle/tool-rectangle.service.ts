@@ -29,7 +29,6 @@ export class ToolRectangleService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mousePosition = { x: event.offsetX, y: event.offsetY };
-        console.log('hein');
         if (this.isMouseInside) {
             this.rectangle = this.createNewRectangle();
             this.origin = { x: event.offsetX, y: event.offsetY };

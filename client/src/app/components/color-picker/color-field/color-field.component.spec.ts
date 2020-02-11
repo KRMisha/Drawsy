@@ -28,52 +28,52 @@ describe('ColorFieldComponent', () => {
     it('#set hue should redraw the canvas if it is not undefined', () => {
         component.hue = 12;
         expect(component.draw).toHaveBeenCalledTimes(1);
-    })
-    
+    });
+
     it('#set saturation should redraw the canvas if it is not undefined', () => {
         component.saturation = 12;
         expect(component.draw).toHaveBeenCalledTimes(1);
-    })
+    });
 
     it('#onMouseDown should call updateColor if mouse is inside', () => {
-        component.onMouseDown({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.updateColor).toHaveBeenCalledTimes(1);
-    })
+    });
 
     it('#onMouseDown should not call updateColor if mouse is not inside', () => {
         component.onMouseLeave();
-        component.onMouseDown({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.updateColor).toHaveBeenCalledTimes(0);
-    })
-    
+    });
+
     it('#onMouseMove should call updateColor', () => {
-        component.onMouseMove({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.updateColor).toHaveBeenCalledTimes(1);
-    })
-    
+    });
+
     it('#updateColor should emit saturationValueChange if the mouse is inside and the mouse is down', () => {
         // tslint:disable-next-line: no-string-literal
         component['isMouseDown'] = true;
-        component.updateColor({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(1);
-    })
+    });
 
     it('#updateColor should not emit saturationValueChange if the mouse is not inside and the mouse is down', () => {
         component.onMouseLeave();
         // tslint:disable-next-line: no-string-literal
         component['isMouseDown'] = true;
-        component.updateColor({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(0);
-    })
-    
+    });
+
     it('#updateColor should not emit saturationValueChange if the mouse is inside and the mouse is not down', () => {
-        component.updateColor({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(0);
-    })
-    
+    });
+
     it('#updateColor should not emit saturationValueChange if the mouse is not inside and the mouse is not down', () => {
         component.onMouseLeave();
-        component.updateColor({offsetX: 20, offsetY: 20} as MouseEvent);
+        component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalledTimes(0);
-    })
+    });
 });
