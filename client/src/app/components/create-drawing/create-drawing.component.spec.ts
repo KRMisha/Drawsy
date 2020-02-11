@@ -10,7 +10,7 @@ import { CreateDrawingComponent } from './create-drawing.component';
 
 // tslint:disable: no-empty
 
-fdescribe('CreateDrawingComponent', () => {
+describe('CreateDrawingComponent', () => {
     let component: CreateDrawingComponent;
     let fixture: ComponentFixture<CreateDrawingComponent>;
 
