@@ -52,6 +52,7 @@ describe('ToolLineService', () => {
         } as Renderer2;
 
         spyOn(service.renderer, 'setAttribute');
+        spyOn(service.renderer, 'createElement').and.callThrough();
         service.isMouseInside = true;
     });
 
@@ -80,7 +81,8 @@ describe('ToolLineService', () => {
         service.onMouseDoubleClick({ offsetX: 50, offsetY: 50 } as MouseEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10 20 20');
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+        expect(service.renderer.createElement).toHaveBeenCalledWith('polyline', 'svg');
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(service['polyline']);
     });
 
     it('should not place line points where user is clicking when mouse is outside', () => {
@@ -107,6 +109,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['junctionPoints'][0], 'cy', '10');
         expect(service['junctionPoints'].length).toEqual(1);
 
+        service.onKeyDown({ key: 'a' } as KeyboardEvent);
         service.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
         service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
@@ -120,7 +123,9 @@ describe('ToolLineService', () => {
         service.onMouseDoubleClick({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10 20 20');
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+        expect(service.renderer.createElement).toHaveBeenCalledWith('polyline', 'svg');
+        expect(service.renderer.createElement).toHaveBeenCalledWith('circle', 'svg');
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(service['polyline']);
         expect(service['junctionPoints'].length).toEqual(0);
     });
 
@@ -131,6 +136,7 @@ describe('ToolLineService', () => {
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10');
 
         service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        service.onKeyUp({ key: 'e' } as KeyboardEvent);
         service.onMouseMove({ offsetX: 50, offsetY: 20 } as MouseEvent);
         service.onMouseDown({ offsetX: 50, offsetY: 20 } as MouseEvent);
 
@@ -284,5 +290,27 @@ describe('ToolLineService', () => {
 
         expect(service['points'].length).toEqual(2);
         expect(service['junctionPoints'].length).toEqual(1);
+    });
+
+    it('should not close line if last point is less than 3px away from first point AND shift is pressed', () => {
+        service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
+
+        service.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+
+        service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
+        service.onMouseDown({ offsetX: 50, offsetY: 50 } as MouseEvent);
+
+        service.onMouseMove({ offsetX: 60, offsetY: 60 } as MouseEvent);
+        service.onMouseDown({ offsetX: 60, offsetY: 60 } as MouseEvent);
+
+        service.onMouseMove({ offsetX: 50, offsetY: 60 } as MouseEvent);
+        service.onMouseDown({ offsetX: 50, offsetY: 60 } as MouseEvent);
+
+        service.onMouseMove({ offsetX: 51, offsetY: 49 } as MouseEvent);
+        service.onMouseDown({ offsetX: 51, offsetY: 49 } as MouseEvent);
+        service.onMouseDown({ offsetX: 51, offsetY: 49 } as MouseEvent);
+        service.onMouseDoubleClick({ offsetX: 51, offsetY: 49 } as MouseEvent);
+
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '50 50 60 60 50 60 50 49');
     });
 });
