@@ -47,4 +47,15 @@ describe('ColorSliderComponent', () => {
         component.hue = 3;
         expect(component.draw).toHaveBeenCalledTimes(1);
     });
+
+    it('#set hue with undefined canvas should do nothing', () => {
+        spyOn(component, 'draw');
+        // tslint:disable-next-line: no-string-literal
+        component['canvas'] = {} as HTMLCanvasElement;
+        component.hue = 5;
+        // tslint:disable-next-line: no-string-literal
+        component['canvas'] = undefined as unknown as HTMLCanvasElement;
+        component.hue = 6;
+        expect(component.hue).toEqual(5);
+    });
 });
