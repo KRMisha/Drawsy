@@ -5,8 +5,8 @@ import { DrawingService } from '../../drawing.service';
 import { ToolSetting } from '../tool';
 import { ToolLineService } from './tool-line.service';
 
-// tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-empty
 // tslint:disable: no-string-literal
 
 class MockColor {
@@ -30,8 +30,6 @@ describe('ToolLineService', () => {
         drawingServiceSpyObj = jasmine.createSpyObj({
             addElement: (element: MockSvgElement) => {},
             removeElement: (element: MockSvgElement) => {},
-            reappendStoredElements: () => {},
-            clearStoredElements: () => {},
         });
         colorServiceSpyObj = jasmine.createSpyObj({
             getPrimaryColor: new MockColor(),

@@ -4,8 +4,8 @@ import { DrawingService } from '../../../drawing.service';
 import { ToolSetting } from '../../tool';
 import { ToolBrush } from './tool-brush';
 
-// tslint:disable: no-empty
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-empty
 // tslint:disable: no-string-literal
 
 class MockToolBrush extends ToolBrush {

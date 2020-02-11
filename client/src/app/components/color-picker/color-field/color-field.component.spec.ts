@@ -32,7 +32,7 @@ describe('ColorFieldComponent', () => {
 
     it('#set hue should not redraw the canvas if it is undefined', () => {
         // tslint:disable-next-line: no-string-literal
-        delete component['canvas']
+        delete component['canvas'];
         component.hue = 12;
         expect(component.draw).toHaveBeenCalledTimes(0);
     });
@@ -44,7 +44,7 @@ describe('ColorFieldComponent', () => {
 
     it('#set saturation should not redraw the canvas if it is undefined', () => {
         // tslint:disable-next-line: no-string-literal
-        delete component['canvas']
+        delete component['canvas'];
         component.saturation = 12;
         expect(component.draw).toHaveBeenCalledTimes(0);
     });
@@ -56,7 +56,7 @@ describe('ColorFieldComponent', () => {
 
     it('#set value should not redraw the canvas if it is undefined', () => {
         // tslint:disable-next-line: no-string-literal
-        delete component['canvas']
+        delete component['canvas'];
         component.value = 12;
         expect(component.draw).toHaveBeenCalledTimes(0);
     });
