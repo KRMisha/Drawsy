@@ -28,7 +28,7 @@ export class ColorHexSelectorComponent {
     updateColorHex(): void {
         if (hexRegex.test(this.hexRgb.value)) {
             const color = new Color();
-            color.setHex(this.hexRgb.value)
+            color.setHex(this.hexRgb.value);
             this.hex = this.hexRgb.value;
             this.colorChanged.emit(color);
         }
