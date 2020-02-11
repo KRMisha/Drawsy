@@ -19,7 +19,7 @@
             </mat-form-field>
         </div>
         <app-color-picker
-            (colorChanged)="updateColor($event)"
+            (colorChanged)="backgroundColor = $event"
             [isLastColorsDisplayEnabled]="false"
             [defaultColor]="backgroundColor"
         ></app-color-picker>
