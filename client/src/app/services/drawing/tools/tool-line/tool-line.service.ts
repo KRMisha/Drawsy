@@ -93,9 +93,7 @@ export class ToolLineService extends Tool {
         if (this.junctionPoints.length > 0) {
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
-        if (this.points.length > geometryDimension) {
-            this.points.length -= geometryDimension;
-        }
+        this.points.length -= geometryDimension;
 
         if (!this.isShiftDown) {
             const firstXIndex = 0;

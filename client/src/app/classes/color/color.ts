@@ -37,6 +37,9 @@ export class Color {
     }
 
     setHsv(hue: number, saturation: number, value: number): void {
+        // All constants are taken from this algorithm:
+        // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
+
         const minHue = 0;
         const minSaturation = 0;
         const maxSaturation = 1;
@@ -63,7 +66,7 @@ export class Color {
             this.setNormalizedColor(m, x + m, chroma + m);
         } else if (hue <= 5) {
             this.setNormalizedColor(x + m, m, chroma + m);
-        } else if (hue <= 6) {
+        } else {
             this.setNormalizedColor(chroma + m, m, x + m);
         }
     }
@@ -79,6 +82,9 @@ export class Color {
     }
 
     getHsv(): [number, number, number] {
+        // All constants are taken from this algorithm:
+        // https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
+
         const redPrime = this.red / maxColorValue;
         const greenPrime = this.green / maxColorValue;
         const bluePrime = this.blue / maxColorValue;
@@ -98,10 +104,6 @@ export class Color {
             hue = angleValue * ((bluePrime - redPrime) / deltaC + 2);
         } else {
             hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
-        }
-
-        if (hue < 0) {
-            hue += maxHue;
         }
 
         let saturation: number;
