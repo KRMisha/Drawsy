@@ -1,6 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-
 import { Renderer2 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { StrokeTypes, ToolSetting } from '../tool';
@@ -40,8 +39,8 @@ describe('ToolRectangleService', () => {
         });
         TestBed.configureTestingModule({
             providers: [
-                { provide: ColorService, useValue: colorServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: ColorService, useValue: colorServiceSpyObj },
             ],
         });
         service = TestBed.get(ToolRectangleService);

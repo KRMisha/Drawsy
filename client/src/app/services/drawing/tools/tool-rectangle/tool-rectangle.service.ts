@@ -65,10 +65,10 @@ export class ToolRectangleService extends Tool {
 
     private createNewRectangle(): SVGPathElement {
         const rectangle: SVGPathElement = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(rectangle, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
+        this.renderer.setAttribute(rectangle, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
         this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
-        this.renderer.setAttribute(rectangle, 'fill', `${this.colorService.getPrimaryColor().toRgbaString()}`);
-        this.renderer.setAttribute(rectangle, 'stroke', `${this.colorService.getSecondaryColor().toRgbaString()}`);
+        this.renderer.setAttribute(rectangle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(rectangle, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
 
         if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
             this.renderer.setAttribute(rectangle, 'stroke', 'none');
