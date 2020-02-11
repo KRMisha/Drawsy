@@ -1,6 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-
 import { Renderer2 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawingService } from '../../drawing.service';
 import { ToolSetting } from '../tool';
@@ -40,8 +39,8 @@ describe('ToolLineService', () => {
         });
         TestBed.configureTestingModule({
             providers: [
-                { provide: ColorService, useValue: colorServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: ColorService, useValue: colorServiceSpyObj },
             ],
         });
         service = TestBed.get(ToolLineService);
@@ -97,7 +96,7 @@ describe('ToolLineService', () => {
         expect(drawingService.addElement).toHaveBeenCalledTimes(0);
     });
 
-    it('should render two point when user makes a two segment line and junctions are enabled', () => {
+    it('should render two points when user makes a two segment line and junctions are enabled', () => {
         service.toolSettings.set(ToolSetting.HasJunction, [true, 5]);
 
         expect(service['junctionPoints'].length).toEqual(0);

@@ -42,8 +42,8 @@ export abstract class ToolBrush extends Tool {
     protected createNewPath(): SVGPathElement {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke', `${this.colorService.getPrimaryColor().toRgbaString()}`);
-        this.renderer.setAttribute(path, 'stroke-width', `${this.toolSettings.get(ToolSetting.Size)}`);
+        this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         return path;

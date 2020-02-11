@@ -47,8 +47,6 @@ describe('GuideComponent', () => {
         fixture = TestBed.createComponent(GuideComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        // guideServiceSpyObj = TestBed.get(GuideService);
-        // guideServiceSpyObj.getGuides.and.returnValue(mockGuides);
     });
 
     it('should create', () => {

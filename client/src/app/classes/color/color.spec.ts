@@ -7,6 +7,10 @@ describe('Color', () => {
         color = new Color();
     });
 
+    it('should create an instance', () => {
+        expect(color).toBeTruthy();
+    });
+
     it('setters should clamp values to min 0', () => {
         color.red = -1;
         color.green = -1;
