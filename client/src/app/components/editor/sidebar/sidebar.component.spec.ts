@@ -5,25 +5,38 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToolHolderService } from 'src/app/services/drawing/tool-holder/tool-holder.service';
+import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
+import { CreateDrawingComponent } from '../../create-drawing/create-drawing.component';
+import { GuideComponent } from '../../guide/guide.component';
+import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 import { SidebarComponent } from './sidebar.component';
 
-describe('SidebarComponent', () => {
+class MockModalService {
+    isModalPresent = false
+    openDialog() {return};
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class MockFocusEvent {
+    target = new HTMLInputElement();
+}
+// tslint:disable: no-string-literal
+fdescribe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
     let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
-    let toolHolderServiceSpyObj: jasmine.SpyObj<ToolHolderService>;
-
+    let mockModalService: MockModalService;
     beforeEach(async(() => {
-        toolSelectorServiceSpyObj = jasmine.createSpyObj({ setSelectedTool: '' });
-        toolHolderServiceSpyObj = jasmine.createSpyObj({ '': '' });
+        toolSelectorServiceSpyObj = jasmine.createSpyObj({ setSelectedTool() {return}});
+        mockModalService = new MockModalService();
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             imports: [BrowserAnimationsModule, MatSidenavModule, MatIconModule, MatSliderModule, MatDialogModule],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
-                { provide: ToolHolderService, useValue: toolHolderServiceSpyObj },
+                { provide: ModalService, useValue: mockModalService }
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -38,4 +51,117 @@ describe('SidebarComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('#ngOnInit should set the selected tool of injected tool selector service', () => {
+        component.ngOnInit();
+
+        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalled();
+    })
+
+    it('#onKeyDown should set the selected tool in the tool selector if there are no modals shown and shortcuts are enabled', () => {
+        mockModalService.isModalPresent = false;
+        component['areShortcutsEnabled'] = true;
+
+        spyOn(component, 'setSelectedTool');
+
+        component.onKeyDown({key: '1'} as KeyboardEvent);
+        expect(component.setSelectedTool).toHaveBeenCalledWith(3);
+
+        component.onKeyDown({key: 'c'} as KeyboardEvent);
+        expect(component.setSelectedTool).toHaveBeenCalledWith(0);
+
+        component.onKeyDown({key: 'l'} as KeyboardEvent);
+        expect(component.setSelectedTool).toHaveBeenCalledWith(2);
+
+        component.onKeyDown({key: 'w'} as KeyboardEvent);
+        expect(component.setSelectedTool).toHaveBeenCalledWith(1);
+    })
+
+    it('#onKeyDown should not change the selected tool in the tool selector if the shortcut is not linked to a tool', () => {
+        mockModalService.isModalPresent = false;
+        component['areShortcutsEnabled'] = true;
+
+        spyOn(component, 'setSelectedTool');
+
+        component.onKeyDown({key: '3'} as KeyboardEvent);
+        expect(component.setSelectedTool).toHaveBeenCalledTimes(0);
+    })
+
+    it('#onKeyDown should not change selectedTool if modal is shown or shortcuts are disabled', () => {
+        spyOn(component, 'setSelectedTool');
+
+        mockModalService.isModalPresent = true;
+        component['areShortcutsEnabled'] = true;
+        component.onKeyDown({key: 'w'} as KeyboardEvent);
+
+        mockModalService.isModalPresent = false;
+        component['areShortcutsEnabled'] = false;
+        component.onKeyDown({key: 'w'} as KeyboardEvent);
+
+        mockModalService.isModalPresent = true;
+        component['areShortcutsEnabled'] = false;
+        component.onKeyDown({key: 'w'} as KeyboardEvent);
+
+        expect(component.setSelectedTool).toHaveBeenCalledTimes(0);
+    })
+
+    it('#onFocusIn should enable shortcuts if eventTarget is a HTMLInputElement', () => {
+        component['areShortcutsEnabled'] = true;
+        expect(component['areShortcutsEnabled']).toEqual(false);
+
+        component['areShortcutsEnabled'] = true;
+        component.onFocusIn({ target: {} as boolean } as unknown as FocusEvent)
+        expect(component['areShortcutsEnabled']).toEqual(true);
+    })
+
+    it('#onFocusOut should disable shortcuts if eventTarget is a HTMLInputElement', () => {
+        component['areShortcutsEnabled'] = false;
+        component.onFocusIn(new MockFocusEvent() as unknown as FocusEvent)
+        expect(component['areShortcutsEnabled']).toEqual(true);
+
+        component['areShortcutsEnabled'] = false;
+        component.onFocusIn(new MockFocusEvent() as unknown as FocusEvent)
+        expect(component['areShortcutsEnabled']).toEqual(false);
+    })
+
+    it('#setSelectedTool should not update its selected button and the tool selector\'s tool if index is out of range', () => {
+        spyOn(component.drawer, 'open');
+        component.buttons = [{} as SidebarButton, {} as SidebarButton] as SidebarButton[];
+        
+        component.setSelectedTool(-1);
+        component.setSelectedTool(4);
+        expect(component.drawer.open).toHaveBeenCalledTimes(0);
+        // It will be called once in the ngOnInit
+        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalledTimes(1); 
+    })
+
+    it('#setSelectedTool should update its selected button and the tool selector\'s tool if index is in range', () => {
+        spyOn(component.drawer, 'open');
+        component.buttons = [{} as SidebarButton, {} as SidebarButton] as SidebarButton[];
+
+        component.setSelectedTool(1);
+        expect(component.drawer.open).toHaveBeenCalled();
+        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalled();
+    })
+
+    it('#openGuideModal should forward the request to modal service', () => {
+        spyOn(mockModalService,'openDialog');
+        component.openGuideModal();
+
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
+    })
+
+    it('#openCreateDrawingModal should forward the request to modal service', () => {
+        spyOn(mockModalService,'openDialog');
+        component.openCreateDrawingModal();
+
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(CreateDrawingComponent);
+    })
+
+    it('#openSettingsModal should forward the request to modal service', () => {
+        spyOn(mockModalService,'openDialog');
+        component.openSettingsModal();
+
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(DrawingSettingsComponent);
+    })
 });
