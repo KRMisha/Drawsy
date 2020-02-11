@@ -29,20 +29,19 @@ export class GuideComponent implements OnInit, AfterViewInit {
         this.selectGuide(this.selectedGuideIndex);
     }
 
-    updateIndex(newIndex: number) {
-        this.selectedGuideIndex = newIndex;
-        this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
-        this.hasPreviousGuide = this.selectedGuideIndex > 0;
-    }
-
     selectGuide(index: number) {
-        this.updateIndex(index);
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.selectedGuideIndex]);
+        if (!(index < 0 || index > this.guides.length)) {
+            this.selectedGuideIndex = index;
+            this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
+            this.hasPreviousGuide = this.selectedGuideIndex > 0;
 
-        const viewContainerRef = this.guideHost.viewContainerRef;
-        viewContainerRef.clear();
+            const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.selectedGuideIndex]);
 
-        viewContainerRef.createComponent(componentFactory);
+            const viewContainerRef = this.guideHost.viewContainerRef;
+            viewContainerRef.clear();
+
+            viewContainerRef.createComponent(componentFactory);
+        }
     }
 
     selectNextGuide(): void {
