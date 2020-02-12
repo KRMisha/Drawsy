@@ -14,8 +14,8 @@ describe('DrawingService', () => {
             appendChild: (parent: any, newChild: any) => {},
             removeChild: (parent: any, newChild: any) => {},
         } as Renderer2;
-        spyOn(service.renderer, 'appendChild');
-        spyOn(service.renderer, 'removeChild');
+        spyOn(service.renderer, 'appendChild').and.callThrough();
+        spyOn(service.renderer, 'removeChild').and.callThrough();
     });
 
     it('should be created', () => {

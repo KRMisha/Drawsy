@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
     let app: any;
+
     beforeEach(async(() => {
         modalServiceSpyObject = jasmine.createSpyObj({
             openDialog: (component: any) => {},
@@ -30,7 +31,7 @@ describe('AppComponent', () => {
 
     it('#onRightClick should prevent the default event', () => {
         const event = new MouseEvent('');
-        spyOn(event, 'preventDefault');
+        spyOn(event, 'preventDefault').and.callThrough();
         app.onRightClick(event);
         expect(event.preventDefault).toHaveBeenCalled();
     });

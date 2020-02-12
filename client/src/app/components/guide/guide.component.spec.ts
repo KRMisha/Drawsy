@@ -63,7 +63,7 @@ describe('GuideComponent', () => {
     });
 
     it('#ngAfterViewInit should select the guide depending on the index attribute', () => {
-        spyOn(component, 'selectGuide');
+        spyOn(component, 'selectGuide').and.callThrough();
 
         component.ngAfterViewInit();
         expect(component.selectGuide).toHaveBeenCalled();
@@ -93,8 +93,8 @@ describe('GuideComponent', () => {
         component.selectedGuideIndex = 0;
         component.hasNextGuide = true;
 
-        spyOn(component, 'selectGuide');
-        spyOn(component.sidebar, 'expandAllMenus');
+        spyOn(component, 'selectGuide').and.callThrough();
+        spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
         component.selectNextGuide();
 
         expect(component.sidebar.expandAllMenus).toHaveBeenCalled();
@@ -110,8 +110,8 @@ describe('GuideComponent', () => {
         component.selectedGuideIndex = 1;
         component.hasPreviousGuide = true;
 
-        spyOn(component, 'selectGuide');
-        spyOn(component.sidebar, 'expandAllMenus');
+        spyOn(component, 'selectGuide').and.callThrough();
+        spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
         component.selectPreviousGuide();
 
         expect(component.sidebar.expandAllMenus).toHaveBeenCalled();
@@ -127,8 +127,8 @@ describe('GuideComponent', () => {
         component.hasPreviousGuide = false;
         component.hasNextGuide = false;
 
-        spyOn(component, 'selectGuide');
-        spyOn(component.sidebar, 'expandAllMenus');
+        spyOn(component, 'selectGuide').and.callThrough();
+        spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
         component.selectPreviousGuide();
         component.selectNextGuide();
 

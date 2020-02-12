@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColorFieldComponent } from './color-field.component';
 
+// tslint:disable: no-string-literal
+
 describe('ColorFieldComponent', () => {
     let component: ColorFieldComponent;
     let fixture: ComponentFixture<ColorFieldComponent>;
@@ -16,8 +18,8 @@ describe('ColorFieldComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.onMouseEnter();
-        spyOn(component.saturationValueChange, 'emit');
-        spyOn(component, 'draw');
+        spyOn(component.saturationValueChange, 'emit').and.callThrough();
+        spyOn(component, 'draw').and.callThrough();
         spyOn(component, 'updateColor').and.callThrough();
     });
 
@@ -31,7 +33,6 @@ describe('ColorFieldComponent', () => {
     });
 
     it('#set hue should not redraw the canvas if it is undefined', () => {
-        // tslint:disable-next-line: no-string-literal
         delete component['canvas'];
         component.hue = 12;
         expect(component.draw).not.toHaveBeenCalled();
@@ -43,7 +44,6 @@ describe('ColorFieldComponent', () => {
     });
 
     it('#set saturation should not redraw the canvas if it is undefined', () => {
-        // tslint:disable-next-line: no-string-literal
         delete component['canvas'];
         component.saturation = 12;
         expect(component.draw).not.toHaveBeenCalled();
@@ -55,7 +55,6 @@ describe('ColorFieldComponent', () => {
     });
 
     it('#set value should not redraw the canvas if it is undefined', () => {
-        // tslint:disable-next-line: no-string-literal
         delete component['canvas'];
         component.value = 12;
         expect(component.draw).not.toHaveBeenCalled();
@@ -78,7 +77,6 @@ describe('ColorFieldComponent', () => {
     });
 
     it('#updateColor should emit saturationValueChange if the mouse is inside and the mouse is down', () => {
-        // tslint:disable-next-line: no-string-literal
         component['isMouseDown'] = true;
         component.updateColor({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(component.saturationValueChange.emit).toHaveBeenCalled();

@@ -48,7 +48,7 @@ describe('ToolLineService', () => {
             },
         } as Renderer2;
 
-        spyOn(service.renderer, 'setAttribute');
+        spyOn(service.renderer, 'setAttribute').and.callThrough();
         spyOn(service.renderer, 'createElement').and.callThrough();
         service.isMouseInside = true;
     });

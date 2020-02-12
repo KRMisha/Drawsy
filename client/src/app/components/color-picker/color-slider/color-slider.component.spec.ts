@@ -17,7 +17,7 @@ describe('ColorSliderComponent', () => {
         fixture = TestBed.createComponent(ColorSliderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        spyOn(component.hueChange, 'emit');
+        spyOn(component.hueChange, 'emit').and.callThrough();
         component.onMouseEnter();
     });
 

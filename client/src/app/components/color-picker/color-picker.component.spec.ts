@@ -36,8 +36,8 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        spyOn(component.previousColorSelected, 'emit');
-        spyOn(component.colorChanged, 'emit');
+        spyOn(component.previousColorSelected, 'emit').and.callThrough();
+        spyOn(component.colorChanged, 'emit').and.callThrough();
     });
 
     it('should create', () => {
