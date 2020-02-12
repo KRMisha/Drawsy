@@ -14,7 +14,7 @@ const heightMargin = 4;
 })
 export class CreateDrawingComponent implements OnInit {
     wereDimensionsModified = false;
-    backgroundColor: Color = new Color();
+    backgroundColor = new Color();
 
     drawingForm = new FormGroup({
         width: new FormControl(

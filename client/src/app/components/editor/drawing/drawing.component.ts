@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
-import { Vec2 } from 'src/app/classes/vec2';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
@@ -12,15 +10,10 @@ import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
-    dimensions: Vec2;
-    backgroundColor: Color;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
     ngOnInit() {
-        this.dimensions = this.drawingService.drawingDimensions;
-        this.backgroundColor = this.drawingService.backgroundColor;
-
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
     }

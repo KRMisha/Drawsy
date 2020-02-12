@@ -40,8 +40,8 @@ describe('ToolBrush', () => {
             createElement: (name: string, namespace?: string) => new MockSvgElement(),
         } as Renderer2;
 
-        spyOn(toolBrush.renderer, 'setAttribute');
-        spyOn(toolBrush.renderer, 'createElement');
+        spyOn(toolBrush.renderer, 'setAttribute').and.callThrough();
+        spyOn(toolBrush.renderer, 'createElement').and.callThrough();
     });
 
     it('should be created', () => {
