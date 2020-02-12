@@ -10,6 +10,7 @@ describe('DrawingSettingsComponent', () => {
     let component: DrawingSettingsComponent;
     let fixture: ComponentFixture<DrawingSettingsComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<DrawingSettingsComponent>>;
+
     beforeEach(async(() => {
         dialogRefSpyObj = jasmine.createSpyObj({
             afterClosed: of({}),

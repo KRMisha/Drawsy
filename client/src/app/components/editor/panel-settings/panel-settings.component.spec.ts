@@ -19,6 +19,7 @@ describe('PanelSettingsComponent', () => {
     let fixture: ComponentFixture<PanelSettingsComponent>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
+
     beforeEach(async(() => {
         toolSelectorServiceSpyObj = jasmine.createSpyObj({
             hasSetting: () => {},

@@ -26,6 +26,7 @@ describe('SidebarComponent', () => {
     let fixture: ComponentFixture<SidebarComponent>;
     let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
     let mockModalService: MockModalService;
+
     beforeEach(async(() => {
         toolSelectorServiceSpyObj = jasmine.createSpyObj({
             setSelectedTool() {

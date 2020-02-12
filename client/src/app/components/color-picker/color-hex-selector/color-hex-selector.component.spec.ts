@@ -70,9 +70,9 @@ describe('ColorHexSelectorComponent', () => {
     });
 
     it('#swapModes should change the bool isHex', () => {
-        component.swapMode({ preventDefault() {} } as MouseEvent); // tslint:disable: no-empty
+        component.swapMode({ preventDefault() {} } as MouseEvent); // tslint:disable-line: no-empty
         expect(component.isHex).toEqual(false);
-        component.swapMode({ preventDefault() {} } as MouseEvent); // tslint:disable: no-empty
+        component.swapMode({ preventDefault() {} } as MouseEvent); // tslint:disable-line: no-empty
         expect(component.isHex).toEqual(true);
     });
 });
