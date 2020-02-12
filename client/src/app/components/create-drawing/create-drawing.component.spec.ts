@@ -29,7 +29,6 @@ describe('CreateDrawingComponent', () => {
 
     beforeEach(async(() => {
         routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
-
         drawingServiceMock = new MockDrawingService();
 
         TestBed.configureTestingModule({

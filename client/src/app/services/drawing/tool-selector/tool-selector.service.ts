@@ -37,12 +37,12 @@ export class ToolSelectorService {
         this.selectedTool.onKeyUp(event);
     }
 
-    onLeave(event: MouseEvent): void {
-        this.selectedTool.onLeave(event);
-    }
-
     onEnter(event: MouseEvent): void {
         this.selectedTool.onEnter(event);
+    }
+
+    onLeave(event: MouseEvent): void {
+        this.selectedTool.onLeave(event);
     }
 
     setMouseDown(isMouseDown: boolean): void {
