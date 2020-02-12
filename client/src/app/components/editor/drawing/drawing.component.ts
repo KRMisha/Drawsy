@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
-import { Vec2 } from 'src/app/classes/vec2';
 import { DrawingService } from 'src/app/services/drawing/drawing.service';
 import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool-selector.service';
 
