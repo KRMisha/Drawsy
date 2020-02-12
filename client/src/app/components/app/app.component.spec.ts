@@ -44,6 +44,6 @@ describe('AppComponent', () => {
     it('#onKeyDown anything else than CTRL + o should do nothing', () => {
         const event = { key: 'o', ctrlKey: false } as KeyboardEvent;
         app.onKeyDown(event);
-        expect(modalServiceSpyObject.openDialog).toHaveBeenCalledTimes(0);
+        expect(modalServiceSpyObject.openDialog).not.toHaveBeenCalled();
     });
 });

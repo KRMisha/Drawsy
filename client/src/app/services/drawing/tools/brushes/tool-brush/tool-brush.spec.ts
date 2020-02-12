@@ -62,12 +62,12 @@ describe('ToolBrush', () => {
         toolBrush.isMouseDown = true;
         toolBrush.isMouseInside = false;
         toolBrush.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
-        expect(toolBrush.renderer.setAttribute).toHaveBeenCalledTimes(0);
+        expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
 
         toolBrush.isMouseDown = false;
         toolBrush.isMouseInside = true;
         toolBrush.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
-        expect(toolBrush.renderer.setAttribute).toHaveBeenCalledTimes(0);
+        expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should create a new path if mouse is in bounds', () => {
@@ -86,8 +86,8 @@ describe('ToolBrush', () => {
     it('#onMouseDown should not create a new path if mouse is out of bounds', () => {
         toolBrush.isMouseInside = false;
         toolBrush.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
-        expect(toolBrush.renderer.createElement).toHaveBeenCalledTimes(0);
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(0);
+        expect(toolBrush.renderer.createElement).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
     });
 
     it('#onEnter should set isMouseInside to false', () => {
@@ -105,7 +105,7 @@ describe('ToolBrush', () => {
     it('#onLeave should not set a path if mouse is not down', () => {
         toolBrush.isMouseDown = false;
         toolBrush.onLeave({ offsetX: 0, offsetY: 0 } as MouseEvent);
-        expect(toolBrush.renderer.setAttribute).toHaveBeenCalledTimes(0);
+        expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
     });
 });
 

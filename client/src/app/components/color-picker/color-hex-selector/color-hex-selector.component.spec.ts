@@ -50,7 +50,7 @@ describe('ColorHexSelectorComponent', () => {
     it('#updateColorHex should not emit a color change if the hex is invalid', () => {
         component.hexRgb.setValue('a');
         component.updateColorHex();
-        expect(component.colorChanged.emit).toHaveBeenCalledTimes(0);
+        expect(component.colorChanged.emit).not.toHaveBeenCalled();
     });
 
     it('#updateColorRgb should emit a color change if the hex is valid', () => {
@@ -58,7 +58,7 @@ describe('ColorHexSelectorComponent', () => {
         component.hexGreen.setValue('34');
         component.hexBlue.setValue('56');
         component.updateColorRgb();
-        expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
+        expect(component.colorChanged.emit).toHaveBeenCalled();
     });
 
     it('#updateColorRgb should not emit a color change if the hex is invalid', () => {
@@ -66,7 +66,7 @@ describe('ColorHexSelectorComponent', () => {
         component.hexGreen.setValue('er');
         component.hexBlue.setValue('ty');
         component.updateColorRgb();
-        expect(component.colorChanged.emit).toHaveBeenCalledTimes(0);
+        expect(component.colorChanged.emit).not.toHaveBeenCalled();
     });
 
     it('#swapModes should change the bool isHex', () => {

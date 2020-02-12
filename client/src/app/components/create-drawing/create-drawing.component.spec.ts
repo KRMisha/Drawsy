@@ -69,8 +69,8 @@ describe('CreateDrawingComponent', () => {
         drawingServiceMock.isDrawingStarted = true;
 
         component.onSubmit();
-        expect(drawingServiceMock.clearStoredElements).toHaveBeenCalledTimes(0);
-        expect(routerSpyObj.navigate).toHaveBeenCalledTimes(0);
+        expect(drawingServiceMock.clearStoredElements).not.toHaveBeenCalled();
+        expect(routerSpyObj.navigate).not.toHaveBeenCalled();
     });
 
     it('#onSubmit should create a new drawing if a drawing is started and user confirms its action', () => {

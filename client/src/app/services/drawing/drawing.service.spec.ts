@@ -38,7 +38,7 @@ describe('DrawingService', () => {
     it('#removeElement should do nothing if element does not exist in array', () => {
         const element = {} as SVGElement;
         service.removeElement(element);
-        expect(service.renderer.removeChild).toHaveBeenCalledTimes(0);
+        expect(service.renderer.removeChild).not.toHaveBeenCalled();
     });
 
     it('#clearStoredElements should remove all items from renderer', () => {
@@ -51,13 +51,13 @@ describe('DrawingService', () => {
 
     it('#clearStoredElements should not remove any elements from renderer if none exist', () => {
         service.clearStoredElements();
-        expect(service.renderer.removeChild).toHaveBeenCalledTimes(0);
+        expect(service.renderer.removeChild).not.toHaveBeenCalled();
     });
 
     it('#reappendStoredElements should do nothing when no element exist', () => {
         service.reappendStoredElements();
-        expect(service.renderer.removeChild).toHaveBeenCalledTimes(0);
-        expect(service.renderer.appendChild).toHaveBeenCalledTimes(0);
+        expect(service.renderer.removeChild).not.toHaveBeenCalled();
+        expect(service.renderer.appendChild).not.toHaveBeenCalled();
     });
 
     it('#reappendStoredElements should re append stored element', () => {

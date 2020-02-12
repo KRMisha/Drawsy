@@ -132,7 +132,7 @@ describe('GuideComponent', () => {
         component.selectPreviousGuide();
         component.selectNextGuide();
 
-        expect(component.selectGuide).toHaveBeenCalledTimes(0);
+        expect(component.selectGuide).not.toHaveBeenCalled();
         expect(component.sidebar.expandAllMenus).toHaveBeenCalledTimes(2);
     });
 });
