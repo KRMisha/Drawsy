@@ -41,7 +41,7 @@ describe('ToolSelectorService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should forward mouseEvents to the selected tool', async(() => {
+    it('should forward events to the selected tool', async(() => {
         spyOn(service.selectedTool, 'onMouseMove').and.callThrough();
         service.onMouseMove({} as MouseEvent);
         expect(service.selectedTool.onMouseMove).toHaveBeenCalled();
@@ -66,13 +66,13 @@ describe('ToolSelectorService', () => {
         service.onKeyUp({} as KeyboardEvent);
         expect(service.selectedTool.onKeyUp).toHaveBeenCalled();
 
-        spyOn(service.selectedTool, 'onLeave').and.callThrough();
-        service.onLeave({} as MouseEvent);
-        expect(service.selectedTool.onLeave).toHaveBeenCalled();
-
         spyOn(service.selectedTool, 'onEnter').and.callThrough();
         service.onEnter({} as MouseEvent);
         expect(service.selectedTool.onEnter).toHaveBeenCalled();
+
+        spyOn(service.selectedTool, 'onLeave').and.callThrough();
+        service.onLeave({} as MouseEvent);
+        expect(service.selectedTool.onLeave).toHaveBeenCalled();
     }));
 
     it('should set selected tool status boolean', async(() => {
