@@ -17,7 +17,7 @@ describe('ColorSliderComponent', () => {
         fixture = TestBed.createComponent(ColorSliderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        spyOn(component.hueChange, 'emit');
+        spyOn(component.hueChange, 'emit').and.callThrough();
         component.onMouseEnter();
     });
 
@@ -28,25 +28,25 @@ describe('ColorSliderComponent', () => {
     it('#onMouseDown should do nothing if mouse is not inside', () => {
         component.onMouseLeave();
         component.onMouseDown({ offsetX: 50 } as MouseEvent);
-        expect(component.hueChange.emit).toHaveBeenCalledTimes(0);
+        expect(component.hueChange.emit).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should emit a hue change if mouse is inside', () => {
         component.onMouseDown({ offsetX: 50 } as MouseEvent);
-        expect(component.hueChange.emit).toHaveBeenCalledTimes(1);
+        expect(component.hueChange.emit).toHaveBeenCalled();
     });
 
     it("#onMouseDown shouldn't emit a hue change if mouse is inside but the mouse is not down", () => {
         component.onMouseUp();
         component.onMouseMove({ offsetX: 50 } as MouseEvent);
-        expect(component.hueChange.emit).toHaveBeenCalledTimes(0);
+        expect(component.hueChange.emit).not.toHaveBeenCalled();
     });
 
     it('#set hue should redraw the canvas', () => {
         spyOn(component, 'draw');
         component['canvas'] = {} as HTMLCanvasElement;
         component.hue = 3;
-        expect(component.draw).toHaveBeenCalledTimes(1);
+        expect(component.draw).toHaveBeenCalled();
     });
 
     it('#set hue with undefined canvas should do nothing', () => {

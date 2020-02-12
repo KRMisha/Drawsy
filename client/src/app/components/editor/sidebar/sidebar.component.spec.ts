@@ -26,6 +26,7 @@ describe('SidebarComponent', () => {
     let fixture: ComponentFixture<SidebarComponent>;
     let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
     let mockModalService: MockModalService;
+
     beforeEach(async(() => {
         toolSelectorServiceSpyObj = jasmine.createSpyObj({
             setSelectedTool() {
@@ -86,7 +87,7 @@ describe('SidebarComponent', () => {
         spyOn(component, 'setSelectedTool');
 
         component.onKeyDown({ key: '3' } as KeyboardEvent);
-        expect(component.setSelectedTool).toHaveBeenCalledTimes(0);
+        expect(component.setSelectedTool).not.toHaveBeenCalled();
     });
 
     it('#onKeyDown should not change selectedTool if modal is shown or shortcuts are disabled', () => {
@@ -104,7 +105,7 @@ describe('SidebarComponent', () => {
         component['areShortcutsEnabled'] = false;
         component.onKeyDown({ key: 'w' } as KeyboardEvent);
 
-        expect(component.setSelectedTool).toHaveBeenCalledTimes(0);
+        expect(component.setSelectedTool).not.toHaveBeenCalled();
     });
 
     it('#onFocusIn should disable shortcuts if eventTarget is a HTMLInputElement', () => {
@@ -136,8 +137,8 @@ describe('SidebarComponent', () => {
 
         component.setSelectedTool(-1);
         component.setSelectedTool(4);
-        expect(component.drawer.open).toHaveBeenCalledTimes(0);
-        // It will be called once in the ngOnInit
+        expect(component.drawer.open).not.toHaveBeenCalled();
+        // Expect to have been called once because it will have been called in the ngOnInit
         expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalledTimes(1);
     });
 

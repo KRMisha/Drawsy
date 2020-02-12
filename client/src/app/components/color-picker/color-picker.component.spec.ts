@@ -36,8 +36,8 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        spyOn(component.previousColorSelected, 'emit');
-        spyOn(component.colorChanged, 'emit');
+        spyOn(component.previousColorSelected, 'emit').and.callThrough();
+        spyOn(component.colorChanged, 'emit').and.callThrough();
     });
 
     it('should create', () => {
@@ -99,7 +99,7 @@ describe('ColorPickerComponent', () => {
 
     it('#oldColorClick should do nothing if mouse button is not left or right click', () => {
         component.oldColorClick({ button: 69 } as MouseEvent, new Color());
-        expect(component.previousColorSelected.emit).toHaveBeenCalledTimes(0);
-        expect(component.colorChanged.emit).toHaveBeenCalledTimes(0);
+        expect(component.previousColorSelected.emit).not.toHaveBeenCalled();
+        expect(component.colorChanged.emit).not.toHaveBeenCalled();
     });
 });

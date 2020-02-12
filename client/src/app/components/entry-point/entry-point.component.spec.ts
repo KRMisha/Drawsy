@@ -12,6 +12,7 @@ describe('EntryPointComponent', () => {
     let component: EntryPointComponent;
     let fixture: ComponentFixture<EntryPointComponent>;
     let mockModalService: ModalService;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [EntryPointComponent],

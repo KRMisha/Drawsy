@@ -37,7 +37,7 @@ describe('ToolPaintbrushService', () => {
             setAttribute: (element: MockSvgElement, name: string, value: string) => {},
             createElement: (name: string, namespace?: string) => new MockSvgElement(),
         } as Renderer2;
-        spyOn(service.renderer, 'setAttribute');
+        spyOn(service.renderer, 'setAttribute').and.callThrough();
     });
 
     it('should be created', () => {

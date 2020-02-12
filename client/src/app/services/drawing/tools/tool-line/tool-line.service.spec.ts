@@ -48,7 +48,7 @@ describe('ToolLineService', () => {
             },
         } as Renderer2;
 
-        spyOn(service.renderer, 'setAttribute');
+        spyOn(service.renderer, 'setAttribute').and.callThrough();
         spyOn(service.renderer, 'createElement').and.callThrough();
         service.isMouseInside = true;
     });
@@ -89,8 +89,8 @@ describe('ToolLineService', () => {
         service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         service.onMouseDoubleClick({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
-        expect(service.renderer.setAttribute).toHaveBeenCalledTimes(0);
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(0);
+        expect(service.renderer.setAttribute).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
     });
 
     it('should render two points when user makes a two segment line and junctions are enabled', () => {
@@ -210,7 +210,7 @@ describe('ToolLineService', () => {
         service.onMouseMove({ offsetX: 50, offsetY: 50 } as MouseEvent);
         service.onKeyDown({ key: 'Escape' } as KeyboardEvent);
 
-        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledTimes(0);
+        expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
     });
 
     it('should remove last point when backspace is hit', () => {

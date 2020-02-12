@@ -47,6 +47,6 @@ describe('ModalService', () => {
         spyOn(service, 'openDialog').and.callThrough();
         service['_isModalPresent'] = true; // tslint:disable-line: no-string-literal
         service.openDialog({} as any);
-        expect(matDialogSpyObj.open).toHaveBeenCalledTimes(0);
+        expect(matDialogSpyObj.open).not.toHaveBeenCalled();
     });
 });

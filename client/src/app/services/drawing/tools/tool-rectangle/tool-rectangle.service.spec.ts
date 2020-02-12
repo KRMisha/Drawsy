@@ -67,7 +67,7 @@ describe('ToolRectangleService', () => {
         service.isMouseInside = false;
 
         service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(drawingService.addElement).toHaveBeenCalledTimes(0);
+        expect(drawingService.addElement).not.toHaveBeenCalled();
     });
 
     it('should create a rectangle with stroke: none if user setting is FillOnly', () => {
