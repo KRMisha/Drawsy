@@ -12,15 +12,10 @@ import { ToolSelectorService } from 'src/app/services/drawing/tool-selector/tool
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
-    dimensions: Vec2;
-    backgroundColor: Color;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
     ngOnInit() {
-        this.dimensions = this.drawingService.drawingDimensions;
-        this.backgroundColor = this.drawingService.backgroundColor;
-
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
     }
