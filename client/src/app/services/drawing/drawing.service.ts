@@ -10,13 +10,12 @@ export class DrawingService {
     rootElement: SVGElement;
 
     drawingDimensions: Vec2 = { x: 512, y: 512 };
-    backgroundColor: Color;
+    backgroundColor = new Color();
     isDrawingStarted = false;
 
     private elements: SVGElement[] = [];
 
     constructor() {
-        this.backgroundColor = new Color();
         this.backgroundColor.red = 255;
         this.backgroundColor.green = 255;
         this.backgroundColor.blue = 255;
