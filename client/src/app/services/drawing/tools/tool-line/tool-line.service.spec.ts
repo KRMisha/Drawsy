@@ -10,9 +10,7 @@ import { ToolLineService } from './tool-line.service';
 // tslint:disable: no-string-literal
 
 class MockColor {
-    toRgbaString(): string {
-        return '';
-    }
+    toRgbaString = () => 'rgba(69, 69, 69, 1)';
 }
 
 class MockSvgElement {
@@ -42,10 +40,8 @@ describe('ToolLineService', () => {
         });
         service = TestBed.get(ToolLineService);
         service.renderer = {
-            setAttribute: (component: MockSvgElement, attributeName: string, attributeValue: string) => {},
-            createElement: (a: string, b: string) => {
-                return new MockSvgElement();
-            },
+            setAttribute: (element: MockSvgElement, name: string, value: string) => {},
+            createElement: (name: string, namespace?: string) => new MockSvgElement(),
         } as Renderer2;
 
         spyOn(service.renderer, 'setAttribute').and.callThrough();
@@ -58,9 +54,17 @@ describe('ToolLineService', () => {
     });
 
     it('should place line points where user is clicking when mouse is inside', () => {
+        service.toolSettings.set(ToolSetting.Size, 42);
+
         service.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
         service.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
 
+        expect(service.renderer.createElement).toHaveBeenCalledWith('polyline', 'svg');
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'stroke', 'rgba(69, 69, 69, 1)');
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'fill', 'none');
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'stroke-width', '42');
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'stroke-linecap', 'round');
+        expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'stroke-linejoin', 'round');
         expect(service.renderer.setAttribute).toHaveBeenCalledWith(service['polyline'], 'points', '10 10');
 
         service.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
