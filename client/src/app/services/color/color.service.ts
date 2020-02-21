@@ -49,16 +49,13 @@ export class ColorService {
     }
 
     private addColor(color: Color): void {
-        for (const arrayColor of this.lastColors) {
-            const isColorPresent = color.red === arrayColor.red && color.green === arrayColor.green && color.blue === arrayColor.blue;
-            if (isColorPresent) {
-                return;
-            }
+        const isColorPresent = (element: Color) =>
+            color.red === element.red && color.green === element.green && color.blue === element.blue;
+        if (this.lastColors.some(isColorPresent)) {
+            return;
         }
 
-        for (let i = this.lastColors.length - 1; i > 0; i--) {
-            this.lastColors[i] = this.lastColors[i - 1];
-        }
-        this.lastColors[0] = color;
+        this.lastColors.pop();
+        this.lastColors.unshift(color);
     }
 }
