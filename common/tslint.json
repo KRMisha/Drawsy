@@ -43,39 +43,38 @@
                     "typeLiterals": "ignore"
                 }
             }
-        ]
-    },
-
-    "cyclomatic-complexity": [true, 15],
-    "no-magic-numbers": [true, 0, 1, 2],
-    "class-name": true,
-    "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
-    "no-any": true,
-    "brace-style": [
-        true,
-        "1tbs",
-        {
-            "allowSingleLine": true
-        }
-    ],
-    "prefer-switch": true,
-    "no-invalid-this": true,
-    "triple-equals": { "options": ["allow-null-check", "allow-undefined-check"] },
-    "no-string-throw": true,
-    "promise-function-async": true,
-    "variable-name": {
-        "options": ["ban-keywords", "check-format"]
-    },
-    "ban-types": {
-        "options": [
-            ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
-            ["Function", "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."],
-            ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
-            ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
-            ["String", "Avoid using the `String` type. Did you mean `string`?"],
-            ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
-        ]
-    },
-    "file-name-casing": [true, "kebab-case"],
-    "max-file-line-count": [true, 350]
+        ],
+        "cyclomatic-complexity": [true, 15],
+        "no-magic-numbers": [true, 0, 1, 2],
+        "class-name": true,
+        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
+        "no-any": true,
+        "brace-style": [
+            true,
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "prefer-switch": true,
+        "no-invalid-this": true,
+        "triple-equals": { "options": ["allow-null-check", "allow-undefined-check"] },
+        "no-string-throw": true,
+        "promise-function-async": true,
+        "variable-name": {
+            "options": ["ban-keywords", "check-format"]
+        },
+        "ban-types": {
+            "options": [
+                ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+                ["Function", "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."],
+                ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+                ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+                ["String", "Avoid using the `String` type. Did you mean `string`?"],
+                ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+            ]
+        },
+        "file-name-casing": [true, "kebab-case"],
+        "max-file-line-count": [true, 350]
+    }
 }
