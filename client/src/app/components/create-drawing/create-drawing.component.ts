@@ -1,11 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Color } from '../../classes/color/color';
 import { DrawingService } from '../../services/drawing/drawing.service';
 
 const widthMargin = 348;
 const heightMargin = 4;
+const maximumHeightWidth = 10000;
+const integerRegexPattern = "^[0-9]*$";
 
 @Component({
     selector: 'app-create-drawing',
@@ -19,11 +21,11 @@ export class CreateDrawingComponent implements OnInit {
     drawingForm = new FormGroup({
         width: new FormControl(
             window.innerWidth - widthMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(10000)]),
+            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
         ),
         height: new FormControl(
             window.innerHeight - heightMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(10000)]),
+            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
         ),
     });
 
@@ -54,6 +56,22 @@ export class CreateDrawingComponent implements OnInit {
         this.drawingService.backgroundColor = this.backgroundColor;
         this.drawingService.clearStoredElements();
         this.router.navigate(['/editor']);
+    }
+
+    private getErrorMessage(formControl: AbstractControl) {
+        return formControl.hasError('required') ? 'Entrez une valeur' :
+            formControl.hasError('min') ? 'Valeur négative ou nulle invalide' :
+            formControl.hasError('max') ? 'Valeur maximale de 10000 px' :
+            formControl.hasError('pattern') ? 'Nombre entier invalide' :
+                '';
+    }
+
+    protected getWidthErrorMessage() {
+        return this.getErrorMessage(this.drawingForm.controls.width);
+    }
+
+    protected getHeightErrorMessage() {
+        return this.getErrorMessage(this.drawingForm.controls.height);
     }
 
     @HostListener('window:resize', ['$event'])
