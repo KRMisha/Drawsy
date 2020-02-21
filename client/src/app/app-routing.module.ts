@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { EditorComponent } from './editor/editor.component';
-import { EntryPointComponent } from './home/entry-point.component';
+import { EditorComponent } from './editor/components/editor/editor.component';
+import { EntryPointComponent } from './home/components/entry-point/entry-point.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/entry-point', pathMatch: 'full' },

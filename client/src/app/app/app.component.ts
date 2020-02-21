@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { CreateDrawingComponent } from '../modals/create-drawing/create-drawing.component';
+import { CreateDrawingComponent } from '../modals/components/create-drawing/create-drawing.component';
 
 @Component({
     selector: 'app-root',
