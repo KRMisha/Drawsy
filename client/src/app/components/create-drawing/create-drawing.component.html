@@ -11,13 +11,13 @@
         <div class="size-selection">
             <mat-form-field>
                 <mat-label>Largeur</mat-label>
-                <input matInput type="number" formControlName="width" required min="1" max="10000" />
-                <mat-error *ngIf="width.invalid">{{getWidthErrorMessage()}}</mat-error>
+                <input matInput formControlName="width" />
+                <mat-error *ngIf="drawingForm.controls.width.invalid">{{getWidthErrorMessage()}}</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Hauteur</mat-label>
-                <input matInput type="number" formControlName="height" required min="1" max="10000" />
-                <mat-error *ngIf="height.invalid">{{getHeightErrorMessage}}</mat-error>
+                <input matInput formControlName="height" />
+                <mat-error *ngIf="drawingForm.controls.height.invalid">{{getHeightErrorMessage()}}</mat-error>
             </mat-form-field>
         </div>
         <app-color-picker

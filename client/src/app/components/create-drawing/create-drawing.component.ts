@@ -7,6 +7,7 @@ import { DrawingService } from '../../services/drawing/drawing.service';
 const widthMargin = 348;
 const heightMargin = 4;
 const maximumHeightWidth = 10000;
+const integerRegexPattern = "^[0-9]*$";
 
 @Component({
     selector: 'app-create-drawing',
@@ -20,11 +21,11 @@ export class CreateDrawingComponent implements OnInit {
     drawingForm = new FormGroup({
         width: new FormControl(
             window.innerWidth - widthMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth)]),
+            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
         ),
         height: new FormControl(
             window.innerHeight - heightMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth)]),
+            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
         ),
     });
 
@@ -61,6 +62,7 @@ export class CreateDrawingComponent implements OnInit {
         return formControl.hasError('required') ? 'Entrez une valeur' :
             formControl.hasError('min') ? 'Valeur négative ou nulle invalide' :
             formControl.hasError('max') ? 'Valeur maximale de 10000 px' :
+            formControl.hasError('pattern') ? 'Nombre entier invalide' :
                 '';
     }
 
