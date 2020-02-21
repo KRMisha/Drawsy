@@ -16,19 +16,21 @@ export class ModalService {
     constructor(private dialog: MatDialog) {}
 
     openDialog(component: Type<any>, dimensions?: Vec2) {
-        if (!this.isModalPresent) {
-            if (dimensions === undefined) {
-                this.dialogRef = this.dialog.open(component, {});
-            } else {
-                this.dialogRef = this.dialog.open(component, {
-                    width: dimensions.x.toString() + 'px',
-                    height: dimensions.y.toString() + 'px',
-                });
-            }
-            this.dialogRef.afterClosed().subscribe(() => {
-                this._isModalPresent = false;
-            });
-            this._isModalPresent = true;
+        if (this.isModalPresent) {
+            return;
         }
+
+        if (dimensions === undefined) {
+            this.dialogRef = this.dialog.open(component, {});
+        } else {
+            this.dialogRef = this.dialog.open(component, {
+                width: `${dimensions.x}px`,
+                height: `${dimensions.y}px`,
+            });
+        }
+        this.dialogRef.afterClosed().subscribe(() => {
+            this._isModalPresent = false;
+        });
+        this._isModalPresent = true;
     }
 }

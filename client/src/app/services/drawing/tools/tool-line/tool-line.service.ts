@@ -162,26 +162,26 @@ export class ToolLineService extends Tool {
     }
 
     private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, currentlyDrawing: boolean): Vec2 {
-        let nextPoint: Vec2 = { x: 0, y: 0 };
         if (!currentlyDrawing || !isShiftDown) {
-            nextPoint = mousePosition;
-        } else {
-            let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
-            angle = Math.round(angle / 45) * 45;
-            if (angle <= 0) {
-                angle += 360;
-            }
+            return mousePosition;
+        }
 
-            if (angle === 180 || angle === 360) {
-                nextPoint.x = mousePosition.x;
-                nextPoint.y = lastPoint.y;
-            } else if (angle === 90 || angle === 270) {
-                nextPoint.x = lastPoint.x;
-                nextPoint.y = mousePosition.y;
-            } else {
-                nextPoint.x = mousePosition.x;
-                nextPoint.y = Math.tan((angle / 180) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
-            }
+        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
+        angle = Math.round(angle / 45) * 45;
+        if (angle <= 0) {
+            angle += 360;
+        }
+
+        const nextPoint: Vec2 = { x: 0, y: 0 };
+        if (angle === 180 || angle === 360) {
+            nextPoint.x = mousePosition.x;
+            nextPoint.y = lastPoint.y;
+        } else if (angle === 90 || angle === 270) {
+            nextPoint.x = lastPoint.x;
+            nextPoint.y = mousePosition.y;
+        } else {
+            nextPoint.x = mousePosition.x;
+            nextPoint.y = Math.tan((angle / 180) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
         }
         return nextPoint;
     }

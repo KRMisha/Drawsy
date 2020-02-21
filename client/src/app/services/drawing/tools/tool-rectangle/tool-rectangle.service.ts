@@ -86,11 +86,13 @@ export class ToolRectangleService extends Tool {
         const positionCopy = { x: position.x, y: position.y };
         if (this.isSquare) {
             const maxSideLength: number = Math.max(Math.abs(positionCopy.x - this.origin.x), Math.abs(positionCopy.y - this.origin.y));
+
             if (positionCopy.x < this.origin.x) {
                 positionCopy.x = this.origin.x - maxSideLength;
             } else {
                 positionCopy.x = this.origin.x + maxSideLength;
             }
+
             if (positionCopy.y < this.origin.y) {
                 positionCopy.y = this.origin.y - maxSideLength;
             } else {
@@ -98,24 +100,6 @@ export class ToolRectangleService extends Tool {
             }
         }
 
-        return (
-            'M' +
-            this.origin.x.toString() +
-            ' ' +
-            this.origin.y.toString() +
-            ' ' +
-            'H' +
-            positionCopy.x.toString() +
-            ' ' +
-            'V' +
-            positionCopy.y.toString() +
-            ' ' +
-            'H' +
-            this.origin.x.toString() +
-            ' ' +
-            'V' +
-            this.origin.y.toString() +
-            ' '
-        );
+        return `M${this.origin.x} ${this.origin.y} H${positionCopy.x} V${positionCopy.y} H${this.origin.x} V${this.origin.y} `;
     }
 }

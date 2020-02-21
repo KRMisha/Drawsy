@@ -80,8 +80,7 @@ export class PanelSettingsComponent {
     getSelectedColor(): Color {
         if (this.isPrimarySelected) {
             return this.colorService.getPrimaryColor();
-        } else {
-            return this.colorService.getSecondaryColor();
         }
+        return this.colorService.getSecondaryColor();
     }
 }
