@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Color, maxColorValue } from 'src/app/classes/color/color';
+import { Color, maxColorValue } from '@app/classes/color/color';
 
 @Component({
     selector: 'app-color-container',

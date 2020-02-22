@@ -7,14 +7,12 @@ const maxRecentColors = 10;
     providedIn: 'root',
 })
 export class ColorService {
-    private primaryColor: Color;
-    private secondaryColor: Color;
+    private primaryColor = new Color();
+    private secondaryColor = new Color();
 
     private lastColors: Color[] = [];
 
     constructor() {
-        this.primaryColor = new Color();
-        this.secondaryColor = new Color();
         for (let i = 0; i < maxRecentColors; i++) {
             this.lastColors.push(new Color());
         }

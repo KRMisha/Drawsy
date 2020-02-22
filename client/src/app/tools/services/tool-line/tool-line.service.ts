@@ -38,6 +38,7 @@ export class ToolLineService extends Tool {
         if (!this.isMouseInside) {
             return;
         }
+
         this.mousePosition = { x: event.offsetX, y: event.offsetY };
         this.updateNextPointPosition();
         this.lastPoint = this.nextPoint;
