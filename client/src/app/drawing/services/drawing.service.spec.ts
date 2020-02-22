@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-any
 // tslint:disable: no-empty
 
 describe('DrawingService', () => {

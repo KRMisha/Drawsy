@@ -4,8 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {

@@ -6,12 +6,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
-import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
+import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 import { SidebarComponent } from './sidebar.component';
+
+// tslint:disable: no-empty
 
 class MockModalService {
     isModalPresent = false;
@@ -108,7 +110,7 @@ describe('SidebarComponent', () => {
 
     it('#onFocusIn should disable shortcuts if eventTarget is a HTMLInputElement', () => {
         component['areShortcutsEnabled'] = true;
-        component.onFocusIn(({ target: document.createElement('input') } as any) as FocusEvent);
+        component.onFocusIn(({ target: document.createElement('input') } as unknown) as FocusEvent);
         expect(component['areShortcutsEnabled']).toEqual(false);
     });
 
@@ -120,7 +122,7 @@ describe('SidebarComponent', () => {
 
     it('#onFocusOut should enable shortcuts if eventTarget is a HTMLInputElement', () => {
         component['areShortcutsEnabled'] = false;
-        component.onFocusOut(({ target: document.createElement('input') } as any) as FocusEvent);
+        component.onFocusOut(({ target: document.createElement('input') } as unknown) as FocusEvent);
         expect(component['areShortcutsEnabled']).toEqual(true);
     });
 

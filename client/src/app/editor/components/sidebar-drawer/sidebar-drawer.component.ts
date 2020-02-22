@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Color, maxColorValue } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
-import { ToolSelectorService } from '../../../tools/components/tool-selector.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
+import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 
 @Component({
     selector: 'app-sidebar-drawer',

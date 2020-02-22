@@ -1,5 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { StrokeTypes, Textures, Tool, ToolSetting } from '../services/tool';
+import { StrokeTypes, Textures, Tool, ToolSetting } from './tool';
 import { ToolHolderService } from './tool-holder.service';
 
 const numberRegex = new RegExp('^[0-9]+$');

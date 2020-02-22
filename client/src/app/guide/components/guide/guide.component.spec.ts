@@ -16,6 +16,7 @@ import { GuideComponent } from './guide.component';
 class MockGuideWelcomeComponent {}
 
 describe('GuideComponent', () => {
+    // tslint:disable-next-line: no-any
     const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;

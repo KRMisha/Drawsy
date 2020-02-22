@@ -11,12 +11,12 @@ export class AppComponent {
     constructor(private modalService: ModalService) {}
 
     @HostListener('contextmenu', ['$event'])
-    onRightClick(event: MouseEvent) {
+    onRightClick(event: MouseEvent): void {
         event.preventDefault();
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();
             this.modalService.openDialog(NewDrawingComponent);

@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
-    let app: any;
+    let app: AppComponent;
 
     beforeEach(async(() => {
         modalServiceSpyObject = jasmine.createSpyObj({

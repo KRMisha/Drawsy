@@ -9,7 +9,7 @@ import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component'
     styleUrls: ['./guide.component.scss'],
 })
 export class GuideComponent implements OnInit, AfterViewInit {
-    guides: Type<any>[];
+    guides: Type<any>[]; // tslint:disable-line: no-any
     selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { DrawingService } from '../../../drawing/services/drawing.service';
-import { ModalService } from '../../../modals/services/modal.service';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
+import { ModalService } from '../../../modals/services/modal.service';
 
 @Component({
     selector: 'app-home',
