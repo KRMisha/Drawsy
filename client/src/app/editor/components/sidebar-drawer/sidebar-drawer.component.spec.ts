@@ -9,14 +9,14 @@ import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
 import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
 import { ToolSetting } from 'src/app/tools/services/tool';
-import { PanelSettingsComponent } from './panel-settings.component';
+import { SidebarDrawerComponent } from './sidebar-drawer.component';
 
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal
 
-describe('PanelSettingsComponent', () => {
-    let component: PanelSettingsComponent;
-    let fixture: ComponentFixture<PanelSettingsComponent>;
+describe('SidebarDrawerComponent', () => {
+    let component: SidebarDrawerComponent;
+    let fixture: ComponentFixture<SidebarDrawerComponent>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
 
@@ -36,7 +36,7 @@ describe('PanelSettingsComponent', () => {
             swapPrimaryAndSecondaryColors: () => {},
         });
         TestBed.configureTestingModule({
-            declarations: [PanelSettingsComponent],
+            declarations: [SidebarDrawerComponent],
             imports: [BrowserAnimationsModule, MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
             providers: [
                 { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
@@ -47,7 +47,7 @@ describe('PanelSettingsComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(PanelSettingsComponent);
+        fixture = TestBed.createComponent(SidebarDrawerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

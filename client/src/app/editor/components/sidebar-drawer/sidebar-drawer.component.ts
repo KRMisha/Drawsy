@@ -5,11 +5,11 @@ import { ToolSelectorService } from '../../../tools/components/tool-selector.ser
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
 
 @Component({
-    selector: 'app-panel-settings',
-    templateUrl: './panel-settings.component.html',
-    styleUrls: ['./panel-settings.component.scss'],
+    selector: 'app-sidebar-drawer',
+    templateUrl: './sidebar-drawer.component.html',
+    styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class PanelSettingsComponent {
+export class SidebarDrawerComponent {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;

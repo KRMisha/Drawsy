@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { ModalService } from '../../../modals/services/modal.service';
-import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
 
 @Component({
-    selector: 'app-entry-point',
-    templateUrl: './entry-point.component.html',
-    styleUrls: ['./entry-point.component.scss'],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
 })
-export class EntryPointComponent {
+export class HomeComponent {
     constructor(public drawingService: DrawingService, private modalService: ModalService) {}
 
     openCreateDrawing(): void {
-        this.modalService.openDialog(CreateDrawingComponent);
+        this.modalService.openDialog(NewDrawingComponent);
     }
 
     openGuideModal(): void {

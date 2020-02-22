@@ -7,25 +7,35 @@ import { DrawingService } from '../../../drawing/services/drawing.service';
 const widthMargin = 348;
 const heightMargin = 4;
 const maximumHeightWidth = 10000;
-const integerRegexPattern = "^[0-9]*$";
+const integerRegexPattern = '^[0-9]*$';
 
 @Component({
-    selector: 'app-create-drawing',
-    templateUrl: './create-drawing.component.html',
-    styleUrls: ['./create-drawing.component.scss'],
+    selector: 'app-new-drawing',
+    templateUrl: './new-drawing.component.html',
+    styleUrls: ['./new-drawing.component.scss'],
 })
-export class CreateDrawingComponent implements OnInit {
+export class NewDrawingComponent implements OnInit {
     wereDimensionsModified = false;
     backgroundColor = new Color();
 
     drawingForm = new FormGroup({
         width: new FormControl(
             window.innerWidth - widthMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
+            Validators.compose([
+                Validators.required,
+                Validators.min(1),
+                Validators.max(maximumHeightWidth),
+                Validators.pattern(integerRegexPattern),
+            ]),
         ),
         height: new FormControl(
             window.innerHeight - heightMargin,
-            Validators.compose([Validators.required, Validators.min(1), Validators.max(maximumHeightWidth), Validators.pattern(integerRegexPattern)]),
+            Validators.compose([
+                Validators.required,
+                Validators.min(1),
+                Validators.max(maximumHeightWidth),
+                Validators.pattern(integerRegexPattern),
+            ]),
         ),
     });
 
@@ -59,11 +69,15 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     private getErrorMessage(formControl: AbstractControl) {
-        return formControl.hasError('required') ? 'Entrez une valeur' :
-            formControl.hasError('min') ? 'Valeur négative ou nulle invalide' :
-            formControl.hasError('max') ? 'Valeur maximale de 10000 px' :
-            formControl.hasError('pattern') ? 'Nombre entier invalide' :
-                '';
+        return formControl.hasError('required')
+            ? 'Entrez une valeur'
+            : formControl.hasError('min')
+            ? 'Valeur négative ou nulle invalide'
+            : formControl.hasError('max')
+            ? 'Valeur maximale de 10000 px'
+            : formControl.hasError('pattern')
+            ? 'Nombre entier invalide'
+            : '';
     }
 
     protected getWidthErrorMessage() {
