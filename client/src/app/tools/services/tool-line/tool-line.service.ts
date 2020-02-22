@@ -118,21 +118,25 @@ export class ToolLineService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.key === 'Escape') {
-            if (this.currentlyDrawing) {
-                this.drawingService.removeElement(this.polyline);
-                this.stopDrawing();
-                for (const circle of this.junctionPoints) {
-                    this.drawingService.removeElement(circle);
+        switch (event.key) {
+            case 'Escape':
+                if (this.currentlyDrawing) {
+                    this.drawingService.removeElement(this.polyline);
+                    this.stopDrawing();
+                    for (const circle of this.junctionPoints) {
+                        this.drawingService.removeElement(circle);
+                    }
+                    this.junctionPoints.length = 0;
                 }
-                this.junctionPoints.length = 0;
-            }
-        } else if (event.key === 'Shift') {
-            this.isShiftDown = true;
-            this.updateNextPointPosition();
-            this.updatePreviewLinePosition();
-        } else if (event.key === 'Backspace') {
-            this.removeLastPointFromLine();
+                break;
+            case 'Shift':
+                this.isShiftDown = true;
+                this.updateNextPointPosition();
+                this.updatePreviewLinePosition();
+                break;
+            case 'Backspace':
+                this.removeLastPointFromLine();
+                break;
         }
     }
 
@@ -173,6 +177,7 @@ export class ToolLineService extends Tool {
         }
 
         const nextPoint: Vec2 = { x: 0, y: 0 };
+        // tslint:disable-next-line: prefer-switch (semantically not a switch)
         if (angle === 180 || angle === 360) {
             nextPoint.x = mousePosition.x;
             nextPoint.y = lastPoint.y;

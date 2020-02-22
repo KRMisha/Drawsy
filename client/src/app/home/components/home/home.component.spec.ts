@@ -4,8 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
@@ -43,10 +43,10 @@ describe('HomeComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#openCreateDrawing should forward request to Modal service', () => {
+    it('#openNewDrawing should forward request to Modal service', () => {
         spyOn(mockModalService, 'openDialog');
-        component.openCreateDrawing();
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(CreateDrawingComponent);
+        component.openNewDrawingModal();
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(NewDrawingComponent);
     });
 
     it('#openGuideModal should forward request to Modal service', () => {

@@ -5,6 +5,8 @@ import { of } from 'rxjs';
 import { Vec2 } from 'src/app/classes/vec2';
 import { ModalService } from './modal.service';
 
+// tslint:disable: no-any
+
 describe('ModalService', () => {
     let service: ModalService;
     let matDialogSpyObj: jasmine.SpyObj<MatDialog>;

@@ -59,6 +59,7 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.clearRect(0, 0, width, height);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        // tslint:disable: no-magic-numbers
         horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
         horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
         horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
@@ -66,6 +67,7 @@ export class ColorSliderComponent implements AfterViewInit {
         horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
         horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
         horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
+        // tslint:enable: no-magic-numbers
         this.context.fillStyle = horizontalGradient;
         const padding = 7;
         this.context.fillRect(0, padding, width, height - 2 * padding);

@@ -39,6 +39,7 @@ export class Color {
     setHsv(hue: number, saturation: number, value: number): void {
         // All constants are taken from this algorithm:
         // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
+        // tslint:disable: no-magic-numbers
 
         const minHue = 0;
         const minSaturation = 0;
@@ -69,13 +70,16 @@ export class Color {
         } else {
             this.setNormalizedColor(chroma + m, m, x + m);
         }
+        // tslint:enable: no-magic-numbers
     }
 
     setHex(hex: string): boolean {
         if (hexRegex.test(hex)) {
+            // tslint:disable: no-magic-numbers
             this.red = parseInt(hex.substring(0, 2), 16);
             this.green = parseInt(hex.substring(2, 4), 16);
             this.blue = parseInt(hex.substring(4, 6), 16);
+            // tslint:enable: no-magic-numbers
             return true;
         }
         return false;
@@ -84,6 +88,7 @@ export class Color {
     getHsv(): [number, number, number] {
         // All constants are taken from this algorithm:
         // https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
+        // tslint:disable: no-magic-numbers
 
         const redPrime = this.red / maxColorValue;
         const greenPrime = this.green / maxColorValue;
@@ -111,6 +116,7 @@ export class Color {
         const value = cMax;
 
         return [hue, saturation, value];
+        // tslint:enable: no-magic-numbers
     }
 
     getHex(): string {
@@ -125,12 +131,12 @@ export class Color {
         return `rgb(${this.red}, ${this.green}, ${this.blue})`;
     }
 
-    private componentToHex(component: number) {
+    private componentToHex(component: number): string {
         const hex = Math.round(component).toString(16);
         return hex.length === 1 ? '0' + hex : hex;
     }
 
-    private setNormalizedColor(red: number, green: number, blue: number) {
+    private setNormalizedColor(red: number, green: number, blue: number): void {
         this.red = red * maxColorValue;
         this.green = green * maxColorValue;
         this.blue = blue * maxColorValue;

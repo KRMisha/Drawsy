@@ -7,11 +7,12 @@ import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
-import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
 import { ToolSetting } from 'src/app/tools/services/tool';
+import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
 import { SidebarDrawerComponent } from './sidebar-drawer.component';
 
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 describe('SidebarDrawerComponent', () => {

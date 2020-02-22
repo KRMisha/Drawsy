@@ -4,11 +4,12 @@ import { ButtonId } from 'src/app/classes/button-id';
 import { Color } from 'src/app/classes/color/color';
 import { Vec2 } from 'src/app/classes/vec2';
 import { DrawingService } from 'src/app/drawing/services/drawing.service';
-import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
+import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
 import { DrawingComponent } from './drawing.component';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 class MockColor extends Color {

@@ -23,7 +23,7 @@ describe('DrawingSettingsComponent', () => {
             declarations: [DrawingSettingsComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                { provide: DrawingService, useValue: { backgroundColor: {} as any } as DrawingService },
+                { provide: DrawingService, useValue: { backgroundColor: {} as Color } as DrawingService },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

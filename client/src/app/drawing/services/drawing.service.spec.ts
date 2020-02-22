@@ -3,7 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { DrawingService } from './drawing.service';
 
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-any
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 
 describe('DrawingService', () => {
     let service: DrawingService;
@@ -60,7 +62,7 @@ describe('DrawingService', () => {
         expect(service.renderer.appendChild).not.toHaveBeenCalled();
     });
 
-    it('#reappendStoredElements should re append stored element', () => {
+    it('#reappendStoredElements should reappend stored element', () => {
         for (let i = 0; i < 10; i++) {
             service.addElement({} as SVGElement);
         }

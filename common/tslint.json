@@ -45,9 +45,9 @@
             }
         ],
         "cyclomatic-complexity": [true, 15],
-        "no-magic-numbers": [true, 0, 1, 2],
+        "no-magic-numbers": [true, -1, 0, 1, 2],
         "class-name": true,
-        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
+        "typedef": [true, "call-signature", "parameter", "arrow-parameter", "property-declaration"],
         "no-any": true,
         "brace-style": [
             true,

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColorSliderComponent } from './color-slider.component';
 
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 describe('ColorSliderComponent', () => {
