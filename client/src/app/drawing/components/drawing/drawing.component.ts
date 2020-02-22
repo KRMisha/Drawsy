@@ -13,12 +13,12 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.drawingService.rootElement = this.svg.nativeElement;
         this.drawingService.reappendStoredElements();
     }
@@ -29,7 +29,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener('document:mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(true);
         }
@@ -37,7 +37,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener('document:mouseup', ['$event'])
-    onMouseUp(event: MouseEvent) {
+    onMouseUp(event: MouseEvent): void {
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(false);
         }

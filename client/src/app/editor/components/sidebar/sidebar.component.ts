@@ -22,12 +22,12 @@ export class SidebarComponent implements OnInit {
 
     constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             switch (event.key) {
                 case '1':
@@ -47,14 +47,14 @@ export class SidebarComponent implements OnInit {
     }
 
     @HostListener('document:focusin', ['$event'])
-    onFocusIn(event: FocusEvent) {
+    onFocusIn(event: FocusEvent): void {
         if (event.target instanceof HTMLInputElement) {
             this.areShortcutsEnabled = false;
         }
     }
 
     @HostListener('document:focusout', ['$event'])
-    onFocusOut(event: FocusEvent) {
+    onFocusOut(event: FocusEvent): void {
         if (event.target instanceof HTMLInputElement) {
             this.areShortcutsEnabled = true;
         }

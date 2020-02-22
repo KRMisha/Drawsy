@@ -16,7 +16,7 @@ export class DrawingSettingsComponent {
         this.color.blue = 255;
     }
 
-    confirmColor() {
+    confirmColor(): void {
         this.drawingService.backgroundColor = this.color;
     }
 }

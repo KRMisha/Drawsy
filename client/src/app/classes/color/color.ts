@@ -125,12 +125,12 @@ export class Color {
         return `rgb(${this.red}, ${this.green}, ${this.blue})`;
     }
 
-    private componentToHex(component: number) {
+    private componentToHex(component: number): string {
         const hex = Math.round(component).toString(16);
         return hex.length === 1 ? '0' + hex : hex;
     }
 
-    private setNormalizedColor(red: number, green: number, blue: number) {
+    private setNormalizedColor(red: number, green: number, blue: number): void {
         this.red = red * maxColorValue;
         this.green = green * maxColorValue;
         this.blue = blue * maxColorValue;

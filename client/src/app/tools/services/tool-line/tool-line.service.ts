@@ -177,7 +177,8 @@ export class ToolLineService extends Tool {
         }
 
         const nextPoint: Vec2 = { x: 0, y: 0 };
-        if (angle === 180 || angle === 360) { // tslint:disable-line: prefer-switch (semantically not a switch)
+        // tslint:disable-next-line: prefer-switch (semantically not a switch)
+        if (angle === 180 || angle === 360) {
             nextPoint.x = mousePosition.x;
             nextPoint.y = lastPoint.y;
         } else if (angle === 90 || angle === 270) {

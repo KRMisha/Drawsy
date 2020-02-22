@@ -29,9 +29,7 @@ describe('SidebarComponent', () => {
 
     beforeEach(async(() => {
         toolSelectorServiceSpyObj = jasmine.createSpyObj({
-            setSelectedTool() {
-                return;
-            },
+            setSelectedTool: () => {},
         });
         mockModalService = new MockModalService();
         TestBed.configureTestingModule({

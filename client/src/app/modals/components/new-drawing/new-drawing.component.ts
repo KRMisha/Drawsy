@@ -45,7 +45,7 @@ export class NewDrawingComponent implements OnInit {
         this.backgroundColor.blue = 255;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawingForm.controls.width.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
@@ -54,7 +54,7 @@ export class NewDrawingComponent implements OnInit {
         });
     }
 
-    onSubmit() {
+    onSubmit(): void {
         const confirmationMessage =
             'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
             'Désirez-vous continuer et abandonner vos changements?';
@@ -68,7 +68,7 @@ export class NewDrawingComponent implements OnInit {
         this.router.navigate(['/editor']);
     }
 
-    private getErrorMessage(formControl: AbstractControl) {
+    private getErrorMessage(formControl: AbstractControl): string {
         return formControl.hasError('required')
             ? 'Entrez une valeur'
             : formControl.hasError('min')
@@ -80,16 +80,16 @@ export class NewDrawingComponent implements OnInit {
             : '';
     }
 
-    protected getWidthErrorMessage() {
+    protected getWidthErrorMessage(): string {
         return this.getErrorMessage(this.drawingForm.controls.width);
     }
 
-    protected getHeightErrorMessage() {
+    protected getHeightErrorMessage(): string {
         return this.getErrorMessage(this.drawingForm.controls.height);
     }
 
     @HostListener('window:resize', ['$event'])
-    onResize(event: Event) {
+    onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
             this.drawingForm.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
             this.drawingForm.controls.height.setValue((event.target as Window).innerHeight - heightMargin, { emitEvent: false });

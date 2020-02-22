@@ -34,7 +34,7 @@ export class SidebarDrawerComponent {
         return this.toolSelectorService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
+    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures): void {
         this.toolSelectorService.setSetting(setting, value);
     }
 

@@ -53,7 +53,7 @@ export class ToolSelectorService {
         this.selectedTool.isMouseInside = isMouseInside;
     }
 
-    setRenderer(renderer: Renderer2) {
+    setRenderer(renderer: Renderer2): void {
         this.renderer = renderer;
         for (const tool of this.toolHolderService.tools) {
             tool.renderer = this.renderer;
@@ -73,7 +73,7 @@ export class ToolSelectorService {
         return value as number | [boolean, number] | StrokeTypes | Textures;
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
+    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures): void {
         const isSizeTypeInvalid = setting === ToolSetting.Size && !numberRegex.test(value.toString());
         const isJunctionTypeInvalid = setting === ToolSetting.HasJunction && !numberRegex.test((value as [boolean, number])[1].toString());
         if (isSizeTypeInvalid || isJunctionTypeInvalid) {
