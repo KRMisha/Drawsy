@@ -13,7 +13,7 @@ describe('AppComponent', () => {
 
     beforeEach(async(() => {
         modalServiceSpyObject = jasmine.createSpyObj({
-            openDialog: (component: any) => {},
+            openDialog: () => {},
         });
         TestBed.configureTestingModule({
             declarations: [AppComponent],

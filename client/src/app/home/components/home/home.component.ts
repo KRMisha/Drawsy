@@ -12,7 +12,7 @@ import { GuideComponent } from '../../../guide/components/guide/guide.component'
 export class HomeComponent {
     constructor(public drawingService: DrawingService, private modalService: ModalService) {}
 
-    openCreateDrawing(): void {
+    openNewDrawingModal(): void {
         this.modalService.openDialog(NewDrawingComponent);
     }
 

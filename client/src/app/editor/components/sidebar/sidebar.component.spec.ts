@@ -8,16 +8,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
 import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 import { SidebarComponent } from './sidebar.component';
 
 class MockModalService {
     isModalPresent = false;
-    openDialog() {
-        return;
-    }
+    openDialog = () => {};
 }
 
 // tslint:disable: no-string-literal
@@ -158,11 +156,11 @@ describe('SidebarComponent', () => {
         expect(mockModalService.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
     });
 
-    it('#openCreateDrawingModal should forward the request to modal service', () => {
+    it('#openNewDrawingModal should forward the request to modal service', () => {
         spyOn(mockModalService, 'openDialog');
-        component.openCreateDrawingModal();
+        component.openNewDrawingModal();
 
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(CreateDrawingComponent);
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(NewDrawingComponent);
     });
 
     it('#openSettingsModal should forward the request to modal service', () => {
