@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { ModalService } from 'src/app/modals/services/modal.service';
-import { CreateDrawingComponent } from '../modals/components/create-drawing/create-drawing.component';
+import { NewDrawingComponent } from '../modals/components/new-drawing/new-drawing.component';
 
 @Component({
     selector: 'app-root',
@@ -19,7 +19,7 @@ export class AppComponent {
     onKeyDown(event: KeyboardEvent) {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();
-            this.modalService.openDialog(CreateDrawingComponent);
+            this.modalService.openDialog(NewDrawingComponent);
         }
     }
 }

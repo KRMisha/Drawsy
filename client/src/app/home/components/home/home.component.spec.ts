@@ -6,16 +6,16 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ModalService } from 'src/app/modals/services/modal.service';
 import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
-import { EntryPointComponent } from './entry-point.component';
+import { HomeComponent } from './home.component';
 
-describe('EntryPointComponent', () => {
-    let component: EntryPointComponent;
-    let fixture: ComponentFixture<EntryPointComponent>;
+describe('HomeComponent', () => {
+    let component: HomeComponent;
+    let fixture: ComponentFixture<HomeComponent>;
     let mockModalService: ModalService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [EntryPointComponent],
+            declarations: [HomeComponent],
             imports: [MatSidenavModule, MatCardModule, MatDialogModule],
             providers: [
                 {
@@ -34,7 +34,7 @@ describe('EntryPointComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(EntryPointComponent);
+        fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
