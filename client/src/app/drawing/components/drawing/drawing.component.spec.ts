@@ -9,6 +9,7 @@ import { DrawingComponent } from './drawing.component';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 class MockColor extends Color {

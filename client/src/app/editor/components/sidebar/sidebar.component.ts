@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit {
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             switch (event.key) {
+                // tslint:disable: no-magic-numbers
                 case '1':
                     this.setSelectedTool(3);
                     break;
@@ -42,6 +43,7 @@ export class SidebarComponent implements OnInit {
                 case 'w':
                     this.setSelectedTool(1);
                     break;
+                // tslint:enable: no-magic-numbers
             }
         }
     }

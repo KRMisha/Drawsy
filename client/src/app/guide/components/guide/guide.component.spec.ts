@@ -9,6 +9,8 @@ import { GuideDirective } from '../guide-directive/guide.directive';
 import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from './guide.component';
 
+// tslint:disable: no-magic-numbers
+
 @Component({
     selector: 'app-guide-welcome',
     template: '<p>Mock Welcome Guide</p>',

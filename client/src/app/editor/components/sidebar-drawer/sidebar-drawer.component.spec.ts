@@ -12,6 +12,7 @@ import { ToolSelectorService } from 'src/app/tools/services/tool-selector.servic
 import { SidebarDrawerComponent } from './sidebar-drawer.component';
 
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 describe('SidebarDrawerComponent', () => {

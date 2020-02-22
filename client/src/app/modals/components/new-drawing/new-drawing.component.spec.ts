@@ -9,6 +9,7 @@ import { DrawingService } from 'src/app/drawing/services/drawing.service';
 import { NewDrawingComponent } from './new-drawing.component';
 
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-empty
 
 class MockDrawingService {

@@ -6,6 +6,8 @@ import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
 import { ColorPickerComponent } from './color-picker.component';
 
+// tslint:disable: no-magic-numbers
+
 describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
     let fixture: ComponentFixture<ColorPickerComponent>;

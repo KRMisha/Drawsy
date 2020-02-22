@@ -14,6 +14,7 @@ import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.c
 import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 
 class MockModalService {
     isModalPresent = false;

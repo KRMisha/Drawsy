@@ -5,6 +5,8 @@ import { StrokeTypes, Textures, Tool, ToolSetting } from './tool';
 import { ToolHolderService } from './tool-holder.service';
 import { ToolSelectorService } from './tool-selector.service';
 
+// tslint:disable: no-magic-numbers
+
 class MockTool extends Tool {
     onMouseUp: () => {};
     onMouseDown: () => {};

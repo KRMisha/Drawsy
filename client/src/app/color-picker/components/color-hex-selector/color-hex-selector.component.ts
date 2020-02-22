@@ -20,9 +20,11 @@ export class ColorHexSelectorComponent {
     @Input()
     set hex(hex: string) {
         this.hexRgb.setValue(hex);
+        // tslint:disable: no-magic-numbers
         this.hexRed.setValue(hex.substring(0, 2));
         this.hexGreen.setValue(hex.substring(2, 4));
         this.hexBlue.setValue(hex.substring(4, 6));
+        // tslint:enable: no-magic-numbers
     }
 
     updateColorHex(): void {
