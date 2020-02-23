@@ -11,9 +11,9 @@ export class DrawingSettingsComponent {
     color = new Color();
 
     constructor(private drawingService: DrawingService) {
-        this.color.red = 255;
-        this.color.green = 255;
-        this.color.blue = 255;
+        this.color.red = Color.maxRgb;
+        this.color.green = Color.maxRgb;
+        this.color.blue = Color.maxRgb;
     }
 
     confirmColor(): void {

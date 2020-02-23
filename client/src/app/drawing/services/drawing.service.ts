@@ -16,9 +16,9 @@ export class DrawingService {
     private elements: SVGElement[] = [];
 
     constructor() {
-        this.backgroundColor.red = 255;
-        this.backgroundColor.green = 255;
-        this.backgroundColor.blue = 255;
+        this.backgroundColor.red = Color.maxRgb;
+        this.backgroundColor.green = Color.maxRgb;
+        this.backgroundColor.blue = Color.maxRgb;
     }
 
     addElement(element: SVGElement): void {
