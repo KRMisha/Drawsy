@@ -27,13 +27,11 @@ import { ColorFieldComponent } from './color-picker/components/color-field/color
 import { ColorHexSelectorComponent } from './color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from './color-picker/components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './color-picker/components/color-slider/color-slider.component';
-import { CreateDrawingComponent } from './modals/components/create-drawing/create-drawing.component';
-import { DrawingSettingsComponent } from './editor/components/drawing-settings/drawing-settings.component';
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
+import { DrawingSettingsComponent } from './editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
-import { PanelSettingsComponent } from './editor/components/panel-settings/panel-settings.component';
+import { SidebarDrawerComponent } from './editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from './editor/components/sidebar/sidebar.component';
-import { EntryPointComponent } from './home/components/entry-point/entry-point.component';
 import { GuideGridComponent } from './guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from './guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from './guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -58,13 +56,13 @@ import { GuideWelcomeComponent } from './guide/components/guide-content/guide-we
 import { GuideDirective } from './guide/components/guide-directive/guide.directive';
 import { GuideSidebarComponent } from './guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from './guide/components/guide/guide.component';
+import { HomeComponent } from './home/components/home/home.component';
+import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         DrawingComponent,
-        PanelSettingsComponent,
-        EntryPointComponent,
         EditorComponent,
         SidebarComponent,
         GuideComponent,
@@ -90,7 +88,6 @@ import { GuideComponent } from './guide/components/guide/guide.component';
         GuideSaveDrawingComponent,
         GuideSidebarComponent,
         GuideDirective,
-        CreateDrawingComponent,
         ColorPickerComponent,
         ColorSliderComponent,
         ColorContainerComponent,
@@ -99,6 +96,9 @@ import { GuideComponent } from './guide/components/guide/guide.component';
         DrawingSettingsComponent,
         GuideCalligraphyComponent,
         GuidePaintbrushComponent,
+        SidebarDrawerComponent,
+        HomeComponent,
+        NewDrawingComponent,
     ],
     imports: [
         BrowserModule,
@@ -121,7 +121,7 @@ import { GuideComponent } from './guide/components/guide/guide.component';
         ReactiveFormsModule,
     ],
     entryComponents: [
-        CreateDrawingComponent,
+        DrawingSettingsComponent,
         GuideComponent,
         GuideWelcomeComponent,
         GuideSpraypaintComponent,
@@ -144,7 +144,7 @@ import { GuideComponent } from './guide/components/guide/guide.component';
         GuideSnapToGridComponent,
         GuideExportDrawingComponent,
         GuideSaveDrawingComponent,
-        DrawingSettingsComponent,
+        NewDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

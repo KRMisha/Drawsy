@@ -1,6 +1,7 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { Color } from '../../classes/color/color';
-import { Vec2 } from '../../classes/vec2';
+import { Color } from '@app/classes/color';
+import { Drawing } from '@app/classes/drawing';
+import { Vec2 } from '@app/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -9,45 +10,55 @@ export class DrawingService {
     renderer: Renderer2;
     rootElement: SVGElement;
 
-    drawingDimensions: Vec2 = { x: 512, y: 512 };
-    backgroundColor = new Color();
-    isDrawingStarted = false;
-
-    private elements: SVGElement[] = [];
+    private currentDrawing = new Drawing();
 
     constructor() {
-        this.backgroundColor.red = 255;
-        this.backgroundColor.green = 255;
-        this.backgroundColor.blue = 255;
+        this.currentDrawing.backgroundColor.red = Color.maxRgb;
+        this.currentDrawing.backgroundColor.green = Color.maxRgb;
+        this.currentDrawing.backgroundColor.blue = Color.maxRgb;
     }
 
     addElement(element: SVGElement): void {
-        this.isDrawingStarted = true;
-        this.elements.push(element);
+        this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);
     }
 
     removeElement(element: SVGElement): void {
-        const elementToRemoveIndex = this.elements.indexOf(element, 0);
-        if (elementToRemoveIndex > -1) {
-            this.elements.splice(elementToRemoveIndex, 1);
+        if (this.currentDrawing.removeElement(element)) {
             this.renderer.removeChild(this.rootElement, element);
         }
     }
 
     reappendStoredElements(): void {
-        if (this.elements.length > 0) {
-            this.isDrawingStarted = true;
-        }
-        for (const element of this.elements) {
+        for (const element of this.currentDrawing.elements) {
             this.renderer.appendChild(this.rootElement, element);
         }
     }
 
     clearStoredElements(): void {
-        this.isDrawingStarted = false;
-        while (this.elements.length > 0) {
-            this.renderer.removeChild(this.rootElement, this.elements.pop());
+        for (const element of this.currentDrawing.elements) {
+            this.renderer.removeChild(this.rootElement, element);
         }
+        this.currentDrawing.clearElements();
+    }
+
+    isDrawingStarted(): boolean {
+        return this.currentDrawing.hasElements();
+    }
+
+    getDrawingDimensions(): Vec2 {
+        return this.currentDrawing.dimensions;
+    }
+
+    getBackgroundColor(): Color {
+        return this.currentDrawing.backgroundColor;
+    }
+
+    setDrawingDimensions(dimensions: Vec2): void {
+        this.currentDrawing.dimensions = dimensions;
+    }
+
+    setBackgroundColor(color: Color): void {
+        this.currentDrawing.backgroundColor = color;
     }
 }

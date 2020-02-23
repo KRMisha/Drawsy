@@ -1,12 +1,15 @@
-.container {
+.home {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     background-color: rgb(63, 63, 71);
+    justify-content: center;
+    text-align: center;
 }
 
 .title {
     color: rgb(255, 255, 255);
     font-weight: bold;
-    text-align: center;
     font-size: 48px;
 }
 

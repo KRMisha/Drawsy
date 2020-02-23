@@ -1,13 +1,15 @@
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../../tool';
+
+const defaultSize = 5;
 
 export abstract class ToolBrush extends Tool {
     private path: SVGPathElement;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, 1);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -50,10 +52,10 @@ export abstract class ToolBrush extends Tool {
     }
 
     private getPathStartString(x: number, y: number): string {
-        return 'M' + x.toString() + ' ' + y.toString() + ' ' + 'L' + x.toString() + ' ' + y.toString() + ' ';
+        return `M${x.toString()}  ${y.toString()} L${x.toString()} ${y.toString()}`;
     }
 
     private getPathLineString(x: number, y: number): string {
-        return 'L' + x.toString() + ' ' + y.toString() + ' ';
+        return `L${x.toString()} ${y.toString()}`;
     }
 }

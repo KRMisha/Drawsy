@@ -1,9 +1,11 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Vec2 } from '@app/classes/vec2';
 import { of } from 'rxjs';
-import { Vec2 } from 'src/app/classes/vec2';
 import { ModalService } from './modal.service';
+
+// tslint:disable: no-any
 
 describe('ModalService', () => {
     let service: ModalService;

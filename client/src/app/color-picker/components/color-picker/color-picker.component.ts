@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
-import { ColorPickerService } from 'src/app/color-picker/services/color-picker.service';
+import { ButtonId } from '@app/classes/button-id';
+import { Color } from '@app/classes/color';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { ColorService } from '@app/drawing/services/color.service';
+
 
 @Component({
     selector: 'app-color-picker',
@@ -69,7 +70,7 @@ export class ColorPickerComponent {
         this.colorChanged.emit(color);
     }
 
-    setAlpha(alpha: number) {
+    setAlpha(alpha: number): void {
         this.alpha = alpha;
         this.colorChanged.emit(this.getColor());
     }
@@ -82,7 +83,7 @@ export class ColorPickerComponent {
         this.colorChanged.emit(color);
     }
 
-    updateColorFromHex(color: Color) {
+    updateColorFromHex(color: Color): void {
         this.setColor(color);
     }
 

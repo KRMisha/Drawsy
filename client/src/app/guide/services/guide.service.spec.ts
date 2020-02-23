@@ -28,6 +28,7 @@ import { GuideWelcomeComponent } from '../components/guide-content/guide-welcome
 // tslint:enable: max-line-length
 
 describe('GuideService', () => {
+    // tslint:disable-next-line: no-any
     const guides: Type<any>[] = [
         GuideWelcomeComponent,
         GuideSpraypaintComponent,

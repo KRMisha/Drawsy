@@ -1,11 +1,13 @@
 import { Injectable, Type } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Vec2 } from 'src/app/classes/vec2';
+import { Vec2 } from '@app/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ModalService {
+    // Type<any> to prevent all dialogs needing to inherit from a parent component
+    // tslint:disable-next-line: no-any
     private dialogRef: MatDialogRef<Type<any>>;
 
     private _isModalPresent = false; // tslint:disable-line: variable-name
@@ -15,6 +17,7 @@ export class ModalService {
 
     constructor(private dialog: MatDialog) {}
 
+    // tslint:disable-next-line: no-any
     openDialog(component: Type<any>, dimensions?: Vec2): void {
         if (this.isModalPresent) {
             return;

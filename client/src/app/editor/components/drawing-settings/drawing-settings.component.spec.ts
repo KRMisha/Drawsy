@@ -1,9 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Color } from '@app/classes/color';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { of } from 'rxjs';
-import { Color } from 'src/app/classes/color/color';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
 import { DrawingSettingsComponent } from './drawing-settings.component';
 
 describe('DrawingSettingsComponent', () => {
@@ -23,7 +23,7 @@ describe('DrawingSettingsComponent', () => {
             declarations: [DrawingSettingsComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                { provide: DrawingService, useValue: { backgroundColor: {} as any } as DrawingService },
+                { provide: DrawingService, useValue: { backgroundColor: {} as Color } as DrawingService },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

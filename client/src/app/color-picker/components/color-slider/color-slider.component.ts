@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { Color, maxHue } from 'src/app/classes/color/color';
-import { ColorPickerService } from 'src/app/color-picker/services/color-picker.service';
+import { Color } from '@app/classes/color';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 
 enum ColorGradient {
     Red = 'rgb(255, 0, 0)',
@@ -53,6 +53,7 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.clearRect(0, 0, width, height);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        // tslint:disable: no-magic-numbers
         horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
         horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
         horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
@@ -60,6 +61,7 @@ export class ColorSliderComponent implements AfterViewInit {
         horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
         horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
         horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
+        // tslint:enable: no-magic-numbers
         this.context.fillStyle = horizontalGradient;
         const padding = 7;
         this.context.fillRect(0, padding, width, height - 2 * padding);
@@ -68,8 +70,8 @@ export class ColorSliderComponent implements AfterViewInit {
         hueColor.setHsv(hue, 1.0, 1.0);
 
         const circle = new Path2D();
-        const size = 8;
-        circle.arc(this.mouseXPosition, height / 2, size, 0, 2 * Math.PI);
+        const radius = 8;
+        circle.arc(this.mouseXPosition, height / 2, radius, 0, 2 * Math.PI);
         this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
@@ -111,7 +113,7 @@ export class ColorSliderComponent implements AfterViewInit {
         }
 
         this.mouseXPosition = event.offsetX;
-        const hue = (this.mouseXPosition / this.canvas.width) * maxHue;
+        const hue = (this.mouseXPosition / this.canvas.width) * Color.maxHue;
         this.draw(hue);
         this.colorPickerService.hue = hue;
     }

@@ -5,19 +5,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
-import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
-import { ModalService } from 'src/app/modals/services/modal.service';
-import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
+import { SidebarButton } from '@app/classes/sidebar-button';
+import { ModalService } from '@app/modals/services/modal.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 import { SidebarComponent } from './sidebar.component';
 
+// tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
+
 class MockModalService {
     isModalPresent = false;
-    openDialog() {
-        return;
-    }
+    openDialog = () => {};
 }
 
 // tslint:disable: no-string-literal
@@ -29,9 +30,7 @@ describe('SidebarComponent', () => {
 
     beforeEach(async(() => {
         toolSelectorServiceSpyObj = jasmine.createSpyObj({
-            setSelectedTool() {
-                return;
-            },
+            setSelectedTool: () => {},
         });
         mockModalService = new MockModalService();
         TestBed.configureTestingModule({
@@ -110,7 +109,7 @@ describe('SidebarComponent', () => {
 
     it('#onFocusIn should disable shortcuts if eventTarget is a HTMLInputElement', () => {
         component['areShortcutsEnabled'] = true;
-        component.onFocusIn(({ target: document.createElement('input') } as any) as FocusEvent);
+        component.onFocusIn(({ target: document.createElement('input') } as unknown) as FocusEvent);
         expect(component['areShortcutsEnabled']).toEqual(false);
     });
 
@@ -122,7 +121,7 @@ describe('SidebarComponent', () => {
 
     it('#onFocusOut should enable shortcuts if eventTarget is a HTMLInputElement', () => {
         component['areShortcutsEnabled'] = false;
-        component.onFocusOut(({ target: document.createElement('input') } as any) as FocusEvent);
+        component.onFocusOut(({ target: document.createElement('input') } as unknown) as FocusEvent);
         expect(component['areShortcutsEnabled']).toEqual(true);
     });
 
@@ -158,11 +157,11 @@ describe('SidebarComponent', () => {
         expect(mockModalService.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
     });
 
-    it('#openCreateDrawingModal should forward the request to modal service', () => {
+    it('#openNewDrawingModal should forward the request to modal service', () => {
         spyOn(mockModalService, 'openDialog');
-        component.openCreateDrawingModal();
+        component.openNewDrawingModal();
 
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(CreateDrawingComponent);
+        expect(mockModalService.openDialog).toHaveBeenCalledWith(NewDrawingComponent);
     });
 
     it('#openSettingsModal should forward the request to modal service', () => {

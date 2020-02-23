@@ -1,5 +1,3 @@
-import { IEnvironment } from './IEnvironment';
-
-export const environment: IEnvironment = {
+export const environment = {
     production: true,
 };

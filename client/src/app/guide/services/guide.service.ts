@@ -25,6 +25,8 @@ import { GuideTextComponent } from '../components/guide-content/guide-tools/guid
 import { GuideWelcomeComponent } from '../components/guide-content/guide-welcome/guide-welcome.component';
 // tslint:enable: max-line-length
 
+// Type<any> to prevent all components needing to inherit from a parent component
+// tslint:disable-next-line: no-any
 const guides: Type<any>[] = [
     GuideWelcomeComponent,
     GuideSpraypaintComponent,
@@ -53,6 +55,7 @@ const guides: Type<any>[] = [
     providedIn: 'root',
 })
 export class GuideService {
+    // tslint:disable-next-line: no-any
     getGuides(): Type<any>[] {
         return guides;
     }
