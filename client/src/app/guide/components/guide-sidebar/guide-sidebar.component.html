@@ -16,7 +16,7 @@
                 </button>
                 {{ node.name }}
             </div>
-            <ul [class.guide-tree-invisible]="!treeControl.isExpanded(node)">
+            <ul [class.guide-tree-hidden]="!treeControl.isExpanded(node)">
                 <ng-container matTreeNodeOutlet></ng-container>
             </ul>
         </li>

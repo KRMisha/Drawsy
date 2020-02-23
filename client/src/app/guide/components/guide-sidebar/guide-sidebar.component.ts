@@ -23,7 +23,7 @@ export class GuideSidebarComponent {
     treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
     dataSource = new MatTreeNestedDataSource<GuideNode>();
 
-    @Output() selectGuide = new EventEmitter<Type<any>>();
+    @Output() selectGuide = new EventEmitter<Type<any>>(); // tslint:disable-line: no-any
 
     constructor() {
         this.dataSource.data = guideData;
