@@ -19,19 +19,13 @@
 .exit-button {
     margin-right: 30px;
     align-self: flex-end;
-    color: rgb(0, 0, 0);
     cursor: pointer;
-
-    :hover {
-        color: rgb(255, 64, 129);
-    }
 }
 
 .sidebar {
     overflow-y: auto;
     overflow-x: hidden;
-    width: 260px;
-    background-color: rgb(230, 230, 230);
+    width: 320px;
 }
 
 .button-container {

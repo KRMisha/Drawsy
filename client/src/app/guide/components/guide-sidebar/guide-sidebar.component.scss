@@ -1,58 +1,19 @@
-.sidebar {
-    height: 100%;
-    background-color: rgb(230, 230, 230);
-}
-
-.main-menu {
-    list-style: none;
-    text-align: left;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.menu-item,
-.menu-item,
-.secondary-menu-item,
-.menu-button,
-.secondary-menu-button {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-color: rgb(110, 109, 109);
-    padding-top: 20px;
-    padding-bottom: 20px;
+.menu-item {
+    border-style: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
     cursor: pointer;
+    width: 100%;
+    text-align: left;
 }
 
-.menu-item:hover,
-.menu-item:hover,
-.menu-button:hover,
-.secondary-menu-button:hover,
-.secondary-menu-item:hover {
-    color: rgb(255, 64, 129);
+.guide-tree-invisible {
+    display: none;
 }
 
-.menu-button,
-.secondary-menu-button {
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-
-.menu-item,
-.secondary-menu-button {
-    padding-left: 20px;
-}
-
-.secondary-menu-item {
-    padding-left: 40px;
-}
-
-ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0px;
-}
-
-ul,
-li {
-    user-select: none;
+.guide-tree ul,
+.guide-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
 }

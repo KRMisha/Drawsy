@@ -3,44 +3,37 @@
 }
 
 .title {
-    color: rgb(255, 255, 255);
     font-weight: bold;
     text-align: center;
 }
 
 .tool-button,
-.option-button {
-    color: rgb(255, 255, 255);
-    border-color: rgba(26, 129, 112, 0.61);
+.option-button,
+.text-icon-button {
     height: 60px;
     margin: 2px;
     cursor: pointer;
 }
 
-.option-button {
-    border-color: rgb(38, 38, 43);
+.text-icon-button {
     font-size: 48px;
 }
 
 .tool-settings {
-    background-color: rgb(63, 63, 71);
     border-right: solid;
     border-width: 1px;
-    border-right-color: rgb(0, 0, 0);
     flex-direction: column;
     width: 280px;
 }
 
 .button-selection {
     height: 100vh;
-    background-color: rgb(38, 38, 43);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .option-selection {
-    background-color: rgb(38, 38, 43);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,9 +41,4 @@
 
 .mat-icon {
     transform: scale(1.8);
-}
-
-.selected {
-    border-color: rgb(255, 64, 129) !important;
-    color: rgb(255, 212, 226);
 }
