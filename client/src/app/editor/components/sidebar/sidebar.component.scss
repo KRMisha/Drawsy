@@ -1,22 +1,14 @@
-.container {
-    display: flex;
-}
+@import '../../../../styles.scss';
 
 .title {
     font-weight: bold;
     text-align: center;
 }
 
-.tool-button,
-.option-button,
-.text-icon-button {
-    height: 60px;
+.option-button {
+    height: 64px;
     margin: 2px;
     cursor: pointer;
-}
-
-.text-icon-button {
-    font-size: 48px;
 }
 
 .tool-settings {
@@ -41,4 +33,8 @@
 
 .mat-icon {
     transform: scale(1.8);
+}
+
+.selected {
+    background-color: $primary;
 }

@@ -24,7 +24,7 @@ import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide
 export interface GuideNode {
     name: string;
     children?: GuideNode[];
-    guide?: Type<any>;
+    guide?: Type<any>; // tslint:disable-line: no-any
 }
 
 export const guideData: GuideNode[] = [
