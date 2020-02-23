@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
 
 @Component({

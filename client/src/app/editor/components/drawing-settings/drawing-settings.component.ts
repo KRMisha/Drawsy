@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 import { DrawingService } from 'src/app/drawing/services/drawing.service';
 
 @Component({
@@ -17,6 +17,6 @@ export class DrawingSettingsComponent {
     }
 
     confirmColor(): void {
-        this.drawingService.backgroundColor = this.color;
+        this.drawingService.setBackgroundColor(this.color);
     }
 }

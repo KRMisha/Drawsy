@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 import { Vec2 } from 'src/app/classes/vec2';
 import { DrawingService } from 'src/app/drawing/services/drawing.service';
 import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';

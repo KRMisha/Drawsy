@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Color } from '../../../classes/color/color';
+import { Color } from '../../../classes/color';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 
 const widthMargin = 348;
@@ -58,12 +58,12 @@ export class NewDrawingComponent implements OnInit {
         const confirmationMessage =
             'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
             'Désirez-vous continuer et abandonner vos changements?';
-        if (this.drawingService.isDrawingStarted && !confirm(confirmationMessage)) {
+        if (this.drawingService.isDrawingStarted() && !confirm(confirmationMessage)) {
             return;
         }
 
-        this.drawingService.drawingDimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
-        this.drawingService.backgroundColor = this.backgroundColor;
+        this.drawingService.setDrawingDimensions({ x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value });
+        this.drawingService.setBackgroundColor(this.backgroundColor);
         this.drawingService.clearStoredElements();
         this.router.navigate(['/editor']);
     }

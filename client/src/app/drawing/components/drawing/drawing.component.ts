@@ -9,7 +9,7 @@ import { ToolSelectorService } from 'src/app/tools/services/tool-selector.servic
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-    @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
+    @ViewChild('appDrawingContent', { static: false }) private svg: ElementRef<SVGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -72,14 +72,14 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     getWidth(): number {
-        return this.drawingService.drawingDimensions.x;
+        return this.drawingService.getDrawingDimensions().x;
     }
 
     getHeight(): number {
-        return this.drawingService.drawingDimensions.y;
+        return this.drawingService.getDrawingDimensions().y;
     }
 
     getBackgroundColor(): string {
-        return this.drawingService.backgroundColor.toRgbaString();
+        return this.drawingService.getBackgroundColor().toRgbaString();
     }
 }
