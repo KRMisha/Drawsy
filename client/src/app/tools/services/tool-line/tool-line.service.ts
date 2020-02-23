@@ -6,6 +6,7 @@ import { DrawingService } from '../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../tool';
 
 const defaultLineWidth = 5;
+const defaultJunctionSize = 10;
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
 const lineClosingPixelTolerance = 3;
@@ -31,7 +32,7 @@ export class ToolLineService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, defaultLineWidth);
-        this.toolSettings.set(ToolSetting.HasJunction, [false, 10]);
+        this.toolSettings.set(ToolSetting.HasJunction, [false, defaultJunctionSize]);
         this.name = 'Ligne';
     }
 
@@ -50,10 +51,10 @@ export class ToolLineService extends Tool {
             this.drawingService.addElement(this.previewLine);
         }
 
-        this.renderer.setAttribute(this.previewLine, 'x1', '' + this.nextPoint.x);
-        this.renderer.setAttribute(this.previewLine, 'y1', '' + this.nextPoint.y);
-        this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPoint.x);
-        this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPoint.y);
+        this.renderer.setAttribute(this.previewLine, 'x1', this.nextPoint.x.toString());
+        this.renderer.setAttribute(this.previewLine, 'y1', this.nextPoint.y.toString());
+        this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
+        this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
 
         if (!this.currentlyDrawing) {
             this.polyline = this.createNewPolyline();
@@ -71,8 +72,8 @@ export class ToolLineService extends Tool {
 
         if (this.hasJunction) {
             const circle = this.createNewJunction();
-            this.renderer.setAttribute(circle, 'cx', '' + this.nextPoint.x);
-            this.renderer.setAttribute(circle, 'cy', '' + this.nextPoint.y);
+            this.renderer.setAttribute(circle, 'cx', this.nextPoint.x.toString());
+            this.renderer.setAttribute(circle, 'cy', this.nextPoint.y.toString());
             this.drawingService.addElement(circle);
         }
 
@@ -156,8 +157,8 @@ export class ToolLineService extends Tool {
             this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
             this.lastPoint.x = this.points[this.points.length - geometryDimension];
             this.lastPoint.y = this.points[this.points.length - 1];
-            this.renderer.setAttribute(this.previewLine, 'x1', '' + this.lastPoint.x);
-            this.renderer.setAttribute(this.previewLine, 'y1', '' + this.lastPoint.y);
+            this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
+            this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
 
             this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
         }
@@ -173,7 +174,8 @@ export class ToolLineService extends Tool {
         }
 
         let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
-        angle = Math.round(angle / 45) * 45;
+        const snapAngle = 45;
+        angle = Math.round(angle / snapAngle) * snapAngle;
         if (angle <= 0) {
             angle += 360;
         }
@@ -216,7 +218,7 @@ export class ToolLineService extends Tool {
 
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(circle, 'r', '' + this.junctionSize / 2);
+        this.renderer.setAttribute(circle, 'r', `${this.junctionSize / 2}`);
         this.renderer.setAttribute(circle, 'fill', this.polyline.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
         return circle;
@@ -224,8 +226,8 @@ export class ToolLineService extends Tool {
 
     private updatePreviewLinePosition(): void {
         if (this.currentlyDrawing) {
-            this.renderer.setAttribute(this.previewLine, 'x2', '' + this.nextPoint.x);
-            this.renderer.setAttribute(this.previewLine, 'y2', '' + this.nextPoint.y);
+            this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
+            this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
         }
     }
 

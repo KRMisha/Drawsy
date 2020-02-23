@@ -132,7 +132,8 @@ export class Color {
     }
 
     private componentToHex(component: number): string {
-        const hex = Math.round(component).toString(16);
+        const hexBase = 16;
+        const hex = Math.round(component).toString(hexBase);
         return hex.length === 1 ? '0' + hex : hex;
     }
 

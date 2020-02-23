@@ -52,10 +52,10 @@ export abstract class ToolBrush extends Tool {
     }
 
     private getPathStartString(x: number, y: number): string {
-        return 'M' + x.toString() + ' ' + y.toString() + ' ' + 'L' + x.toString() + ' ' + y.toString() + ' ';
+        return `M${x.toString()}  ${y.toString()} L${x.toString()} ${y.toString()}`;
     }
 
     private getPathLineString(x: number, y: number): string {
-        return 'L' + x.toString() + ' ' + y.toString() + ' ';
+        return `L${x.toString()} ${y.toString()}`;
     }
 }
