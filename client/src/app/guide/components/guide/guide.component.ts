@@ -29,8 +29,8 @@ export class GuideComponent implements OnInit, AfterViewInit {
         this.selectGuide(this.guides[this.selectedGuideIndex]);
     }
 
+    // tslint:disable-next-line: no-any
     selectGuide(guide: Type<any>): void {
-        // tslint:disable-line: no-any
         if (this.findIndex(guide) === -1) {
             return;
         }
@@ -47,8 +47,8 @@ export class GuideComponent implements OnInit, AfterViewInit {
         viewContainerRef.createComponent(componentFactory);
     }
 
+    // tslint:disable-next-line: no-any
     findIndex(guide: Type<any>): number {
-        // tslint:disable-line: no-any
         for (let i = 0; i < this.guides.length; i++) {
             if (guide === this.guides[i]) {
                 return i;

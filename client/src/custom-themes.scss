@@ -1,5 +1,9 @@
-$polydessin-theme-primary: mat-palette($mat-indigo, 100);
-$polydessin-theme-accent: mat-palette($mat-indigo, 100);
+$polydessin-theme-primary: mat-palette($mat-indigo, 200);
+$polydessin-theme-accent: mat-palette($mat-indigo, 200);
 $polydessin-theme-warn: mat-palette($mat-red);
 
 $polydessin-theme: mat-dark-theme($polydessin-theme-primary, $polydessin-theme-accent, $polydessin-theme-warn);
+
+$primary: mat-color($polydessin-theme-primary);
+$accent: mat-color($polydessin-theme-accent);
+$warn: mat-color($polydessin-theme-warn);

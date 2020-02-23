@@ -1,4 +1,4 @@
-<mat-drawer-container class="container">
+<mat-drawer-container>
     <div class="button-selection">
         <div class="option-selection">
             <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
@@ -10,7 +10,7 @@
             <button
                 mat-stroked-button
                 *ngFor="let button of buttons; let i = index"
-                class="tool-button"
+                class="option-button"
                 [class.selected]="button === selectedButton"
                 (click)="setSelectedTool(i)"
                 title="{{ button.name }}"
@@ -22,8 +22,12 @@
             <button mat-stroked-button class="option-button" (click)="openSettingsModal()">
                 <mat-icon class="mat-icon">settings</mat-icon>
             </button>
-            <button mat-stroked-button class="text-icon-button" (click)="openNewDrawingModal()">+</button>
-            <button mat-stroked-button class="text-icon-button" (click)="openGuideModal()">?</button>
+            <button mat-stroked-button class="option-button" (click)="openNewDrawingModal()">
+                <mat-icon class="mat-icon">add</mat-icon>
+            </button>
+            <button mat-stroked-button class="option-button" (click)="openGuideModal()">
+                <mat-icon class="mat-icon">help</mat-icon>
+            </button>
             <button mat-stroked-button class="option-button" routerLink="/home">
                 <mat-icon class="mat-icon">home</mat-icon>
             </button>
