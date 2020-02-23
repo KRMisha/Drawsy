@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Color } from '@app/classes/color.ts';
 import { Vec2 } from '@app/classes/vec2.ts';
 
@@ -31,7 +30,4 @@ export class Drawing {
     hasElements(): boolean {
         return this.elements.length > 0;
     }
-=======
-export class Drawing {
->>>>>>> 8748e5c99d2b608f0da85aa7ab2b8884bce9d0d4
 }
