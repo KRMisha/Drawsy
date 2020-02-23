@@ -5,9 +5,10 @@ import { ColorService } from 'src/app/drawing/services/color.service';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../tool';
 
+const defaultLineWidth = 5;
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
-const lineClosingTolerance = 3;
+const lineClosingPixelTolerance = 3;
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +30,7 @@ export class ToolLineService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, 5);
+        this.toolSettings.set(ToolSetting.Size, defaultLineWidth);
         this.toolSettings.set(ToolSetting.HasJunction, [false, 10]);
         this.name = 'Ligne';
     }
@@ -105,7 +106,7 @@ export class ToolLineService extends Tool {
             const deltaX = Math.abs(this.points[firstXIndex] - this.points[lastXIndex]);
             const deltaY = Math.abs(this.points[firstYIndex] - this.points[lastYIndex]);
 
-            if (deltaX <= lineClosingTolerance && deltaY <= lineClosingTolerance) {
+            if (deltaX <= lineClosingPixelTolerance && deltaY <= lineClosingPixelTolerance) {
                 if (this.junctionPoints.length > 0) {
                     this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
                 }

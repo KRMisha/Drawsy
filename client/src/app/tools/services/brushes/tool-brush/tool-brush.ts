@@ -2,12 +2,14 @@ import { ColorService } from 'src/app/drawing/services/color.service';
 import { DrawingService } from '../../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../../tool';
 
+const defaultSize = 5;
+
 export abstract class ToolBrush extends Tool {
     private path: SVGPathElement;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, 1);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {
