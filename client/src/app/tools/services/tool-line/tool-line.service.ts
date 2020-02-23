@@ -174,7 +174,8 @@ export class ToolLineService extends Tool {
         }
 
         let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
-        angle = Math.round(angle / 45) * 45;
+        const snapAngle = 45;
+        angle = Math.round(angle / snapAngle) * snapAngle;
         if (angle <= 0) {
             angle += 360;
         }
