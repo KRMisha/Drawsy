@@ -9,7 +9,7 @@ import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component'
     styleUrls: ['./guide.component.scss'],
 })
 export class GuideComponent implements OnInit, AfterViewInit {
-    guides: Type<any>[];
+    guides: Type<any>[]; // tslint:disable-line: no-any
     selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
@@ -18,18 +18,18 @@ export class GuideComponent implements OnInit, AfterViewInit {
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.guides = this.guideService.getGuides();
         this.selectedGuideIndex = 0;
         this.hasPreviousGuide = false;
         this.hasNextGuide = true;
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.selectGuide(this.selectedGuideIndex);
     }
 
-    selectGuide(index: number) {
+    selectGuide(index: number): void {
         if (index < 0 || index > this.guides.length) {
             return;
         }

@@ -1,11 +1,12 @@
 import { Renderer2 } from '@angular/core';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../../drawing/services/drawing.service';
 import { ToolSetting } from '../../tool';
 import { ToolBrush } from './tool-brush';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 class MockToolBrush extends ToolBrush {

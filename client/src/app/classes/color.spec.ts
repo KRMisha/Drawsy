@@ -1,5 +1,7 @@
 import { Color } from './color';
 
+// tslint:disable: no-magic-numbers
+
 describe('Color', () => {
     let color: Color;
 

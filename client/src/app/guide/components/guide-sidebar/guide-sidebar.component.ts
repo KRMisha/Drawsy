@@ -1,6 +1,7 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { Type } from '@angular/core';
 
 enum MenuSection {
     Tools,
@@ -13,6 +14,7 @@ enum MenuSection {
 interface GuideNode {
   name: string;
   children?: GuideNode[];
+  guide?: Type<any>;
 }
 
 const GuideData: GuideNode[] = [

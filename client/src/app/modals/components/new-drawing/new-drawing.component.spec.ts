@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { Color } from 'src/app/classes/color/color';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
-import { CreateDrawingComponent } from './create-drawing.component';
+import { Color } from '@app/classes/color';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { NewDrawingComponent } from './new-drawing.component';
 
 // tslint:disable: max-classes-per-file
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-empty
 
 class MockDrawingService {
@@ -21,9 +22,9 @@ class MockWindow {
     innerHeight: number;
 }
 
-describe('CreateDrawingComponent', () => {
-    let component: CreateDrawingComponent;
-    let fixture: ComponentFixture<CreateDrawingComponent>;
+describe('NewDrawingComponent', () => {
+    let component: NewDrawingComponent;
+    let fixture: ComponentFixture<NewDrawingComponent>;
     let routerSpyObj: jasmine.SpyObj<Router>;
     let drawingServiceMock: MockDrawingService;
 
@@ -32,7 +33,7 @@ describe('CreateDrawingComponent', () => {
         drawingServiceMock = new MockDrawingService();
 
         TestBed.configureTestingModule({
-            declarations: [CreateDrawingComponent],
+            declarations: [NewDrawingComponent],
             imports: [FormsModule, MatCardModule, MatIconModule, ReactiveFormsModule],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceMock },
@@ -43,7 +44,7 @@ describe('CreateDrawingComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(CreateDrawingComponent);
+        fixture = TestBed.createComponent(NewDrawingComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.backgroundColor = new Color();

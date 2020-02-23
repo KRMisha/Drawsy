@@ -24,14 +24,12 @@
             </button>
             <button mat-stroked-button class="text-icon-button" (click)="openCreateDrawingModal()">+</button>
             <button mat-stroked-button class="text-icon-button" (click)="openGuideModal()">?</button>
-            <button mat-stroked-button class="option-button" routerLink="/entry-point">
+            <button mat-stroked-button class="option-button" routerLink="/home">
                 <mat-icon class="mat-icon">home</mat-icon>
             </button>
         </div>
     </div>
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings">
-        <div>
-            <app-panel-settings></app-panel-settings>
-        </div>
+        <app-sidebar-drawer></app-sidebar-drawer>
     </mat-drawer>
 </mat-drawer-container>

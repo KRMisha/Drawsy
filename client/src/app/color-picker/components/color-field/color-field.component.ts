@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
-import { Vec2 } from 'src/app/classes/vec2';
+import { Color } from '@app/classes/color';
+import { Vec2 } from '@app/classes/vec2';
 
 enum ColorString {
     OpaqueWhite = 'rgba(255, 255, 255, 1)',
@@ -100,7 +100,8 @@ export class ColorFieldComponent implements AfterViewInit {
         this.color.setHsv(this._hue, this._saturation, this._value);
 
         const circle = new Path2D();
-        circle.arc(this.mousePosition.x, this.mousePosition.y, 10, 0, 2 * Math.PI);
+        const radius = 10;
+        circle.arc(this.mousePosition.x, this.mousePosition.y, radius, 0, 2 * Math.PI);
         this.context.fillStyle = this.color.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;

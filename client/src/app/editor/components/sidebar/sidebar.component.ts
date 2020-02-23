@@ -1,10 +1,10 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { SidebarButton, sidebarButtons } from '../../../classes/sidebar-button/sidebar-button';
-import { ToolSelectorService } from '../../../tools/components/tool-selector.service';
-import { ModalService } from '../../../modals/services/modal.service';
-import { CreateDrawingComponent } from '../../../modals/components/create-drawing/create-drawing.component';
+import { SidebarButton, sidebarButtons } from '@app/classes/sidebar-button';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
+import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
+import { ModalService } from '../../../modals/services/modal.service';
+import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
 
 @Component({
@@ -22,14 +22,15 @@ export class SidebarComponent implements OnInit {
 
     constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             switch (event.key) {
+                // tslint:disable: no-magic-numbers
                 case '1':
                     this.setSelectedTool(3);
                     break;
@@ -42,19 +43,20 @@ export class SidebarComponent implements OnInit {
                 case 'w':
                     this.setSelectedTool(1);
                     break;
+                // tslint:enable: no-magic-numbers
             }
         }
     }
 
     @HostListener('document:focusin', ['$event'])
-    onFocusIn(event: FocusEvent) {
+    onFocusIn(event: FocusEvent): void {
         if (event.target instanceof HTMLInputElement) {
             this.areShortcutsEnabled = false;
         }
     }
 
     @HostListener('document:focusout', ['$event'])
-    onFocusOut(event: FocusEvent) {
+    onFocusOut(event: FocusEvent): void {
         if (event.target instanceof HTMLInputElement) {
             this.areShortcutsEnabled = true;
         }
@@ -73,8 +75,8 @@ export class SidebarComponent implements OnInit {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
     }
 
-    openCreateDrawingModal(): void {
-        this.modalService.openDialog(CreateDrawingComponent);
+    openNewDrawingModal(): void {
+        this.modalService.openDialog(NewDrawingComponent);
     }
 
     openSettingsModal(): void {

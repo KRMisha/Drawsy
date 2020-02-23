@@ -1,3 +1,7 @@
+.container {
+    display: flex;
+}
+
 .title {
     font-weight: bold;
     text-align: center;
@@ -37,8 +41,4 @@
 
 .mat-icon {
     transform: scale(1.8);
-}
-
-.selected {
-
 }

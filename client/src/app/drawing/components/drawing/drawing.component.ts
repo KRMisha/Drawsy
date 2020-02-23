@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ButtonId } from 'src/app/classes/button-id';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
-import { ToolSelectorService } from 'src/app/tools/components/tool-selector.service';
+import { ButtonId } from '@app/classes/button-id';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({
     selector: 'app-drawing',
@@ -9,16 +9,16 @@ import { ToolSelectorService } from 'src/app/tools/components/tool-selector.serv
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-    @ViewChild('appSvg', { static: false }) private svg: ElementRef<SVGElement>;
+    @ViewChild('appDrawingContent', { static: false }) private svg: ElementRef<SVGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawingService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.drawingService.rootElement = this.svg.nativeElement;
         this.drawingService.reappendStoredElements();
     }
@@ -29,7 +29,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener('document:mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(true);
         }
@@ -37,7 +37,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener('document:mouseup', ['$event'])
-    onMouseUp(event: MouseEvent) {
+    onMouseUp(event: MouseEvent): void {
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(false);
         }
@@ -72,14 +72,14 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     getWidth(): number {
-        return this.drawingService.drawingDimensions.x;
+        return this.drawingService.getDrawingDimensions().x;
     }
 
     getHeight(): number {
-        return this.drawingService.drawingDimensions.y;
+        return this.drawingService.getDrawingDimensions().y;
     }
 
     getBackgroundColor(): string {
-        return this.drawingService.backgroundColor.toRgbaString();
+        return this.drawingService.getBackgroundColor().toRgbaString();
     }
 }

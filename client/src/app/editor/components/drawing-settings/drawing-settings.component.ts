@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
+import { Color } from '@app/classes/color';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
     selector: 'app-drawing-settings',
@@ -11,12 +11,12 @@ export class DrawingSettingsComponent {
     color = new Color();
 
     constructor(private drawingService: DrawingService) {
-        this.color.red = 255;
-        this.color.green = 255;
-        this.color.blue = 255;
+        this.color.red = Color.maxRgb;
+        this.color.green = Color.maxRgb;
+        this.color.blue = Color.maxRgb;
     }
 
-    confirmColor() {
-        this.drawingService.backgroundColor = this.color;
+    confirmColor(): void {
+        this.drawingService.setBackgroundColor(this.color);
     }
 }

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { Color, maxColorValue } from 'src/app/classes/color/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
-import { ToolSelectorService } from '../../../tools/components/tool-selector.service';
+import { Color } from '@app/classes/color';
+import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
+import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 
 @Component({
-    selector: 'app-panel-settings',
-    templateUrl: './panel-settings.component.html',
-    styleUrls: ['./panel-settings.component.scss'],
+    selector: 'app-sidebar-drawer',
+    templateUrl: './sidebar-drawer.component.html',
+    styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class PanelSettingsComponent {
+export class SidebarDrawerComponent {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;
@@ -21,9 +21,9 @@ export class PanelSettingsComponent {
     private color = new Color();
 
     constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
-        this.color.red = maxColorValue;
-        this.color.green = maxColorValue;
-        this.color.blue = maxColorValue;
+        this.color.red = Color.maxRgb;
+        this.color.green = Color.maxRgb;
+        this.color.blue = Color.maxRgb;
     }
 
     getToolName(): string {
@@ -34,7 +34,7 @@ export class PanelSettingsComponent {
         return this.toolSelectorService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures) {
+    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures): void {
         this.toolSelectorService.setSetting(setting, value);
     }
 
