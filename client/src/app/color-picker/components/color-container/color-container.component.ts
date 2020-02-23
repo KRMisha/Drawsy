@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Color } from '@app/classes/color/color';
+import { Color } from '@app/classes/color';
 
 @Component({
     selector: 'app-color-container',

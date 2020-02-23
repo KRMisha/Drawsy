@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SidebarButton } from 'src/app/classes/sidebar-button/sidebar-button';
+import { SidebarButton } from '@app/classes/sidebar-button';
 import { ModalService } from 'src/app/modals/services/modal.service';
 import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';

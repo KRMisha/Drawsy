@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 
 enum ColorGradient {
     Red = 'rgb(255, 0, 0)',

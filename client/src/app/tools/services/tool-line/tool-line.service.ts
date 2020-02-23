@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 import { Vec2 } from 'src/app/classes/vec2';
 import { ColorService } from 'src/app/drawing/services/color.service';
 import { DrawingService } from '../../../drawing/services/drawing.service';
