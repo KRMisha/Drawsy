@@ -4,6 +4,9 @@ import { Vec2 } from '../../../classes/vec2';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { StrokeTypes, Tool, ToolSetting } from '../tool';
 
+const defaultBorderWidth = 5;
+const defaultStrokeType = StrokeTypes.FillWithBorder;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -15,8 +18,8 @@ export class ToolRectangleService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, 1);
-        this.toolSettings.set(ToolSetting.StrokeType, StrokeTypes.FillWithBorder);
+        this.toolSettings.set(ToolSetting.Size, defaultBorderWidth);
+        this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
         this.name = 'Rectangle';
     }
 
