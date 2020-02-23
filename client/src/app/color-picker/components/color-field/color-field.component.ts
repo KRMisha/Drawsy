@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Color } from '@app/classes/color';
-import { Vec2 } from 'src/app/classes/vec2';
+import { Vec2 } from '@app/classes/vec2';
 
 enum ColorString {
     OpaqueWhite = 'rgba(255, 255, 255, 1)',

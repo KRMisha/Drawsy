@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonId } from 'src/app/classes/button-id';
+import { ButtonId } from '@app/classes/button-id';
 import { Color } from '@app/classes/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 
 @Component({
     selector: 'app-color-picker',

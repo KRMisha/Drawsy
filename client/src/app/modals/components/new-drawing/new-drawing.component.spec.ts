@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Color } from '@app/classes/color';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { NewDrawingComponent } from './new-drawing.component';
 
 // tslint:disable: max-classes-per-file

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
-import { Vec2 } from 'src/app/classes/vec2';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { Vec2 } from '@app/classes/vec2';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../tool';
 

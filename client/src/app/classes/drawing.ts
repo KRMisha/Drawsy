@@ -1,5 +1,5 @@
-import { Color } from '@app/classes/color.ts';
-import { Vec2 } from '@app/classes/vec2.ts';
+import { Color } from '@app/classes/color';
+import { Vec2 } from '@app/classes/vec2';
 
 export class Drawing {
     private _elements: SVGElement[] = []; // tslint:disable-line: variable-name

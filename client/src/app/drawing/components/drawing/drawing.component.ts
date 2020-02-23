@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ButtonId } from 'src/app/classes/button-id';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
-import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
+import { ButtonId } from '@app/classes/button-id';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({
     selector: 'app-drawing',

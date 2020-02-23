@@ -6,9 +6,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Color } from '@app/classes/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
-import { ToolSetting } from 'src/app/tools/services/tool';
-import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
+import { ColorService } from '@app/drawing/services/color.service';
+import { ToolSetting } from '@app/tools/services/tool';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { SidebarDrawerComponent } from './sidebar-drawer.component';
 
 // tslint:disable: no-empty

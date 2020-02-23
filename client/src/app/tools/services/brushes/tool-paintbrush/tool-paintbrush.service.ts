@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../../drawing/services/drawing.service';
 import { Textures, ToolSetting } from '../../tool';
 import { ToolBrush } from '../tool-brush/tool-brush';
