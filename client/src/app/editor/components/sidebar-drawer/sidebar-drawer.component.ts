@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Color, maxColorValue } from 'src/app/classes/color/color';
+import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
@@ -21,9 +21,9 @@ export class SidebarDrawerComponent {
     private color = new Color();
 
     constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
-        this.color.red = maxColorValue;
-        this.color.green = maxColorValue;
-        this.color.blue = maxColorValue;
+        this.color.red = Color.maxRgb;
+        this.color.green = Color.maxRgb;
+        this.color.blue = Color.maxRgb;
     }
 
     getToolName(): string {

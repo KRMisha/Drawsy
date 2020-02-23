@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { Color, maxHue } from 'src/app/classes/color/color';
+import { Color } from 'src/app/classes/color/color';
 
 enum ColorGradient {
     Red = 'rgb(255, 0, 0)',
@@ -35,7 +35,7 @@ export class ColorSliderComponent implements AfterViewInit {
     set hue(hue: number) {
         if (this.canvas !== undefined) {
             this._hue = hue;
-            this.mouseXPosition = (hue / maxHue) * canvasWidth;
+            this.mouseXPosition = (hue / Color.maxHue) * canvasWidth;
             this.draw();
         }
     }
@@ -119,7 +119,7 @@ export class ColorSliderComponent implements AfterViewInit {
         }
 
         this.mouseXPosition = event.offsetX;
-        this._hue = (this.mouseXPosition / this.canvas.width) * maxHue;
+        this._hue = (this.mouseXPosition / this.canvas.width) * Color.maxHue;
         this.draw();
         this.hueChange.emit(this.hue);
     }
