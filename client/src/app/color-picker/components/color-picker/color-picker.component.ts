@@ -2,11 +2,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonId } from 'src/app/classes/button-id';
 import { Color } from 'src/app/classes/color/color';
 import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorPickerService } from 'src/app/color-picker/services/color-picker.service';
 
 @Component({
     selector: 'app-color-picker',
     templateUrl: './color-picker.component.html',
     styleUrls: ['./color-picker.component.scss'],
+    providers: [{ provide: ColorPickerService, useValue: new ColorPickerService() }],
 })
 export class ColorPickerComponent {
     hue = 0;
@@ -16,7 +18,6 @@ export class ColorPickerComponent {
     hexStr = '000000';
     defaultColorSet = false;
 
-    @Input() isTextBlack = true;
     @Input() isLastColorsDisplayEnabled = true;
 
     @Input() isColorPickerDisplayEnabled = true;
@@ -36,7 +37,13 @@ export class ColorPickerComponent {
     @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
     @Output() previousColorSelected: EventEmitter<Color> = new EventEmitter();
 
-    constructor(private colorService: ColorService) {}
+    constructor(private colorService: ColorService, colorPickerService: ColorPickerService) {
+        colorPickerService.colorChanged$.subscribe(
+            color => {
+                this.colorChanged.emit(color);
+            }
+        )
+    }
 
     private getColor(): Color {
         const color = new Color();

@@ -10,15 +10,10 @@
     </div>
 
     <div [style.display]="isColorPickerDisplayEnabled ? 'block' : 'none'">
-        <app-color-field
-            [hue]="hue"
-            [saturation]="saturation"
-            [value]="value"
-            (saturationValueChange)="setSaturationAndValue($event)"
-        ></app-color-field>
-        <app-color-slider [hue]="hue" (hueChange)="setHue($event)"></app-color-slider>
+        <app-color-field></app-color-field>
+        <app-color-slider></app-color-slider>
 
-        <div class="alpha-slider" [style.color]="isTextBlack ? 'black' : 'white'">
+        <div class="alpha-slider">
             <div class="alpha-text">
                 Alpha:
             </div>
