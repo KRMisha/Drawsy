@@ -6,6 +6,8 @@ import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-
 import { ModalService } from '../../../modals/services/modal.service';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
+import { ExportDrawingComponent } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
+import { ImportDrawingComponent } from '@app/drawing/components/import-drawing/import-drawing/import-drawing.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -81,5 +83,13 @@ export class SidebarComponent implements OnInit {
 
     openSettingsModal(): void {
         this.modalService.openDialog(DrawingSettingsComponent);
+    }
+
+    openExportModal(): void {
+        this.modalService.openDialog(ExportDrawingComponent);
+    }
+
+    openImportModal(): void {
+        this.modalService.openDialog(ImportDrawingComponent);
     }
 }

@@ -58,6 +58,8 @@ import { GuideSidebarComponent } from './guide/components/guide-sidebar/guide-si
 import { GuideComponent } from './guide/components/guide/guide.component';
 import { HomeComponent } from './home/components/home/home.component';
 import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing.component';
+import { ExportDrawingComponent } from './drawing/components/export-drawing/export-drawing/export-drawing.component';
+import { ImportDrawingComponent } from './drawing/components/import-drawing/import-drawing/import-drawing.component';
 
 @NgModule({
     declarations: [
@@ -99,6 +101,8 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         SidebarDrawerComponent,
         HomeComponent,
         NewDrawingComponent,
+        ImportDrawingComponent,
+        ExportDrawingComponent,
     ],
     imports: [
         BrowserModule,
@@ -145,6 +149,8 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         GuideExportDrawingComponent,
         GuideSaveDrawingComponent,
         NewDrawingComponent,
+        ExportDrawingComponent,
+        ImportDrawingComponent
     ],
     providers: [],
     bootstrap: [AppComponent],

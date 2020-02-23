@@ -61,4 +61,14 @@ export class DrawingService {
     setBackgroundColor(color: Color): void {
         this.currentDrawing.backgroundColor = color;
     }
+
+    getCurrentDrawing(): Drawing {
+        return this.currentDrawing;
+    }
+
+    loadDrawing(drawing: Drawing): void {
+        this.clearStoredElements();
+        this.currentDrawing = drawing;
+        this.reappendStoredElements();
+    }
 }
