@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 
 enum ColorGradient {
     Red = 'rgb(255, 0, 0)',
@@ -76,8 +76,8 @@ export class ColorSliderComponent implements AfterViewInit {
         hueColor.setHsv(this.hue, 1.0, 1.0);
 
         const circle = new Path2D();
-        const size = 8;
-        circle.arc(this.mouseXPosition, height / 2, size, 0, 2 * Math.PI);
+        const radius = 8;
+        circle.arc(this.mouseXPosition, height / 2, radius, 0, 2 * Math.PI);
         this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;

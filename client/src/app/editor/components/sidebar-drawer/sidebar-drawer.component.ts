@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { Color } from '@app/classes/color';
+import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 

@@ -1,6 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { StrokeTypes, ToolSetting } from '../tool';
 import { ToolRectangleService } from './tool-rectangle.service';

@@ -1,11 +1,11 @@
 import { Renderer2 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ButtonId } from 'src/app/classes/button-id';
-import { Color } from 'src/app/classes/color/color';
-import { Vec2 } from 'src/app/classes/vec2';
-import { DrawingService } from 'src/app/drawing/services/drawing.service';
-import { ToolSelectorService } from 'src/app/tools/services/tool-selector.service';
-import { DrawingComponent } from './drawing.component';
+import { ButtonId } from '@app/classes/button-id';
+import { Color } from '@app/classes/color';
+import { Vec2 } from '@app/classes/vec2';
+import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty

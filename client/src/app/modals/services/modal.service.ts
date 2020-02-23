@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Vec2 } from 'src/app/classes/vec2';
+import { Vec2 } from '@app/classes/vec2';
 
 @Injectable({
     providedIn: 'root',

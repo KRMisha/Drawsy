@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color } from 'src/app/classes/color/color';
+import { Color } from '@app/classes/color';
 
 const maxRecentColors = 10;
 

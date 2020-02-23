@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { Vec2 } from '../../../classes/vec2';
 import { DrawingService } from '../../../drawing/services/drawing.service';
 import { StrokeTypes, Tool, ToolSetting } from '../tool';

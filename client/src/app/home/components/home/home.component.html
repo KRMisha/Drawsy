@@ -10,7 +10,7 @@
             </div>
             <div class="button-list">
                 <a mat-stroked-button (click)="openNewDrawingModal()">CRÉER UN NOUVEAU DESSIN</a>
-                <div *ngIf="this.drawingService.isDrawingStarted">
+                <div *ngIf="this.drawingService.isDrawingStarted()">
                     <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
                 </div>
                 <a mat-stroked-button>GALERIE DE DESSIN</a>

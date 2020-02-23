@@ -1,4 +1,4 @@
-import { ColorService } from 'src/app/drawing/services/color.service';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '../../../../drawing/services/drawing.service';
 import { Tool, ToolSetting } from '../../tool';
 
