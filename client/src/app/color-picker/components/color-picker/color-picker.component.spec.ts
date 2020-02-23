@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { Color } from '@app/classes/color';
-import { ColorService } from 'src/app/drawing/services/color.service';
-import { ColorPickerComponent } from './color-picker.component';
+import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
+import { ColorService } from '@app/drawing/services/color.service';
 
 // tslint:disable: no-magic-numbers
 

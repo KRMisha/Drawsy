@@ -1,8 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Color } from '../../../classes/color';
-import { DrawingService } from '../../../drawing/services/drawing.service';
+import { Color } from '@app/classes/color';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 const widthMargin = 348;
 const heightMargin = 4;
