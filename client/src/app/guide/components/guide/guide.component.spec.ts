@@ -10,6 +10,7 @@ import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component'
 import { GuideComponent } from './guide.component';
 
 // tslint:disable: no-magic-numbers
+// tslint:disable: max-classes-per-file
 
 @Component({
     selector: 'app-guide-welcome',
@@ -17,9 +18,21 @@ import { GuideComponent } from './guide.component';
 })
 class MockGuideWelcomeComponent {}
 
+@Component({
+    selector: 'app-guide-pencil',
+    template: '<p>Mock Pencil Guide</p>',
+})
+class MockGuidePencilComponent {}
+
+@Component({
+    selector: 'app-guide-paintbrush',
+    template: '<p>Mock Paintbrush Guide</p>',
+})
+class MockGuidePaintbrushComponent {}
+
 describe('GuideComponent', () => {
     // tslint:disable-next-line: no-any
-    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuideWelcomeComponent];
+    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
@@ -72,16 +85,13 @@ describe('GuideComponent', () => {
         expect(component.selectGuide).toHaveBeenCalled();
     });
 
-    it('#selectGuide should check if index is in range of guides array', () => {
-        component.selectedGuideIndex = 1;
-        component.selectGuide(4);
-        expect(component.selectedGuideIndex).toEqual(1);
-        component.selectGuide(-1);
-        expect(component.selectedGuideIndex).toEqual(1);
+    it('#findIndex should check if index is in range of guides array and return -1 otherwise', () => {
+        expect(component.findIndex(MockGuideWelcomeComponent)).toEqual(0);
+        expect(component.findIndex(MockGuidePaintbrushComponent)).toEqual(-1);
     });
 
     it('#selectGuide should update attributes when index is in range of guide array', () => {
-        component.selectGuide(1);
+        component.selectGuide(MockGuidePencilComponent);
         expect(component.selectedGuideIndex).toEqual(1);
         expect(component.hasNextGuide).toEqual(false);
         expect(component.hasPreviousGuide).toEqual(true);
