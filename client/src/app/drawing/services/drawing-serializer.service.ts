@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DrawingService } from './drawing.service';
 import { Drawing } from '@app/classes/drawing';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Color } from '@app/classes/color';
 
 @Injectable({
     providedIn: 'root',
@@ -26,21 +27,28 @@ export class DrawingSerializerService {
     }
 
     importSelectedDrawing(file: FileList): void {
-        // let importedDrawing: Drawing = new Drawing();
+        let importedDrawing: Drawing = new Drawing();
         const fileReader: FileReader = new FileReader();
         let fileContent: string = '';
         fileReader.onloadend = () => { 
             fileContent = (fileReader.result as string);
             console.log(fileContent);
 
-            // const domParser = new DOMParser();
-            // const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
-            // const penis = doc.getRootNode();
+            const domParser = new DOMParser();
+            const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
+            const childrenArray = Array.prototype.slice.call(doc.children) as SVGElement[];
+            for (const element of childrenArray) {
+                importedDrawing.addElement(element);
+            }
+            const backgroundColor = new Color();
+            backgroundColor.red= Color.maxRgb;
+            backgroundColor.green= Color.maxRgb;
+            backgroundColor.blue= Color.maxRgb;
+            
+            importedDrawing.backgroundColor = backgroundColor;
+            console.log(importedDrawing);
+            this.drawingService.loadDrawing(importedDrawing);
         }
         fileReader.readAsText(file[0]);
-
-        // let svgDocument = document.body.firstChild;
-        
-        // this.drawingService.loadDrawing(importedDrawing);
     }
 }
