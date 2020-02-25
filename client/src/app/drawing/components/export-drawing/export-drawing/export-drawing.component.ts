@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-export-drawing',
@@ -10,12 +10,18 @@ import { SafeUrl } from '@angular/platform-browser';
 export class ExportDrawingComponent implements OnInit {
 
   fileUrl: SafeUrl;
-  constructor(private drawingSerializerService: DrawingSerializerService) { }
+  constructor(private drawingSerializerService: DrawingSerializerService, private meta:Meta) {
+
+  }
   ngOnInit() {
-    this.exportDrawing();
   }
 
   exportDrawing(): void {
-    this.fileUrl = this.drawingSerializerService.exportCurrentDrawing();
+    const metaArray: HTMLMetaElement[] = [];
+    const nextMetaElement = this.meta.addTag({ name: 'Sam', content: 'samsam'});
+    if (nextMetaElement instanceof HTMLMetaElement) {
+      metaArray.push(nextMetaElement);
+    }
+    this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(metaArray);
   }
 }

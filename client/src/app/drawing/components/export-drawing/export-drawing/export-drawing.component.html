@@ -1,2 +1,4 @@
 <p>export-drawing works!</p>
-<a [href]="fileUrl" download="file.svg">DownloadFile</a>
+<a [href]="fileUrl" download="file.svg">
+    <button mat-raised-button (click)="exportDrawing()">Download</button>
+</a>

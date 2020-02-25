@@ -12,11 +12,14 @@ export class DrawingSerializerService {
 
     constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer) {}
 
-    exportCurrentDrawing(): SafeUrl {
+    exportCurrentDrawing(metaData: HTMLMetaElement[]): SafeUrl {
         const currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
         const serializer = new XMLSerializer();
-        let svgFile: string = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${this.drawingService.getDrawingDimensions().y}`;
-
+        let svgFile: string = '';
+        for (const metaElement of metaData) {
+            svgFile += serializer.serializeToString(metaElement);
+        }
+        svgFile += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${this.drawingService.getDrawingDimensions().y}`;
         for (const element of currentDrawing.elements) {
             svgFile += serializer.serializeToString(element);
         }
@@ -32,21 +35,18 @@ export class DrawingSerializerService {
         let fileContent: string = '';
         fileReader.onloadend = () => { 
             fileContent = (fileReader.result as string);
-            console.log(fileContent);
 
             const domParser = new DOMParser();
             const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
-            const childrenArray = Array.prototype.slice.call(doc.children) as SVGElement[];
-            for (const element of childrenArray) {
-                importedDrawing.addElement(element);
-            }
+            const childrenArray = Array.prototype.slice.call(doc.children) as SVGElement;
+
+            importedDrawing.addElement(childrenArray);
             const backgroundColor = new Color();
             backgroundColor.red= Color.maxRgb;
             backgroundColor.green= Color.maxRgb;
             backgroundColor.blue= Color.maxRgb;
             
             importedDrawing.backgroundColor = backgroundColor;
-            console.log(importedDrawing);
             this.drawingService.loadDrawing(importedDrawing);
         }
         fileReader.readAsText(file[0]);
