@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import '~@angular/material/theming';
+@include mat-core();
+@import 'custom-themes.scss';
+@include angular-material-theme($polydessin-theme);
+
 html,
 body {
     height: 100%;
@@ -17,12 +22,13 @@ body {
     background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(63, 63, 71);
+    background-color: rgb(158, 158, 158);
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(255, 64, 129);
+    background: rgb(139, 138, 155);
 }
+
 h1,
 h2,
 div,

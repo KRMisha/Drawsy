@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -122,6 +123,7 @@ import { ImportDrawingComponent } from './drawing/components/import-drawing/impo
         MatExpansionModule,
         MatDialogModule,
         MatSelectModule,
+        MatTreeModule,
         ReactiveFormsModule,
     ],
     entryComponents: [

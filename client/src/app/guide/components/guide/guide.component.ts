@@ -26,19 +26,20 @@ export class GuideComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.selectGuide(this.selectedGuideIndex);
+        this.selectGuide(this.guides[this.selectedGuideIndex]);
     }
 
-    selectGuide(index: number): void {
-        if (index < 0 || index > this.guides.length) {
+    // tslint:disable-next-line: no-any
+    selectGuide(guide: Type<any>): void {
+        if (this.findIndex(guide) === -1) {
             return;
         }
 
-        this.selectedGuideIndex = index;
+        this.selectedGuideIndex = this.findIndex(guide);
         this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
         this.hasPreviousGuide = this.selectedGuideIndex > 0;
 
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.guides[this.selectedGuideIndex]);
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(guide);
 
         const viewContainerRef = this.guideHost.viewContainerRef;
         viewContainerRef.clear();
@@ -46,16 +47,26 @@ export class GuideComponent implements OnInit, AfterViewInit {
         viewContainerRef.createComponent(componentFactory);
     }
 
+    // tslint:disable-next-line: no-any
+    findIndex(guide: Type<any>): number {
+        for (let i = 0; i < this.guides.length; i++) {
+            if (guide === this.guides[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     selectNextGuide(): void {
         if (this.hasNextGuide) {
-            this.selectGuide(++this.selectedGuideIndex);
+            this.selectGuide(this.guides[++this.selectedGuideIndex]);
         }
         this.sidebar.expandAllMenus();
     }
 
     selectPreviousGuide(): void {
         if (this.hasPreviousGuide) {
-            this.selectGuide(--this.selectedGuideIndex);
+            this.selectGuide(this.guides[--this.selectedGuideIndex]);
         }
         this.sidebar.expandAllMenus();
     }
