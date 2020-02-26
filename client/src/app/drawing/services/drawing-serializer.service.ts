@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DrawingService } from './drawing.service';
 import { Drawing } from '@app/classes/drawing';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl, Meta } from '@angular/platform-browser';
 import { Color } from '@app/classes/color';
 
 @Injectable({
@@ -10,16 +10,18 @@ import { Color } from '@app/classes/color';
 
 export class DrawingSerializerService {
 
-    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer) {}
+    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer, private metaData:Meta) {}
 
     exportCurrentDrawing(metaData: HTMLMetaElement[]): SafeUrl {
         const currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
         const serializer = new XMLSerializer();
         let svgFile: string = '';
-        for (const metaElement of metaData) {
-            svgFile += serializer.serializeToString(metaElement);
-        }
+        // for (const metaElement of metaData) {
+        //     svgFile += serializer.serializeToString(metaElement);
+        // }
         svgFile += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${this.drawingService.getDrawingDimensions().y}`;
+        // svgFile += `<meta>`
+        svgFile += serializer.serializeToString(this.metaData.addTag({name: 'Test', content: 'this bish'}) as Node);
         for (const element of currentDrawing.elements) {
             svgFile += serializer.serializeToString(element);
         }
@@ -38,9 +40,18 @@ export class DrawingSerializerService {
 
             const domParser = new DOMParser();
             const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
-            const childrenArray = Array.prototype.slice.call(doc.children) as SVGElement;
-
-            importedDrawing.addElement(childrenArray);
+            let childrenArray = doc.children;
+            for (let i = 0; i < childrenArray.length; i++) {
+                console.log("FIRST DEGREE CHILD");
+                console.log(childrenArray[i]);
+            }
+            childrenArray = childrenArray[0].children;
+            // console.log(doc);
+            // console.log("BETWEEEENNNNNN");
+            // console.log(Array.prototype.slice.call(doc.children));
+            for (let i = 0; i < childrenArray.length; i++) {
+                importedDrawing.addElement(childrenArray[i] as SVGElement);
+            }
             const backgroundColor = new Color();
             backgroundColor.red= Color.maxRgb;
             backgroundColor.green= Color.maxRgb;
