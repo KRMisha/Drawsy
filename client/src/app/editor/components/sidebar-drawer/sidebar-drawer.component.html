@@ -21,11 +21,18 @@
         </button>
     </div>
 
+    <app-color-container
+        *ngFor="let color of colorService.getLastColors()"
+        [color]="color"
+        (click)="oldColorClick($event, color)"
+        (contextmenu)="oldColorClick($event, color)"
+        class="recent-colors-item"
+    ></app-color-container>
+
     <app-color-picker
-        (colorChanged)="updateColor($event)"
-        (previousColorSelected)="isColorPickerDisplayEnabled = false"
-        [isColorPickerDisplayEnabled]="isColorPickerDisplayEnabled"
-        [paletteColor]="getSelectedColor()"
+    isColorPickerDisplayEnabled = false;
+        *ngIf="isColorPickerDisplayEnabled"
+        [(colorModel)]="color"
     >
     </app-color-picker>
 </div>

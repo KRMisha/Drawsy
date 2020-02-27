@@ -15,11 +15,11 @@ const canvasWidth = 250;
 const canvasHeight = 21;
 
 @Component({
-    selector: 'app-color-slider',
-    templateUrl: './color-slider.component.html',
-    styleUrls: ['./color-slider.component.scss'],
+    selector: 'app-hue-slider',
+    templateUrl: './hue-slider.component.html',
+    styleUrls: ['./hue-slider.component.scss'],
 })
-export class ColorSliderComponent implements AfterViewInit {
+export class HueSliderComponent implements AfterViewInit {
     @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
@@ -33,7 +33,7 @@ export class ColorSliderComponent implements AfterViewInit {
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.hueChanged$.subscribe(
             hue => {
-                this.draw(hue);
+                this.mouseXPosition = hue / Color.maxHue * canvasWidth;
             }
         )
     }
@@ -43,10 +43,11 @@ export class ColorSliderComponent implements AfterViewInit {
         this.canvas = this.hueCanvas.nativeElement;
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
-        this.draw(0);
+        this.mouseXPosition = this.colorPickerService.hue  / Color.maxHue * this.canvas.width;
+        this.draw();
     }
 
-    draw(hue: number): void {
+    draw(): void {
         const width = this.canvas.width;
         const height = this.canvas.height;
 
@@ -67,7 +68,7 @@ export class ColorSliderComponent implements AfterViewInit {
         this.context.fillRect(0, padding, width, height - 2 * padding);
 
         const hueColor = new Color();
-        hueColor.setHsv(hue, 1.0, 1.0);
+        hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
 
         const circle = new Path2D();
         const radius = 8;
@@ -114,7 +115,7 @@ export class ColorSliderComponent implements AfterViewInit {
 
         this.mouseXPosition = event.offsetX;
         const hue = (this.mouseXPosition / this.canvas.width) * Color.maxHue;
-        this.draw(hue);
         this.colorPickerService.hue = hue;
+        this.draw();
     }
 }

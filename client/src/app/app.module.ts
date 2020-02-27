@@ -26,7 +26,7 @@ import { ColorContainerComponent } from './color-picker/components/color-contain
 import { ColorFieldComponent } from './color-picker/components/color-field/color-field.component';
 import { ColorHexSelectorComponent } from './color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from './color-picker/components/color-picker/color-picker.component';
-import { ColorSliderComponent } from './color-picker/components/color-slider/color-slider.component';
+import { HueSliderComponent } from './color-picker/components/hue-slider/hue-slider.component';
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
 import { DrawingSettingsComponent } from './editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
@@ -89,7 +89,7 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         GuideSidebarComponent,
         GuideDirective,
         ColorPickerComponent,
-        ColorSliderComponent,
+        HueSliderComponent,
         ColorContainerComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,

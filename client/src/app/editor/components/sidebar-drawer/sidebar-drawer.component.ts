@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
+import { ButtonId } from '@app/classes/button-id';
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -20,7 +21,7 @@ export class SidebarDrawerComponent {
 
     private color = new Color();
 
-    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
+    constructor(private toolSelectorService: ToolSelectorService, protected colorService: ColorService) {
         this.color.red = Color.maxRgb;
         this.color.green = Color.maxRgb;
         this.color.blue = Color.maxRgb;
@@ -53,11 +54,13 @@ export class SidebarDrawerComponent {
     selectPrimaryColor(): void {
         this.isPrimarySelected = true;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getPrimaryColor();
     }
-
+    
     selectSecondaryColor(): void {
         this.isPrimarySelected = false;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getSecondaryColor();
     }
 
     updateColor(color: Color): void {
@@ -82,5 +85,15 @@ export class SidebarDrawerComponent {
             return this.colorService.getPrimaryColor();
         }
         return this.colorService.getSecondaryColor();
+    }
+
+    oldColorClick(event: MouseEvent, color: Color): void {
+        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
+            if (event.button === ButtonId.Left) {
+                this.colorService.setPrimaryColor(color);
+            } else {
+                this.colorService.setSecondaryColor(color);
+            }
+        }
     }
 }

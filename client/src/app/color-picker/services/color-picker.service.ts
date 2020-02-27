@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Color } from '@app/classes/color';
 import { Subject } from 'rxjs';
-import { Color } from '../../classes/color/color';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,13 @@ export class ColorPickerService {
     private saturationChangedSource = new Subject<number>();
     private valueChangedSource = new Subject<number>();
     private alphaChangedSource = new Subject<number>();
-    private colorChanged = new Subject<Color>();
+    private colorChangedSource = new Subject<Color>();
 
     hueChanged$ = this.hueChangedSource.asObservable();
     saturationChanged$ = this.saturationChangedSource.asObservable();
     valueChanged$ = this.valueChangedSource.asObservable();
     alphaChanged$ = this.alphaChangedSource.asObservable();
-    colorChanged$ = this.colorChanged.asObservable();
+    colorChanged$ = this.colorChangedSource.asObservable();
 
     // tslint:disable: variable-name
     private hue_ = 0;
@@ -27,7 +27,7 @@ export class ColorPickerService {
 
     set hue(hue: number) {
         this.hue_ = hue;
-        this.colorChanged.next(this.getColor());
+        this.colorChangedSource.next(this.getColor());
         this.hueChangedSource.next(hue);
     }
 
@@ -37,7 +37,7 @@ export class ColorPickerService {
 
     set saturation(saturation: number) {
         this.saturation_ = saturation;
-        this.colorChanged.next(this.getColor());
+        this.colorChangedSource.next(this.getColor());
         this.saturationChangedSource.next(saturation);
     }
 
@@ -47,7 +47,7 @@ export class ColorPickerService {
 
     set value(value: number) {
         this.value_ = value;
-        this.colorChanged.next(this.getColor());
+        this.colorChangedSource.next(this.getColor());
         this.valueChangedSource.next(value);
     }
 
@@ -57,12 +57,24 @@ export class ColorPickerService {
 
     set alpha(alpha: number) {
         this.alpha_ = alpha;
-        this.colorChanged.next(this.getColor());
+        this.colorChangedSource.next(this.getColor());
         this.alphaChangedSource.next(alpha);
     }
 
     get alpha(): number {
         return this.alpha_;
+    }
+
+    setColor(color: Color): void {
+        const hsv = color.getHsv();
+        this.hue_ = hsv[0];
+        this.saturation_ = hsv[1];
+        this.value_ = hsv[2];
+        this.alpha_ = color.alpha;
+        this.colorChangedSource.next(color);
+        this.hueChangedSource.next(this.hue);
+        this.saturationChangedSource.next(this.saturation);
+        this.valueChangedSource.next(this.value);
     }
 
     getColor(): Color {

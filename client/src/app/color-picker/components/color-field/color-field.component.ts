@@ -31,12 +31,23 @@ export class ColorFieldComponent implements AfterViewInit {
 
 
     constructor(private colorPickerService: ColorPickerService) {
-
         this.colorPickerService.hueChanged$.subscribe(
             hue => {
-                this.draw(hue);
+                this.draw();
             }
-        )
+        );
+        this.colorPickerService.saturationChanged$.subscribe(
+            saturation => {
+                this.mousePosition.x = saturation * canvasWidth;
+                this.draw();
+            }
+        );
+        this.colorPickerService.valueChanged$.subscribe(
+            value => {
+                this.mousePosition.y = canvasHeight * (1 - value);
+                this.draw();
+            }
+        );
     }
 
     ngAfterViewInit(): void {
@@ -44,31 +55,34 @@ export class ColorFieldComponent implements AfterViewInit {
         this.canvas = this.saturationValueCanvas.nativeElement;
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
-        this.draw(0);
+        this.mousePosition.y = this.canvas.height * (1 - this.colorPickerService.value);
+        this.mousePosition.x = this.colorPickerService.saturation * this.canvas.width;
+        this.draw();
     }
 
-    draw(hue: number): void {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
-
+    draw(): void {
+        if (this.canvas === undefined) {
+            return;
+        }
+        
         const color = new Color();
-        color.setHsv(hue, 1, 1);
+        color.setHsv(this.colorPickerService.hue, 1, 1);
 
         const colorStr = color.toRgbString();
         this.context.fillStyle = colorStr;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
         horizontalGradient.addColorStop(0, ColorString.OpaqueWhite);
         horizontalGradient.addColorStop(1, ColorString.TransparentWhite);
         this.context.fillStyle = horizontalGradient;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        const verticalGradient = this.context.createLinearGradient(0, 0, 0, height);
+        const verticalGradient = this.context.createLinearGradient(0, 0, 0, canvasHeight);
         verticalGradient.addColorStop(0, ColorString.TransparentBlack);
         verticalGradient.addColorStop(1, ColorString.OpaqueBlack);
         this.context.fillStyle = verticalGradient;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
 
@@ -119,6 +133,6 @@ export class ColorFieldComponent implements AfterViewInit {
         this.mousePosition.y = event.offsetY;
         this.colorPickerService.saturation = event.offsetX / this.canvas.width;
         this.colorPickerService.value = 1.0 - event.offsetY / this.canvas.height;
-        this.draw(this.colorPickerService.hue);
+        this.draw();
     }
 }
