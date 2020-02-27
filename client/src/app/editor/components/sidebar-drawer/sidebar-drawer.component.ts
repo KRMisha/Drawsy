@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { ToolDefaults } from '@app/tools/classes/tool-defaults'
+import { ToolDefaults } from '@app/tools/classes/tool-defaults';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
@@ -16,7 +15,7 @@ const maximumJunctionSize = 100;
     templateUrl: './sidebar-drawer.component.html',
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class SidebarDrawerComponent implements OnInit{
+export class SidebarDrawerComponent implements OnInit {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;
@@ -29,36 +28,32 @@ export class SidebarDrawerComponent implements OnInit{
 
     sizeGroup = new FormGroup({
         size: new FormControl(
-            0, 
+            0,
             Validators.compose([
-                Validators.required, 
-                Validators.max(maximumSize), 
-                Validators.min(1), 
-                Validators.pattern(integerRegexPattern)
-            ])
-        )
+                Validators.required,
+                Validators.max(maximumSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
     });
-    
+
     junctionSizeGroup = new FormGroup({
         junctionSize: new FormControl(
-            0, 
+            0,
             Validators.compose([
-                Validators.required, 
-                Validators.max(maximumJunctionSize), 
-                Validators.min(1), 
-                Validators.pattern(integerRegexPattern)
-            ])
-        )
+                Validators.required,
+                Validators.max(maximumJunctionSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
     });
-    
 
     constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
         this.color.red = Color.maxRgb;
         this.color.green = Color.maxRgb;
         this.color.blue = Color.maxRgb;
-
-        
-        
 
         this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
@@ -68,8 +63,10 @@ export class SidebarDrawerComponent implements OnInit{
 
         this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.HasJunction,
-                     [((this.getSetting(ToolSetting.HasJunction)) as [boolean, number])[0], this.junctionSizeGroup.controls.junctionSize.value]);
+                this.toolSelectorService.setSetting(ToolSetting.HasJunction, [
+                    (this.getSetting(ToolSetting.HasJunction) as [boolean, number])[0],
+                    this.junctionSizeGroup.controls.junctionSize.value,
+                ]);
             }
         });
     }
