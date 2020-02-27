@@ -39,11 +39,11 @@
         <form [formGroup]="sizeGroup">
             <input
             class="input-number"
-            formControlName="drawingSize"
+            formControlName="size"
             />
         </form>
     </div>
-    <mat-slider min="1" max="500" (input)="sizeGroup.controls.drawingSize.setValue($event.value)" [value]="sizeGroup.controls.drawingSize.value"> </mat-slider>
+    <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value"> </mat-slider>
 </div>
 
 <div *ngIf="hasSetting(ToolSetting.HasJunction)">
@@ -52,7 +52,7 @@
         <form [formGroup]="junctionSizeGroup">
             <input
             class="input-number"
-            formControlName="drawingJunctionSize"
+            formControlName="junctionSize"
             [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
             />
         </form>
@@ -66,8 +66,8 @@
     <mat-slider
         min="1"
         max="100"
-        (input)="junctionSizeGroup.controls.drawingJunctionSize.setValue($event.value)"
-        [value]="junctionSizeGroup.controls.drawingJunctionSize.value"
+        (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
+        [value]="junctionSizeGroup.controls.junctionSize.value"
         [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
     >
     </mat-slider>

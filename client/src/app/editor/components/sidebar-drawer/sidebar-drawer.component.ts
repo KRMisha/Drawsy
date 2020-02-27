@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
-import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
+import { ToolDefaults } from '@app/tools/classes/tool-defaults'
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 
 const integerRegexPattern = '^[0-9]*$';
@@ -27,7 +28,7 @@ export class SidebarDrawerComponent implements OnInit{
     private color = new Color();
 
     sizeGroup = new FormGroup({
-        drawingSize: new FormControl(
+        size: new FormControl(
             0, 
             Validators.compose([
                 Validators.required, 
@@ -39,7 +40,7 @@ export class SidebarDrawerComponent implements OnInit{
     });
     
     junctionSizeGroup = new FormGroup({
-        drawingJunctionSize: new FormControl(
+        junctionSize: new FormControl(
             0, 
             Validators.compose([
                 Validators.required, 
@@ -59,22 +60,24 @@ export class SidebarDrawerComponent implements OnInit{
         
         
 
-        this.sizeGroup.controls.drawingSize.valueChanges.subscribe(() => {
-            if (this.sizeGroup.controls.drawingSize.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.drawingSize.value);
+        this.sizeGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.sizeGroup.controls.size.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
             }
         });
 
-        this.junctionSizeGroup.controls.drawingJunctionSize.valueChanges.subscribe(() => {
-            if (this.junctionSizeGroup.controls.drawingJunctionSize.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.HasJunction, [true, this.junctionSizeGroup.controls.drawingJunctionSize.value]);
+        this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+            if (this.junctionSizeGroup.controls.junctionSize.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.HasJunction,
+                     [((this.getSetting(ToolSetting.HasJunction)) as [boolean, number])[0], this.junctionSizeGroup.controls.junctionSize.value]);
             }
         });
     }
 
     ngOnInit(): void {
         // We set the initial values now to update the service through the subscribe
-        this.sizeGroup.controls.drawingSize.setValue(this.getSetting(ToolSetting.Size));
+        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
     }
 
     getToolName(): string {
