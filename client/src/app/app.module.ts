@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,12 +20,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app/app.component';
 import { AlphaSliderComponent } from './color-picker/components/alpha-slider/alpha-slider.component';
-import { ColorContainerComponent } from './color-picker/components/color-container/color-container.component';
 import { ColorFieldComponent } from './color-picker/components/color-field/color-field.component';
 import { ColorHexSelectorComponent } from './color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from './color-picker/components/color-picker/color-picker.component';
@@ -92,7 +90,6 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         GuideDirective,
         ColorPickerComponent,
         HueSliderComponent,
-        ColorContainerComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
         DrawingSettingsComponent,
@@ -117,6 +114,7 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         MatIconModule,
         MatSidenavModule,
         MatListModule,
+        MatRippleModule,
         AppRoutingModule,
         MatExpansionModule,
         MatDialogModule,

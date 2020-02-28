@@ -18,12 +18,10 @@ export class ColorHexSelectorComponent {
     isHex = true;
 
     constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.colorChanged$.subscribe(
-            color => {
-                const hex = color.getHex();
-                this.setHex(hex);
-            }
-        )
+        this.colorPickerService.colorChanged$.subscribe((color: Color) => {
+            const hex = color.getHex();
+            this.setHex(hex);
+        });
     }
 
     private setHex(hex: string): void {
@@ -34,17 +32,6 @@ export class ColorHexSelectorComponent {
         this.hexBlue.setValue(hex.substring(4, 6));
         // tslint:enable: no-magic-numbers
     }
-
-    // @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
-    // @Input()
-    // set hex(hex: string) {
-    //     this.hexRgb.setValue(hex);
-    //     // tslint:disable: no-magic-numbers
-    //     this.hexRed.setValue(hex.substring(0, 2));
-    //     this.hexGreen.setValue(hex.substring(2, 4));
-    //     this.hexBlue.setValue(hex.substring(4, 6));
-    //     // tslint:enable: no-magic-numbers
-    // }
 
     updateColorHex(): void {
         if (hexRegex.test(this.hexRgb.value)) {

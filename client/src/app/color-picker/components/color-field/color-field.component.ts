@@ -21,7 +21,6 @@ const canvasHeight = 160;
 export class ColorFieldComponent implements AfterViewInit {
     @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
-
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
@@ -29,25 +28,18 @@ export class ColorFieldComponent implements AfterViewInit {
     private mousePosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
 
-
     constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.hueChanged$.subscribe(
-            hue => {
-                this.draw();
-            }
-        );
-        this.colorPickerService.saturationChanged$.subscribe(
-            saturation => {
-                this.mousePosition.x = saturation * canvasWidth;
-                this.draw();
-            }
-        );
-        this.colorPickerService.valueChanged$.subscribe(
-            value => {
-                this.mousePosition.y = canvasHeight * (1 - value);
-                this.draw();
-            }
-        );
+        this.colorPickerService.hueChanged$.subscribe((hue: number) => {
+            this.draw();
+        });
+        this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
+            this.mousePosition.x = saturation * canvasWidth;
+            this.draw();
+        });
+        this.colorPickerService.valueChanged$.subscribe((value: number) => {
+            this.mousePosition.y = canvasHeight * (1 - value);
+            this.draw();
+        });
     }
 
     ngAfterViewInit(): void {
@@ -64,7 +56,7 @@ export class ColorFieldComponent implements AfterViewInit {
         if (this.canvas === undefined) {
             return;
         }
-        
+
         const color = new Color();
         color.setHsv(this.colorPickerService.hue, 1, 1);
 
@@ -128,9 +120,15 @@ export class ColorFieldComponent implements AfterViewInit {
         if (!this.isMouseDown) {
             return;
         }
-        
-        this.mousePosition.x = Math.min(canvasWidth, Math.max(0, event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x));
-        this.mousePosition.y = Math.min(canvasHeight, Math.max(0, event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y));;
+
+        this.mousePosition.x = Math.min(
+            canvasWidth,
+            Math.max(0, event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x),
+        );
+        this.mousePosition.y = Math.min(
+            canvasHeight,
+            Math.max(0, event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y),
+        );
         this.colorPickerService.saturation = this.mousePosition.x / canvasWidth;
         this.colorPickerService.value = 1.0 - this.mousePosition.y / canvasHeight;
         this.draw();

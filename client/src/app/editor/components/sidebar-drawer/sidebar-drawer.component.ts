@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
+import { ButtonId } from '@app/classes/button-id';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
-import { ButtonId } from '@app/classes/button-id';
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -56,7 +56,7 @@ export class SidebarDrawerComponent {
         this.isColorPickerDisplayEnabled = true;
         this.color = this.getPrimaryColor();
     }
-    
+
     selectSecondaryColor(): void {
         this.isPrimarySelected = false;
         this.isColorPickerDisplayEnabled = true;
@@ -78,6 +78,11 @@ export class SidebarDrawerComponent {
 
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
+        if (this.isPrimarySelected) {
+            this.color = this.colorService.getPrimaryColor();
+        } else {
+            this.color = this.colorService.getSecondaryColor();
+        }
     }
 
     getSelectedColor(): Color {

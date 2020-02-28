@@ -232,11 +232,8 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLine(): void {
-        const previewColor = new Color();
-        previewColor.red = this.colorService.getPrimaryColor().red;
-        previewColor.green = this.colorService.getPrimaryColor().green;
-        previewColor.blue = this.colorService.getPrimaryColor().blue;
-        previewColor.alpha = this.colorService.getPrimaryColor().alpha / 2;
+        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        previewColor.alpha /= 2;
 
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
         this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);

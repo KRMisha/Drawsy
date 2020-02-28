@@ -9,26 +9,24 @@ const radius = 8;
 @Component({
     selector: 'app-alpha-slider',
     templateUrl: './alpha-slider.component.html',
-    styleUrls: ['./alpha-slider.component.scss']
+    styleUrls: ['./alpha-slider.component.scss'],
 })
 export class AlphaSliderComponent implements AfterViewInit {
     @ViewChild('alphaPicker', { static: false }) alphaCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
-    private color = new Color;
+    private color = new Color();
 
     private isMouseInside = false;
     private isMouseDown = false;
     private mouseXPosition = 0;
 
     constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.colorChanged$.subscribe(
-            color => {
-                this.color = color;
-                this.draw();
-            }
-        )
+        this.colorPickerService.colorChanged$.subscribe((color: Color) => {
+            this.color = color;
+            this.draw();
+        });
     }
 
     ngAfterViewInit(): void {
@@ -92,7 +90,7 @@ export class AlphaSliderComponent implements AfterViewInit {
         if (!this.isMouseDown) {
             return;
         }
-        
+
         this.mouseXPosition = Math.min(canvasWidth, Math.max(0, event.clientX - this.alphaCanvas.nativeElement.getBoundingClientRect().x));
         const alpha = this.mouseXPosition / this.canvas.width;
         this.colorPickerService.alpha = alpha;

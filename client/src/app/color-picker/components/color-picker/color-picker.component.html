@@ -6,7 +6,7 @@
             <app-alpha-slider style="position: absolute; top: 22px; left:0px"></app-alpha-slider>
         </div>
         <div class="color-preview-checker">
-            <div class="color-preview" [style.background-color]="color.toRgbaString()"></div>
+            <div class="color-preview" [style.background-color]="this.colorPickerService.getColor().toRgbaString()"></div>
         </div>
     </div>
     <app-color-hex-selector></app-color-hex-selector>

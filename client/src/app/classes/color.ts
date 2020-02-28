@@ -38,6 +38,42 @@ export class Color {
         this._alpha = this.clampValue(alpha, 0, 1);
     }
 
+    static fromColor(color: Color): Color {
+        const newColor = new Color();
+        newColor.red = color.red;
+        newColor.green = color.green;
+        newColor.blue = color.blue;
+        newColor.alpha = color.alpha;
+        newColor.lastHue = color.lastHue;
+        return newColor;
+    }
+
+    static fromRgb(red: number, green: number, blue: number): Color {
+        const newColor = new Color();
+        newColor.red = red;
+        newColor.green = green;
+        newColor.blue = blue;
+        return newColor;
+    }
+
+    static fromRgba(red: number, green: number, blue: number, alpha: number): Color {
+        const newColor = this.fromRgb(red, green, blue);
+        newColor.alpha = alpha;
+        return newColor;
+    }
+
+    static fromHsv(hue: number, saturation: number, value: number): Color {
+        const newColor = new Color();
+        newColor.setHsv(hue, value, saturation);
+        return newColor;
+    }
+
+    static fromHex(hex: string): Color {
+        const newColor = new Color();
+        newColor.setHex(hex);
+        return newColor;
+    }
+
     setHsv(hue: number, saturation: number, value: number): void {
         // All constants are taken from this algorithm:
         // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
@@ -113,6 +149,10 @@ export class Color {
             hue = angleValue * ((bluePrime - redPrime) / deltaC + 2);
         } else {
             hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
+        }
+
+        if (hue < 0) {
+            hue += Color.maxHue;
         }
 
         const saturation: number = cMax === 0 ? 0 : deltaC / cMax;
