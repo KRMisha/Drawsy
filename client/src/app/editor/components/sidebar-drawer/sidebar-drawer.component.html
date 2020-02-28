@@ -38,45 +38,38 @@
         ></div>
     </div>
 
-    <app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color"> </app-color-picker>
+    <app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color"></app-color-picker>
 
     <h1>{{ getToolName() }}</h1>
 
     <div *ngIf="hasSetting(ToolSetting.Size)">
         <div class="option">
             <h2>Taille</h2>
-            <input
-                class="input-number"
-                type="number"
-                [ngModel]="getSetting(ToolSetting.Size)"
-                (ngModelChange)="setSetting(ToolSetting.Size, $event)"
-            />
+            <form [formGroup]="sizeGroup">
+                <input class="input-number" formControlName="size" />
+            </form>
         </div>
-        <mat-slider min="1" max="100" (input)="setSetting(ToolSetting.Size, $event.value)" [value]="getSetting(ToolSetting.Size)">
+        <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
         </mat-slider>
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.HasJunction)">
         <div class="option">
             <h2>Taille jonction</h2>
-            <input
-                class="input-number"
-                type="number"
-                [ngModel]="getSetting(ToolSetting.HasJunction)[1]"
-                (ngModelChange)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event])"
-                [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
-            />
-            <mat-checkbox
+            <form [formGroup]="junctionSizeGroup">
+                <input class="input-number" formControlName="junctionSize" [disabled]="!getSetting(ToolSetting.HasJunction)[0]" />
+            </form>
+
+            <mat-slide-toggle
                 [ngModel]="getSetting(ToolSetting.HasJunction)[0]"
                 (ngModelChange)="setSetting(ToolSetting.HasJunction, [$event, getSetting(ToolSetting.HasJunction)[1]])"
-            >
-            </mat-checkbox>
+            ></mat-slide-toggle>
         </div>
         <mat-slider
             min="1"
             max="100"
-            (input)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event.value])"
-            [value]="getSetting(ToolSetting.HasJunction)[1]"
+            (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
+            [value]="junctionSizeGroup.controls.junctionSize.value"
             [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
         >
         </mat-slider>
@@ -105,11 +98,11 @@
             <mat-form-field class="select">
                 <mat-label>Type de texture</mat-label>
                 <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
-                    <mat-option [value]="Textures.Texture1">Texture 1</mat-option>
-                    <mat-option [value]="Textures.Texture2">Texture 2</mat-option>
-                    <mat-option [value]="Textures.Texture3">Texture 3</mat-option>
-                    <mat-option [value]="Textures.Texture4">Texture 4</mat-option>
-                    <mat-option [value]="Textures.Texture5">Texture 5</mat-option>
+                    <mat-option [value]="Textures.Texture1">Vent d'automne</mat-option>
+                    <mat-option [value]="Textures.Texture2">Âme fragile</mat-option>
+                    <mat-option [value]="Textures.Texture3">Ombre du matin</mat-option>
+                    <mat-option [value]="Textures.Texture4">Chlorophylle</mat-option>
+                    <mat-option [value]="Textures.Texture5">Innocence juvénile</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

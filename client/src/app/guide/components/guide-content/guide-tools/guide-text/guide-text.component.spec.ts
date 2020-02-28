@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideTextComponent } from './guide-text.component';
+import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 
 describe('GuideTextComponent', () => {
     let component: GuideTextComponent;

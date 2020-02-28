@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideGridComponent } from './guide-grid.component';
+import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 
 describe('GuideGridComponent', () => {
     let component: GuideGridComponent;

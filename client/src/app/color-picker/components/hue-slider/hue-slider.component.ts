@@ -21,7 +21,7 @@ const radius = 8;
     styleUrls: ['./hue-slider.component.scss'],
 })
 export class HueSliderComponent implements AfterViewInit {
-    @ViewChild('huePicker', { static: false }) hueCanvas: ElementRef;
+    @ViewChild('appHuePicker', { static: false }) hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;

@@ -1,4 +1,4 @@
-import { Color } from './color';
+import { Color } from '@app/classes/color';
 
 // tslint:disable: no-magic-numbers
 

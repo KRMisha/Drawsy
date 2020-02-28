@@ -1,7 +1,4 @@
-import { Injectable, Type } from '@angular/core';
-
-// Disable max line length for long imports due to detailed nesting
-// tslint:disable: max-line-length
+import { Type } from '@angular/core';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -23,40 +20,61 @@ import { GuideRectangleComponent } from '@app/guide/components/guide-content/gui
 import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
-// tslint:enable: max-line-length
 
-// Type<any> to prevent all components needing to inherit from a parent component
-// tslint:disable-next-line: no-any
-const guides: Type<any>[] = [
-    GuideWelcomeComponent,
-    GuideSpraypaintComponent,
-    GuidePencilComponent,
-    GuidePaintbrushComponent,
-    GuideCalligraphyComponent,
-    GuideEllipseComponent,
-    GuidePolygonComponent,
-    GuideRectangleComponent,
-    GuideRecolorComponent,
-    GuideColorComponent,
-    GuideEraserComponent,
-    GuideStampComponent,
-    GuideLineComponent,
-    GuideColorPickerComponent,
-    GuideFillComponent,
-    GuideTextComponent,
-    GuideSelectComponent,
-    GuideGridComponent,
-    GuideSnapToGridComponent,
-    GuideExportDrawingComponent,
-    GuideSaveDrawingComponent,
-];
-
-@Injectable({
-    providedIn: 'root',
-})
-export class GuideService {
-    // tslint:disable-next-line: no-any
-    getGuides(): Type<any>[] {
-        return guides;
-    }
+export interface GuideNode {
+    name: string;
+    children?: GuideNode[];
+    guide?: Type<any>; // tslint:disable-line: no-any
 }
+
+export const guideData: GuideNode[] = [
+    {
+        name: 'Bienvenue',
+        guide: GuideWelcomeComponent,
+    },
+    {
+        name: 'Outils',
+        children: [
+            {
+                name: 'Outils de traçage',
+                children: [
+                    { name: 'Aérosol', guide: GuideSpraypaintComponent },
+                    { name: 'Crayon', guide: GuidePencilComponent },
+                    { name: 'Pinceau', guide: GuidePaintbrushComponent },
+                    { name: 'Plume', guide: GuideCalligraphyComponent },
+                ],
+            },
+            {
+                name: 'Formes',
+                children: [
+                    { name: 'Ellipse', guide: GuideEllipseComponent },
+                    { name: 'Polygone', guide: GuidePolygonComponent },
+                    { name: 'Rectangle', guide: GuideRectangleComponent },
+                ],
+            },
+            { name: 'Applicateur de couleur', guide: GuideRecolorComponent },
+            { name: 'Couleur', guide: GuideColorComponent },
+            { name: 'Efface', guide: GuideEraserComponent },
+            { name: 'Étampe', guide: GuideStampComponent },
+            { name: 'Ligne', guide: GuideLineComponent },
+            { name: 'Pipette', guide: GuideColorPickerComponent },
+            { name: 'Seau de peinture', guide: GuideFillComponent },
+            { name: 'Texte', guide: GuideTextComponent },
+            { name: 'Sélection', guide: GuideSelectComponent },
+        ],
+    },
+    {
+        name: 'Surface de dessin',
+        children: [
+            { name: 'Grille', guide: GuideGridComponent },
+            { name: 'Magnétisme', guide: GuideSnapToGridComponent },
+        ],
+    },
+    {
+        name: 'Option de fichiers',
+        children: [
+            { name: 'Exporter le dessin', guide: GuideExportDrawingComponent },
+            { name: 'Sauvegarder le dessin', guide: GuideSaveDrawingComponent },
+        ],
+    },
+];

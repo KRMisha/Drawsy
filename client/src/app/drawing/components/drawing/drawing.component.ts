@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ButtonId } from '@app/classes/button-id';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({

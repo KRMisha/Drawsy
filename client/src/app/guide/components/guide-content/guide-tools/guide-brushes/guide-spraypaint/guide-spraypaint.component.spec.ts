@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideSpraypaintComponent } from './guide-spraypaint.component';
+import { GuideSpraypaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spraypaint//guide-spraypaint.component';
 
 describe('GuideSpraypaintComponent', () => {
     let component: GuideSpraypaintComponent;

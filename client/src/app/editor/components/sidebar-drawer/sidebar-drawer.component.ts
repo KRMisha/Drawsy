@@ -1,27 +1,85 @@
-import { Component } from '@angular/core';
-import { ButtonId } from '@app/classes/button-id';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
-import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { Subscription } from 'rxjs';
+
+const integerRegexPattern = '^[0-9]*$';
+const maximumSize = 500;
+const maximumJunctionSize = 100;
 
 @Component({
     selector: 'app-sidebar-drawer',
     templateUrl: './sidebar-drawer.component.html',
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class SidebarDrawerComponent {
+export class SidebarDrawerComponent implements OnInit, OnDestroy {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;
     StrokeTypes = StrokeTypes;
+
+    sizeSubscription: Subscription;
+    junctionSizeSubscription: Subscription;
 
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 
     private color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    constructor(private toolSelectorService: ToolSelectorService, protected colorService: ColorService) {}
+    sizeGroup = new FormGroup({
+        size: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    junctionSizeGroup = new FormGroup({
+        junctionSize: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumJunctionSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {}
+
+    ngOnInit(): void {
+        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
+
+        this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.sizeGroup.controls.size.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+            }
+        });
+
+        this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+            if (this.junctionSizeGroup.controls.junctionSize.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.HasJunction, [
+                    (this.getSetting(ToolSetting.HasJunction) as [boolean, number])[0],
+                    this.junctionSizeGroup.controls.junctionSize.value,
+                ]);
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.sizeSubscription.unsubscribe();
+        this.junctionSizeSubscription.unsubscribe();
+    }
 
     getToolName(): string {
         return this.toolSelectorService.getToolName();
@@ -86,15 +144,5 @@ export class SidebarDrawerComponent {
             return this.colorService.getPrimaryColor();
         }
         return this.colorService.getSecondaryColor();
-    }
-
-    oldColorClick(event: MouseEvent, color: Color): void {
-        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
-            if (event.button === ButtonId.Left) {
-                this.colorService.setPrimaryColor(color);
-            } else {
-                this.colorService.setSecondaryColor(color);
-            }
-        }
     }
 }

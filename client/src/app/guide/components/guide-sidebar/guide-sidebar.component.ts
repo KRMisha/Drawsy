@@ -1,12 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-
-enum MenuSection {
-    Tools,
-    ToolBrushes,
-    ToolShapes,
-    DrawingSurfaceOptions,
-    FileOptions,
-}
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { guideData, GuideNode } from '@app/guide/classes/guide-node';
 
 @Component({
     selector: 'app-guide-sidebar',
@@ -14,18 +9,29 @@ enum MenuSection {
     styleUrls: ['./guide-sidebar.component.scss'],
 })
 export class GuideSidebarComponent {
-    MenuSection = MenuSection; // Make enum available to template
     isEachMenuExpanded: boolean[] = [false, false, false, false, false];
 
-    @Output() selectGuide = new EventEmitter<number>();
+    treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
+    dataSource = new MatTreeNestedDataSource<GuideNode>();
 
-    toggleMenu(menuSection: MenuSection): void {
-        this.isEachMenuExpanded[menuSection] = !this.isEachMenuExpanded[menuSection];
+    @Output() selectGuide = new EventEmitter<Type<any>>(); // tslint:disable-line: no-any
+
+    constructor() {
+        this.dataSource.data = guideData;
+    }
+
+    hasChild = (_: number, node: GuideNode) => node.children !== undefined && node.children.length > 0;
+
+    expandLayer(nodes: GuideNode[]): void {
+        for (const node of nodes) {
+            if (node.children) {
+                this.expandLayer(node.children);
+                this.treeControl.expand(node);
+            }
+        }
     }
 
     expandAllMenus(): void {
-        for (let i = 0; i < this.isEachMenuExpanded.length; i++) {
-            this.isEachMenuExpanded[i] = true;
-        }
+        this.expandLayer(this.dataSource.data);
     }
 }

@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AlphaSliderComponent } from './alpha-slider.component';
+import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 
 describe('AlphaSliderComponent', () => {
     let component: AlphaSliderComponent;

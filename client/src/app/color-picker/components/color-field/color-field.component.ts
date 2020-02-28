@@ -19,7 +19,7 @@ const canvasHeight = 160;
     styleUrls: ['./color-field.component.scss'],
 })
 export class ColorFieldComponent implements AfterViewInit {
-    @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
+    @ViewChild('appSaturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;

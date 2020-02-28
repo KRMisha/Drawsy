@@ -1,9 +1,9 @@
 import { Renderer2 } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
-import { DrawingService } from '../../drawing/services/drawing.service';
-import { StrokeTypes, Textures, Tool, ToolSetting } from './tool';
-import { ToolHolderService } from './tool-holder.service';
-import { ToolSelectorService } from './tool-selector.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { StrokeTypes, Textures, Tool, ToolSetting } from '@app/tools/services/tool';
+import { ToolHolderService } from '@app/tools/services/tool-holder.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 // tslint:disable: no-magic-numbers
 

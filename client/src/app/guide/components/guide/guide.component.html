@@ -1,21 +1,21 @@
-<div class="guide">
-    <app-guide-sidebar #sidebar class="sidebar" (selectGuide)="selectGuide($event)"></app-guide-sidebar>
-    <div class="guide-content">
-        <button mat-icon-button mat-dialog-close class="exit-button">
-            <mat-icon class="icon">close</mat-icon>
-        </button>
+<div class="container">
+    <app-guide-sidebar #appSidebar class="item-sidebar" (selectGuide)="selectGuide($event)"></app-guide-sidebar>
+    <button mat-icon-button mat-dialog-close class="item-exit-button">
+        <mat-icon class="icon">close</mat-icon>
+    </button>
+    <div class="item-guide-content">
         <ng-template appGuide></ng-template>
-        <div class="button-container">
-            <div class="previous-container">
-                <button mat-icon-button *ngIf="hasPreviousGuide" class="navigation-button" (click)="selectPreviousGuide()">
-                    <mat-icon class="icon">keyboard_arrow_left</mat-icon> Précédent
-                </button>
-            </div>
-            <div class="next-container">
-                <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()">
-                    Suivant <mat-icon class="icon">keyboard_arrow_right</mat-icon>
-                </button>
-            </div>
+    </div>
+    <div class="item-buttons">
+        <div class="previous">
+            <button mat-icon-button *ngIf="hasPreviousGuide" class="navigation-button" (click)="selectPreviousGuide()">
+                <mat-icon class="icon">keyboard_arrow_left</mat-icon> Précédent
+            </button>
+        </div>
+        <div class="next">
+            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()">
+                Suivant <mat-icon class="icon">keyboard_arrow_right</mat-icon>
+            </button>
         </div>
     </div>
 </div>

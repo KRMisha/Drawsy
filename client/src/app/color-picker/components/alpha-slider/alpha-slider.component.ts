@@ -12,7 +12,7 @@ const radius = 8;
     styleUrls: ['./alpha-slider.component.scss'],
 })
 export class AlphaSliderComponent implements AfterViewInit {
-    @ViewChild('alphaPicker', { static: false }) alphaCanvas: ElementRef;
+    @ViewChild('appAlphaPicker', { static: false }) alphaCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
