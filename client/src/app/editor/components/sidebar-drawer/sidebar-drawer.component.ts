@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { ToolDefaults } from '@app/tools/classes/tool-defaults';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
