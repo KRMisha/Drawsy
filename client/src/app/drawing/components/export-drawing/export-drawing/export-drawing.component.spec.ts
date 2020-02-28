@@ -3,23 +3,22 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExportDrawingComponent } from './export-drawing.component';
 
 describe('ExportDrawingComponent', () => {
-  let component: ExportDrawingComponent;
-  let fixture: ComponentFixture<ExportDrawingComponent>;
+    let component: ExportDrawingComponent;
+    let fixture: ComponentFixture<ExportDrawingComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ExportDrawingComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ExportDrawingComponent],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ExportDrawingComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(ExportDrawingComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

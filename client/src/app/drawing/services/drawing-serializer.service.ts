@@ -7,10 +7,8 @@ import { Color } from '@app/classes/color';
 @Injectable({
     providedIn: 'root',
 })
-
 export class DrawingSerializerService {
-
-    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer, private metaData:Meta) {}
+    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer, private metaData: Meta) {}
 
     exportCurrentDrawing(metaData: HTMLMetaElement[]): SafeUrl {
         const currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
@@ -19,14 +17,16 @@ export class DrawingSerializerService {
         // for (const metaElement of metaData) {
         //     svgFile += serializer.serializeToString(metaElement);
         // }
-        svgFile += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${this.drawingService.getDrawingDimensions().y}`;
+        svgFile += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${
+            this.drawingService.getDrawingDimensions().y
+        }`;
         // svgFile += `<meta>`
-        svgFile += serializer.serializeToString(this.metaData.addTag({name: 'Test', content: 'this bish'}) as Node);
+        svgFile += serializer.serializeToString(this.metaData.addTag({ name: 'Test', content: 'this bish' }) as Node);
         for (const element of currentDrawing.elements) {
             svgFile += serializer.serializeToString(element);
         }
-        svgFile += '</svg>'
-        const blob = new Blob([svgFile], {type: 'image/svg+xml'});
+        svgFile += '</svg>';
+        const blob = new Blob([svgFile], { type: 'image/svg+xml' });
 
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
@@ -35,14 +35,14 @@ export class DrawingSerializerService {
         let importedDrawing: Drawing = new Drawing();
         const fileReader: FileReader = new FileReader();
         let fileContent: string = '';
-        fileReader.onloadend = () => { 
-            fileContent = (fileReader.result as string);
+        fileReader.onloadend = () => {
+            fileContent = fileReader.result as string;
 
             const domParser = new DOMParser();
             const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
             let childrenArray = doc.children;
             for (let i = 0; i < childrenArray.length; i++) {
-                console.log("FIRST DEGREE CHILD");
+                console.log('FIRST DEGREE CHILD');
                 console.log(childrenArray[i]);
             }
             childrenArray = childrenArray[0].children;
@@ -53,13 +53,13 @@ export class DrawingSerializerService {
                 importedDrawing.addElement(childrenArray[i] as SVGElement);
             }
             const backgroundColor = new Color();
-            backgroundColor.red= Color.maxRgb;
-            backgroundColor.green= Color.maxRgb;
-            backgroundColor.blue= Color.maxRgb;
-            
+            backgroundColor.red = Color.maxRgb;
+            backgroundColor.green = Color.maxRgb;
+            backgroundColor.blue = Color.maxRgb;
+
             importedDrawing.backgroundColor = backgroundColor;
             this.drawingService.loadDrawing(importedDrawing);
-        }
+        };
         fileReader.readAsText(file[0]);
     }
 }

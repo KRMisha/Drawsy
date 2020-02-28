@@ -1,19 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 
 @Component({
-  selector: 'app-import-drawing',
-  templateUrl: './import-drawing.component.html',
-  styleUrls: ['./import-drawing.component.scss']
+    selector: 'app-import-drawing',
+    templateUrl: './import-drawing.component.html',
+    styleUrls: ['./import-drawing.component.scss'],
 })
-export class ImportDrawingComponent implements OnInit {
+export class ImportDrawingComponent {
+    constructor(private drawingSerializerService: DrawingSerializerService) {}
 
-  constructor(private drawingSerializerService: DrawingSerializerService) { }
-
-  ngOnInit() {
-  }
-
-  public onChange(fileList: FileList): void {
-    this.drawingSerializerService.importSelectedDrawing(fileList)
-  }
+    onChange(fileList: FileList): void {
+        this.drawingSerializerService.importSelectedDrawing(fileList);
+    }
 }

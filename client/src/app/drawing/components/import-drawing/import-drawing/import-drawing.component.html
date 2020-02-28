@@ -1,1 +1,2 @@
-<input type="file" (change)="onChange($event.target.files)">
+<button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+<input hidden (change)="onChange($event.target.files)" #fileInput type="file" id="file" />

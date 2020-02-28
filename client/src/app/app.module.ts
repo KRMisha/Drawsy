@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +30,8 @@ import { ColorHexSelectorComponent } from './color-picker/components/color-hex-s
 import { ColorPickerComponent } from './color-picker/components/color-picker/color-picker.component';
 import { ColorSliderComponent } from './color-picker/components/color-slider/color-slider.component';
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
+import { ExportDrawingComponent } from './drawing/components/export-drawing/export-drawing/export-drawing.component';
+import { ImportDrawingComponent } from './drawing/components/import-drawing/import-drawing/import-drawing.component';
 import { DrawingSettingsComponent } from './editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
 import { SidebarDrawerComponent } from './editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -59,8 +62,6 @@ import { GuideSidebarComponent } from './guide/components/guide-sidebar/guide-si
 import { GuideComponent } from './guide/components/guide/guide.component';
 import { HomeComponent } from './home/components/home/home.component';
 import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing.component';
-import { ExportDrawingComponent } from './drawing/components/export-drawing/export-drawing/export-drawing.component';
-import { ImportDrawingComponent } from './drawing/components/import-drawing/import-drawing/import-drawing.component';
 
 @NgModule({
     declarations: [
@@ -119,6 +120,7 @@ import { ImportDrawingComponent } from './drawing/components/import-drawing/impo
         MatIconModule,
         MatSidenavModule,
         MatListModule,
+        MatTabsModule,
         AppRoutingModule,
         MatExpansionModule,
         MatDialogModule,
@@ -152,7 +154,7 @@ import { ImportDrawingComponent } from './drawing/components/import-drawing/impo
         GuideSaveDrawingComponent,
         NewDrawingComponent,
         ExportDrawingComponent,
-        ImportDrawingComponent
+        ImportDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

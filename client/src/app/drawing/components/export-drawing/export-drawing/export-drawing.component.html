@@ -1,4 +1,10 @@
-<p>export-drawing works!</p>
-<a [href]="fileUrl" download="file.svg">
-    <button mat-raised-button (click)="exportDrawing()">Download</button>
-</a>
+<mat-tab-group>
+    <mat-tab label="Export">
+        <a [href]="fileUrl" download="file.svg">
+            <button mat-raised-button (click)="exportDrawing()">Download</button>
+        </a>
+    </mat-tab>
+    <mat-tab label="Import">
+        <app-import-drawing></app-import-drawing>
+    </mat-tab>
+</mat-tab-group>
