@@ -21,8 +21,7 @@ export class SidebarDrawerComponent {
 
     private color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    constructor(private toolSelectorService: ToolSelectorService, protected colorService: ColorService) {
-    }
+    constructor(private toolSelectorService: ToolSelectorService, protected colorService: ColorService) {}
 
     getToolName(): string {
         return this.toolSelectorService.getToolName();

@@ -38,7 +38,7 @@ export class ColorService {
     }
 
     setSecondaryColor(color: Color): void {
-        this.secondaryColor = Color.fromColor(color);;
+        this.secondaryColor = Color.fromColor(color);
         this.addColor(this.secondaryColor);
     }
 

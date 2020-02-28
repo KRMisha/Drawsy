@@ -39,8 +39,7 @@ export class NewDrawingComponent implements OnInit {
         ),
     });
 
-    constructor(private router: Router, private drawingService: DrawingService) {
-    }
+    constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
         this.drawingForm.controls.width.valueChanges.subscribe(() => {

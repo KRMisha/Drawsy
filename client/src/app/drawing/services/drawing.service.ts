@@ -12,9 +12,6 @@ export class DrawingService {
 
     private currentDrawing = new Drawing();
 
-    constructor() {
-    }
-
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);

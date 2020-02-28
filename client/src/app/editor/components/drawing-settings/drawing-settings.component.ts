@@ -10,8 +10,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 export class DrawingSettingsComponent {
     color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    constructor(private drawingService: DrawingService) {
-    }
+    constructor(private drawingService: DrawingService) {}
 
     confirmColor(): void {
         this.drawingService.setBackgroundColor(this.color);

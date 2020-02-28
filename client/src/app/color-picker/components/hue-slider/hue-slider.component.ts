@@ -44,7 +44,7 @@ export class HueSliderComponent implements AfterViewInit {
     }
 
     constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.hueChanged$.subscribe((hue : number) => {
+        this.colorPickerService.hueChanged$.subscribe((hue: number) => {
             this.sliderXPosition = this.calculateMouseXPositionFromHue(this.sliderXPosition, hue);
             this.draw();
         });
