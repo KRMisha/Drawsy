@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,11 +26,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '@app/app-routing.module';
 
 import { AppComponent } from '@app/app/app.component';
-import { ColorContainerComponent } from '@app/color-picker/components/color-container/color-container.component';
+import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
 import { ColorHexSelectorComponent } from '@app/color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
-import { ColorSliderComponent } from '@app/color-picker/components/color-slider/color-slider.component';
+import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
@@ -62,90 +65,93 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
 
 @NgModule({
     declarations: [
+        AlphaSliderComponent,
         AppComponent,
-        DrawingComponent,
-        EditorComponent,
-        SidebarComponent,
-        GuideComponent,
-        GuideWelcomeComponent,
-        GuideSpraypaintComponent,
-        GuidePencilComponent,
-        GuideCalligraphyComponent,
-        GuideEllipseComponent,
-        GuidePolygonComponent,
-        GuideRectangleComponent,
-        GuideRecolorComponent,
-        GuideColorComponent,
-        GuideEraserComponent,
-        GuideStampComponent,
-        GuideLineComponent,
-        GuideColorPickerComponent,
-        GuideFillComponent,
-        GuideTextComponent,
-        GuideSelectComponent,
-        GuideGridComponent,
-        GuideSnapToGridComponent,
-        GuideExportDrawingComponent,
-        GuideSaveDrawingComponent,
-        GuideSidebarComponent,
-        GuideDirective,
-        ColorPickerComponent,
-        ColorSliderComponent,
-        ColorContainerComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
+        ColorPickerComponent,
+        DrawingComponent,
         DrawingSettingsComponent,
+        EditorComponent,
         GuideCalligraphyComponent,
+        GuideCalligraphyComponent,
+        GuideColorComponent,
+        GuideColorPickerComponent,
+        GuideComponent,
+        GuideDirective,
+        GuideEllipseComponent,
+        GuideEraserComponent,
+        GuideExportDrawingComponent,
+        GuideFillComponent,
+        GuideGridComponent,
+        GuideLineComponent,
         GuidePaintbrushComponent,
-        SidebarDrawerComponent,
+        GuidePencilComponent,
+        GuidePolygonComponent,
+        GuideRecolorComponent,
+        GuideRectangleComponent,
+        GuideSaveDrawingComponent,
+        GuideSelectComponent,
+        GuideSidebarComponent,
+        GuideSnapToGridComponent,
+        GuideSpraypaintComponent,
+        GuideStampComponent,
+        GuideTextComponent,
+        GuideWelcomeComponent,
         HomeComponent,
+        HueSliderComponent,
         NewDrawingComponent,
+        SidebarComponent,
+        SidebarDrawerComponent,
     ],
     imports: [
-        BrowserModule,
-        HttpClientModule,
-        FormsModule,
+        AppRoutingModule,
         BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
         MatButtonModule,
         MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSliderModule,
         MatCheckboxModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatListModule,
-        AppRoutingModule,
-        MatExpansionModule,
+        MatChipsModule,
         MatDialogModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatRippleModule,
         MatSelectModule,
+        MatSidenavModule,
+        MatSliderModule,
+        MatSlideToggleModule,
         MatTreeModule,
         ReactiveFormsModule,
     ],
     entryComponents: [
         DrawingSettingsComponent,
-        GuideComponent,
-        GuideWelcomeComponent,
-        GuideSpraypaintComponent,
-        GuidePencilComponent,
-        GuidePaintbrushComponent,
         GuideCalligraphyComponent,
-        GuideEllipseComponent,
-        GuidePolygonComponent,
-        GuideRectangleComponent,
-        GuideRecolorComponent,
         GuideColorComponent,
-        GuideEraserComponent,
-        GuideStampComponent,
-        GuideLineComponent,
         GuideColorPickerComponent,
-        GuideFillComponent,
-        GuideTextComponent,
-        GuideSelectComponent,
-        GuideGridComponent,
-        GuideSnapToGridComponent,
+        GuideComponent,
+        GuideEllipseComponent,
+        GuideEraserComponent,
         GuideExportDrawingComponent,
+        GuideFillComponent,
+        GuideGridComponent,
+        GuideLineComponent,
+        GuidePaintbrushComponent,
+        GuidePencilComponent,
+        GuidePolygonComponent,
+        GuideRecolorComponent,
+        GuideRectangleComponent,
         GuideSaveDrawingComponent,
+        GuideSelectComponent,
+        GuideSnapToGridComponent,
+        GuideSpraypaintComponent,
+        GuideStampComponent,
+        GuideTextComponent,
+        GuideWelcomeComponent,
         NewDrawingComponent,
     ],
     providers: [],

@@ -15,7 +15,7 @@ export abstract class ToolBrush extends Tool {
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseInside && this.isMouseDown) {
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
-            this.path.setAttribute('d', pathString);
+            this.renderer.setAttribute(this.path, 'd', pathString);
         }
     }
 

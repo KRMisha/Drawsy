@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ColorSliderComponent } from '@app/color-picker/components/color-slider/color-slider.component';
+import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
 
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
-describe('ColorSliderComponent', () => {
-    let component: ColorSliderComponent;
-    let fixture: ComponentFixture<ColorSliderComponent>;
+describe('HueSliderComponent', () => {
+    let component: HueSliderComponent;
+    let fixture: ComponentFixture<HueSliderComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ColorSliderComponent],
+            declarations: [HueSliderComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ColorSliderComponent);
+        fixture = TestBed.createComponent(HueSliderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         spyOn(component.hueChange, 'emit').and.callThrough();

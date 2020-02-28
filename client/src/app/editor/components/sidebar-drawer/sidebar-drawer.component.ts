@@ -28,7 +28,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 
-    private color = new Color();
+    private color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -54,11 +54,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
-    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
-        this.color.red = Color.maxRgb;
-        this.color.green = Color.maxRgb;
-        this.color.blue = Color.maxRgb;
-    }
+    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {}
 
     ngOnInit(): void {
         this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
@@ -112,11 +108,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     selectPrimaryColor(): void {
         this.isPrimarySelected = true;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getPrimaryColor();
     }
 
     selectSecondaryColor(): void {
         this.isPrimarySelected = false;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getSecondaryColor();
     }
 
     updateColor(color: Color): void {
@@ -134,6 +132,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
+        if (this.isPrimarySelected) {
+            this.color = this.colorService.getPrimaryColor();
+        } else {
+            this.color = this.colorService.getSecondaryColor();
+        }
     }
 
     getSelectedColor(): Color {
@@ -142,12 +145,4 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
         return this.colorService.getSecondaryColor();
     }
-
-    // get Textures(): string[] {
-    //     return Object.values(Textures);
-    // }
-
-    // get StrokeTypes(): string[] {
-    //     return Object.values(StrokeTypes);
-    // }
 }

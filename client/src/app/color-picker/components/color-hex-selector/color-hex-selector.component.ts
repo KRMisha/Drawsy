@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Color, hexRegex } from '@app/classes/color';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 
 const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 
@@ -16,11 +17,16 @@ export class ColorHexSelectorComponent {
     hexBlue = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     isHex = true;
 
-    @Output() colorChanged: EventEmitter<Color> = new EventEmitter();
-    @Input()
-    set hex(hex: string) {
-        this.hexRgb.setValue(hex);
+    constructor(private colorPickerService: ColorPickerService) {
+        this.colorPickerService.colorChanged$.subscribe((color: Color) => {
+            const hex = color.getHex();
+            this.setHex(hex);
+        });
+    }
+
+    private setHex(hex: string): void {
         // tslint:disable: no-magic-numbers
+        this.hexRgb.setValue(hex);
         this.hexRed.setValue(hex.substring(0, 2));
         this.hexGreen.setValue(hex.substring(2, 4));
         this.hexBlue.setValue(hex.substring(4, 6));
@@ -31,8 +37,8 @@ export class ColorHexSelectorComponent {
         if (hexRegex.test(this.hexRgb.value)) {
             const color = new Color();
             color.setHex(this.hexRgb.value);
-            this.hex = this.hexRgb.value;
-            this.colorChanged.emit(color);
+            color.alpha = this.colorPickerService.alpha;
+            this.colorPickerService.setColor(color);
         }
     }
 
@@ -51,7 +57,7 @@ export class ColorHexSelectorComponent {
         if (this.isHex) {
             this.updateColorRgb();
         } else {
-            this.hex = this.hexRgb.value;
+            this.setHex(this.hexRgb.value);
         }
         event.preventDefault();
     }

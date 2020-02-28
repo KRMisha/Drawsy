@@ -16,7 +16,7 @@ export class SidebarComponent implements OnInit {
     buttons: SidebarButton[] = sidebarButtons;
     selectedButton: SidebarButton = this.buttons[0];
 
-    @ViewChild('drawer', { static: false }) drawer: MatDrawer;
+    @ViewChild('appDrawer', { static: false }) drawer: MatDrawer;
 
     private areShortcutsEnabled = true;
 

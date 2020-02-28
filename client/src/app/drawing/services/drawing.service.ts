@@ -12,12 +12,6 @@ export class DrawingService {
 
     private currentDrawing = new Drawing();
 
-    constructor() {
-        this.currentDrawing.backgroundColor.red = Color.maxRgb;
-        this.currentDrawing.backgroundColor.green = Color.maxRgb;
-        this.currentDrawing.backgroundColor.blue = Color.maxRgb;
-    }
-
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);
