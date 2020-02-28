@@ -33,23 +33,13 @@ export class ColorService {
     }
 
     setPrimaryColor(color: Color): void {
-        const newColor = new Color();
-        newColor.red = color.red;
-        newColor.green = color.green;
-        newColor.blue = color.blue;
-        newColor.alpha = color.alpha;
-        this.primaryColor = newColor;
-        this.addColor(newColor);
+        this.primaryColor = Color.fromColor(color);
+        this.addColor(this.primaryColor);
     }
 
     setSecondaryColor(color: Color): void {
-        const newColor = new Color();
-        newColor.red = color.red;
-        newColor.green = color.green;
-        newColor.blue = color.blue;
-        newColor.alpha = color.alpha;
-        this.secondaryColor = newColor;
-        this.addColor(newColor);
+        this.secondaryColor = Color.fromColor(color);;
+        this.addColor(this.secondaryColor);
     }
 
     getLastColors(): Color[] {
