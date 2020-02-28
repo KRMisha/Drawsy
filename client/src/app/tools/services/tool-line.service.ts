@@ -173,24 +173,27 @@ export class ToolLineService extends Tool {
             return mousePosition;
         }
 
-        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * 180) / Math.PI;
+        const maxAngle = 360;
+        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle / 2) / Math.PI;
         const snapAngle = 45;
         angle = Math.round(angle / snapAngle) * snapAngle;
         if (angle <= 0) {
-            angle += 360;
+            angle += maxAngle;
         }
-
+        
         const nextPoint: Vec2 = { x: 0, y: 0 };
+        const horizontalAngles = [180, 360]; // tslint:disable-line: no-magic-numbers
+        const verticalAngles = [90, 270]; // tslint:disable-line: no-magic-numbers
         // tslint:disable-next-line: prefer-switch (semantically not a switch)
-        if (angle === 180 || angle === 360) {
+        if (horizontalAngles.includes(angle)) {
             nextPoint.x = mousePosition.x;
             nextPoint.y = lastPoint.y;
-        } else if (angle === 90 || angle === 270) {
+        } else if (verticalAngles.includes(angle)) {
             nextPoint.x = lastPoint.x;
             nextPoint.y = mousePosition.y;
         } else {
             nextPoint.x = mousePosition.x;
-            nextPoint.y = Math.tan((angle / 180) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
+            nextPoint.y = Math.tan((angle / (maxAngle / 2)) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
         }
         return nextPoint;
     }
