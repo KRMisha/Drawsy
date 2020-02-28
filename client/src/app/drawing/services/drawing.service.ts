@@ -8,7 +8,10 @@ import { Vec2 } from '@app/classes/vec2';
 })
 export class DrawingService {
     renderer: Renderer2;
-    rootElement: SVGElement;
+
+    private drawingRoot: SVGSVGElement;
+    private svgDrawingContent: SVGGElement;
+    private svgMetadataContent: SVGMetadataElement;
 
     private currentDrawing = new Drawing();
 
@@ -18,32 +21,38 @@ export class DrawingService {
         this.currentDrawing.backgroundColor.blue = Color.maxRgb;
     }
 
+    setTarget(drawingRoot: SVGSVGElement): void {
+        this.drawingRoot = drawingRoot;
+        this.svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
+        this.svgMetadataContent = drawingRoot.getElementsByTagName('metadata')[0];
+    }
+
     addElement(element: SVGElement): void {
-        this.currentDrawing.addElement(element);
-        this.renderer.appendChild(this.rootElement, element);
+        this.currentDrawing.addSvgElement(element);
+        this.renderer.appendChild(this.svgDrawingContent, element);
     }
 
     removeElement(element: SVGElement): void {
-        if (this.currentDrawing.removeElement(element)) {
-            this.renderer.removeChild(this.rootElement, element);
+        if (this.currentDrawing.removeSvgElement(element)) {
+            this.renderer.removeChild(this.svgDrawingContent, element);
         }
     }
 
     reappendStoredElements(): void {
-        for (const element of this.currentDrawing.elements) {
-            this.renderer.appendChild(this.rootElement, element);
+        for (const element of this.currentDrawing.svgElements) {
+            this.renderer.appendChild(this.svgDrawingContent, element);
         }
     }
 
     clearStoredElements(): void {
-        for (const element of this.currentDrawing.elements) {
-            this.renderer.removeChild(this.rootElement, element);
+        for (const element of this.currentDrawing.svgElements) {
+            this.renderer.removeChild(this.svgDrawingContent, element);
         }
-        this.currentDrawing.clearElements();
+        this.currentDrawing.clearSvgElements();
     }
 
     isDrawingStarted(): boolean {
-        return this.currentDrawing.hasElements();
+        return this.currentDrawing.hasSvgElements();
     }
 
     getDrawingDimensions(): Vec2 {
@@ -66,9 +75,18 @@ export class DrawingService {
         return this.currentDrawing;
     }
 
-    loadDrawing(drawing: Drawing): void {
+    setDrawing(drawing: Drawing): void {
         this.clearStoredElements();
         this.currentDrawing = drawing;
         this.reappendStoredElements();
+    }
+
+    addSvgMetadataElement(element: SVGMetadataElement): void {
+        this.currentDrawing.addmetadataElement(element);
+        this.renderer.appendChild(this.svgMetadataContent, element);
+    }
+
+    getSvgRoot(): void {
+        this.drawingRoot.getElementsByTagName('g');
     }
 }

@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 
+import { MatChipsModule } from '@angular/material/chips';
 import { AppComponent } from './app/app.component';
 import { ColorContainerComponent } from './color-picker/components/color-container/color-container.component';
 import { ColorFieldComponent } from './color-picker/components/color-field/color-field.component';
@@ -63,7 +64,6 @@ import { GuideSidebarComponent } from './guide/components/guide-sidebar/guide-si
 import { GuideComponent } from './guide/components/guide/guide.component';
 import { HomeComponent } from './home/components/home/home.component';
 import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing.component';
-import {MatChipsModule} from '@angular/material/chips';
 @NgModule({
     declarations: [
         AppComponent,

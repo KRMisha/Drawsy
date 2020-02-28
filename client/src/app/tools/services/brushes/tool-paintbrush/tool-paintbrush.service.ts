@@ -16,7 +16,7 @@ export class ToolPaintbrushService extends ToolBrush {
 
     protected createNewPath(): SVGPathElement {
         const path = super.createNewPath();
-        this.renderer.setAttribute(path, 'filter', 'url(#texture' + this.toolSettings.get(ToolSetting.Texture) + ')');
+        this.renderer.setAttribute(path, 'filter', `url(#texture${this.toolSettings.get(ToolSetting.Texture)})`);
         return path;
     }
 }

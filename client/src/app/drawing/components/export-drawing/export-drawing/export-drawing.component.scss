@@ -1,4 +1,8 @@
-.example-chip-list {
+.chip-list {
     width: 100%;
-  }
-  
+    ::ng-deep {
+        .mat-chip-list-wrapper {
+            max-width: 100%;
+        }
+    }
+}

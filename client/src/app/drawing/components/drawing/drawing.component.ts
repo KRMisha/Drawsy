@@ -9,7 +9,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-    @ViewChild('appDrawingContent', { static: false }) private svg: ElementRef<SVGElement>;
+    @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -19,7 +19,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.drawingService.rootElement = this.svg.nativeElement;
+        this.drawingService.setTarget(this.drawingRoot.nativeElement);
         this.drawingService.reappendStoredElements();
     }
 
