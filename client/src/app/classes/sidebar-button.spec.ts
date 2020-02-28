@@ -1,4 +1,4 @@
-import { SidebarButton } from './sidebar-button';
+import { SidebarButton } from '@app/classes/sidebar-button';
 
 describe('SidebarButton', () => {
     it('should create an instance', () => {

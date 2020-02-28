@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
-import { DrawingService } from '../../../drawing/services/drawing.service';
-import { Tool, ToolSetting } from '../tool';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Tool, ToolSetting } from '@app/tools/services/tool';
 
 const defaultLineWidth = 5;
 const defaultJunctionSize = 10;

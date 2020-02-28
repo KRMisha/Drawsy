@@ -6,12 +6,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidebarButton } from '@app/classes/sidebar-button';
+import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
+import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-import { GuideComponent } from '../../../guide/components/guide/guide.component';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
-import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
-import { SidebarComponent } from './sidebar.component';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers

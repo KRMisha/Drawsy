@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideColorPickerComponent } from './guide-color-picker.component';
+import { GuideColorPickerComponent } from '@app/guide/components/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
 
 describe('GuideColorPickerComponent', () => {
     let component: GuideColorPickerComponent;

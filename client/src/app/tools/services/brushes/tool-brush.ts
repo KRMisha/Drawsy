@@ -1,6 +1,6 @@
 import { ColorService } from '@app/drawing/services/color.service';
-import { DrawingService } from '../../../../drawing/services/drawing.service';
-import { Tool, ToolSetting } from '../../tool';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Tool, ToolSetting } from '@app/tools/services/tool';
 
 const defaultSize = 5;
 
@@ -13,7 +13,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseInside && this.isMouseDown) {   
+        if (this.isMouseInside && this.isMouseDown) {
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.path.setAttribute('d', pathString);
         }
@@ -42,7 +42,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     protected createNewPath(): SVGPathElement {
-        let path: SVGPathElement = this.renderer.createElement('path', 'svg');
+        const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         path.setAttribute('fill', 'none');
         path.setAttribute('stroke', this.colorService.getPrimaryColor().toRgbaString());
         path.setAttribute('stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());

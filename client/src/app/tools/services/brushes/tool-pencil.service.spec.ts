@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ToolPencilService } from './tool-pencil.service';
+import { ToolPencilService } from '/tool-pencil.service';
 
 describe('ToolPencilService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

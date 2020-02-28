@@ -25,7 +25,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     sizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
 
-
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 

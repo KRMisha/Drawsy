@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { DrawingService } from '../../drawing/services/drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 export enum ToolSetting {
     Size,

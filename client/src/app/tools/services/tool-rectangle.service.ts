@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
-import { Vec2 } from '../../../classes/vec2';
-import { DrawingService } from '../../../drawing/services/drawing.service';
-import { StrokeTypes, Tool, ToolSetting } from '../tool';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { StrokeTypes, Tool, ToolSetting } from '@app/tools/services/tool';
 
 const defaultBorderWidth = 5;
 const defaultStrokeType = StrokeTypes.FillWithBorder;

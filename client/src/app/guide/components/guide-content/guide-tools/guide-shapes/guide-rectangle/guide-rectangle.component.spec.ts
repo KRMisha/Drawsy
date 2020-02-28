@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideRectangleComponent } from './guide-rectangle.component';
+import { GuideRectangleComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-rectangle/guide-rectangle.component';
 
 describe('GuideRectangleComponent', () => {
     let component: GuideRectangleComponent;

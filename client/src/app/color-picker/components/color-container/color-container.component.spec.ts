@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ColorContainerComponent } from './color-container.component';
+import { ColorContainerComponent } from '@app/color-picker/components/color-container/color-container.component';
 
 describe('ColorContainerComponent', () => {
     let component: ColorContainerComponent;

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
-import { GuideService } from '../../services/guide.service';
-import { GuideDirective } from '../guide-directive/guide.directive';
-import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component';
+import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
+import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
+import { GuideService } from '@app/guide/services/guide.service';
 
 @Component({
     selector: 'app-guide',
