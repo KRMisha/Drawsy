@@ -9,6 +9,8 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
     providers: [{ provide: ColorPickerService, useValue: new ColorPickerService() }],
 })
 export class ColorPickerComponent {
+    protected color = new Color();
+
     @Input()
     set colorModel(color: Color) {
         this.colorPickerService.setColor(color);    
@@ -20,6 +22,7 @@ export class ColorPickerComponent {
         this.colorPickerService.colorChanged$.subscribe(
             color => {
                 this.colorModelChange.emit(color);
+                this.color = color;
             }
         )
     }

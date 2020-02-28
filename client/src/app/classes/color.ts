@@ -4,6 +4,8 @@ export class Color {
     static readonly maxRgb = 255;
     static readonly maxHue = 360;
 
+    private lastHue = 0;
+
     private _red = 0; // tslint:disable-line: variable-name
     get red(): number {
         return this._red;
@@ -71,6 +73,8 @@ export class Color {
             this.setNormalizedColor(chroma + m, m, x + m);
         }
         // tslint:enable: no-magic-numbers
+
+        this.lastHue = hue;
     }
 
     setHex(hex: string): boolean {
@@ -102,7 +106,7 @@ export class Color {
 
         let hue: number;
         if (deltaC === 0) {
-            hue = 0;
+            hue = this.lastHue;
         } else if (cMax === redPrime) {
             hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
         } else if (cMax === greenPrime) {

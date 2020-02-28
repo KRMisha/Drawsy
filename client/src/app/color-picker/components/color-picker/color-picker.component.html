@@ -1,12 +1,13 @@
 <div class="color-picker-container">
     <app-color-field></app-color-field>
-    <app-hue-slider></app-hue-slider>
-
-    <div class="alpha-slider">
-        <div class="alpha-text">
-            Alpha:
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: 206px; position: relative">
+            <app-hue-slider style="position: absolute; top: 0px; left:0px"></app-hue-slider>
+            <app-alpha-slider style="position: absolute; top: 22px; left:0px"></app-alpha-slider>
         </div>
-        <mat-slider min="0.0" max="1.0" step="0.01" value="1.0" [(ngModel)]="alpha" (change)="setAlpha($event.value)"> </mat-slider>
+        <div class="color-preview-checker">
+            <div class="color-preview" [style.background-color]="color.toRgbaString()"></div>
+        </div>
     </div>
-    <app-color-hex-selector (colorChanged)="updateColorFromHex($event)"></app-color-hex-selector>
+    <app-color-hex-selector></app-color-hex-selector>
 </div>

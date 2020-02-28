@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app/app.component';
+import { AlphaSliderComponent } from './color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorContainerComponent } from './color-picker/components/color-container/color-container.component';
 import { ColorFieldComponent } from './color-picker/components/color-field/color-field.component';
 import { ColorHexSelectorComponent } from './color-picker/components/color-hex-selector/color-hex-selector.component';
@@ -99,6 +101,7 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         SidebarDrawerComponent,
         HomeComponent,
         NewDrawingComponent,
+        AlphaSliderComponent,
     ],
     imports: [
         BrowserModule,
@@ -117,6 +120,7 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         AppRoutingModule,
         MatExpansionModule,
         MatDialogModule,
+        MatChipsModule,
         MatSelectModule,
         ReactiveFormsModule,
     ],

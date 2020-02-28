@@ -18,6 +18,8 @@ export class ColorPickerService {
     alphaChanged$ = this.alphaChangedSource.asObservable();
     colorChanged$ = this.colorChangedSource.asObservable();
 
+    color = new Color();
+
     // tslint:disable: variable-name
     private hue_ = 0;
     private saturation_ = 0;
@@ -78,10 +80,9 @@ export class ColorPickerService {
     }
 
     getColor(): Color {
-        const color = new Color();
-        color.setHsv(this.hue, this.saturation, this.value);
-        color.alpha = this.alpha;
-        return color;
+        this.color.setHsv(this.hue, this.saturation, this.value);
+        this.color.alpha = this.alpha;
+        return this.color;
     }
 
     getHex(): string {

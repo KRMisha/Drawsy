@@ -19,7 +19,7 @@ const canvasHeight = 160;
     styleUrls: ['./color-field.component.scss'],
 })
 export class ColorFieldComponent implements AfterViewInit {
-    @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
 
     private context: CanvasRenderingContext2D;
@@ -100,8 +100,8 @@ export class ColorFieldComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isMouseDown = true;
-            this.updateColor(event);
         }
+        this.updateColor(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
@@ -109,7 +109,7 @@ export class ColorFieldComponent implements AfterViewInit {
         this.isMouseDown = false;
     }
 
-    @HostListener('mousemove', ['$event'])
+    @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         this.updateColor(event);
     }
@@ -125,14 +125,14 @@ export class ColorFieldComponent implements AfterViewInit {
     }
 
     updateColor(event: MouseEvent): void {
-        if (!this.isMouseDown || !this.isMouseInside) {
+        if (!this.isMouseDown) {
             return;
         }
         
-        this.mousePosition.x = event.offsetX;
-        this.mousePosition.y = event.offsetY;
-        this.colorPickerService.saturation = event.offsetX / this.canvas.width;
-        this.colorPickerService.value = 1.0 - event.offsetY / this.canvas.height;
+        this.mousePosition.x = Math.min(canvasWidth, Math.max(0, event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x));
+        this.mousePosition.y = Math.min(canvasHeight, Math.max(0, event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y));;
+        this.colorPickerService.saturation = this.mousePosition.x / canvasWidth;
+        this.colorPickerService.value = 1.0 - this.mousePosition.y / canvasHeight;
         this.draw();
     }
 }

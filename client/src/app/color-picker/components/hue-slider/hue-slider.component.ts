@@ -11,8 +11,9 @@ enum ColorGradient {
     Pink = 'rgb(255, 0, 255)',
 }
 
-const canvasWidth = 250;
-const canvasHeight = 21;
+const canvasWidth = 206;
+const canvasHeight = 20;
+const radius = 8;
 
 @Component({
     selector: 'app-hue-slider',
@@ -25,10 +26,11 @@ export class HueSliderComponent implements AfterViewInit {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
+    private isMouseInside = false;
     private isMouseDown = false;
     private mouseXPosition = 0;
 
-    private isMouseInside = false;
+    private hueColor = new Color();
 
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.hueChanged$.subscribe(
@@ -64,16 +66,14 @@ export class HueSliderComponent implements AfterViewInit {
         horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
         // tslint:enable: no-magic-numbers
         this.context.fillStyle = horizontalGradient;
-        const padding = 7;
+        const padding = 0;
         this.context.fillRect(0, padding, width, height - 2 * padding);
 
-        const hueColor = new Color();
-        hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
+        this.hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
 
         const circle = new Path2D();
-        const radius = 8;
         circle.arc(this.mouseXPosition, height / 2, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = hueColor.toRgbString();
+        this.context.fillStyle = this.hueColor.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
         this.context.strokeStyle = 'white';
@@ -84,8 +84,8 @@ export class HueSliderComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isMouseDown = true;
-            this.update(event);
         }
+        this.update(event);
     }
 
     @HostListener('document:mouseup')
@@ -93,7 +93,7 @@ export class HueSliderComponent implements AfterViewInit {
         this.isMouseDown = false;
     }
 
-    @HostListener('mousemove', ['$event'])
+    @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         this.update(event);
     }
@@ -109,11 +109,11 @@ export class HueSliderComponent implements AfterViewInit {
     }
 
     update(event: MouseEvent): void {
-        if (!this.isMouseDown || !this.isMouseInside) {
+        if (!this.isMouseDown) {
             return;
         }
-
-        this.mouseXPosition = event.offsetX;
+        
+        this.mouseXPosition = Math.min(canvasWidth, Math.max(0, event.clientX - this.hueCanvas.nativeElement.getBoundingClientRect().x));
         const hue = (this.mouseXPosition / this.canvas.width) * Color.maxHue;
         this.colorPickerService.hue = hue;
         this.draw();
