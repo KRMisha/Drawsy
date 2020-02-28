@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
-import { Textures, ToolSetting } from '@app/tools/services/tool';
 
 @Injectable({
     providedIn: 'root',
@@ -10,7 +11,7 @@ import { Textures, ToolSetting } from '@app/tools/services/tool';
 export class ToolPaintbrushService extends ToolBrush {
     constructor(drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService);
-        this.toolSettings.set(ToolSetting.Texture, Textures.Texture1);
+        this.toolSettings.set(ToolSetting.Texture, ToolDefaults.Texture);
         this.name = 'Pinceau';
     }
 

@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { SidebarButton, sidebarButtons } from '@app/classes/sidebar-button';
+import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';

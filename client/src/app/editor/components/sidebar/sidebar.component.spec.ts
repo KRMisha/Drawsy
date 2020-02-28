@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SidebarButton } from '@app/classes/sidebar-button';
+import { SidebarButton } from '@app/editor/classes/sidebar-button';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
