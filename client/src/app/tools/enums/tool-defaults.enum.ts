@@ -1,4 +1,4 @@
-import { StrokeTypes, Textures } from '@app/tools/services/tool';
+import { StrokeTypes, Textures } from '@app/tools/enums/tool-settings.enum';
 
 export enum ToolDefaults {
     Size = 5,

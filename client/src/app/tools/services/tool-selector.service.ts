@@ -1,5 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { StrokeTypes, Textures, Tool, ToolSetting } from '@app/tools/services/tool';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 
 @Injectable({

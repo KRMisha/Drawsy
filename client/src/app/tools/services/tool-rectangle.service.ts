@@ -3,7 +3,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeTypes, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
