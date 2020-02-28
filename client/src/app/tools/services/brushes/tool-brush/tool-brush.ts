@@ -13,9 +13,9 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseInside && this.isMouseDown) {
+        if (this.isMouseInside && this.isMouseDown) {   
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.path.setAttribute('d', pathString);
         }
     }
 
@@ -24,7 +24,7 @@ export abstract class ToolBrush extends Tool {
             this.path = this.createNewPath();
 
             const pathString = this.getPathStartString(event.offsetX, event.offsetY);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.path.setAttribute('d', pathString);
             this.drawingService.addElement(this.path);
         }
     }
@@ -36,18 +36,18 @@ export abstract class ToolBrush extends Tool {
     onLeave(event: MouseEvent): void {
         if (this.isMouseDown) {
             const pathString = this.path.getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.path.setAttribute('d', pathString);
             this.isMouseDown = false;
         }
     }
 
     protected createNewPath(): SVGPathElement {
-        const path: SVGPathElement = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
-        this.renderer.setAttribute(path, 'stroke-linecap', 'round');
-        this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
+        let path: SVGPathElement = this.renderer.createElement('path', 'svg');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', this.colorService.getPrimaryColor().toRgbaString());
+        path.setAttribute('stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
         return path;
     }
 
