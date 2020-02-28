@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { StrokeTypes, Textures, ToolSetting } from '../../../tools/services/tool';
-import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
+import { ToolDefaults } from '@app/tools/classes/tool-defaults';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+
+const integerRegexPattern = '^[0-9]*$';
+const maximumSize = 500;
+const maximumJunctionSize = 100;
 
 @Component({
     selector: 'app-sidebar-drawer',
     templateUrl: './sidebar-drawer.component.html',
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class SidebarDrawerComponent {
+export class SidebarDrawerComponent implements OnInit {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;
@@ -20,10 +26,55 @@ export class SidebarDrawerComponent {
 
     private color = new Color();
 
+    sizeGroup = new FormGroup({
+        size: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    junctionSizeGroup = new FormGroup({
+        junctionSize: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumJunctionSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
     constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
         this.color.red = Color.maxRgb;
         this.color.green = Color.maxRgb;
         this.color.blue = Color.maxRgb;
+
+        this.sizeGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.sizeGroup.controls.size.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+            }
+        });
+
+        this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+            if (this.junctionSizeGroup.controls.junctionSize.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.HasJunction, [
+                    (this.getSetting(ToolSetting.HasJunction) as [boolean, number])[0],
+                    this.junctionSizeGroup.controls.junctionSize.value,
+                ]);
+            }
+        });
+    }
+
+    ngOnInit(): void {
+        // We set the initial values now to update the service through the subscribe
+        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
     }
 
     getToolName(): string {

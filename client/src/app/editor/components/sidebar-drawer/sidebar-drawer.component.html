@@ -36,26 +36,21 @@
 <div *ngIf="hasSetting(ToolSetting.Size)">
     <div class="option">
         <h2>Taille</h2>
-        <input
-            class="input-number"
-            type="number"
-            [ngModel]="getSetting(ToolSetting.Size)"
-            (ngModelChange)="setSetting(ToolSetting.Size, $event)"
-        />
+        <form [formGroup]="sizeGroup">
+            <input class="input-number" formControlName="size" />
+        </form>
     </div>
-    <mat-slider min="1" max="100" (input)="setSetting(ToolSetting.Size, $event.value)" [value]="getSetting(ToolSetting.Size)"> </mat-slider>
+    <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
+    </mat-slider>
 </div>
 
 <div *ngIf="hasSetting(ToolSetting.HasJunction)">
     <div class="option">
         <h2>Taille jonction</h2>
-        <input
-            class="input-number"
-            type="number"
-            [ngModel]="getSetting(ToolSetting.HasJunction)[1]"
-            (ngModelChange)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event])"
-            [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
-        />
+        <form [formGroup]="junctionSizeGroup">
+            <input class="input-number" formControlName="junctionSize" [disabled]="!getSetting(ToolSetting.HasJunction)[0]" />
+        </form>
+
         <mat-checkbox
             [ngModel]="getSetting(ToolSetting.HasJunction)[0]"
             (ngModelChange)="setSetting(ToolSetting.HasJunction, [$event, getSetting(ToolSetting.HasJunction)[1]])"
@@ -65,8 +60,8 @@
     <mat-slider
         min="1"
         max="100"
-        (input)="setSetting(ToolSetting.HasJunction, [getSetting(ToolSetting.HasJunction)[0], $event.value])"
-        [value]="getSetting(ToolSetting.HasJunction)[1]"
+        (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
+        [value]="junctionSizeGroup.controls.junctionSize.value"
         [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
     >
     </mat-slider>
