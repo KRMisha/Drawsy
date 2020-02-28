@@ -32,6 +32,7 @@ import { ColorSliderComponent } from './color-picker/components/color-slider/col
 import { DrawingComponent } from './drawing/components/drawing/drawing.component';
 import { ExportDrawingComponent } from './drawing/components/export-drawing/export-drawing/export-drawing.component';
 import { ImportDrawingComponent } from './drawing/components/import-drawing/import-drawing/import-drawing.component';
+import { ImportExportDrawingComponent } from './drawing/components/import-export-drawing/import-export-drawing.component';
 import { DrawingSettingsComponent } from './editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from './editor/components/editor/editor.component';
 import { SidebarDrawerComponent } from './editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -62,7 +63,7 @@ import { GuideSidebarComponent } from './guide/components/guide-sidebar/guide-si
 import { GuideComponent } from './guide/components/guide/guide.component';
 import { HomeComponent } from './home/components/home/home.component';
 import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing.component';
-
+import {MatChipsModule} from '@angular/material/chips';
 @NgModule({
     declarations: [
         AppComponent,
@@ -105,12 +106,14 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         NewDrawingComponent,
         ImportDrawingComponent,
         ExportDrawingComponent,
+        ImportExportDrawingComponent,
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         FormsModule,
         BrowserAnimationsModule,
+        MatChipsModule,
         MatButtonModule,
         MatCardModule,
         MatFormFieldModule,
@@ -155,6 +158,7 @@ import { NewDrawingComponent } from './modals/components/new-drawing/new-drawing
         NewDrawingComponent,
         ExportDrawingComponent,
         ImportDrawingComponent,
+        ImportExportDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

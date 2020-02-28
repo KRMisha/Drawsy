@@ -1,13 +1,12 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SidebarButton, sidebarButtons } from '@app/classes/sidebar-button';
-import { ExportDrawingComponent } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
+import { ImportExportDrawingComponent } from '@app/drawing/components/import-export-drawing/import-export-drawing.component';
 import { GuideComponent } from '../../../guide/components/guide/guide.component';
 import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '../../../modals/services/modal.service';
 import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
 import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
-
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
@@ -84,7 +83,7 @@ export class SidebarComponent implements OnInit {
         this.modalService.openDialog(DrawingSettingsComponent);
     }
 
-    openExportModal(): void {
-        this.modalService.openDialog(ExportDrawingComponent);
+    openImportExportModal(): void {
+        this.modalService.openDialog(ImportExportDrawingComponent);
     }
 }

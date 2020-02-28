@@ -1,10 +1,22 @@
-<mat-tab-group>
-    <mat-tab label="Export">
-        <a [href]="fileUrl" download="file.svg">
-            <button mat-raised-button (click)="exportDrawing()">Download</button>
-        </a>
-    </mat-tab>
-    <mat-tab label="Import">
-        <app-import-drawing></app-import-drawing>
-    </mat-tab>
-</mat-tab-group>
+<div>
+    <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Fruit selection">
+          <mat-chip *ngFor="let label of labels" [selectable]="selectable"
+                   [removable]="removable" (removed)="remove(label)">
+                {{label.name}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Nouvelle étiquette..."
+                 [matChipInputFor]="chipList"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+    </mat-form-field>
+</div>
+
+<div>
+    <a [href]="fileUrl" download="file.svg">
+        <button mat-raised-button (click)="exportDrawing()">Download</button>
+    </a>
+</div>

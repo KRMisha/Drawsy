@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
-import { DrawingService } from './drawing.service';
-import { Drawing } from '@app/classes/drawing';
-import { DomSanitizer, SafeUrl, Meta } from '@angular/platform-browser';
+import { Injectable, Renderer2 } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Color } from '@app/classes/color';
+import { Drawing } from '@app/classes/drawing';
+import { DrawingService } from './drawing.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingSerializerService {
-    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer, private metaData: Meta) {}
+    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer, private renderer: Renderer2) {}
 
     exportCurrentDrawing(metaData: HTMLMetaElement[]): SafeUrl {
+        this.renderer.createElement('metadata');
         const currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
         const serializer = new XMLSerializer();
-        let svgFile: string = '';
+        let svgFile = '';
         // for (const metaElement of metaData) {
         //     svgFile += serializer.serializeToString(metaElement);
         // }
@@ -21,7 +22,7 @@ export class DrawingSerializerService {
             this.drawingService.getDrawingDimensions().y
         }`;
         // svgFile += `<meta>`
-        svgFile += serializer.serializeToString(this.metaData.addTag({ name: 'Test', content: 'this bish' }) as Node);
+        // svgFile += serializer.serializeToString(this.metaData.addTag({ name: 'Test', content: 'this bish' }) as Node);
         for (const element of currentDrawing.elements) {
             svgFile += serializer.serializeToString(element);
         }
