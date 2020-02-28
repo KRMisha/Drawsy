@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideExportDrawingComponent } from './guide-export-drawing.component';
+import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
 
 describe('GuideExportDrawingComponent', () => {
     let component: GuideExportDrawingComponent;

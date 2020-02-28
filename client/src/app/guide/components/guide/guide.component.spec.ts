@@ -3,11 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
+import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { GuideService } from '@app/guide/services/guide.service';
 import { of } from 'rxjs';
-import { GuideService } from '../../services/guide.service';
-import { GuideDirective } from '../guide-directive/guide.directive';
-import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component';
-import { GuideComponent } from './guide.component';
 
 // tslint:disable: no-magic-numbers
 // tslint:disable: max-classes-per-file

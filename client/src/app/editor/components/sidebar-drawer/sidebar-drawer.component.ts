@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults';
-import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { Subscription } from 'rxjs';
 
@@ -24,7 +24,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     sizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
-
 
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
@@ -143,4 +142,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
         return this.colorService.getSecondaryColor();
     }
+
+    // get Textures(): string[] {
+    //     return Object.values(Textures);
+    // }
+
+    // get StrokeTypes(): string[] {
+    //     return Object.values(StrokeTypes);
+    // }
 }

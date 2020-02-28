@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { NewDrawingComponent } from './new-drawing.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-magic-numbers

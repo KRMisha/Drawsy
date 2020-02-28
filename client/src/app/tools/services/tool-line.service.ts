@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
-import { DrawingService } from '../../../drawing/services/drawing.service';
-import { Tool, ToolSetting } from '../tool';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { Tool } from '@app/tools/services/tool';
 
-const defaultLineWidth = 5;
-const defaultJunctionSize = 10;
 const minimumPointsToEnableBackspace = 4;
 const geometryDimension = 2;
 const lineClosingPixelTolerance = 3;
@@ -31,8 +31,8 @@ export class ToolLineService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
-        this.toolSettings.set(ToolSetting.Size, defaultLineWidth);
-        this.toolSettings.set(ToolSetting.HasJunction, [false, defaultJunctionSize]);
+        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
+        this.toolSettings.set(ToolSetting.HasJunction, [false, ToolDefaults.JunctionSize]);
         this.name = 'Ligne';
     }
 

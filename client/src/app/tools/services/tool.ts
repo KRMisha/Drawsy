@@ -1,26 +1,6 @@
 import { Renderer2 } from '@angular/core';
-import { DrawingService } from '../../drawing/services/drawing.service';
-
-export enum ToolSetting {
-    Size,
-    HasJunction,
-    StrokeType,
-    Texture,
-}
-
-export enum Textures {
-    Texture1 = 1,
-    Texture2,
-    Texture3,
-    Texture4,
-    Texture5,
-}
-
-export enum StrokeTypes {
-    FillWithBorder,
-    FillOnly,
-    BorderOnly,
-}
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
 export abstract class Tool {
     renderer: Renderer2;

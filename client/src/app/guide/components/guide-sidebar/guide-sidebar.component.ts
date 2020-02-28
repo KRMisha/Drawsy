@@ -1,15 +1,7 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, EventEmitter, Output, Type } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { guideData, GuideNode } from '@app/guide/classes/guide-node/guide-node';
-
-enum MenuSection {
-    Tools,
-    ToolBrushes,
-    ToolShapes,
-    DrawingSurfaceOptions,
-    FileOptions,
-}
+import { guideData, GuideNode } from '@app/guide/classes/guide-node';
 
 @Component({
     selector: 'app-guide-sidebar',
@@ -17,7 +9,6 @@ enum MenuSection {
     styleUrls: ['./guide-sidebar.component.scss'],
 })
 export class GuideSidebarComponent {
-    MenuSection = MenuSection; // Make enum available to template
     isEachMenuExpanded: boolean[] = [false, false, false, false, false];
 
     treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
@@ -29,7 +20,7 @@ export class GuideSidebarComponent {
         this.dataSource.data = guideData;
     }
 
-    hasChild = (_: number, node: GuideNode) => !!node.children && node.children.length > 0;
+    hasChild = (_: number, node: GuideNode) => node.children !== undefined && node.children.length > 0;
 
     expandLayer(nodes: GuideNode[]): void {
         for (const node of nodes) {

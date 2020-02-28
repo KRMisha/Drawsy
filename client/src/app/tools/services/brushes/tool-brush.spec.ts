@@ -1,8 +1,8 @@
 import { Renderer2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { DrawingService } from '../../../../drawing/services/drawing.service';
-import { ToolSetting } from '../../tool';
-import { ToolBrush } from './tool-brush';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
+import { ToolSetting } from '@app/tools/services/tool';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty

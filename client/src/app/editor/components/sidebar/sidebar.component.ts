@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { SidebarButton, sidebarButtons } from '@app/classes/sidebar-button';
-import { GuideComponent } from '../../../guide/components/guide/guide.component';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
-import { ModalService } from '../../../modals/services/modal.service';
-import { ToolSelectorService } from '../../../tools/services/tool-selector.service';
-import { DrawingSettingsComponent } from '../drawing-settings/drawing-settings.component';
+import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
+import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { ModalService } from '@app/modals/services/modal.service';
+import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({
     selector: 'app-sidebar',

@@ -1,8 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ModalService } from '../modals/services/modal.service';
-import { AppComponent } from './app.component';
+import { AppComponent } from '@app/app/app.component';
+import { ModalService } from '@app/modals/services/modal.service';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
