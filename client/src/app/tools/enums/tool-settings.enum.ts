@@ -6,7 +6,7 @@ export enum ToolSetting {
 }
 
 export enum Textures {
-    Texture1,
+    Texture1 = 1,
     Texture2,
     Texture3,
     Texture4,
