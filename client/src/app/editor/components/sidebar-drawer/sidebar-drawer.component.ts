@@ -62,6 +62,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
+        
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
@@ -76,10 +79,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 ]);
             }
         });
-
-        // We set the initial values now to update the service through the subscribe
-        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
-        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
     }
 
     ngOnDestroy(): void {
