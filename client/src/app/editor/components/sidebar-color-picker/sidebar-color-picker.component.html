@@ -6,6 +6,7 @@
         matRipple
         [style.background-color]="colorService.getPrimaryColor().toRgbString()"
         [class.mat-elevation-z8]="isPrimarySelected && isColorPickerDisplayEnabled"
+        [class.mat-elevation-z4]="!isPrimarySelected || !isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
     ></div>
     <div class="swap-colors-button">
@@ -20,6 +21,7 @@
         matRipple
         [style.background-color]="colorService.getSecondaryColor().toRgbString()"
         [class.mat-elevation-z8]="!isPrimarySelected && isColorPickerDisplayEnabled"
+        [class.mat-elevation-z4]="isPrimarySelected || !isColorPickerDisplayEnabled"
         (click)="selectSecondaryColor()"
     ></div>
 </div>

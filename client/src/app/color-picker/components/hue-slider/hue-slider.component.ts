@@ -29,7 +29,6 @@ export class HueSliderComponent implements AfterViewInit {
     private isMouseInside = false;
     private isMouseDown = false;
     private sliderXPosition = 0;
-    private mouseXPosition = 0;
 
     private hueColor = new Color();
 
@@ -95,7 +94,6 @@ export class HueSliderComponent implements AfterViewInit {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.isSliderPositionClipedRight = false;
         if (this.isMouseInside) {
             this.isMouseDown = true;
         }
@@ -104,13 +102,11 @@ export class HueSliderComponent implements AfterViewInit {
 
     @HostListener('document:mouseup')
     onMouseUp(): void {
-        this.isSliderPositionClipedRight = false;
         this.isMouseDown = false;
     }
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.isSliderPositionClipedRight = false;
         this.update(event);
     }
 
@@ -129,12 +125,10 @@ export class HueSliderComponent implements AfterViewInit {
             return;
         }
 
-        this.mouseXPosition = event.clientX - this.hueCanvas.nativeElement.getBoundingClientRect().x;
-        this.sliderXPosition = Math.min(canvasWidth, Math.max(0, this.mouseXPosition));
+        const mouseXPosition = event.clientX - this.hueCanvas.nativeElement.getBoundingClientRect().x;
+        this.sliderXPosition = Math.min(canvasWidth, Math.max(0, mouseXPosition));
 
-        if (this.mouseXPosition >= canvasWidth) {
-            this.isSliderPositionClipedRight = true;
-        }
+        this.isSliderPositionClipedRight = mouseXPosition >= canvasWidth;
 
         const hue = (this.sliderXPosition / this.canvas.width) * Color.maxHue;
         this.colorPickerService.hue = hue;
