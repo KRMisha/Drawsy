@@ -33,8 +33,8 @@
             matRipple
             *ngFor="let color of colorService.getLastColors()"
             [style.background-color]="color.toRgbString()"
-            (click)="oldColorClick($event, color)"
-            (contextmenu)="oldColorClick($event, color)"
+            (click)="onColorClick($event, color)"
+            (contextmenu)="onColorClick($event, color)"
         ></div>
     </div>
 
