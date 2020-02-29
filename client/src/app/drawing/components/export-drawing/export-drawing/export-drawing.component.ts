@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SafeUrl } from '@angular/platform-browser';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 export interface Label {
     name: string;
@@ -32,7 +33,7 @@ export class ExportDrawingComponent {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-        
+
         if ((value || '').trim()) {
             this.labels.push({ name: value.trim() });
         }

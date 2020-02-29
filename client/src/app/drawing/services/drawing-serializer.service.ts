@@ -30,7 +30,7 @@ export class DrawingSerializerService {
             const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
             const childrenArray = doc.children[0].getElementsByTagName('g');
 
-            Array.from(childrenArray).forEach( (element: SVGElement) => {
+            Array.from(childrenArray).forEach((element: SVGElement) => {
                 importedDrawing.addSvgElement(element);
             });
 
