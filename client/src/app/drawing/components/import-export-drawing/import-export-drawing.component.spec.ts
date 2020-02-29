@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImportExportDrawingComponent } from './import-export-drawing.component';
+import { ImportExportDrawingComponent } from '@app/drawing/components/import-export-drawing/import-export-drawing.component';
 
 describe('ImportExportDrawingComponent', () => {
     let component: ImportExportDrawingComponent;

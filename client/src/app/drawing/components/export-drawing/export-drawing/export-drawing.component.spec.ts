@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExportDrawingComponent } from './export-drawing.component';
+import { ExportDrawingComponent } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
 
 describe('ExportDrawingComponent', () => {
     let component: ExportDrawingComponent;

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DrawingSerializerService } from './drawing-serializer.service';
+import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 
 describe('DrawingSerializerService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

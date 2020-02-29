@@ -15,12 +15,6 @@ export class DrawingService {
 
     private currentDrawing = new Drawing();
 
-    constructor() {
-        this.currentDrawing.backgroundColor.red = Color.maxRgb;
-        this.currentDrawing.backgroundColor.green = Color.maxRgb;
-        this.currentDrawing.backgroundColor.blue = Color.maxRgb;
-    }
-
     setTarget(drawingRoot: SVGSVGElement): void {
         this.drawingRoot = drawingRoot;
         this.svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
@@ -79,14 +73,19 @@ export class DrawingService {
         this.clearStoredElements();
         this.currentDrawing = drawing;
         this.reappendStoredElements();
+        this.setBackgroundColor(drawing.backgroundColor);
     }
 
     addSvgMetadataElement(element: SVGMetadataElement): void {
-        this.currentDrawing.addmetadataElement(element);
+        this.currentDrawing.addMetadataElement(element);
         this.renderer.appendChild(this.svgMetadataContent, element);
     }
 
-    getSvgRoot(): void {
-        this.drawingRoot.getElementsByTagName('g');
+    getSvgRoot(): HTMLCollectionOf<SVGGElement> {
+        return this.drawingRoot.getElementsByTagName('g');
+    }
+
+    getDrawingRoot(): SVGSVGElement {
+        return this.drawingRoot;
     }
 }

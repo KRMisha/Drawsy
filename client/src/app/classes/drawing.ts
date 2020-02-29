@@ -13,6 +13,7 @@ export class Drawing {
     }
 
     dimensions: Vec2 = { x: 512, y: 512 };
+
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     addSvgElement(element: SVGElement): void {
@@ -36,7 +37,7 @@ export class Drawing {
         return this.svgElements.length > 0;
     }
 
-    addmetadataElement(element: SVGMetadataElement): void {
+    addMetadataElement(element: SVGMetadataElement): void {
         this.metadataElements.push(element);
     }
 

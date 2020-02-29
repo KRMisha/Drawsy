@@ -24,9 +24,9 @@ export class ExportDrawingComponent {
     constructor(private drawingSerializerService: DrawingSerializerService, private meta: Meta) {}
 
     exportDrawing(): void {
-        const metaArray: HTMLMetaElement[] = [];
+        const metaArray: SVGMetadataElement[] = [];
         const nextMetaElement = this.meta.addTag({ name: 'Sam', content: 'samsam' });
-        if (nextMetaElement instanceof HTMLMetaElement) {
+        if (nextMetaElement instanceof SVGMetadataElement) {
             metaArray.push(nextMetaElement);
         }
         this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(metaArray);
