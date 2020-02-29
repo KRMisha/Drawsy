@@ -1,10 +1,12 @@
 .container {
     display: flex;
     width: 100%;
+    justify-content: space-between;
 }
 
 .form-field {
     margin: auto;
+    width: 100%;
 }
 
 .single-component {
@@ -20,4 +22,9 @@
 .mat-raised-button {
     height: 36px;
     width: 64px;
+}
+
+mat-form-field {
+    margin: 0px !important;
+    text-align: center;
 }

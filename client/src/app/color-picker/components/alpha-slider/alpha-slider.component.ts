@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@
 import { Color } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 
-const canvasWidth = 206;
+const canvasWidth = 204;
 const canvasHeight = 20;
 const radius = 8;
 
@@ -25,6 +25,7 @@ export class AlphaSliderComponent implements AfterViewInit {
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.color = color;
+            this.mouseXPosition = this.color.alpha * canvasWidth;
             this.draw();
         });
     }

@@ -1,29 +1,38 @@
-import { Injectable, Renderer2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ToolSelectorService {
+export class ToolSelectorService implements OnDestroy {
     renderer: Renderer2;
     selectedTool: Tool;
 
+    private primaryColorSubscription: Subscription;
+    private secondaryColorSubscription: Subscription;
+
     constructor(private toolHolderService: ToolHolderService, private colorService: ColorService) {
-        this.colorService.primaryColorChanged$.subscribe(
+        this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe(
             (color: Color) => {
                 this.selectedTool.onPrimaryColorChange(color);
             }
         );
 
-        this.colorService.secondaryColorChanged$.subscribe(
+        this.secondaryColorSubscription = this.colorService.secondaryColorChanged$.subscribe(
             (color: Color) => {
                 this.selectedTool.onSecondaryColorChange(color);
             }
-        )
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.primaryColorSubscription.unsubscribe();
+        this.secondaryColorSubscription.unsubscribe();
     }
 
     onMouseMove(event: MouseEvent): void {

@@ -11,7 +11,7 @@ enum ColorGradient {
     Pink = 'rgb(255, 0, 255)',
 }
 
-const canvasWidth = 206;
+const canvasWidth = 204;
 const canvasHeight = 20;
 const radius = 8;
 
