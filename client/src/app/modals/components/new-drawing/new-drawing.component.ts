@@ -5,7 +5,6 @@ import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 const widthMargin = 348;
-const heightMargin = 4;
 const maximumHeightWidth = 10000;
 const integerRegexPattern = '^[0-9]*$';
 
@@ -29,7 +28,7 @@ export class NewDrawingComponent implements OnInit {
             ]),
         ),
         height: new FormControl(
-            window.innerHeight - heightMargin,
+            window.innerHeight,
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
@@ -88,7 +87,7 @@ export class NewDrawingComponent implements OnInit {
     onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
             this.drawingForm.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
-            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight - heightMargin, { emitEvent: false });
+            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
         }
     }
 }
