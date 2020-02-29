@@ -1,7 +1,7 @@
 <div>
     <mat-form-field class="chip-list">
         <mat-chip-list #chipList aria-label="Label selection">
-            <mat-chip *ngFor="let label of labels" [selectable]="selectable" [removable]="removable" (removed)="remove(label)">
+            <mat-chip *ngFor="let label of labels" [selectable]="selectable" [removable]="removable" (removed)="removeLabel(label)" color=$primary>
                 {{ label.name }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
@@ -11,7 +11,7 @@
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="addLabel($event)"
-            />
+            >
         </mat-chip-list>
     </mat-form-field>
 </div>

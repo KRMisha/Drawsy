@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
+import { Label } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Injectable({
@@ -10,26 +11,9 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 export class DrawingSerializerService {
     constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer) {}
 
-    exportCurrentDrawing(metaData: SVGMetadataElement[]): SafeUrl {
-        // const currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
-        // const serializer = new XMLSerializer();
-
-        let svgFile = '';
-        // svgFile = serializer.serializeToString(this.drawingService.getDrawingRoot().innerHTML)
-        // for (const metaElement of metaData) {
-        //     svgFile += serializer.serializeToString(metaElement);
-        // }
-        svgFile += `<svg version="1.1" xmlns="http://www.w3.org/2000/svg"> width=${this.drawingService.getDrawingDimensions().x} height=${
-            this.drawingService.getDrawingDimensions().y}`;
-        // // svgFile += `<meta>`
-        // // svgFile += serializer.serializeToString(this.metaData.addTag({ name: 'Test', content: 'this bish' }) as Node);
-        // for (const element of currentDrawing.svgElements) {
-        //     svgFile += serializer.serializeToString(element);
-        // }
-        svgFile += this.drawingService.getSvgRoot()[0].innerHTML;
-
-        svgFile += '</svg>';
-        const blob = new Blob([svgFile], { type: 'image/svg+xml' });
+    exportCurrentDrawing(labels: Label[]): SafeUrl {
+        const svgFileString = this.drawingService.getDrawingRoot().outerHTML;
+        const blob = new Blob([svgFileString], { type: 'image/svg+xml' });
 
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -10,6 +11,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
+    @Input() viewportDimensions: Vec2;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -71,12 +73,8 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.toolSelectorService.onLeave(event);
     }
 
-    getWidth(): number {
-        return this.drawingService.getDrawingDimensions().x;
-    }
-
-    getHeight(): number {
-        return this.drawingService.getDrawingDimensions().y;
+    getViewBox(): string {
+        return `0 0 ${this.drawingService.getDrawingDimensions().x} ${this.drawingService.getDrawingDimensions().x}`;
     }
 
     getBackgroundColor(): string {

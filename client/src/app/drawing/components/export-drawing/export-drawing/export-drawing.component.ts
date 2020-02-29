@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Meta, SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 
 export interface Label {
@@ -13,36 +13,31 @@ export interface Label {
     styleUrls: ['./export-drawing.component.scss'],
 })
 export class ExportDrawingComponent {
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     visible = true;
     selectable = true;
     removable = true;
     addOnBlur = true;
     fileUrl: SafeUrl;
-    labels: Label[];
+    labels: Label[] = [];
 
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    constructor(private drawingSerializerService: DrawingSerializerService, private meta: Meta) {}
+    constructor(private drawingSerializerService: DrawingSerializerService) {
+        this.exportDrawing();
+    }
 
     exportDrawing(): void {
-        const metaArray: SVGMetadataElement[] = [];
-        const nextMetaElement = this.meta.addTag({ name: 'Sam', content: 'samsam' });
-        if (nextMetaElement instanceof SVGMetadataElement) {
-            metaArray.push(nextMetaElement);
-        }
-        this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(metaArray);
+        this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(this.labels);
     }
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-
-        // Add the label
+        
         if ((value || '').trim()) {
             this.labels.push({ name: value.trim() });
         }
 
-        // Reset the input value
-        if (input) {
+        if (input !== undefined) {
             input.value = '';
         }
     }
