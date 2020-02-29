@@ -25,19 +25,25 @@ export class ColorFieldComponent implements AfterViewInit {
     private canvas: HTMLCanvasElement;
 
     private isMouseDown = false;
-    private mousePosition: Vec2 = { x: 0, y: canvasHeight };
+    private sliderPosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
+
+    private isSliderPositionClipedToBottom = false;
 
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.hueChanged$.subscribe((hue: number) => {
             this.draw();
         });
         this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
-            this.mousePosition.x = saturation * canvasWidth;
+            const color = this.colorPickerService.getColor();
+            const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
+            if (!this.isSliderPositionClipedToBottom || !isBlack) {
+                this.sliderPosition.x = saturation * canvasWidth;
+            }
             this.draw();
         });
         this.colorPickerService.valueChanged$.subscribe((value: number) => {
-            this.mousePosition.y = canvasHeight * (1 - value);
+            this.sliderPosition.y = canvasHeight * (1 - value);
             this.draw();
         });
     }
@@ -47,8 +53,8 @@ export class ColorFieldComponent implements AfterViewInit {
         this.canvas = this.saturationValueCanvas.nativeElement;
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
-        this.mousePosition.y = this.canvas.height * (1 - this.colorPickerService.value);
-        this.mousePosition.x = this.colorPickerService.saturation * this.canvas.width;
+        this.sliderPosition.y = this.canvas.height * (1 - this.colorPickerService.value);
+        this.sliderPosition.x = this.colorPickerService.saturation * this.canvas.width;
         this.draw();
     }
 
@@ -80,7 +86,7 @@ export class ColorFieldComponent implements AfterViewInit {
 
         const circle = new Path2D();
         const radius = 10;
-        circle.arc(this.mousePosition.x, this.mousePosition.y, radius, 0, 2 * Math.PI);
+        circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
         this.context.fillStyle = color.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
@@ -121,16 +127,16 @@ export class ColorFieldComponent implements AfterViewInit {
             return;
         }
 
-        this.mousePosition.x = Math.min(
-            canvasWidth,
-            Math.max(0, event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x),
-        );
-        this.mousePosition.y = Math.min(
-            canvasHeight,
-            Math.max(0, event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y),
-        );
-        this.colorPickerService.saturation = this.mousePosition.x / canvasWidth;
-        this.colorPickerService.value = 1.0 - this.mousePosition.y / canvasHeight;
+        const mouseXPosition = event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x;
+        this.sliderPosition.x = Math.min(canvasWidth, Math.max(0, mouseXPosition));
+
+        const mouseYPosition = event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y;
+        this.sliderPosition.y = Math.min(canvasHeight, Math.max(0, mouseYPosition));
+
+        this.isSliderPositionClipedToBottom = mouseYPosition >= canvasHeight;
+
+        this.colorPickerService.saturation = this.sliderPosition.x / canvasWidth;
+        this.colorPickerService.value = 1.0 - this.sliderPosition.y / canvasHeight;
         this.draw();
     }
 }

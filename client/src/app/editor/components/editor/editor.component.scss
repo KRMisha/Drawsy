@@ -4,6 +4,9 @@
 
 .drawing {
     overflow: auto;
-    height: 100vh;
     width: min-content;
+}
+
+app-drawing {
+    display: grid;
 }

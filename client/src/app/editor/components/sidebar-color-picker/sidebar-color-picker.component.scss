@@ -1,0 +1,45 @@
+.old-colors {
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-start;
+    margin-bottom: 8px;
+}
+
+.current-colors {
+    display: flex;
+    width: 100%;
+}
+
+.circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background-color: white;
+}
+
+.primary-color,
+.secondary-color,
+.big-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: white;
+}
+
+.primary-color {
+    width: 50%;
+}
+
+.secondary-color {
+    width: 25%;
+}
+
+.swap-colors-button {
+    width: 25%;
+    button {
+        margin: auto auto;
+        position: relative;
+        top: -4px;
+        left: 11.25px;
+    }
+}

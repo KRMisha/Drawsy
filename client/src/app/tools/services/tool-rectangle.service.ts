@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -63,6 +64,18 @@ export class ToolRectangleService extends Tool {
 
     onLeave(event: MouseEvent): void {
         this.isMouseDown = false;
+    }
+
+    onPrimaryColorChange(color: Color): void {
+        if (this.isMouseInside && this.isMouseDown) {
+            this.renderer.setAttribute(this.rectangle, 'fill', color.toRgbaString());
+        }
+    }
+
+    onSecondaryColorChange(color: Color): void {
+        if (this.isMouseInside && this.isMouseDown) {
+            this.renderer.setAttribute(this.rectangle, 'stroke', color.toRgbaString());
+        }
     }
 
     private createNewRectangle(): SVGPathElement {

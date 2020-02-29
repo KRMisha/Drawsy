@@ -38,6 +38,7 @@ export class ToolLineService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (!this.isMouseInside) {
+            this.stopDrawing();
             return;
         }
 
@@ -148,6 +149,21 @@ export class ToolLineService extends Tool {
             this.isShiftDown = false;
             this.updateNextPointPosition();
             this.updatePreviewLinePosition();
+        }
+    }
+
+    onPrimaryColorChange(color: Color): void {
+        if (!this.currentlyDrawing) {
+            return;
+        }
+        this.renderer.setAttribute(this.polyline, 'stroke', color.toRgbaString());
+
+        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        previewColor.alpha /= 2;
+        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
+
+        for (const junction of this.junctionPoints) {
+            this.renderer.setAttribute(junction, 'fill', color.toRgbaString());
         }
     }
 

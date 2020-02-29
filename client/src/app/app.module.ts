@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from '@app/app/app.component';
 import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
@@ -34,6 +35,7 @@ import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
@@ -103,6 +105,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         NewDrawingComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        SidebarColorPickerComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -125,6 +128,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         MatSidenavModule,
         MatSliderModule,
         MatSlideToggleModule,
+        MatTooltipModule,
         MatTreeModule,
         ReactiveFormsModule,
     ],

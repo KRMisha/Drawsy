@@ -80,8 +80,8 @@ export class ColorPickerService {
         const hsv = this.color.getHsv();
         if (color.red !== color.green || color.green !== color.blue || color.blue !== color.red) {
             this.hue_ = hsv[0];
-            this.saturation_ = hsv[1];
         }
+        this.saturation_ = hsv[1];
         this.value_ = hsv[2];
         this.alpha_ = color.alpha;
 
