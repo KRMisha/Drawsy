@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
+import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -144,5 +145,15 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             return this.colorService.getPrimaryColor();
         }
         return this.colorService.getSecondaryColor();
+    }
+
+    onColorClick(event: MouseEvent, color: Color): void {
+        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
+            if (event.button === ButtonId.Left) {
+                this.colorService.setPrimaryColor(color);
+            } else {
+                this.colorService.setSecondaryColor(color);
+            }
+        }
     }
 }
