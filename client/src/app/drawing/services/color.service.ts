@@ -3,10 +3,10 @@ import { Color } from '@app/classes/color';
 import { Subject } from 'rxjs';
 
 const defaultColors = [
-    Color.fromHex('fe8a71'),
+    Color.fromHex('000000'),
+    Color.fromHex('fefefe'),
     Color.fromHex('f6cd61'),
     Color.fromHex('3da4ab'),
-    Color.fromHex('fe9c8f'),
     Color.fromHex('ff6f69'),
     Color.fromHex('0392cf'),
     Color.fromHex('7bc043'),

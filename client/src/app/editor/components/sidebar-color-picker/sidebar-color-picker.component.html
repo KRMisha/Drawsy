@@ -1,7 +1,11 @@
 <div class="current-colors">
-    <div class="primary-color"
+    <div 
+        class="primary-color"
+        matTooltip="Couleur primaire"
+        [matTooltipPosition]="'above'"
         matRipple
         [style.background-color]="colorService.getPrimaryColor().toRgbString()"
+        [class.mat-elevation-z8]="isPrimarySelected && isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
     ></div>
     <div class="swap-colors-button">
@@ -11,8 +15,11 @@
     </div>
     <div
         class="secondary-color"
+        matTooltip="Couleur secondaire"
+        [matTooltipPosition]="'above'"
         matRipple
         [style.background-color]="colorService.getSecondaryColor().toRgbString()"
+        [class.mat-elevation-z8]="!isPrimarySelected && isColorPickerDisplayEnabled"
         (click)="selectSecondaryColor()"
     ></div>
 </div>

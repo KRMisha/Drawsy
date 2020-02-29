@@ -1,9 +1,7 @@
 <div class="container">
-    <h1>Couleur</h1>
+    <h1>{{ getToolName() }}</h1>
 
     <app-sidebar-color-picker></app-sidebar-color-picker>
-
-    <h1>{{ getToolName() }}</h1>
 
     <div *ngIf="hasSetting(ToolSetting.Size)">
         <div class="option">

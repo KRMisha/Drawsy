@@ -63,6 +63,7 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [
@@ -127,6 +128,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         MatSidenavModule,
         MatSliderModule,
         MatSlideToggleModule,
+        MatTooltipModule,
         MatTreeModule,
         ReactiveFormsModule,
     ],
