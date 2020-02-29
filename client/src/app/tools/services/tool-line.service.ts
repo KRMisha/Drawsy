@@ -38,6 +38,7 @@ export class ToolLineService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (!this.isMouseInside) {
+            this.stopDrawing();
             return;
         }
 

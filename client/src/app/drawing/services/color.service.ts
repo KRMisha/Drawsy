@@ -37,6 +37,8 @@ export class ColorService {
         const temp = this.primaryColor;
         this.primaryColor = this.secondaryColor;
         this.secondaryColor = temp;
+        this.primaryColorChangedSource.next(this.primaryColor);
+        this.secondaryColorChangedSource.next(this.secondaryColor);
     }
 
     setPrimaryColor(color: Color): void {
