@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
-import { GuideService } from '../../services/guide.service';
-import { GuideDirective } from '../guide-directive/guide.directive';
-import { GuideSidebarComponent } from '../guide-sidebar/guide-sidebar.component';
+import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
+import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
+import { GuideService } from '@app/guide/services/guide.service';
 
 @Component({
     selector: 'app-guide',
@@ -13,7 +13,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
     selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
-    @ViewChild('sidebar', { static: false }) sidebar: GuideSidebarComponent;
+    @ViewChild('appSidebar', { static: false }) sidebar: GuideSidebarComponent;
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
@@ -31,11 +31,12 @@ export class GuideComponent implements OnInit, AfterViewInit {
 
     // tslint:disable-next-line: no-any
     selectGuide(guide: Type<any>): void {
-        if (this.findIndex(guide) === -1) {
+        const selectedGuideIndex = this.guides.indexOf(guide);
+        if (selectedGuideIndex === -1) {
             return;
         }
 
-        this.selectedGuideIndex = this.findIndex(guide);
+        this.selectedGuideIndex = selectedGuideIndex;
         this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
         this.hasPreviousGuide = this.selectedGuideIndex > 0;
 
@@ -45,16 +46,6 @@ export class GuideComponent implements OnInit, AfterViewInit {
         viewContainerRef.clear();
 
         viewContainerRef.createComponent(componentFactory);
-    }
-
-    // tslint:disable-next-line: no-any
-    findIndex(guide: Type<any>): number {
-        for (let i = 0; i < this.guides.length; i++) {
-            if (guide === this.guides[i]) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     selectNextGuide(): void {

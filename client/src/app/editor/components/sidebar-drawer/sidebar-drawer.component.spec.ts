@@ -7,9 +7,9 @@ import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
+import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { ToolSetting } from '@app/tools/services/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-import { SidebarDrawerComponent } from './sidebar-drawer.component';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { ToolDefaults } from '@app/tools/classes/tool-defaults';
-import { StrokeTypes, Textures, ToolSetting } from '@app/tools/services/tool';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
@@ -15,16 +16,19 @@ const maximumJunctionSize = 100;
     templateUrl: './sidebar-drawer.component.html',
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
-export class SidebarDrawerComponent implements OnInit {
+export class SidebarDrawerComponent implements OnInit, OnDestroy {
     // Make enums available to template
     ToolSetting = ToolSetting;
     Textures = Textures;
     StrokeTypes = StrokeTypes;
 
+    sizeSubscription: Subscription;
+    junctionSizeSubscription: Subscription;
+
     isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 
-    private color = new Color();
+    private color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -50,18 +54,19 @@ export class SidebarDrawerComponent implements OnInit {
         ),
     });
 
-    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {
-        this.color.red = Color.maxRgb;
-        this.color.green = Color.maxRgb;
-        this.color.blue = Color.maxRgb;
+    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {}
 
-        this.sizeGroup.controls.size.valueChanges.subscribe(() => {
+    ngOnInit(): void {
+        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
+
+        this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
             }
         });
 
-        this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+        this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.HasJunction, [
                     (this.getSetting(ToolSetting.HasJunction) as [boolean, number])[0],
@@ -71,10 +76,9 @@ export class SidebarDrawerComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {
-        // We set the initial values now to update the service through the subscribe
-        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
-        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
+    ngOnDestroy(): void {
+        this.sizeSubscription.unsubscribe();
+        this.junctionSizeSubscription.unsubscribe();
     }
 
     getToolName(): string {
@@ -104,11 +108,13 @@ export class SidebarDrawerComponent implements OnInit {
     selectPrimaryColor(): void {
         this.isPrimarySelected = true;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getPrimaryColor();
     }
 
     selectSecondaryColor(): void {
         this.isPrimarySelected = false;
         this.isColorPickerDisplayEnabled = true;
+        this.color = this.getSecondaryColor();
     }
 
     updateColor(color: Color): void {
@@ -126,6 +132,11 @@ export class SidebarDrawerComponent implements OnInit {
 
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
+        if (this.isPrimarySelected) {
+            this.color = this.colorService.getPrimaryColor();
+        } else {
+            this.color = this.colorService.getSecondaryColor();
+        }
     }
 
     getSelectedColor(): Color {

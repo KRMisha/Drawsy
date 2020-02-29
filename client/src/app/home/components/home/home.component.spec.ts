@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { HomeComponent } from '@app/home/components/home/home.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
-import { GuideComponent } from '../../../guide/components/guide/guide.component';
-import { NewDrawingComponent } from '../../../modals/components/new-drawing/new-drawing.component';
-import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
     let component: HomeComponent;

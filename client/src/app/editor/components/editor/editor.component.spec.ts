@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { EditorComponent } from './editor.component';
+import { EditorComponent } from '@app/editor/components/editor/editor.component';
 
 describe('EditorComponent', () => {
     let component: EditorComponent;

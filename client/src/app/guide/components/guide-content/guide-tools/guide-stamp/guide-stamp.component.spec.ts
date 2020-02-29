@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideStampComponent } from './guide-stamp.component';
+import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 
 describe('GuideStampComponent', () => {
     let component: GuideStampComponent;

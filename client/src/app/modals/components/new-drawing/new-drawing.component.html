@@ -20,11 +20,7 @@
                 <mat-error *ngIf="drawingForm.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
             </mat-form-field>
         </div>
-        <app-color-picker
-            (colorChanged)="backgroundColor = $event"
-            [isLastColorsDisplayEnabled]="false"
-            [defaultColor]="backgroundColor"
-        ></app-color-picker>
+        <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
         <button mat-stroked-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
     </form>
 </div>

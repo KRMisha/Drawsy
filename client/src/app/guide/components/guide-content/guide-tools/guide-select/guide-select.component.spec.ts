@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideSelectComponent } from './guide-select.component';
+import { GuideSelectComponent } from '@app/guide/components/guide-content/guide-tools/guide-select/guide-select.component';
 
 describe('GuideSelectComponent', () => {
     let component: GuideSelectComponent;

@@ -38,3 +38,17 @@ input {
     margin-left: 2px;
     margin-right: 2px;
 }
+
+.color-preview-checker {
+    width: 42px;
+    height: 42px;
+    background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
+    background-size: 21px 21px;
+    background-position: 0 0, 0 10.25px, 10.25px -10.25px, -10.25px 0px;
+}
+
+.color-preview {
+    width: 100%;
+    height: 100%;
+}

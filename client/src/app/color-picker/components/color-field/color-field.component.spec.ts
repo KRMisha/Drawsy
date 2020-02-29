@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ColorFieldComponent } from './color-field.component';
+import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
 
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal

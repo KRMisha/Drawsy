@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ToolPaintbrushService } from './brushes/tool-paintbrush/tool-paintbrush.service';
-import { ToolPencilService } from './brushes/tool-pencil/tool-pencil.service';
-import { Tool } from './tool';
-import { ToolLineService } from './tool-line/tool-line.service';
-import { ToolRectangleService } from './tool-rectangle/tool-rectangle.service';
+import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
+import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
+import { Tool } from '@app/tools/services/tool';
+import { ToolLineService } from '@app/tools/services/tool-line.service';
+import { ToolRectangleService } from '@app/tools/services/tool-rectangle.service';
 
 @Injectable({
     providedIn: 'root',

@@ -1,13 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideSidebarComponent } from './guide-sidebar.component';
-
-enum MenuSection {
-    Tools,
-    ToolBrushes,
-    ToolShapes,
-    DrawingSurfaceOptions,
-    FileOptions,
-}
+import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 
 describe('GuideSidebarComponent', () => {
     let component: GuideSidebarComponent;

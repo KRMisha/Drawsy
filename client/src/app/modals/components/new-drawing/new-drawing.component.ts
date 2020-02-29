@@ -16,7 +16,7 @@ const integerRegexPattern = '^[0-9]*$';
 })
 export class NewDrawingComponent implements OnInit {
     wereDimensionsModified = false;
-    backgroundColor = new Color();
+    backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     drawingForm = new FormGroup({
         width: new FormControl(
@@ -39,11 +39,7 @@ export class NewDrawingComponent implements OnInit {
         ),
     });
 
-    constructor(private router: Router, private drawingService: DrawingService) {
-        this.backgroundColor.red = Color.maxRgb;
-        this.backgroundColor.green = Color.maxRgb;
-        this.backgroundColor.blue = Color.maxRgb;
-    }
+    constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
         this.drawingForm.controls.width.valueChanges.subscribe(() => {

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuidePencilComponent } from './guide-pencil.component';
+import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
 
 describe('GuidePencilComponent', () => {
     let component: GuidePencilComponent;

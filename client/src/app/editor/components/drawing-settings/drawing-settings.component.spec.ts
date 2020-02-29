@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { of } from 'rxjs';
-import { DrawingSettingsComponent } from './drawing-settings.component';
 
 describe('DrawingSettingsComponent', () => {
     let component: DrawingSettingsComponent;
@@ -23,7 +23,7 @@ describe('DrawingSettingsComponent', () => {
             declarations: [DrawingSettingsComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-                { provide: DrawingService, useValue: { backgroundColor: {} as Color } as DrawingService },
+                { provide: DrawingService, useValue: ({ backgroundColor: {} as Color } as unknown) as DrawingService },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();

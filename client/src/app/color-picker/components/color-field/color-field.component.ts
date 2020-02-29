@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 
 enum ColorString {
     OpaqueWhite = 'rgba(255, 255, 255, 1)',
@@ -18,52 +19,27 @@ const canvasHeight = 160;
     styleUrls: ['./color-field.component.scss'],
 })
 export class ColorFieldComponent implements AfterViewInit {
-    @ViewChild('saturationValuePicker', { static: false }) saturationValueCanvas: ElementRef<HTMLCanvasElement>;
-
-    @Output() saturationValueChange: EventEmitter<[number, number]> = new EventEmitter();
+    @ViewChild('appSaturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
-
-    private _hue = 0; // tslint:disable-line: variable-name
-    @Input()
-    set hue(hue: number) {
-        this._hue = hue;
-        if (this.canvas !== undefined) {
-            this.draw();
-        }
-    }
-
-    private _saturation = 0; // tslint:disable-line: variable-name
-    @Input()
-    set saturation(saturation: number) {
-        this._saturation = saturation;
-        this.mousePosition.x = saturation * canvasWidth;
-        if (this.canvas !== undefined) {
-            this.draw();
-        }
-    }
-
-    private _value = 1; // tslint:disable-line: variable-name
-    @Input()
-    set value(value: number) {
-        this._value = value;
-        this.mousePosition.y = (1 - value) * canvasHeight;
-        if (this.canvas !== undefined) {
-            this.draw();
-        }
-    }
 
     private isMouseDown = false;
     private mousePosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
 
-    private color = new Color();
-
-    constructor() {
-        this.color.red = 0;
-        this.color.green = 0;
-        this.color.blue = 0;
+    constructor(private colorPickerService: ColorPickerService) {
+        this.colorPickerService.hueChanged$.subscribe((hue: number) => {
+            this.draw();
+        });
+        this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
+            this.mousePosition.x = saturation * canvasWidth;
+            this.draw();
+        });
+        this.colorPickerService.valueChanged$.subscribe((value: number) => {
+            this.mousePosition.y = canvasHeight * (1 - value);
+            this.draw();
+        });
     }
 
     ngAfterViewInit(): void {
@@ -71,38 +47,41 @@ export class ColorFieldComponent implements AfterViewInit {
         this.canvas = this.saturationValueCanvas.nativeElement;
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
+        this.mousePosition.y = this.canvas.height * (1 - this.colorPickerService.value);
+        this.mousePosition.x = this.colorPickerService.saturation * this.canvas.width;
         this.draw();
     }
 
     draw(): void {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
+        if (this.canvas === undefined) {
+            return;
+        }
 
         const color = new Color();
-        color.setHsv(this._hue, 1, 1);
+        color.setHsv(this.colorPickerService.hue, 1, 1);
 
         const colorStr = color.toRgbString();
         this.context.fillStyle = colorStr;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
         horizontalGradient.addColorStop(0, ColorString.OpaqueWhite);
         horizontalGradient.addColorStop(1, ColorString.TransparentWhite);
         this.context.fillStyle = horizontalGradient;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        const verticalGradient = this.context.createLinearGradient(0, 0, 0, height);
+        const verticalGradient = this.context.createLinearGradient(0, 0, 0, canvasHeight);
         verticalGradient.addColorStop(0, ColorString.TransparentBlack);
         verticalGradient.addColorStop(1, ColorString.OpaqueBlack);
         this.context.fillStyle = verticalGradient;
-        this.context.fillRect(0, 0, width, height);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        this.color.setHsv(this._hue, this._saturation, this._value);
+        color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
 
         const circle = new Path2D();
         const radius = 10;
         circle.arc(this.mousePosition.x, this.mousePosition.y, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = this.color.toRgbString();
+        this.context.fillStyle = color.toRgbString();
         this.context.fill(circle);
         this.context.lineWidth = 2;
         this.context.strokeStyle = ColorString.OpaqueWhite;
@@ -113,8 +92,8 @@ export class ColorFieldComponent implements AfterViewInit {
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isMouseDown = true;
-            this.updateColor(event);
         }
+        this.updateColor(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
@@ -122,7 +101,7 @@ export class ColorFieldComponent implements AfterViewInit {
         this.isMouseDown = false;
     }
 
-    @HostListener('mousemove', ['$event'])
+    @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         this.updateColor(event);
     }
@@ -138,14 +117,20 @@ export class ColorFieldComponent implements AfterViewInit {
     }
 
     updateColor(event: MouseEvent): void {
-        if (!this.isMouseDown || !this.isMouseInside) {
+        if (!this.isMouseDown) {
             return;
         }
-        this._saturation = event.offsetX / this.canvas.width;
-        this._value = 1.0 - event.offsetY / this.canvas.height;
-        this.mousePosition.x = event.offsetX;
-        this.mousePosition.y = event.offsetY;
+
+        this.mousePosition.x = Math.min(
+            canvasWidth,
+            Math.max(0, event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x),
+        );
+        this.mousePosition.y = Math.min(
+            canvasHeight,
+            Math.max(0, event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y),
+        );
+        this.colorPickerService.saturation = this.mousePosition.x / canvasWidth;
+        this.colorPickerService.value = 1.0 - this.mousePosition.y / canvasHeight;
         this.draw();
-        this.saturationValueChange.emit([this._saturation, this._value]);
     }
 }
