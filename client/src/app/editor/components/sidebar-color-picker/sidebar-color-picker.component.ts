@@ -9,7 +9,6 @@ import { ButtonId } from '@app/editor/enums/button-id.enum';
     styleUrls: ['./sidebar-color-picker.component.scss'],
 })
 export class SidebarColorPickerComponent {
-
     // tslint:disable-next-line: variable-name
     private color_ = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
     set color(color: Color) {
@@ -21,7 +20,7 @@ export class SidebarColorPickerComponent {
 
     private isPrimarySelected = true;
     protected isColorPickerDisplayEnabled = false;
-    
+
     private isMouseInside = false;
 
     constructor(private colorService: ColorService) {}

@@ -129,7 +129,7 @@ export class ColorFieldComponent implements AfterViewInit {
 
         const mouseXPosition = event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x;
         this.sliderPosition.x = Math.min(canvasWidth, Math.max(0, mouseXPosition));
-        
+
         const mouseYPosition = event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y;
         this.sliderPosition.y = Math.min(canvasHeight, Math.max(0, mouseYPosition));
 

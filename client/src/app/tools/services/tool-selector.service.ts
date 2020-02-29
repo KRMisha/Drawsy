@@ -17,17 +17,13 @@ export class ToolSelectorService implements OnDestroy {
     private secondaryColorSubscription: Subscription;
 
     constructor(private toolHolderService: ToolHolderService, private colorService: ColorService) {
-        this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe(
-            (color: Color) => {
-                this.selectedTool.onPrimaryColorChange(color);
-            }
-        );
+        this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
+            this.selectedTool.onPrimaryColorChange(color);
+        });
 
-        this.secondaryColorSubscription = this.colorService.secondaryColorChanged$.subscribe(
-            (color: Color) => {
-                this.selectedTool.onSecondaryColorChange(color);
-            }
-        );
+        this.secondaryColorSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
+            this.selectedTool.onSecondaryColorChange(color);
+        });
     }
 
     ngOnDestroy(): void {

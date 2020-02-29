@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from '@app/app/app.component';
 import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
@@ -63,7 +64,6 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [

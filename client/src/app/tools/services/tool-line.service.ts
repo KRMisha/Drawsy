@@ -156,7 +156,7 @@ export class ToolLineService extends Tool {
             return;
         }
         this.renderer.setAttribute(this.polyline, 'stroke', color.toRgbaString());
-        
+
         const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
         previewColor.alpha /= 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
