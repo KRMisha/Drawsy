@@ -8,6 +8,7 @@ const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
     { path: 'editor', component: EditorComponent },
+    { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({
