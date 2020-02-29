@@ -1,0 +1,31 @@
+<div class="current-colors">
+    <div class="primary-color"
+        matRipple
+        [style.background-color]="colorService.getPrimaryColor().toRgbString()"
+        (click)="selectPrimaryColor()"
+    ></div>
+    <div class="swap-colors-button">
+        <button mat-icon-button (click)="swapColors()">
+            <mat-icon>swap_horiz</mat-icon>
+        </button>
+    </div>
+    <div
+        class="secondary-color"
+        matRipple
+        [style.background-color]="colorService.getSecondaryColor().toRgbString()"
+        (click)="selectSecondaryColor()"
+    ></div>
+</div>
+
+<div class="old-colors">
+    <div
+        class="circle"
+        matRipple
+        *ngFor="let color of colorService.getLastColors()"
+        [style.background-color]="color.toRgbString()"
+        (click)="onColorClick($event, color)"
+        (contextmenu)="onColorClick($event, color)"
+    ></div>
+</div>
+
+<app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color"></app-color-picker>

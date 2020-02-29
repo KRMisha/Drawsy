@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Color } from '@app/classes/color';
-import { ColorService } from '@app/drawing/services/color.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -25,11 +22,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     sizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
-
-    isPrimarySelected = true;
-    isColorPickerDisplayEnabled = false;
-
-    private color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -55,7 +47,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
-    constructor(private toolSelectorService: ToolSelectorService, private colorService: ColorService) {}
+    constructor(private toolSelectorService: ToolSelectorService) {}
 
     ngOnInit(): void {
         this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
@@ -96,64 +88,5 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     hasSetting(setting: ToolSetting): boolean {
         return this.toolSelectorService.hasSetting(setting);
-    }
-
-    getPrimaryColor(): Color {
-        return this.colorService.getPrimaryColor();
-    }
-
-    getSecondaryColor(): Color {
-        return this.colorService.getSecondaryColor();
-    }
-
-    selectPrimaryColor(): void {
-        this.isPrimarySelected = true;
-        this.isColorPickerDisplayEnabled = true;
-        this.color = this.getPrimaryColor();
-    }
-
-    selectSecondaryColor(): void {
-        this.isPrimarySelected = false;
-        this.isColorPickerDisplayEnabled = true;
-        this.color = this.getSecondaryColor();
-    }
-
-    updateColor(color: Color): void {
-        this.color = color;
-    }
-
-    confirmColor(): void {
-        if (this.isPrimarySelected) {
-            this.colorService.setPrimaryColor(this.color);
-        } else {
-            this.colorService.setSecondaryColor(this.color);
-        }
-        this.isColorPickerDisplayEnabled = false;
-    }
-
-    swapColors(): void {
-        this.colorService.swapPrimaryAndSecondaryColors();
-        if (this.isPrimarySelected) {
-            this.color = this.colorService.getPrimaryColor();
-        } else {
-            this.color = this.colorService.getSecondaryColor();
-        }
-    }
-
-    getSelectedColor(): Color {
-        if (this.isPrimarySelected) {
-            return this.colorService.getPrimaryColor();
-        }
-        return this.colorService.getSecondaryColor();
-    }
-
-    onColorClick(event: MouseEvent, color: Color): void {
-        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
-            if (event.button === ButtonId.Left) {
-                this.colorService.setPrimaryColor(color);
-            } else {
-                this.colorService.setSecondaryColor(color);
-            }
-        }
     }
 }

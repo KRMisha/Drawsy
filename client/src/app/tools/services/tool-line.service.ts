@@ -151,6 +151,21 @@ export class ToolLineService extends Tool {
         }
     }
 
+    onPrimaryColorChange(color: Color): void {
+        if (!this.currentlyDrawing) {
+            return;
+        }
+        this.renderer.setAttribute(this.polyline, 'stroke', color.toRgbaString());
+        
+        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        previewColor.alpha /= 2;
+        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
+
+        for (const junction of this.junctionPoints) {
+            this.renderer.setAttribute(junction, 'fill', color.toRgbaString());
+        }
+    }
+
     private removeLastPointFromLine(): void {
         if (this.points.length >= minimumPointsToEnableBackspace) {
             this.points.length = this.points.length - geometryDimension;
@@ -174,13 +189,13 @@ export class ToolLineService extends Tool {
         }
 
         const maxAngle = 360;
-        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle / 2) / Math.PI;
+        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle) / 2 / Math.PI;
         const snapAngle = 45;
         angle = Math.round(angle / snapAngle) * snapAngle;
         if (angle <= 0) {
             angle += maxAngle;
         }
-        
+
         const nextPoint: Vec2 = { x: 0, y: 0 };
         const horizontalAngles = [180, 360]; // tslint:disable-line: no-magic-numbers
         const verticalAngles = [90, 270]; // tslint:disable-line: no-magic-numbers

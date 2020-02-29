@@ -34,6 +34,7 @@ import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
+import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
@@ -103,6 +104,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         NewDrawingComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        SidebarColorPickerComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -1,4 +1,6 @@
 import { Injectable, Renderer2 } from '@angular/core';
+import { Color } from '@app/classes/color';
+import { ColorService } from '@app/drawing/services/color.service';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
@@ -10,7 +12,19 @@ export class ToolSelectorService {
     renderer: Renderer2;
     selectedTool: Tool;
 
-    constructor(private toolHolderService: ToolHolderService) {}
+    constructor(private toolHolderService: ToolHolderService, private colorService: ColorService) {
+        this.colorService.primaryColorChanged$.subscribe(
+            (color: Color) => {
+                this.selectedTool.onPrimaryColorChange(color);
+            }
+        );
+
+        this.colorService.secondaryColorChanged$.subscribe(
+            (color: Color) => {
+                this.selectedTool.onSecondaryColorChange(color);
+            }
+        )
+    }
 
     onMouseMove(event: MouseEvent): void {
         this.selectedTool.onMouseMove(event);

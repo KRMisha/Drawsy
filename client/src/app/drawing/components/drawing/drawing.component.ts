@@ -6,7 +6,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
-    styleUrls: ['./drawing.component.scss'],
+    styleUrls: ['./drawing.component.scss']
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appDrawingContent', { static: false }) private svg: ElementRef<SVGElement>;
