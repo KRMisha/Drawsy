@@ -1,13 +1,9 @@
 <div class="color-picker-container">
-    <app-color-field></app-color-field>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-        <div style="width: 206px; position: relative">
-            <app-hue-slider style="position: absolute; top: 0px; left:0px"></app-hue-slider>
-            <app-alpha-slider style="position: absolute; top: 22px; left:0px"></app-alpha-slider>
-        </div>
-        <div matRipple class="color-preview-checker mat-elevation-z2">
-            <div class="color-preview" [style.background-color]="this.colorPickerService.getColor().toRgbaString()"></div>
-        </div>
+    <app-color-field class="item-color-picker"></app-color-field>
+    <app-hue-slider class="item-hue"></app-hue-slider>
+    <app-alpha-slider class="item-alpha"></app-alpha-slider>
+    <div matRipple class="color-preview-checker mat-elevation-z2">
+        <div class="color-preview" [style.background-color]="this.colorPickerService.getColor().toRgbaString()"></div>
     </div>
-    <app-color-hex-selector></app-color-hex-selector>
+    <app-color-hex-selector class="item-hex-selector"></app-color-hex-selector>
 </div>

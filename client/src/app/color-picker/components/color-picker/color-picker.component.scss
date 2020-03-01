@@ -1,45 +1,32 @@
 .color-picker-container {
-    width: 250px;
-}
-
-.recent-colors {
+    justify-content: center;
+    display: grid;
     grid-template-areas:
-        'color' 'color' 'color' 'color' 'color'
-        'color' 'color' 'color' 'color' 'color';
-    justify-content: space-around;
-    text-align: center;
+        'color color'
+        'hue  preview'
+        'alpha preview'
+        'hex hex';
 }
 
-.recent-colors-item {
-    grid-area: 'color';
-    margin: 10px;
+.item-color-picker {
+    grid-area: color;
 }
 
-.mat-slider {
-    padding: 0px;
-    width: 200px;
+.item-hue {
+    grid-area: hue;
 }
 
-.alpha-text {
-    padding-top: 12px;
-    padding-right: 5px;
+.item-alpha {
+    grid-area: alpha;
 }
 
-.alpha-slider {
-    display: flex;
-    width: 250px;
-}
-
-input {
-    border-radius: 25px;
-    border-style: none;
-    text-align: center;
-    width: 70px;
-    margin-left: 2px;
-    margin-right: 2px;
+.item-hex-selector {
+    grid-area: hex;
 }
 
 .color-preview-checker {
+    grid-area: preview;
+    justify-self: right;
     width: 42px;
     height: 42px;
     background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
