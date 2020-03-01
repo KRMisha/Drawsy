@@ -20,9 +20,15 @@ export class ColorPickerComponent {
 
     @Output() colorModelChange = new EventEmitter<Color>();
 
+    @Output() submit = new EventEmitter();
+
     constructor(protected colorPickerService: ColorPickerService) {
         this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.colorModelChange.emit(color);
+        });
+
+        this.colorPickerService.colorSubmitted$.subscribe(() => {
+            this.submit.emit();
         });
     }
 }

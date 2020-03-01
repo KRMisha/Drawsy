@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Subject } from 'rxjs';
 
+const defaultPrimaryColor = Color.fromHex('000000');
+const defaultSecondaryColor = Color.fromHex('7f7f7f');
+
 const defaultColors = [
-    Color.fromHex('000000'),
-    Color.fromHex('fefefe'),
+    defaultPrimaryColor,
+    defaultSecondaryColor,
     Color.fromHex('f6cd61'),
     Color.fromHex('3da4ab'),
     Color.fromHex('ff6f69'),
@@ -14,9 +17,6 @@ const defaultColors = [
     Color.fromHex('f37736'),
     Color.fromHex('ee4035'),
 ];
-
-const defaultPrimaryColor = Color.fromHex('000000');
-const defaultSecondaryColor = Color.fromHex('ffffff');
 
 @Injectable({
     providedIn: 'root',
