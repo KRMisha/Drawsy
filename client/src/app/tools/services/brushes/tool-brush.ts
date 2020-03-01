@@ -1,3 +1,4 @@
+import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
@@ -39,6 +40,13 @@ export abstract class ToolBrush extends Tool {
             this.renderer.setAttribute(this.path, 'd', pathString);
             this.isMouseDown = false;
         }
+    }
+
+    onPrimaryColorChange(color: Color): void {
+        if (!this.isMouseInside || !this.isMouseDown) {
+            return;
+        }
+        this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
     }
 
     protected createNewPath(): SVGPathElement {

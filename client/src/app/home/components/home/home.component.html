@@ -1,37 +1,21 @@
-<div class="home">
-    <h1 class="title">PolyDessin</h1>
-    <div class="horizontal-container">
-        <div class="vertical-container">
-            <div>
-                <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Google_fuchsia3.svg/1200px-Google_fuchsia3.svg.png"
-                    class="logo"
-                />
-            </div>
-            <div class="button-list">
-                <a mat-stroked-button (click)="openNewDrawingModal()">CRÉER UN NOUVEAU DESSIN</a>
-                <div *ngIf="this.drawingService.isDrawingStarted()">
-                    <a mat-stroked-button routerLink="/editor">CONTINUER UN DESSIN</a>
-                </div>
-                <a mat-stroked-button>GALERIE DE DESSIN</a>
-                <a mat-stroked-button (click)="openGuideModal()">GUIDE D'UTILISATION</a>
-            </div>
-        </div>
-        <mat-card class="card-container">
-            <mat-card-title>Bienvenue!</mat-card-title>
-            <mat-card-content class="text-block">
-                Ce logiciel de dessin vectoriel a été développé par l'équipe 203 (groupe 2). Les Singletons c'est méchant.
-                <del>Simon</del> Misha me tient en otage, s'il-vous-plaît en informer Brenda afin de planifier une rencontre HPR où je vais
-                pouvoir renverser la monarchie. <br /><br />
-                Développeurs:
-            </mat-card-content>
-            <div class="name-list">
-                <li>Francis "Chancellier Suprême des Stylesheets" Pepin</li>
-                <li>Justin van den Hanenberg</li>
-                <li>Misha Krieger-Raynauld</li>
-                <li>Samer Massaad</li>
-                <li>Simon Gauvin</li>
-            </div>
-        </mat-card>
-    </div>
+<div class="mat-app-background">
+  <mat-toolbar class="mat-elevation-z8">Bienvenue sur l'application Polydessin!</mat-toolbar>
+  <mat-toolbar class="mat-elevation-z4" color=primary>
+      Polydessin
+  </mat-toolbar>
+  <div>
+    <mat-card class="item-buttons">
+      <button mat-raised-button class="button" (click)="openNewDrawingModal()">Créer un nouveau dessin</button>
+      <div *ngIf="this.drawingService.isDrawingStarted()">
+        <button mat-raised-button class="button" routerLink="/editor">Continuer un dessin</button>
+      </div>
+      <button mat-raised-button class="button">Galerie de dessin</button>
+      <button mat-raised-button class="button" (click)="openGuideModal()">Guide d'utilisation</button>
+    </mat-card>
+  </div>
+  <div class="footer">
+    <mat-divider></mat-divider>
+    <p>Équipe 203</p>
+    <p>Francis Pepin • Justin van den Hanenberg • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin</p>
+  </div>
 </div>

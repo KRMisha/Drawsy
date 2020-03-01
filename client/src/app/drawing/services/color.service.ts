@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
+import { Subject } from 'rxjs';
 
 const defaultColors = [
-    Color.fromHex('fe8a71'),
+    Color.fromHex('000000'),
+    Color.fromHex('fefefe'),
     Color.fromHex('f6cd61'),
     Color.fromHex('3da4ab'),
-    Color.fromHex('fe9c8f'),
     Color.fromHex('ff6f69'),
     Color.fromHex('0392cf'),
     Color.fromHex('7bc043'),
@@ -26,20 +27,30 @@ export class ColorService {
 
     private lastColors: Color[] = defaultColors;
 
+    private primaryColorChangedSource = new Subject<Color>();
+    private secondaryColorChangedSource = new Subject<Color>();
+
+    primaryColorChanged$ = this.primaryColorChangedSource.asObservable();
+    secondaryColorChanged$ = this.secondaryColorChangedSource.asObservable();
+
     swapPrimaryAndSecondaryColors(): void {
         const temp = this.primaryColor;
         this.primaryColor = this.secondaryColor;
         this.secondaryColor = temp;
+        this.primaryColorChangedSource.next(this.primaryColor);
+        this.secondaryColorChangedSource.next(this.secondaryColor);
     }
 
     setPrimaryColor(color: Color): void {
         this.primaryColor = Color.fromColor(color);
         this.addColor(this.primaryColor);
+        this.primaryColorChangedSource.next(this.primaryColor);
     }
 
     setSecondaryColor(color: Color): void {
         this.secondaryColor = Color.fromColor(color);
         this.addColor(this.secondaryColor);
+        this.secondaryColorChangedSource.next(this.secondaryColor);
     }
 
     getLastColors(): Color[] {

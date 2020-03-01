@@ -21,5 +21,7 @@
             <mat-error *ngIf="hexRgb.invalid && (hexRgb.dirty || hexRgb.touched)">Invalide</mat-error>
         </mat-form-field>
     </div>
-    <button mat-raised-button (click)="swapMode($event)">Swap</button>
+    <button mat-icon-button (click)="swapMode($event)">
+        <mat-icon>swap_vert</mat-icon>
+    </button>
 </div>

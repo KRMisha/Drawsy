@@ -1,4 +1,5 @@
 import { Renderer2 } from '@angular/core';
+import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
@@ -22,5 +23,7 @@ export abstract class Tool {
     onKeyUp(event: KeyboardEvent): void {}
     onEnter(event: MouseEvent): void {}
     onLeave(event: MouseEvent): void {}
+    onPrimaryColorChange(color: Color): void {}
+    onSecondaryColorChange(color: Color): void {}
     // tslint:enable: empty
 }
