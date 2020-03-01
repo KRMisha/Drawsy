@@ -1,27 +1,27 @@
 .color-picker-container {
-  justify-content: center;
-  display: grid;
-  grid-template-areas:
-  "color color"
-  "hue  preview"
-  "alpha preview"
-  "hex hex";
+    justify-content: center;
+    display: grid;
+    grid-template-areas:
+        'color color'
+        'hue  preview'
+        'alpha preview'
+        'hex hex';
 }
 
 .item-color-picker {
-  grid-area: color;
+    grid-area: color;
 }
 
 .item-hue {
-  grid-area: hue;
+    grid-area: hue;
 }
 
 .item-alpha {
-  grid-area: alpha;
+    grid-area: alpha;
 }
 
 .item-hex-selector {
-  grid-area: hex;
+    grid-area: hex;
 }
 
 .color-preview-checker {
