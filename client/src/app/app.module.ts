@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -62,6 +63,7 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+
 
 @NgModule({
     declarations: [
@@ -125,6 +127,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         MatSidenavModule,
         MatSliderModule,
         MatSlideToggleModule,
+        MatToolbarModule,
         MatTreeModule,
         ReactiveFormsModule,
     ],
