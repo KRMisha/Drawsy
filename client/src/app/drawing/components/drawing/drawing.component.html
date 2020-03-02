@@ -1,15 +1,15 @@
 <svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="getViewBox()" [attr.width]="getWidth()" [attr.height]="getHeight()">
-    <metadata
-        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        xmlns:dc="http://purl.org/dc/elements/1.1/"
-        xmlns:cc="http://creativecommons.org/ns#"
-    ></metadata>
+
+    <desc>
+        <title>THIS WILL BE THE TITLE</title>
+        label1,label2,label3
+    </desc>
 
     <defs>
-        <filter id="texture1" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
-        </filter>
-
+    <filter id="texture1" filterUnits="userSpaceOnUse">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+    </filter>
+    
         <filter id="texture2" filterUnits="userSpaceOnUse">
             <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence2" />
             <feDisplacementMap in2="turbulence2" in="SourceGraphic" scale="15" />
@@ -50,7 +50,11 @@
             <feComposite in="SourceGraphic" in2="result5" operator="arithmetic" k2="1" k3="1" />
         </filter>
 
-        <filter id="black-and-white" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox">
+        <filter id="previewTexture0">
+            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite"/>
+        </filter>
+
+        <filter id="previewTexture1" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox">
             <feColorMatrix
                 type="matrix"
                 values="0 1 0 0 0
@@ -60,7 +64,7 @@
             />
         </filter>
 
-        <filter id="mid-sepia" color-interpolation-filters="sRGB">
+        <filter id="previewTexture2" color-interpolation-filters="sRGB">
             <feColorMatrix type="luminanceToAlpha" />
             <feComponentTransfer>
                 <feFuncA type="table" tableValues="0 .2 0.5 .8 1 .8 0.5 .20 0" />
@@ -85,9 +89,22 @@
             />
             <feComposite operator="over" in="sepia-clip" in2="gscale" />
         </filter>
+
+        <filter id="previewTexture3">
+            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite"/>
+        </filter>
+
+        <filter id="previewTexture4">
+            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite"/>
+        </filter>
+
+        <filter id="previewTexture5">
+            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite"/>
+        </filter>
+
     </defs>
 
-    <rect width="100%" height="100%" [attr.fill]="getBackgroundColor()" />
+    <rect width="100%" height="100%" [attr.fill]="getBackgroundColor()"/>
 
-    <g>></g>
+    <g></g>
 </svg>

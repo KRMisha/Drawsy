@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
-import { Label } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Injectable({
@@ -11,14 +10,13 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 export class DrawingSerializerService {
     constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer) {}
 
-    exportCurrentDrawing(labels: Label[]): SafeUrl {
-        const svgFileString = this.drawingService.getDrawingRoot().outerHTML;
-        const blob = new Blob([svgFileString], { type: 'image/svg+xml' });
+    exportCurrentDrawing(drawingRoot: SVGSVGElement): SafeUrl {
+        const blob = new Blob([drawingRoot.outerHTML], { type: 'image/svg+xml' });
 
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
 
-    importSelectedDrawing(file: FileList): void {
+    importSelectedDrawing(file: FileList): void{
         const importedDrawing: Drawing = new Drawing();
         const fileReader: FileReader = new FileReader();
         let fileContent: string;
@@ -42,7 +40,6 @@ export class DrawingSerializerService {
             importedDrawing.backgroundColor = backgroundColor;
             this.drawingService.setDrawing(importedDrawing);
         };
-
         fileReader.readAsText(file[0]);
     }
 }

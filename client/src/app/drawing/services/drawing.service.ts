@@ -2,6 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
+import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum'
 
 @Injectable({
     providedIn: 'root',
@@ -11,14 +12,14 @@ export class DrawingService {
 
     private drawingRoot: SVGSVGElement;
     private svgDrawingContent: SVGGElement;
-    private svgMetadataContent: SVGMetadataElement;
-
+    private svgDescContent: SVGDescElement;
+    
     private currentDrawing = new Drawing();
 
     setTarget(drawingRoot: SVGSVGElement): void {
         this.drawingRoot = drawingRoot;
         this.svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
-        this.svgMetadataContent = drawingRoot.getElementsByTagName('metadata')[0];
+        this.svgDescContent = drawingRoot.getElementsByTagName('desc')[0];
     }
 
     addElement(element: SVGElement): void {
@@ -76,9 +77,14 @@ export class DrawingService {
         this.setBackgroundColor(drawing.backgroundColor);
     }
 
-    addSvgMetadataElement(element: SVGMetadataElement): void {
-        this.currentDrawing.addMetadataElement(element);
-        this.renderer.appendChild(this.svgMetadataContent, element);
+    addDescElement(element: string): void {
+        this.currentDrawing.addDescElement(element);
+        this.svgDescContent.append(element);
+    }
+
+    removeDescElement(element: string): void {
+        this.currentDrawing.removeDescElement(element);
+        // TODO: REMOVE STRING FROM DESC
     }
 
     getSvgRoot(): HTMLCollectionOf<SVGGElement> {
@@ -87,5 +93,9 @@ export class DrawingService {
 
     getDrawingRoot(): SVGSVGElement {
         return this.drawingRoot;
+    }
+
+    setPreviewTexture(previewTexture: DrawingPreviewTextures): void {
+        this.renderer.setAttribute(this.svgDrawingContent, 'filter', `url(#previewTexture${previewTexture})`);
     }
 }

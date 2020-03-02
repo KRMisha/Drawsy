@@ -1,30 +1,34 @@
 <div mat-dialog-content>
     <mat-form-field class="chip-list">
         <mat-chip-list #chipList aria-label="Label selection">
-            <mat-chip
-                *ngFor="let label of labels"
-                [selectable]="selectable"
-                [removable]="removable"
-                (removed)="removeLabel(label)"
-                color="$primary"
-            >
-                {{ label.name }}
+            <mat-chip *ngFor="let label of labels" [selectable]="selectable" [removable]="removable"
+                (removed)="removeLabel(label)" color="$primary">
+                {{ label }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
-            <input
-                placeholder="Nouvelle étiquette..."
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="addLabel($event)"
-            />
+            <input placeholder="Nouvelle étiquette..." [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addLabel($event)" />
         </mat-chip-list>
     </mat-form-field>
 
-    <mat-card>
+    <!-- <mat-card>
         <mat-card-title>Aperçu</mat-card-title>
         <app-drawing [isPreview]="true"></app-drawing>
-    </mat-card>
+    </mat-card> -->
+</div>
+<div>
+    <mat-form-field>
+        <mat-label>Type de filtre</mat-label>
+        <mat-select [value]="DrawingPreviewTextures.PreviewTexture0" (selectionChange)="setPreviewTexture($event.value)">
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture0">Aucun filtre</mat-option>
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture1">Noir et blanc</mat-option>
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture2">Sepia</mat-option>
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture3">Futur1</mat-option>
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture4">Futur2</mat-option>
+            <mat-option [value]="DrawingPreviewTextures.PreviewTexture5">Futur3</mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 
 <div mat-dialog-actions>

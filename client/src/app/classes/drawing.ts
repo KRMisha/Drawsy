@@ -2,14 +2,22 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 
 export class Drawing {
+    private _title: string; // tslint:disable-line: variable-name
+    get title(): string {
+        return this._title;
+    }
+    set title(title: string) {
+        this.title = title;
+    }
+
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
     get svgElements(): SVGElement[] {
         return this._svgElements;
     }
 
-    private _metadataElements: SVGMetadataElement[] = []; // tslint:disable-line: variable-name
-    get metadataElements(): SVGMetadataElement[] {
-        return this._metadataElements;
+    private _descElements: string[] = []; // tslint:disable-line: variable-name
+    get descElements(): string[] {
+        return this._descElements;
     }
 
     dimensions: Vec2 = { x: 512, y: 512 };
@@ -37,24 +45,24 @@ export class Drawing {
         return this.svgElements.length > 0;
     }
 
-    addMetadataElement(element: SVGMetadataElement): void {
-        this.metadataElements.push(element);
+    addDescElement(element: string): void {
+        this.descElements.push(element);
     }
 
-    removeMetadataElement(element: SVGMetadataElement): boolean {
-        const elementToRemoveIndex = this.metadataElements.indexOf(element, 0);
+    removeDescElement(element: string): boolean {
+        const elementToRemoveIndex = this.descElements.indexOf(element, 0);
         if (elementToRemoveIndex > -1) {
-            this.metadataElements.splice(elementToRemoveIndex, 1);
+            this.descElements.splice(elementToRemoveIndex, 1);
             return true;
         }
         return false;
     }
 
-    clearMetadataSvgElements(): void {
-        this.metadataElements.length = 0;
+    clearDescSvgElements(): void {
+        this.descElements.length = 0;
     }
 
-    hasMetadataSvgElements(): boolean {
-        return this.metadataElements.length > 0;
+    hasDescSvgElements(): boolean {
+        return this.descElements.length > 0;
     }
 }
