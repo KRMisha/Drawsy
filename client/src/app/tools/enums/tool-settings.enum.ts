@@ -1,6 +1,6 @@
 export enum ToolSetting {
     Size,
-    HasJunction,
+    JunctionSettings,
     StrokeType,
     Texture,
 }

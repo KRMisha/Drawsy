@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Subscription } from 'rxjs';
 
-const canvasWidth = 204;
+const canvasWidth = 202;
 const canvasHeight = 20;
 const radius = 8;
 
@@ -11,7 +12,7 @@ const radius = 8;
     templateUrl: './alpha-slider.component.html',
     styleUrls: ['./alpha-slider.component.scss'],
 })
-export class AlphaSliderComponent implements AfterViewInit {
+export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appAlphaPicker', { static: false }) alphaCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
@@ -22,13 +23,9 @@ export class AlphaSliderComponent implements AfterViewInit {
     private isMouseDown = false;
     private mouseXPosition = 0;
 
-    constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.colorChanged$.subscribe((color: Color) => {
-            this.color = color;
-            this.mouseXPosition = this.color.alpha * canvasWidth;
-            this.draw();
-        });
-    }
+    private colorChangedSubscription: Subscription;
+
+    constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
         this.context = this.alphaCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -36,14 +33,21 @@ export class AlphaSliderComponent implements AfterViewInit {
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
         this.mouseXPosition = this.colorPickerService.alpha * canvasWidth;
+
+        this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
+            this.color = color;
+            this.mouseXPosition = this.color.alpha * canvasWidth;
+            this.draw();
+        });
+
         this.draw();
     }
 
-    private draw(): void {
-        if (this.context === undefined) {
-            return;
-        }
+    ngOnDestroy(): void {
+        this.colorChangedSubscription.unsubscribe();
+    }
 
+    private draw(): void {
         this.context.clearRect(0, 0, canvasWidth, canvasHeight);
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
         horizontalGradient.addColorStop(0, `rgba(${this.color.red}, ${this.color.green}, ${this.color.blue}, 0)`);

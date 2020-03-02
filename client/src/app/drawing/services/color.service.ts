@@ -66,13 +66,14 @@ export class ColorService {
     }
 
     private addColor(color: Color): void {
-        const isColorPresent = (element: Color) =>
-            color.red === element.red && color.green === element.green && color.blue === element.blue;
-        if (this.lastColors.some(isColorPresent)) {
-            return;
-        }
+        const isColorPresent = (element: Color) => color.getHex() === element.getHex();
+        const index = this.lastColors.findIndex(isColorPresent);
 
-        this.lastColors.pop();
-        this.lastColors.unshift(color);
+        if (index === -1) {
+            this.lastColors.pop();
+            this.lastColors.unshift(color);
+        } else {
+            this.lastColors[index] = color;
+        }
     }
 }
