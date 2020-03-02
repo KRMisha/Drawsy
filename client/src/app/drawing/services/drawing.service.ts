@@ -77,9 +77,11 @@ export class DrawingService {
         this.setBackgroundColor(drawing.backgroundColor);
     }
 
-    addDescElement(element: string): void {
-        this.currentDrawing.addDescElement(element);
-        this.svgDescContent.append(element);
+    addDescElements(elements: string[]): void {
+        this.currentDrawing.addDescElement(elements);
+        for (const element of elements) {
+            this.svgDescContent.append(element);
+        }
     }
 
     removeDescElement(element: string): void {

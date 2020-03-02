@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SafeUrl } from '@angular/platform-browser';
 import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
@@ -14,7 +14,7 @@ export interface Label {
     templateUrl: './export-drawing.component.html',
     styleUrls: ['./export-drawing.component.scss'],
 })
-export class ExportDrawingComponent implements OnDestroy {
+export class ExportDrawingComponent implements OnDestroy, OnInit {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     visible = true;
     selectable = true;
@@ -27,9 +27,11 @@ export class ExportDrawingComponent implements OnDestroy {
     title: string;
 
     DrawingPreviewTextures = DrawingPreviewTextures;
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {
+    constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
+
+    ngOnInit(): void {
         const currentDrawing = this.drawingService.getCurrentDrawing();
-        this.labels = currentDrawing.descElements;
+        this.labels = [...currentDrawing.descElements];
         this.title = currentDrawing.title;
     }
 
@@ -38,6 +40,7 @@ export class ExportDrawingComponent implements OnDestroy {
     }
 
     exportDrawing(): void {
+        this.drawingService.addDescElements(this.labels);
         this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(this.drawingService.getDrawingRoot());
     }
 
@@ -47,7 +50,6 @@ export class ExportDrawingComponent implements OnDestroy {
 
         if ((value || '').trim()) {
             this.labels.push(value.trim());
-            this.drawingService.addDescElement(value.trim());
         }
 
         if (input !== undefined) {

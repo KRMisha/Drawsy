@@ -45,8 +45,10 @@ export class Drawing {
         return this.svgElements.length > 0;
     }
 
-    addDescElement(element: string): void {
-        this.descElements.push(element);
+    addDescElement(elements: string[]): void {
+        for (const element of elements) {
+            this.descElements.push(element);
+        }
     }
 
     removeDescElement(element: string): boolean {
