@@ -1,12 +1,12 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { ImportExportDrawingComponent } from '@app/drawing/components/import-export-drawing/import-export-drawing.component';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-import { ImportExportDrawingComponent } from '@app/drawing/components/import-export-drawing/import-export-drawing.component';
 
 @Component({
     selector: 'app-sidebar',

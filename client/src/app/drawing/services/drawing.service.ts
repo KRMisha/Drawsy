@@ -2,7 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
-import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum'
+import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +13,7 @@ export class DrawingService {
     private drawingRoot: SVGSVGElement;
     private svgDrawingContent: SVGGElement;
     private svgDescContent: SVGDescElement;
-    
+
     private currentDrawing = new Drawing();
 
     setTarget(drawingRoot: SVGSVGElement): void {
@@ -96,6 +96,14 @@ export class DrawingService {
     }
 
     setPreviewTexture(previewTexture: DrawingPreviewTextures): void {
-        this.renderer.setAttribute(this.svgDrawingContent, 'filter', `url(#previewTexture${previewTexture})`);
+        if (previewTexture === DrawingPreviewTextures.PreviewTexture0) {
+            this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
+        } else {
+            this.renderer.setAttribute(this.svgDrawingContent, 'filter', `url(#previewTexture${previewTexture})`);
+        }
+    }
+
+    removePreviewTexture(): void {
+        this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
     }
 }

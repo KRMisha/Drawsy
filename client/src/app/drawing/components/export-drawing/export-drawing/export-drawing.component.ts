@@ -3,9 +3,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SafeUrl } from '@angular/platform-browser';
 import { Drawing } from '@app/classes/drawing';
+import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
 
 export interface Label {
     name: string;
@@ -22,7 +22,7 @@ export class ExportDrawingComponent implements OnDestroy {
     removable = true;
     addOnBlur = true;
     fileUrl: SafeUrl;
-    previewTexture: DrawingPreviewTextures = DrawingPreviewTextures.PreviewTexture0; 
+    previewTexture: DrawingPreviewTextures = DrawingPreviewTextures.PreviewTexture0;
 
     currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
     labels: string[] = this.currentDrawing.descElements;
@@ -32,7 +32,7 @@ export class ExportDrawingComponent implements OnDestroy {
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
 
     ngOnDestroy(): void {
-        this.setPreviewTexture(DrawingPreviewTextures.PreviewTexture0);
+        this.drawingService.removePreviewTexture();
     }
 
     exportDrawing(): void {

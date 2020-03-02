@@ -38,7 +38,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(true);
         }
@@ -50,7 +50,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         if (event.button === ButtonId.Left) {
             this.toolSelectorService.setMouseDown(false);
         }
@@ -62,7 +62,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         this.toolSelectorService.onMouseDoubleClick(event);
     }
 
@@ -71,7 +71,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         this.toolSelectorService.onKeyDown(event);
     }
 
@@ -80,7 +80,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         this.toolSelectorService.onKeyUp(event);
     }
 
@@ -89,7 +89,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         this.toolSelectorService.setMouseInside(true);
         this.toolSelectorService.onEnter(event);
     }
@@ -99,13 +99,13 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         if (this.isPreview) {
             return;
         }
-        
+
         this.toolSelectorService.setMouseInside(false);
         this.toolSelectorService.onLeave(event);
     }
 
     getViewBox(): string {
-        return `0 0 ${this.drawingService.getDrawingDimensions().x} ${this.drawingService.getDrawingDimensions().y}`
+        return `0 0 ${this.drawingService.getDrawingDimensions().x} ${this.drawingService.getDrawingDimensions().y}`;
     }
 
     getWidth(): string {

@@ -16,7 +16,7 @@ export class DrawingSerializerService {
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
 
-    importSelectedDrawing(file: FileList): void{
+    importSelectedDrawing(file: FileList): void {
         const importedDrawing: Drawing = new Drawing();
         const fileReader: FileReader = new FileReader();
         let fileContent: string;

@@ -4,5 +4,5 @@ export enum DrawingPreviewTextures {
     PreviewTexture2,
     PreviewTexture3,
     PreviewTexture4,
-    PreviewTexture5
+    PreviewTexture5,
 }
