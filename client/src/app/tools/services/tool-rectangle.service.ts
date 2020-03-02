@@ -4,6 +4,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { StrokeTypes, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -17,10 +18,9 @@ export class ToolRectangleService extends Tool {
     private isSquare = false;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
-        super(drawingService);
+        super(drawingService, ToolNames.Rectangle);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.StrokeType);
-        this.name = 'Rectangle';
     }
 
     onMouseMove(event: MouseEvent): void {

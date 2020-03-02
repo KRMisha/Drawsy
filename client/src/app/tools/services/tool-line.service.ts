@@ -5,6 +5,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -16,6 +17,7 @@ const lineClosingPixelTolerance = 3;
     providedIn: 'root',
 })
 export class ToolLineService extends Tool {
+    private groupElement: SVGElement;
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
     private isCurrentlyDrawing = false;
@@ -31,7 +33,7 @@ export class ToolLineService extends Tool {
     private junctionSize: number;
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
-        super(drawingService);
+        super(drawingService, ToolNames.Line);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
             hasJunction: false,
@@ -52,26 +54,24 @@ export class ToolLineService extends Tool {
         this.updateNextPointPosition();
         this.lastPoint = this.nextPoint;
 
-        if (this.previewLine === undefined) {
+        if (!this.isCurrentlyDrawing) {
+            this.isCurrentlyDrawing = true;
+
+            this.groupElement = this.renderer.createElement('g', 'svg');
+            this.drawingService.addElement(this.groupElement);
+
+            this.polyline = this.createNewPolyline();
+            this.renderer.appendChild(this.groupElement, this.polyline);
+
             this.previewLine = this.renderer.createElement('line', 'svg');
-            this.renderer.setAttribute(this.previewLine, 'display', 'none');
             this.drawingService.addElement(this.previewLine);
+            this.updatePreviewLine();
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', this.nextPoint.x.toString());
         this.renderer.setAttribute(this.previewLine, 'y1', this.nextPoint.y.toString());
         this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
         this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
-
-        if (!this.isCurrentlyDrawing) {
-            this.polyline = this.createNewPolyline();
-            this.updatePreviewLine();
-            this.renderer.setAttribute(this.previewLine, 'display', '');
-            this.isCurrentlyDrawing = true;
-            this.drawingService.addElement(this.polyline);
-            this.drawingService.removeElement(this.previewLine);
-            this.drawingService.addElement(this.previewLine);
-        }
 
         this.points.push(this.nextPoint.x);
         this.points.push(this.nextPoint.y);
@@ -81,7 +81,7 @@ export class ToolLineService extends Tool {
             const circle = this.createNewJunction();
             this.renderer.setAttribute(circle, 'cx', this.nextPoint.x.toString());
             this.renderer.setAttribute(circle, 'cy', this.nextPoint.y.toString());
-            this.drawingService.addElement(circle);
+            this.renderer.appendChild(this.groupElement, circle);
         }
 
         this.updateNextPointPosition();
@@ -101,7 +101,7 @@ export class ToolLineService extends Tool {
             return;
         }
         if (this.junctionPoints.length > 0) {
-            this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
+            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
         }
         this.points.length -= geometryDimension;
 
@@ -116,7 +116,7 @@ export class ToolLineService extends Tool {
 
             if (deltaX <= lineClosingPixelTolerance && deltaY <= lineClosingPixelTolerance) {
                 if (this.junctionPoints.length > 0) {
-                    this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
+                    this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
@@ -131,11 +131,8 @@ export class ToolLineService extends Tool {
         switch (event.key) {
             case 'Escape':
                 if (this.isCurrentlyDrawing) {
-                    this.drawingService.removeElement(this.polyline);
+                    this.drawingService.removeElement(this.groupElement);
                     this.stopDrawing();
-                    for (const circle of this.junctionPoints) {
-                        this.drawingService.removeElement(circle);
-                    }
                     this.junctionPoints.length = 0;
                 }
                 break;
@@ -182,7 +179,7 @@ export class ToolLineService extends Tool {
             this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
 
-            this.drawingService.removeElement(this.junctionPoints.pop() as SVGCircleElement);
+            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
         }
     }
 
@@ -222,8 +219,9 @@ export class ToolLineService extends Tool {
 
     private stopDrawing(): void {
         this.isCurrentlyDrawing = false;
-        this.renderer.setAttribute(this.previewLine, 'display', 'none');
         this.points.length = 0;
+        this.drawingService.removeElement(this.previewLine);
+        delete this.previewLine;
     }
 
     private createNewPolyline(): SVGPolylineElement {
