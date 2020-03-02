@@ -13,22 +13,35 @@
                 class="option-button"
                 [class.selected]="button === selectedButton"
                 (click)="setSelectedTool(i)"
-                title="{{ button.name }}"
+                matTooltip="{{ button.name }}"
+                [matTooltipPosition]="'right'"
             >
                 <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
             </button>
         </div>
         <div class="option-selection">
-            <button mat-stroked-button class="option-button" (click)="openSettingsModal()">
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openSettingsModal()"
+                matTooltip="Paramètres"
+                [matTooltipPosition]="'right'"
+            >
                 <mat-icon class="mat-icon">settings</mat-icon>
             </button>
-            <button mat-stroked-button class="option-button" (click)="openNewDrawingModal()">
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openNewDrawingModal()"
+                matTooltip="Nouveau dessin"
+                [matTooltipPosition]="'right'"
+            >
                 <mat-icon class="mat-icon">add</mat-icon>
             </button>
-            <button mat-stroked-button class="option-button" (click)="openGuideModal()">
+            <button mat-stroked-button class="option-button" (click)="openGuideModal()" matTooltip="Aide" [matTooltipPosition]="'right'">
                 <mat-icon class="mat-icon">help</mat-icon>
             </button>
-            <button mat-stroked-button class="option-button" routerLink="/home">
+            <button mat-stroked-button class="option-button" routerLink="/home" matTooltip="Accueil" [matTooltipPosition]="'right'">
                 <mat-icon class="mat-icon">home</mat-icon>
             </button>
         </div>
