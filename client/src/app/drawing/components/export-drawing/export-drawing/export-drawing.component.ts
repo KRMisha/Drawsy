@@ -2,7 +2,6 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SafeUrl } from '@angular/platform-browser';
-import { Drawing } from '@app/classes/drawing';
 import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -24,21 +23,21 @@ export class ExportDrawingComponent implements OnDestroy {
     fileUrl: SafeUrl;
     previewTexture: DrawingPreviewTextures = DrawingPreviewTextures.PreviewTexture0;
 
-    currentDrawing: Drawing = this.drawingService.getCurrentDrawing();
-    labels: string[] = this.currentDrawing.descElements;
-    title: string = this.currentDrawing.title;
+    labels: string[] = [];
+    title: string;
 
     DrawingPreviewTextures = DrawingPreviewTextures;
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
+    constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {
+        const currentDrawing = this.drawingService.getCurrentDrawing();
+        this.labels = currentDrawing.descElements;
+        this.title = currentDrawing.title;
+    }
 
     ngOnDestroy(): void {
         this.drawingService.removePreviewTexture();
     }
 
     exportDrawing(): void {
-        for (const label of this.labels) {
-            this.drawingService.addDescElement(label);
-        }
         this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(this.drawingService.getDrawingRoot());
     }
 
@@ -48,6 +47,7 @@ export class ExportDrawingComponent implements OnDestroy {
 
         if ((value || '').trim()) {
             this.labels.push(value.trim());
+            this.drawingService.addDescElement(value.trim());
         }
 
         if (input !== undefined) {
