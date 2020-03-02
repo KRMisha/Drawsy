@@ -14,24 +14,33 @@
         </mat-slider>
     </div>
 
-    <div *ngIf="hasSetting(ToolSetting.HasJunction)">
+    <div *ngIf="hasSetting(ToolSetting.JunctionSettings)">
         <div class="option">
             <h2 class="mat-h2">Taille jonction</h2>
             <form [formGroup]="junctionSizeGroup">
-                <input class="input-number" formControlName="junctionSize" [disabled]="!getSetting(ToolSetting.HasJunction)[0]" />
+                <input
+                    class="input-number"
+                    formControlName="junctionSize"
+                    [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
+                />
             </form>
 
             <mat-slide-toggle
-                [ngModel]="getSetting(ToolSetting.HasJunction)[0]"
-                (ngModelChange)="setSetting(ToolSetting.HasJunction, [$event, getSetting(ToolSetting.HasJunction)[1]])"
+                [ngModel]="getSetting(ToolSetting.JunctionSettings).hasJunction"
+                (ngModelChange)="
+                    setSetting(ToolSetting.JunctionSettings, {
+                        hasJunction: $event,
+                        junctionSize: getSetting(ToolSetting.JunctionSettings).junctionSize
+                    })
+                "
             ></mat-slide-toggle>
         </div>
         <mat-slider
             min="1"
-            max="100"
+            max="500"
             (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
             [value]="junctionSizeGroup.controls.junctionSize.value"
-            [disabled]="!getSetting(ToolSetting.HasJunction)[0]"
+            [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
         >
         </mat-slider>
     </div>

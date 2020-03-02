@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Subscription } from 'rxjs';
 
 enum ColorString {
     OpaqueWhite = 'rgba(255, 255, 255, 1)',
@@ -18,7 +19,7 @@ const canvasHeight = 160;
     templateUrl: './color-field.component.html',
     styleUrls: ['./color-field.component.scss'],
 })
-export class ColorFieldComponent implements AfterViewInit {
+export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSaturationValuePicker', { static: false }) saturationValueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
@@ -28,25 +29,13 @@ export class ColorFieldComponent implements AfterViewInit {
     private sliderPosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
 
+    private hueChangedSubscription: Subscription;
+    private saturationChangedSubscription: Subscription;
+    private valueChangedSubscription: Subscription;
+
     private isSliderPositionClipedToBottom = false;
 
-    constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.hueChanged$.subscribe((hue: number) => {
-            this.draw();
-        });
-        this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
-            const color = this.colorPickerService.getColor();
-            const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
-            if (!this.isSliderPositionClipedToBottom || !isBlack) {
-                this.sliderPosition.x = saturation * canvasWidth;
-            }
-            this.draw();
-        });
-        this.colorPickerService.valueChanged$.subscribe((value: number) => {
-            this.sliderPosition.y = canvasHeight * (1 - value);
-            this.draw();
-        });
-    }
+    constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
         this.context = this.saturationValueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -55,14 +44,33 @@ export class ColorFieldComponent implements AfterViewInit {
         this.canvas.height = canvasHeight;
         this.sliderPosition.y = this.canvas.height * (1 - this.colorPickerService.value);
         this.sliderPosition.x = this.colorPickerService.saturation * this.canvas.width;
+
+        this.hueChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
+            this.draw();
+        });
+        this.saturationChangedSubscription = this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
+            const color = this.colorPickerService.getColor();
+            const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
+            if (!this.isSliderPositionClipedToBottom || !isBlack) {
+                this.sliderPosition.x = saturation * canvasWidth;
+            }
+            this.draw();
+        });
+        this.valueChangedSubscription = this.colorPickerService.valueChanged$.subscribe((value: number) => {
+            this.sliderPosition.y = canvasHeight * (1 - value);
+            this.draw();
+        });
+
         this.draw();
     }
 
-    draw(): void {
-        if (this.canvas === undefined) {
-            return;
-        }
+    ngOnDestroy(): void {
+        this.hueChangedSubscription.unsubscribe();
+        this.saturationChangedSubscription.unsubscribe();
+        this.valueChangedSubscription.unsubscribe();
+    }
 
+    draw(): void {
         const color = new Color();
         color.setHsv(this.colorPickerService.hue, 1, 1);
 

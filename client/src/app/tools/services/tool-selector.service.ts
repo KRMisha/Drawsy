@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
+import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
@@ -86,12 +87,12 @@ export class ToolSelectorService implements OnDestroy {
         return this.selectedTool.name;
     }
 
-    getSetting(setting: ToolSetting): number | [boolean, number] | StrokeTypes | Textures {
+    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeTypes | Textures {
         const value = this.selectedTool.toolSettings.get(setting);
-        return value as number | [boolean, number] | StrokeTypes | Textures;
+        return value as number | JunctionSettings | StrokeTypes | Textures;
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeTypes | Textures): void {
         this.selectedTool.toolSettings.set(setting, value);
     }
 

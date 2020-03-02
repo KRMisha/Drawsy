@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -61,10 +62,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
         this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.HasJunction, [
-                    (this.getSetting(ToolSetting.HasJunction) as [boolean, number])[0],
-                    this.junctionSizeGroup.controls.junctionSize.value,
-                ]);
+                this.toolSelectorService.setSetting(ToolSetting.JunctionSettings, {
+                    hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
+                    junctionSize: this.junctionSizeGroup.controls.junctionSize.value,
+                } as JunctionSettings);
             }
         });
     }
@@ -78,11 +79,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.toolSelectorService.getToolName();
     }
 
-    getSetting(setting: ToolSetting): number | [boolean, number] | StrokeTypes | Textures {
+    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeTypes | Textures {
         return this.toolSelectorService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | [boolean, number] | StrokeTypes | Textures): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeTypes | Textures): void {
         this.toolSelectorService.setSetting(setting, value);
     }
 

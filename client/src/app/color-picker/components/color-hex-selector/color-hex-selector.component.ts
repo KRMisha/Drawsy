@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Color, hexRegex } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Subscription } from 'rxjs';
 
 const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 
@@ -10,18 +11,26 @@ const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
     templateUrl: './color-hex-selector.component.html',
     styleUrls: ['./color-hex-selector.component.scss'],
 })
-export class ColorHexSelectorComponent {
+export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     hexRgb = new FormControl('000000', [Validators.required, Validators.pattern(hexRegex)]);
     hexRed = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     hexGreen = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     hexBlue = new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]);
     isHex = true;
 
-    constructor(private colorPickerService: ColorPickerService) {
-        this.colorPickerService.colorChanged$.subscribe((color: Color) => {
+    private colorChangedSubscription: Subscription;
+
+    constructor(private colorPickerService: ColorPickerService) {}
+
+    ngOnInit(): void {
+        this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             const hex = color.getHex();
             this.setHex(hex);
         });
+    }
+
+    ngOnDestroy(): void {
+        this.colorChangedSubscription.unsubscribe();
     }
 
     private setHex(hex: string): void {

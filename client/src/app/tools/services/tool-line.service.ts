@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -17,7 +18,7 @@ const lineClosingPixelTolerance = 3;
 export class ToolLineService extends Tool {
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
-    private currentlyDrawing = false;
+    private isCurrentlyDrawing = false;
     private mousePosition: Vec2;
     private nextPoint: Vec2;
     private lastPoint: Vec2;
@@ -32,13 +33,18 @@ export class ToolLineService extends Tool {
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
-        this.toolSettings.set(ToolSetting.HasJunction, [false, ToolDefaults.JunctionSize]);
+        this.toolSettings.set(ToolSetting.JunctionSettings, {
+            hasJunction: false,
+            junctionSize: ToolDefaults.JunctionSize,
+        } as JunctionSettings);
         this.name = 'Ligne';
     }
 
     onMouseDown(event: MouseEvent): void {
         if (!this.isMouseInside) {
-            this.stopDrawing();
+            if (this.isCurrentlyDrawing) {
+                this.stopDrawing();
+            }
             return;
         }
 
@@ -57,11 +63,11 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
         this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
 
-        if (!this.currentlyDrawing) {
+        if (!this.isCurrentlyDrawing) {
             this.polyline = this.createNewPolyline();
             this.updatePreviewLine();
             this.renderer.setAttribute(this.previewLine, 'display', '');
-            this.currentlyDrawing = true;
+            this.isCurrentlyDrawing = true;
             this.drawingService.addElement(this.polyline);
             this.drawingService.removeElement(this.previewLine);
             this.drawingService.addElement(this.previewLine);
@@ -124,7 +130,7 @@ export class ToolLineService extends Tool {
     onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
             case 'Escape':
-                if (this.currentlyDrawing) {
+                if (this.isCurrentlyDrawing) {
                     this.drawingService.removeElement(this.polyline);
                     this.stopDrawing();
                     for (const circle of this.junctionPoints) {
@@ -153,7 +159,7 @@ export class ToolLineService extends Tool {
     }
 
     onPrimaryColorChange(color: Color): void {
-        if (!this.currentlyDrawing) {
+        if (!this.isCurrentlyDrawing) {
             return;
         }
         this.renderer.setAttribute(this.polyline, 'stroke', color.toRgbaString());
@@ -181,7 +187,7 @@ export class ToolLineService extends Tool {
     }
 
     private updateNextPointPosition(): void {
-        this.nextPoint = this.calculateNextPointPosition(this.lastPoint, this.mousePosition, this.isShiftDown, this.currentlyDrawing);
+        this.nextPoint = this.calculateNextPointPosition(this.lastPoint, this.mousePosition, this.isShiftDown, this.isCurrentlyDrawing);
     }
 
     private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, currentlyDrawing: boolean): Vec2 {
@@ -215,7 +221,7 @@ export class ToolLineService extends Tool {
     }
 
     private stopDrawing(): void {
-        this.currentlyDrawing = false;
+        this.isCurrentlyDrawing = false;
         this.renderer.setAttribute(this.previewLine, 'display', 'none');
         this.points.length = 0;
     }
@@ -229,9 +235,9 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(polyline, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(polyline, 'points', '');
 
-        const junction = this.toolSettings.get(ToolSetting.HasJunction) as [boolean, number];
-        this.hasJunction = junction[0];
-        this.junctionSize = junction[1];
+        const junction = this.toolSettings.get(ToolSetting.JunctionSettings) as JunctionSettings;
+        this.hasJunction = junction.hasJunction;
+        this.junctionSize = junction.junctionSize;
         return polyline;
     }
 
@@ -244,7 +250,7 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLinePosition(): void {
-        if (this.currentlyDrawing) {
+        if (this.isCurrentlyDrawing) {
             this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
         }
