@@ -11,8 +11,7 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appDrawingContent', { static: false }) private svgContent: ElementRef<SVGElement>;
     @ViewChild('appSvgSurface', { static: false }) private svgDrawingSurface: ElementRef<SVGElement>;
-    @ViewChild('appSelectedShapesRect', { static: false }) private svgSelectedShapesRect: ElementRef<SVGElement>;
-    @ViewChild('appUserSelectionRect', { static: false }) private svgUserSelectionRect: ElementRef<SVGElement>;
+    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -24,9 +23,9 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.drawingService.rootElement = this.svgContent.nativeElement;
         this.drawingService.svgDrawingSurface = this.svgDrawingSurface.nativeElement;
-        this.drawingService.svgSelectedShapesRect = this.svgSelectedShapesRect.nativeElement;
-        this.drawingService.svgUserSelectionRect = this.svgUserSelectionRect.nativeElement;
+        this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.drawingService.reappendStoredElements();
+        this.toolSelectorService.onRendererInit();
     }
 
     @HostListener('document:mousemove', ['$event'])

@@ -11,14 +11,14 @@ import { Subject } from 'rxjs';
 export class DrawingService {
     private currentDrawing = new Drawing();
     private elementClickedSource = new Subject<SvgClickEvent>();
-
+    
     elementClicked$ = this.elementClickedSource.asObservable();
-
+    
     renderer: Renderer2;
+    
     rootElement: SVGElement;
+    svgUserInterfaceContent: SVGElement;
     svgDrawingSurface: SVGElement;
-    svgSelectedShapesRect: SVGElement;
-    svgUserSelectionRect: SVGElement;
 
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
@@ -32,6 +32,15 @@ export class DrawingService {
         if (this.currentDrawing.removeElement(element)) {
             this.renderer.removeChild(this.rootElement, element);
         }
+    }
+
+    addUiElement(element: SVGElement): void {
+        console.log(this.renderer);
+        this.renderer.appendChild(this.svgUserInterfaceContent, element);
+    }
+
+    removeUiElement(element: SVGElement): void {
+        this.renderer.removeChild(this.svgUserInterfaceContent, element);
     }
 
     reappendStoredElements(): void {

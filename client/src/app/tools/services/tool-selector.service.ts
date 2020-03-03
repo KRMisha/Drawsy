@@ -40,6 +40,12 @@ export class ToolSelectorService implements OnDestroy {
         this.elementClickSubscription.unsubscribe();
     }
 
+    onRendererInit(): void {
+        for (const tool of this.toolHolderService.tools) {
+            tool.onRendererInit();
+        }
+    }
+
     onMouseMove(event: MouseEvent): void {
         this.selectedTool.onMouseMove(event);
     }

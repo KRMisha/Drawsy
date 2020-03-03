@@ -15,20 +15,38 @@ export class ToolSelectionService extends Tool {
     private selectedElements: SVGElement[] = [];
     private currentMouseButtonDown: ButtonId | null = null;
     private userJustClickedOnShape = false;
+    
+    private svgSelectedShapesRect: SVGElement;
+    private svgUserSelectionRect: SVGElement;
 
     constructor(drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
     }
 
+    onRendererInit(): void {
+        this.svgSelectedShapesRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '1');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke', '#000000');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'none');
+
+        this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', 'rgba(49, 104, 142, 0.2)');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-dasharray', '1, 7');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '4');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', 'rgba(49, 104, 142, 0.8)');
+
+        this.renderer.appendChild(this.drawingService.svgUserInterfaceContent, this.svgSelectedShapesRect);
+        this.renderer.appendChild(this.drawingService.svgUserInterfaceContent, this.svgUserSelectionRect);
+    }
+
     onMouseDown(event: MouseEvent): void {
-        // this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
         this.isMouseDown = true;
+        this.isMouseDownInside = this.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (this.isMouseInside) {
-            this.updateVisibleRect(this.getUserSelectionRect(this.userSelectionStartCoords), this.drawingService.svgUserSelectionRect);
-            this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'block');
+            this.updateVisibleRect(this.getUserSelectionRect(this.userSelectionStartCoords), this.svgUserSelectionRect);
         }
-        this.isMouseDownInside = this.isMouseInside;
         if (this.currentMouseButtonDown === null) {
             this.currentMouseButtonDown = event.button;
         }
@@ -37,7 +55,7 @@ export class ToolSelectionService extends Tool {
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
-            this.updateVisibleRect(userSelectionRect, this.drawingService.svgUserSelectionRect);
+            this.updateVisibleRect(userSelectionRect, this.svgUserSelectionRect);
             if (this.currentMouseButtonDown === ButtonId.Left) {
                 this.selectedElements = this.getSelectedElements(userSelectionRect);
                 this.updateSvgSelectedShapesRect(this.selectedElements);
@@ -52,7 +70,7 @@ export class ToolSelectionService extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         this.isMouseDown = false;
-        this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'none');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
 
         if (this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
@@ -91,7 +109,7 @@ export class ToolSelectionService extends Tool {
         if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button)) {
             this.selectedElements = [element];
             const bounds = this.getSvgElementBounds(element);
-            this.updateVisibleRect(bounds, this.drawingService.svgSelectedShapesRect);
+            this.updateVisibleRect(bounds, this.svgSelectedShapesRect);
         } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
             this.inserveObjectsSelection([element], this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
@@ -102,9 +120,9 @@ export class ToolSelectionService extends Tool {
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
         const elementsBounds = this.getSvgElementsBounds(selectedElements);
         if (elementsBounds !== null) {
-            this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
+            this.updateVisibleRect(elementsBounds, this.svgSelectedShapesRect);
         } else {
-            this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
+            this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
         }
     }
 
