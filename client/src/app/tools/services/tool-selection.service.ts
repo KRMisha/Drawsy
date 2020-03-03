@@ -78,7 +78,11 @@ export class ToolSelectionService extends Tool {
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (this.isMouseInside) {
             this.updateVisibleRect(this.getUserSelectionRect(this.userSelectionStartCoords), this.svgUserSelectionRect);
+        } else {
+            this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
+            this.hideSelectedShapesRect();
         }
+    
         if (this.currentMouseButtonDown === null) {
             this.currentMouseButtonDown = event.button;
         }
@@ -171,10 +175,14 @@ export class ToolSelectionService extends Tool {
                 this.renderer.setAttribute(this.svgControlPoints[i], 'display', 'block');
             }
         } else {
-            this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
-            for (const controlPoint of this.svgControlPoints) {
-                this.renderer.setAttribute(controlPoint, 'display', 'none');
-            }
+            this.hideSelectedShapesRect();
+        }
+    }
+
+    private hideSelectedShapesRect(): void {
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
+        for (const controlPoint of this.svgControlPoints) {
+            this.renderer.setAttribute(controlPoint, 'display', 'none');
         }
     }
 
