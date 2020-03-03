@@ -236,6 +236,7 @@ export class ToolLineService extends Tool {
         const junction = this.toolSettings.get(ToolSetting.JunctionSettings) as JunctionSettings;
         this.hasJunction = junction.hasJunction;
         this.junctionSize = junction.junctionSize;
+        console.log(this.junctionSize);
         return polyline;
     }
 

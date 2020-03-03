@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
-const maximumJunctionSize = 100;
+const maximumJunctionSize = 500;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -61,6 +61,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         });
 
         this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.JunctionSettings, {
                     hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
