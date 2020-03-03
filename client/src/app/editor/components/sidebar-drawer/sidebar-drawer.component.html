@@ -3,37 +3,39 @@
 
     <app-sidebar-color-picker></app-sidebar-color-picker>
 
-    <div *ngIf="hasSetting(ToolSetting.Size)">
-        <div class="option">
-            <h2 class="mat-h2">Taille</h2>
-            <form [formGroup]="sizeGroup">
-                <input class="input-number" formControlName="size" />
-            </form>
-        </div>
+    <div *ngIf="hasSetting(ToolSetting.Size)" class="size-container">
+        <h2 class="mat-h2">Taille</h2>
+        <form [formGroup]="sizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="size" />
+                <mat-error>Invalide</mat-error>
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
         <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
         </mat-slider>
     </div>
 
-    <div *ngIf="hasSetting(ToolSetting.JunctionSettings)">
-        <div class="option">
-            <h2 class="mat-h2">Taille jonction</h2>
-            <form [formGroup]="junctionSizeGroup">
-                <input
-                    class="input-number"
-                    formControlName="junctionSize"
-                />
-            </form>
+    <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
+        <h2 class="mat-h2">Taille jonction</h2>
+        <form [formGroup]="junctionSizeGroup">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="junctionSize" />
+                <mat-error>Invalide</mat-error>
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
 
-            <mat-slide-toggle
-                [ngModel]="getSetting(ToolSetting.JunctionSettings).hasJunction"
-                (ngModelChange)="
-                    setSetting(ToolSetting.JunctionSettings, {
-                        hasJunction: $event,
-                        junctionSize: getSetting(ToolSetting.JunctionSettings).junctionSize
-                    })
-                "
-            ></mat-slide-toggle>
-        </div>
+        <mat-slide-toggle
+            [ngModel]="getSetting(ToolSetting.JunctionSettings).hasJunction"
+            (ngModelChange)="
+                setSetting(ToolSetting.JunctionSettings, {
+                    hasJunction: $event,
+                    junctionSize: getSetting(ToolSetting.JunctionSettings).junctionSize
+                })
+            "
+            class="toggle"
+        ></mat-slide-toggle>
         <mat-slider
             min="1"
             max="100"
@@ -45,8 +47,8 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.StrokeType)">
-        <div class="dropdown-style">
-            <h2 class="mat-h2">Type de tracé</h2>
+        <h2 class="mat-h2">Type de tracé</h2>
+        <div class="dropdown">
             <mat-form-field class="select">
                 <mat-label>Type de tracé</mat-label>
                 <mat-select
@@ -62,9 +64,9 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.Texture)">
-        <div class="dropdown-style">
-            <h2 class="mat-h2">Type de texture</h2>
-            <mat-form-field class="select">
+        <h2 class="mat-h2">Type de texture</h2>
+        <div class="dropdown">
+            <mat-form-field>
                 <mat-label>Type de texture</mat-label>
                 <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
                     <mat-option [value]="Textures.Texture1">Vent d'automne</mat-option>
