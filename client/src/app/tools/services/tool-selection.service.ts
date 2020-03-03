@@ -15,6 +15,7 @@ export class ToolSelectionService extends Tool {
     private selectedElements: SVGElement[] = [];
     private currentMouseButtonDown: ButtonId | null = null;
     private wasSelectionEmptyWhenUserClicked: boolean;
+    private userJustClickedOnShape = false;
 
     constructor(drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
@@ -76,8 +77,11 @@ export class ToolSelectionService extends Tool {
                     }
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 }
-            } else if (isCurrentSelectionEmpty && isLeftButtonUp) {
+            } else if ((isCurrentSelectionEmpty && isLeftButtonUp)) {
                 this.selectedElements = currentSelectedElements;
+                this.updateSvgSelectedShapesRect(this.selectedElements);
+            } else if (!this.userJustClickedOnShape) {
+                this.selectedElements = [];
                 this.updateSvgSelectedShapesRect(this.selectedElements);
             }
         }
@@ -85,6 +89,8 @@ export class ToolSelectionService extends Tool {
         if (event.button === this.currentMouseButtonDown) {
             this.currentMouseButtonDown = null;
         }
+
+        this.userJustClickedOnShape = false;
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
@@ -96,6 +102,7 @@ export class ToolSelectionService extends Tool {
             this.removeElementFromArray(element, this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
         }
+        this.userJustClickedOnShape = true; 
     }
 
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
