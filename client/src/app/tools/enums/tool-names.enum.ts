@@ -3,4 +3,5 @@ export enum ToolNames {
     Brush = 'Pinceau',
     Line = 'Ligne',
     Rectangle = 'Rectangle',
+    Selection = 'Sélection',
 }

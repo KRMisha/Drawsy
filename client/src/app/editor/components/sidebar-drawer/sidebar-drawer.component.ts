@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
-const maximumJunctionSize = 100;
+const maximumJunctionSize = 500;
 
 @Component({
     selector: 'app-sidebar-drawer',
