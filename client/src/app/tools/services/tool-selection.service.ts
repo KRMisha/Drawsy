@@ -122,7 +122,6 @@ export class ToolSelectionService extends Tool {
             const isSimpleClick = userSelectionRect.width === 0 && userSelectionRect.height === 0;
             const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
-            const isCurrentSelectionEmpty = currentSelectedElements.length === 0;
 
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {
@@ -132,9 +131,6 @@ export class ToolSelectionService extends Tool {
                     this.inserveObjectsSelection(currentSelectedElements, this.selectedElements);
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 }
-            } else if (isCurrentSelectionEmpty && isLeftButtonUp) {
-                this.selectedElements = currentSelectedElements;
-                this.updateSvgSelectedShapesRect(this.selectedElements);
             } else if (!this.userJustClickedOnShape && isLeftButtonUp) {
                 this.selectedElements = [];
                 this.updateSvgSelectedShapesRect(this.selectedElements);
