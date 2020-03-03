@@ -2,7 +2,7 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 
 export class Drawing {
-    private _title: string; // tslint:disable-line: variable-name
+    private _title = 'Default'; // tslint:disable-line: variable-name
     get title(): string {
         return this._title;
     }

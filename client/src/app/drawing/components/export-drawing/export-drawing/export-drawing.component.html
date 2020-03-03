@@ -1,44 +1,56 @@
 <div>
-    <mat-form-field class="chip-list">
-        <mat-chip-list #chipList aria-label="Label selection">
-            <mat-chip
-                *ngFor="let label of labels"
-                [selectable]="selectable"
-                [removable]="removable"
-                (removed)="removeLabel(label)"
-                color="$primary"
-            >
-                {{ label }}
-                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-            </mat-chip>
-            <input
-                placeholder="Nouvelle étiquette..."
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="addLabel($event)"
-            />
-        </mat-chip-list>
-    </mat-form-field>
+    <form class="metadata-form">
+        <div>
+            <mat-form-field class="chip-list">
+                <mat-chip-list #chipList aria-label="Label selection">
+                    <mat-chip
+                        *ngFor="let label of labels"
+                        [selectable]="selectable"
+                        [removable]="removable"
+                        (removed)="removeLabel(label)"
+                        color="$primary"
+                    >
+                        {{ label }}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                        placeholder="Nouvelle étiquette..."
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addLabel($event)"
+                    />
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
 
+        <div>
+            <mat-form-field>
+                <mat-label>Titre</mat-label>
+                <input matInput (input)="updateDrawingTitle($event)" placeholder="Ex. Arbre de jeunesse" />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <mat-label>Type de filtre</mat-label>
+                <mat-select [value]="DrawingPreviewTextures.PreviewTexture0" (selectionChange)="setPreviewTexture($event.value)">
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture0">Aucun filtre</mat-option>
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture1">Noir et blanc</mat-option>
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture2">Sepia</mat-option>
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture3">Pixel</mat-option>
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture4">1980</mat-option>
+                    <mat-option [value]="DrawingPreviewTextures.PreviewTexture5">Corrompu</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
     <!-- <mat-card>
         <mat-card-title>Aperçu</mat-card-title>
         <app-drawing [isPreview]="true"></app-drawing>
     </mat-card> -->
 </div>
-<div>
-    <mat-form-field>
-        <mat-label>Type de filtre</mat-label>
-        <mat-select [value]="DrawingPreviewTextures.PreviewTexture0" (selectionChange)="setPreviewTexture($event.value)">
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture0">Aucun filtre</mat-option>
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture1">Noir et blanc</mat-option>
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture2">Sepia</mat-option>
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture3">Pixel</mat-option>
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture4">1980</mat-option>
-            <mat-option [value]="DrawingPreviewTextures.PreviewTexture5">Corrompu</mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
+<div></div>
 
 <div>
     <a [href]="fileUrl" download="file.svg">

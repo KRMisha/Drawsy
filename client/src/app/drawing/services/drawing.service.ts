@@ -76,7 +76,7 @@ export class DrawingService {
         this.clearStoredElements();
         this.currentDrawing = drawing;
         this.reappendStoredElements();
-        this.setBackgroundColor(drawing.backgroundColor);
+        this.setPreviewTexture(DrawingPreviewTextures.PreviewTexture0);
     }
 
     addDescElements(elements: string[]): void {
@@ -87,9 +87,21 @@ export class DrawingService {
     }
 
     appendAllDescElements(): void {
+        const titleContent = this.svgDescContent.getElementsByTagName('title')[0];
+        const labelContent = this.svgDescContent.getElementsByTagName('desc')[0];
+
         for (const element of this.currentDrawing.descElements) {
-            this.svgDescContent.append(`${element},`);
+            labelContent.append(`${element},`);
         }
+        titleContent.append(this.currentDrawing.title);
+    }
+
+    updateDrawingTitle(title: string): void {
+        this.currentDrawing.title = title;
+    }
+
+    appendDrawingTitle(): void {
+        this.svgDescContent.getElementsByTagName('title')[0].append(this.currentDrawing.title);
     }
 
     getSvgRoot(): HTMLCollectionOf<SVGGElement> {

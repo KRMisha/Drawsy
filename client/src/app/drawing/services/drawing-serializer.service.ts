@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -16,28 +15,36 @@ export class DrawingSerializerService {
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
 
-    importSelectedDrawing(file: FileList): void {
-        const importedDrawing: Drawing = new Drawing();
+    importSelectedDrawing(file: FileList, svgRootElement: SVGSVGElement): void {
         const fileReader: FileReader = new FileReader();
-        let fileContent: string;
 
         fileReader.onloadend = () => {
-            fileContent = fileReader.result as string;
+            const fileContent = fileReader.result as string;
 
             const domParser = new DOMParser();
             const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
-            const childrenArray = doc.children[0].getElementsByTagName('g');
 
-            Array.from(childrenArray).forEach((element: SVGElement) => {
-                importedDrawing.addSvgElement(element);
-            });
+            const svgBackgroundRect = doc.children[0].getElementsByTagName('rect')[0];
+            svgRootElement.getElementsByTagName('rect')[0].remove();
+            svgRootElement.append(svgBackgroundRect);
 
-            const backgroundColor = new Color();
-            backgroundColor.red = Color.maxRgb;
-            backgroundColor.green = Color.maxRgb;
-            backgroundColor.blue = Color.maxRgb;
+            const svgDrawingContent = doc.children[0].getElementsByTagName('g')[0];
+            svgRootElement.getElementsByTagName('g')[0].remove();
+            svgRootElement.append(svgDrawingContent);
 
-            importedDrawing.backgroundColor = backgroundColor;
+            const importedDrawing: Drawing = new Drawing();
+
+            const svgMetadata = doc.children[0].getElementsByTagName('desc')[0];
+            importedDrawing.title = svgMetadata.getElementsByTagName('title')[0].innerHTML;
+            const labelString = svgMetadata.getElementsByTagName('desc')[0].innerHTML;
+
+            const labels = labelString.split(',');
+            for (const label of labels) {
+                if (label.trim()) {
+                    importedDrawing.addDescElement(label.trim());
+                }
+            }
+
             this.drawingService.setDrawing(importedDrawing);
         };
         fileReader.readAsText(file[0]);

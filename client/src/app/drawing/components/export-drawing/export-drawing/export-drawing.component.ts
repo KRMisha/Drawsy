@@ -26,7 +26,7 @@ export class ExportDrawingComponent implements OnDestroy, OnInit {
     previewTexture: DrawingPreviewTextures = DrawingPreviewTextures.PreviewTexture0;
 
     labels: string[] = [];
-    title: string;
+    title = 'Default2';
 
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
 
@@ -43,6 +43,8 @@ export class ExportDrawingComponent implements OnDestroy, OnInit {
 
     exportDrawing(): void {
         this.drawingService.addDescElements(this.labels);
+        // this.drawingService.updateDrawingTitle(this.title);
+        this.drawingService.appendDrawingTitle();
         this.drawingService.appendAllDescElements();
         this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(this.drawingService.getDrawingRoot());
     }
@@ -70,6 +72,10 @@ export class ExportDrawingComponent implements OnDestroy, OnInit {
 
     getPreviewTexture(): DrawingPreviewTextures {
         return this.previewTexture;
+    }
+
+    updateDrawingTitle(title: string): void {
+        this.drawingService.updateDrawingTitle(title);
     }
 
     setPreviewTexture(texture: DrawingPreviewTextures): void {
