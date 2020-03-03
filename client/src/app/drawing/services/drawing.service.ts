@@ -9,6 +9,8 @@ import { Vec2 } from '@app/classes/vec2';
 export class DrawingService {
     renderer: Renderer2;
     rootElement: SVGElement;
+    svgDrawingSurface: SVGElement;
+    svgSelectionShape: SVGElement;
 
     private currentDrawing = new Drawing();
 
@@ -46,6 +48,10 @@ export class DrawingService {
 
     getBackgroundColor(): Color {
         return this.currentDrawing.backgroundColor;
+    }
+
+    getSvgElements(): SVGElement[] {
+        return this.currentDrawing.elements;
     }
 
     setDrawingDimensions(dimensions: Vec2): void {
