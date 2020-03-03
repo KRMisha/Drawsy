@@ -1,3 +1,5 @@
+@import 'src/styles.scss';
+
 .container {
     margin-left: 5%;
     margin-right: 5%;
@@ -59,4 +61,8 @@
 .divider {
     grid-area: divider;
     width: 100%;
+}
+
+::ng-deep .error-tooltip {
+    color: $warn !important;
 }
