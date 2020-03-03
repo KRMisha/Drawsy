@@ -10,7 +10,8 @@ export class DrawingService {
     renderer: Renderer2;
     rootElement: SVGElement;
     svgDrawingSurface: SVGElement;
-    svgSelectionShape: SVGElement;
+    svgSelectedShapesRect: SVGElement;
+    svgUserSelectionRect: SVGElement;
 
     private currentDrawing = new Drawing();
 

@@ -57,13 +57,22 @@
     <g #appDrawingContent></g>
 
     <rect
-        #appSelectionShape
+        #appSelectedShapesRect
         display="none"
-        rx="0"
         fill="none"
         stroke-dasharray="1,7"
         stroke-width="4"
         stroke-linecap="round"
         stroke="#005555"
     />
+
+    <rect #appUserSelectionRect
+        display="none"
+        fill="rgba(49, 104, 142, 0.2)"
+        stroke-dasharray="1,7"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke="rgba(49, 104, 142, 0.8)"
+    />
+
 </svg>
