@@ -17,7 +17,6 @@
     padding-right: 30px;
     height: 100%;
     align-self: start;
-    overflow-y: auto;
     grid-area: guide;
 }
 
@@ -33,11 +32,8 @@
 }
 
 .item-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    overflow-y: hidden;
     grid-area: buttons;
+    padding-bottom: 30px;
 }
 
 .navigation-button {

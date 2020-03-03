@@ -1,26 +1,20 @@
-.container {
-    display: grid;
-    grid-template-areas:
-        'title title'
-        'color-picker color-picker'
-        'cancel confirm';
+.settings-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .mat-h1 {
-    grid-area: title;
     text-align: center;
 }
 
-.item-color {
-    grid-area: color-picker;
+mat-dialog-content::-webkit-scrollbar {
+    display: none;
 }
 
-.item-cancel {
-    grid-area: cancel;
-    margin-right: 2px;
+mat-dialog-actions {
+    padding: 10px;
 }
 
-.item-confirm {
-    grid-area: confirm;
-    margin-left: 2px;
+.button {
+    width: 45%;
 }

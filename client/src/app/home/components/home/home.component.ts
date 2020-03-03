@@ -13,7 +13,7 @@ export class HomeComponent {
     constructor(public drawingService: DrawingService, private modalService: ModalService) {}
 
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 1920, y: 1080 });
+        this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
     }
 
     openGuideModal(): void {

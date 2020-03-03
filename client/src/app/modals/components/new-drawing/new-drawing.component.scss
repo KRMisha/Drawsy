@@ -1,45 +1,17 @@
 .container {
     display: flex;
     flex-direction: column;
-}
-
-.settings-container {
-    display: grid;
-    grid-template-areas:
-        'width-input height-input'
-        'color-picker color-picker'
-        'cancel confirm';
-}
-
-.mat-h1 {
-    grid-area: title;
     text-align: center;
 }
 
-.item-width-input {
-    grid-area: width-input;
-    justify-self: right;
+mat-dialog-content::-webkit-scrollbar {
+    display: none;
 }
 
-.item-size-selection {
-    justify-content: center;
+.form-field {
+    text-align: center;
 }
 
-.item-height-input {
-    grid-area: height-input;
-    justify-self: left;
-}
-
-.item-color {
-    grid-area: color-picker;
-}
-
-.item-cancel {
-    grid-area: cancel;
-    margin-right: 2px;
-}
-
-.item-confirm {
-    grid-area: confirm;
-    margin-left: 2px;
+.button {
+    width: 45%;
 }
