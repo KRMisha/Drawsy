@@ -9,7 +9,9 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-    @ViewChild('appDrawingContent', { static: false }) private svg: ElementRef<SVGElement>;
+    @ViewChild('appDrawingContent', { static: false }) private svgContent: ElementRef<SVGElement>;
+    @ViewChild('appSvgSurface', { static: false }) private svgDrawingSurface: ElementRef<SVGElement>;
+    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -19,8 +21,11 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.drawingService.rootElement = this.svg.nativeElement;
+        this.drawingService.rootElement = this.svgContent.nativeElement;
+        this.drawingService.svgDrawingSurface = this.svgDrawingSurface.nativeElement;
+        this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.drawingService.reappendStoredElements();
+        this.toolSelectorService.afterDrawingInit();
     }
 
     @HostListener('document:mousemove', ['$event'])

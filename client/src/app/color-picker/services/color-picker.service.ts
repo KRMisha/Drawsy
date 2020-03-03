@@ -1,10 +1,6 @@
-import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Subject } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root',
-})
 export class ColorPickerService {
     private hueChangedSource = new Subject<number>();
     private saturationChangedSource = new Subject<number>();
