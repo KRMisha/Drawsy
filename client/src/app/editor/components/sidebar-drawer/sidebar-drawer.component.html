@@ -21,7 +21,6 @@
                 <input
                     class="input-number"
                     formControlName="junctionSize"
-                    [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
                 />
             </form>
 
@@ -37,7 +36,7 @@
         </div>
         <mat-slider
             min="1"
-            max="500"
+            max="100"
             (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
             [value]="junctionSizeGroup.controls.junctionSize.value"
             [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
