@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
+import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
@@ -28,8 +29,8 @@ export class ToolSelectorService implements OnDestroy {
             this.selectedTool.onSecondaryColorChange(color);
         });
 
-        this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((element: SVGElement) => {
-            this.selectedTool.onElementClick(element);
+        this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
+            this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.svgElement);
         });
     }
 

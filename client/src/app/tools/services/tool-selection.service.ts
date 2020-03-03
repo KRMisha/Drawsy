@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -11,54 +12,106 @@ import { Tool } from '@app/tools/services/tool';
 export class ToolSelectionService extends Tool {
     private userSelectionStartCoords: Vec2;
     private isMouseDownInside: boolean;
+    private selectedElements: SVGElement[] = [];
+    private currentMouseButtonDown: ButtonId | null = null;
+    private wasSelectionEmptyWhenUserClicked: boolean;
 
     constructor(drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
+        // this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
         this.isMouseDown = true;
+        this.userSelectionStartCoords = this.getMousePosition(event);
         if (this.isMouseInside) {
-            this.userSelectionStartCoords = { x: event.offsetX, y: event.offsetY } as Vec2;
-            this.updateVisibleRect(this.getUserSelectionRect(event), this.drawingService.svgUserSelectionRect);
+            this.updateVisibleRect(this.getUserSelectionRect(this.userSelectionStartCoords), this.drawingService.svgUserSelectionRect);
             this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'block');
         }
         this.isMouseDownInside = this.isMouseInside;
+        if (this.currentMouseButtonDown === null) {
+            this.currentMouseButtonDown = event.button;
+        }
+        this.wasSelectionEmptyWhenUserClicked = this.selectedElements.length === 0;
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
-            const userSelectionRect = this.getUserSelectionRect(event);
+            const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
             this.updateVisibleRect(userSelectionRect, this.drawingService.svgUserSelectionRect);
-            const elementsBounds = this.getSvgElementsBounds(this.getSelectedElements(userSelectionRect));
-            if (elementsBounds !== null) {
-                this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'block');
-                this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
-            } else {
-                this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
+            if (this.currentMouseButtonDown === ButtonId.Left || this.wasSelectionEmptyWhenUserClicked) {
+                this.selectedElements = this.getSelectedElements(userSelectionRect);
+                this.updateSvgSelectedShapesRect(this.selectedElements);
+            } else if (this.currentMouseButtonDown === ButtonId.Right) {
+                const selectedElementsCopy = Object.assign([], this.selectedElements);
+                const currentSelectedElements = this.getSelectedElements(userSelectionRect);
+                for (const element of currentSelectedElements) {
+                    this.removeElementFromArray(element, selectedElementsCopy);
+                }
+                this.updateSvgSelectedShapesRect(selectedElementsCopy);
             }
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.isMouseInside && this.isMouseDownInside) {
-            const userSelectionRect = this.getUserSelectionRect(event);
+        this.isMouseDown = false;
+        this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'none');
 
-            if (userSelectionRect.width !== 0 || userSelectionRect.height !== 0) {
-                const selectedElements = this.getSelectedElements(userSelectionRect);
-                const elementsBounds = this.getSvgElementsBounds(selectedElements);
-                if (elementsBounds !== null) {
-                    this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
+        if (this.isMouseInside && this.isMouseDownInside) {
+            const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
+            const currentSelectedElements = this.getSelectedElements(userSelectionRect);
+
+            const isSimpleClick = userSelectionRect.width === 0 && userSelectionRect.height === 0;
+            const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
+            const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
+            const isCurrentSelectionEmpty = currentSelectedElements.length === 0;
+
+            if (!isSimpleClick) {
+                if (isLeftButtonUp || this.wasSelectionEmptyWhenUserClicked) {
+                    this.selectedElements = currentSelectedElements;
+                    this.updateSvgSelectedShapesRect(this.selectedElements);
+                } else if (isRightButtonUp) {
+                    for (const element of currentSelectedElements) {
+                        this.removeElementFromArray(element, this.selectedElements);
+                    }
+                    this.updateSvgSelectedShapesRect(this.selectedElements);
                 }
+            } else if (isCurrentSelectionEmpty && isLeftButtonUp) {
+                this.selectedElements = currentSelectedElements;
+                this.updateSvgSelectedShapesRect(this.selectedElements);
             }
         }
-        this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'none');
+
+        if (event.button === this.currentMouseButtonDown) {
+            this.currentMouseButtonDown = null;
+        }
     }
 
-    onElementClick(element: SVGElement): void {
-        const bounds = this.getSvgElementBounds(element);
-        this.updateVisibleRect(bounds, this.drawingService.svgSelectedShapesRect);
+    onElementClick(event: MouseEvent, element: SVGElement): void {
+        if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) || this.wasSelectionEmptyWhenUserClicked) {
+            this.selectedElements = [element];
+            const bounds = this.getSvgElementBounds(element);
+            this.updateVisibleRect(bounds, this.drawingService.svgSelectedShapesRect);
+        } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
+            this.removeElementFromArray(element, this.selectedElements);
+            this.updateSvgSelectedShapesRect(this.selectedElements);
+        }
+    }
+
+    private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
+        const elementsBounds = this.getSvgElementsBounds(selectedElements);
+        if (elementsBounds !== null) {
+            this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
+        } else {
+            this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'none');
+        }
+    }
+
+    private removeElementFromArray(svgElement: SVGElement, array: SVGElement[]): void {
+        const elementToRemoveIndex = array.indexOf(svgElement, 0);
+        if (elementToRemoveIndex > -1) {
+            array.splice(elementToRemoveIndex, 1);
+        }
     }
 
     private updateVisibleRect(area: Rect, rect: SVGElement): void {
@@ -69,22 +122,14 @@ export class ToolSelectionService extends Tool {
         this.renderer.setAttribute(rect, 'display', 'block');
     }
 
-    private getUserSelectionRect(event: MouseEvent): Rect {
+    private getUserSelectionRect(mousePos: Vec2): Rect {
         const userSelectionRect = new Rect();
 
-        if (event.offsetX >= this.userSelectionStartCoords.x) {
-            userSelectionRect.x = this.userSelectionStartCoords.x;
-        } else {
-            userSelectionRect.x = event.offsetX;
-        }
-        userSelectionRect.width = Math.abs(event.offsetX - this.userSelectionStartCoords.x);
+        userSelectionRect.x = Math.min(mousePos.x, this.userSelectionStartCoords.x);
+        userSelectionRect.width = Math.abs(mousePos.x - this.userSelectionStartCoords.x);
 
-        if (event.offsetY >= this.userSelectionStartCoords.y) {
-            userSelectionRect.y = this.userSelectionStartCoords.y;
-        } else {
-            userSelectionRect.y = event.offsetY;
-        }
-        userSelectionRect.height = Math.abs(event.offsetY - this.userSelectionStartCoords.y);
+        userSelectionRect.y = Math.min(mousePos.y, this.userSelectionStartCoords.y);
+        userSelectionRect.height = Math.abs(mousePos.y - this.userSelectionStartCoords.y);
 
         return userSelectionRect;
     }
@@ -119,18 +164,10 @@ export class ToolSelectionService extends Tool {
 
         for (const svgElement of svgElements) {
             const currentShapeRect = this.getSvgElementBounds(svgElement);
-            if (currentShapeRect.x < minPos.x) {
-                minPos.x = currentShapeRect.x;
-            }
-            if (currentShapeRect.y < minPos.y) {
-                minPos.y = currentShapeRect.y;
-            }
-            if (currentShapeRect.x + currentShapeRect.width > maxPos.x) {
-                maxPos.x = currentShapeRect.x + currentShapeRect.width;
-            }
-            if (currentShapeRect.y + currentShapeRect.height > maxPos.y) {
-                maxPos.y = currentShapeRect.y + currentShapeRect.height;
-            }
+            minPos.x = Math.min(minPos.x, currentShapeRect.x);
+            minPos.y = Math.min(minPos.y, currentShapeRect.y);
+            maxPos.x = Math.max(maxPos.x, currentShapeRect.x + currentShapeRect.width);
+            maxPos.y = Math.max(maxPos.y, currentShapeRect.y + currentShapeRect.height);
         }
         return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
     }
@@ -145,5 +182,13 @@ export class ToolSelectionService extends Tool {
             width: svgElementBounds.width,
             height: svgElementBounds.height,
         } as Rect;
+    }
+
+    private getMousePosition(event: MouseEvent): Vec2 {
+        const rootBounds = this.drawingService.svgDrawingSurface.getBoundingClientRect() as DOMRect;
+        return {
+            x: event.clientX - rootBounds.x,
+            y: event.clientY - rootBounds.y,
+        } as Vec2;
     }
 }

@@ -2,6 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
+import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Subject } from 'rxjs';
 })
 export class DrawingService {
     private currentDrawing = new Drawing();
-    private elementClickedSource = new Subject<SVGElement>();
+    private elementClickedSource = new Subject<SvgClickEvent>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
 
@@ -23,7 +24,7 @@ export class DrawingService {
         this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);
         this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next(element);
+            this.elementClickedSource.next({ svgElement: element, mouseEvent: event } as SvgClickEvent);
         });
     }
 

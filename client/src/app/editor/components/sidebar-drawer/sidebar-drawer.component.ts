@@ -61,7 +61,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         });
 
         this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
-
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.JunctionSettings, {
                     hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
