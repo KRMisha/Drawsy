@@ -105,6 +105,7 @@ export class ToolSelectionService extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         if (this.controlPointHeld !== ControlPoints.None) {
+            this.controlPointHeld = ControlPoints.None;
             return;
         }
         this.isMouseDown = false;
@@ -141,7 +142,6 @@ export class ToolSelectionService extends Tool {
         }
 
         this.userJustClickedOnShape = false;
-        this.controlPointHeld = ControlPoints.None;
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
