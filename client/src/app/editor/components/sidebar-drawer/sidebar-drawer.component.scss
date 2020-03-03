@@ -7,23 +7,27 @@
     display: grid;
     grid-template-areas:
         'tool-name input-field'
-        'slider slider';
+        'slider slider'
+        'divider divider';
 }
 
 .junction-container {
     display: grid;
     grid-template-areas:
         'tool-name toggle input-field'
-        'slider slider slider';
+        'slider slider slider'
+        'divider divider divider';
 }
 
 .mat-h1 {
     text-align: center;
+    font-weight: 500;
 }
 
 .mat-h2 {
     grid-area: tool-name;
     align-self: flex-end;
+    margin-top: 16px;
 }
 
 .form {
@@ -49,5 +53,10 @@
 
 .dropdown {
     margin-top: 10px;
-    text-align: center;
+    width: 100%;
+}
+
+.divider {
+    grid-area: divider;
+    width: 100%;
 }

@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Type } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { guideData, GuideNode } from '@app/guide/classes/guide-node';
 
@@ -9,15 +9,15 @@ import { guideData, GuideNode } from '@app/guide/classes/guide-node';
     styleUrls: ['./guide-sidebar.component.scss'],
 })
 export class GuideSidebarComponent {
-    isEachMenuExpanded: boolean[] = [false, false, false, false, false];
-
     treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
     dataSource = new MatTreeNestedDataSource<GuideNode>();
 
     @Output() selectGuide = new EventEmitter<Type<any>>(); // tslint:disable-line: no-any
+    @Input() selectedComponentButton: string;
 
     constructor() {
         this.dataSource.data = guideData;
+        this.selectedComponentButton = 'GuideWelcomeComponent';
     }
 
     hasChild = (_: number, node: GuideNode) => node.children !== undefined && node.children.length > 0;
@@ -33,5 +33,9 @@ export class GuideSidebarComponent {
 
     expandAllMenus(): void {
         this.expandLayer(this.dataSource.data);
+    }
+
+    updateGuideButton(nodeName: string): void {
+        this.selectedComponentButton = nodeName;
     }
 }

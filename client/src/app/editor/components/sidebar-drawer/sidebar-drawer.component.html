@@ -1,7 +1,9 @@
 <div class="container">
     <h1 class="mat-h1">{{ getToolName() }}</h1>
 
+    <h2 class="mat-h2">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
+    <mat-divider></mat-divider>
 
     <div *ngIf="hasSetting(ToolSetting.Size)" class="size-container">
         <h2 class="mat-h2">Taille</h2>
@@ -14,8 +16,8 @@
         </form>
         <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
         </mat-slider>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
         <form [formGroup]="junctionSizeGroup">
@@ -44,13 +46,12 @@
             [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
         >
         </mat-slider>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.StrokeType)">
         <h2 class="mat-h2">Type de tracé</h2>
-        <div class="dropdown">
-            <mat-form-field class="select">
-                <mat-label>Type de tracé</mat-label>
+            <mat-form-field class="dropdown">
+                <mat-label>Sélection</mat-label>
                 <mat-select
                     [value]="getSetting(ToolSetting.StrokeType)"
                     (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)"
@@ -60,14 +61,12 @@
                     <mat-option [value]="StrokeTypes.BorderOnly">Contour</mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.Texture)">
         <h2 class="mat-h2">Type de texture</h2>
-        <div class="dropdown">
-            <mat-form-field>
-                <mat-label>Type de texture</mat-label>
+            <mat-form-field class="dropdown">
+                <mat-label>Sélection</mat-label>
                 <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
                     <mat-option [value]="Textures.Texture1">Vent d'automne</mat-option>
                     <mat-option [value]="Textures.Texture2">Âme fragile</mat-option>
@@ -76,6 +75,6 @@
                     <mat-option [value]="Textures.Texture5">Innocence juvénile</mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
+        <mat-divider class="divider"></mat-divider>
     </div>
 </div>
