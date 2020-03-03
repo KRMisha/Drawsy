@@ -2,22 +2,29 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingService {
+    private currentDrawing = new Drawing();
+    private elementClickedSource = new Subject<SVGElement>();
+
+    elementClicked$ = this.elementClickedSource.asObservable();
+
     renderer: Renderer2;
     rootElement: SVGElement;
     svgDrawingSurface: SVGElement;
     svgSelectedShapesRect: SVGElement;
     svgUserSelectionRect: SVGElement;
 
-    private currentDrawing = new Drawing();
-
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);
+        this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
+            this.elementClickedSource.next(element);
+        });
     }
 
     removeElement(element: SVGElement): void {

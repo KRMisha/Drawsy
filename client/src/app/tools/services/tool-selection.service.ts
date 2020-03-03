@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Rect } from '@app/classes/rect';
+import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { Tool } from '@app/tools/services/tool';
-import { Vec2 } from '@app/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -24,14 +24,14 @@ export class ToolSelectionService extends Tool {
             this.updateVisibleRect(this.getUserSelectionRect(event), this.drawingService.svgUserSelectionRect);
             this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'block');
         }
-        this.isMouseDownInside = this.isMouseInside
+        this.isMouseDownInside = this.isMouseInside;
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(event);
             this.updateVisibleRect(userSelectionRect, this.drawingService.svgUserSelectionRect);
-            const elementsBounds = this.getSvgElementsBounds(this.getSelectedElements(userSelectionRect))
+            const elementsBounds = this.getSvgElementsBounds(this.getSelectedElements(userSelectionRect));
             if (elementsBounds !== null) {
                 this.renderer.setAttribute(this.drawingService.svgSelectedShapesRect, 'display', 'block');
                 this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
@@ -44,19 +44,21 @@ export class ToolSelectionService extends Tool {
     onMouseUp(event: MouseEvent): void {
         if (this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(event);
-            
-            if (userSelectionRect.width === 0 && userSelectionRect.height === 0) {
-                // Pixel perfect selection
-            }
-            else {
+
+            if (userSelectionRect.width !== 0 || userSelectionRect.height !== 0) {
                 const selectedElements = this.getSelectedElements(userSelectionRect);
-                const elementsBounds = this.getSvgElementsBounds(selectedElements)
+                const elementsBounds = this.getSvgElementsBounds(selectedElements);
                 if (elementsBounds !== null) {
                     this.updateVisibleRect(elementsBounds, this.drawingService.svgSelectedShapesRect);
                 }
             }
         }
         this.renderer.setAttribute(this.drawingService.svgUserSelectionRect, 'display', 'none');
+    }
+
+    onElementClick(element: SVGElement): void {
+        const bounds = this.getSvgElementBounds(element);
+        this.updateVisibleRect(bounds, this.drawingService.svgSelectedShapesRect);
     }
 
     private updateVisibleRect(area: Rect, rect: SVGElement): void {
@@ -89,7 +91,7 @@ export class ToolSelectionService extends Tool {
 
     private getSelectedElements(area: Rect): SVGElement[] {
         const allSvgElements = this.drawingService.getSvgElements();
-        const selectedElements : SVGElement[] = [];
+        const selectedElements: SVGElement[] = [];
         for (let i = allSvgElements.length - 1; i >= 0; i--) {
             if (this.isElementIntersectingSelection(area, this.getSvgElementBounds(allSvgElements[i]))) {
                 selectedElements.push(allSvgElements[i]);
@@ -100,8 +102,10 @@ export class ToolSelectionService extends Tool {
 
     private isElementIntersectingSelection(selectionRect: Rect, elementRect: Rect): boolean {
         return (
-            selectionRect.x + selectionRect.width >= elementRect.x && selectionRect.x <= elementRect.x + elementRect.width &&
-            selectionRect.y + selectionRect.height >= elementRect.y && selectionRect.y <= elementRect.y + elementRect.height
+            selectionRect.x + selectionRect.width >= elementRect.x &&
+            selectionRect.x <= elementRect.x + elementRect.width &&
+            selectionRect.y + selectionRect.height >= elementRect.y &&
+            selectionRect.y <= elementRect.y + elementRect.height
         );
     }
 
@@ -110,7 +114,7 @@ export class ToolSelectionService extends Tool {
             return null;
         }
         const firstShapeRect = this.getSvgElementBounds(svgElements[0]);
-        const minPos = { x: firstShapeRect.x, y: firstShapeRect.y }
+        const minPos = { x: firstShapeRect.x, y: firstShapeRect.y };
         const maxPos = { x: firstShapeRect.x + firstShapeRect.width, y: firstShapeRect.y + firstShapeRect.height };
 
         for (const svgElement of svgElements) {

@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -16,8 +17,9 @@ export class ToolSelectorService implements OnDestroy {
 
     private primaryColorSubscription: Subscription;
     private secondaryColorSubscription: Subscription;
+    private elementClickSubscription: Subscription;
 
-    constructor(private toolHolderService: ToolHolderService, private colorService: ColorService) {
+    constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.selectedTool.onPrimaryColorChange(color);
         });
@@ -25,11 +27,16 @@ export class ToolSelectorService implements OnDestroy {
         this.secondaryColorSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.selectedTool.onSecondaryColorChange(color);
         });
+
+        this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((element: SVGElement) => {
+            this.selectedTool.onElementClick(element);
+        });
     }
 
     ngOnDestroy(): void {
         this.primaryColorSubscription.unsubscribe();
         this.secondaryColorSubscription.unsubscribe();
+        this.elementClickSubscription.unsubscribe();
     }
 
     onMouseMove(event: MouseEvent): void {

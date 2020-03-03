@@ -28,5 +28,6 @@ export abstract class Tool {
     onLeave(event: MouseEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
+    onElementClick(element: SVGElement): void {}
     // tslint:enable: empty
 }
