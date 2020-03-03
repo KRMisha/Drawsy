@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -95,5 +95,25 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     hasSetting(setting: ToolSetting): boolean {
         return this.toolSelectorService.hasSetting(setting);
+    }
+
+    protected getJunctionSizeErrorMessage(): string {
+        return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
+    }
+
+    protected getSizeErrorMessage(): string {
+        return this.getErrorMessage(this.sizeGroup.controls.size);
+    }
+
+    private getErrorMessage(formControl: AbstractControl): string {
+        return formControl.hasError('required')
+            ? 'Entrez une taille'
+            : formControl.hasError('min')
+            ? 'Valeur positive seulement'
+            : formControl.hasError('max')
+            ? 'Valeur maximale dépassée'
+            : formControl.hasError('pattern')
+            ? 'Nombre entier invalide'
+            : '';
     }
 }

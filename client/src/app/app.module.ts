@@ -20,13 +20,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from '@app/app/app.component';
 import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
