@@ -6,6 +6,16 @@ import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { Tool } from '@app/tools/services/tool';
 
+const controlPointSideSize = 10;
+
+enum ControlPoints {
+    None = -1,
+    Left = 0,
+    Top = 1,
+    Right = 2,
+    Bottom = 3
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -15,19 +25,22 @@ export class ToolSelectionService extends Tool {
     private selectedElements: SVGElement[] = [];
     private currentMouseButtonDown: ButtonId | null = null;
     private userJustClickedOnShape = false;
+    private controlPointHeld = ControlPoints.None;
     
     private svgSelectedShapesRect: SVGElement;
     private svgUserSelectionRect: SVGElement;
+    private svgControlPoints: SVGElement[] = [];
 
     constructor(drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
     }
 
-    onRendererInit(): void {
+    afterDrawingInit(): void {
         this.svgSelectedShapesRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '1');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '2');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke', '#000000');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'none');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
 
         this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', 'rgba(49, 104, 142, 0.2)');
@@ -35,12 +48,31 @@ export class ToolSelectionService extends Tool {
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '4');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', 'rgba(49, 104, 142, 0.8)');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
 
-        this.renderer.appendChild(this.drawingService.svgUserInterfaceContent, this.svgSelectedShapesRect);
-        this.renderer.appendChild(this.drawingService.svgUserInterfaceContent, this.svgUserSelectionRect);
+        this.drawingService.addUiElement(this.svgSelectedShapesRect);
+        this.drawingService.addUiElement(this.svgUserSelectionRect);
+
+        const controlPointsCount = 4;
+        for (let i = 0; i < controlPointsCount; i++) {
+            this.svgControlPoints.push(this.renderer.createElement('rect', 'svg'));
+            this.renderer.setAttribute(this.svgControlPoints[this.svgControlPoints.length - 1], 'width', controlPointSideSize.toString());
+            this.renderer.setAttribute(this.svgControlPoints[this.svgControlPoints.length - 1], 'height', controlPointSideSize.toString());
+            this.renderer.setAttribute(this.svgControlPoints[this.svgControlPoints.length - 1], 'fill', 'black');
+            this.renderer.setAttribute(this.svgControlPoints[this.svgControlPoints.length - 1], 'display', 'none');
+            this.drawingService.addUiElement(this.svgControlPoints[this.svgControlPoints.length - 1]);
+
+            this.renderer.listen(this.svgControlPoints[this.svgControlPoints.length - 1], 'mousedown', (event: MouseEvent) => {
+                this.controlPointHeld = i;
+            })
+        }
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (this.controlPointHeld !== ControlPoints.None) {
+            return;
+        }
+
         this.isMouseDown = true;
         this.isMouseDownInside = this.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
@@ -53,6 +85,9 @@ export class ToolSelectionService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
+        if (this.controlPointHeld !== ControlPoints.None) {
+            return;
+        }
         if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
             this.updateVisibleRect(userSelectionRect, this.svgUserSelectionRect);
@@ -69,6 +104,9 @@ export class ToolSelectionService extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
+        if (this.controlPointHeld !== ControlPoints.None) {
+            return;
+        }
         this.isMouseDown = false;
         this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
 
@@ -103,13 +141,13 @@ export class ToolSelectionService extends Tool {
         }
 
         this.userJustClickedOnShape = false;
+        this.controlPointHeld = ControlPoints.None;
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
         if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button)) {
             this.selectedElements = [element];
-            const bounds = this.getSvgElementBounds(element);
-            this.updateVisibleRect(bounds, this.svgSelectedShapesRect);
+            this.updateSvgSelectedShapesRect(this.selectedElements);
         } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
             this.inserveObjectsSelection([element], this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
@@ -121,8 +159,22 @@ export class ToolSelectionService extends Tool {
         const elementsBounds = this.getSvgElementsBounds(selectedElements);
         if (elementsBounds !== null) {
             this.updateVisibleRect(elementsBounds, this.svgSelectedShapesRect);
+            const positions = [
+                {x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
+                {x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
+                {x: elementsBounds.x + elementsBounds.width, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
+                {x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
+            ]
+            for (let i = 0; i < positions.length; i++) {
+                this.renderer.setAttribute(this.svgControlPoints[i], 'x', (positions[i].x - controlPointSideSize / 2).toString());
+                this.renderer.setAttribute(this.svgControlPoints[i], 'y', (positions[i].y - controlPointSideSize / 2).toString());
+                this.renderer.setAttribute(this.svgControlPoints[i], 'display', 'block');
+            }
         } else {
             this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
+            for (const controlPoint of this.svgControlPoints) {
+                this.renderer.setAttribute(controlPoint, 'display', 'none');   
+            }
         }
     }
 

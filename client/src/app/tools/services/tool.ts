@@ -18,7 +18,7 @@ export abstract class Tool {
     // Deactivate tslint for method stubs below because not all derived service classes
     // may need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    onRendererInit(): void {}
+    afterDrawingInit(): void {}
     onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}

@@ -40,9 +40,9 @@ export class ToolSelectorService implements OnDestroy {
         this.elementClickSubscription.unsubscribe();
     }
 
-    onRendererInit(): void {
+    afterDrawingInit(): void {
         for (const tool of this.toolHolderService.tools) {
-            tool.onRendererInit();
+            tool.afterDrawingInit();
         }
     }
 

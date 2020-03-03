@@ -25,7 +25,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.drawingService.svgDrawingSurface = this.svgDrawingSurface.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.drawingService.reappendStoredElements();
-        this.toolSelectorService.onRendererInit();
+        this.toolSelectorService.afterDrawingInit();
     }
 
     @HostListener('document:mousemove', ['$event'])

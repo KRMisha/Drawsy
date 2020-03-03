@@ -35,7 +35,6 @@ export class DrawingService {
     }
 
     addUiElement(element: SVGElement): void {
-        console.log(this.renderer);
         this.renderer.appendChild(this.svgUserInterfaceContent, element);
     }
 
