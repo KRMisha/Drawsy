@@ -3,6 +3,7 @@
 
     <h2 class="mat-h2">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
+    <mat-divider></mat-divider>
 
     <div *ngIf="hasSetting(ToolSetting.Size)" class="size-container">
         <h2 class="mat-h2">Taille</h2>
@@ -15,8 +16,8 @@
         </form>
         <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
         </mat-slider>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
         <form [formGroup]="junctionSizeGroup">
@@ -45,8 +46,8 @@
             [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
         >
         </mat-slider>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.StrokeType)">
         <h2 class="mat-h2">Type de tracé</h2>
         <div class="dropdown">
@@ -62,8 +63,8 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <mat-divider class="divider"></mat-divider>
     </div>
-
     <div *ngIf="hasSetting(ToolSetting.Texture)">
         <h2 class="mat-h2">Type de texture</h2>
         <div class="dropdown">
@@ -78,5 +79,6 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <mat-divider class="divider"></mat-divider>
     </div>
 </div>
