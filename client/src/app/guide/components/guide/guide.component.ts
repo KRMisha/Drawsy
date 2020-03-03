@@ -13,6 +13,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
     selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
+    currentComponent: string;
     @ViewChild('appSidebar', { static: false }) sidebar: GuideSidebarComponent;
     @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
 
@@ -20,6 +21,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.guides = this.guideService.getGuides();
+        this.currentComponent = 'GuideWelcomeComponent';
         this.selectedGuideIndex = 0;
         this.hasPreviousGuide = false;
         this.hasNextGuide = true;
@@ -46,6 +48,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
         viewContainerRef.clear();
 
         viewContainerRef.createComponent(componentFactory);
+        this.currentComponent = guide.name;
     }
 
     selectNextGuide(): void {
