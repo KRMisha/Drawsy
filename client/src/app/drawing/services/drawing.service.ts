@@ -13,6 +13,7 @@ export class DrawingService {
     private drawingRoot: SVGSVGElement;
     private svgDrawingContent: SVGGElement;
     private svgDescContent: SVGDescElement;
+    private svgBackgroundRect: SVGElement;
 
     private currentDrawing = new Drawing();
 
@@ -20,6 +21,7 @@ export class DrawingService {
         this.drawingRoot = drawingRoot;
         this.svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
         this.svgDescContent = drawingRoot.getElementsByTagName('desc')[0];
+        this.svgBackgroundRect = drawingRoot.getElementsByTagName('rect')[0];
     }
 
     addElement(element: SVGElement): void {
@@ -78,15 +80,16 @@ export class DrawingService {
     }
 
     addDescElements(elements: string[]): void {
-        this.currentDrawing.addDescElement(elements);
+        this.currentDrawing.clearDescElements();
         for (const element of elements) {
-            this.svgDescContent.append(element);
+            this.currentDrawing.addDescElement(element);
         }
     }
 
-    removeDescElement(element: string): void {
-        this.currentDrawing.removeDescElement(element);
-        // TODO: REMOVE STRING FROM DESC
+    appendAllDescElements(): void {
+        for (const element of this.currentDrawing.descElements) {
+            this.svgDescContent.append(`${element},`);
+        }
     }
 
     getSvgRoot(): HTMLCollectionOf<SVGGElement> {
@@ -100,12 +103,15 @@ export class DrawingService {
     setPreviewTexture(previewTexture: DrawingPreviewTextures): void {
         if (previewTexture === DrawingPreviewTextures.PreviewTexture0) {
             this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
+            this.renderer.removeAttribute(this.svgBackgroundRect, 'filter');
         } else {
             this.renderer.setAttribute(this.svgDrawingContent, 'filter', `url(#previewTexture${previewTexture})`);
+            this.renderer.setAttribute(this.svgBackgroundRect, 'filter', `url(#previewTexture${previewTexture})`);
         }
     }
 
     removePreviewTexture(): void {
         this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
+        this.renderer.removeAttribute(this.svgBackgroundRect, 'filter');
     }
 }

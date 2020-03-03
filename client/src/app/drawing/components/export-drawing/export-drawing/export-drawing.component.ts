@@ -15,6 +15,8 @@ export interface Label {
     styleUrls: ['./export-drawing.component.scss'],
 })
 export class ExportDrawingComponent implements OnDestroy, OnInit {
+    DrawingPreviewTextures = DrawingPreviewTextures; // Make enum available to template
+
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     visible = true;
     selectable = true;
@@ -26,7 +28,6 @@ export class ExportDrawingComponent implements OnDestroy, OnInit {
     labels: string[] = [];
     title: string;
 
-    DrawingPreviewTextures = DrawingPreviewTextures;
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
@@ -37,10 +38,12 @@ export class ExportDrawingComponent implements OnDestroy, OnInit {
 
     ngOnDestroy(): void {
         this.drawingService.removePreviewTexture();
+        this.drawingService.addDescElements(this.labels);
     }
 
     exportDrawing(): void {
         this.drawingService.addDescElements(this.labels);
+        this.drawingService.appendAllDescElements();
         this.fileUrl = this.drawingSerializerService.exportCurrentDrawing(this.drawingService.getDrawingRoot());
     }
 

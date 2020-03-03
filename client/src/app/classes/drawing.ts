@@ -45,26 +45,15 @@ export class Drawing {
         return this.svgElements.length > 0;
     }
 
-    addDescElement(elements: string[]): void {
-        for (const element of elements) {
-            this.descElements.push(element);
-        }
+    addDescElement(element: string): void {
+        this.descElements.push(element);
     }
 
-    removeDescElement(element: string): boolean {
-        const elementToRemoveIndex = this.descElements.indexOf(element, 0);
-        if (elementToRemoveIndex > -1) {
-            this.descElements.splice(elementToRemoveIndex, 1);
-            return true;
-        }
-        return false;
+    clearDescElements(): void {
+        this._descElements = [];
     }
 
-    clearDescSvgElements(): void {
-        this.descElements.length = 0;
-    }
-
-    hasDescSvgElements(): boolean {
+    hasDescElements(): boolean {
         return this.descElements.length > 0;
     }
 }
