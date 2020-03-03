@@ -14,7 +14,6 @@ export class ToolSelectionService extends Tool {
     private isMouseDownInside: boolean;
     private selectedElements: SVGElement[] = [];
     private currentMouseButtonDown: ButtonId | null = null;
-    private wasSelectionEmptyWhenUserClicked: boolean;
     private userJustClickedOnShape = false;
 
     constructor(drawingService: DrawingService) {
@@ -33,22 +32,19 @@ export class ToolSelectionService extends Tool {
         if (this.currentMouseButtonDown === null) {
             this.currentMouseButtonDown = event.button;
         }
-        this.wasSelectionEmptyWhenUserClicked = this.selectedElements.length === 0;
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = this.getUserSelectionRect(this.getMousePosition(event));
             this.updateVisibleRect(userSelectionRect, this.drawingService.svgUserSelectionRect);
-            if (this.currentMouseButtonDown === ButtonId.Left || this.wasSelectionEmptyWhenUserClicked) {
+            if (this.currentMouseButtonDown === ButtonId.Left) {
                 this.selectedElements = this.getSelectedElements(userSelectionRect);
                 this.updateSvgSelectedShapesRect(this.selectedElements);
             } else if (this.currentMouseButtonDown === ButtonId.Right) {
                 const selectedElementsCopy = Object.assign([], this.selectedElements);
                 const currentSelectedElements = this.getSelectedElements(userSelectionRect);
-                for (const element of currentSelectedElements) {
-                    this.removeElementFromArray(element, selectedElementsCopy);
-                }
+                this.inserveObjectsSelection(currentSelectedElements, selectedElementsCopy);
                 this.updateSvgSelectedShapesRect(selectedElementsCopy);
             }
         }
@@ -68,19 +64,17 @@ export class ToolSelectionService extends Tool {
             const isCurrentSelectionEmpty = currentSelectedElements.length === 0;
 
             if (!isSimpleClick) {
-                if (isLeftButtonUp || this.wasSelectionEmptyWhenUserClicked) {
+                if (isLeftButtonUp) {
                     this.selectedElements = currentSelectedElements;
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 } else if (isRightButtonUp) {
-                    for (const element of currentSelectedElements) {
-                        this.removeElementFromArray(element, this.selectedElements);
-                    }
+                    this.inserveObjectsSelection(currentSelectedElements, this.selectedElements);
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 }
             } else if ((isCurrentSelectionEmpty && isLeftButtonUp)) {
                 this.selectedElements = currentSelectedElements;
                 this.updateSvgSelectedShapesRect(this.selectedElements);
-            } else if (!this.userJustClickedOnShape) {
+            } else if (!this.userJustClickedOnShape && isLeftButtonUp) {
                 this.selectedElements = [];
                 this.updateSvgSelectedShapesRect(this.selectedElements);
             }
@@ -94,17 +88,17 @@ export class ToolSelectionService extends Tool {
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
-        if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) || this.wasSelectionEmptyWhenUserClicked) {
+        if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button)) {
             this.selectedElements = [element];
             const bounds = this.getSvgElementBounds(element);
             this.updateVisibleRect(bounds, this.drawingService.svgSelectedShapesRect);
         } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
-            this.removeElementFromArray(element, this.selectedElements);
+            this.inserveObjectsSelection([element], this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
         }
         this.userJustClickedOnShape = true; 
     }
-
+    
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
         const elementsBounds = this.getSvgElementsBounds(selectedElements);
         if (elementsBounds !== null) {
@@ -114,10 +108,14 @@ export class ToolSelectionService extends Tool {
         }
     }
 
-    private removeElementFromArray(svgElement: SVGElement, array: SVGElement[]): void {
-        const elementToRemoveIndex = array.indexOf(svgElement, 0);
-        if (elementToRemoveIndex > -1) {
-            array.splice(elementToRemoveIndex, 1);
+    private inserveObjectsSelection(svgElements: SVGElement[], array: SVGElement[]): void {
+        for (const svgElement of svgElements) {
+            const elementToRemoveIndex = array.indexOf(svgElement, 0);
+            if (elementToRemoveIndex > -1) {
+                array.splice(elementToRemoveIndex, 1);
+            } else {
+                array.push(svgElement);
+            }
         }
     }
 
