@@ -11,11 +11,11 @@ import { Subject } from 'rxjs';
 export class DrawingService {
     private currentDrawing = new Drawing();
     private elementClickedSource = new Subject<SvgClickEvent>();
-    
+
     elementClicked$ = this.elementClickedSource.asObservable();
-    
+
     renderer: Renderer2;
-    
+
     rootElement: SVGElement;
     svgUserInterfaceContent: SVGElement;
     svgDrawingSurface: SVGElement;

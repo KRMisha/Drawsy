@@ -13,7 +13,7 @@ enum ControlPoints {
     Left = 0,
     Top = 1,
     Right = 2,
-    Bottom = 3
+    Bottom = 3,
 }
 
 @Injectable({
@@ -26,7 +26,7 @@ export class ToolSelectionService extends Tool {
     private currentMouseButtonDown: ButtonId | null = null;
     private userJustClickedOnShape = false;
     private controlPointHeld = ControlPoints.None;
-    
+
     private svgSelectedShapesRect: SVGElement;
     private svgUserSelectionRect: SVGElement;
     private svgControlPoints: SVGElement[] = [];
@@ -64,7 +64,7 @@ export class ToolSelectionService extends Tool {
 
             this.renderer.listen(this.svgControlPoints[this.svgControlPoints.length - 1], 'mousedown', (event: MouseEvent) => {
                 this.controlPointHeld = i;
-            })
+            });
         }
     }
 
@@ -127,7 +127,7 @@ export class ToolSelectionService extends Tool {
                     this.inserveObjectsSelection(currentSelectedElements, this.selectedElements);
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 }
-            } else if ((isCurrentSelectionEmpty && isLeftButtonUp)) {
+            } else if (isCurrentSelectionEmpty && isLeftButtonUp) {
                 this.selectedElements = currentSelectedElements;
                 this.updateSvgSelectedShapesRect(this.selectedElements);
             } else if (!this.userJustClickedOnShape && isLeftButtonUp) {
@@ -145,26 +145,26 @@ export class ToolSelectionService extends Tool {
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
-        if ((event.button === ButtonId.Left && this.currentMouseButtonDown === event.button)) {
+        if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
             this.selectedElements = [element];
             this.updateSvgSelectedShapesRect(this.selectedElements);
         } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
             this.inserveObjectsSelection([element], this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
         }
-        this.userJustClickedOnShape = true; 
+        this.userJustClickedOnShape = true;
     }
-    
+
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
         const elementsBounds = this.getSvgElementsBounds(selectedElements);
         if (elementsBounds !== null) {
             this.updateVisibleRect(elementsBounds, this.svgSelectedShapesRect);
             const positions = [
-                {x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                {x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
-                {x: elementsBounds.x + elementsBounds.width, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                {x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
-            ]
+                { x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
+                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
+                { x: elementsBounds.x + elementsBounds.width, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
+                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
+            ];
             for (let i = 0; i < positions.length; i++) {
                 this.renderer.setAttribute(this.svgControlPoints[i], 'x', (positions[i].x - controlPointSideSize / 2).toString());
                 this.renderer.setAttribute(this.svgControlPoints[i], 'y', (positions[i].y - controlPointSideSize / 2).toString());
@@ -173,7 +173,7 @@ export class ToolSelectionService extends Tool {
         } else {
             this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
             for (const controlPoint of this.svgControlPoints) {
-                this.renderer.setAttribute(controlPoint, 'display', 'none');   
+                this.renderer.setAttribute(controlPoint, 'display', 'none');
             }
         }
     }
