@@ -1,58 +1,53 @@
-h1 {
-    text-align: center;
-}
-
-h2 {
-    padding: 0px;
-    margin: 0px;
-}
-
-input {
-    border-radius: 25px;
-    border-style: none;
-    text-align: center;
-}
-
 .container {
-    width: 90%;
     margin-left: 5%;
+    margin-right: 5%;
 }
 
-.option {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+.size-container {
+    display: grid;
+    grid-template-areas:
+        'tool-name input-field'
+        'slider slider';
+}
 
-    input {
-        width: 20%;
-    }
+.junction-container {
+    display: grid;
+    grid-template-areas:
+        'tool-name toggle input-field'
+        'slider slider slider';
+}
+
+.mat-h1 {
+    text-align: center;
+}
+
+.mat-h2 {
+    grid-area: tool-name;
+    align-self: flex-end;
+}
+
+.form {
+    justify-self: right;
+}
+
+.form-field {
+    grid-area: input-field;
+    text-align: right;
+    width: 70px !important;
 }
 
 .mat-slider {
+    grid-area: slider;
     width: 100%;
 }
 
-.select-style {
-    color: rgb(255, 255, 255);
+.toggle {
+    grid-area: toggle;
+    align-self: center;
+    justify-self: center;
+}
+
+.dropdown {
+    margin-top: 10px;
     text-align: center;
-}
-
-.dropdown-style {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    .select {
-        align-self: center;
-        margin-top: 10px;
-    }
-}
-
-.input-number::-webkit-outer-spin-button,
-.input-number::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.input-number {
-    -moz-appearance: textfield;
 }

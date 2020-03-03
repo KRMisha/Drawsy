@@ -38,7 +38,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     junctionSizeGroup = new FormGroup({
         junctionSize: new FormControl(
-            {value: 0, disabled: true},
+            { value: 0, disabled: true },
             Validators.compose([
                 Validators.required,
                 Validators.max(maximumJunctionSize),
@@ -85,8 +85,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeTypes | Textures): void {
         if (setting === ToolSetting.JunctionSettings) {
-            (value as JunctionSettings).hasJunction ?
-                this.junctionSizeGroup.controls.junctionSize.enable() : this.junctionSizeGroup.controls.junctionSize.disable();
+            (value as JunctionSettings).hasJunction
+                ? this.junctionSizeGroup.controls.junctionSize.enable()
+                : this.junctionSizeGroup.controls.junctionSize.disable();
         }
 
         this.toolSelectorService.setSetting(setting, value);
