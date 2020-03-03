@@ -1,26 +1,18 @@
-<div (window:resize)="onResize($event)">
-    <button mat-icon-button mat-dialog-close class="exit-button" tabindex="-1">
-        <mat-icon class="icon">close</mat-icon>
-    </button>
-
-    <mat-card-title>
-        <h1 class="mat-h1">Création de dessin</h1>
-    </mat-card-title>
-
-    <form [formGroup]="drawingForm" (ngSubmit)="onSubmit()">
-        <div class="size-selection">
-            <mat-form-field>
-                <mat-label>Largeur</mat-label>
-                <input matInput formControlName="width" />
-                <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Hauteur</mat-label>
-                <input matInput formControlName="height" />
-                <mat-error *ngIf="drawingForm.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
-            </mat-form-field>
-        </div>
-        <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
-        <button mat-stroked-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid">Confirmer</button>
+<div (window:resize)="onResize($event)" class="container">
+    <h1 class="mat-h1">Création de dessin</h1>
+    <form [formGroup]="drawingForm" (ngSubmit)="onSubmit()" class="settings-container">
+        <mat-form-field class="item-width-input">
+            <mat-label>Largeur</mat-label>
+            <input matInput formControlName="width" />
+            <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="item-height-input">
+            <mat-label>Hauteur</mat-label>
+            <input matInput formControlName="height" />
+            <mat-error *ngIf="drawingForm.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <app-color-picker [(colorModel)]="backgroundColor" class="item-color"></app-color-picker>
+        <button mat-raised-button mat-dialog-close class="item-cancel">Annuler</button>
+        <button mat-raised-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid" class="item-confirm">Confirmer</button>
     </form>
 </div>

@@ -1,5 +1,6 @@
 <div class="container">
     <h1 class="mat-h1">Sélection couleur de fond</h1>
-    <app-color-picker [(colorModel)]="color"></app-color-picker>
-    <button mat-stroked-button mat-dialog-close (click)="confirmColor()">Confirmer</button>
+    <app-color-picker [(colorModel)]="color" class="item-color"></app-color-picker>
+    <button mat-raised-button mat-dialog-close class="item-cancel">Annuler</button>
+    <button mat-raised-button mat-dialog-close (click)="confirmColor()" class="item-confirm">Confirmer</button>
 </div>

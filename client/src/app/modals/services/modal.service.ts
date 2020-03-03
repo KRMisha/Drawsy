@@ -18,19 +18,15 @@ export class ModalService {
     constructor(private dialog: MatDialog) {}
 
     // tslint:disable-next-line: no-any
-    openDialog(component: Type<any>, dimensions?: Vec2): void {
+    openDialog(component: Type<any>, dimensions: Vec2): void {
         if (this.isModalPresent) {
             return;
         }
 
-        this.dialogRef = this.dialog.open(
-            component,
-            (dimensions && {
-                width: `${dimensions.x}px`,
-                height: `${dimensions.y}px`,
-            }) ||
-                {},
-        );
+        this.dialogRef = this.dialog.open(component, {
+            width: `${dimensions.x}px`,
+            height: `${dimensions.y}px`,
+        });
         this.dialogRef.afterClosed().subscribe(() => {
             this._isModalPresent = false;
         });
