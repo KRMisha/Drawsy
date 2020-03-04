@@ -24,8 +24,6 @@ export class DrawingService {
     svgUserInterfaceContent: SVGElement;
     svgDrawingSurface: SVGElement;
 
-    constructor(private geometryService: GeometryService) {}
-
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
         this.renderer.appendChild(this.rootElement, element);
@@ -72,7 +70,7 @@ export class DrawingService {
         const allSvgElements = this.getSvgElements();
         const selectedElements: SVGElement[] = [];
         for (let i = allSvgElements.length - 1; i >= 0; i--) {
-            if (this.geometryService.isRect1IntersectingRect2(area, this.getSvgElementBounds(allSvgElements[i]))) {
+            if (GeometryService.areRectsIntersecting(area, this.getSvgElementBounds(allSvgElements[i]))) {
                 selectedElements.push(allSvgElements[i]);
             }
         }
