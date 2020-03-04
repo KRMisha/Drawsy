@@ -5,4 +5,5 @@ export enum ToolDefaults {
     JunctionSize = 10,
     Texture = Textures.Texture1,
     StrokeType = StrokeTypes.FillWithBorder,
+    PolygonSideCount = 3,
 }

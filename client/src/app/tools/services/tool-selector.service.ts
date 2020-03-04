@@ -5,8 +5,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolHolderService } from '@app/tools/services/shapes/tool-holder.service';
 import { Tool } from '@app/tools/services/tool';
+import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
 
 @Injectable({

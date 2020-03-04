@@ -13,4 +13,5 @@ export const sidebarButtons: SidebarButton[] = [
     { name: ToolNames.Rectangle, icon: 'crop_5_4', toolIndex: 3 },
     { name: ToolNames.Selection, icon: 'format_shapes', toolIndex: 4 },
     { name: ToolNames.Ellipse, icon: 'panorama_fish_eye', toolIndex: 5 },
+    { name: ToolNames.Polygon, icon: 'star', toolIndex: 6 },
 ];

@@ -5,4 +5,5 @@ export enum ToolNames {
     Rectangle = 'Rectangle',
     Selection = 'Sélection',
     Ellipse = 'Éllipse',
+    Polygon = "Polygone",
 }

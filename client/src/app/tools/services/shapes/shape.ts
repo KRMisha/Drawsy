@@ -5,6 +5,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { Tool } from '@app/tools/services/tool';
+import { StrokeTypes, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 
 export class Shape extends Tool {
     private shape: SVGElement;
@@ -12,13 +14,16 @@ export class Shape extends Tool {
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(drawingService: DrawingService, colorService: ColorService, name: string) {
+    constructor(drawingService: DrawingService, private colorService: ColorService, name: string) {
         super(drawingService, name);
+        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
+        this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.StrokeType);
     }
 
     protected updateShape(shapeArea: Rect, shape: SVGElement): void {} // tslint:disable-line: no-empty
+
     protected createNewShape(): SVGElement {
-        return new SVGElement();
+        return {} as SVGElement;
     }
 
     onPrimaryColorChange(color: Color): void {
@@ -44,6 +49,7 @@ export class Shape extends Tool {
         this.mousePosition = this.getMousePosition(event);
         if (this.isMouseInside) {
             this.shape = this.createNewShape();
+            this.setElementAttributes(this.shape);
             this.origin = this.getMousePosition(event);
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
@@ -73,7 +79,7 @@ export class Shape extends Tool {
     }
 
     private updateShapeArea(): void {
-        if (this.shape === undefined) {
+        if (this.shape === undefined || !this.isMouseDown) {
             return;
         }
 
@@ -100,5 +106,18 @@ export class Shape extends Tool {
         }
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
         this.updateShape(shapeArea, this.shape);
+    }
+
+    private setElementAttributes(element: SVGElement): void {
+        this.renderer.setAttribute(element, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
+        this.renderer.setAttribute(element, 'stroke-linecap', 'square');
+        this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(element, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
+            this.renderer.setAttribute(element, 'stroke', 'none');
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly) {
+            this.renderer.setAttribute(element, 'fill', 'none');
+        }
     }
 }

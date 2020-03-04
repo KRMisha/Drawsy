@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
 const maximumJunctionSize = 500;
+const maximumPolygonSideCount = 12;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -23,6 +24,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     sizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
+    polygonSideCountSubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -42,6 +44,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             Validators.compose([
                 Validators.required,
                 Validators.max(maximumJunctionSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    polygonSideCountGroup = new FormGroup({
+        polygonSideCount: new FormControl(
+            { value: 0, disabled: false },
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumPolygonSideCount),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
             ]),
@@ -68,6 +82,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 } as JunctionSettings);
             }
         });
+
+        this.polygonSideCountSubscription = this.polygonSideCountGroup.controls.polygonSideCount.valueChanges.subscribe(() => {
+            if (this.polygonSideCountGroup.controls.polygonSideCount.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.PolygonSideCount, this.polygonSideCountGroup.controls.polygonSideCount.value);
+            }
+        })
     }
 
     ngOnDestroy(): void {
