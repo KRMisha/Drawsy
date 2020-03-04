@@ -158,7 +158,7 @@ export class ToolSelectionService extends Tool {
     }
 
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
-        const elementsBounds = this.drawingService.getSvgElementsBounds(selectedElements);
+        const elementsBounds = this.drawingService.getElementListBounds(selectedElements);
         if (elementsBounds !== null) {
             this.updateVisibleRect(elementsBounds, this.svgSelectedShapesRect);
             const positions = [

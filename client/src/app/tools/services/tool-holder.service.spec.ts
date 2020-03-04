@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
 import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
-import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
+import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
 
 describe('ToolHolderService', () => {

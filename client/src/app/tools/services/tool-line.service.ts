@@ -4,7 +4,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -34,10 +34,10 @@ export class ToolLineService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService, ToolNames.Line);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
             hasJunction: false,
-            junctionSize: ToolDefaults.JunctionSize,
+            junctionSize: defaultJunctionSize,
         } as JunctionSettings);
         this.name = 'Ligne';
     }

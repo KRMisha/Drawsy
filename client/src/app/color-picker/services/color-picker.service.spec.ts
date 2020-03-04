@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ColorPickerService } from './color-picker.service';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 
 describe('ColorPickerServiceService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

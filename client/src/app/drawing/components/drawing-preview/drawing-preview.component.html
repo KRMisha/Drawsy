@@ -1,0 +1,71 @@
+<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <title #appTitle></title>
+    <desc #appDesc></desc>
+
+    <defs #appDefs>
+        <filter id="previewFilter0">
+            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite" />
+        </filter>
+
+        <filter id="previewFilter1" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+            <feColorMatrix
+                type="matrix"
+                values="0 1 0 0 0
+                    0 1 0 0 0
+                    0 1 0 0 0
+                    0 1 0 1 0 "
+            />
+        </filter>
+
+        <filter id="previewFilter2" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+            <feColorMatrix type="luminanceToAlpha" />
+            <feComponentTransfer>
+                <feFuncA type="table" tableValues="0 .2 0.5 .8 1 .8 0.5 .20 0" />
+            </feComponentTransfer>
+            <feComposite operator="in" in="SourceGraphic" />
+            <feColorMatrix
+                type="matrix"
+                result="sepia-clip"
+                values="0.39 0.769 0.189 0  0
+                0.349 0.686 0.168 0  0
+                0.272 0.534 0.131 0  0
+                  0  0 0 1  0"
+            />
+            <feColorMatrix
+                in="SourceGraphic"
+                type="matrix"
+                result="gscale"
+                values="0.2126 0.7152 0.0722 0 0
+                              0.2126 0.7152 0.0722 0 0
+                              0.2126 0.7152 0.0722 0 0
+                              0 0 0 1 0"
+            />
+            <feComposite operator="over" in="sepia-clip" in2="gscale" />
+        </filter>
+
+        <filter id="previewFilter3" filterUnits="userSpaceOnUse">
+            <feFlood x="4" y="4" height="2" width="2" />
+            <feComposite width="10" height="10" />
+            <feTile result="flood" />
+            <feComposite in="SourceGraphic" in2="flood" operator="in" />
+            <feMorphology operator="dilate" radius="5" />
+        </filter>
+
+        <filter id="previewFilter4" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="0 2" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" edgeMode="none" result="blur" />
+            <feComposite in="blur" in2="blur" operator="arithmetic" k1="2.3" k2="1.4" k3="-0.1" k4="-0.1" result="composite1" />
+        </filter>
+
+        <filter id="previewFilter5" filterUnits="userSpaceOnUse">
+            <feTurbulence type="turbulence" baseFrequency="0.034 0.047" numOctaves="2" seed="2" stitchTiles="stitch" result="turbulence1" />
+            <feTurbulence type="turbulence" baseFrequency="1.999 2.001" numOctaves="2" seed="2" stitchTiles="stitch" result="turbulence2" />
+            <feComposite in="SourceGraphic" in2="turbulence1" operator="in" result="composite1" />
+            <feComposite in="composite1" in2="SourceGraphic" operator="lighter" />
+            <feComposite in="SourceGraphic" in2="turbulence2" operator="lighter" />
+        </filter>
+    </defs>
+
+    <rect width="100%" height="100%" [attr.fill]="getBackgroundColor()" [attr.filter]="getFilter()" />
+
+    <g #appDrawingContent [attr.filter]="getFilter()"></g>
+</svg>

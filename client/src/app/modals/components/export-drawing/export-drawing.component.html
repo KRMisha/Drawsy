@@ -1,0 +1,46 @@
+<div>
+    <form class="metadata-form">
+        <mat-form-field class="chip-list">
+            <mat-chip-list #chipList aria-label="Label selection">
+                <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)" color="$primary">
+                    {{ label }}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                    placeholder="Nouvelle étiquette..."
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addLabel($event)"
+                />
+            </mat-chip-list>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Titre</mat-label>
+            <input matInput (input)="updateDrawingTitle($event)" placeholder="Ex. Arbre de jeunesse" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Type de filtre</mat-label>
+            <mat-select [(value)]="previewFilter">
+                <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
+                <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
+                <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
+                <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
+                <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
+                <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <mat-card>
+        <mat-card-title>Aperçu</mat-card-title>
+        <app-drawing-preview></app-drawing-preview>
+    </mat-card>
+</div>
+
+<div>
+    <a [href]="fileUrl" download="file.svg">
+        <button mat-raised-button (click)="exportDrawing()">Download</button>
+    </a>
+</div>

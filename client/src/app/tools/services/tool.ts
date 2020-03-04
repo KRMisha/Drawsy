@@ -3,11 +3,11 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
-import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
 export abstract class Tool {
-    renderer: Renderer2; // tslint:disable-line: variable-name
-    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeTypes | Textures>();
+    renderer: Renderer2;
+    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
     name: string;
     isMouseDown = false;
     isMouseInside = false;
@@ -35,7 +35,7 @@ export abstract class Tool {
     // tslint:enable: empty
 
     protected getMousePosition(event: MouseEvent): Vec2 {
-        const rootBounds = this.drawingService.svgDrawingSurface.getBoundingClientRect() as DOMRect;
+        const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
         return {
             x: event.clientX - rootBounds.x,
             y: event.clientY - rootBounds.y,

@@ -1,17 +1,17 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
-import { Drawing } from '@app/classes/drawing';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { Subject } from 'rxjs';
 import { GeometryService } from './geometry.service';
 
+const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
+
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingService {
-    private currentDrawing = new Drawing();
     private elementClickedSource = new Subject<SvgClickEvent>();
     private elementHoveredSource = new Subject<SVGElement>();
 
@@ -20,13 +20,24 @@ export class DrawingService {
 
     renderer: Renderer2;
 
-    rootElement: SVGElement;
-    svgUserInterfaceContent: SVGElement;
-    svgDrawingSurface: SVGElement;
+    drawingRoot: SVGSVGElement;
+    svgDrawingContent: SVGGElement;
+    svgUserInterfaceContent: SVGGElement;
+
+    title = 'Sans titre';
+    labels: string[] = [];
+    dimensions: Vec2 = defaultDimensions;
+    backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
+
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+    get svgElements(): SVGElement[] {
+        return this._svgElements;
+    }
 
     addElement(element: SVGElement): void {
-        this.currentDrawing.addElement(element);
-        this.renderer.appendChild(this.rootElement, element);
+        this.svgElements.push(element);
+        this.renderer.appendChild(this.svgDrawingContent, element);
+
         this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event } as SvgClickEvent);
         });
@@ -36,8 +47,10 @@ export class DrawingService {
     }
 
     removeElement(element: SVGElement): void {
-        if (this.currentDrawing.removeElement(element)) {
-            this.renderer.removeChild(this.rootElement, element);
+        const elementToRemoveIndex = this.svgElements.indexOf(element);
+        if (elementToRemoveIndex > -1) {
+            this.svgElements.splice(elementToRemoveIndex, 1);
+            this.renderer.removeChild(this.svgDrawingContent, element);
         }
     }
 
@@ -50,16 +63,15 @@ export class DrawingService {
     }
 
     reappendStoredElements(): void {
-        for (const element of this.currentDrawing.elements) {
-            this.renderer.appendChild(this.rootElement, element);
+        for (const element of this.svgElements) {
+            this.addElement(element);
         }
     }
 
     clearStoredElements(): void {
-        for (const element of this.currentDrawing.elements) {
-            this.renderer.removeChild(this.rootElement, element);
+        for (const element of this.svgElements) {
+            this.renderer.removeChild(this.svgDrawingContent, element);
         }
-        this.currentDrawing.clearElements();
     }
 
     getElementsUnderPoint(point: Vec2): SVGElement[] {
@@ -67,67 +79,41 @@ export class DrawingService {
     }
 
     getElementsUnderArea(area: Rect): SVGElement[] {
-        const allSvgElements = this.getSvgElements();
-        const selectedElements: SVGElement[] = [];
-        for (let i = allSvgElements.length - 1; i >= 0; i--) {
-            if (GeometryService.areRectsIntersecting(area, this.getSvgElementBounds(allSvgElements[i]))) {
-                selectedElements.push(allSvgElements[i]);
-            }
-        }
-        return selectedElements;
+        return this.svgElements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
     isDrawingStarted(): boolean {
-        return this.currentDrawing.hasElements();
+        return this.svgElements.length > 0;
     }
 
-    getDrawingDimensions(): Vec2 {
-        return this.currentDrawing.dimensions;
-    }
-
-    getBackgroundColor(): Color {
-        return this.currentDrawing.backgroundColor;
-    }
-
-    getSvgElementBounds(svgElement: SVGElement): Rect {
-        const svgElementBounds = svgElement.getBoundingClientRect() as DOMRect;
-        const rootBounds = this.svgDrawingSurface.getBoundingClientRect() as DOMRect;
+    getElementBounds(element: SVGElement): Rect {
+        const svgElementBounds = element.getBoundingClientRect() as DOMRect;
+        const drawingRootBounds = this.drawingRoot.getBoundingClientRect() as DOMRect;
 
         return {
-            x: svgElementBounds.x - rootBounds.x,
-            y: svgElementBounds.y - rootBounds.y,
+            x: svgElementBounds.x - drawingRootBounds.x,
+            y: svgElementBounds.y - drawingRootBounds.y,
             width: svgElementBounds.width,
             height: svgElementBounds.height,
         } as Rect;
     }
 
-    getSvgElementsBounds(svgElements: SVGElement[]): Rect | null {
-        if (svgElements.length === 0) {
+    getElementListBounds(elements: SVGElement[]): Rect | null {
+        if (elements.length === 0) {
             return null;
         }
-        const firstShapeRect = this.getSvgElementBounds(svgElements[0]);
-        const minPos = { x: firstShapeRect.x, y: firstShapeRect.y };
-        const maxPos = { x: firstShapeRect.x + firstShapeRect.width, y: firstShapeRect.y + firstShapeRect.height };
 
-        for (const svgElement of svgElements) {
-            const currentShapeRect = this.getSvgElementBounds(svgElement);
-            minPos.x = Math.min(minPos.x, currentShapeRect.x);
-            minPos.y = Math.min(minPos.y, currentShapeRect.y);
-            maxPos.x = Math.max(maxPos.x, currentShapeRect.x + currentShapeRect.width);
-            maxPos.y = Math.max(maxPos.y, currentShapeRect.y + currentShapeRect.height);
+        const firstShapeBounds = this.getElementBounds(elements[0]);
+        const minPos = { x: firstShapeBounds.x, y: firstShapeBounds.y };
+        const maxPos = { x: firstShapeBounds.x + firstShapeBounds.width, y: firstShapeBounds.y + firstShapeBounds.height };
+
+        for (const element of elements) {
+            const currentShapeBounds = this.getElementBounds(element);
+            minPos.x = Math.min(minPos.x, currentShapeBounds.x);
+            minPos.y = Math.min(minPos.y, currentShapeBounds.y);
+            maxPos.x = Math.max(maxPos.x, currentShapeBounds.x + currentShapeBounds.width);
+            maxPos.y = Math.max(maxPos.y, currentShapeBounds.y + currentShapeBounds.height);
         }
         return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
-    }
-
-    getSvgElements(): SVGElement[] {
-        return this.currentDrawing.elements;
-    }
-
-    setDrawingDimensions(dimensions: Vec2): void {
-        this.currentDrawing.dimensions = dimensions;
-    }
-
-    setBackgroundColor(color: Color): void {
-        this.currentDrawing.backgroundColor = color;
     }
 }

@@ -1,9 +1,7 @@
-import { StrokeTypes, Textures } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, Texture } from '@app/tools/enums/tool-settings.enum';
 
-export enum ToolDefaults {
-    Size = 5,
-    JunctionSize = 10,
-    Texture = Textures.Texture1,
-    StrokeType = StrokeTypes.FillWithBorder,
-    PolygonSideCount = 3,
-}
+export const defaultSize = 5;
+export const defaultJunctionSize = 10;
+export const defaultTexture = Texture.Blur;
+export const defaultStrokeType = StrokeType.FillWithBorder;
+export const defaultPolygonSideCount = 3;

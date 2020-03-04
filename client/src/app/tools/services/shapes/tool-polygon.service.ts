@@ -3,7 +3,7 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { defaultPolygonSideCount } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from './shape';
@@ -14,7 +14,7 @@ import { Shape } from './shape';
 export class ToolPolygonService extends Shape {
     constructor(drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Polygon);
-        this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.PolygonSideCount);
+        this.toolSettings.set(ToolSetting.PolygonSideCount, defaultPolygonSideCount);
     }
 
     protected createNewShape(): SVGElement {
@@ -27,12 +27,12 @@ export class ToolPolygonService extends Shape {
         const numSides = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
 
         for (let i = 0; i < numSides; i++) {
-            const angle = i * 2 * Math.PI / numSides;
-            const point = { x: Math.cos(angle) * shapeArea.width / 2, y: Math.sin(angle) * shapeArea.height / 2 } as Vec2;
+            const angle = (i * 2 * Math.PI) / numSides;
+            const point = { x: (Math.cos(angle) * shapeArea.width) / 2, y: (Math.sin(angle) * shapeArea.height) / 2 } as Vec2;
             points.push(point);
         }
 
-        let pointsStr = ""
+        let pointsStr = '';
         for (const point of points) {
             pointsStr += `${point.x + shapeArea.x + shapeArea.width / 2}, ${point.y + shapeArea.y + shapeArea.height / 2} `;
         }

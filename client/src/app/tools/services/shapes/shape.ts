@@ -4,9 +4,9 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
+import { defaultSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
-import { StrokeTypes, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
 
 export class Shape extends Tool {
     private shape: SVGElement;
@@ -16,8 +16,8 @@ export class Shape extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService, name: string) {
         super(drawingService, name);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
-        this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.StrokeType);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
     }
 
     protected updateShape(shapeArea: Rect, shape: SVGElement): void {} // tslint:disable-line: no-empty
@@ -104,6 +104,7 @@ export class Shape extends Tool {
                 mousePositionCopy.y -= deltaHeight;
             }
         }
+        console.log(mousePositionCopy);
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
         this.updateShape(shapeArea, this.shape);
     }
@@ -114,9 +115,9 @@ export class Shape extends Tool {
         this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(element, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
 
-        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.FillOnly) {
             this.renderer.setAttribute(element, 'stroke', 'none');
-        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly) {
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly) {
             this.renderer.setAttribute(element, 'fill', 'none');
         }
     }

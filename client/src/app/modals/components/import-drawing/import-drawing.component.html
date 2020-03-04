@@ -1,0 +1,2 @@
+<button type="button" mat-raised-button (click)="fileInput.click()">Choisir fichier</button>
+<input hidden #fileInput type="file" accept="image/svg+xml" multiple="false" (change)="onChange($event.target.files)" />

@@ -57,8 +57,8 @@ export class NewDrawingComponent implements OnInit {
             return;
         }
 
-        this.drawingService.setDrawingDimensions({ x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value });
-        this.drawingService.setBackgroundColor(this.backgroundColor);
+        this.drawingService.dimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
+        this.drawingService.backgroundColor = this.backgroundColor;
         this.drawingService.clearStoredElements();
         this.router.navigate(['/editor']);
     }

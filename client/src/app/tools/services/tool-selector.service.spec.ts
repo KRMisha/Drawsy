@@ -1,9 +1,11 @@
 import { Renderer2 } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
-import { StrokeTypes, Textures, Tool, ToolSetting } from '@app/tools/services/tool';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { StrokeType, Texture, ToolSetting } from '../enums/tool-settings.enum';
+import { Tool } from './tool';
 
 // tslint:disable: no-magic-numbers
 
@@ -20,7 +22,7 @@ class MockTool extends Tool {
     isMouseDown = false;
     isMouseInside = false;
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeTypes | Textures>();
+    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
 }
 
 // tslint:disable: max-classes-per-file
