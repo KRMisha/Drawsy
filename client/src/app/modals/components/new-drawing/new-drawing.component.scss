@@ -1,15 +1,17 @@
-:host {
+.container {
     display: flex;
     flex-direction: column;
-    padding-top: 24px;
+    text-align: center;
 }
 
-.exit-button {
-    float: right;
-    cursor: hand;
+mat-dialog-content::-webkit-scrollbar {
+    display: none;
 }
 
-.size-selection {
-    display: flex;
-    flex-direction: row;
+.form-field {
+    text-align: center;
+}
+
+.button {
+    width: 45%;
 }

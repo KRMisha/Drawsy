@@ -8,17 +8,17 @@
     <button mat-icon-button mat-dialog-close class="item-exit-button">
         <mat-icon class="icon">close</mat-icon>
     </button>
-    <div class="item-guide-content">
+    <div mat-dialog-content class="item-guide-content">
         <ng-template appGuide></ng-template>
     </div>
-    <div class="item-buttons">
+    <div mat-dialog-actions align="center" class="item-buttons">
         <div class="previous">
             <button mat-icon-button *ngIf="hasPreviousGuide" class="navigation-button" (click)="selectPreviousGuide()">
                 <mat-icon class="icon">keyboard_arrow_left</mat-icon> Précédent
             </button>
         </div>
         <div class="next">
-            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()">
+            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()" cdkFocusInitial>
                 Suivant <mat-icon class="icon">keyboard_arrow_right</mat-icon>
             </button>
         </div>

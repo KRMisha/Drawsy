@@ -1,4 +1,20 @@
-.container {
+.settings-container {
     display: flex;
     flex-direction: column;
+}
+
+.mat-h1 {
+    text-align: center;
+}
+
+mat-dialog-content::-webkit-scrollbar {
+    display: none;
+}
+
+mat-dialog-actions {
+    padding: 10px;
+}
+
+.button {
+    width: 45%;
 }
