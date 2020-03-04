@@ -1,5 +1,5 @@
 <div class="container">
-    <form (keydown.enter)="colorPickerService.onColorSubmit()">
+    <form class="form" (keydown.enter)="colorPickerService.onColorSubmit()">
         <mat-form-field *ngIf="isHex" class="form-field">
             <mat-label>Hex # </mat-label>
             <input matInput (input)="updateColorHex()" [formControl]="hexRgb" />

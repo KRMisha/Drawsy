@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { JunctionSettings } from '@app/editor/classes/junction-settings';
+import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';

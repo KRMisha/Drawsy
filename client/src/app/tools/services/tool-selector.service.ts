@@ -3,7 +3,7 @@ import { Color } from '@app/classes/color';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { JunctionSettings } from '@app/editor/classes/junction-settings';
+import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';

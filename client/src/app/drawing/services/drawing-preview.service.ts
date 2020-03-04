@@ -41,8 +41,8 @@ export class DrawingPreviewService {
         this.renderer.appendChild(this.svgDesc, labelsText);
     }
 
-    getBackgroundColor(): string {
-        return this.drawingService.backgroundColor.toRgbaString();
+    get backgroundColor(): string {
+        return this.drawingService.backgroundColor;
     }
 
     get title(): string {

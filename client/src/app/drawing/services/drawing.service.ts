@@ -39,7 +39,7 @@ export class DrawingService {
         this.renderer.appendChild(this.svgDrawingContent, element);
 
         this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next({ svgElement: element, mouseEvent: event } as SvgClickEvent);
+            this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
         });
         this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
             this.elementHoveredSource.next(element);

@@ -1,10 +1,10 @@
-<div>
-    <form class="metadata-form">
+<form>
+    <mat-dialog-content>
         <mat-form-field class="chip-list">
             <mat-chip-list #chipList aria-label="Label selection">
-                <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)" color="$primary">
+                <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
                     {{ label }}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
                     placeholder="Nouvelle étiquette..."
@@ -18,7 +18,7 @@
 
         <mat-form-field>
             <mat-label>Titre</mat-label>
-            <input matInput (input)="updateDrawingTitle($event)" placeholder="Ex. Arbre de jeunesse" />
+            <input matInput [(ngModel)]="title" />
         </mat-form-field>
 
         <mat-form-field>
@@ -32,15 +32,15 @@
                 <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
             </mat-select>
         </mat-form-field>
-    </form>
-    <mat-card>
-        <mat-card-title>Aperçu</mat-card-title>
-        <app-drawing-preview></app-drawing-preview>
-    </mat-card>
-</div>
+        <mat-card>
+            <mat-card-title>Aperçu</mat-card-title>
+            <app-drawing-preview></app-drawing-preview>
+        </mat-card>
+    </mat-dialog-content>
 
-<div>
-    <a [href]="fileUrl" download="file.svg">
-        <button mat-raised-button (click)="exportDrawing()">Download</button>
-    </a>
-</div>
+    <mat-dialog-actions align="end">
+        <a [href]="fileUrl" download="file.svg">
+            <button mat-raised-button (click)="exportDrawing()">Sauvegarder</button>
+        </a>
+    </mat-dialog-actions>
+</form>
