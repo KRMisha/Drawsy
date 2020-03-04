@@ -1,8 +1,8 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
-import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
-import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textures.enum';
+
+const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
 
 @Injectable({
     providedIn: 'root',
@@ -10,120 +10,54 @@ import { DrawingPreviewTextures } from '@app/drawing/enums/drawing-preview-textu
 export class DrawingService {
     renderer: Renderer2;
 
-    private drawingRoot: SVGSVGElement;
-    private svgDrawingContent: SVGGElement;
-    private svgDescContent: SVGDescElement;
-    private svgBackgroundRect: SVGElement;
+    private _drawingRoot: SVGSVGElement; // tslint:disable-line: variable-name
+    get drawingRoot(): SVGSVGElement {
+        return this._drawingRoot;
+    }
 
-    private currentDrawing = new Drawing();
+    private svgDrawingContent: SVGGElement;
+
+    title = 'Sans titre';
+    labels: string[] = [];
+    dimensions: Vec2 = defaultDimensions;
+    backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
+
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+    get svgElements(): SVGElement[] {
+        return this._svgElements;
+    }
 
     setTarget(drawingRoot: SVGSVGElement): void {
-        this.drawingRoot = drawingRoot;
+        this._drawingRoot = drawingRoot;
         this.svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
-        this.svgDescContent = drawingRoot.getElementsByTagName('desc')[0];
-        this.svgBackgroundRect = drawingRoot.getElementsByTagName('rect')[0];
     }
 
     addElement(element: SVGElement): void {
-        this.currentDrawing.addSvgElement(element);
+        this.svgElements.push(element);
         this.renderer.appendChild(this.svgDrawingContent, element);
     }
 
     removeElement(element: SVGElement): void {
-        if (this.currentDrawing.removeSvgElement(element)) {
+        const elementToRemoveIndex = this.svgElements.indexOf(element);
+        if (elementToRemoveIndex > -1) {
+            this.svgElements.splice(elementToRemoveIndex, 1);
             this.renderer.removeChild(this.svgDrawingContent, element);
         }
     }
 
     reappendStoredElements(): void {
-        for (const element of this.currentDrawing.svgElements) {
-            this.renderer.appendChild(this.svgDrawingContent, element);
+        for (const element of this.svgElements) {
+            this.addElement(element);
         }
     }
 
     clearStoredElements(): void {
-        for (const element of this.currentDrawing.svgElements) {
+        for (const element of this.svgElements) {
             this.renderer.removeChild(this.svgDrawingContent, element);
         }
-        this.currentDrawing.clearSvgElements();
     }
 
     isDrawingStarted(): boolean {
-        return this.currentDrawing.hasSvgElements();
-    }
-
-    getDrawingDimensions(): Vec2 {
-        return this.currentDrawing.dimensions;
-    }
-
-    getBackgroundColor(): Color {
-        return this.currentDrawing.backgroundColor;
-    }
-
-    setDrawingDimensions(dimensions: Vec2): void {
-        this.currentDrawing.dimensions = dimensions;
-    }
-
-    setBackgroundColor(color: Color): void {
-        this.currentDrawing.backgroundColor = color;
-    }
-
-    getCurrentDrawing(): Drawing {
-        return this.currentDrawing;
-    }
-
-    setDrawing(drawing: Drawing): void {
-        this.clearStoredElements();
-        this.currentDrawing = drawing;
-        this.reappendStoredElements();
-        this.setPreviewTexture(DrawingPreviewTextures.PreviewTexture0);
-    }
-
-    addDescElements(elements: string[]): void {
-        this.currentDrawing.clearDescElements();
-        for (const element of elements) {
-            this.currentDrawing.addDescElement(element);
-        }
-    }
-
-    appendAllDescElements(): void {
-        const titleContent = this.svgDescContent.getElementsByTagName('title')[0];
-        const labelContent = this.svgDescContent.getElementsByTagName('desc')[0];
-
-        for (const element of this.currentDrawing.descElements) {
-            labelContent.append(`${element},`);
-        }
-        titleContent.append(this.currentDrawing.title);
-    }
-
-    updateDrawingTitle(title: string): void {
-        this.currentDrawing.title = title;
-    }
-
-    appendDrawingTitle(): void {
-        this.svgDescContent.getElementsByTagName('title')[0].append(this.currentDrawing.title);
-    }
-
-    getSvgRoot(): HTMLCollectionOf<SVGGElement> {
-        return this.drawingRoot.getElementsByTagName('g');
-    }
-
-    getDrawingRoot(): SVGSVGElement {
-        return this.drawingRoot;
-    }
-
-    setPreviewTexture(previewTexture: DrawingPreviewTextures): void {
-        if (previewTexture === DrawingPreviewTextures.PreviewTexture0) {
-            this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
-            this.renderer.removeAttribute(this.svgBackgroundRect, 'filter');
-        } else {
-            this.renderer.setAttribute(this.svgDrawingContent, 'filter', `url(#previewTexture${previewTexture})`);
-            this.renderer.setAttribute(this.svgBackgroundRect, 'filter', `url(#previewTexture${previewTexture})`);
-        }
-    }
-
-    removePreviewTexture(): void {
-        this.renderer.removeAttribute(this.svgDrawingContent, 'filter');
-        this.renderer.removeAttribute(this.svgBackgroundRect, 'filter');
+        return this.svgElements.length > 0;
     }
 }
