@@ -1,11 +1,11 @@
 import { Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
 export abstract class Tool {
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeTypes | Textures>();
+    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeType | Texture>();
     name: string;
     isMouseDown = false;
     isMouseInside = false;

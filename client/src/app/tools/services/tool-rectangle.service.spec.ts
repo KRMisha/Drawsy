@@ -2,7 +2,7 @@ import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { StrokeTypes, ToolSetting } from '@app/tools/services/tool';
+import { StrokeType, ToolSetting } from '@app/tools/services/tool';
 import { ToolRectangleService } from '@app/tools/services/tool-rectangle.service';
 
 // tslint:disable: max-classes-per-file
@@ -76,7 +76,7 @@ describe('ToolRectangleService', () => {
 
     it('#onMouseDown should create a rectangle with stroke: none if user setting is FillOnly', () => {
         spyOn(service.renderer, 'setAttribute').and.callThrough();
-        service.toolSettings.set(ToolSetting.StrokeType, StrokeTypes.FillOnly);
+        service.toolSettings.set(ToolSetting.StrokeType, StrokeType.FillOnly);
 
         service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('ToolRectangleService', () => {
 
     it('#onMouseDown should create a rectangle with fill: none if user setting is BorderOnly', () => {
         spyOn(service.renderer, 'setAttribute').and.callThrough();
-        service.toolSettings.set(ToolSetting.StrokeType, StrokeTypes.BorderOnly);
+        service.toolSettings.set(ToolSetting.StrokeType, StrokeType.BorderOnly);
 
         service.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();

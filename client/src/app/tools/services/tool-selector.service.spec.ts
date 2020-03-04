@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { StrokeTypes, Textures, Tool, ToolSetting } from '@app/tools/services/tool';
+import { StrokeType, Texture, Tool, ToolSetting } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
@@ -20,7 +20,7 @@ class MockTool extends Tool {
     isMouseDown = false;
     isMouseInside = false;
     renderer: Renderer2;
-    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeTypes | Textures>();
+    toolSettings = new Map<ToolSetting, number | [boolean, number] | StrokeType | Texture>();
 }
 
 // tslint:disable: max-classes-per-file
