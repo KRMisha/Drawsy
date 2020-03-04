@@ -4,7 +4,7 @@
         <mat-dialog-content>
             <mat-form-field class="form-field">
                 <mat-label>Largeur</mat-label>
-                <input matInput formControlName="width" ngbAutoFocus/>
+                <input matInput formControlName="width" />
                 <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
             </mat-form-field>
             <mat-form-field class="form-field">
