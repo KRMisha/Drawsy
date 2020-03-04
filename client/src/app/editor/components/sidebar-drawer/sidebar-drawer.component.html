@@ -77,4 +77,15 @@
         </mat-form-field>
         <mat-divider class="divider"></mat-divider>
     </div>
+    <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)">
+        <h2 class="mat-h2">Nombre de faces</h2>
+        <mat-slider
+            min="3"
+            max="12"
+            (input)="polygonSideCountGroup.controls.polygonSideCount.setValue($event.value)"
+            [value]="polygonSideCountGroup.controls.polygonSideCount.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
 </div>

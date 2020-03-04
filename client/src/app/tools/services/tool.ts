@@ -35,7 +35,7 @@ export abstract class Tool {
     // tslint:enable: empty
 
     protected getMousePosition(event: MouseEvent): Vec2 {
-        const rootBounds = this.drawingService.svgDrawingContent.getBoundingClientRect() as DOMRect;
+        const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
         return {
             x: event.clientX - rootBounds.x,
             y: event.clientY - rootBounds.y,

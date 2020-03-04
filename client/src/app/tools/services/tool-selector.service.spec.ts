@@ -2,10 +2,10 @@ import { Renderer2 } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
+import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
-import { StrokeType, Texture, ToolSetting } from '../enums/tool-settings.enum';
 
 // tslint:disable: no-magic-numbers
 

@@ -3,6 +3,7 @@ export enum ToolSetting {
     JunctionSettings,
     StrokeType,
     Texture,
+    PolygonSideCount,
 }
 
 export enum Texture {
