@@ -5,6 +5,7 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { Subject } from 'rxjs';
+import { GeometryService } from './geometry.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,6 +23,8 @@ export class DrawingService {
     rootElement: SVGElement;
     svgUserInterfaceContent: SVGElement;
     svgDrawingSurface: SVGElement;
+
+    constructor(private geometryService: GeometryService) {}
 
     addElement(element: SVGElement): void {
         this.currentDrawing.addElement(element);
@@ -69,20 +72,11 @@ export class DrawingService {
         const allSvgElements = this.getSvgElements();
         const selectedElements: SVGElement[] = [];
         for (let i = allSvgElements.length - 1; i >= 0; i--) {
-            if (this.isElementUnderArea(area, this.getSvgElementBounds(allSvgElements[i]))) {
+            if (this.geometryService.isRect1IntersectingRect2(area, this.getSvgElementBounds(allSvgElements[i]))) {
                 selectedElements.push(allSvgElements[i]);
             }
         }
         return selectedElements;
-    }
-
-    isElementUnderArea(rect1: Rect, rect2: Rect): boolean {
-        return (
-            rect1.x + rect1.width >= rect2.x &&
-            rect1.x <= rect2.x + rect2.width &&
-            rect1.y + rect1.height >= rect2.y &&
-            rect1.y <= rect2.y + rect2.height
-        );
     }
 
     isDrawingStarted(): boolean {
