@@ -11,7 +11,7 @@
         <div class="size-selection">
             <mat-form-field>
                 <mat-label>Largeur</mat-label>
-                <input matInput formControlName="width" />
+                <input matInput formControlName="width" ngbAutoFocus/>
                 <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
             </mat-form-field>
             <mat-form-field>
