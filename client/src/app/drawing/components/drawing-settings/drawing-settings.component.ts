@@ -13,6 +13,6 @@ export class DrawingSettingsComponent {
     constructor(private drawingService: DrawingService) {}
 
     confirmColor(): void {
-        this.drawingService.setBackgroundColor(this.color);
+        this.drawingService.backgroundColor = this.color;
     }
 }

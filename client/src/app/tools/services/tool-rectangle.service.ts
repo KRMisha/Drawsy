@@ -3,9 +3,9 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { defaultSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
-import { StrokeTypes, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -19,8 +19,8 @@ export class ToolRectangleService extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService, ToolNames.Rectangle);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
-        this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.StrokeType);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -84,10 +84,9 @@ export class ToolRectangleService extends Tool {
         this.renderer.setAttribute(rectangle, 'stroke-linecap', 'square');
         this.renderer.setAttribute(rectangle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(rectangle, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
-
-        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.FillOnly) {
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.FillOnly) {
             this.renderer.setAttribute(rectangle, 'stroke', 'none');
-        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeTypes.BorderOnly) {
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly) {
             this.renderer.setAttribute(rectangle, 'fill', 'none');
         }
         return rectangle;

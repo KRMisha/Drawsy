@@ -5,15 +5,15 @@ export enum ToolSetting {
     Texture,
 }
 
-export enum Textures {
-    Texture1 = 1,
-    Texture2,
-    Texture3,
-    Texture4,
-    Texture5,
+export enum Texture {
+    Blur = 1,
+    Graffiti,
+    Shadow,
+    Matte,
+    Fabric,
 }
 
-export enum StrokeTypes {
+export enum StrokeType {
     FillWithBorder,
     FillOnly,
     BorderOnly,

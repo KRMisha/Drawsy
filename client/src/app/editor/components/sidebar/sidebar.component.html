@@ -14,7 +14,7 @@
                 [class.selected]="button === selectedButton"
                 (click)="setSelectedTool(i)"
                 matTooltip="{{ button.name }}"
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
             >
                 <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
             </button>
@@ -25,23 +25,32 @@
                 class="option-button"
                 (click)="openSettingsModal()"
                 matTooltip="Paramètres"
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
             >
                 <mat-icon class="mat-icon">settings</mat-icon>
             </button>
             <button
                 mat-stroked-button
                 class="option-button"
+                (click)="openImportExportModal()"
+                matTooltip="Importer/exporter dessin"
+                matTooltipPosition="right"
+            >
+                <mat-icon class="mat-icon">import_export</mat-icon>
+            </button>
+            <button
+                mat-stroked-button
+                class="option-button"
                 (click)="openNewDrawingModal()"
                 matTooltip="Nouveau dessin"
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
             >
                 <mat-icon class="mat-icon">add</mat-icon>
             </button>
-            <button mat-stroked-button class="option-button" (click)="openGuideModal()" matTooltip="Aide" [matTooltipPosition]="'right'">
+            <button mat-stroked-button class="option-button" (click)="openGuideModal()" matTooltip="Aide" matTooltipPosition="right">
                 <mat-icon class="mat-icon">help</mat-icon>
             </button>
-            <button mat-stroked-button class="option-button" routerLink="/home" matTooltip="Accueil" [matTooltipPosition]="'right'">
+            <button mat-stroked-button class="option-button" routerLink="/home" matTooltip="Accueil" matTooltipPosition="right">
                 <mat-icon class="mat-icon">home</mat-icon>
             </button>
         </div>

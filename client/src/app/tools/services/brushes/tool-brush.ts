@@ -1,7 +1,7 @@
 import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
+import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -10,7 +10,7 @@ export abstract class ToolBrush extends Tool {
 
     constructor(drawingService: DrawingService, private colorService: ColorService, name: string) {
         super(drawingService, name);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.Size);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {

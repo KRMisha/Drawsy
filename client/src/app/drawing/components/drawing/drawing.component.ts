@@ -9,9 +9,9 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-    @ViewChild('appDrawingContent', { static: false }) private svgContent: ElementRef<SVGElement>;
-    @ViewChild('appSvgSurface', { static: false }) private svgDrawingSurface: ElementRef<SVGElement>;
-    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGElement>;
+    @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
+    @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
 
     constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
 
@@ -21,9 +21,10 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.drawingService.rootElement = this.svgContent.nativeElement;
-        this.drawingService.svgDrawingSurface = this.svgDrawingSurface.nativeElement;
+        this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
+        this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
+
         this.drawingService.reappendStoredElements();
         this.toolSelectorService.afterDrawingInit();
     }
@@ -77,14 +78,14 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     }
 
     getWidth(): number {
-        return this.drawingService.getDrawingDimensions().x;
+        return this.drawingService.dimensions.x;
     }
 
     getHeight(): number {
-        return this.drawingService.getDrawingDimensions().y;
+        return this.drawingService.dimensions.y;
     }
 
     getBackgroundColor(): string {
-        return this.drawingService.getBackgroundColor().toRgbaString();
+        return this.drawingService.backgroundColor.toRgbaString();
     }
 }

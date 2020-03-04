@@ -1,22 +1,15 @@
-<svg
-    #appSvgSurface
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    baseProfile="full"
-    [attr.width]="getWidth()"
-    [attr.height]="getHeight()"
->
+<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.width]="getWidth()" [attr.height]="getHeight()">
     <defs>
-        <filter id="texture1" filterUnits="userSpaceOnUse">
+        <filter id="brushTexture1" filterUnits="userSpaceOnUse">
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
         </filter>
 
-        <filter id="texture2" filterUnits="userSpaceOnUse">
+        <filter id="brushTexture2" filterUnits="userSpaceOnUse">
             <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence2" />
             <feDisplacementMap in2="turbulence2" in="SourceGraphic" scale="15" />
         </filter>
 
-        <filter id="texture3" filterUnits="userSpaceOnUse">
+        <filter id="brushTexture3" filterUnits="userSpaceOnUse">
             <feDropShadow stdDeviation="5" in="SourceGraphic" dx="10" dy="10" flood-color="#80868b" result="shadow3" />
             <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur3" />
             <feMerge>
@@ -26,7 +19,7 @@
             </feMerge>
         </filter>
 
-        <filter id="texture4" filterUnits="userSpaceOnUse">
+        <filter id="brushTexture4" filterUnits="userSpaceOnUse">
             <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur4" />
             <feSpecularLighting
                 in="blur4"
@@ -42,7 +35,7 @@
             <feComposite in="SourceGraphic" in2="specular4" operator="arithmetic" k2="1" k3="1" />
         </filter>
 
-        <filter id="texture5" filterUnits="userSpaceOnUse">
+        <filter id="brushTexture5" filterUnits="userSpaceOnUse">
             <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence5" />
             <feDiffuseLighting surfaceScale="5" diffuseConstant="0.05" in="turbulence5" result="diffuse5">
                 <feDistantLight azimuth="6" elevation="5" />

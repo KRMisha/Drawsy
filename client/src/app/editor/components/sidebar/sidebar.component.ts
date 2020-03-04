@@ -1,8 +1,9 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
+import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
-import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -13,10 +14,10 @@ import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
+    @ViewChild('appDrawer', { static: false }) drawer: MatDrawer;
+
     buttons: SidebarButton[] = sidebarButtons;
     selectedButton: SidebarButton = this.buttons[0];
-
-    @ViewChild('appDrawer', { static: false }) drawer: MatDrawer;
 
     private areShortcutsEnabled = true;
 
@@ -71,15 +72,19 @@ export class SidebarComponent implements OnInit {
         this.toolSelectorService.setSelectedTool(toolIndex);
     }
 
-    openGuideModal(): void {
-        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    openSettingsModal(): void {
+        this.modalService.openDialog(DrawingSettingsComponent, { x: 500, y: 500 });
+    }
+
+    openImportExportModal(): void {
+        this.modalService.openDialog(ImportExportDrawingComponent, { x: 500, y: 500 });
     }
 
     openNewDrawingModal(): void {
         this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
     }
 
-    openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 500, y: 500 });
+    openGuideModal(): void {
+        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
     }
 }

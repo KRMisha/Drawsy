@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
-import { ToolDefaults } from '@app/tools/enums/tool-defaults.enum';
-import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { Subscription } from 'rxjs';
 
@@ -18,8 +18,8 @@ const maximumJunctionSize = 500;
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
     // Make enums available to template
     ToolSetting = ToolSetting;
-    Textures = Textures;
-    StrokeTypes = StrokeTypes;
+    Texture = Texture;
+    StrokeType = StrokeType;
 
     sizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
@@ -51,8 +51,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     constructor(private toolSelectorService: ToolSelectorService) {}
 
     ngOnInit(): void {
-        this.sizeGroup.controls.size.setValue(ToolDefaults.Size);
-        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.JunctionSize);
+        this.sizeGroup.controls.size.setValue(defaultSize);
+        this.junctionSizeGroup.controls.junctionSize.setValue(defaultJunctionSize);
 
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
@@ -79,11 +79,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.toolSelectorService.getToolName();
     }
 
-    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeTypes | Textures {
+    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | Texture {
         return this.toolSelectorService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeTypes | Textures): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | Texture): void {
         if (setting === ToolSetting.JunctionSettings) {
             (value as JunctionSettings).hasJunction
                 ? this.junctionSizeGroup.controls.junctionSize.enable()
