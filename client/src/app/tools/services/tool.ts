@@ -31,6 +31,7 @@ export abstract class Tool {
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
+    onElementHover(element: SVGElement): void {};
     // tslint:enable: empty
 
     protected getMousePosition(event: MouseEvent): Vec2 {
