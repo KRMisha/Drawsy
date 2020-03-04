@@ -45,9 +45,9 @@
                     [value]="getSetting(ToolSetting.StrokeType)"
                     (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)"
                 >
-                    <mat-option [value]="StrokeTypes.FillWithBorder">Plein avec contour</mat-option>
-                    <mat-option [value]="StrokeTypes.FillOnly">Plein</mat-option>
-                    <mat-option [value]="StrokeTypes.BorderOnly">Contour</mat-option>
+                    <mat-option [value]="StrokeType.FillWithBorder">Plein avec contour</mat-option>
+                    <mat-option [value]="StrokeType.FillOnly">Plein</mat-option>
+                    <mat-option [value]="StrokeType.BorderOnly">Contour</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -59,11 +59,11 @@
             <mat-form-field class="select">
                 <mat-label>Type de texture</mat-label>
                 <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
-                    <mat-option [value]="Textures.Texture1">Vent d'automne</mat-option>
-                    <mat-option [value]="Textures.Texture2">Âme fragile</mat-option>
-                    <mat-option [value]="Textures.Texture3">Ombre du matin</mat-option>
-                    <mat-option [value]="Textures.Texture4">Chlorophylle</mat-option>
-                    <mat-option [value]="Textures.Texture5">Innocence juvénile</mat-option>
+                    <mat-option [value]="Texture.Blur">Vent d'automne</mat-option>
+                    <mat-option [value]="Texture.Graffiti">Âme fragile</mat-option>
+                    <mat-option [value]="Texture.Shadow">Ombre du matin</mat-option>
+                    <mat-option [value]="Texture.Matte">Chlorophylle</mat-option>
+                    <mat-option [value]="Texture.Fabric">Innocence juvénile</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

@@ -34,11 +34,8 @@ import { ColorFieldComponent } from '@app/color-picker/components/color-field/co
 import { ColorHexSelectorComponent } from '@app/color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
 import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
+import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { ExportDrawingComponent } from '@app/drawing/components/export-drawing/export-drawing/export-drawing.component';
-import { ImportDrawingComponent } from '@app/drawing/components/import-drawing/import-drawing/import-drawing.component';
-import { ImportExportDrawingComponent } from '@app/drawing/components/import-export-drawing/import-export-drawing.component';
-import { DrawingSettingsComponent } from '@app/editor/components/drawing-settings/drawing-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -68,7 +65,11 @@ import { GuideDirective } from '@app/guide/components/guide-directive/guide.dire
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
+import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
+import { ImportDrawingComponent } from '@app/modals/components/import-drawing/import-drawing.component';
+import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { DrawingPreviewComponent } from './drawing/components/drawing-preview/drawing-preview.component';
 
 @NgModule({
     declarations: [
@@ -114,6 +115,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         SidebarComponent,
         SidebarDrawerComponent,
         SidebarColorPickerComponent,
+        DrawingPreviewComponent,
     ],
     imports: [
         AppRoutingModule,

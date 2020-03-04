@@ -1,52 +1,52 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Drawing } from '@app/classes/drawing';
+import { Color } from '@app/classes/color';
+import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';;
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawingSerializerService {
-    constructor(private drawingService: DrawingService, private domSanitizer: DomSanitizer) {}
+    constructor(
+        private domSanitizer: DomSanitizer,
+        private drawingService: DrawingService,
+        private drawingPreviewService: DrawingPreviewService,
+    ) {}
 
-    exportCurrentDrawing(drawingRoot: SVGSVGElement): SafeUrl {
-        const blob = new Blob([drawingRoot.outerHTML], { type: 'image/svg+xml' });
+    exportSvgDrawing(): SafeUrl {
+        this.drawingPreviewService.finalizePreview();
+
+        const xmlHeader = '<?xml version="1.0" standalone="yes"?>';
+        const content = xmlHeader + this.drawingPreviewService.drawingPreviewRoot.outerHTML;
+        const blob = new Blob([content], { type: 'image/svg+xml' });
 
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
 
-    importSelectedDrawing(file: FileList, svgRootElement: SVGSVGElement): void {
+    importSvgDrawing(file: File): void {
         const fileReader: FileReader = new FileReader();
+        fileReader.readAsText(file);
 
-        fileReader.onloadend = () => {
-            const fileContent = fileReader.result as string;
+        const domParser = new DOMParser();
+        const document = domParser.parseFromString(fileReader.result as string, 'image/svg+xml');
+        const drawingRoot = document.getElementsByTagName('svg')[0];
 
-            const domParser = new DOMParser();
-            const doc = domParser.parseFromString(fileContent, 'image/svg+xml');
+        this.drawingService.dimensions.x = drawingRoot.viewBox.baseVal.width;
+        this.drawingService.dimensions.y = drawingRoot.viewBox.baseVal.height;
 
-            const svgBackgroundRect = doc.children[0].getElementsByTagName('rect')[0];
-            svgRootElement.getElementsByTagName('rect')[0].remove();
-            svgRootElement.append(svgBackgroundRect);
+        const backgroundRectFill = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+        const rgbaRegex = `/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/`;
+        const radix = 10;
+        const rgba = (backgroundRectFill.match(rgbaRegex) as RegExpMatchArray).map((x: string) => parseInt(x, radix));
+        this.drawingService.backgroundColor = Color.fromRgba.apply(rgba);
 
-            const svgDrawingContent = doc.children[0].getElementsByTagName('g')[0];
-            svgRootElement.getElementsByTagName('g')[0].remove();
-            svgRootElement.append(svgDrawingContent);
+        this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
+        this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
 
-            const importedDrawing: Drawing = new Drawing();
-
-            const svgMetadata = doc.children[0].getElementsByTagName('desc')[0];
-            importedDrawing.title = svgMetadata.getElementsByTagName('title')[0].innerHTML;
-            const labelString = svgMetadata.getElementsByTagName('desc')[0].innerHTML;
-
-            const labels = labelString.split(',');
-            for (const label of labels) {
-                if (label.trim()) {
-                    importedDrawing.addDescElement(label.trim());
-                }
-            }
-
-            this.drawingService.setDrawing(importedDrawing);
-        };
-        fileReader.readAsText(file[0]);
+        const svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
+        for (const element of Array.from(svgDrawingContent.children)) {
+            this.drawingService.addElement(element as SVGElement);
+        }
     }
 }
