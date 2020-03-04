@@ -71,11 +71,8 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     }
 
     draw(): void {
-        const color = new Color();
-        color.setHsv(this.colorPickerService.hue, 1, 1);
-
-        const colorStr = color.toRgbString();
-        this.context.fillStyle = colorStr;
+        const color = Color.fromHsv(this.colorPickerService.hue, 1, 1);
+        this.context.fillStyle = color.toRgbString();;
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
@@ -91,7 +88,6 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
-
         const circle = new Path2D();
         const radius = 10;
         circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
