@@ -2,6 +2,12 @@
     display: flex;
 }
 
+.drawing {
+    display: grid;
+    overflow: hidden;
+    width: min-content;
+}
+
 app-drawing {
     display: grid;
 }
