@@ -116,9 +116,10 @@ export class Color {
     setHex(hex: string): boolean {
         if (hexRegex.test(hex)) {
             // tslint:disable: no-magic-numbers
-            this.red = parseInt(hex.substring(0, 2), 16);
-            this.green = parseInt(hex.substring(2, 4), 16);
-            this.blue = parseInt(hex.substring(4, 6), 16);
+            const radix = 16;
+            this.red = parseInt(hex.substring(0, 2), radix);
+            this.green = parseInt(hex.substring(2, 4), radix);
+            this.blue = parseInt(hex.substring(4, 6), radix);
             // tslint:enable: no-magic-numbers
             return true;
         }
