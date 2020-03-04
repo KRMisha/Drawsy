@@ -34,8 +34,6 @@ export class DrawingService {
         return this._svgElements;
     }
 
-    constructor(private geometryService: GeometryService) {}
-
     addElement(element: SVGElement): void {
         this.svgElements.push(element);
         this.renderer.appendChild(this.svgDrawingContent, element);
@@ -81,9 +79,7 @@ export class DrawingService {
     }
 
     getElementsUnderArea(area: Rect): SVGElement[] {
-        return this.svgElements.filter((element: SVGElement) =>
-            this.geometryService.isRect1IntersectingRect2(area, this.getElementBounds(element)),
-        );
+        return this.svgElements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
     isDrawingStarted(): boolean {
@@ -92,7 +88,7 @@ export class DrawingService {
 
     getElementBounds(element: SVGElement): Rect {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
-        const drawingRootBounds = this.svgDrawingContent.getBoundingClientRect() as DOMRect;
+        const drawingRootBounds = this.drawingRoot.getBoundingClientRect() as DOMRect;
 
         return {
             x: svgElementBounds.x - drawingRootBounds.x,
