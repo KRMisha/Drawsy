@@ -1,24 +1,22 @@
-<div (window:resize)="onResize($event)" class="container">
-    <h1 mat-dialog-title class="mat-h1">Création de dessin</h1>
-    <form [formGroup]="drawingForm" (ngSubmit)="onSubmit()">
-        <mat-dialog-content>
-            <mat-form-field class="form-field">
-                <mat-label>Largeur</mat-label>
-                <input matInput formControlName="width" />
-                <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
-            </mat-form-field>
-            <mat-form-field class="form-field">
-                <mat-label>Hauteur</mat-label>
-                <input matInput formControlName="height" />
-                <mat-error *ngIf="drawingForm.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
-            </mat-form-field>
-            <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
-        </mat-dialog-content>
-        <mat-dialog-actions align="center">
-            <button mat-raised-button mat-dialog-close class="button">Annuler</button>
-            <button mat-raised-button mat-dialog-close type="submit" [disabled]="!drawingForm.valid" class="button" cdkFocusInitial>
-                Confirmer
-            </button>
-        </mat-dialog-actions>
-    </form>
-</div>
+<h1 mat-dialog-title class="mat-h1">Création de dessin</h1>
+<form class="container" [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <mat-form-field class="form-field">
+            <mat-label>Largeur</mat-label>
+            <input matInput formControlName="width" />
+            <mat-error *ngIf="drawingFormGroup.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <mat-label>Hauteur</mat-label>
+            <input matInput formControlName="height" />
+            <mat-error *ngIf="drawingFormGroup.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button mat-raised-button mat-dialog-close class="button">Annuler</button>
+        <button mat-raised-button mat-dialog-close type="submit" [disabled]="!drawingFormGroup.valid" class="button" cdkFocusInitial>
+            Confirmer
+        </button>
+    </mat-dialog-actions>
+</form>
