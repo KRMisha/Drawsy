@@ -12,8 +12,10 @@ import { Subject } from 'rxjs';
 export class DrawingService {
     private currentDrawing = new Drawing();
     private elementClickedSource = new Subject<SvgClickEvent>();
+    private elementHoveredSource = new Subject<SVGElement>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
+    elementHovered$ = this.elementHoveredSource.asObservable();
 
     renderer: Renderer2;
 
@@ -26,6 +28,9 @@ export class DrawingService {
         this.renderer.appendChild(this.rootElement, element);
         this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event } as SvgClickEvent);
+        });
+        this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
+            this.elementHoveredSource.next(element);
         });
     }
 
@@ -54,6 +59,10 @@ export class DrawingService {
             this.renderer.removeChild(this.rootElement, element);
         }
         this.currentDrawing.clearElements();
+    }
+
+    getElementsUnderPoint(point: Vec2): SVGElement[] {
+        return this.getElementsUnderArea({ x: point.x, y: point.y, width: 0, height: 0 });
     }
 
     getElementsUnderArea(area: Rect): SVGElement[] {
