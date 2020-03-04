@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
+import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/editor/classes/junction-settings';
 import { StrokeTypes, Textures, ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -31,4 +32,12 @@ export abstract class Tool {
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
     // tslint:enable: empty
+
+    protected getMousePosition(event: MouseEvent): Vec2 {
+        const rootBounds = this.drawingService.svgDrawingSurface.getBoundingClientRect() as DOMRect;
+        return {
+            x: event.clientX - rootBounds.x,
+            y: event.clientY - rootBounds.y,
+        } as Vec2;
+    }
 }

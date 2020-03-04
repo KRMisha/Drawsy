@@ -1,6 +1,7 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Drawing } from '@app/classes/drawing';
+import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { Subject } from 'rxjs';
@@ -11,8 +12,10 @@ import { Subject } from 'rxjs';
 export class DrawingService {
     private currentDrawing = new Drawing();
     private elementClickedSource = new Subject<SvgClickEvent>();
+    private elementHoveredSource = new Subject<SVGElement>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
+    elementHovered$ = this.elementHoveredSource.asObservable();
 
     renderer: Renderer2;
 
@@ -25,6 +28,9 @@ export class DrawingService {
         this.renderer.appendChild(this.rootElement, element);
         this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event } as SvgClickEvent);
+        });
+        this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
+            this.elementHoveredSource.next(element);
         });
     }
 
@@ -55,6 +61,30 @@ export class DrawingService {
         this.currentDrawing.clearElements();
     }
 
+    getElementsUnderPoint(point: Vec2): SVGElement[] {
+        return this.getElementsUnderArea({ x: point.x, y: point.y, width: 0, height: 0 });
+    }
+
+    getElementsUnderArea(area: Rect): SVGElement[] {
+        const allSvgElements = this.getSvgElements();
+        const selectedElements: SVGElement[] = [];
+        for (let i = allSvgElements.length - 1; i >= 0; i--) {
+            if (this.isElementUnderArea(area, this.getSvgElementBounds(allSvgElements[i]))) {
+                selectedElements.push(allSvgElements[i]);
+            }
+        }
+        return selectedElements;
+    }
+
+    isElementUnderArea(rect1: Rect, rect2: Rect): boolean {
+        return (
+            rect1.x + rect1.width >= rect2.x &&
+            rect1.x <= rect2.x + rect2.width &&
+            rect1.y + rect1.height >= rect2.y &&
+            rect1.y <= rect2.y + rect2.height
+        );
+    }
+
     isDrawingStarted(): boolean {
         return this.currentDrawing.hasElements();
     }
@@ -65,6 +95,36 @@ export class DrawingService {
 
     getBackgroundColor(): Color {
         return this.currentDrawing.backgroundColor;
+    }
+
+    getSvgElementBounds(svgElement: SVGElement): Rect {
+        const svgElementBounds = svgElement.getBoundingClientRect() as DOMRect;
+        const rootBounds = this.svgDrawingSurface.getBoundingClientRect() as DOMRect;
+
+        return {
+            x: svgElementBounds.x - rootBounds.x,
+            y: svgElementBounds.y - rootBounds.y,
+            width: svgElementBounds.width,
+            height: svgElementBounds.height,
+        } as Rect;
+    }
+
+    getSvgElementsBounds(svgElements: SVGElement[]): Rect | null {
+        if (svgElements.length === 0) {
+            return null;
+        }
+        const firstShapeRect = this.getSvgElementBounds(svgElements[0]);
+        const minPos = { x: firstShapeRect.x, y: firstShapeRect.y };
+        const maxPos = { x: firstShapeRect.x + firstShapeRect.width, y: firstShapeRect.y + firstShapeRect.height };
+
+        for (const svgElement of svgElements) {
+            const currentShapeRect = this.getSvgElementBounds(svgElement);
+            minPos.x = Math.min(minPos.x, currentShapeRect.x);
+            minPos.y = Math.min(minPos.y, currentShapeRect.y);
+            maxPos.x = Math.max(maxPos.x, currentShapeRect.x + currentShapeRect.width);
+            maxPos.y = Math.max(maxPos.y, currentShapeRect.y + currentShapeRect.height);
+        }
+        return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
     }
 
     getSvgElements(): SVGElement[] {
