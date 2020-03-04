@@ -82,7 +82,7 @@ export class ToolSelectionService extends Tool {
             this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
             this.hideSelectedShapesRect();
         }
-    
+
         if (this.currentMouseButtonDown === null) {
             this.currentMouseButtonDown = event.button;
         }

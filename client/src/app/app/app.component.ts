@@ -19,7 +19,7 @@ export class AppComponent {
     onKeyDown(event: KeyboardEvent): void {
         if (event.ctrlKey && event.key === 'o') {
             event.preventDefault();
-            this.modalService.openDialog(NewDrawingComponent);
+            this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
         }
     }
 }
