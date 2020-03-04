@@ -25,6 +25,10 @@ export class DrawingPreviewComponent implements AfterViewInit {
         this.drawingPreviewService.initializePreview();
     }
 
+    getBackgroundColor(): string {
+        return this.drawingPreviewService.backgroundColor.toRgbaString();
+    }
+
     getFilter(): string {
         return `url(#previewFilter${this.drawingPreviewService.previewFilter})`;
     }

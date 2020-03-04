@@ -48,6 +48,14 @@ export class ExportDrawingComponent {
         }
     }
 
+    get title(): string {
+        return this.drawingPreviewService.title;
+    }
+
+    set title(title: string) {
+        this.drawingPreviewService.title = title;
+    }
+
     get labels(): string[] {
         return this.drawingPreviewService.labels;
     }

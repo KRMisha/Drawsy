@@ -2,7 +2,7 @@ import { Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { JunctionSettings } from '@app/editor/classes/junction-settings';
+import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
 export abstract class Tool {
