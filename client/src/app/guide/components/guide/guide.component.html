@@ -18,7 +18,7 @@
             </button>
         </div>
         <div class="next">
-            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()">
+            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()" cdkFocusInitial>
                 Suivant <mat-icon class="icon">keyboard_arrow_right</mat-icon>
             </button>
         </div>
