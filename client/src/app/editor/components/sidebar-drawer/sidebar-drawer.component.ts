@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
@@ -17,7 +17,6 @@ const maximumPolygonSideCount = 12;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
-
     // Make enums available to template
     ToolSetting = ToolSetting;
     Texture = Texture;
@@ -73,7 +72,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
         }
         if (this.toolSelectorService.hasSetting(ToolSetting.PolygonSideCount)) {
-            this.polygonSideCountGroup.controls.polygonSideCount.setValue(this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount));
+            this.polygonSideCountGroup.controls.polygonSideCount.setValue(
+                this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount),
+            );
         }
     }
 

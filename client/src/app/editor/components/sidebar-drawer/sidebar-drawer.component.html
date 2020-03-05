@@ -53,14 +53,16 @@
     </div>
     <div *ngIf="hasSetting(ToolSetting.StrokeType)">
         <h2 class="mat-h2">Type de tracé</h2>
-        <mat-form-field class="dropdown">
-            <mat-label>Sélection</mat-label>
-            <mat-select [value]="getSetting(ToolSetting.StrokeType)" (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)">
-                <mat-option [value]="StrokeType.FillWithBorder">Plein avec contour</mat-option>
-                <mat-option [value]="StrokeType.FillOnly">Plein</mat-option>
-                <mat-option [value]="StrokeType.BorderOnly">Contour</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <div class="toggle-buttons-container">
+            <mat-button-toggle-group
+                [value]="getSetting(ToolSetting.StrokeType)"
+                (change)="setSetting(ToolSetting.StrokeType, $event.value)"
+            >
+                <mat-button-toggle [value]="StrokeType.FillWithBorder">Complet</mat-button-toggle>
+                <mat-button-toggle [value]="StrokeType.FillOnly">Plein</mat-button-toggle>
+                <mat-button-toggle [value]="StrokeType.BorderOnly">Contour</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
         <mat-divider class="divider"></mat-divider>
     </div>
     <div *ngIf="hasSetting(ToolSetting.Texture)">
