@@ -46,7 +46,7 @@ export class ToolLineService extends Tool {
             return;
         }
 
-        this.mousePosition = { x: event.offsetX, y: event.offsetY };
+        this.mousePosition = this.getMousePosition(event);
         this.updateNextPointPosition();
         this.lastPoint = this.nextPoint;
 

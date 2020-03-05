@@ -35,6 +35,11 @@ export class ToolSelectionService extends Tool {
     private svgUserSelectionRect: SVGElement;
     private svgControlPoints: SVGElement[] = [];
 
+    private arrowUpHeld = false;
+    private arrowDownHeld = false;
+    private arrowLeftHeld = false;
+    private arrowRightHeld = false;
+
     constructor(protected drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
     }
@@ -148,6 +153,14 @@ export class ToolSelectionService extends Tool {
         this.lastMousePosition = this.getMousePosition(event);
     }
 
+    onKeyDown(event: KeyboardEvent): void {
+        this.setArrowStateFromEvent(event, true);
+    }
+    
+    onKeyUp(event: KeyboardEvent): void {
+        this.setArrowStateFromEvent(event, false);
+    }
+
     onElementClick(event: MouseEvent, element: SVGElement): void {
         if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
             this.selectedElements = [element];
@@ -162,6 +175,41 @@ export class ToolSelectionService extends Tool {
     onToolDeselection(): void {
         this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
         this.hideSelectedShapesRect();
+    }
+
+    private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
+        switch (event.key) {
+            case "ArrowUp":
+                this.arrowUpHeld = state;
+                this.moveSelectionInArrowDirection()
+                break;
+            case "ArrowDown":
+                this.arrowDownHeld = state;
+                this.moveSelectionInArrowDirection()
+                break;
+            case "ArrowLeft":
+                this.arrowLeftHeld = state;
+                this.moveSelectionInArrowDirection()
+                break;
+            case "ArrowRight":
+                this.arrowRightHeld = state;
+                this.moveSelectionInArrowDirection()
+                break;
+        }
+    }
+
+    private moveSelectionInArrowDirection(): void {
+        const moveDirection: Vec2 = { x: 0, y: 0 };
+        const moveDelta = 3;
+        if (this.arrowLeftHeld !== this.arrowRightHeld) {
+            moveDirection.x = this.arrowRightHeld ? moveDelta : - moveDelta;
+        }
+        if (this.arrowUpHeld !== this.arrowDownHeld) {
+            moveDirection.y = this.arrowDownHeld ? moveDelta : - moveDelta;
+        }
+
+        this.drawingService.moveElementList(this.selectedElements, moveDirection);
+        this.updateSvgSelectedShapesRect(this.selectedElements);
     }
 
     private isMouseInsideSelection(mousePosition: Vec2): boolean {

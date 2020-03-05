@@ -7,7 +7,7 @@ import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { Subject } from 'rxjs';
 import { GeometryService } from './geometry.service';
 
-const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
+const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 
 @Injectable({
     providedIn: 'root',
