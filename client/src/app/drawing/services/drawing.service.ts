@@ -81,7 +81,7 @@ export class DrawingService {
         return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
             image.onload = () => {
                 resolve(image);
-            }
+            };
         });
     }
 
@@ -89,7 +89,7 @@ export class DrawingService {
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
         this.renderer.setAttribute(canvas, 'width', this.dimensions.x.toString());
         this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
-        
+
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
             this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
