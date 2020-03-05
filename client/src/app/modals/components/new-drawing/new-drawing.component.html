@@ -4,7 +4,7 @@
         <mat-form-field class="form-field">
             <mat-label>Largeur</mat-label>
             <input matInput formControlName="width" />
-            <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
+            <mat-error *ngIf="drawingFormGroup.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
         </mat-form-field>
         <mat-form-field class="form-field">
             <mat-label>Hauteur</mat-label>
