@@ -10,7 +10,7 @@ import { ModalService } from '@app/modals/services/modal.service';
     styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-    constructor(public drawingService: DrawingService, private modalService: ModalService) {}
+    constructor(private drawingService: DrawingService, private modalService: ModalService) {}
 
     openNewDrawingModal(): void {
         this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
@@ -18,5 +18,9 @@ export class HomeComponent {
 
     openGuideModal(): void {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    isDrawingStarted(): boolean {
+        return this.drawingService.isDrawingStarted();
     }
 }

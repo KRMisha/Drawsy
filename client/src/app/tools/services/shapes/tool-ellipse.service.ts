@@ -12,7 +12,7 @@ import { Shape } from '@app/tools/services/shapes/shape';
     providedIn: 'root',
 })
 export class ToolEllipseService extends Shape {
-    constructor(drawingService: DrawingService, colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Ellipse);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
