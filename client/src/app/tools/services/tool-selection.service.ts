@@ -156,7 +156,7 @@ export class ToolSelectionService extends Tool {
     onKeyDown(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, true);
     }
-    
+
     onKeyUp(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, false);
     }
@@ -179,21 +179,21 @@ export class ToolSelectionService extends Tool {
 
     private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
         switch (event.key) {
-            case "ArrowUp":
+            case 'ArrowUp':
                 this.arrowUpHeld = state;
-                this.moveSelectionInArrowDirection()
+                this.moveSelectionInArrowDirection();
                 break;
-            case "ArrowDown":
+            case 'ArrowDown':
                 this.arrowDownHeld = state;
-                this.moveSelectionInArrowDirection()
+                this.moveSelectionInArrowDirection();
                 break;
-            case "ArrowLeft":
+            case 'ArrowLeft':
                 this.arrowLeftHeld = state;
-                this.moveSelectionInArrowDirection()
+                this.moveSelectionInArrowDirection();
                 break;
-            case "ArrowRight":
+            case 'ArrowRight':
                 this.arrowRightHeld = state;
-                this.moveSelectionInArrowDirection()
+                this.moveSelectionInArrowDirection();
                 break;
         }
     }
@@ -202,10 +202,10 @@ export class ToolSelectionService extends Tool {
         const moveDirection: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
         if (this.arrowLeftHeld !== this.arrowRightHeld) {
-            moveDirection.x = this.arrowRightHeld ? moveDelta : - moveDelta;
+            moveDirection.x = this.arrowRightHeld ? moveDelta : -moveDelta;
         }
         if (this.arrowUpHeld !== this.arrowDownHeld) {
-            moveDirection.y = this.arrowDownHeld ? moveDelta : - moveDelta;
+            moveDirection.y = this.arrowDownHeld ? moveDelta : -moveDelta;
         }
 
         this.drawingService.moveElementList(this.selectedElements, moveDirection);
