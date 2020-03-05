@@ -3,8 +3,10 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
-import { Shape } from './shape';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { Shape } from '@app/tools/services/shapes/shape';
 
 @Injectable({
     providedIn: 'root',
@@ -12,6 +14,7 @@ import { Shape } from './shape';
 export class ToolEllipseService extends Shape {
     constructor(drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Ellipse);
+        this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
 
     protected createNewShape(): SVGElement {
