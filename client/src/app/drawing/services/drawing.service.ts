@@ -203,5 +203,6 @@ export class DrawingService {
             transformations.translation.y += moveOffset.y;
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
+        this.cachedCanvas = null;
     }
 }
