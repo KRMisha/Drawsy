@@ -54,7 +54,11 @@ export class DrawingSerializerService {
                 .substring(backgroundRectFill.indexOf('(') + 1, backgroundRectFill.lastIndexOf(')'))
                 .split(' ')
                 .map((x: string) => parseInt(x.trim(), radix));
-            this.drawingService.backgroundColor = Color.fromRgba(rgba[0], rgba[1], rgba[2], rgba[3]);
+            const redIndex = 0;
+            const greenIndex = 1;
+            const blueIndex = 2;
+            const alphaIndex = 3;
+            this.drawingService.backgroundColor = Color.fromRgba(rgba[redIndex], rgba[greenIndex], rgba[blueIndex], rgba[alphaIndex]);
 
             this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
             this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');

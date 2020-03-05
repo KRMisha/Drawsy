@@ -5,7 +5,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { defaultPolygonSideCount } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from './shape';
 
 @Injectable({
@@ -18,8 +18,18 @@ export class ToolPolygonService extends Shape {
     }
 
     protected createNewShape(): SVGElement {
-        const rectangle: SVGElement = this.renderer.createElement('polygon', 'svg');
-        return rectangle;
+        const polygon: SVGElement = this.renderer.createElement('polygon', 'svg');
+        this.renderer.setAttribute(polygon, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
+        this.renderer.setAttribute(polygon, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(polygon, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+        this.renderer.setAttribute(polygon, 'stroke-linecap', 'round');
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.FillOnly) {
+            this.renderer.setAttribute(polygon, 'stroke', 'none');
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly) {
+            this.renderer.setAttribute(polygon, 'fill', 'none');
+        }
+        return polygon;
     }
 
     protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {

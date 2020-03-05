@@ -3,9 +3,9 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import { defaultStrokeSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from '@app/tools/services/shapes/shape';
 
 @Injectable({
@@ -14,11 +14,21 @@ import { Shape } from '@app/tools/services/shapes/shape';
 export class ToolEllipseService extends Shape {
     constructor(protected drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Ellipse);
-        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        this.toolSettings.set(ToolSetting.StrokeSize, defaultStrokeSize);
     }
 
     protected createNewShape(): SVGElement {
         const ellipse = this.renderer.createElement('ellipse', 'svg');
+        this.renderer.setAttribute(ellipse, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
+        this.renderer.setAttribute(ellipse, 'stroke-linecap', 'square');
+        this.renderer.setAttribute(ellipse, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(ellipse, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.FillOnly) {
+            this.renderer.setAttribute(ellipse, 'stroke', 'none');
+        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly) {
+            this.renderer.setAttribute(ellipse, 'fill', 'none');
+        }
         return ellipse;
     }
 

@@ -39,33 +39,19 @@ export class ToolLineService extends Tool {
             hasJunction: false,
             junctionSize: defaultJunctionSize,
         } as JunctionSettings);
-        this.name = 'Ligne';
     }
 
     onMouseDown(event: MouseEvent): void {
         if (!this.isMouseInside) {
-            if (this.isCurrentlyDrawing) {
-                this.stopDrawing();
-            }
             return;
         }
 
-        this.mousePosition = { x: event.offsetX, y: event.offsetY };
+        this.mousePosition = this.getMousePosition(event);
         this.updateNextPointPosition();
         this.lastPoint = this.nextPoint;
 
         if (!this.isCurrentlyDrawing) {
-            this.isCurrentlyDrawing = true;
-
-            this.groupElement = this.renderer.createElement('g', 'svg');
-            this.drawingService.addElement(this.groupElement);
-
-            this.polyline = this.createNewPolyline();
-            this.renderer.appendChild(this.groupElement, this.polyline);
-
-            this.previewLine = this.renderer.createElement('line', 'svg');
-            this.drawingService.addElement(this.previewLine);
-            this.updatePreviewLine();
+            this.startDrawingShape();
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', this.nextPoint.x.toString());
@@ -89,17 +75,12 @@ export class ToolLineService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseInside) {
-            this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.updateNextPointPosition();
-            this.updatePreviewLinePosition();
-        }
+        this.mousePosition = this.getMousePosition(event);
+        this.updateNextPointPosition();
+        this.updatePreviewLinePosition();
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
-        if (!this.isMouseInside) {
-            return;
-        }
         if (this.junctionPoints.length > 0) {
             this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
         }
@@ -170,6 +151,34 @@ export class ToolLineService extends Tool {
         }
     }
 
+    onToolDeselection(): void {
+        if (this.isCurrentlyDrawing) {
+            this.stopDrawing();
+        }
+    }
+
+    private startDrawingShape(): void {
+        this.isCurrentlyDrawing = true;
+
+        const junction = this.toolSettings.get(ToolSetting.JunctionSettings) as JunctionSettings;
+        this.hasJunction = junction.hasJunction;
+        this.junctionSize = junction.junctionSize;
+
+        const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
+        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue);
+
+        this.groupElement = this.renderer.createElement('g', 'svg');
+        this.renderer.setAttribute(this.groupElement, 'shape-padding', padding.toString());
+        this.drawingService.addElement(this.groupElement);
+
+        this.polyline = this.createNewPolyline();
+        this.renderer.appendChild(this.groupElement, this.polyline);
+
+        this.previewLine = this.renderer.createElement('line', 'svg');
+        this.drawingService.addElement(this.previewLine);
+        this.updatePreviewLine();
+    }
+
     private removeLastPointFromLine(): void {
         if (this.points.length >= minimumPointsToEnableBackspace) {
             this.points.length = this.points.length - geometryDimension;
@@ -203,7 +212,7 @@ export class ToolLineService extends Tool {
         const nextPoint: Vec2 = { x: 0, y: 0 };
         const horizontalAngles = [180, 360]; // tslint:disable-line: no-magic-numbers
         const verticalAngles = [90, 270]; // tslint:disable-line: no-magic-numbers
-        // tslint:disable-next-line: prefer-switch (semantically not a switch)
+
         if (horizontalAngles.includes(angle)) {
             nextPoint.x = mousePosition.x;
             nextPoint.y = lastPoint.y;
@@ -232,10 +241,6 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(polyline, 'stroke-linecap', 'round');
         this.renderer.setAttribute(polyline, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(polyline, 'points', '');
-
-        const junction = this.toolSettings.get(ToolSetting.JunctionSettings) as JunctionSettings;
-        this.hasJunction = junction.hasJunction;
-        this.junctionSize = junction.junctionSize;
         return polyline;
     }
 

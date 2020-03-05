@@ -100,6 +100,9 @@ export class ToolSelectorService implements OnDestroy {
     }
 
     setSelectedTool(toolIndex: number): void {
+        if (this.selectedTool) {
+            this.selectedTool.onToolDeselection();
+        }
         this.selectedTool = this.toolHolderService.tools[toolIndex];
     }
 
