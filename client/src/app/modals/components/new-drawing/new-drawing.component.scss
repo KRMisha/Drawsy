@@ -1,17 +1,13 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-}
-
 mat-dialog-content::-webkit-scrollbar {
     display: none;
 }
 
-.form-field {
+.form-field,
+.mat-h1,
+.content {
     text-align: center;
 }
 
 .button {
-    width: 45%;
+    width: 27%;
 }

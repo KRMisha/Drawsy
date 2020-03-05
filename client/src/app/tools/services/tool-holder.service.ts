@@ -7,6 +7,7 @@ import { Tool } from '@app/tools/services/tool';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
 import { ToolSelectionService } from '@app/tools/services/tool-selection.service';
 import { ToolPolygonService } from './shapes/tool-polygon.service';
+import { ToolEyedropperService } from './tool-eyedropper.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +23,8 @@ export class ToolHolderService {
         tool5: ToolSelectionService,
         tool6: ToolEllipseService,
         tool7: ToolPolygonService,
+        tool8: ToolEyedropperService,
     ) {
-        this.tools = [tool1, tool2, tool3, tool4, tool5, tool6, tool7];
+        this.tools = [tool1, tool2, tool3, tool4, tool5, tool6, tool7, tool8];
     }
 }

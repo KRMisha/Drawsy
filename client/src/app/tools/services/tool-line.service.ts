@@ -3,7 +3,7 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { JunctionSettings } from '@app/editor/classes/junction-settings';
+import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';

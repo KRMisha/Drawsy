@@ -1,10 +1,10 @@
 <h1 mat-dialog-title class="mat-h1">Création de dessin</h1>
-<form class="container" [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()">
-    <mat-dialog-content>
+<form [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="content">
         <mat-form-field class="form-field">
             <mat-label>Largeur</mat-label>
             <input matInput formControlName="width" />
-            <mat-error *ngIf="drawingFormGroup.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
+            <mat-error *ngIf="drawingForm.controls.width.invalid">{{ getWidthErrorMessage() }}</mat-error>
         </mat-form-field>
         <mat-form-field class="form-field">
             <mat-label>Hauteur</mat-label>

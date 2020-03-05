@@ -24,7 +24,7 @@ export class ExportDrawingComponent {
 
     exportDrawing(): void {
         this.drawingPreviewService.finalizePreview();
-        this.fileUrl = this.drawingSerializerService.exportSvgDrawing();
+        this.fileUrl = this.drawingSerializerService.exportDrawingAsSvg();
     }
 
     addLabel(event: MatChipInputEvent): void {
@@ -46,6 +46,14 @@ export class ExportDrawingComponent {
         if (index >= 0) {
             this.drawingPreviewService.labels.splice(index, 1);
         }
+    }
+
+    get title(): string {
+        return this.drawingPreviewService.title;
+    }
+
+    set title(title: string) {
+        this.drawingPreviewService.title = title;
     }
 
     get labels(): string[] {

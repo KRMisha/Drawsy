@@ -1,4 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Color } from '@app/classes/color';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -41,8 +42,8 @@ export class DrawingPreviewService {
         this.renderer.appendChild(this.svgDesc, labelsText);
     }
 
-    getBackgroundColor(): string {
-        return this.drawingService.backgroundColor.toRgbaString();
+    get backgroundColor(): Color {
+        return this.drawingService.backgroundColor;
     }
 
     get title(): string {

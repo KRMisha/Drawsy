@@ -22,19 +22,23 @@ export class ToolPolygonService extends Shape {
         return rectangle;
     }
 
-    protected updateShape(shapeArea: Rect, shape: SVGElement): void {
+    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
         const points: Vec2[] = [];
         const numSides = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
 
+        let angle = -Math.PI / 2;
         for (let i = 0; i < numSides; i++) {
-            const angle = (i * 2 * Math.PI) / numSides;
-            const point = { x: (Math.cos(angle) * shapeArea.width) / 2, y: (Math.sin(angle) * shapeArea.height) / 2 } as Vec2;
+            angle += (2 * Math.PI) / numSides;
+            const point = {
+                x: ((Math.cos(angle) * shapeArea.width) / 2) * scale.x + shapeArea.x + shapeArea.width / 2,
+                y: ((Math.sin(angle) * shapeArea.height) / 2) * scale.y + shapeArea.y + shapeArea.height / 2,
+            } as Vec2;
             points.push(point);
         }
 
         let pointsStr = '';
         for (const point of points) {
-            pointsStr += `${point.x + shapeArea.x + shapeArea.width / 2}, ${point.y + shapeArea.y + shapeArea.height / 2} `;
+            pointsStr += `${point.x}, ${point.y} `;
         }
 
         this.renderer.setAttribute(shape, 'points', pointsStr);

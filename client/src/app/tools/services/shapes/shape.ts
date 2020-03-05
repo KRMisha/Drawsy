@@ -20,7 +20,7 @@ export class Shape extends Tool {
         this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
     }
 
-    protected updateShape(shapeArea: Rect, shape: SVGElement): void {} // tslint:disable-line: no-empty
+    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {} // tslint:disable-line: no-empty
 
     protected createNewShape(): SVGElement {
         return {} as SVGElement;
@@ -84,29 +84,21 @@ export class Shape extends Tool {
         }
 
         const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
+        const isCurrentMouseRightOfOrigin = mousePositionCopy.x >= this.origin.x;
+        const isCurrentMouseBelowOrigin = mousePositionCopy.y >= this.origin.y;
+        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
+
         if (this.isShiftDown) {
-            const width = Math.abs(mousePositionCopy.x - this.origin.x);
-            const height = Math.abs(mousePositionCopy.y - this.origin.y);
-            const desiredSideSize = Math.max(width, height);
+            const dimensions: Vec2 = { x: Math.abs(mousePositionCopy.x - this.origin.x), y: Math.abs(mousePositionCopy.y - this.origin.y) };
+            const desiredSideSize = Math.max(dimensions.x, dimensions.y);
+            const deltaDimensions: Vec2 = { x: Math.abs(dimensions.x - desiredSideSize), y: Math.abs(dimensions.y - desiredSideSize) };
 
-            const deltaWidth = Math.abs(width - desiredSideSize);
-            const deltaHeight = Math.abs(height - desiredSideSize);
-
-            if (mousePositionCopy.x >= this.origin.x) {
-                mousePositionCopy.x += deltaWidth;
-            } else {
-                mousePositionCopy.x -= deltaWidth;
-            }
-
-            if (mousePositionCopy.y >= this.origin.y) {
-                mousePositionCopy.y += deltaHeight;
-            } else {
-                mousePositionCopy.y -= deltaHeight;
-            }
+            mousePositionCopy.x += isCurrentMouseRightOfOrigin ? deltaDimensions.x : -deltaDimensions.x;
+            mousePositionCopy.y += isCurrentMouseBelowOrigin ? deltaDimensions.y : -deltaDimensions.y;
         }
-        console.log(mousePositionCopy);
+
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
-        this.updateShape(shapeArea, this.shape);
+        this.updateShape(shapeArea, scale, this.shape);
     }
 
     private setElementAttributes(element: SVGElement): void {
