@@ -32,6 +32,8 @@ export class ToolEyedropperService extends Tool {
         const blueIndexOffset = 2;
         const alphaIndexOffset = 3;
         const valuesPerColorCount = 4;
+        pixel.x = Math.round(pixel.x);
+        pixel.y = Math.round(pixel.y);
 
         return new Promise<Color>((resolve: (color: Color) => void) => {
             this.drawingService.getCanvasFromSvgRoot(this.drawingService.drawingRoot).then((canvas: HTMLCanvasElement) => {
