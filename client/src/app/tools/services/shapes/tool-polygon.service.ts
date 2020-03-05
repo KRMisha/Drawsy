@@ -36,8 +36,6 @@ export class ToolPolygonService extends Shape {
             points.push(point);
         }
 
-        console.log(scale.x);
-
         let pointsStr = '';
         for (const point of points) {
             pointsStr += `${point.x}, ${point.y} `;

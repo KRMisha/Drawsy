@@ -12,6 +12,10 @@ const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
     providedIn: 'root',
 })
 export class DrawingService {
+    private cachedCanvas: HTMLCanvasElement | null = null;
+
+    private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
+
     private elementClickedSource = new Subject<SvgClickEvent>();
     private elementHoveredSource = new Subject<SVGElement>();
 
@@ -27,7 +31,15 @@ export class DrawingService {
     title = 'Sans titre';
     labels: string[] = [];
     dimensions: Vec2 = defaultDimensions;
-    backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
+
+    set backgroundColor(color: Color) {
+        this._backgroundColor = color;
+        this.cachedCanvas = null;
+    }
+
+    get backgroundColor(): Color {
+        return this._backgroundColor;
+    }
 
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
     get svgElements(): SVGElement[] {
@@ -44,6 +56,7 @@ export class DrawingService {
         this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
             this.elementHoveredSource.next(element);
         });
+        this.cachedCanvas = null;
     }
 
     removeElement(element: SVGElement): void {
@@ -52,6 +65,7 @@ export class DrawingService {
             this.svgElements.splice(elementToRemoveIndex, 1);
             this.renderer.removeChild(this.svgDrawingContent, element);
         }
+        this.cachedCanvas = null;
     }
 
     addUiElement(element: SVGElement): void {
@@ -66,12 +80,14 @@ export class DrawingService {
         for (const element of this.svgElements) {
             this.addElement(element);
         }
+        this.cachedCanvas = null;
     }
 
     clearStoredElements(): void {
         for (const element of this.svgElements) {
             this.renderer.removeChild(this.svgDrawingContent, element);
         }
+        this.cachedCanvas = null;
     }
 
     async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
@@ -81,19 +97,26 @@ export class DrawingService {
         return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
             image.onload = () => {
                 resolve(image);
-            }
+            };
         });
     }
 
     async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
+        if (this.cachedCanvas !== null) {
+            return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
+                resolve(this.cachedCanvas as HTMLCanvasElement);
+            });
+        }
+
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
         this.renderer.setAttribute(canvas, 'width', this.dimensions.x.toString());
         this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
-        
+
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
             this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
                 context.drawImage(image, 0, 0);
+                this.cachedCanvas = canvas;
                 resolve(canvas);
             });
         });
