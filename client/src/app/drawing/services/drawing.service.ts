@@ -74,6 +74,33 @@ export class DrawingService {
         }
     }
 
+    async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
+        const svg64 = btoa(root.outerHTML);
+        const image = new Image();
+        image.src = 'data:image/svg+xml;base64,' + svg64;
+        // tslint:disable-next-line: typedef
+        return new Promise<HTMLImageElement>((resolve) => {
+            image.onload = () => {
+                resolve(image);
+            }
+        });
+    }
+
+    async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
+        const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
+        this.renderer.setAttribute(canvas, 'width', this.dimensions.x.toString());
+        this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
+        
+        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        // tslint:disable-next-line: typedef
+        return new Promise<HTMLCanvasElement>((resolve) => {
+            this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
+                context.drawImage(image, 0, 0);
+                resolve(canvas);
+            });
+        });
+    }
+
     getElementsUnderPoint(point: Vec2): SVGElement[] {
         return this.getElementsUnderArea({ x: point.x, y: point.y, width: 0, height: 0 });
     }

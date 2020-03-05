@@ -24,7 +24,7 @@ export class ExportDrawingComponent {
 
     exportDrawing(): void {
         this.drawingPreviewService.finalizePreview();
-        this.fileUrl = this.drawingSerializerService.exportSvgDrawing();
+        this.fileUrl = this.drawingSerializerService.exportDrawingAsSvg();
     }
 
     addLabel(event: MatChipInputEvent): void {
