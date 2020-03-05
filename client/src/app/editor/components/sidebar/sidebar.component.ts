@@ -73,15 +73,15 @@ export class SidebarComponent implements OnInit {
     }
 
     openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 500, y: 500 });
+        this.modalService.openDialog(DrawingSettingsComponent, { x: 350, y: 440 });
     }
 
     openImportExportModal(): void {
-        this.modalService.openDialog(ImportExportDrawingComponent, { x: 500, y: 600 });
+        this.modalService.openDialog(ImportExportDrawingComponent, { x: 1000, y: 1000 });
     }
 
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
+        this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
     }
 
     openGuideModal(): void {
