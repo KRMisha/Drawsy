@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
-const widthMargin = 348;
+const widthMargin = 332;
 const maximumHeightWidth = 10000;
 const integerRegexPattern = '^[0-9]*$';
 
