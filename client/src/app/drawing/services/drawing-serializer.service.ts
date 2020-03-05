@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -8,37 +7,33 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     providedIn: 'root',
 })
 export class DrawingSerializerService {
+    private renderer: Renderer2;
+
     constructor(
-        private domSanitizer: DomSanitizer,
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
-    ) {}
+        private rendererFactory: RendererFactory2,
+    ) {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
+    }
 
-    exportDrawingAsSvg(): SafeUrl {
-        this.drawingPreviewService.finalizePreview();
-
+    exportDrawingAsSvg(fileName: string): void {
         const xmlHeader = '<?xml version="1.0" standalone="yes"?>\n';
         const content = xmlHeader + this.drawingPreviewService.drawingPreviewRoot.outerHTML;
         const blob = new Blob([content], { type: 'image/svg+xml' });
 
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+        const link = this.renderer.createElement('a');
+        link.download = fileName + '.svg';
+        link.href = window.URL.createObjectURL(blob);
+        link.click();
     }
 
-    async exportDrawingAsPng(): Promise<SafeUrl> {
-        return new Promise<SafeUrl>((resolve: (safeUrl: SafeUrl) => void): void => {
-            this.drawingService.getImageFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((image: HTMLImageElement) => {
-                const blob = new Blob([image.innerHTML], { type: 'image/png' });
-                resolve(this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob)));
-            });
-        });
-    }
-
-    async exportDrawingAsJpeg(): Promise<SafeUrl> {
-        return new Promise<SafeUrl>((resolve: (safeUrl: SafeUrl) => void): void => {
-            this.drawingService.getImageFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((image: HTMLImageElement) => {
-                const blob = new Blob([image.outerHTML], { type: 'image/jpeg' });
-                resolve(this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob)));
-            });
+    exportDrawing(fileName: string, fileType: string): void {
+        this.drawingService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((canvas: HTMLCanvasElement) => {
+            const link = this.renderer.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL(fileType);
+            link.click();
         });
     }
 

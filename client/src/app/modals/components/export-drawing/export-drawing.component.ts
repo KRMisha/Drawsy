@@ -1,7 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { SafeUrl } from '@angular/platform-browser';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
@@ -18,20 +17,25 @@ export class ExportDrawingComponent {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    fileUrl: SafeUrl;
 
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
+    constructor(
+        private drawingSerializerService: DrawingSerializerService,
+        private drawingPreviewService: DrawingPreviewService,
+    ) {}
 
     exportDrawingAsSvg(): void {
         this.drawingPreviewService.finalizePreview();
-        this.fileUrl = this.drawingSerializerService.exportDrawingAsSvg();
+        this.drawingSerializerService.exportDrawingAsSvg(this.drawingPreviewService.title);
     }
 
     exportDrawingAsPng(): void {
         this.drawingPreviewService.finalizePreview();
-        this.drawingSerializerService.exportDrawingAsPng().then((safeUrl: SafeUrl) => {
-            this.fileUrl = safeUrl;
-        });
+        this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.png', 'image/png');    
+    }
+
+    exportDrawingAsJpeg(): void {
+        this.drawingPreviewService.finalizePreview();
+        this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.jpeg', 'image/jpeg');
     }
 
     addLabel(event: MatChipInputEvent): void {
