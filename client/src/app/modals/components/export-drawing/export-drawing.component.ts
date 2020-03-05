@@ -18,10 +18,7 @@ export class ExportDrawingComponent {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(
-        private drawingSerializerService: DrawingSerializerService,
-        private drawingPreviewService: DrawingPreviewService,
-    ) {}
+    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 
     exportDrawingAsSvg(): void {
         this.drawingPreviewService.finalizePreview();
@@ -30,7 +27,7 @@ export class ExportDrawingComponent {
 
     exportDrawingAsPng(): void {
         this.drawingPreviewService.finalizePreview();
-        this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.png', 'image/png');    
+        this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.png', 'image/png');
     }
 
     exportDrawingAsJpeg(): void {

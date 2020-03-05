@@ -36,25 +36,25 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
         this.hexCombinedRgbChangedSubscription = this.hexSelectorGroup.controls.hexCombinedRgb.valueChanges.subscribe(() => {
             this.updateHexRgbComponents();
             this.updateColorPicker();
-            this.hexSelectorGroup.updateValueAndValidity({emitEvent: false});
+            this.hexSelectorGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexRedChangedSubscription = this.hexSelectorGroup.controls.hexRed.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorGroup.updateValueAndValidity({emitEvent: false});
+            this.hexSelectorGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexGreenChangedSubscription = this.hexSelectorGroup.controls.hexGreen.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorGroup.updateValueAndValidity({emitEvent: false});
+            this.hexSelectorGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexBlueChangedSubscription = this.hexSelectorGroup.controls.hexBlue.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorGroup.updateValueAndValidity({emitEvent: false});
+            this.hexSelectorGroup.updateValueAndValidity({ emitEvent: false });
         });
     }
 
@@ -73,9 +73,10 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     }
 
     private updateHexCombinedRgb(): void {
-        const hexCombinedRgbString = this.hexSelectorGroup.controls.hexRed.value +
-                                     this.hexSelectorGroup.controls.hexGreen.value +
-                                     this.hexSelectorGroup.controls.hexBlue.value;
+        const hexCombinedRgbString =
+            this.hexSelectorGroup.controls.hexRed.value +
+            this.hexSelectorGroup.controls.hexGreen.value +
+            this.hexSelectorGroup.controls.hexBlue.value;
         this.hexSelectorGroup.controls.hexCombinedRgb.setValue(hexCombinedRgbString, { emitEvent: false });
     }
 
@@ -96,7 +97,7 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
 
     private updateColorPicker(): void {
         if (this.hexSelectorGroup.controls.hexCombinedRgb.valid) {
-            const color = Color.fromHex(this.hexSelectorGroup.controls.hexCombinedRgb.value)
+            const color = Color.fromHex(this.hexSelectorGroup.controls.hexCombinedRgb.value);
             color.alpha = this.colorPickerService.alpha;
             this.colorPickerService.setColor(color);
         }

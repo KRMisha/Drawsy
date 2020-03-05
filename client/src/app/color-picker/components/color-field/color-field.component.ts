@@ -72,7 +72,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
     draw(): void {
         const color = Color.fromHsv(this.colorPickerService.hue, 1, 1);
-        this.context.fillStyle = color.toRgbString();;
+        this.context.fillStyle = color.toRgbString();
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
