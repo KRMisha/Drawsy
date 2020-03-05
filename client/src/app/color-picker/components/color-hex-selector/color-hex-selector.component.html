@@ -1,29 +1,27 @@
-<div class="container">
-    <form class="form" (keydown.enter)="colorPickerService.onColorSubmit()">
-        <mat-form-field *ngIf="isHex" class="form-field">
-            <mat-label>Hex # </mat-label>
-            <input matInput (input)="updateColorHex()" [formControl]="hexRgb" />
-            <mat-error *ngIf="hexRgb.invalid && (hexRgb.dirty || hexRgb.touched)">Invalide</mat-error>
+<form class="container" [formGroup]="hexSelectorGroup" (ngSubmit)="colorPickerService.onColorSubmit()">
+    <mat-form-field *ngIf="isCombinedHex" class="form-field">
+        <mat-label>Hex # </mat-label>
+        <input matInput formControlName="hexCombinedRgb" />
+        <mat-error *ngIf="hexSelectorGroup.controls.hexCombinedRgb.invalid">Invalide</mat-error>
+    </mat-form-field>
+    <div *ngIf="!isCombinedHex" class="all-components">
+        <mat-form-field class="single-component">
+            <mat-label>Rouge</mat-label>
+            <input matInput formControlName="hexRed" />
+            <mat-error *ngIf="hexSelectorGroup.controls.hexRed.invalid">Invalide</mat-error>
         </mat-form-field>
-        <div *ngIf="!isHex" class="all-components">
-            <mat-form-field class="single-component">
-                <mat-label>Rouge</mat-label>
-                <input matInput (input)="updateColorRgb()" [formControl]="hexRed" />
-                <mat-error *ngIf="hexRgb.invalid && (hexRgb.dirty || hexRgb.touched)">Invalide</mat-error>
-            </mat-form-field>
-            <mat-form-field class="single-component">
-                <mat-label>Vert</mat-label>
-                <input matInput (input)="updateColorRgb()" [formControl]="hexGreen" />
-                <mat-error *ngIf="hexRgb.invalid && (hexRgb.dirty || hexRgb.touched)">Invalide</mat-error>
-            </mat-form-field>
-            <mat-form-field class="single-component">
-                <mat-label>Bleu</mat-label>
-                <input matInput (input)="updateColorRgb()" [formControl]="hexBlue" />
-                <mat-error *ngIf="hexRgb.invalid && (hexRgb.dirty || hexRgb.touched)">Invalide</mat-error>
-            </mat-form-field>
-        </div>
-    </form>
+        <mat-form-field class="single-component">
+            <mat-label>Vert</mat-label>
+            <input matInput formControlName="hexGreen" />
+            <mat-error *ngIf="hexSelectorGroup.controls.hexGreen.invalid">Invalide</mat-error>
+        </mat-form-field>
+        <mat-form-field class="single-component">
+            <mat-label>Bleu</mat-label>
+            <input matInput formControlName="hexBlue" />
+            <mat-error *ngIf="hexSelectorGroup.controls.hexBlue.invalid">Invalide</mat-error>
+        </mat-form-field>
+    </div>
     <button mat-icon-button (click)="swapMode($event)">
         <mat-icon>swap_vert</mat-icon>
     </button>
-</div>
+</form>

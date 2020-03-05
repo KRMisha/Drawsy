@@ -5,7 +5,7 @@ import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 const widthMargin = 332;
-const maximumHeightWidth = 10000;
+const maximumDimension = 10000;
 const integerRegexPattern = '^[0-9]*$';
 
 @Component({
@@ -17,13 +17,13 @@ export class NewDrawingComponent implements OnInit {
     wereDimensionsModified = false;
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    drawingForm = new FormGroup({
+    drawingFormGroup = new FormGroup({
         width: new FormControl(
             window.innerWidth - widthMargin,
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
-                Validators.max(maximumHeightWidth),
+                Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
             ]),
         ),
@@ -32,7 +32,7 @@ export class NewDrawingComponent implements OnInit {
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
-                Validators.max(maximumHeightWidth),
+                Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
             ]),
         ),
@@ -41,10 +41,10 @@ export class NewDrawingComponent implements OnInit {
     constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.drawingForm.controls.width.valueChanges.subscribe(() => {
+        this.drawingFormGroup.controls.width.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
-        this.drawingForm.controls.height.valueChanges.subscribe(() => {
+        this.drawingFormGroup.controls.height.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
     }
@@ -57,7 +57,7 @@ export class NewDrawingComponent implements OnInit {
             return;
         }
 
-        this.drawingService.dimensions = { x: this.drawingForm.controls.width.value, y: this.drawingForm.controls.height.value };
+        this.drawingService.dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
         this.drawingService.backgroundColor = this.backgroundColor;
         this.drawingService.clearStoredElements();
         this.router.navigate(['/editor']);
@@ -76,18 +76,18 @@ export class NewDrawingComponent implements OnInit {
     }
 
     protected getWidthErrorMessage(): string {
-        return this.getErrorMessage(this.drawingForm.controls.width);
+        return this.getErrorMessage(this.drawingFormGroup.controls.width);
     }
 
     protected getHeightErrorMessage(): string {
-        return this.getErrorMessage(this.drawingForm.controls.height);
+        return this.getErrorMessage(this.drawingFormGroup.controls.height);
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
-            this.drawingForm.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
-            this.drawingForm.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
+            this.drawingFormGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
+            this.drawingFormGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
         }
     }
 }
