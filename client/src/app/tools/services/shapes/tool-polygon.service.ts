@@ -12,7 +12,7 @@ import { Shape } from './shape';
     providedIn: 'root',
 })
 export class ToolPolygonService extends Shape {
-    constructor(drawingService: DrawingService, colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Polygon);
         this.toolSettings.set(ToolSetting.PolygonSideCount, defaultPolygonSideCount);
     }
@@ -35,8 +35,6 @@ export class ToolPolygonService extends Shape {
             } as Vec2;
             points.push(point);
         }
-
-        console.log(scale.x);
 
         let pointsStr = '';
         for (const point of points) {

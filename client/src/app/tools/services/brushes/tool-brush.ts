@@ -8,7 +8,7 @@ import { Tool } from '@app/tools/services/tool';
 export abstract class ToolBrush extends Tool {
     private path: SVGPathElement;
 
-    constructor(drawingService: DrawingService, private colorService: ColorService, name: string) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService, name: string) {
         super(drawingService, name);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
     }

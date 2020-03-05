@@ -32,7 +32,7 @@ export class ToolLineService extends Tool {
     private hasJunction: boolean;
     private junctionSize: number;
 
-    constructor(drawingService: DrawingService, private colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService, ToolNames.Line);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {

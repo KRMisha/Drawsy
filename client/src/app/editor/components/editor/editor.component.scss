@@ -1,12 +1,22 @@
 .container {
-    display: flex;
+    display: grid;
+    grid-template-areas: 'sidebar drawing';
+    grid-template-columns: min-content auto;
+}
+
+.drawing-container {
+    max-width: auto;
+    max-height: 100vh;
+    overflow: auto;
+}
+
+.sidebar {
+    grid-area: sidebar;
 }
 
 .drawing {
-    overflow: auto;
-    width: min-content;
-}
-
-app-drawing {
+    grid-area: drawing;
     display: grid;
+    width: min-content;
+    height: min-content;
 }
