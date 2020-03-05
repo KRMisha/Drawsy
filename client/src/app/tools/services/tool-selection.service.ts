@@ -120,6 +120,7 @@ export class ToolSelectionService extends Tool {
                 const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
                 this.updateVisibleRect(userSelectionRect, this.svgUserSelectionRect);
                 if (this.currentMouseButtonDown === ButtonId.Left) {
+                    console.log('a');
                     this.selectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
                     this.updateSvgSelectedShapesRect(this.selectedElements);
                 } else if (this.currentMouseButtonDown === ButtonId.Right) {
@@ -138,7 +139,6 @@ export class ToolSelectionService extends Tool {
             this.controlPointHeld = ControlPoints.None;
             return;
         }
-        this.isMouseDown = false;
 
         if (!this.isMovingSelection || this.isSimpleClick(event)) {
             this.updateSelectionOnMouseUp(event);
@@ -148,6 +148,7 @@ export class ToolSelectionService extends Tool {
             this.currentMouseButtonDown = null;
         }
 
+        this.isMouseDown = false;
         this.userJustClickedOnShape = false;
         this.isMovingSelection = false;
         this.lastMousePosition = this.getMousePosition(event);
@@ -162,6 +163,10 @@ export class ToolSelectionService extends Tool {
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
+        this.userJustClickedOnShape = true;
+        if (this.isMovingSelection) {
+            return;
+        }
         if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
             this.selectedElements = [element];
             this.updateSvgSelectedShapesRect(this.selectedElements);
@@ -169,7 +174,6 @@ export class ToolSelectionService extends Tool {
             this.inverseObjectsSelection([element], this.selectedElements);
             this.updateSvgSelectedShapesRect(this.selectedElements);
         }
-        this.userJustClickedOnShape = true;
     }
 
     onToolDeselection(): void {
