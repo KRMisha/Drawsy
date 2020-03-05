@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
+const maximumStrokeSize = 100;
 const maximumJunctionSize = 500;
 const maximumPolygonSideCount = 12;
 
@@ -17,13 +18,13 @@ const maximumPolygonSideCount = 12;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
-
     // Make enums available to template
     ToolSetting = ToolSetting;
     Texture = Texture;
     StrokeType = StrokeType;
 
     sizeSubscription: Subscription;
+    strokeSizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
     polygonSideCountSubscription: Subscription;
 
@@ -33,6 +34,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             Validators.compose([
                 Validators.required,
                 Validators.max(maximumSize),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    strokeSizeGroup = new FormGroup({
+        size: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumStrokeSize),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
             ]),
@@ -68,12 +81,17 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.toolSelectorService.hasSetting(ToolSetting.Size)) {
             this.sizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.Size));
         }
+        if (this.toolSelectorService.hasSetting(ToolSetting.StrokeSize)) {
+            this.strokeSizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.StrokeSize));
+        }
         if (this.toolSelectorService.hasSetting(ToolSetting.JunctionSettings)) {
             const junctionSize = (this.toolSelectorService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
             this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
         }
         if (this.toolSelectorService.hasSetting(ToolSetting.PolygonSideCount)) {
-            this.polygonSideCountGroup.controls.polygonSideCount.setValue(this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount));
+            this.polygonSideCountGroup.controls.polygonSideCount.setValue(
+                this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount),
+            );
         }
     }
 
@@ -86,6 +104,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+            }
+        });
+
+        this.strokeSizeSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.strokeSizeGroup.controls.size.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
             }
         });
 

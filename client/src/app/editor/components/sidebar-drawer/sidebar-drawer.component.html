@@ -17,6 +17,23 @@
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
+    <div *ngIf="hasSetting(ToolSetting.StrokeSize)" class="size-container">
+        <h2 class="mat-h2">Taille bordure</h2>
+        <form [formGroup]="strokeSizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="1"
+            max="100"
+            (input)="strokeSizeGroup.controls.size.setValue($event.value)"
+            [value]="strokeSizeGroup.controls.size.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
         <form [formGroup]="junctionSizeGroup">
