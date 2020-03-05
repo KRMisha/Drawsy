@@ -14,7 +14,7 @@ export class Shape extends Tool {
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(drawingService: DrawingService, private colorService: ColorService, name: string) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService, name: string) {
         super(drawingService, name);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
         this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);

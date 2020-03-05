@@ -12,7 +12,7 @@ import { Shape } from './shape';
     providedIn: 'root',
 })
 export class ToolPolygonService extends Shape {
-    constructor(drawingService: DrawingService, colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Polygon);
         this.toolSettings.set(ToolSetting.PolygonSideCount, defaultPolygonSideCount);
     }

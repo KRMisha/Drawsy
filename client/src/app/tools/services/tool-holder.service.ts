@@ -16,15 +16,15 @@ export class ToolHolderService {
     tools: Tool[];
 
     constructor(
-        tool1: ToolPencilService,
-        tool2: ToolPaintbrushService,
-        tool3: ToolLineService,
-        tool4: ToolRectangleService,
-        tool5: ToolSelectionService,
-        tool6: ToolEllipseService,
-        tool7: ToolPolygonService,
-        tool8: ToolEyedropperService,
+        private tool1: ToolPencilService,
+        private tool2: ToolPaintbrushService,
+        private tool3: ToolLineService,
+        private tool4: ToolRectangleService,
+        private tool5: ToolSelectionService,
+        private tool6: ToolEllipseService,
+        private tool7: ToolPolygonService,
+        private tool8: ToolEyedropperService,
     ) {
-        this.tools = [tool1, tool2, tool3, tool4, tool5, tool6, tool7, tool8];
+        this.tools = [this.tool1, this.tool2, this.tool3, this.tool4, this.tool5, this.tool6, this.tool7, this.tool8];
     }
 }

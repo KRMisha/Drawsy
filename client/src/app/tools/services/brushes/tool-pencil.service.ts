@@ -8,7 +8,7 @@ import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
     providedIn: 'root',
 })
 export class ToolPencilService extends ToolBrush {
-    constructor(drawingService: DrawingService, colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, colorService: ColorService) {
         super(drawingService, colorService, ToolNames.Pencil);
     }
 }

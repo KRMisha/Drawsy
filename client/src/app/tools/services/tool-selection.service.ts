@@ -32,7 +32,7 @@ export class ToolSelectionService extends Tool {
     private svgUserSelectionRect: SVGElement;
     private svgControlPoints: SVGElement[] = [];
 
-    constructor(drawingService: DrawingService) {
+    constructor(protected drawingService: DrawingService) {
         super(drawingService, ToolNames.Selection);
     }
 

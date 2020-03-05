@@ -17,7 +17,7 @@ export class ToolRectangleService extends Tool {
     private mousePosition: Vec2;
     private isSquare = false;
 
-    constructor(drawingService: DrawingService, private colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService, ToolNames.Rectangle);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
         this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
