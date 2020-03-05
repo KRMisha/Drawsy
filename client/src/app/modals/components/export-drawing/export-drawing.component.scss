@@ -6,3 +6,24 @@
         }
     }
 }
+
+.container {
+    width: 95%;
+    display: grid;
+    grid-template-rows: 78vh auto;
+}
+
+.item-content {
+    max-height: unset !important;
+}
+
+.item-buttons {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.export-button {
+    width: max-content;
+    margin: 4px;
+}
