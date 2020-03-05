@@ -14,12 +14,32 @@ export class DrawingSerializerService {
         private drawingPreviewService: DrawingPreviewService,
     ) {}
 
-    exportSvgDrawing(): SafeUrl {
+    exportDrawingAsSvg(): SafeUrl {
         this.drawingPreviewService.finalizePreview();
 
         const xmlHeader = '<?xml version="1.0" standalone="yes"?>\n';
         const content = xmlHeader + this.drawingPreviewService.drawingPreviewRoot.outerHTML;
         const blob = new Blob([content], { type: 'image/svg+xml' });
+
+        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+    }
+
+    exportDrawingAsPng(): SafeUrl {
+        // const serializer = new XMLSerializer();
+        // const svgContentString = serializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
+
+        // const image = new Image();
+
+        const blob = new Blob(['test'], { type: 'image/png' });
+
+        // const canvas = document.createElement('canvas');
+        // const context = canvas.getContext('2d');
+
+        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+    }
+
+    exportDrawingAsJpeg(): SafeUrl {
+        const blob = new Blob(['test'], { type: 'image/jpeg' });
 
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
