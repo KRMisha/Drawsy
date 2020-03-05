@@ -78,8 +78,7 @@ export class DrawingService {
         const svg64 = btoa(root.outerHTML);
         const image = new Image();
         image.src = 'data:image/svg+xml;base64,' + svg64;
-        // tslint:disable-next-line: typedef
-        return new Promise<HTMLImageElement>((resolve) => {
+        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
             image.onload = () => {
                 resolve(image);
             }
@@ -92,8 +91,7 @@ export class DrawingService {
         this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
         
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        // tslint:disable-next-line: typedef
-        return new Promise<HTMLCanvasElement>((resolve) => {
+        return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
             this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
                 context.drawImage(image, 0, 0);
                 resolve(canvas);
