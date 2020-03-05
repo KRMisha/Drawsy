@@ -24,24 +24,22 @@ export class DrawingSerializerService {
         return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
     }
 
-    exportDrawingAsPng(): SafeUrl {
-        // const serializer = new XMLSerializer();
-        // const svgContentString = serializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
-
-        // const image = new Image();
-
-        const blob = new Blob(['test'], { type: 'image/png' });
-
-        // const canvas = document.createElement('canvas');
-        // const context = canvas.getContext('2d');
-
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+    async exportDrawingAsPng(): Promise<SafeUrl> {
+        return new Promise<SafeUrl>((resolve: (safeUrl: SafeUrl) => void): void => {
+            this.drawingService.getImageFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((image: HTMLImageElement) => {
+                const blob = new Blob([image.innerHTML], { type: 'image/png' });
+                resolve(this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob)));
+            });
+        });
     }
 
-    exportDrawingAsJpeg(): SafeUrl {
-        const blob = new Blob(['test'], { type: 'image/jpeg' });
-
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+    async exportDrawingAsJpeg(): Promise<SafeUrl> {
+        return new Promise<SafeUrl>((resolve: (safeUrl: SafeUrl) => void): void => {
+            this.drawingService.getImageFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((image: HTMLImageElement) => {
+                const blob = new Blob([image.outerHTML], { type: 'image/jpeg' });
+                resolve(this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob)));
+            });
+        });
     }
 
     importSvgDrawing(file: File): void {

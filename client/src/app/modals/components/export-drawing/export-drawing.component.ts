@@ -22,9 +22,16 @@ export class ExportDrawingComponent {
 
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 
-    exportDrawing(): void {
+    exportDrawingAsSvg(): void {
         this.drawingPreviewService.finalizePreview();
         this.fileUrl = this.drawingSerializerService.exportDrawingAsSvg();
+    }
+
+    exportDrawingAsPng(): void {
+        this.drawingPreviewService.finalizePreview();
+        this.drawingSerializerService.exportDrawingAsPng().then((safeUrl: SafeUrl) => {
+            this.fileUrl = safeUrl;
+        });
     }
 
     addLabel(event: MatChipInputEvent): void {
