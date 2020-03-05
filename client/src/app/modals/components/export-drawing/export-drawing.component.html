@@ -37,10 +37,10 @@
             <app-drawing-preview></app-drawing-preview>
         </mat-card>
     </mat-dialog-content>
-
-    <mat-dialog-actions align="end">
-        <a [href]="fileUrl" download="file.svg">
-            <button mat-raised-button (click)="exportDrawing()">Sauvegarder</button>
-        </a>
-    </mat-dialog-actions>
 </form>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button (click)="exportDrawingAsSvg()">Sauvegarder en format SVG</button>
+    <button mat-raised-button (click)="exportDrawingAsPng()">Sauvegarder en format PNG</button>
+    <button mat-raised-button (click)="exportDrawingAsJpeg()">Sauvegarder en format JPEG</button>
+</mat-dialog-actions>

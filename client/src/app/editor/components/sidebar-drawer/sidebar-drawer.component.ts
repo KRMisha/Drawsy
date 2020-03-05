@@ -108,10 +108,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | Texture): void {
         if (setting === ToolSetting.JunctionSettings) {
-            if  ((value as JunctionSettings).hasJunction) {
+            if ((value as JunctionSettings).hasJunction) {
                 this.junctionSizeGroup.controls.junctionSize.enable();
-            }
-            else {
+            } else {
                 this.junctionSizeGroup.controls.junctionSize.disable();
             }
         }

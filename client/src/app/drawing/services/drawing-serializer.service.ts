@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -8,65 +7,63 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     providedIn: 'root',
 })
 export class DrawingSerializerService {
+    private renderer: Renderer2;
+
     constructor(
-        private domSanitizer: DomSanitizer,
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
-    ) {}
+        private rendererFactory: RendererFactory2,
+    ) {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
+    }
 
-    exportDrawingAsSvg(): SafeUrl {
-        this.drawingPreviewService.finalizePreview();
-
+    exportDrawingAsSvg(fileName: string): void {
         const xmlHeader = '<?xml version="1.0" standalone="yes"?>\n';
         const content = xmlHeader + this.drawingPreviewService.drawingPreviewRoot.outerHTML;
         const blob = new Blob([content], { type: 'image/svg+xml' });
 
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+        const link = this.renderer.createElement('a');
+        link.download = fileName + '.svg';
+        link.href = window.URL.createObjectURL(blob);
+        link.click();
     }
 
-    exportDrawingAsPng(): SafeUrl {
-        // const serializer = new XMLSerializer();
-        // const svgContentString = serializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
-
-        // const image = new Image();
-
-        const blob = new Blob(['test'], { type: 'image/png' });
-
-        // const canvas = document.createElement('canvas');
-        // const context = canvas.getContext('2d');
-
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
-    }
-
-    exportDrawingAsJpeg(): SafeUrl {
-        const blob = new Blob(['test'], { type: 'image/jpeg' });
-
-        return this.domSanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+    exportDrawing(fileName: string, fileType: string): void {
+        this.drawingService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((canvas: HTMLCanvasElement) => {
+            const link = this.renderer.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL(fileType);
+            link.click();
+        });
     }
 
     importSvgDrawing(file: File): void {
         const fileReader: FileReader = new FileReader();
+
+        fileReader.onload = () => {
+            const domParser = new DOMParser();
+            const document = domParser.parseFromString(fileReader.result as string, 'image/svg+xml');
+            const drawingRoot = document.getElementsByTagName('svg')[0];
+
+            this.drawingService.dimensions.x = drawingRoot.viewBox.baseVal.width;
+            this.drawingService.dimensions.y = drawingRoot.viewBox.baseVal.height;
+
+            const backgroundRectFill = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+            const radix = 10;
+            const rgba = backgroundRectFill
+                .substring(backgroundRectFill.indexOf('(') + 1, backgroundRectFill.lastIndexOf(')'))
+                .split(' ')
+                .map((x: string) => parseInt(x.trim(), radix));
+            this.drawingService.backgroundColor = Color.fromRgba(rgba[0], rgba[1], rgba[2], rgba[3]);
+
+            this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
+            this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+
+            const svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
+            for (const element of Array.from(svgDrawingContent.children)) {
+                this.drawingService.addElement(element as SVGElement);
+            }
+        };
         fileReader.readAsText(file);
-
-        const domParser = new DOMParser();
-        const document = domParser.parseFromString(fileReader.result as string, 'image/svg+xml');
-        const drawingRoot = document.getElementsByTagName('svg')[0];
-
-        this.drawingService.dimensions.x = drawingRoot.viewBox.baseVal.width;
-        this.drawingService.dimensions.y = drawingRoot.viewBox.baseVal.height;
-
-        const backgroundRectFill = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
-        const rgbaRegex = `/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/`;
-        const radix = 10;
-        const rgba = (backgroundRectFill.match(rgbaRegex) as RegExpMatchArray).map((x: string) => parseInt(x, radix));
-        this.drawingService.backgroundColor = Color.fromRgba.apply(rgba);
-
-        this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
-        this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-
-        const svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
-        for (const element of Array.from(svgDrawingContent.children)) {
-            this.drawingService.addElement(element as SVGElement);
-        }
     }
 }
