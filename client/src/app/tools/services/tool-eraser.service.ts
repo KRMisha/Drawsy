@@ -69,6 +69,7 @@ export class ToolEraserService extends Tool {
 
     onToolDeselection(): void {
         this.svgEraserElement.setAttribute('display', 'none');
+        this.svgSelectedShapeRect.setAttribute('display', 'none');
     }
 
     private onMousePositionChange(mousePosition: Vec2): void {

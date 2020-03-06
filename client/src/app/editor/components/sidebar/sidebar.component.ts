@@ -32,6 +32,7 @@ export class SidebarComponent implements OnInit {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
+    // tslint:disable-next-line: cyclomatic-complexity
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
@@ -40,11 +41,26 @@ export class SidebarComponent implements OnInit {
                 case '1':
                     this.setSelectedTool(3);
                     break;
+                case '2':
+                    this.setSelectedTool(4);
+                    break;
+                case '3':
+                    this.setSelectedTool(5);
+                    break;
                 case 'c':
                     this.setSelectedTool(0);
                     break;
+                case 'e':
+                    this.setSelectedTool(8);
+                    break;
+                case 'i':
+                    this.setSelectedTool(6);
+                    break;
                 case 'l':
                     this.setSelectedTool(2);
+                    break;
+                case 's':
+                    this.setSelectedTool(7);
                     break;
                 case 'w':
                     this.setSelectedTool(1);
@@ -86,6 +102,7 @@ export class SidebarComponent implements OnInit {
         if (toolIndex < 0 || toolIndex >= this.buttons.length) {
             return;
         }
+        console.log(toolIndex);
         this.drawer.open();
         this.selectedButton = this.buttons[toolIndex];
         this.toolSelectorService.setSelectedTool(toolIndex);

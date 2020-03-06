@@ -97,6 +97,7 @@ export class ToolSelectionService extends Tool {
                 this.updateVisibleRect(this.svgUserSelectionRect, rect);
             }
         } else {
+            this.selectedElements = [];
             this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
             this.hideSelectedShapesRect();
         }
@@ -165,6 +166,11 @@ export class ToolSelectionService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'a' && event.ctrlKey) {
+            this.selectedElements = [...this.drawingService.svgElements];
+            this.updateSvgSelectedShapesRect(this.selectedElements);
+            return;
+        }
         this.setArrowStateFromEvent(event, true);
         this.moveSelectionInArrowDirection();
     }
