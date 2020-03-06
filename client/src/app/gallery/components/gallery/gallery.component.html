@@ -1,28 +1,46 @@
 <div class="container">
     <div mat-dialog-title>
         <h1 class="mat-h1">Galerie de dessins</h1>
+
+        <mat-form-field class="chip-list">
+            <mat-chip-list #chipList aria-label="Label selection">
+                <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
+                    {{ label }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                    placeholder="Rercherche par étiquette"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addLabel($event)"
+                />
+            </mat-chip-list>
+        </mat-form-field>
     </div>
     <mat-dialog-content class="content">
         <div class="card-container" *ngFor="let container of containers">
-            <mat-card class="card">
-                <mat-card-header>
-                    <mat-card-title>{{ container.title }}</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="content-container">
-                    <div class="drawing-container">
-                        <!-- <img class="drawing" src="{{ container.link }}" /> -->
-                    </div>
-                    <mat-chip-list #chipList>
-                        <mat-chip *ngFor="let label of container.labels">
-                            {{ label }}
-                        </mat-chip>
-                    </mat-chip-list>
-                </mat-card-content>
-                <mat-card-actions align="end">
-                    <button mat-raised-button class="button">Effacer</button>
-                    <button mat-raised-button class="button">Charger</button>
-                </mat-card-actions>
-            </mat-card>
+            <div *ngIf="hasSearchLabel(container)">
+                <mat-card class="card">
+                    <mat-card-header>
+                        <mat-card-title>{{ container.title }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="content-container">
+                        <div class="drawing-container">
+                            <!-- <img class="drawing" src="{{ container.link }}" /> -->
+                        </div>
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let label of container.labels">
+                                {{ label }}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </mat-card-content>
+                    <mat-card-actions align="end">
+                        <button mat-raised-button class="button">Effacer</button>
+                        <button mat-raised-button class="button">Charger</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
