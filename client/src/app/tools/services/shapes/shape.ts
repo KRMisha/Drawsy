@@ -47,6 +47,7 @@ export class Shape extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
+        this.isMouseDown = this.isMouseInside;
         if (this.isMouseInside) {
             this.shape = this.createNewShape();
             this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());

@@ -34,6 +34,23 @@
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
+    <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
+        <h2 class="mat-h2">Taille de l'efface</h2>
+        <form [formGroup]="eraserSizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="3"
+            max="50"
+            (input)="eraserSizeGroup.controls.size.setValue($event.value)"
+            [value]="eraserSizeGroup.controls.size.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
         <form [formGroup]="junctionSizeGroup">
