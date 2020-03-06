@@ -1,0 +1,29 @@
+<div class="container">
+    <div mat-dialog-title>
+        <h1 class="mat-h1">Galerie de dessins</h1>
+    </div>
+    <mat-dialog-content class="content">
+        <div class="card-container" *ngFor="let link of links; let i = index">
+            <mat-card class="card">
+                <mat-card-header>
+                    <mat-card-title>Titre du dessin</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <img class="drawing" src="{{ link }}" />
+                    <mat-chip-list #chipList aria-label="Fruit selection">
+                        <mat-chip>
+                            Étiquette
+                        </mat-chip>
+                    </mat-chip-list>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                    <button mat-raised-button class="button">Effacer</button>
+                    <button mat-raised-button class="button">Charger</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button mat-dialog-close class="button">Fermer</button>
+    </mat-dialog-actions>
+</div>

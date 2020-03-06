@@ -3,6 +3,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
+import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
@@ -105,5 +106,9 @@ export class SidebarComponent implements OnInit {
 
     openGuideModal(): void {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    openGalleryModal(): void {
+        this.modalService.openDialog(GalleryComponent, { x: 800, y: 1000 });
     }
 }

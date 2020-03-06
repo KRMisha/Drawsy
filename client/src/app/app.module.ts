@@ -41,6 +41,7 @@ import { EditorComponent } from '@app/editor/components/editor/editor.component'
 import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
+import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -84,6 +85,7 @@ import { DrawingPreviewComponent } from './drawing/components/drawing-preview/dr
         DrawingSettingsComponent,
         EditorComponent,
         ExportDrawingComponent,
+        GalleryComponent,
         GuideCalligraphyComponent,
         GuideCalligraphyComponent,
         GuideColorComponent,
@@ -154,6 +156,7 @@ import { DrawingPreviewComponent } from './drawing/components/drawing-preview/dr
     entryComponents: [
         DrawingSettingsComponent,
         ExportDrawingComponent,
+        GalleryComponent,
         GuideCalligraphyComponent,
         GuideColorComponent,
         GuideColorPickerComponent,
