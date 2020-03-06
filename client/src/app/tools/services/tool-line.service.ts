@@ -167,7 +167,7 @@ export class ToolLineService extends Tool {
         this.junctionSize = junction.junctionSize;
 
         const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
-        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue);
+        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue) / 2;
 
         this.groupElement = this.renderer.createElement('g', 'svg');
         this.renderer.setAttribute(this.groupElement, 'shape-padding', padding.toString());
