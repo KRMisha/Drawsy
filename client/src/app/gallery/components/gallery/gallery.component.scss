@@ -3,20 +3,30 @@
 }
 
 .card {
-    margin-bottom: 8px;
-    margin-top: 8px;
     background-color: #505050;
-    justify-content: center;
     text-align: center;
+    height: 100% !important;
+}
+
+.content-container {
+    max-height: 540px !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .drawing {
     max-width: 500px;
     max-height: 500px;
-    width: 100%;
-    height: 100%;
     background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.content {
+    max-height: 80vh !important;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 682px;
+    justify-content: space-between;
 }

@@ -109,6 +109,6 @@ export class SidebarComponent implements OnInit {
     }
 
     openGalleryModal(): void {
-        this.modalService.openDialog(GalleryComponent, { x: 800, y: 1000 });
+        this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });
     }
 }
