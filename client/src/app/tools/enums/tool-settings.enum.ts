@@ -1,6 +1,7 @@
 export enum ToolSetting {
     Size,
     StrokeSize,
+    EraserSize,
     JunctionSettings,
     StrokeType,
     Texture,

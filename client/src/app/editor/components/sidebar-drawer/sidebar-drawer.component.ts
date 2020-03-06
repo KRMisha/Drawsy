@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
 const maximumStrokeSize = 100;
+const maximumEraserSize = 50;
+const minimumEraserSize = 3;
 const maximumJunctionSize = 500;
 const maximumPolygonSideCount = 12;
 
@@ -25,6 +27,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     sizeSubscription: Subscription;
     strokeSizeSubscription: Subscription;
+    eraserSizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
     polygonSideCountSubscription: Subscription;
 
@@ -47,6 +50,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.max(maximumStrokeSize),
                 Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    eraserSizeGroup = new FormGroup({
+        size: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumEraserSize),
+                Validators.min(minimumEraserSize),
                 Validators.pattern(integerRegexPattern),
             ]),
         ),
@@ -84,6 +99,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.toolSelectorService.hasSetting(ToolSetting.StrokeSize)) {
             this.strokeSizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.StrokeSize));
         }
+        if (this.toolSelectorService.hasSetting(ToolSetting.EraserSize)) {
+            this.eraserSizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.EraserSize));
+        }
         if (this.toolSelectorService.hasSetting(ToolSetting.JunctionSettings)) {
             const junctionSize = (this.toolSelectorService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
             this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
@@ -113,6 +131,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.eraserSizeSubscription = this.eraserSizeGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.eraserSizeGroup.controls.size.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.EraserSize, this.eraserSizeGroup.controls.size.value);
+            }
+        });
+
         this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
                 this.toolSelectorService.setSetting(ToolSetting.JunctionSettings, {
@@ -135,6 +159,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.sizeSubscription.unsubscribe();
         this.junctionSizeSubscription.unsubscribe();
+        this.strokeSizeSubscription.unsubscribe();
+        this.eraserSizeSubscription.unsubscribe();
+        this.polygonSideCountSubscription.unsubscribe();
     }
 
     getToolName(): string {
@@ -172,9 +199,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return formControl.hasError('required')
             ? 'Entrez une taille'
             : formControl.hasError('min')
-            ? 'Valeur positive seulement'
+            ? 'Valeur trop petite'
             : formControl.hasError('max')
-            ? 'Valeur maximale dépassée'
+            ? 'Valeur trop grande'
             : formControl.hasError('pattern')
             ? 'Nombre entier invalide'
             : '';

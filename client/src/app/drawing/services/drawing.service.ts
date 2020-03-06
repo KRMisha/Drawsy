@@ -193,6 +193,13 @@ export class DrawingService {
         return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
     }
 
+    updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
+        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
+        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
+        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
+        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
+    }
+
     moveElementList(elements: SVGElement[], moveOffset: Vec2): void {
         for (const element of elements) {
             const transformations = this.transformationMap.get(element);
