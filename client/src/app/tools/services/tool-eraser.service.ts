@@ -24,6 +24,8 @@ export class ToolEraserService extends Tool {
 
     private svgElementsDeletedDuringDrag: SVGElement[] = [];
 
+    private drawingElementsCopy: SVGElement[] = [];
+
     constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolNames.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, defaultSize);
@@ -51,12 +53,16 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        this.drawingElementsCopy = [...this.drawingService.svgElements];
         this.onMousePositionChange(this.getMousePosition(event));
     }
 
     onMouseUp(event: MouseEvent): void {
         if (this.svgElementsDeletedDuringDrag.length > 0) {
-            this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag.reverse()));
+            this.svgElementsDeletedDuringDrag.sort((element1: SVGElement, element2: SVGElement) => {
+                return this.drawingElementsCopy.indexOf(element1) - this.drawingElementsCopy.indexOf(element2);
+            });
+            this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
             this.svgElementsDeletedDuringDrag = [];
         }
     }

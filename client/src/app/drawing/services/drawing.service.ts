@@ -22,6 +22,8 @@ export class DrawingService {
 
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+
     private elementClickedSource = new Subject<SvgClickEvent>();
     private elementHoveredSource = new Subject<SVGElement>();
 
@@ -42,11 +44,11 @@ export class DrawingService {
         this._backgroundColor = color;
         this.cachedCanvas = null;
     }
+
     get backgroundColor(): Color {
         return this._backgroundColor;
     }
 
-    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
     get svgElements(): SVGElement[] {
         return this._svgElements;
     }
@@ -102,16 +104,15 @@ export class DrawingService {
 
     reappendStoredElements(): void {
         for (const element of this.svgElements) {
-            this.addElement(element);
+            this.renderer.appendChild(this.svgDrawingContent, element);
         }
         this.cachedCanvas = null;
     }
 
     clearStoredElements(): void {
-        for (const element of this.svgElements) {
-            this.renderer.removeChild(this.svgDrawingContent, element);
+        while(this.svgElements.length > 0) {
+            this.removeElement(this.svgElements[0]);
         }
-        this.cachedCanvas = null;
     }
 
     async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
