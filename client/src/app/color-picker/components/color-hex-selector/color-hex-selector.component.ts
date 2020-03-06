@@ -29,6 +29,8 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngOnInit(): void {
+        this.updateAll(this.colorPickerService.getColor().getHex());
+
         this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.updateAll(color.getHex());
         });
