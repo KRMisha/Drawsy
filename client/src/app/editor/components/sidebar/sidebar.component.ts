@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
+import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
@@ -21,12 +22,17 @@ export class SidebarComponent implements OnInit {
 
     private areShortcutsEnabled = true;
 
-    constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {}
+    constructor(
+        private toolSelectorService: ToolSelectorService,
+        private modalService: ModalService,
+        private commandService: CommandService,
+    ) {}
 
     ngOnInit(): void {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
+    // tslint:disable-next-line: cyclomatic-complexity
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
@@ -35,16 +41,45 @@ export class SidebarComponent implements OnInit {
                 case '1':
                     this.setSelectedTool(3);
                     break;
+                case '2':
+                    this.setSelectedTool(4);
+                    break;
+                case '3':
+                    this.setSelectedTool(5);
+                    break;
                 case 'c':
                     this.setSelectedTool(0);
                     break;
+                case 'e':
+                    this.setSelectedTool(8);
+                    break;
+                case 'i':
+                    this.setSelectedTool(6);
+                    break;
                 case 'l':
                     this.setSelectedTool(2);
+                    break;
+                case 's':
+                    this.setSelectedTool(7);
                     break;
                 case 'w':
                     this.setSelectedTool(1);
                     break;
                 // tslint:enable: no-magic-numbers
+                case 'z': {
+                    if (event.ctrlKey) {
+                        this.commandService.undo();
+                        this.toolSelectorService.selectedTool.onToolDeselection();
+                    }
+                    break;
+                }
+                case 'Z': {
+                    if (event.ctrlKey) {
+                        this.commandService.redo();
+                        this.toolSelectorService.selectedTool.onToolDeselection();
+                    }
+                    break;
+                }
             }
         }
     }
@@ -67,21 +102,22 @@ export class SidebarComponent implements OnInit {
         if (toolIndex < 0 || toolIndex >= this.buttons.length) {
             return;
         }
+        console.log(toolIndex);
         this.drawer.open();
         this.selectedButton = this.buttons[toolIndex];
         this.toolSelectorService.setSelectedTool(toolIndex);
     }
 
     openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 500, y: 500 });
+        this.modalService.openDialog(DrawingSettingsComponent, { x: 350, y: 440 });
     }
 
     openImportExportModal(): void {
-        this.modalService.openDialog(ImportExportDrawingComponent, { x: 500, y: 600 });
+        this.modalService.openDialog(ImportExportDrawingComponent, { x: 1000, y: 1000 });
     }
 
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
+        this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
     }
 
     openGuideModal(): void {

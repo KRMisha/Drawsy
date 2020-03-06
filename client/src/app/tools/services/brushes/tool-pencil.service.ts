@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
 import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
@@ -8,7 +9,7 @@ import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
     providedIn: 'root',
 })
 export class ToolPencilService extends ToolBrush {
-    constructor(protected drawingService: DrawingService, colorService: ColorService) {
-        super(drawingService, colorService, ToolNames.Pencil);
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
+        super(drawingService, colorService, commandService, ToolNames.Pencil);
     }
 }

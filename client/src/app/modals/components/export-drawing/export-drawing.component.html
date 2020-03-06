@@ -1,49 +1,50 @@
-<form>
-    <mat-dialog-content>
-        <mat-form-field class="chip-list">
-            <mat-chip-list #chipList aria-label="Label selection">
-                <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
-                    {{ label }}
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <input
-                    name="martine"
-                    placeholder="Nouvelle étiquette..."
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="addLabel($event)"
-                />
-                <mat-error *ngIf="labelForm.invalid">Étiquette invalide</mat-error>
-            </mat-chip-list>
-        </mat-form-field>
+<div class="container">
+    <mat-dialog-content class="item-content">
+        <form>
+            <mat-form-field class="chip-list">
+                <mat-chip-list #chipList aria-label="Label selection">
+                    <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
+                        {{ label }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                        name="martine"
+                        placeholder="Nouvelle étiquette..."
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addLabel($event)"
+                    />
+                    <mat-error *ngIf="labelForm.invalid">Étiquette invalide</mat-error>
+                </mat-chip-list>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Titre</mat-label>
-            <input matInput [formControl]="titleForm" />
-            <mat-error *ngIf="titleForm.invalid">Titre invalide</mat-error>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>Titre</mat-label>
+                <input matInput [formControl]="titleForm" />
+                <mat-error *ngIf="titleForm.invalid">Titre invalide</mat-error>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Type de filtre</mat-label>
-            <mat-select [(value)]="previewFilter">
-                <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
-                <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
-                <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
-                <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
-                <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
-                <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-card>
-            <mat-card-title>Aperçu</mat-card-title>
-            <app-drawing-preview></app-drawing-preview>
-        </mat-card>
+            <mat-form-field>
+                <mat-label>Type de filtre</mat-label>
+                <mat-select [(value)]="previewFilter">
+                    <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
+                    <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
+                    <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
+                    <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
+                    <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
+                    <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-card>
+                <mat-card-title>Aperçu</mat-card-title>
+                <app-drawing-preview></app-drawing-preview>
+            </mat-card>
+        </form>
     </mat-dialog-content>
-</form>
-
-<mat-dialog-actions align="end">
-    <button mat-raised-button (click)="exportDrawingAsSvg()">Sauvegarder en format SVG</button>
-    <button mat-raised-button (click)="exportDrawingAsPng()">Sauvegarder en format PNG</button>
-    <button mat-raised-button (click)="exportDrawingAsJpeg()">Sauvegarder en format JPEG</button>
-</mat-dialog-actions>
+    <div class="item-buttons">
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsSvg()">Sauvegarder en format SVG</button>
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()">Sauvegarder en format PNG</button>
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()">Sauvegarder en format JPEG</button>
+    </div>
+</div>

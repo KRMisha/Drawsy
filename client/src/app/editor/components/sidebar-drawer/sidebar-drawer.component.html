@@ -17,6 +17,40 @@
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
+    <div *ngIf="hasSetting(ToolSetting.StrokeSize)" class="size-container">
+        <h2 class="mat-h2">Taille bordure</h2>
+        <form [formGroup]="strokeSizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="1"
+            max="100"
+            (input)="strokeSizeGroup.controls.size.setValue($event.value)"
+            [value]="strokeSizeGroup.controls.size.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
+    <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
+        <h2 class="mat-h2">Taille de l'efface</h2>
+        <form [formGroup]="eraserSizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="3"
+            max="50"
+            (input)="eraserSizeGroup.controls.size.setValue($event.value)"
+            [value]="eraserSizeGroup.controls.size.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
         <form [formGroup]="junctionSizeGroup">
@@ -53,14 +87,16 @@
     </div>
     <div *ngIf="hasSetting(ToolSetting.StrokeType)">
         <h2 class="mat-h2">Type de tracé</h2>
-        <mat-form-field class="dropdown">
-            <mat-label>Sélection</mat-label>
-            <mat-select [value]="getSetting(ToolSetting.StrokeType)" (selectionChange)="setSetting(ToolSetting.StrokeType, $event.value)">
-                <mat-option [value]="StrokeType.FillWithBorder">Plein avec contour</mat-option>
-                <mat-option [value]="StrokeType.FillOnly">Plein</mat-option>
-                <mat-option [value]="StrokeType.BorderOnly">Contour</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <div class="toggle-buttons-container">
+            <mat-button-toggle-group
+                [value]="getSetting(ToolSetting.StrokeType)"
+                (change)="setSetting(ToolSetting.StrokeType, $event.value)"
+            >
+                <mat-button-toggle [value]="StrokeType.FillWithBorder">Complet</mat-button-toggle>
+                <mat-button-toggle [value]="StrokeType.FillOnly">Plein</mat-button-toggle>
+                <mat-button-toggle [value]="StrokeType.BorderOnly">Contour</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
         <mat-divider class="divider"></mat-divider>
     </div>
     <div *ngIf="hasSetting(ToolSetting.Texture)">

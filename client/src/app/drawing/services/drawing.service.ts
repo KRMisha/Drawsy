@@ -3,10 +3,11 @@ import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
+import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { Subject } from 'rxjs';
 import { GeometryService } from './geometry.service';
 
-const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
+const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +15,14 @@ const defaultDimensions: Vec2 = { x: 1024, y: 1024 };
 export class DrawingService {
     private cachedCanvas: HTMLCanvasElement | null = null;
 
+    private mouseUpfunctionMap = new Map<SVGElement, () => void>();
+    private mouseMovefunctionMap = new Map<SVGElement, () => void>();
+
+    private transformationMap = new Map<SVGElement, SvgTransformations>();
+
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
+
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
     private elementHoveredSource = new Subject<SVGElement>();
@@ -41,7 +49,6 @@ export class DrawingService {
         return this._backgroundColor;
     }
 
-    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
     get svgElements(): SVGElement[] {
         return this._svgElements;
     }
@@ -49,13 +56,18 @@ export class DrawingService {
     addElement(element: SVGElement): void {
         this.svgElements.push(element);
         this.renderer.appendChild(this.svgDrawingContent, element);
+        this.transformationMap.set(element, new SvgTransformations());
 
-        this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
+        const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
         });
-        this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
+        const mouseMoveFunction = this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
             this.elementHoveredSource.next(element);
         });
+
+        this.mouseUpfunctionMap.set(element, mouseUpFunction);
+        this.mouseMovefunctionMap.set(element, mouseMoveFunction);
+
         this.cachedCanvas = null;
     }
 
@@ -64,7 +76,21 @@ export class DrawingService {
         if (elementToRemoveIndex > -1) {
             this.svgElements.splice(elementToRemoveIndex, 1);
             this.renderer.removeChild(this.svgDrawingContent, element);
+            this.transformationMap.delete(element);
         }
+
+        const mouseUpFunction = this.mouseUpfunctionMap.get(element);
+        if (mouseUpFunction) {
+            mouseUpFunction();
+        }
+        this.mouseUpfunctionMap.delete(element);
+
+        const mouseMoveFunction = this.mouseMovefunctionMap.get(element);
+        if (mouseMoveFunction) {
+            mouseMoveFunction();
+        }
+        this.mouseMovefunctionMap.delete(element);
+
         this.cachedCanvas = null;
     }
 
@@ -78,16 +104,15 @@ export class DrawingService {
 
     reappendStoredElements(): void {
         for (const element of this.svgElements) {
-            this.addElement(element);
+            this.renderer.appendChild(this.svgDrawingContent, element);
         }
         this.cachedCanvas = null;
     }
 
     clearStoredElements(): void {
-        for (const element of this.svgElements) {
-            this.renderer.removeChild(this.svgDrawingContent, element);
+        while (this.svgElements.length > 0) {
+            this.removeElement(this.svgElements[0]);
         }
-        this.cachedCanvas = null;
     }
 
     async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
@@ -138,11 +163,14 @@ export class DrawingService {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingRoot.getBoundingClientRect() as DOMRect;
 
+        const paddingStr = element.getAttribute('shape-padding') as string;
+        const paddingValue = paddingStr === null ? 0 : +paddingStr;
+
         return {
-            x: svgElementBounds.x - drawingRootBounds.x,
-            y: svgElementBounds.y - drawingRootBounds.y,
-            width: svgElementBounds.width,
-            height: svgElementBounds.height,
+            x: svgElementBounds.x - drawingRootBounds.x - paddingValue,
+            y: svgElementBounds.y - drawingRootBounds.y - paddingValue,
+            width: svgElementBounds.width + 2 * paddingValue,
+            height: svgElementBounds.height + 2 * paddingValue,
         } as Rect;
     }
 
@@ -163,5 +191,25 @@ export class DrawingService {
             maxPos.y = Math.max(maxPos.y, currentShapeBounds.y + currentShapeBounds.height);
         }
         return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
+    }
+
+    updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
+        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
+        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
+        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
+        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
+    }
+
+    moveElementList(elements: SVGElement[], moveOffset: Vec2): void {
+        for (const element of elements) {
+            const transformations = this.transformationMap.get(element);
+            if (!transformations) {
+                continue;
+            }
+            transformations.translation.x += moveOffset.x;
+            transformations.translation.y += moveOffset.y;
+            this.renderer.setAttribute(element, 'transform', transformations.toString());
+        }
+        this.cachedCanvas = null;
     }
 }

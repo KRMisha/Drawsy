@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
@@ -27,12 +29,21 @@ export class ToolSelectionService extends Tool {
     private currentMouseButtonDown: ButtonId | null = null;
     private userJustClickedOnShape = false;
     private controlPointHeld = ControlPoints.None;
+    private selectionRect: Rect | null = null;
+    private isMovingSelection = false;
+    private lastMousePosition: Vec2 = { x: 0, y: 0 };
+    private totalMoveValue: Vec2 = { x: 0, y: 0 };
 
-    private svgSelectedShapesRect: SVGElement;
-    private svgUserSelectionRect: SVGElement;
+    private svgSelectedShapesRect: SVGRectElement;
+    private svgUserSelectionRect: SVGRectElement;
     private svgControlPoints: SVGElement[] = [];
 
-    constructor(protected drawingService: DrawingService) {
+    private arrowUpHeld = false;
+    private arrowDownHeld = false;
+    private arrowLeftHeld = false;
+    private arrowRightHeld = false;
+
+    constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolNames.Selection);
     }
 
@@ -78,9 +89,15 @@ export class ToolSelectionService extends Tool {
         this.isMouseDownInside = this.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (this.isMouseInside) {
-            const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
-            this.updateVisibleRect(rect, this.svgUserSelectionRect);
+            if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
+                this.isMovingSelection = true;
+                this.totalMoveValue = { x: 0, y: 0 };
+            } else {
+                const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
+                this.updateVisibleRect(this.svgUserSelectionRect, rect);
+            }
         } else {
+            this.selectedElements = [];
             this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
             this.hideSelectedShapesRect();
         }
@@ -88,25 +105,40 @@ export class ToolSelectionService extends Tool {
         if (this.currentMouseButtonDown === null) {
             this.currentMouseButtonDown = event.button;
         }
+        this.lastMousePosition = this.getMousePosition(event);
     }
 
     onMouseMove(event: MouseEvent): void {
         if (this.controlPointHeld !== ControlPoints.None) {
             return;
         }
-        if (this.isMouseDown && this.isMouseInside && this.isMouseDownInside) {
-            const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
-            this.updateVisibleRect(userSelectionRect, this.svgUserSelectionRect);
-            if (this.currentMouseButtonDown === ButtonId.Left) {
-                this.selectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
+        if (this.isMouseDown && this.isMouseDownInside) {
+            if (this.isMovingSelection) {
+                const currentMousePos = this.getMousePosition(event);
+                const deltaMousePos: Vec2 = {
+                    x: currentMousePos.x - this.lastMousePosition.x,
+                    y: currentMousePos.y - this.lastMousePosition.y,
+                };
+                this.totalMoveValue.x += deltaMousePos.x;
+                this.totalMoveValue.y += deltaMousePos.y;
+
+                this.drawingService.moveElementList(this.selectedElements, deltaMousePos);
                 this.updateSvgSelectedShapesRect(this.selectedElements);
-            } else if (this.currentMouseButtonDown === ButtonId.Right) {
-                const selectedElementsCopy = Object.assign([], this.selectedElements);
-                const currentSelectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
-                this.inverseObjectsSelection(currentSelectedElements, selectedElementsCopy);
-                this.updateSvgSelectedShapesRect(selectedElementsCopy);
+            } else {
+                const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
+                this.updateVisibleRect(this.svgUserSelectionRect, userSelectionRect);
+                if (this.currentMouseButtonDown === ButtonId.Left) {
+                    this.selectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
+                    this.updateSvgSelectedShapesRect(this.selectedElements);
+                } else if (this.currentMouseButtonDown === ButtonId.Right) {
+                    const selectedElementsCopy = Object.assign([], this.selectedElements);
+                    const currentSelectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
+                    this.inverseObjectsSelection(currentSelectedElements, selectedElementsCopy);
+                    this.updateSvgSelectedShapesRect(selectedElementsCopy);
+                }
             }
         }
+        this.lastMousePosition = this.getMousePosition(event);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -114,17 +146,137 @@ export class ToolSelectionService extends Tool {
             this.controlPointHeld = ControlPoints.None;
             return;
         }
+
+        if (!this.isMovingSelection || this.isSimpleClick(event)) {
+            this.updateSelectionOnMouseUp(event);
+        }
+
+        if (this.isMovingSelection) {
+            this.addMoveCommand();
+        }
+
+        if (event.button === this.currentMouseButtonDown) {
+            this.currentMouseButtonDown = null;
+        }
+
         this.isMouseDown = false;
+        this.userJustClickedOnShape = false;
+        this.isMovingSelection = false;
+        this.lastMousePosition = this.getMousePosition(event);
+    }
+
+    onKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'a' && event.ctrlKey) {
+            this.selectedElements = [...this.drawingService.svgElements];
+            this.updateSvgSelectedShapesRect(this.selectedElements);
+            return;
+        }
+        this.setArrowStateFromEvent(event, true);
+        this.moveSelectionInArrowDirection();
+    }
+
+    onKeyUp(event: KeyboardEvent): void {
+        this.setArrowStateFromEvent(event, false);
+        if (
+            !this.arrowDownHeld &&
+            !this.arrowUpHeld &&
+            !this.arrowLeftHeld &&
+            !this.arrowRightHeld &&
+            (this.totalMoveValue.x !== 0 || this.totalMoveValue.y !== 0)
+        ) {
+            this.addMoveCommand();
+        }
+    }
+
+    onElementClick(event: MouseEvent, element: SVGElement): void {
+        this.userJustClickedOnShape = true;
+        if (this.isMovingSelection) {
+            return;
+        }
+        if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
+            this.selectedElements = [element];
+            this.updateSvgSelectedShapesRect(this.selectedElements);
+        } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
+            this.inverseObjectsSelection([element], this.selectedElements);
+            this.updateSvgSelectedShapesRect(this.selectedElements);
+        }
+    }
+
+    onToolDeselection(): void {
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
+        this.selectedElements = [];
+        this.selectionRect = null;
+        this.hideSelectedShapesRect();
+    }
+
+    private addMoveCommand(): void {
+        const selectedElementsCopy = [...this.selectedElements];
+        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalMoveValue));
+        this.totalMoveValue = { x: 0, y: 0 };
+    }
+
+    private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
+        switch (event.key) {
+            case 'ArrowUp':
+                this.arrowUpHeld = state;
+                break;
+            case 'ArrowDown':
+                this.arrowDownHeld = state;
+                break;
+            case 'ArrowLeft':
+                this.arrowLeftHeld = state;
+                break;
+            case 'ArrowRight':
+                this.arrowRightHeld = state;
+                break;
+        }
+    }
+
+    private moveSelectionInArrowDirection(): void {
+        const moveDirection: Vec2 = { x: 0, y: 0 };
+        const moveDelta = 3;
+        if (this.arrowLeftHeld !== this.arrowRightHeld) {
+            moveDirection.x = this.arrowRightHeld ? moveDelta : -moveDelta;
+        }
+        if (this.arrowUpHeld !== this.arrowDownHeld) {
+            moveDirection.y = this.arrowDownHeld ? moveDelta : -moveDelta;
+        }
+
+        this.totalMoveValue.x += moveDirection.x;
+        this.totalMoveValue.y += moveDirection.y;
+
+        this.drawingService.moveElementList(this.selectedElements, moveDirection);
+        this.updateSvgSelectedShapesRect(this.selectedElements);
+    }
+
+    private isMouseInsideSelection(mousePosition: Vec2): boolean {
+        if (this.selectionRect) {
+            return GeometryService.areRectsIntersecting(this.selectionRect, {
+                x: mousePosition.x,
+                y: mousePosition.y,
+                width: 0,
+                height: 0,
+            });
+        }
+        return false;
+    }
+
+    private isSimpleClick(event: MouseEvent): boolean {
+        const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
+        return userSelectionRect.width === 0 && userSelectionRect.height === 0;
+    }
+
+    private updateSelectionOnMouseUp(event: MouseEvent): void {
         this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
 
         if (this.isMouseInside && this.isMouseDownInside) {
             const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
-            const currentSelectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
 
-            const isSimpleClick = userSelectionRect.width === 0 && userSelectionRect.height === 0;
+            const isSimpleClick = this.isSimpleClick(event);
             const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
 
+            const currentSelectedElements = this.drawingService.getElementsUnderArea(userSelectionRect);
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {
                     this.selectedElements = currentSelectedElements;
@@ -138,29 +290,13 @@ export class ToolSelectionService extends Tool {
                 this.updateSvgSelectedShapesRect(this.selectedElements);
             }
         }
-
-        if (event.button === this.currentMouseButtonDown) {
-            this.currentMouseButtonDown = null;
-        }
-
-        this.userJustClickedOnShape = false;
-    }
-
-    onElementClick(event: MouseEvent, element: SVGElement): void {
-        if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
-            this.selectedElements = [element];
-            this.updateSvgSelectedShapesRect(this.selectedElements);
-        } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
-            this.inverseObjectsSelection([element], this.selectedElements);
-            this.updateSvgSelectedShapesRect(this.selectedElements);
-        }
-        this.userJustClickedOnShape = true;
     }
 
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
         const elementsBounds = this.drawingService.getElementListBounds(selectedElements);
         if (elementsBounds !== null) {
-            this.updateVisibleRect(elementsBounds, this.svgSelectedShapesRect);
+            this.updateVisibleRect(this.svgSelectedShapesRect, elementsBounds);
+            this.selectionRect = elementsBounds;
             const positions = [
                 { x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
                 { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
@@ -177,15 +313,13 @@ export class ToolSelectionService extends Tool {
         }
     }
 
-    private updateVisibleRect(area: Rect, rect: SVGElement): void {
-        this.renderer.setAttribute(rect, 'x', area.x.toString());
-        this.renderer.setAttribute(rect, 'y', area.y.toString());
-        this.renderer.setAttribute(rect, 'width', area.width.toString());
-        this.renderer.setAttribute(rect, 'height', area.height.toString());
-        this.renderer.setAttribute(rect, 'display', 'block');
+    private updateVisibleRect(element: SVGRectElement, rect: Rect): void {
+        this.drawingService.updateSvgRectFromRect(element, rect);
+        this.renderer.setAttribute(element, 'display', 'block');
     }
 
     private hideSelectedShapesRect(): void {
+        this.selectionRect = null;
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
         for (const controlPoint of this.svgControlPoints) {
             this.renderer.setAttribute(controlPoint, 'display', 'none');

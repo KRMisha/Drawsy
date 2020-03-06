@@ -1,22 +1,30 @@
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { defaultSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
-import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { defaultStrokeSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export class Shape extends Tool {
-    private shape: SVGElement;
+    private shape: SVGElement | null;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(protected drawingService: DrawingService, private colorService: ColorService, name: string) {
+    constructor(
+        protected drawingService: DrawingService,
+        protected colorService: ColorService,
+        protected commandService: CommandService,
+        name: string,
+    ) {
         super(drawingService, name);
-        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        this.toolSettings.set(ToolSetting.StrokeSize, defaultStrokeSize);
         this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
     }
 
@@ -40,28 +48,30 @@ export class Shape extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (this.isMouseInside && this.isMouseDown) {
+        if (this.isMouseDown) {
             this.updateShapeArea();
         }
     }
 
     onMouseDown(event: MouseEvent): void {
+        console.log('a');
         this.mousePosition = this.getMousePosition(event);
+        this.isMouseDown = this.isMouseInside && event.button === ButtonId.Left;
         if (this.isMouseInside) {
+            console.log('b');
             this.shape = this.createNewShape();
-            this.setElementAttributes(this.shape);
+            this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());
             this.origin = this.getMousePosition(event);
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
         }
     }
 
-    onEnter(event: MouseEvent): void {
-        this.isMouseDown = false;
-    }
-
-    onLeave(event: MouseEvent): void {
-        this.isMouseDown = false;
+    onMouseUp(event: MouseEvent): void {
+        if (event.button === ButtonId.Left && this.shape) {
+            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            this.shape = null;
+        }
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -98,19 +108,6 @@ export class Shape extends Tool {
         }
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
-        this.updateShape(shapeArea, scale, this.shape);
-    }
-
-    private setElementAttributes(element: SVGElement): void {
-        this.renderer.setAttribute(element, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
-        this.renderer.setAttribute(element, 'stroke-linecap', 'square');
-        this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(element, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
-
-        if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.FillOnly) {
-            this.renderer.setAttribute(element, 'stroke', 'none');
-        } else if (this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly) {
-            this.renderer.setAttribute(element, 'fill', 'none');
-        }
+        this.updateShape(shapeArea, scale, this.shape as SVGElement);
     }
 }
