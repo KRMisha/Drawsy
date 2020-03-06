@@ -54,7 +54,9 @@ export class DrawingSerializerService {
                 .substring(backgroundRectFill.indexOf('(') + 1, backgroundRectFill.lastIndexOf(')'))
                 .split(' ')
                 .map((x: string) => parseInt(x.trim(), radix));
+            // tslint:disable: no-magic-numbers
             this.drawingService.backgroundColor = Color.fromRgba(rgba[0], rgba[1], rgba[2], rgba[3]);
+            // tslint:enable: no-magic-numbers 
 
             this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
             this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');

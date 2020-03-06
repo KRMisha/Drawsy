@@ -7,8 +7,8 @@ import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.ser
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { Subscription } from 'rxjs';
 
-const labelPattern = '^([0-9a-zA-Z\ ])*$';
-const titlePattern = '^([0-9a-zA-Z\ ])*$';
+const labelPattern = '^([0-9a-zA-Z ])*$';
+const titlePattern = '^([0-9a-zA-Z ])*$';
 const maxInputStringLength = 15;
 
 export interface Label {
@@ -24,15 +24,9 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     titleFormSubscription: Subscription;
 
-    labelForm = new FormControl(
-        '',
-        [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]
-    );
+    labelForm = new FormControl('', [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]);
 
-    titleForm = new FormControl(
-        '',
-        [Validators.required, Validators.pattern(titlePattern) ,Validators.maxLength(maxInputStringLength)]
-    );
+    titleForm = new FormControl('', [Validators.required, Validators.pattern(titlePattern), Validators.maxLength(maxInputStringLength)]);
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -82,15 +76,13 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
-            }
-            else {
-                const index = this.labels.findIndex(value1 => value1 === value.trim());
-                if(index !== -1) {
+            } else {
+                const index = this.labels.findIndex((tmpString: string): boolean => tmpString === value.trim());
+                if (index !== -1) {
                     this.labels.splice(index, 1);
                 }
             }
-        }
-        else {
+        } else {
             control.updateValueAndValidity();
         }
 
