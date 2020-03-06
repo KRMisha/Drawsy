@@ -151,9 +151,7 @@ export class ToolSelectionService extends Tool {
         }
 
         if (this.isMovingSelection) {
-            const selectedElementsCopy = [...this.selectedElements];
-            this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalMoveValue));
-            this.totalMoveValue = { x: 0, y: 0 };
+            this.addMoveCommand();
         }
 
         if (event.button === this.currentMouseButtonDown) {
@@ -168,10 +166,20 @@ export class ToolSelectionService extends Tool {
 
     onKeyDown(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, true);
+        this.moveSelectionInArrowDirection();
     }
 
     onKeyUp(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, false);
+        if (
+            !this.arrowDownHeld &&
+            !this.arrowUpHeld &&
+            !this.arrowLeftHeld &&
+            !this.arrowRightHeld &&
+            (this.totalMoveValue.x !== 0 || this.totalMoveValue.y !== 0)
+        ) {
+            this.addMoveCommand();
+        }
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
@@ -195,23 +203,25 @@ export class ToolSelectionService extends Tool {
         this.hideSelectedShapesRect();
     }
 
+    private addMoveCommand(): void {
+        const selectedElementsCopy = [...this.selectedElements];
+        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalMoveValue));
+        this.totalMoveValue = { x: 0, y: 0 };
+    }
+
     private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
         switch (event.key) {
             case 'ArrowUp':
                 this.arrowUpHeld = state;
-                this.moveSelectionInArrowDirection();
                 break;
             case 'ArrowDown':
                 this.arrowDownHeld = state;
-                this.moveSelectionInArrowDirection();
                 break;
             case 'ArrowLeft':
                 this.arrowLeftHeld = state;
-                this.moveSelectionInArrowDirection();
                 break;
             case 'ArrowRight':
                 this.arrowRightHeld = state;
-                this.moveSelectionInArrowDirection();
                 break;
         }
     }
@@ -225,6 +235,9 @@ export class ToolSelectionService extends Tool {
         if (this.arrowUpHeld !== this.arrowDownHeld) {
             moveDirection.y = this.arrowDownHeld ? moveDelta : -moveDelta;
         }
+
+        this.totalMoveValue.x += moveDirection.x;
+        this.totalMoveValue.y += moveDirection.y;
 
         this.drawingService.moveElementList(this.selectedElements, moveDirection);
         this.updateSvgSelectedShapesRect(this.selectedElements);

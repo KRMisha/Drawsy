@@ -17,6 +17,7 @@ export class DrawingPreviewService {
 
     previewFilter = PreviewFilter.None;
 
+
     constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
