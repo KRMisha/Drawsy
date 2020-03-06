@@ -6,7 +6,7 @@
     <div>
         <mat-card class="item-buttons">
             <button mat-raised-button class="button" (click)="openNewDrawingModal()">Créer un nouveau dessin</button>
-            <button mat-raised-button class="button" routerLink="/editor" *ngIf="isDrawingStarted()">
+            <button mat-raised-button class="button" (click)="continueDrawing()" *ngIf="isDrawingStarted()">
                 Continuer un dessin
             </button>
             <button mat-raised-button class="button">Galerie de dessin</button>
