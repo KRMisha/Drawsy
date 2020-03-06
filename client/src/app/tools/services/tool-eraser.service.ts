@@ -21,7 +21,7 @@ export class ToolEraserService extends Tool {
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 
-    private svgElementsDeletedDuringDrag: SVGElement[];
+    private svgElementsDeletedDuringDrag: SVGElement[] = [];
 
     constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolNames.Eraser);
