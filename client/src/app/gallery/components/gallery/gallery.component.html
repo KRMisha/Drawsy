@@ -3,18 +3,18 @@
         <h1 class="mat-h1">Galerie de dessins</h1>
     </div>
     <mat-dialog-content class="content">
-        <div class="card-container" *ngFor="let link of links; let i = index">
+        <div class="card-container" *ngFor="let container of containers">
             <mat-card class="card">
                 <mat-card-header>
-                    <mat-card-title>Titre du dessin</mat-card-title>
+                    <mat-card-title>{{ container.title }}</mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="content-container">
                     <div class="drawing-container">
-                        <img class="drawing" src="{{ link }}" />
+                        <!-- <img class="drawing" src="{{ container.link }}" /> -->
                     </div>
                     <mat-chip-list #chipList>
-                        <mat-chip>
-                            Étiquette
+                        <mat-chip *ngFor="let label of container.labels">
+                            {{ label }}
                         </mat-chip>
                     </mat-chip-list>
                 </mat-card-content>
@@ -26,6 +26,7 @@
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
+        <input type="file" (change)="createSvgFileContainer($event.target.files)" />
         <button mat-raised-button mat-dialog-close class="button">Fermer</button>
     </mat-dialog-actions>
 </div>
