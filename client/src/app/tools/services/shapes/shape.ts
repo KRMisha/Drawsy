@@ -1,20 +1,28 @@
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
+import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { defaultStrokeSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export class Shape extends Tool {
-    private shape: SVGElement;
+    private shape: SVGElement | null;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(protected drawingService: DrawingService, protected colorService: ColorService, name: string) {
+    constructor(
+        protected drawingService: DrawingService,
+        protected colorService: ColorService,
+        protected commandService: CommandService,
+        name: string,
+    ) {
         super(drawingService, name);
         this.toolSettings.set(ToolSetting.StrokeSize, defaultStrokeSize);
         this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
@@ -47,13 +55,20 @@ export class Shape extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        this.isMouseDown = this.isMouseInside;
+        this.isMouseDown = this.isMouseInside && event.button === ButtonId.Left;
         if (this.isMouseInside) {
             this.shape = this.createNewShape();
             this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());
             this.origin = this.getMousePosition(event);
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
+        }
+    }
+
+    onMouseUp(event: MouseEvent): void {
+        if (event.button === ButtonId.Left && this.shape) {
+            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            this.shape = null;
         }
     }
 
@@ -91,6 +106,6 @@ export class Shape extends Tool {
         }
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
-        this.updateShape(shapeArea, scale, this.shape);
+        this.updateShape(shapeArea, scale, this.shape as SVGElement);
     }
 }
