@@ -80,7 +80,6 @@ export class DrawingService {
         const mouseUpFunction = this.mouseUpfunctionMap.get(element);
         if (mouseUpFunction) {
             mouseUpFunction();
-            console.log('penisss');
         }
         this.mouseUpfunctionMap.delete(element);
 

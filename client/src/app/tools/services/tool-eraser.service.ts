@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -21,7 +23,7 @@ export class ToolEraserService extends Tool {
 
     private svgElementsDeletedDuringDrag: SVGElement[];
 
-    constructor(protected drawingService: DrawingService) {
+    constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolNames.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, defaultSize);
     }
@@ -43,8 +45,10 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        // Undo-redo with svgElementsDeletedDuringDrag
-        this.svgElementsDeletedDuringDrag = [];
+        if (this.svgElementsDeletedDuringDrag.length > 0) {
+            this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
+            this.svgElementsDeletedDuringDrag = [];
+        }
     }
 
     onToolDeselection(): void {
@@ -69,6 +73,7 @@ export class ToolEraserService extends Tool {
         }
 
         if (this.svgElementUnderCursor && this.isMouseDown) {
+            this.restoreElementUnderCursorAttributes();
             this.drawingService.removeElement(this.svgElementUnderCursor);
             this.svgElementsDeletedDuringDrag.push(this.svgElementUnderCursor);
             this.svgElementUnderCursor = null;

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
+import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
@@ -32,7 +34,7 @@ export class ToolLineService extends Tool {
     private hasJunction: boolean;
     private junctionSize: number;
 
-    constructor(protected drawingService: DrawingService, private colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
         super(drawingService, ToolNames.Line);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
@@ -230,7 +232,7 @@ export class ToolLineService extends Tool {
         this.isCurrentlyDrawing = false;
         this.points.length = 0;
         this.drawingService.removeElement(this.previewLine);
-        delete this.previewLine;
+        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
     }
 
     private createNewPolyline(): SVGPolylineElement {

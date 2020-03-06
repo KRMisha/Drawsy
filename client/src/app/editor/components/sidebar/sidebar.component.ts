@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
+import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
@@ -21,7 +22,11 @@ export class SidebarComponent implements OnInit {
 
     private areShortcutsEnabled = true;
 
-    constructor(private toolSelectorService: ToolSelectorService, private modalService: ModalService) {}
+    constructor(
+        private toolSelectorService: ToolSelectorService,
+        private modalService: ModalService,
+        private commandService: CommandService,
+    ) {}
 
     ngOnInit(): void {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
@@ -45,6 +50,20 @@ export class SidebarComponent implements OnInit {
                     this.setSelectedTool(1);
                     break;
                 // tslint:enable: no-magic-numbers
+                case 'z': {
+                    if (event.ctrlKey) {
+                        this.commandService.undo();
+                        this.toolSelectorService.selectedTool.onToolDeselection();
+                    }
+                    break;
+                }
+                case 'Z': {
+                    if (event.ctrlKey) {
+                        this.commandService.redo();
+                        this.toolSelectorService.selectedTool.onToolDeselection();
+                    }
+                    break;
+                }
             }
         }
     }
