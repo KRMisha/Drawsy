@@ -1,11 +1,15 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
+const labelPattern = '^([0-9a-zA-Z\ ])*$';
+const titlePattern = '^([0-9a-zA-Z\ ])*$';
+const maxInputStringLength = 15;
 
 export interface Label {
     name: string;
@@ -15,36 +19,37 @@ export interface Label {
     templateUrl: './export-drawing.component.html',
     styleUrls: ['./export-drawing.component.scss'],
 })
-export class ExportDrawingComponent implements OnInit, OnDestroy{
+export class ExportDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
-    labelFormSubscription: Subscription;
+    titleFormSubscription: Subscription;
 
-    labelForm = new FormGroup({
-        label: new FormControl(
-            '',
-            [Validators.pattern('^([0-9a-zA-Z\ \-éèîêôçàû])*$'), Validators.required]
-        )
-    });
+    labelForm = new FormControl(
+        '',
+        [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]
+    );
+
+    titleForm = new FormControl(
+        '',
+        [Validators.required, Validators.pattern(titlePattern) ,Validators.maxLength(maxInputStringLength)]
+    );
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
+    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {
+        this.labelForm.setValue(this.labels);
+    }
 
     ngOnInit(): void {
-        this.labelForm.controls.label.setValue(this.drawingPreviewService.labels);
-
-        this.labelFormSubscription = this.labelForm.controls.label.valueChanges.subscribe(() => {
-            const tempLabels = this.labels;
-            if (this.labelForm.controls.label.valid) {
-                tempLabels.push(this.labelForm.controls.label.value);
-                this.labels = tempLabels;
+        this.titleFormSubscription = this.titleForm.valueChanges.subscribe(() => {
+            if (this.titleForm.valid) {
+                this.title = this.titleForm.value;
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.labelFormSubscription.unsubscribe();
+        this.titleFormSubscription.unsubscribe();
     }
 
     exportDrawingAsSvg(): void {
@@ -66,13 +71,14 @@ export class ExportDrawingComponent implements OnInit, OnDestroy{
         const input = event.input;
         const value = event.value;
 
-        const control = this.labelForm.controls.label;
+        const control = this.labelForm;
 
         if ((value || '').trim()) {
             control.setErrors(null);
             const tempLabels = this.labels;
             tempLabels.push(value.trim());
             control.setValue(value);
+            control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
@@ -85,7 +91,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy{
             }
         }
         else {
-            this.labelForm.controls.label.updateValueAndValidity();
+            control.updateValueAndValidity();
         }
 
         if (input !== undefined) {
@@ -96,7 +102,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy{
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
 
-        const control = this.labelForm.controls.label;
+        const control = this.labelForm;
 
         if (index >= 0) {
             this.labels.splice(index, 1);
