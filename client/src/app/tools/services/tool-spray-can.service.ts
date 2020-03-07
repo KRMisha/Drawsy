@@ -40,6 +40,7 @@ export class ToolSprayCanService extends Tool {
 
         this.isMouseDown = true;
         this.groupElement = this.renderer.createElement('g', 'svg');
+        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.mousePosition = this.getMousePosition(event);
         this.drawingService.addElement(this.groupElement);
         this.createSprayInterval(event);
@@ -56,7 +57,6 @@ export class ToolSprayCanService extends Tool {
         this.renderer.setAttribute(newCircle, 'cx', (this.mousePosition.x + position.x).toString());
         this.renderer.setAttribute(newCircle, 'cy', (this.mousePosition.y + position.y).toString());
         this.renderer.setAttribute(newCircle, 'r', '1');
-        this.renderer.setAttribute(newCircle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         return newCircle;
     }
 
