@@ -54,11 +54,9 @@ export class Shape extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        console.log('a');
         this.mousePosition = this.getMousePosition(event);
         this.isMouseDown = this.isMouseInside && event.button === ButtonId.Left;
         if (this.isMouseInside) {
-            console.log('b');
             this.shape = this.createNewShape();
             this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());
             this.origin = this.getMousePosition(event);

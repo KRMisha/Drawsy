@@ -47,6 +47,9 @@ export class SidebarComponent implements OnInit {
                 case '3':
                     this.setSelectedTool(5);
                     break;
+                case 'a':
+                    this.setSelectedTool(9);
+                    break;
                 case 'c':
                     this.setSelectedTool(0);
                     break;
@@ -102,7 +105,6 @@ export class SidebarComponent implements OnInit {
         if (toolIndex < 0 || toolIndex >= this.buttons.length) {
             return;
         }
-        console.log(toolIndex);
         this.drawer.open();
         this.selectedButton = this.buttons[toolIndex];
         this.toolSelectorService.setSelectedTool(toolIndex);

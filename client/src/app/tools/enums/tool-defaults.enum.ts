@@ -6,4 +6,5 @@ export const defaultJunctionSize = 10;
 export const defaultTexture = Texture.Blur;
 export const defaultStrokeType = StrokeType.FillWithBorder;
 export const defaultPolygonSideCount = 3;
-export const defaultDensity = 20;
+export const defaultSpraySpeed = 20;
+export const defaultSprayRadius = 20;

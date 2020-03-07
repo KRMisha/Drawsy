@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
 const maximumStrokeSize = 100;
+const maximumSpraySpeed = 100;
+const maximumSprayRadius = 100;
 const maximumEraserSize = 50;
 const minimumEraserSize = 3;
 const maximumJunctionSize = 500;
@@ -30,6 +32,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     eraserSizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
     polygonSideCountSubscription: Subscription;
+    spraySpeedSubscription: Subscription;
+    sprayRadiusSubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -91,6 +95,30 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
+    spraySpeedGroup = new FormGroup({
+        spraySpeed: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSpraySpeed),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    sprayRadiusGroup = new FormGroup({
+        sprayRadius: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSprayRadius),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
     @Input()
     set selectedButtonIndex(index: number) {
         if (this.toolSelectorService.hasSetting(ToolSetting.Size)) {
@@ -110,6 +138,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             this.polygonSideCountGroup.controls.polygonSideCount.setValue(
                 this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount),
             );
+        }
+        if (this.toolSelectorService.hasSetting(ToolSetting.SpraySpeed)) {
+            this.spraySpeedGroup.controls.spraySpeed.setValue(this.toolSelectorService.getSetting(ToolSetting.SpraySpeed));
+        }
+
+        if (this.toolSelectorService.hasSetting(ToolSetting.SprayRadius)) {
+            this.sprayRadiusGroup.controls.sprayRadius.setValue(this.toolSelectorService.getSetting(ToolSetting.SprayRadius));
         }
     }
 
@@ -154,6 +189,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 );
             }
         });
+
+        this.spraySpeedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
+            if (this.spraySpeedGroup.controls.spraySpeed.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
+            }
+        });
+
+        this.sprayRadiusSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
+            if (this.sprayRadiusGroup.controls.sprayRadius.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -162,6 +209,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.strokeSizeSubscription.unsubscribe();
         this.eraserSizeSubscription.unsubscribe();
         this.polygonSideCountSubscription.unsubscribe();
+        this.spraySpeedSubscription.unsubscribe();
+        this.sprayRadiusSubscription.unsubscribe();
     }
 
     getToolName(): string {

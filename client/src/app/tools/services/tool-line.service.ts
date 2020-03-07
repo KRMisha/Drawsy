@@ -19,7 +19,7 @@ const lineClosingPixelTolerance = 3;
     providedIn: 'root',
 })
 export class ToolLineService extends Tool {
-    private groupElement: SVGElement;
+    private groupElement: SVGGElement;
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
     private isCurrentlyDrawing = false;
