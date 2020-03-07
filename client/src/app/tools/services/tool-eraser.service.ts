@@ -28,7 +28,7 @@ export class ToolEraserService extends Tool {
 
     constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolNames.Eraser);
-        this.toolSettings.set(ToolSetting.EraserSize, defaultSize);
+        this.toolSettings.set(ToolSetting.Density, defaultSize);
     }
 
     afterDrawingInit(): void {

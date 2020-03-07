@@ -6,6 +6,7 @@ export enum ToolSetting {
     StrokeType,
     Texture,
     PolygonSideCount,
+    Density,
 }
 
 export enum Texture {
