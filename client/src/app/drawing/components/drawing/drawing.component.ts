@@ -66,6 +66,19 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectorService.onKeyDown(event);
+        switch (event.key) {
+            case 'g':
+                this.gridService.toggleGrid();
+                break;
+            case '+':
+                if (event.shiftKey) {
+                    this.gridService.raiseGridSize();
+                }
+                break;
+            case '-':
+                this.gridService.lowerGridSize();
+                break;
+        }
     }
 
     @HostListener('document:keyup', ['$event'])

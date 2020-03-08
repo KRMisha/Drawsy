@@ -17,10 +17,10 @@
     <input matInput value="{{ gridService.opacity }}" disabled class="alpha-input" placeholder="Valeur du alpha" />
     <mat-slider
         class="slider"
-        min="1"
+        min="10"
         max="100"
         (input)="gridService.updateOpacity($event.value)"
-        [value]="gridService.opacity * 100"
+        [value]="gridService.opacity * gridService.opacityRange"
     ></mat-slider>
     <mat-divider class="divider"></mat-divider>
 </div>
