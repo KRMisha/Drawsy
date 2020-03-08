@@ -12,11 +12,11 @@ const precisionRegexPattern = '^[0-9.]*$';
 const sliderRange = 100;
 
 @Component({
-    selector: 'app-grid',
-    templateUrl: './grid.component.html',
-    styleUrls: ['./grid.component.scss'],
+    selector: 'app-grid-settings',
+    templateUrl: './grid-settings.component.html',
+    styleUrls: ['./grid-settings.component.scss'],
 })
-export class GridComponent implements OnInit {
+export class GridSettingsComponent implements OnInit {
     // Make constant available to template
     sliderRange = sliderRange;
 
