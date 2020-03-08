@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { GridService } from '@app/drawing/services/grid.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
@@ -12,8 +13,15 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
+    @ViewChild('appGridPattern', { static: false }) private svgGridPattern: ElementRef<SVGPatternElement>;
+    @ViewChild('appGridPath', { static: false }) private svgGridPath: ElementRef<SVGPathElement>;
 
-    constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
+    constructor(
+        private renderer: Renderer2,
+        private drawingService: DrawingService,
+        private toolSelectorService: ToolSelectorService,
+        private gridService: GridService,
+    ) {}
 
     ngOnInit(): void {
         this.drawingService.renderer = this.renderer;
@@ -24,7 +32,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
-
+        this.gridService.setElementRoots(this.svgGridPattern.nativeElement, this.svgGridPath.nativeElement);
         this.drawingService.reappendStoredElements();
         this.toolSelectorService.afterDrawingInit();
     }
