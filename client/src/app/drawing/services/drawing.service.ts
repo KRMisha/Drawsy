@@ -114,23 +114,10 @@ export class DrawingService {
             this.removeElement(this.svgElements[0]);
         }
     }
-
-    async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
-        const svg64 = btoa(root.outerHTML);
-        const image = new Image();
-        image.src = 'data:image/svg+xml;base64,' + svg64;
-        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
-            image.onload = () => {
-                resolve(image);
-            };
-        });
-    }
-
+    
     async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
         if (this.cachedCanvas !== null) {
-            return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
-                resolve(this.cachedCanvas as HTMLCanvasElement);
-            });
+            return this.cachedCanvas;
         }
 
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
@@ -138,13 +125,10 @@ export class DrawingService {
         this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
 
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
-            this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
-                context.drawImage(image, 0, 0);
-                this.cachedCanvas = canvas;
-                resolve(canvas);
-            });
-        });
+        const image = await this.getImageFromSvgRoot(root);
+        context.drawImage(image, 0, 0);
+        this.cachedCanvas = canvas;
+        return canvas;
     }
 
     getElementsUnderPoint(point: Vec2): SVGElement[] {
@@ -211,5 +195,16 @@ export class DrawingService {
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
         this.cachedCanvas = null;
+    }
+
+    private async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
+        const svg64 = btoa(root.outerHTML);
+        const image = new Image();
+        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
+            image.onload = () => {
+                resolve(image);
+            };
+            image.src = 'data:image/svg+xml;base64,' + svg64;
+        });
     }
 }
