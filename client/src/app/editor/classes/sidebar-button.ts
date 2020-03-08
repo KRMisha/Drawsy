@@ -17,4 +17,5 @@ export const sidebarButtons: SidebarButton[] = [
     { name: ToolNames.Selection, icon: 'format_shapes', toolIndex: 7 },
     { name: ToolNames.Eraser, icon: 'delete', toolIndex: 8 },
     { name: ToolNames.SprayCan, icon: 'blur_on', toolIndex: 9 },
+    { name: ToolNames.Recolor, icon: 'invert_colors', toolIndex: 10 },
 ];

@@ -9,4 +9,5 @@ export enum ToolNames {
     Eyedropper = 'Pipette',
     Eraser = 'Efface',
     SprayCan = 'Aérosol',
+    Recolor = 'Applicateur de couleur',
 }
