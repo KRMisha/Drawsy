@@ -9,7 +9,7 @@ const gridSizeVariation = 5;
 })
 export class GridService {
     gridSize = 100;
-    opacity = 1;
+    gridOpacity = 1;
     isDisplayed = false;
     private gridPatternElement: SVGPatternElement;
     private gridPathElement: SVGPathElement;
@@ -52,8 +52,8 @@ export class GridService {
         this.gridPatternElement.setAttribute('height', this.gridSize.toString());
     }
 
-    updateOpacity(opacity: number): void {
-        this.opacity = opacity;
-        this.gridPatternElement.setAttribute('stroke-opacity', `${this.opacity}`);
+    updateOpacity(gridOpacity: number): void {
+        this.gridOpacity = gridOpacity;
+        this.gridPatternElement.setAttribute('stroke-opacity', `${this.gridOpacity}`);
     }
 }

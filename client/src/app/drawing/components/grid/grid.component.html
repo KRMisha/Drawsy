@@ -2,14 +2,14 @@
     <button mat-raised-button class="toggle-button" (click)="gridService.toggleGrid(); selectIcon()">
         <mat-icon>{{ icon }}</mat-icon>
     </button>
-    <div class="dimension-buttons-container">
-        <form [formGroup]="sizeGroup" class="form">
-            <mat-form-field class="form-field">
+    <div class="size-buttons-container">
+        <form [formGroup]="sizeGroup">
+            <mat-form-field>
                 <input
                     matInput
-                    class="input"
+                    class="size-input"
                     value="{{ gridService.gridSize }}"
-                    placeholder="Taille du carré"
+                    placeholder="Taille des carrés"
                     formControlName="size"
                     [matTooltip]="getSizeErrorMessage()"
                     matTooltipClass="error-tooltip"
@@ -23,16 +23,17 @@
             <mat-icon>add</mat-icon>
         </button>
     </div>
-    <h4 class="mat-h4">Alpha</h4>
-    <form [formGroup]="opacityGroup" class="form">
-        <input
-            matInput
-            class="alpha-input"
-            placeholder="Valeur du alpha"
-            formControlName="opacity"
-            [matTooltip]="getOpacityErrorMessage()"
-            matTooltipClass="error-tooltip"
-        />
+    <form [formGroup]="opacityGroup" class="opacity-form">
+        <mat-form-field>
+            <input
+                matInput
+                class="opacity-input"
+                placeholder="Transparence de la grille"
+                formControlName="opacity"
+                [matTooltip]="getOpacityErrorMessage()"
+                matTooltipClass="error-tooltip"
+            />
+        </mat-form-field>
     </form>
     <mat-slider
         class="slider"

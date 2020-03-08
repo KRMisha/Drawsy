@@ -3,12 +3,12 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { GridService } from '@app/drawing/services/grid.service';
 import { Subscription } from 'rxjs';
 
-const integerRegexPattern = '^[0-9]*$';
-const precisionRegexPattern = '^[0-9.]*$';
 const maximumSize = 1000;
 const minimumSize = 10;
 const maximumOpacity = 1;
 const minimumOpacity = 0.1;
+const integerRegexPattern = '^[0-9]*$';
+const precisionRegexPattern = '^[0-9.]*$';
 const sliderRange = 100;
 
 @Component({
@@ -17,7 +17,9 @@ const sliderRange = 100;
     styleUrls: ['./grid.component.scss'],
 })
 export class GridComponent implements OnInit {
+    // Make constant available to template
     sliderRange = sliderRange;
+
     icon = 'grid_off';
     sizeSubscription: Subscription;
     opacitySubscription: Subscription;
@@ -51,7 +53,7 @@ export class GridComponent implements OnInit {
     ngOnInit(): void {
         this.selectIcon();
         this.sizeGroup.controls.size.setValue(this.gridService.gridSize);
-        this.opacityGroup.controls.opacity.setValue(this.gridService.opacity);
+        this.opacityGroup.controls.opacity.setValue(this.gridService.gridOpacity);
 
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
@@ -81,12 +83,12 @@ export class GridComponent implements OnInit {
     private getErrorMessage(formControl: AbstractControl): string {
         return formControl.hasError('required')
             ? 'Entrez une taille'
+            : formControl.hasError('pattern')
+            ? 'Nombre invalide'
             : formControl.hasError('min')
             ? 'Valeur trop petite'
             : formControl.hasError('max')
             ? 'Valeur trop grande'
-            : formControl.hasError('pattern')
-            ? 'Nombre entier invalide'
             : '';
     }
 }
