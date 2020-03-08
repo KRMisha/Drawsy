@@ -71,6 +71,7 @@ import { ImportDrawingComponent } from '@app/modals/components/import-drawing/im
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { DrawingPreviewComponent } from './drawing/components/drawing-preview/drawing-preview.component';
+import { GridComponent } from './drawing/components/grid/grid.component';
 
 @NgModule({
     declarations: [
@@ -117,6 +118,7 @@ import { DrawingPreviewComponent } from './drawing/components/drawing-preview/dr
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        GridComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -1,0 +1,24 @@
+.container {
+    display: grid;
+    grid-template-columns: 60px max-content;
+    justify-content: center;
+}
+
+.toggle-button {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: unset !important;
+    padding: 0px;
+}
+
+.input-button {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: unset !important;
+    padding: 0px;
+    margin: 4px;
+}
+
+.input {
+    text-align: center;
+}
