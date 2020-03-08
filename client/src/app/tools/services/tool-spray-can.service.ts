@@ -27,7 +27,7 @@ export class ToolSprayCanService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         if (this.isMouseDown && this.isMouseInside) {
-            window.clearInterval(this.interval);
+            clearInterval(this.interval);
             this.createSpray(event);
             this.createSprayInterval(event);
         }
@@ -47,7 +47,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        window.clearInterval(this.interval);
+        clearInterval(this.interval);
         this.isMouseDown = false;
         this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
     }

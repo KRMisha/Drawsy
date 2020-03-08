@@ -114,7 +114,7 @@ export class DrawingService {
             this.removeElement(this.svgElements[0]);
         }
     }
-    
+
     async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
         if (this.cachedCanvas !== null) {
             return this.cachedCanvas;
