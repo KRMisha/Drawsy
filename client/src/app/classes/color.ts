@@ -73,7 +73,7 @@ export class Color {
         newColor.setHex(hex);
         return newColor;
     }
-    
+
     static fromRgbaString(rgbaString: string): Color {
         const radix = 10;
         const rgbaValues = rgbaString
