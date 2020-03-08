@@ -75,11 +75,10 @@ export class Color {
     }
 
     static fromRgbaString(rgbaString: string): Color {
-        const radix = 10;
         const rgbaValues = rgbaString
             .substring(rgbaString.indexOf('(') + 1, rgbaString.lastIndexOf(')'))
-            .split(' ')
-            .map((x: string) => parseInt(x.trim(), radix));
+            .split(',')
+            .map((x: string) => parseFloat(x.trim()));
         const redIndex = 0;
         const greenIndex = 1;
         const blueIndex = 2;
