@@ -3,9 +3,19 @@
         <mat-icon>{{ icon }}</mat-icon>
     </button>
     <div class="dimension-buttons-container">
-        <mat-form-field class="form-field">
-            <input matInput value="{{ gridService.gridSize }}" disabled class="input" placeholder="Taille du carré" />
-        </mat-form-field>
+        <form [formGroup]="sizeGroup" class="form">
+            <mat-form-field class="form-field">
+                <input
+                    matInput
+                    class="input"
+                    value="{{ gridService.gridSize }}"
+                    placeholder="Taille du carré"
+                    formControlName="size"
+                    [matTooltip]="getSizeErrorMessage()"
+                    matTooltipClass="error-tooltip"
+                />
+            </mat-form-field>
+        </form>
         <button mat-raised-button class="input-button" (click)="gridService.lowerGridSize()">
             <mat-icon>remove</mat-icon>
         </button>
@@ -14,13 +24,21 @@
         </button>
     </div>
     <h4 class="mat-h4">Alpha</h4>
-    <input matInput value="{{ gridService.opacity }}" disabled class="alpha-input" placeholder="Valeur du alpha" />
+    <form [formGroup]="opacityGroup" class="form">
+        <input
+            matInput
+            class="alpha-input"
+            placeholder="Valeur du alpha"
+            formControlName="opacity"
+            [matTooltip]="getOpacityErrorMessage()"
+            matTooltipClass="error-tooltip"
+        />
+    </form>
     <mat-slider
         class="slider"
         min="10"
         max="100"
-        (input)="gridService.updateOpacity($event.value)"
-        [value]="gridService.opacity * gridService.opacityRange"
+        (input)="this.opacityGroup.controls.opacity.setValue($event.value / sliderRange)"
+        [value]="opacityGroup.controls.opacity.value * sliderRange"
     ></mat-slider>
-    <mat-divider class="divider"></mat-divider>
 </div>
