@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 
+const maximumSize = 1000;
+const minimumSize = 10;
 const gridSizeVariation = 5;
-const opacityRange = 100;
 
 @Injectable({
     providedIn: 'root',
 })
 export class GridService {
     gridSize = 100;
-    opacity = 1;
+    gridOpacity = 1;
     isDisplayed = false;
     private gridPatternElement: SVGPatternElement;
     private gridPathElement: SVGPathElement;
@@ -24,14 +25,23 @@ export class GridService {
         this.gridPathElement.setAttribute('visibility', visibility);
     }
 
-    raiseGridSize(): void {
-        this.gridSize += gridSizeVariation;
+    setGridSize(gridSize: number): void {
+        this.gridSize = gridSize;
         this.updateGridSize();
     }
 
+    raiseGridSize(): void {
+        if (Math.floor(this.gridSize) + gridSizeVariation <= maximumSize) {
+            const sizeModulo = this.gridSize % gridSizeVariation;
+            this.gridSize = Math.floor(this.gridSize) + gridSizeVariation - sizeModulo;
+            this.updateGridSize();
+        }
+    }
+
     lowerGridSize(): void {
-        if (this.gridSize - gridSizeVariation > 0) {
-            this.gridSize -= gridSizeVariation;
+        if (this.gridSize - gridSizeVariation >= minimumSize) {
+            const sizeModulo = this.gridSize % gridSizeVariation;
+            sizeModulo === 0 ? (this.gridSize -= gridSizeVariation) : (this.gridSize -= sizeModulo);
             this.updateGridSize();
         }
     }
@@ -40,11 +50,10 @@ export class GridService {
         this.gridPathElement.setAttribute('d', `M ${this.gridSize} 0 L 0 0 0 ${this.gridSize}`);
         this.gridPatternElement.setAttribute('width', this.gridSize.toString());
         this.gridPatternElement.setAttribute('height', this.gridSize.toString());
-        this.gridPathElement.setAttribute('fill-opacity', '0.1');
     }
 
-    updateOpacity(opacity: number): void {
-        this.opacity = opacity / opacityRange;
-        this.gridPatternElement.setAttribute('stroke-opacity', `${this.opacity}`);
+    updateOpacity(gridOpacity: number): void {
+        this.gridOpacity = gridOpacity;
+        this.gridPatternElement.setAttribute('stroke-opacity', `${this.gridOpacity}`);
     }
 }

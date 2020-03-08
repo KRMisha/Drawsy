@@ -1,0 +1,45 @@
+<div class="container">
+    <button mat-raised-button class="toggle-button" (click)="gridService.toggleGrid(); selectIcon()">
+        <mat-icon>{{ icon }}</mat-icon>
+    </button>
+    <div class="size-buttons-container">
+        <form [formGroup]="sizeGroup">
+            <mat-form-field>
+                <input
+                    matInput
+                    class="size-input"
+                    value="{{ gridService.gridSize }}"
+                    placeholder="Taille des carrés"
+                    formControlName="size"
+                    [matTooltip]="getSizeErrorMessage()"
+                    matTooltipClass="error-tooltip"
+                />
+            </mat-form-field>
+        </form>
+        <button mat-raised-button class="input-button" (click)="gridService.lowerGridSize()">
+            <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-raised-button class="input-button" (click)="gridService.raiseGridSize()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <form [formGroup]="opacityGroup" class="opacity-form">
+        <mat-form-field>
+            <input
+                matInput
+                class="opacity-input"
+                placeholder="Transparence de la grille"
+                formControlName="opacity"
+                [matTooltip]="getOpacityErrorMessage()"
+                matTooltipClass="error-tooltip"
+            />
+        </mat-form-field>
+    </form>
+    <mat-slider
+        class="slider"
+        min="10"
+        max="100"
+        (input)="this.opacityGroup.controls.opacity.setValue($event.value / sliderRange)"
+        [value]="opacityGroup.controls.opacity.value * sliderRange"
+    ></mat-slider>
+</div>

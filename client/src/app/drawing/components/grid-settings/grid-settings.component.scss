@@ -2,12 +2,10 @@
     display: grid;
     grid-template-columns: 60px max-content;
     grid-template-areas:
-        'toggle dimension'
-        'alpha-title alpha-input'
-        'slider slider'
-        'divider divider';
+        'toggle size-buttons'
+        '. opacity-input'
+        'slider slider';
     justify-content: center;
-    align-content: center;
 }
 
 .toggle-button {
@@ -18,8 +16,9 @@
     padding: 0px;
 }
 
-.dimension-buttons-container {
-    grid-area: dimension;
+.size-buttons-container {
+    grid-area: size-buttons;
+    display: flex;
 }
 
 .input-button {
@@ -30,25 +29,19 @@
     margin: 4px;
 }
 
-.input {
+.size-input {
     text-align: center;
 }
 
-.mat-h4 {
-    grid-area: alpha-title;
-    margin-bottom: 0px !important;
-    text-align: center;
-    vertical-align: middle;
+.opacity-input {
+    text-align: right;
 }
 
-.alpha-input {
-    grid-area: alpha-input;
+.opacity-form {
+    grid-area: opacity-input;
+    justify-self: right;
 }
 
 .slider {
     grid-area: slider;
-}
-
-.divider {
-    grid-area: divider;
 }
