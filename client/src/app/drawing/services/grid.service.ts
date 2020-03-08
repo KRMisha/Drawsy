@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 
 const gridSizeVariation = 5;
+const opacityRange = 100;
 
 @Injectable({
     providedIn: 'root',
 })
 export class GridService {
-    gridSize = 50;
+    gridSize = 100;
+    opacity = 1;
     isDisplayed = false;
     private gridPatternElement: SVGPatternElement;
     private gridPathElement: SVGPathElement;
@@ -35,8 +37,14 @@ export class GridService {
     }
 
     private updateGridSize(): void {
-        this.gridPathElement.setAttribute('d', `M ${this.gridSize} 0 L 0 0 0 100`);
+        this.gridPathElement.setAttribute('d', `M ${this.gridSize} 0 L 0 0 0 ${this.gridSize}`);
         this.gridPatternElement.setAttribute('width', this.gridSize.toString());
         this.gridPatternElement.setAttribute('height', this.gridSize.toString());
+        this.gridPathElement.setAttribute('fill-opacity', '0.1');
+    }
+
+    updateOpacity(opacity: number): void {
+        this.opacity = opacity / opacityRange;
+        this.gridPatternElement.setAttribute('stroke-opacity', `${this.opacity}`);
     }
 }

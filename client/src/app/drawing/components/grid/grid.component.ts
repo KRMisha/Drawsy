@@ -16,6 +16,6 @@ export class GridComponent implements OnInit {
     }
 
     selectIcon(): void {
-        this.gridService.isDisplayed ? (this.icon = 'grid_on') : (this.icon = 'grid_off');
+        this.gridService.isDisplayed ? (this.icon = 'grid_off') : (this.icon = 'grid_on');
     }
 }

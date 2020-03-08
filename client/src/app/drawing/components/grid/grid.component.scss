@@ -1,14 +1,25 @@
 .container {
     display: grid;
     grid-template-columns: 60px max-content;
+    grid-template-areas:
+        'toggle dimension'
+        'alpha-title alpha-input'
+        'slider slider'
+        'divider divider';
     justify-content: center;
+    align-content: center;
 }
 
 .toggle-button {
+    grid-area: toggle;
     width: 48px !important;
     height: 48px !important;
     min-width: unset !important;
     padding: 0px;
+}
+
+.dimension-buttons-container {
+    grid-area: dimension;
 }
 
 .input-button {
@@ -21,4 +32,23 @@
 
 .input {
     text-align: center;
+}
+
+.mat-h4 {
+    grid-area: alpha-title;
+    margin-bottom: 0px !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.alpha-input {
+    grid-area: alpha-input;
+}
+
+.slider {
+    grid-area: slider;
+}
+
+.divider {
+    grid-area: divider;
 }
