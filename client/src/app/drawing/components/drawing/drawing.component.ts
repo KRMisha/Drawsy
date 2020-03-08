@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, 
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({
@@ -15,12 +16,14 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
     @ViewChild('appGridPattern', { static: false }) private svgGridPattern: ElementRef<SVGPatternElement>;
     @ViewChild('appGridPath', { static: false }) private svgGridPath: ElementRef<SVGPathElement>;
+    private areShortcutsEnabled = true;
 
     constructor(
         private renderer: Renderer2,
         private drawingService: DrawingService,
         private toolSelectorService: ToolSelectorService,
         private gridService: GridService,
+        private modalService: ModalService,
     ) {}
 
     ngOnInit(): void {
@@ -66,18 +69,34 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectorService.onKeyDown(event);
-        switch (event.key) {
-            case 'g':
-                this.gridService.toggleGrid();
-                break;
-            case '+':
-                if (event.shiftKey) {
-                    this.gridService.raiseGridSize();
-                }
-                break;
-            case '-':
-                this.gridService.lowerGridSize();
-                break;
+        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
+            switch (event.key) {
+                case 'g':
+                    this.gridService.toggleGrid();
+                    break;
+                case '+':
+                    if (event.shiftKey) {
+                        this.gridService.raiseGridSize();
+                    }
+                    break;
+                case '-':
+                    this.gridService.lowerGridSize();
+                    break;
+            }
+        }
+    }
+
+    @HostListener('document:focusin', ['$event'])
+    onFocusIn(event: FocusEvent): void {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = false;
+        }
+    }
+
+    @HostListener('document:focusout', ['$event'])
+    onFocusOut(event: FocusEvent): void {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = true;
         }
     }
 
