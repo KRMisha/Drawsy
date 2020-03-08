@@ -7,6 +7,7 @@
         'slider slider'
         'divider divider';
     justify-content: center;
+    align-content: center;
 }
 
 .toggle-button {
@@ -35,6 +36,9 @@
 
 .mat-h4 {
     grid-area: alpha-title;
+    margin-bottom: 0px !important;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .alpha-input {

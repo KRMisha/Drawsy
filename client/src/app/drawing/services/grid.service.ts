@@ -45,8 +45,6 @@ export class GridService {
 
     updateOpacity(opacity: number): void {
         this.opacity = opacity / opacityRange;
-        console.log(opacity);
-        console.log(this.opacity);
         this.gridPatternElement.setAttribute('stroke-opacity', `${this.opacity}`);
     }
 }
