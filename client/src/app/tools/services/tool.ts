@@ -31,7 +31,6 @@ export abstract class Tool {
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
-    onElementHover(element: SVGElement): void {}
     onToolDeselection(): void {}
     // tslint:enable: empty
 

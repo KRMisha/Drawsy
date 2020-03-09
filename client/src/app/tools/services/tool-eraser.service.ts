@@ -18,7 +18,7 @@ export class ToolEraserService extends Tool {
     private svgEraserElement: SVGRectElement;
     private svgSelectedShapeRect: SVGRectElement;
 
-    private svgElementUnderCursor: SVGElement | null = null;
+    private svgElementUnderCursor?: SVGElement = undefined;
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 
@@ -80,7 +80,7 @@ export class ToolEraserService extends Tool {
         if (elementsUnderEraser.length === 0) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
-            this.svgElementUnderCursor = null;
+            this.svgElementUnderCursor = undefined;
             return;
         }
 
@@ -92,12 +92,12 @@ export class ToolEraserService extends Tool {
             this.displayRedRectAroundElement(elementToConsider);
         }
 
-        if (this.svgElementUnderCursor && this.isMouseDown) {
+        if (this.svgElementUnderCursor !== undefined && this.isMouseDown) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
             this.drawingService.removeElement(this.svgElementUnderCursor);
             this.svgElementsDeletedDuringDrag.push(this.svgElementUnderCursor);
-            this.svgElementUnderCursor = null;
+            this.svgElementUnderCursor = undefined;
         }
     }
 
@@ -146,7 +146,7 @@ export class ToolEraserService extends Tool {
     }
 
     private restoreElementUnderCursorAttributes(): void {
-        if (this.svgElementUnderCursor) {
+        if (this.svgElementUnderCursor !== undefined) {
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke-width', this.elementUnderCursorStrokeWidth);
         }

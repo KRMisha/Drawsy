@@ -8,4 +8,6 @@ export enum ToolNames {
     Polygon = 'Polygone',
     Eyedropper = 'Pipette',
     Eraser = 'Efface',
+    SprayCan = 'Aérosol',
+    Recolor = 'Applicateur de couleur',
 }

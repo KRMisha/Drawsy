@@ -74,6 +74,18 @@ export class Color {
         return newColor;
     }
 
+    static fromRgbaString(rgbaString: string): Color {
+        const rgbaValues = rgbaString
+            .substring(rgbaString.indexOf('(') + 1, rgbaString.lastIndexOf(')'))
+            .split(',')
+            .map((x: string) => parseFloat(x.trim()));
+        const redIndex = 0;
+        const greenIndex = 1;
+        const blueIndex = 2;
+        const alphaIndex = 3;
+        return this.fromRgba(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex], rgbaValues[alphaIndex]);
+    }
+
     setHsv(hue: number, saturation: number, value: number): void {
         // All constants are taken from this algorithm:
         // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB

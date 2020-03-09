@@ -35,17 +35,14 @@ export class ToolEyedropperService extends Tool {
         pixel.x = Math.round(pixel.x);
         pixel.y = Math.round(pixel.y);
 
-        return new Promise<Color>((resolve: (color: Color) => void) => {
-            this.drawingService.getCanvasFromSvgRoot(this.drawingService.drawingRoot).then((canvas: HTMLCanvasElement) => {
-                const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-                const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
-                const colorIndex = pixel.y * (canvas.width * valuesPerColorCount) + pixel.x * valuesPerColorCount;
-                const red = data[colorIndex];
-                const green = data[colorIndex + greenIndexOffset];
-                const blue = data[colorIndex + blueIndexOffset];
-                const alpha = data[colorIndex + alphaIndexOffset];
-                resolve(Color.fromRgba(red, green, blue, alpha));
-            });
-        });
+        const canvas = await this.drawingService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
+        const colorIndex = pixel.y * (canvas.width * valuesPerColorCount) + pixel.x * valuesPerColorCount;
+        const red = data[colorIndex];
+        const green = data[colorIndex + greenIndexOffset];
+        const blue = data[colorIndex + blueIndexOffset];
+        const alpha = data[colorIndex + alphaIndexOffset];
+        return Color.fromRgba(red, green, blue, alpha);
     }
 }

@@ -19,7 +19,7 @@ const lineClosingPixelTolerance = 3;
     providedIn: 'root',
 })
 export class ToolLineService extends Tool {
-    private groupElement: SVGElement;
+    private groupElement: SVGGElement;
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
     private isCurrentlyDrawing = false;
@@ -167,12 +167,14 @@ export class ToolLineService extends Tool {
         this.junctionSize = junction.junctionSize;
 
         const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
-        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue) / 2;
+        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
+        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
         this.renderer.setAttribute(this.groupElement, 'shape-padding', padding.toString());
+
         this.drawingService.addElement(this.groupElement);
 
         this.polyline = this.createNewPolyline();
@@ -249,7 +251,6 @@ export class ToolLineService extends Tool {
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', `${this.junctionSize / 2}`);
-        this.renderer.setAttribute(circle, 'fill', this.groupElement.getAttribute('stroke') as string);
         this.junctionPoints.push(circle);
         return circle;
     }

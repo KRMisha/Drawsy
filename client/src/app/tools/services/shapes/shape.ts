@@ -12,7 +12,7 @@ import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export class Shape extends Tool {
-    private shape: SVGElement | null;
+    private shape?: SVGElement;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
@@ -54,11 +54,9 @@ export class Shape extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        console.log('a');
         this.mousePosition = this.getMousePosition(event);
         this.isMouseDown = this.isMouseInside && event.button === ButtonId.Left;
         if (this.isMouseInside) {
-            console.log('b');
             this.shape = this.createNewShape();
             this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());
             this.origin = this.getMousePosition(event);
@@ -68,9 +66,9 @@ export class Shape extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button === ButtonId.Left && this.shape) {
+        if (event.button === ButtonId.Left && this.shape !== undefined) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
-            this.shape = null;
+            this.shape = undefined;
         }
     }
 

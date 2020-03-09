@@ -13,10 +13,9 @@ const defaultDimensions: Vec2 = { x: 1300, y: 800 };
     providedIn: 'root',
 })
 export class DrawingService {
-    private cachedCanvas: HTMLCanvasElement | null = null;
+    private cachedCanvas?: HTMLCanvasElement = undefined;
 
     private mouseUpfunctionMap = new Map<SVGElement, () => void>();
-    private mouseMovefunctionMap = new Map<SVGElement, () => void>();
 
     private transformationMap = new Map<SVGElement, SvgTransformations>();
 
@@ -25,10 +24,8 @@ export class DrawingService {
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
-    private elementHoveredSource = new Subject<SVGElement>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
-    elementHovered$ = this.elementHoveredSource.asObservable();
 
     renderer: Renderer2;
 
@@ -42,7 +39,7 @@ export class DrawingService {
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     get backgroundColor(): Color {
@@ -61,14 +58,10 @@ export class DrawingService {
         const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
         });
-        const mouseMoveFunction = this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
-            this.elementHoveredSource.next(element);
-        });
 
         this.mouseUpfunctionMap.set(element, mouseUpFunction);
-        this.mouseMovefunctionMap.set(element, mouseMoveFunction);
 
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     removeElement(element: SVGElement): void {
@@ -85,13 +78,7 @@ export class DrawingService {
         }
         this.mouseUpfunctionMap.delete(element);
 
-        const mouseMoveFunction = this.mouseMovefunctionMap.get(element);
-        if (mouseMoveFunction) {
-            mouseMoveFunction();
-        }
-        this.mouseMovefunctionMap.delete(element);
-
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     addUiElement(element: SVGElement): void {
@@ -106,7 +93,7 @@ export class DrawingService {
         for (const element of this.svgElements) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     clearStoredElements(): void {
@@ -115,22 +102,9 @@ export class DrawingService {
         }
     }
 
-    async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
-        const svg64 = btoa(root.outerHTML);
-        const image = new Image();
-        image.src = 'data:image/svg+xml;base64,' + svg64;
-        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
-            image.onload = () => {
-                resolve(image);
-            };
-        });
-    }
-
     async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
-        if (this.cachedCanvas !== null) {
-            return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
-                resolve(this.cachedCanvas as HTMLCanvasElement);
-            });
+        if (this.cachedCanvas !== undefined) {
+            return this.cachedCanvas;
         }
 
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
@@ -138,13 +112,10 @@ export class DrawingService {
         this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
 
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        return new Promise<HTMLCanvasElement>((resolve: (canvas: HTMLCanvasElement) => void) => {
-            this.getImageFromSvgRoot(root).then((image: HTMLImageElement) => {
-                context.drawImage(image, 0, 0);
-                this.cachedCanvas = canvas;
-                resolve(canvas);
-            });
-        });
+        const image = await this.getImageFromSvgRoot(root);
+        context.drawImage(image, 0, 0);
+        this.cachedCanvas = canvas;
+        return canvas;
     }
 
     getElementsUnderPoint(point: Vec2): SVGElement[] {
@@ -174,9 +145,9 @@ export class DrawingService {
         } as Rect;
     }
 
-    getElementListBounds(elements: SVGElement[]): Rect | null {
+    getElementListBounds(elements: SVGElement[]): Rect | undefined {
         if (elements.length === 0) {
-            return null;
+            return undefined;
         }
 
         const firstShapeBounds = this.getElementBounds(elements[0]);
@@ -210,6 +181,17 @@ export class DrawingService {
             transformations.translation.y += moveOffset.y;
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
+    }
+
+    private async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
+        const svg64 = btoa(root.outerHTML);
+        const image = new Image();
+        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
+            image.onload = () => {
+                resolve(image);
+            };
+            image.src = 'data:image/svg+xml;base64,' + svg64;
+        });
     }
 }

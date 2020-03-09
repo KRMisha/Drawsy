@@ -48,17 +48,9 @@ export class DrawingSerializerService {
             this.drawingService.dimensions.x = drawingRoot.viewBox.baseVal.width;
             this.drawingService.dimensions.y = drawingRoot.viewBox.baseVal.height;
 
-            const backgroundRectFill = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
-            const radix = 10;
-            const rgba = backgroundRectFill
-                .substring(backgroundRectFill.indexOf('(') + 1, backgroundRectFill.lastIndexOf(')'))
-                .split(' ')
-                .map((x: string) => parseInt(x.trim(), radix));
-            const redIndex = 0;
-            const greenIndex = 1;
-            const blueIndex = 2;
-            const alphaIndex = 3;
-            this.drawingService.backgroundColor = Color.fromRgba(rgba[redIndex], rgba[greenIndex], rgba[blueIndex], rgba[alphaIndex]);
+            const backgroundRectFillString = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+
+            this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
 
             this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
             this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
