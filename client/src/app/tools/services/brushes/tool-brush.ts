@@ -9,7 +9,7 @@ import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolBrush extends Tool {
-    private path: SVGPathElement | null;
+    private path?: SVGPathElement;
 
     constructor(
         protected drawingService: DrawingService,
@@ -86,9 +86,9 @@ export abstract class ToolBrush extends Tool {
 
     private stopDrawing(): void {
         this.isMouseDown = false;
-        if (this.path) {
+        if (this.path !== undefined) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
-            this.path = null;
+            this.path = undefined;
         }
     }
 }
