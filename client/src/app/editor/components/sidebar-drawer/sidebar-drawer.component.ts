@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -22,6 +23,9 @@ const maximumPolygonSideCount = 12;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
+    @Output() undoClicked = new EventEmitter<void>();
+    @Output() redoClicked = new EventEmitter<void>();
+
     // Make enums available to template
     ToolSetting = ToolSetting;
     Texture = Texture;
@@ -148,7 +152,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
-    constructor(private toolSelectorService: ToolSelectorService) {}
+    constructor(private toolSelectorService: ToolSelectorService, private commandService: CommandService) {}
 
     ngOnInit(): void {
         this.sizeGroup.controls.size.setValue(defaultSize);
@@ -236,11 +240,27 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.toolSelectorService.hasSetting(setting);
     }
 
-    protected getJunctionSizeErrorMessage(): string {
+    isUndoAvailable(): boolean {
+        return this.commandService.hasUndoCommands();
+    }
+
+    isRedoAvailable(): boolean {
+        return this.commandService.hasRedoCommands();
+    }
+
+    undoCommand(): void {
+        this.undoClicked.emit();
+    }
+
+    redoCommand(): void {
+        this.redoClicked.emit();
+    }
+
+    getJunctionSizeErrorMessage(): string {
         return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
     }
 
-    protected getSizeErrorMessage(): string {
+    getSizeErrorMessage(): string {
         return this.getErrorMessage(this.sizeGroup.controls.size);
     }
 
