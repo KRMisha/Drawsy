@@ -103,7 +103,7 @@ export class ToolSelectionService extends Tool {
             this.hideSelectedShapesRect();
         }
 
-        if (this.currentMouseButtonDown === null) {
+        if (this.currentMouseButtonDown === undefined) {
             this.currentMouseButtonDown = event.button;
         }
         this.lastMousePosition = this.getMousePosition(event);
@@ -158,12 +158,12 @@ export class ToolSelectionService extends Tool {
 
         if (event.button === this.currentMouseButtonDown) {
             this.currentMouseButtonDown = undefined;
+            this.isMouseDown = false;
         }
 
         this.userJustClickedOnShape = false;
         this.isMovingSelection = false;
         this.lastMousePosition = this.getMousePosition(event);
-        this.isMouseDown = false;
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -251,7 +251,7 @@ export class ToolSelectionService extends Tool {
     }
 
     private isMouseInsideSelection(mousePosition: Vec2): boolean {
-        if (this.selectionRect) {
+        if (this.selectionRect !== undefined) {
             return GeometryService.areRectsIntersecting(this.selectionRect, {
                 x: mousePosition.x,
                 y: mousePosition.y,
