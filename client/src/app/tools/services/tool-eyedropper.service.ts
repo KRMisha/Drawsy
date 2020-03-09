@@ -17,13 +17,7 @@ export class ToolEyedropperService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
-            this.getPixelColor(this.getMousePosition(event)).then((color: Color) => {
-                if (event.button === ButtonId.Left) {
-                    this.colorService.setPrimaryColor(color);
-                } else if (event.button === ButtonId.Right) {
-                    this.colorService.setSecondaryColor(color);
-                }
-            });
+            this.setColor(event);
         }
     }
 
@@ -44,5 +38,14 @@ export class ToolEyedropperService extends Tool {
         const blue = data[colorIndex + blueIndexOffset];
         const alpha = data[colorIndex + alphaIndexOffset];
         return Color.fromRgba(red, green, blue, alpha);
+    }
+
+    private async setColor(event: MouseEvent): Promise<void> {
+        const color = await this.getPixelColor(this.getMousePosition(event));
+        if (event.button === ButtonId.Left) {
+            this.colorService.setPrimaryColor(color);
+        } else if (event.button === ButtonId.Right) {
+            this.colorService.setSecondaryColor(color);
+        }
     }
 }
