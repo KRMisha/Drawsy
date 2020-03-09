@@ -10,6 +10,11 @@ export class ImportDrawingComponent {
     constructor(private drawingSerializerService: DrawingSerializerService) {}
 
     onChange(fileList: FileList): void {
-        this.drawingSerializerService.importSvgDrawing(fileList[0]);
+        this.loadSvgFile(fileList[0]);
+    }
+
+    private async loadSvgFile(file: File): Promise<void> {
+        const svgFile = await this.drawingSerializerService.importSvgDrawing(file);
+        this.drawingSerializerService.loadSvgDrawing(svgFile);
     }
 }
