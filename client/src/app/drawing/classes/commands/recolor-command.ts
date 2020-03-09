@@ -3,8 +3,8 @@ import { Command } from './command';
 export class RecolorCommand implements Command {
     constructor(
         private element: SVGElement,
-        private attributesBefore: Map<string, string | null>,
-        private attributesAfter: Map<string, string | null>,
+        private attributesBefore: Map<string, string | undefined>,
+        private attributesAfter: Map<string, string | undefined>,
     ) {}
 
     undo(): void {
@@ -15,8 +15,8 @@ export class RecolorCommand implements Command {
         this.applyAtrributeMap(this.attributesAfter);
     }
 
-    private applyAtrributeMap(map: Map<string, string | null>): void {
-        map.forEach((value: string | null, key: string) => {
+    private applyAtrributeMap(map: Map<string, string | undefined>): void {
+        map.forEach((value: string | undefined, key: string) => {
             if (value) {
                 this.element.setAttribute(key, value);
             } else {

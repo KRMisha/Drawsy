@@ -54,10 +54,10 @@ export class ToolRecolorService extends Tool {
         this.commandService.addCommand(new RecolorCommand(element, attributesBefore, attributesAfter));
     }
 
-    private getAttributesMap(element: SVGElement): Map<string, string | null> {
-        const map = new Map<string, string | null>();
-        map.set('fill', element.getAttribute('fill'))
-        map.set('stroke', element.getAttribute('stroke'))
+    private getAttributesMap(element: SVGElement): Map<string, string | undefined> {
+        const map = new Map<string, string | undefined>();
+        map.set('fill', element.getAttribute('fill') || undefined)
+        map.set('stroke', element.getAttribute('stroke') || undefined)
         return map;
     }
 }
