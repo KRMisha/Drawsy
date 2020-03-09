@@ -16,7 +16,6 @@ export class DrawingService {
     private cachedCanvas: HTMLCanvasElement | null = null;
 
     private mouseUpfunctionMap = new Map<SVGElement, () => void>();
-    private mouseMovefunctionMap = new Map<SVGElement, () => void>();
 
     private transformationMap = new Map<SVGElement, SvgTransformations>();
 
@@ -25,10 +24,8 @@ export class DrawingService {
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
-    private elementHoveredSource = new Subject<SVGElement>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
-    elementHovered$ = this.elementHoveredSource.asObservable();
 
     renderer: Renderer2;
 
@@ -61,12 +58,8 @@ export class DrawingService {
         const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
         });
-        const mouseMoveFunction = this.renderer.listen(element, 'mousemove', (event: MouseEvent) => {
-            this.elementHoveredSource.next(element);
-        });
 
         this.mouseUpfunctionMap.set(element, mouseUpFunction);
-        this.mouseMovefunctionMap.set(element, mouseMoveFunction);
 
         this.cachedCanvas = null;
     }
@@ -84,12 +77,6 @@ export class DrawingService {
             mouseUpFunction();
         }
         this.mouseUpfunctionMap.delete(element);
-
-        const mouseMoveFunction = this.mouseMovefunctionMap.get(element);
-        if (mouseMoveFunction) {
-            mouseMoveFunction();
-        }
-        this.mouseMovefunctionMap.delete(element);
 
         this.cachedCanvas = null;
     }

@@ -35,6 +35,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
+        this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
         this.gridService.setElementRoots(this.svgGridPattern.nativeElement, this.svgGridPath.nativeElement);
         this.drawingService.reappendStoredElements();
         this.toolSelectorService.afterDrawingInit();

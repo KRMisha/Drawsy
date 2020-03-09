@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { ChangeColorCommand } from '@app/drawing/classes/commands/change-color-command';
+import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -16,36 +15,49 @@ export class ToolRecolorService extends Tool {
         super(drawingService, ToolNames.Recolor);
     }
 
-    onMouseDown(event: MouseEvent): void {
-        if (this.isMouseDown) {
+    onElementClick(event: MouseEvent, element: SVGElement): void {
+        if (event.button !== ButtonId.Left && event.button !== ButtonId.Right) {
             return;
         }
-        this.isMouseDown = true;
+
+        const attributesBefore = this.getAttributesMap(element);
+
+        const elementType = (element as Node).nodeName;
+        switch (elementType) {
+            case 'path': {
+                if (event.button === ButtonId.Left) {
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                }
+                break;
+            }
+            case 'rect':
+            case 'polygon':
+            case 'ellipse':
+                const isLeftClick = event.button === ButtonId.Left;
+                const colorToApply = isLeftClick ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
+                const attributeToChange = isLeftClick ? 'fill' : 'stroke';
+                const attributeValue = element.getAttribute(attributeToChange);
+
+                if (attributeValue && attributeValue !== 'none') {
+                    this.renderer.setAttribute(element, attributeToChange, colorToApply.toRgbaString());
+                }
+                break;
+            default: {
+                if (event.button === ButtonId.Left) {
+                    this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                }
+            }
+        }
+
+        const attributesAfter = this.getAttributesMap(element);
+        this.commandService.addCommand(new RecolorCommand(element, attributesBefore, attributesAfter));
     }
 
-    onMouseUp(event: MouseEvent): void {
-        const selectedElement = this.drawingService.getElementsUnderPoint(this.getMousePosition(event))[0];
-        if (selectedElement === undefined) {
-            return;
-        }
-
-        if (event.button === ButtonId.Left) {
-            if (selectedElement.getAttribute('fill') !== 'none') {
-                const oldColor = Color.fromRgbaString(selectedElement.getAttribute('fill') as string);
-                this.commandService.addCommand(
-                    new ChangeColorCommand(selectedElement, 'fill', oldColor, this.colorService.getPrimaryColor()),
-                );
-                this.renderer.setAttribute(selectedElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-            }
-        } else if (event.button === ButtonId.Right) {
-            console.log('RIGHT');
-            if (selectedElement.getAttribute('stroke') !== 'none') {
-                const oldColor = Color.fromRgbaString(selectedElement.getAttribute('stroke') as string);
-                this.commandService.addCommand(
-                    new ChangeColorCommand(selectedElement, 'stroke', oldColor, this.colorService.getSecondaryColor()),
-                );
-                this.renderer.setAttribute(selectedElement, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
-            }
-        }
+    private getAttributesMap(element: SVGElement): Map<string, string | undefined> {
+        const map = new Map<string, string | undefined>();
+        map.set('fill', element.getAttribute('fill') || undefined);
+        map.set('stroke', element.getAttribute('stroke') || undefined);
+        return map;
     }
 }
