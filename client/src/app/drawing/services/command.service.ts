@@ -28,4 +28,12 @@ export class CommandService {
         this.undoCommands.push(command);
         this.redoCommands = [];
     }
+
+    hasUndoCommands(): boolean {
+        return this.undoCommands.length !== 0;
+    }
+
+    hasRedoCommands(): boolean {
+        return this.redoCommands.length !== 0;
+    }
 }

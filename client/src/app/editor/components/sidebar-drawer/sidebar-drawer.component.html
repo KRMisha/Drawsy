@@ -1,6 +1,5 @@
 <div class="container">
     <h1 class="mat-h1">{{ getToolName() }}</h1>
-
     <h2 class="mat-h2">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
@@ -157,5 +156,15 @@
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
+    </div>
+
+    <div class="undo-redo">
+        <h2 class="mat-h2 undo-redo-title">Annuler-refaire</h2>
+        <button mat-icon-button class="undo-button" [disabled]="!isUndoAvailable()" (click)="undoCommand()">
+            <mat-icon class="mat-icon">undo</mat-icon>
+        </button>
+        <button mat-icon-button class="redo-button" [disabled]="!isRedoAvailable()" (click)="redoCommand()">
+            <mat-icon class="mat-icon">redo</mat-icon>
+        </button>
     </div>
 </div>
