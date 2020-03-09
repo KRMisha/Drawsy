@@ -13,7 +13,7 @@ import { Tool } from './tool';
 export class ToolEyedropperService extends Tool {
     constructor(protected drawingService: DrawingService, private colorService: ColorService) {
         super(drawingService, ToolNames.Eyedropper);
-    }    
+    }
 
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
