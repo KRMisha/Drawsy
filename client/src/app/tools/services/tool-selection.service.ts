@@ -26,10 +26,10 @@ export class ToolSelectionService extends Tool {
     private userSelectionStartCoords: Vec2;
     private isMouseDownInside: boolean;
     private selectedElements: SVGElement[] = [];
-    private currentMouseButtonDown: ButtonId | null = null;
+    private currentMouseButtonDown?: ButtonId = undefined;
     private userJustClickedOnShape = false;
     private controlPointHeld = ControlPoints.None;
-    private selectionRect: Rect | null = null;
+    private selectionRect?: Rect = undefined;
     private isMovingSelection = false;
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     private totalMoveValue: Vec2 = { x: 0, y: 0 };
@@ -84,6 +84,8 @@ export class ToolSelectionService extends Tool {
         if (this.controlPointHeld !== ControlPoints.None) {
             return;
         }
+
+        this.isMouseDown = true;
 
         this.isMouseDownInside = this.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
@@ -155,12 +157,13 @@ export class ToolSelectionService extends Tool {
         }
 
         if (event.button === this.currentMouseButtonDown) {
-            this.currentMouseButtonDown = null;
+            this.currentMouseButtonDown = undefined;
         }
 
         this.userJustClickedOnShape = false;
         this.isMovingSelection = false;
         this.lastMousePosition = this.getMousePosition(event);
+        this.isMouseDown = false;
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -203,7 +206,7 @@ export class ToolSelectionService extends Tool {
     onToolDeselection(): void {
         this.renderer.setAttribute(this.svgUserSelectionRect, 'display', 'none');
         this.selectedElements = [];
-        this.selectionRect = null;
+        this.selectionRect = undefined;
         this.hideSelectedShapesRect();
     }
 
@@ -292,7 +295,7 @@ export class ToolSelectionService extends Tool {
 
     private updateSvgSelectedShapesRect(selectedElements: SVGElement[]): void {
         const elementsBounds = this.drawingService.getElementListBounds(selectedElements);
-        if (elementsBounds !== null) {
+        if (elementsBounds !== undefined) {
             this.updateVisibleRect(this.svgSelectedShapesRect, elementsBounds);
             this.selectionRect = elementsBounds;
             const positions = [
@@ -317,7 +320,7 @@ export class ToolSelectionService extends Tool {
     }
 
     private hideSelectedShapesRect(): void {
-        this.selectionRect = null;
+        this.selectionRect = undefined;
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'display', 'none');
         for (const controlPoint of this.svgControlPoints) {
             this.renderer.setAttribute(controlPoint, 'display', 'none');

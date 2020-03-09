@@ -13,7 +13,7 @@ const defaultDimensions: Vec2 = { x: 1300, y: 800 };
     providedIn: 'root',
 })
 export class DrawingService {
-    private cachedCanvas: HTMLCanvasElement | null = null;
+    private cachedCanvas?: HTMLCanvasElement = undefined;
 
     private mouseUpfunctionMap = new Map<SVGElement, () => void>();
 
@@ -39,7 +39,7 @@ export class DrawingService {
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     get backgroundColor(): Color {
@@ -61,7 +61,7 @@ export class DrawingService {
 
         this.mouseUpfunctionMap.set(element, mouseUpFunction);
 
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     removeElement(element: SVGElement): void {
@@ -78,7 +78,7 @@ export class DrawingService {
         }
         this.mouseUpfunctionMap.delete(element);
 
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     addUiElement(element: SVGElement): void {
@@ -93,7 +93,7 @@ export class DrawingService {
         for (const element of this.svgElements) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     clearStoredElements(): void {
@@ -103,7 +103,7 @@ export class DrawingService {
     }
 
     async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
-        if (this.cachedCanvas !== null) {
+        if (this.cachedCanvas !== undefined) {
             return this.cachedCanvas;
         }
 
@@ -145,9 +145,9 @@ export class DrawingService {
         } as Rect;
     }
 
-    getElementListBounds(elements: SVGElement[]): Rect | null {
+    getElementListBounds(elements: SVGElement[]): Rect | undefined {
         if (elements.length === 0) {
-            return null;
+            return undefined;
         }
 
         const firstShapeBounds = this.getElementBounds(elements[0]);
@@ -181,7 +181,7 @@ export class DrawingService {
             transformations.translation.y += moveOffset.y;
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
-        this.cachedCanvas = null;
+        this.cachedCanvas = undefined;
     }
 
     private async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
