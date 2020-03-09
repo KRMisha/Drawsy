@@ -47,12 +47,10 @@ export abstract class ToolBrush extends Tool {
     }
 
     onEnter(event: MouseEvent): void {
-        this.isMouseInside = true;
         this.stopDrawing();
     }
 
     onLeave(event: MouseEvent): void {
-        this.isMouseInside = false;
         if (this.isMouseDown) {
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);

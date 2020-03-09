@@ -58,14 +58,6 @@ export class ToolRectangleService extends Tool {
         }
     }
 
-    onEnter(event: MouseEvent): void {
-        this.isMouseDown = false;
-    }
-
-    onLeave(event: MouseEvent): void {
-        this.isMouseDown = false;
-    }
-
     onPrimaryColorChange(color: Color): void {
         if (this.isMouseInside && this.isMouseDown) {
             this.renderer.setAttribute(this.rectangle, 'fill', color.toRgbaString());

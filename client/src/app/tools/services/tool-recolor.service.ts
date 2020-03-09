@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
-// import { CommandService } from '@app/drawing/services/command.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolNames } from '@app/tools/enums/tool-names.enum';
@@ -10,32 +11,53 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolRecolorService extends Tool {
-    constructor(protected drawingService: DrawingService, private colorService: ColorService) {
+    constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
         super(drawingService, ToolNames.Recolor);
     }
 
-    onMouseDown(event: MouseEvent): void {
-        if (this.isMouseDown) {
+    onElementClick(event: MouseEvent, element: SVGElement): void {
+        if (event.button !== ButtonId.Left && event.button !== ButtonId.Right) {
             return;
         }
-        this.isMouseDown = true;
+
+        const attributesBefore = this.getAttributesMap(element);
+
+        const elementType = (element as Node).nodeName;
+        switch (elementType) {
+            case 'path': {
+                if (event.button === ButtonId.Left) {
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                }
+                break;
+            }
+            case 'rect':
+            case 'polygon':
+            case 'ellipse':
+                const isLeftClick = event.button === ButtonId.Left;
+                const colorToApply = isLeftClick ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
+                const attributeToChange = isLeftClick ? 'fill' : 'stroke';
+                const attributeValue = element.getAttribute(attributeToChange);
+
+                if (attributeValue && attributeValue !== 'none') {
+                    this.renderer.setAttribute(element, attributeToChange, colorToApply.toRgbaString());
+                }
+                break;
+            default: {
+                if (event.button === ButtonId.Left) {
+                    this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                }
+            }
+        }
+
+        const attributesAfter = this.getAttributesMap(element);
+        this.commandService.addCommand(new RecolorCommand(element, attributesBefore, attributesAfter));
     }
 
-    onMouseUp(event: MouseEvent): void {
-        const selectedElement = this.drawingService.getElementsUnderPoint(this.getMousePosition(event))[0];
-        if (selectedElement === undefined) {
-            return;
-        }
-
-        if (event.button === ButtonId.Left) {
-            if (selectedElement.getAttribute('fill') !== 'none') {
-                this.renderer.setAttribute(selectedElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-            }
-        } else if (event.button === ButtonId.Right) {
-            console.log('RIGHT');
-            if (selectedElement.getAttribute('stroke') !== 'none') {
-                this.renderer.setAttribute(selectedElement, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
-            }
-        }
+    private getAttributesMap(element: SVGElement): Map<string, string | null> {
+        const map = new Map<string, string | null>();
+        map.set('fill', element.getAttribute('fill'))
+        map.set('stroke', element.getAttribute('stroke'))
+        return map;
     }
 }

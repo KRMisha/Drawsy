@@ -85,7 +85,6 @@ export class ToolSelectionService extends Tool {
             return;
         }
 
-        this.isMouseDown = true;
         this.isMouseDownInside = this.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (this.isMouseInside) {
@@ -159,7 +158,6 @@ export class ToolSelectionService extends Tool {
             this.currentMouseButtonDown = null;
         }
 
-        this.isMouseDown = false;
         this.userJustClickedOnShape = false;
         this.isMovingSelection = false;
         this.lastMousePosition = this.getMousePosition(event);
