@@ -56,6 +56,10 @@
         </div>
     </div>
     <mat-drawer #appDrawer mode="side" position="end" opened class="tool-settings">
-        <app-sidebar-drawer [selectedButtonIndex]="selectedButton.toolIndex" (undoClicked)="undo()" (redoClicked)="redo()"></app-sidebar-drawer>
+        <app-sidebar-drawer
+            [selectedButtonIndex]="selectedButton.toolIndex"
+            (undoClicked)="undo()"
+            (redoClicked)="redo()"
+        ></app-sidebar-drawer>
     </mat-drawer>
 </mat-drawer-container>

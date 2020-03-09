@@ -125,12 +125,12 @@ export class SidebarComponent implements OnInit {
     }
 
     undo(): void {
-      this.commandService.undo();
-      this.toolSelectorService.selectedTool.onToolDeselection();
+        this.commandService.undo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
     }
 
     redo(): void {
-      this.commandService.redo();
-      this.toolSelectorService.selectedTool.onToolDeselection();
+        this.commandService.redo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
     }
 }

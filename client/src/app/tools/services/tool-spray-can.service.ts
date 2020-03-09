@@ -37,7 +37,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!this.isMouseInside && event.button !== ButtonId.Left) {
+        if (!this.isMouseInside || event.button !== ButtonId.Left) {
             return;
         }
 
@@ -55,7 +55,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private stopSpray(): void {
-        if (!this.groupElement) {
+        if (this.groupElement === undefined) {
             return;
         }
         window.clearInterval(this.interval);

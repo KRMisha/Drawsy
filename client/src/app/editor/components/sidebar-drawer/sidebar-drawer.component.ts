@@ -249,7 +249,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     undoCommand(): void {
-      this.undoClicked.emit();
+        this.undoClicked.emit();
     }
 
     redoCommand(): void {
