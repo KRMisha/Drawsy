@@ -1,5 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
+import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -28,38 +29,48 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    exportDrawing(fileName: string, fileType: string): void {
-        this.drawingService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot).then((canvas: HTMLCanvasElement) => {
-            const link = this.renderer.createElement('a');
-            link.download = fileName;
-            link.href = canvas.toDataURL(fileType);
-            link.click();
-        });
+    async exportDrawing(fileName: string, fileType: string): Promise<void> {
+        const link = this.renderer.createElement('a');
+        link.download = fileName;
+        const canvas = await this.drawingService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        link.href = canvas.toDataURL(fileType);
+        link.click();
     }
 
-    importSvgDrawing(file: File): void {
-        const fileReader: FileReader = new FileReader();
+    async importSvgDrawing(file: File): Promise<SvgFileContainer> {
+        const fileContent = await this.readFile(file);
 
-        fileReader.onload = () => {
-            const domParser = new DOMParser();
-            const document = domParser.parseFromString(fileReader.result as string, 'image/svg+xml');
-            const drawingRoot = document.getElementsByTagName('svg')[0];
+        const domParser = new DOMParser();
+        const document = domParser.parseFromString(fileContent, 'image/svg+xml');
 
-            this.drawingService.dimensions.x = drawingRoot.viewBox.baseVal.width;
-            this.drawingService.dimensions.y = drawingRoot.viewBox.baseVal.height;
+        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
+        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
+        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        const fileUrl = URL.createObjectURL(file);
+        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, url: fileUrl } as SvgFileContainer;
+    }
 
-            const backgroundRectFillString = drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+    loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
+        this.drawingService.dimensions.x = svgFileContainer.drawingRoot.viewBox.baseVal.width;
+        this.drawingService.dimensions.y = svgFileContainer.drawingRoot.viewBox.baseVal.height;
 
-            this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
+        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
 
-            this.drawingService.title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
-            this.drawingService.labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
 
-            const svgDrawingContent = drawingRoot.getElementsByTagName('g')[0];
-            for (const element of Array.from(svgDrawingContent.children)) {
-                this.drawingService.addElement(element as SVGElement);
-            }
-        };
-        fileReader.readAsText(file);
+        const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
+        for (const element of Array.from(svgDrawingContent.children)) {
+            this.drawingService.addElement(element as SVGElement);
+        }
+    }
+
+    private async readFile(file: File): Promise<string> {
+        return new Promise<string>((resolve: (fileContent: string) => void): void => {
+            const fileReader: FileReader = new FileReader();
+            fileReader.onload = () => {
+                resolve(fileReader.result as string);
+            };
+            fileReader.readAsText(file);
+        });
     }
 }
