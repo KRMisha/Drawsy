@@ -78,11 +78,9 @@
 .undo-redo {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-areas: 'title undo redo';
-    align-content: flex-end;
-    align-items: center;
-    justify-items: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
 }
 
 .undo-redo-title {
@@ -91,8 +89,14 @@
 
 .undo-button {
     grid-area: undo;
+    margin-bottom: 10px;
 }
 
 .redo-button {
     grid-area: redo;
+    margin-bottom: 10px;
+}
+
+.command-icon {
+    transform: scale(1.5);
 }

@@ -71,15 +71,13 @@ export class SidebarComponent implements OnInit {
                 // tslint:enable: no-magic-numbers
                 case 'z': {
                     if (event.ctrlKey) {
-                        this.commandService.undo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.undo();
                     }
                     break;
                 }
                 case 'Z': {
                     if (event.ctrlKey) {
-                        this.commandService.redo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.redo();
                     }
                     break;
                 }
@@ -124,5 +122,15 @@ export class SidebarComponent implements OnInit {
 
     openGuideModal(): void {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    undo(): void {
+      this.commandService.undo();
+      this.toolSelectorService.selectedTool.onToolDeselection();
+    }
+
+    redo(): void {
+      this.commandService.redo();
+      this.toolSelectorService.selectedTool.onToolDeselection();
     }
 }

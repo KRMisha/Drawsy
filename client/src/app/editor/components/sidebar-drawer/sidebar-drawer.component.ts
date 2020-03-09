@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
@@ -23,6 +23,9 @@ const maximumPolygonSideCount = 12;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
+    @Output() undoClicked = new EventEmitter<void>();
+    @Output() redoClicked = new EventEmitter<void>();
+
     // Make enums available to template
     ToolSetting = ToolSetting;
     Texture = Texture;
@@ -246,11 +249,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     undoCommand(): void {
-        this.commandService.undo();
+      this.undoClicked.emit();
     }
 
     redoCommand(): void {
-        this.commandService.redo();
+        this.redoClicked.emit();
     }
 
     getJunctionSizeErrorMessage(): string {
