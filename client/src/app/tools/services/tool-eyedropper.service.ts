@@ -4,7 +4,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { ToolNames } from '../enums/tool-names.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from './tool';
 
 @Injectable({
@@ -12,11 +12,11 @@ import { Tool } from './tool';
 })
 export class ToolEyedropperService extends Tool {
     constructor(protected drawingService: DrawingService, private colorService: ColorService) {
-        super(drawingService, ToolNames.Eyedropper);
+        super(drawingService, ToolName.Eyedropper);
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside) {
+        if (Tool.isMouseInside) {
             this.setColor(event);
         }
     }

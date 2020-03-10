@@ -1,4 +1,4 @@
-export enum ToolNames {
+export enum ToolName {
     Pencil = 'Crayon',
     Brush = 'Pinceau',
     Line = 'Ligne',

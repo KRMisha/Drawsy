@@ -4,7 +4,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from './shape';
 
@@ -13,7 +13,7 @@ import { Shape } from './shape';
 })
 export class ToolRectangleService extends Shape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolNames.Rectangle);
+        super(drawingService, colorService, commandService, ToolName.Rectangle);
     }
 
     protected createNewShape(): SVGElement {

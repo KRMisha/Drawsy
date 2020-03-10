@@ -15,27 +15,29 @@ const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 export class DrawingService {
     private cachedCanvas?: HTMLCanvasElement = undefined;
 
-    private mouseUpfunctionMap = new Map<SVGElement, () => void>();
+    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
 
     private transformationMap = new Map<SVGElement, SvgTransformations>();
 
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
-    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
-
     private elementClickedSource = new Subject<SvgClickEvent>();
+
+    private _drawingRoot: SVGSVGElement; // tslint:disable-line: variable-name
+
+    private _dimensions: Vec2 = defaultDimensions; // tslint:disable-line: variable-name
+
+    readonly svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
     elementClicked$ = this.elementClickedSource.asObservable();
 
     renderer: Renderer2;
 
-    drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
 
     title = 'Sans titre';
     labels: string[] = [];
-    dimensions: Vec2 = defaultDimensions;
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
@@ -46,8 +48,24 @@ export class DrawingService {
         return this._backgroundColor;
     }
 
-    get svgElements(): SVGElement[] {
-        return this._svgElements;
+    set drawingRoot(drawingRoot: SVGSVGElement) {
+        this._drawingRoot = drawingRoot;
+        const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
+        this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
+    }
+
+    get drawingRoot(): SVGSVGElement {
+        return this._drawingRoot;
+    }
+
+    set dimensions(dimensions: Vec2) {
+        this._dimensions = dimensions;
+        const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
+        this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
+    }
+
+    get dimensions(): Vec2 {
+        return this._dimensions;
     }
 
     addElement(element: SVGElement): void {
@@ -59,7 +77,7 @@ export class DrawingService {
             this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
         });
 
-        this.mouseUpfunctionMap.set(element, mouseUpFunction);
+        this.mouseUpFunctionMap.set(element, mouseUpFunction);
 
         this.cachedCanvas = undefined;
     }
@@ -72,11 +90,11 @@ export class DrawingService {
             this.transformationMap.delete(element);
         }
 
-        const mouseUpFunction = this.mouseUpfunctionMap.get(element);
+        const mouseUpFunction = this.mouseUpFunctionMap.get(element);
         if (mouseUpFunction) {
             mouseUpFunction();
         }
-        this.mouseUpfunctionMap.delete(element);
+        this.mouseUpFunctionMap.delete(element);
 
         this.cachedCanvas = undefined;
     }
@@ -108,8 +126,8 @@ export class DrawingService {
         }
 
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
-        this.renderer.setAttribute(canvas, 'width', this.dimensions.x.toString());
-        this.renderer.setAttribute(canvas, 'height', this.dimensions.y.toString());
+        this.renderer.setAttribute(canvas, 'width', root.viewBox.baseVal.width.toString());
+        this.renderer.setAttribute(canvas, 'height', root.viewBox.baseVal.height.toString());
 
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const image = await this.getImageFromSvgRoot(root);
