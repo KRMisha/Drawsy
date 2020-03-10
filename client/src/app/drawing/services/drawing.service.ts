@@ -22,19 +22,18 @@ export class DrawingService {
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
-
-    private _drawingRoot: SVGSVGElement; // tslint:disable-line: variable-name
-
-    private _dimensions: Vec2 = defaultDimensions; // tslint:disable-line: variable-name
-
+    
     readonly svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
-
+    
     elementClicked$ = this.elementClickedSource.asObservable();
-
+    
     renderer: Renderer2;
-
+    
+    drawingRoot: SVGSVGElement; 
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
+
+    dimensions: Vec2 = defaultDimensions;
 
     title = 'Sans titre';
     labels: string[] = [];
@@ -46,28 +45,6 @@ export class DrawingService {
 
     get backgroundColor(): Color {
         return this._backgroundColor;
-    }
-
-    set drawingRoot(drawingRoot: SVGSVGElement) {
-        this._drawingRoot = drawingRoot;
-        const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
-        this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
-    }
-
-    get drawingRoot(): SVGSVGElement {
-        return this._drawingRoot;
-    }
-
-    set dimensions(dimensions: Vec2) {
-        this._dimensions = dimensions;
-        if (this.drawingRoot !== undefined) {
-            const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
-            this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
-        }
-    }
-
-    get dimensions(): Vec2 {
-        return this._dimensions;
     }
 
     addElement(element: SVGElement, elementNextNeighbour?: SVGElement): void {
