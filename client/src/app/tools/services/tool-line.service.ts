@@ -6,8 +6,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -35,16 +35,16 @@ export class ToolLineService extends Tool {
     private junctionSize: number;
 
     constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolNames.Line);
-        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        super(drawingService, ToolName.Line);
+        this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
             hasJunction: false,
-            junctionSize: defaultJunctionSize,
+            junctionSize: ToolDefaults.defaultJunctionSize,
         } as JunctionSettings);
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!this.isMouseInside) {
+        if (!Tool.isMouseInside) {
             return;
         }
 

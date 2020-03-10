@@ -126,6 +126,10 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         return this.drawingService.dimensions.y;
     }
 
+    getViewBox(): string {
+        return `0 0 ${this.getWidth()} ${this.getHeight()}`;
+    }
+
     getBackgroundColor(): string {
         return this.drawingService.backgroundColor.toRgbaString();
     }

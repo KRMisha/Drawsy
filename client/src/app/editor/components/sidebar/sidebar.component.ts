@@ -48,7 +48,9 @@ export class SidebarComponent implements OnInit {
                     this.setSelectedTool(5);
                     break;
                 case 'a':
-                    this.setSelectedTool(9);
+                    if (!event.ctrlKey) {
+                        this.setSelectedTool(9);
+                    }
                     break;
                 case 'c':
                     this.setSelectedTool(0);
@@ -62,6 +64,9 @@ export class SidebarComponent implements OnInit {
                 case 'l':
                     this.setSelectedTool(2);
                     break;
+                case 'r':
+                    this.setSelectedTool(10);
+                    break;
                 case 's':
                     this.setSelectedTool(7);
                     break;
@@ -71,15 +76,15 @@ export class SidebarComponent implements OnInit {
                 // tslint:enable: no-magic-numbers
                 case 'z': {
                     if (event.ctrlKey) {
-                        this.commandService.undo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.undo();
+                        event.preventDefault();
                     }
                     break;
                 }
                 case 'Z': {
                     if (event.ctrlKey) {
-                        this.commandService.redo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.redo();
+                        event.preventDefault();
                     }
                     break;
                 }
@@ -124,5 +129,15 @@ export class SidebarComponent implements OnInit {
 
     openGuideModal(): void {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    undo(): void {
+        this.commandService.undo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
+    }
+
+    redo(): void {
+        this.commandService.redo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
     }
 }

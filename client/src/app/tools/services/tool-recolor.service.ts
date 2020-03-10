@@ -4,7 +4,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -12,7 +12,7 @@ import { Tool } from '@app/tools/services/tool';
 })
 export class ToolRecolorService extends Tool {
     constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolNames.Recolor);
+        super(drawingService, ToolName.Recolor);
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {

@@ -5,8 +5,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { defaultSprayRadius, defaultSpraySpeed } from '@app/tools/enums/tool-defaults.enum';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
 
@@ -20,14 +20,14 @@ export class ToolSprayCanService extends Tool {
     private mousePosition: Vec2;
     private interval: number;
     constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolNames.SprayCan);
-        this.toolSettings.set(ToolSetting.SprayRadius, defaultSprayRadius);
-        this.toolSettings.set(ToolSetting.SpraySpeed, defaultSpraySpeed);
+        super(drawingService, ToolName.SprayCan);
+        this.toolSettings.set(ToolSetting.SprayRadius, ToolDefaults.defaultSprayRadius);
+        this.toolSettings.set(ToolSetting.SpraySpeed, ToolDefaults.defaultSpraySpeed);
     }
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (this.isMouseDown && this.isMouseInside && this.groupElement) {
+        if (Tool.isMouseDown && Tool.isMouseInside && this.groupElement) {
             window.clearInterval(this.interval);
             this.createSpray();
             this.createSprayInterval();
@@ -37,7 +37,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!this.isMouseInside && event.button !== ButtonId.Left) {
+        if (!Tool.isMouseInside || event.button !== ButtonId.Left) {
             return;
         }
 
@@ -55,7 +55,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private stopSpray(): void {
-        if (!this.groupElement) {
+        if (this.groupElement === undefined) {
             return;
         }
         window.clearInterval(this.interval);

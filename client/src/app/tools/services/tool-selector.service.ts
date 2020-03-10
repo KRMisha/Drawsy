@@ -79,11 +79,11 @@ export class ToolSelectorService implements OnDestroy {
     }
 
     setMouseDown(isMouseDown: boolean): void {
-        this.selectedTool.isMouseDown = isMouseDown;
+        Tool.isMouseDown = isMouseDown;
     }
 
     setMouseInside(isMouseInside: boolean): void {
-        this.selectedTool.isMouseInside = isMouseInside;
+        Tool.isMouseInside = isMouseInside;
     }
 
     setRenderer(renderer: Renderer2): void {
