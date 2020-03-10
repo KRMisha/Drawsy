@@ -4,7 +4,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { defaultStrokeSize } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from '@app/tools/services/shapes/shape';
@@ -15,7 +15,7 @@ import { Shape } from '@app/tools/services/shapes/shape';
 export class ToolEllipseService extends Shape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Ellipse);
-        this.toolSettings.set(ToolSetting.StrokeSize, defaultStrokeSize);
+        this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
     }
 
     protected createNewShape(): SVGElement {

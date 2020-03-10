@@ -4,7 +4,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -19,7 +19,7 @@ export abstract class ToolBrush extends Tool {
         name: ToolName,
     ) {
         super(drawingService, name);
-        this.toolSettings.set(ToolSetting.Size, defaultSize);
+        this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {

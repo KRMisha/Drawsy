@@ -7,7 +7,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { defaultStrokeSize, defaultStrokeType } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -25,8 +25,8 @@ export class Shape extends Tool {
         name: ToolName,
     ) {
         super(drawingService, name);
-        this.toolSettings.set(ToolSetting.StrokeSize, defaultStrokeSize);
-        this.toolSettings.set(ToolSetting.StrokeType, defaultStrokeType);
+        this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
+        this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
 
     protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {} // tslint:disable-line: no-empty

@@ -6,7 +6,7 @@ import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elem
 import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
@@ -15,7 +15,7 @@ import { Tool } from './tool';
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private eraserSize = defaultSize;
+    private eraserSize = ToolDefaults.defaultSize;
     private svgEraserElement: SVGRectElement;
     private svgSelectedShapeRect: SVGRectElement;
 
@@ -31,7 +31,7 @@ export class ToolEraserService extends Tool {
 
     constructor(protected drawingService: DrawingService, private commandService: CommandService) {
         super(drawingService, ToolName.Eraser);
-        this.toolSettings.set(ToolSetting.EraserSize, defaultSize);
+        this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
     }
 
     afterDrawingInit(): void {

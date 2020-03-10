@@ -5,7 +5,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { defaultSprayRadius, defaultSpraySpeed } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
@@ -21,8 +21,8 @@ export class ToolSprayCanService extends Tool {
     private interval: number;
     constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
         super(drawingService, ToolName.SprayCan);
-        this.toolSettings.set(ToolSetting.SprayRadius, defaultSprayRadius);
-        this.toolSettings.set(ToolSetting.SpraySpeed, defaultSpraySpeed);
+        this.toolSettings.set(ToolSetting.SprayRadius, ToolDefaults.defaultSprayRadius);
+        this.toolSettings.set(ToolSetting.SpraySpeed, ToolDefaults.defaultSpraySpeed);
     }
 
     onMouseMove(event: MouseEvent): void {

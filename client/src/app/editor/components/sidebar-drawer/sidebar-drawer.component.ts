@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { Subscription } from 'rxjs';
