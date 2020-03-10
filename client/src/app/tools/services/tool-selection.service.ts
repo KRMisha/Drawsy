@@ -34,6 +34,7 @@ export class ToolSelectionService extends Tool {
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     private totalMoveValue: Vec2 = { x: 0, y: 0 };
     private movingIntervalId?: number;
+    private isMouseButtonDown = false;
 
     private svgSelectedShapesRect: SVGRectElement;
     private svgUserSelectionRect: SVGRectElement;
@@ -85,7 +86,7 @@ export class ToolSelectionService extends Tool {
         if (this.controlPointHeld !== ControlPoints.None) {
             return;
         }
-
+        
         this.isMouseDownInside = Tool.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (Tool.isMouseInside) {
@@ -103,6 +104,7 @@ export class ToolSelectionService extends Tool {
         }
 
         if (this.currentMouseButtonDown === undefined) {
+            this.isMouseButtonDown = true;
             this.currentMouseButtonDown = event.button;
         }
         this.lastMousePosition = this.getMousePosition(event);
@@ -112,7 +114,7 @@ export class ToolSelectionService extends Tool {
         if (this.controlPointHeld !== ControlPoints.None) {
             return;
         }
-        if (Tool.isMouseDown && this.isMouseDownInside) {
+        if (this.isMouseButtonDown && this.isMouseDownInside) {
             if (this.isMovingSelection) {
                 const currentMousePos = this.getMousePosition(event);
                 const deltaMousePos: Vec2 = {
@@ -156,6 +158,7 @@ export class ToolSelectionService extends Tool {
         }
 
         if (event.button === this.currentMouseButtonDown) {
+            this.isMouseButtonDown = false;
             this.currentMouseButtonDown = undefined;
         }
 
