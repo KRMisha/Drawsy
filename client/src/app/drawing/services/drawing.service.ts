@@ -60,8 +60,10 @@ export class DrawingService {
 
     set dimensions(dimensions: Vec2) {
         this._dimensions = dimensions;
-        const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
-        this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
+        if (this.drawingRoot !== undefined) {
+            const viewBoxString = `0 0 ${this.dimensions.x} ${this.dimensions.y}`;
+            this.renderer.setAttribute(this.drawingRoot, 'viewBox', viewBoxString);
+        }
     }
 
     get dimensions(): Vec2 {
