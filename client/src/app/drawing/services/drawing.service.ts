@@ -68,9 +68,14 @@ export class DrawingService {
         return this._dimensions;
     }
 
-    addElement(element: SVGElement): void {
-        this.svgElements.push(element);
-        this.renderer.appendChild(this.svgDrawingContent, element);
+    addElement(element: SVGElement, elementNextNeighbour?: SVGElement): void {
+        if (elementNextNeighbour === undefined) {
+            this.svgElements.push(element);
+            this.renderer.appendChild(this.svgDrawingContent, element);
+        } else {
+            this.svgElements.splice(this.svgElements.indexOf(elementNextNeighbour), 0, element);
+            this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbour);
+        }
         this.transformationMap.set(element, new SvgTransformations());
 
         const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {

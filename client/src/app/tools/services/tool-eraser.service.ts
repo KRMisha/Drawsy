@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
+import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
@@ -24,7 +25,7 @@ export class ToolEraserService extends Tool {
 
     private isMouseDownInside = false;
 
-    private svgElementsDeletedDuringDrag: SVGElement[] = [];
+    private svgElementsDeletedDuringDrag: ElementAndItsNeighbour[] = [];
 
     private drawingElementsCopy: SVGElement[] = [];
 
@@ -62,8 +63,12 @@ export class ToolEraserService extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         if (this.svgElementsDeletedDuringDrag.length > 0) {
-            this.svgElementsDeletedDuringDrag.sort((element1: SVGElement, element2: SVGElement) => {
-                return this.drawingElementsCopy.indexOf(element1) - this.drawingElementsCopy.indexOf(element2);
+            const elementIndices = new Map<SVGElement, number>();
+            for (let i = 0; i < this.drawingElementsCopy.length; i++) {
+                elementIndices.set(this.drawingElementsCopy[i], i);
+            }
+            this.svgElementsDeletedDuringDrag.sort((element1: ElementAndItsNeighbour, element2: ElementAndItsNeighbour) => {
+                return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
             });
             this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
             this.svgElementsDeletedDuringDrag = [];
@@ -107,8 +112,12 @@ export class ToolEraserService extends Tool {
         if (this.svgElementUnderCursor !== undefined && Tool.isMouseDown && this.isMouseDownInside) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
+            const indexOfElement = this.drawingElementsCopy.indexOf(this.svgElementUnderCursor);
+            this.svgElementsDeletedDuringDrag.push({
+                element: this.svgElementUnderCursor,
+                neighbour: this.drawingElementsCopy[indexOfElement + 1],
+            });
             this.drawingService.removeElement(this.svgElementUnderCursor);
-            this.svgElementsDeletedDuringDrag.push(this.svgElementUnderCursor);
             this.svgElementUnderCursor = undefined;
         }
     }
