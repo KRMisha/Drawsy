@@ -17,10 +17,10 @@ class MockDrawingService {
     clearStoredElements = () => {};
 }
 
-class MockWindow {
-    innerWidth: number;
-    innerHeight: number;
-}
+// class MockWindow {
+//     innerWidth: number;
+//     innerHeight: number;
+// }
 
 describe('NewDrawingComponent', () => {
     let component: NewDrawingComponent;
@@ -85,49 +85,49 @@ describe('NewDrawingComponent', () => {
         expect(routerSpyObj.navigate).toHaveBeenCalled();
     });
 
-    it('should remember the dimensions were modified if they were modified manually', () => {
-        component.drawingForm.controls.width.setValue(123);
-        expect(component.wereDimensionsModified).toBe(true);
+    // it('should remember the dimensions were modified if they were modified manually', () => {
+    //     component.drawingForm.controls.width.setValue(123);
+    //     expect(component.wereDimensionsModified).toBe(true);
 
-        component.wereDimensionsModified = false;
-        component.drawingForm.controls.height.setValue(456);
-        expect(component.wereDimensionsModified).toBe(true);
-    });
+    //     component.wereDimensionsModified = false;
+    //     component.drawingForm.controls.height.setValue(456);
+    //     expect(component.wereDimensionsModified).toBe(true);
+    // });
 
-    it('should not remember the dimensions were modified if they were not modified manually', () => {
-        component.drawingForm.controls.width.setValue(123, { emitEvent: false });
-        expect(component.wereDimensionsModified).toBe(false);
+    // it('should not remember the dimensions were modified if they were not modified manually', () => {
+    //     component.drawingForm.controls.width.setValue(123, { emitEvent: false });
+    //     expect(component.wereDimensionsModified).toBe(false);
 
-        component.wereDimensionsModified = false;
-        component.drawingForm.controls.height.setValue(456, { emitEvent: false });
-        expect(component.wereDimensionsModified).toBe(false);
-    });
+    //     component.wereDimensionsModified = false;
+    //     component.drawingForm.controls.height.setValue(456, { emitEvent: false });
+    //     expect(component.wereDimensionsModified).toBe(false);
+    // });
 
-    it('#onResize should update drawing dimensions if they were never modified manually', () => {
-        component.drawingForm.controls.width.setValue(123);
-        component.drawingForm.controls.height.setValue(456);
-        component.wereDimensionsModified = false;
+    // it('#onResize should update drawing dimensions if they were never modified manually', () => {
+    //     component.drawingForm.controls.width.setValue(123);
+    //     component.drawingForm.controls.height.setValue(456);
+    //     component.wereDimensionsModified = false;
 
-        const mockWindow = new MockWindow();
-        mockWindow.innerWidth = 1337;
-        mockWindow.innerHeight = 1337;
-        component.onResize({ target: (mockWindow as unknown) as EventTarget } as Event);
+    //     const mockWindow = new MockWindow();
+    //     mockWindow.innerWidth = 1337;
+    //     mockWindow.innerHeight = 1337;
+    //     component.onResize({ target: (mockWindow as unknown) as EventTarget } as Event);
 
-        expect(component.drawingForm.controls.width.value).not.toBe(123);
-        expect(component.drawingForm.controls.height.value).not.toBe(456);
-    });
+    //     expect(component.drawingForm.controls.width.value).not.toBe(123);
+    //     expect(component.drawingForm.controls.height.value).not.toBe(456);
+    // });
 
-    it('#onResize should not update drawing dimensions if they were modified manually', () => {
-        component.drawingForm.controls.width.setValue(123);
-        component.drawingForm.controls.height.setValue(456);
-        component.wereDimensionsModified = true;
+    // it('#onResize should not update drawing dimensions if they were modified manually', () => {
+    //     component.drawingForm.controls.width.setValue(123);
+    //     component.drawingForm.controls.height.setValue(456);
+    //     component.wereDimensionsModified = true;
 
-        const mockWindow = new MockWindow();
-        mockWindow.innerWidth = 1337;
-        mockWindow.innerHeight = 1337;
-        component.onResize({ target: (mockWindow as unknown) as EventTarget } as Event);
+    //     const mockWindow = new MockWindow();
+    //     mockWindow.innerWidth = 1337;
+    //     mockWindow.innerHeight = 1337;
+    //     component.onResize({ target: (mockWindow as unknown) as EventTarget } as Event);
 
-        expect(component.drawingForm.controls.width.value).toBe(123);
-        expect(component.drawingForm.controls.height.value).toBe(456);
-    });
+    //     expect(component.drawingForm.controls.width.value).toBe(123);
+    //     expect(component.drawingForm.controls.height.value).toBe(456);
+    // });
 });
