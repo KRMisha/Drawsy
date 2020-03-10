@@ -159,10 +159,10 @@
     </div>
 
     <div class="undo-redo">
-        <button mat-icon-button class="undo-button" [disabled]="!isUndoAvailable()" (click)="undoCommand()">
+        <button mat-icon-button class="undo-button" matTooltip="Annuler" [disabled]="!isUndoAvailable()" (click)="undoCommand()">
             <mat-icon class="command-icon">undo</mat-icon>
         </button>
-        <button mat-icon-button class="redo-button" [disabled]="!isRedoAvailable()" (click)="redoCommand()">
+        <button mat-icon-button class="redo-button" matTooltip="Refaire" [disabled]="!isRedoAvailable()" (click)="redoCommand()">
             <mat-icon class="command-icon">redo</mat-icon>
         </button>
     </div>
