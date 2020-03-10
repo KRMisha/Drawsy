@@ -5,6 +5,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -15,14 +16,14 @@ export abstract class ToolBrush extends Tool {
         protected drawingService: DrawingService,
         private colorService: ColorService,
         protected commandService: CommandService,
-        name: string,
+        name: ToolName,
     ) {
         super(drawingService, name);
         this.toolSettings.set(ToolSetting.Size, defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.isMouseDown && this.isMouseInside) {
+        if (Tool.isMouseDown && Tool.isMouseInside) {
             const mousePosition = this.getMousePosition(event);
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
@@ -30,7 +31,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside && event.button === ButtonId.Left) {
+        if (Tool.isMouseInside && event.button === ButtonId.Left) {
             this.path = this.createNewPath();
 
             const mousePosition = this.getMousePosition(event);
@@ -51,7 +52,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onLeave(event: MouseEvent): void {
-        if (this.isMouseDown) {
+        if (Tool.isMouseDown) {
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
             this.stopDrawing();
@@ -59,7 +60,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onPrimaryColorChange(color: Color): void {
-        if (!this.isMouseInside || !this.isMouseDown) {
+        if (!Tool.isMouseInside || !Tool.isMouseDown) {
             return;
         }
         this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
@@ -85,7 +86,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     private stopDrawing(): void {
-        this.isMouseDown = false;
+        Tool.isMouseDown = false;
         if (this.path !== undefined) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
             this.path = undefined;

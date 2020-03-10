@@ -6,7 +6,7 @@ import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elem
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { defaultSize } from '@app/tools/enums/tool-defaults.enum';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
 
@@ -22,12 +22,14 @@ export class ToolEraserService extends Tool {
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 
+    private isMouseDownInside = false;
+
     private svgElementsDeletedDuringDrag: SVGElement[] = [];
 
     private drawingElementsCopy: SVGElement[] = [];
 
     constructor(protected drawingService: DrawingService, private commandService: CommandService) {
-        super(drawingService, ToolNames.Eraser);
+        super(drawingService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, defaultSize);
     }
 
@@ -53,6 +55,7 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        this.isMouseDownInside = Tool.isMouseInside;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
         this.onMousePositionChange(this.getMousePosition(event));
     }
@@ -67,6 +70,14 @@ export class ToolEraserService extends Tool {
         }
     }
 
+    onEnter(): void {
+        this.renderer.setAttribute(this.svgEraserElement, 'display', 'block');
+    }
+
+    onLeave(): void {
+        this.renderer.setAttribute(this.svgEraserElement, 'display', 'none');
+    }
+
     onToolDeselection(): void {
         this.svgEraserElement.setAttribute('display', 'none');
         this.svgSelectedShapeRect.setAttribute('display', 'none');
@@ -76,6 +87,7 @@ export class ToolEraserService extends Tool {
         this.eraserSize = this.toolSettings.get(ToolSetting.EraserSize) as number;
         const eraserRect = this.getEraserRectFromMousePosition(mousePosition);
         this.updateVisibleRect(this.svgEraserElement, eraserRect);
+
         const elementsUnderEraser = this.drawingService.getElementsUnderArea(eraserRect);
         if (elementsUnderEraser.length === 0) {
             this.restoreElementUnderCursorAttributes();
@@ -92,7 +104,7 @@ export class ToolEraserService extends Tool {
             this.displayRedRectAroundElement(elementToConsider);
         }
 
-        if (this.svgElementUnderCursor !== undefined && this.isMouseDown) {
+        if (this.svgElementUnderCursor !== undefined && Tool.isMouseDown && this.isMouseDownInside) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
             this.drawingService.removeElement(this.svgElementUnderCursor);
@@ -135,10 +147,11 @@ export class ToolEraserService extends Tool {
             }
         }
 
-        const defaultBorderWidth = 10;
+        const defaultBorderWidth = 3;
         let borderWidth = defaultBorderWidth;
         if (this.elementUnderCursorStrokeWidth !== 'none') {
-            borderWidth = +this.elementUnderCursorStrokeWidth + defaultBorderWidth;
+            const borderIncreaseFactor = 1.08;
+            borderWidth += +this.elementUnderCursorStrokeWidth * borderIncreaseFactor;
         }
 
         this.renderer.setAttribute(element, 'stroke', borderColor);
