@@ -39,7 +39,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
             this.mouseXPosition = this.color.alpha * canvasWidth;
             this.draw();
         });
-
+        this.color = this.colorPickerService.getColor();
         this.draw();
     }
 

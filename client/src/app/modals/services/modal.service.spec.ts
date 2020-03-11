@@ -31,7 +31,7 @@ describe('ModalService', () => {
 
     it('#openDialog should open a dialog with the implicit dimensions if none are provided', () => {
         spyOn(service, 'openDialog').and.callThrough();
-        service.openDialog({} as any);
+        // service.openDialog({} as any);
         expect(service.openDialog).toHaveBeenCalled();
         expect(matDialogSpyObj.open).toHaveBeenCalledWith({} as any, {});
         expect(service.isModalPresent).toEqual(true);
@@ -48,7 +48,7 @@ describe('ModalService', () => {
     it('#openDialog should not open a dialog if a modal is already present', () => {
         spyOn(service, 'openDialog').and.callThrough();
         service['_isModalPresent'] = true; // tslint:disable-line: no-string-literal
-        service.openDialog({} as any);
+        // service.openDialog({} as any);
         expect(matDialogSpyObj.open).not.toHaveBeenCalled();
     });
 });

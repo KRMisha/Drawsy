@@ -8,14 +8,14 @@ export class RecolorCommand implements Command {
     ) {}
 
     undo(): void {
-        this.applyAtrributeMap(this.attributesBefore);
+        this.applyAttributeMap(this.attributesBefore);
     }
 
     redo(): void {
-        this.applyAtrributeMap(this.attributesAfter);
+        this.applyAttributeMap(this.attributesAfter);
     }
 
-    private applyAtrributeMap(map: Map<string, string | undefined>): void {
+    private applyAttributeMap(map: Map<string, string | undefined>): void {
         map.forEach((value: string | undefined, key: string) => {
             if (value) {
                 this.element.setAttribute(key, value);

@@ -1,6 +1,6 @@
 import { Command } from '@app/drawing/classes/commands/command';
+import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ElementAndItsNeighbour } from '../element-and-its-neighbour';
 
 export class RemoveElementsCommand implements Command {
     constructor(private drawingService: DrawingService, private elements: ElementAndItsNeighbour[]) {}
