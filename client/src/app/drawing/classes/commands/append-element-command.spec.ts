@@ -24,12 +24,14 @@ describe('AppendElementCommand', () => {
     });
 
     it('#undo should forward removeElement calling to drawingService', () => {
-        spyOn(drawingService, 'removeElement').and.stub();
-        expect(drawingService).toHaveBeenCalledWith(svgElement);
+        spyOn(drawingService, 'removeElement');
+        command.undo();
+        expect(drawingService.removeElement).toHaveBeenCalledWith(svgElement);
     });
 
     it('#redo should forward addElement calling to drawingService', () => {
-        spyOn(drawingService, 'addElement').and.stub();
-        expect(drawingService).toHaveBeenCalledWith(svgElement);
+        spyOn(drawingService, 'addElement');
+        command.redo();
+        expect(drawingService.addElement).toHaveBeenCalledWith(svgElement);
     });
 });
