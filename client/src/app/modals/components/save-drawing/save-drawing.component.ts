@@ -108,7 +108,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     set title(title: string) {
         this.drawingPreviewService.title = title;
-        console.log('Setter called');
     }
 
     get labels(): string[] {
