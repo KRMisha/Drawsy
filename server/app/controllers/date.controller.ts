@@ -13,7 +13,7 @@ export class DateController {
     }
 
     private setupRoutes(): void {
-        this.router.get('/', (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/', (req: Request, res: Response) => {
             // Send the request to the service and send the response
             this.dateService
                 .currentTime()

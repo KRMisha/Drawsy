@@ -14,13 +14,13 @@ export class IndexController {
     }
 
     private setupRoutes(): void {
-        this.router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
             const time: Message = await this.indexService.helloWorld();
             res.json(time);
         });
 
-        this.router.get('/about', (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/about', (req: Request, res: Response) => {
             // Send the request to the service and send the response
             res.json(this.indexService.about());
         });
