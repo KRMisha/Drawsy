@@ -22,10 +22,15 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
     titleFormSubscription: Subscription;
+    labelFormSubscription: Subscription;
 
     labelForm = new FormControl('', [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]);
 
-    titleForm = new FormControl('', [Validators.required, Validators.pattern(titlePattern), Validators.maxLength(maxInputStringLength)]);
+    titleForm = new FormControl(this.drawingPreviewService.title, [
+        Validators.required,
+        Validators.pattern(titlePattern),
+        Validators.maxLength(maxInputStringLength),
+    ]);
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -34,10 +39,15 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.title = this.drawingPreviewService.title;
+        this.labels = this.drawingPreviewService.labels;
         this.titleFormSubscription = this.titleForm.valueChanges.subscribe(() => {
             if (this.titleForm.valid) {
                 this.title = this.titleForm.value;
             }
+        });
+        this.labelFormSubscription = this.labelForm.valueChanges.subscribe(() => {
+            this.labelForm.updateValueAndValidity();
         });
     }
 
@@ -98,6 +108,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     set title(title: string) {
         this.drawingPreviewService.title = title;
+        console.log('Setter called');
     }
 
     get labels(): string[] {
@@ -114,5 +125,30 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     set previewFilter(previewFilter: PreviewFilter) {
         this.drawingPreviewService.previewFilter = previewFilter;
+    }
+
+    protected getLabelError(): string {
+        console.log(this.labelForm.hasError('maxlength'));
+        return this.labelForm.hasError('pattern')
+            ? '(A-Z, a-z, 0-9) uniquement'
+            : this.labelForm.hasError('maxlength')
+            ? 'Longueur maximale 15 caractères'
+            : '';
+    }
+
+    protected getTitleError(): string {
+        return this.titleForm.hasError('pattern')
+            ? '(A-Z, a-z, 0-9) uniquement'
+            : this.titleForm.hasError('maxlength')
+            ? 'Longueur maximale 15 caractères'
+            : this.titleForm.hasError('required')
+            ? 'Titre obligatoire'
+            : '';
+    }
+
+    protected saveOnServer(): void {
+        if (this.labelForm.valid && this.titleForm.valid) {
+            console.log('SERVER DOWN');
+        }
     }
 }
