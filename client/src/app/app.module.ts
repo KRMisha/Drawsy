@@ -73,6 +73,7 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { ImportDrawingComponent } from '@app/modals/components/import-drawing/import-drawing.component';
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SaveDrawingComponent } from './modals/components/save-drawing/save-drawing.component';
 
 @NgModule({
     declarations: [
@@ -121,6 +122,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         SidebarComponent,
         SidebarDrawerComponent,
         GridSettingsComponent,
+        SaveDrawingComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -184,6 +186,7 @@ import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-draw
         ImportDrawingComponent,
         ImportExportDrawingComponent,
         NewDrawingComponent,
+        SaveDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],
