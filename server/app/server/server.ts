@@ -1,42 +1,42 @@
 import * as http from 'http';
 import { inject, injectable } from 'inversify';
+import Types from '../types';
 import { Application } from './app';
-import Types from './types';
 
 @injectable()
 export class Server {
-    private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
-    private readonly baseDix: number = 10;
+    private readonly port: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
     private server: http.Server;
 
-    constructor(@inject(Types.Application) private application: Application) {}
-
-    init(): void {
-        this.application.app.set('port', this.appPort);
-
+    constructor(@inject(Types.Application) private application: Application) {
+        this.application.app.set('port', this.port);
         this.server = http.createServer(this.application.app);
+    }
 
-        this.server.listen(this.appPort);
+    start(): void {
+        this.server.listen(this.port);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
     }
 
     private normalizePort(val: number | string): number | string | boolean {
-        const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
+        const radix = 10;
+        const port: number = typeof val === 'string' ? parseInt(val, radix) : val;
         if (isNaN(port)) {
             return val;
-        } else if (port >= 0) {
-            return port;
-        } else {
-            return false;
         }
+        if (port >= 0) {
+            return port;
+        }
+        return false;
     }
 
     private onError(error: NodeJS.ErrnoException): void {
         if (error.syscall !== 'listen') {
             throw error;
         }
-        const bind: string = typeof this.appPort === 'string' ? 'Pipe ' + this.appPort : 'Port ' + this.appPort;
+
+        const bind: string = typeof this.port === 'string' ? `Pipe ${this.port}` : `Port ${this.port}`;
         switch (error.code) {
             case 'EACCES':
                 console.error(`${bind} requires elevated privileges`);
@@ -51,14 +51,10 @@ export class Server {
         }
     }
 
-    /**
-     * Se produit lorsque le serveur se met à écouter sur le port.
-     */
     private onListening(): void {
-        const addr = this.server.address();
-        // tslint:disable-next-line:no-non-null-assertion
-        const bind: string = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr!.port}`;
-        // tslint:disable-next-line:no-console
+        const address = this.server.address();
+        // tslint:disable-next-line: no-non-null-assertion
+        const bind: string = typeof address === 'string' ? `pipe ${address}` : `port ${address!.port}`;
         console.log(`Listening on ${bind}`);
     }
 }

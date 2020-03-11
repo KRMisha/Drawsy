@@ -6,14 +6,13 @@ import Types from '../types';
 
 @injectable()
 export class DateController {
-    router: Router;
+    router = Router();
 
     constructor(@inject(Types.DateService) private dateService: DateService) {
-        this.configureRouter();
+        this.setupRoutes();
     }
 
-    private configureRouter() {
-        this.router = Router();
+    private setupRoutes(): void {
         this.router.get('/', (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             this.dateService

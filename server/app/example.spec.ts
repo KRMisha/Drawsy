@@ -7,18 +7,18 @@ describe('A starting set of test examples to showcase test-suite behaviour', () 
 
     // Return a valid value after 1000ms
     const getDelayedPromise: () => Promise<string> = async (): Promise<string> => {
-        return new Promise<string>((resolve) => {
+        const msDelay = 1000;
+        return new Promise<string>((resolve: (value: string) => void): void => {
             setTimeout(() => {
                 resolve('Hi');
-            }, 1000);
+            }, msDelay);
         });
     };
+
     // When called, return a promise that resolves with a number
     function* promiseGenerator(): IterableIterator<Promise<number>> {
-        for (;;) {
-            yield new Promise((res) => {
-                res(Math.random() * 100);
-            });
+        while (true) {
+            yield Promise.resolve(Math.random() * 100);
         }
     }
 
@@ -30,8 +30,8 @@ describe('A starting set of test examples to showcase test-suite behaviour', () 
             // Get a promise of a value that will be later resolved
             const promiseOfValue = promiseGenerator().next();
             // Assign a value to our object
-            promiseOfValue.value.then((v) => {
-                variableNeedingToBeChangedEachRun = v;
+            promiseOfValue.value.then((value: number) => {
+                variableNeedingToBeChangedEachRun = value;
                 d();
             });
         });
@@ -52,7 +52,7 @@ describe('A starting set of test examples to showcase test-suite behaviour', () 
         });
     });
 
-    it('should complete a 100% sure test with done called', (done) => {
+    it('should complete a 100% sure test with done called', (done: Mocha.Done) => {
         assert.ok(true);
         done();
     });
@@ -70,10 +70,10 @@ describe('A starting set of test examples to showcase test-suite behaviour', () 
                 done();
             });
         });
-        it('will fail if calling done AND returning a promise', (done: Mocha.Done) => {
+        it('will fail if calling done AND returning a promise', async (done: Mocha.Done) => {
             // Message from mocha:
             // Error: Resolution method is overspecified. Specify a callback *or* return a Promise; not both.
-            return getDelayedPromise().then((v: string) => {
+            return getDelayedPromise().then((value: string) => {
                 done();
             });
         });

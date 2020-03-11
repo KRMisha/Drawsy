@@ -7,15 +7,13 @@ import Types from '../types';
 
 @injectable()
 export class IndexController {
-    router: Router;
+    router = Router();
 
     constructor(@inject(Types.IndexService) private indexService: IndexService) {
-        this.configureRouter();
+        this.setupRoutes();
     }
 
-    private configureRouter(): void {
-        this.router = Router();
-
+    private setupRoutes(): void {
         this.router.get('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             const time: Message = await this.indexService.helloWorld();
