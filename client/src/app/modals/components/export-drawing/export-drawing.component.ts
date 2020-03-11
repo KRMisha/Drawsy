@@ -1,9 +1,15 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { Subscription } from 'rxjs';
+
+const labelPattern = '^([0-9a-zA-Z ])*$';
+const titlePattern = '^([0-9a-zA-Z ])*$';
+const maxInputStringLength = 15;
 
 export interface Label {
     name: string;
@@ -13,12 +19,32 @@ export interface Label {
     templateUrl: './export-drawing.component.html',
     styleUrls: ['./export-drawing.component.scss'],
 })
-export class ExportDrawingComponent {
+export class ExportDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
+
+    titleFormSubscription: Subscription;
+
+    labelForm = new FormControl('', [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]);
+
+    titleForm = new FormControl('', [Validators.required, Validators.pattern(titlePattern), Validators.maxLength(maxInputStringLength)]);
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
+    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {
+        this.labelForm.setValue(this.labels);
+    }
+
+    ngOnInit(): void {
+        this.titleFormSubscription = this.titleForm.valueChanges.subscribe(() => {
+            if (this.titleForm.valid) {
+                this.title = this.titleForm.value;
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.titleFormSubscription.unsubscribe();
+    }
 
     exportDrawingAsSvg(): void {
         this.drawingPreviewService.finalizePreview();
@@ -39,8 +65,25 @@ export class ExportDrawingComponent {
         const input = event.input;
         const value = event.value;
 
+        const control = this.labelForm;
+
         if ((value || '').trim()) {
-            this.drawingPreviewService.labels.push(value.trim());
+            control.setErrors(null);
+            const tempLabels = this.labels;
+            tempLabels.push(value.trim());
+            control.setValue(value);
+            control.updateValueAndValidity();
+            if (control.valid) {
+                control.markAsDirty();
+                input.value = '';
+            } else {
+                const index = this.labels.findIndex((tmpString: string): boolean => tmpString === value.trim());
+                if (index !== -1) {
+                    this.labels.splice(index, 1);
+                }
+            }
+        } else {
+            control.updateValueAndValidity();
         }
 
         if (input !== undefined) {
@@ -51,9 +94,14 @@ export class ExportDrawingComponent {
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
 
+        const control = this.labelForm;
+
         if (index >= 0) {
-            this.drawingPreviewService.labels.splice(index, 1);
+            this.labels.splice(index, 1);
         }
+
+        control.updateValueAndValidity();
+        control.markAsDirty();
     }
 
     get title(): string {

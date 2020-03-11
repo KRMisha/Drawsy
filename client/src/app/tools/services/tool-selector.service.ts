@@ -19,7 +19,6 @@ export class ToolSelectorService implements OnDestroy {
     private primaryColorSubscription: Subscription;
     private secondaryColorSubscription: Subscription;
     private elementClickSubscription: Subscription;
-    private elementHoverSubscription: Subscription;
 
     constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
@@ -33,17 +32,12 @@ export class ToolSelectorService implements OnDestroy {
         this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
             this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.svgElement);
         });
-
-        this.elementClickSubscription = this.drawingService.elementHovered$.subscribe((svgElement: SVGElement) => {
-            this.selectedTool.onElementHover(svgElement);
-        });
     }
 
     ngOnDestroy(): void {
         this.primaryColorSubscription.unsubscribe();
         this.secondaryColorSubscription.unsubscribe();
         this.elementClickSubscription.unsubscribe();
-        this.elementHoverSubscription.unsubscribe();
     }
 
     afterDrawingInit(): void {
@@ -85,11 +79,11 @@ export class ToolSelectorService implements OnDestroy {
     }
 
     setMouseDown(isMouseDown: boolean): void {
-        this.selectedTool.isMouseDown = isMouseDown;
+        Tool.isMouseDown = isMouseDown;
     }
 
     setMouseInside(isMouseInside: boolean): void {
-        this.selectedTool.isMouseInside = isMouseInside;
+        Tool.isMouseInside = isMouseInside;
     }
 
     setRenderer(renderer: Renderer2): void {

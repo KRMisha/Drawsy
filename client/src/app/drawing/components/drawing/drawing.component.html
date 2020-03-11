@@ -1,4 +1,9 @@
-<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.width]="getWidth()" [attr.height]="getHeight()">
+<svg #appDrawingRoot
+    xmlns="http://www.w3.org/2000/svg"
+    [attr.width]="getWidth()"
+    [attr.height]="getHeight()"
+    [attr.viewBox]="getViewBox()"
+>
     <defs>
         <filter id="brushTexture1" filterUnits="userSpaceOnUse">
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
@@ -43,11 +48,17 @@
             <feComposite in="diffuse5" in2="SourceAlpha" operator="in" result="result5" />
             <feComposite in="SourceGraphic" in2="result5" operator="arithmetic" k2="1" k3="1" />
         </filter>
+
+        <pattern #appGridPattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+            <path #appGridPath d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="10" visibility="hidden" />
+        </pattern>
     </defs>
 
     <rect width="100%" height="100%" [attr.fill]="getBackgroundColor()" />
 
     <g #appDrawingContent></g>
 
-    <g #appUserInterfaceContent></g>
+    <g #appUserInterfaceContent>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+    </g>
 </svg>

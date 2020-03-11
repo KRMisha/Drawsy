@@ -35,8 +35,10 @@ import { ColorFieldComponent } from '@app/color-picker/components/color-field/co
 import { ColorHexSelectorComponent } from '@app/color-picker/components/color-hex-selector/color-hex-selector.component';
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
 import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
+import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
+import { GridSettingsComponent } from '@app/drawing/components/grid-settings/grid-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -71,7 +73,6 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { ImportDrawingComponent } from '@app/modals/components/import-drawing/import-drawing.component';
 import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { DrawingPreviewComponent } from './drawing/components/drawing-preview/drawing-preview.component';
 
 @NgModule({
     declarations: [
@@ -119,6 +120,7 @@ import { DrawingPreviewComponent } from './drawing/components/drawing-preview/dr
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        GridSettingsComponent,
     ],
     imports: [
         AppRoutingModule,

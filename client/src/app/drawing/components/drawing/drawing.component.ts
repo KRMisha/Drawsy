@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { GridService } from '@app/drawing/services/grid.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
 @Component({
@@ -12,8 +14,17 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
+    @ViewChild('appGridPattern', { static: false }) private svgGridPattern: ElementRef<SVGPatternElement>;
+    @ViewChild('appGridPath', { static: false }) private svgGridPath: ElementRef<SVGPathElement>;
+    private areShortcutsEnabled = true;
 
-    constructor(private renderer: Renderer2, private drawingService: DrawingService, private toolSelectorService: ToolSelectorService) {}
+    constructor(
+        private renderer: Renderer2,
+        private drawingService: DrawingService,
+        private toolSelectorService: ToolSelectorService,
+        private gridService: GridService,
+        private modalService: ModalService,
+    ) {}
 
     ngOnInit(): void {
         this.drawingService.renderer = this.renderer;
@@ -24,7 +35,8 @@ export class DrawingComponent implements OnInit, AfterViewInit {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
-
+        this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
+        this.gridService.setElementRoots(this.svgGridPattern.nativeElement, this.svgGridPath.nativeElement);
         this.drawingService.reappendStoredElements();
         this.toolSelectorService.afterDrawingInit();
     }
@@ -58,6 +70,35 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectorService.onKeyDown(event);
+        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
+            switch (event.key) {
+                case 'g':
+                    this.gridService.toggleGrid();
+                    break;
+                case '+':
+                    if (event.shiftKey) {
+                        this.gridService.raiseGridSize();
+                    }
+                    break;
+                case '-':
+                    this.gridService.lowerGridSize();
+                    break;
+            }
+        }
+    }
+
+    @HostListener('document:focusin', ['$event'])
+    onFocusIn(event: FocusEvent): void {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = false;
+        }
+    }
+
+    @HostListener('document:focusout', ['$event'])
+    onFocusOut(event: FocusEvent): void {
+        if (event.target instanceof HTMLInputElement) {
+            this.areShortcutsEnabled = true;
+        }
     }
 
     @HostListener('document:keyup', ['$event'])
@@ -83,6 +124,10 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
     getHeight(): number {
         return this.drawingService.dimensions.y;
+    }
+
+    getViewBox(): string {
+        return `0 0 ${this.getWidth()} ${this.getHeight()}`;
     }
 
     getBackgroundColor(): string {

@@ -1,0 +1,47 @@
+.container {
+    display: grid;
+    grid-template-columns: 60px max-content;
+    grid-template-areas:
+        'toggle size-buttons'
+        '. opacity-input'
+        'slider slider';
+    justify-content: center;
+}
+
+.toggle-button {
+    grid-area: toggle;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: unset !important;
+    padding: 0px;
+}
+
+.size-buttons-container {
+    grid-area: size-buttons;
+    display: flex;
+}
+
+.input-button {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: unset !important;
+    padding: 0px;
+    margin: 4px;
+}
+
+.size-input {
+    text-align: center;
+}
+
+.opacity-input {
+    text-align: right;
+}
+
+.opacity-form {
+    grid-area: opacity-input;
+    justify-self: right;
+}
+
+.slider {
+    grid-area: slider;
+}

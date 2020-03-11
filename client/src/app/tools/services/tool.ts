@@ -4,15 +4,17 @@ import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolName } from '../enums/tool-name.enum';
 
 export abstract class Tool {
+    static isMouseDown = false;
+    static isMouseInside = false;
+
+    name: ToolName;
     renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
-    name: string;
-    isMouseDown = false;
-    isMouseInside = false;
 
-    constructor(protected drawingService: DrawingService, name: string) {
+    constructor(protected drawingService: DrawingService, name: ToolName) {
         this.name = name;
     }
 
@@ -31,7 +33,6 @@ export abstract class Tool {
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
-    onElementHover(element: SVGElement): void {}
     onToolDeselection(): void {}
     // tslint:enable: empty
 

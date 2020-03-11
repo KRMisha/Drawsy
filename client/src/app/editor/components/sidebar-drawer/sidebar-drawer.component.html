@@ -1,6 +1,5 @@
 <div class="container">
     <h1 class="mat-h1">{{ getToolName() }}</h1>
-
     <h2 class="mat-h2">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
@@ -123,5 +122,48 @@
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
+    </div>
+    <div *ngIf="hasSetting(ToolSetting.SprayRadius)" class="size-container">
+        <h2 class="mat-h2">Diamètre du jet</h2>
+        <form [formGroup]="sprayRadiusGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="sprayRadius" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="10"
+            max="100"
+            (input)="sprayRadiusGroup.controls.sprayRadius.setValue($event.value)"
+            [value]="sprayRadiusGroup.controls.sprayRadius.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
+    <div *ngIf="hasSetting(ToolSetting.SpraySpeed)" class="size-container">
+        <h2 class="mat-h2">Vitesse du jet</h2>
+        <form [formGroup]="spraySpeedGroup" class="form">
+            <mat-form-field class="form-field">
+                <input matInput formControlName="spraySpeed" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <span matSuffix>jets/s</span>
+            </mat-form-field>
+        </form>
+        <mat-slider
+            min="10"
+            max="100"
+            (input)="spraySpeedGroup.controls.spraySpeed.setValue($event.value)"
+            [value]="spraySpeedGroup.controls.spraySpeed.value"
+        >
+        </mat-slider>
+        <mat-divider class="divider"></mat-divider>
+    </div>
+
+    <div class="undo-redo">
+        <button mat-icon-button class="undo-button" matTooltip="Annuler" [disabled]="!isUndoAvailable()" (click)="undoCommand()">
+            <mat-icon class="command-icon">undo</mat-icon>
+        </button>
+        <button mat-icon-button class="redo-button" matTooltip="Refaire" [disabled]="!isRedoAvailable()" (click)="redoCommand()">
+            <mat-icon class="command-icon">redo</mat-icon>
+        </button>
     </div>
 </div>

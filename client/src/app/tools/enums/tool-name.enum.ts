@@ -1,4 +1,4 @@
-export enum ToolNames {
+export enum ToolName {
     Pencil = 'Crayon',
     Brush = 'Pinceau',
     Line = 'Ligne',
@@ -8,4 +8,6 @@ export enum ToolNames {
     Polygon = 'Polygone',
     Eyedropper = 'Pipette',
     Eraser = 'Efface',
+    SprayCan = 'Aérosol',
+    Recolor = 'Applicateur de couleur',
 }

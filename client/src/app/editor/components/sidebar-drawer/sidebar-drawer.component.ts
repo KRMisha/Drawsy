@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { defaultJunctionSize, defaultSize } from '@app/tools/enums/tool-defaults.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 import { Subscription } from 'rxjs';
@@ -9,6 +10,8 @@ import { Subscription } from 'rxjs';
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
 const maximumStrokeSize = 100;
+const maximumSpraySpeed = 100;
+const maximumSprayRadius = 100;
 const maximumEraserSize = 50;
 const minimumEraserSize = 3;
 const maximumJunctionSize = 500;
@@ -20,6 +23,9 @@ const maximumPolygonSideCount = 12;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
+    @Output() undoClicked = new EventEmitter<void>();
+    @Output() redoClicked = new EventEmitter<void>();
+
     // Make enums available to template
     ToolSetting = ToolSetting;
     Texture = Texture;
@@ -30,6 +36,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     eraserSizeSubscription: Subscription;
     junctionSizeSubscription: Subscription;
     polygonSideCountSubscription: Subscription;
+    spraySpeedSubscription: Subscription;
+    sprayRadiusSubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -91,6 +99,30 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
+    spraySpeedGroup = new FormGroup({
+        spraySpeed: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSpraySpeed),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
+    sprayRadiusGroup = new FormGroup({
+        sprayRadius: new FormControl(
+            0,
+            Validators.compose([
+                Validators.required,
+                Validators.max(maximumSprayRadius),
+                Validators.min(1),
+                Validators.pattern(integerRegexPattern),
+            ]),
+        ),
+    });
+
     @Input()
     set selectedButtonIndex(index: number) {
         if (this.toolSelectorService.hasSetting(ToolSetting.Size)) {
@@ -111,13 +143,20 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount),
             );
         }
+        if (this.toolSelectorService.hasSetting(ToolSetting.SpraySpeed)) {
+            this.spraySpeedGroup.controls.spraySpeed.setValue(this.toolSelectorService.getSetting(ToolSetting.SpraySpeed));
+        }
+
+        if (this.toolSelectorService.hasSetting(ToolSetting.SprayRadius)) {
+            this.sprayRadiusGroup.controls.sprayRadius.setValue(this.toolSelectorService.getSetting(ToolSetting.SprayRadius));
+        }
     }
 
-    constructor(private toolSelectorService: ToolSelectorService) {}
+    constructor(private toolSelectorService: ToolSelectorService, private commandService: CommandService) {}
 
     ngOnInit(): void {
-        this.sizeGroup.controls.size.setValue(defaultSize);
-        this.junctionSizeGroup.controls.junctionSize.setValue(defaultJunctionSize);
+        this.sizeGroup.controls.size.setValue(ToolDefaults.defaultSize);
+        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.defaultJunctionSize);
 
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
@@ -154,6 +193,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 );
             }
         });
+
+        this.spraySpeedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
+            if (this.spraySpeedGroup.controls.spraySpeed.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
+            }
+        });
+
+        this.sprayRadiusSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
+            if (this.sprayRadiusGroup.controls.sprayRadius.valid) {
+                this.toolSelectorService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -162,6 +213,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.strokeSizeSubscription.unsubscribe();
         this.eraserSizeSubscription.unsubscribe();
         this.polygonSideCountSubscription.unsubscribe();
+        this.spraySpeedSubscription.unsubscribe();
+        this.sprayRadiusSubscription.unsubscribe();
     }
 
     getToolName(): string {
@@ -187,11 +240,27 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.toolSelectorService.hasSetting(setting);
     }
 
-    protected getJunctionSizeErrorMessage(): string {
+    isUndoAvailable(): boolean {
+        return this.commandService.hasUndoCommands();
+    }
+
+    isRedoAvailable(): boolean {
+        return this.commandService.hasRedoCommands();
+    }
+
+    undoCommand(): void {
+        this.undoClicked.emit();
+    }
+
+    redoCommand(): void {
+        this.redoClicked.emit();
+    }
+
+    getJunctionSizeErrorMessage(): string {
         return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
     }
 
-    protected getSizeErrorMessage(): string {
+    getSizeErrorMessage(): string {
         return this.getErrorMessage(this.sizeGroup.controls.size);
     }
 

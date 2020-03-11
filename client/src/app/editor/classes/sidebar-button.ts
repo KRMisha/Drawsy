@@ -1,4 +1,4 @@
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 
 export class SidebarButton {
     name: string;
@@ -7,13 +7,15 @@ export class SidebarButton {
 }
 
 export const sidebarButtons: SidebarButton[] = [
-    { name: ToolNames.Pencil, icon: 'create', toolIndex: 0 },
-    { name: ToolNames.Brush, icon: 'brush', toolIndex: 1 },
-    { name: ToolNames.Line, icon: 'timeline', toolIndex: 2 },
-    { name: ToolNames.Rectangle, icon: 'crop_5_4', toolIndex: 3 },
-    { name: ToolNames.Selection, icon: 'format_shapes', toolIndex: 4 },
-    { name: ToolNames.Ellipse, icon: 'panorama_fish_eye', toolIndex: 5 },
-    { name: ToolNames.Polygon, icon: 'star', toolIndex: 6 },
-    { name: ToolNames.Eyedropper, icon: 'colorize', toolIndex: 7 },
-    { name: ToolNames.Eraser, icon: 'delete', toolIndex: 8 },
+    { name: ToolName.Pencil, icon: 'create', toolIndex: 0 },
+    { name: ToolName.Brush, icon: 'brush', toolIndex: 1 },
+    { name: ToolName.Line, icon: 'timeline', toolIndex: 2 },
+    { name: ToolName.Rectangle, icon: 'crop_5_4', toolIndex: 3 },
+    { name: ToolName.Ellipse, icon: 'panorama_fish_eye', toolIndex: 4 },
+    { name: ToolName.Polygon, icon: 'star', toolIndex: 5 },
+    { name: ToolName.Eyedropper, icon: 'colorize', toolIndex: 6 },
+    { name: ToolName.Selection, icon: 'format_shapes', toolIndex: 7 },
+    { name: ToolName.Eraser, icon: 'delete', toolIndex: 8 },
+    { name: ToolName.SprayCan, icon: 'blur_on', toolIndex: 9 },
+    { name: ToolName.Recolor, icon: 'invert_colors', toolIndex: 10 },
 ];

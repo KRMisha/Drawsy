@@ -4,8 +4,8 @@ import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { defaultPolygonSideCount } from '@app/tools/enums/tool-defaults.enum';
-import { ToolNames } from '@app/tools/enums/tool-names.enum';
+import ToolDefaults from '@app/tools/enums/tool-defaults';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Shape } from './shape';
 
@@ -14,8 +14,8 @@ import { Shape } from './shape';
 })
 export class ToolPolygonService extends Shape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolNames.Polygon);
-        this.toolSettings.set(ToolSetting.PolygonSideCount, defaultPolygonSideCount);
+        super(drawingService, colorService, commandService, ToolName.Polygon);
+        this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);
     }
 
     protected createNewShape(): SVGElement {

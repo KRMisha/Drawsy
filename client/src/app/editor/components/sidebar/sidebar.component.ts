@@ -33,6 +33,7 @@ export class SidebarComponent implements OnInit {
         this.toolSelectorService.setSelectedTool(this.selectedButton.toolIndex);
     }
 
+    // tslint:disable-next-line: cyclomatic-complexity
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
@@ -41,11 +42,34 @@ export class SidebarComponent implements OnInit {
                 case '1':
                     this.setSelectedTool(3);
                     break;
+                case '2':
+                    this.setSelectedTool(4);
+                    break;
+                case '3':
+                    this.setSelectedTool(5);
+                    break;
+                case 'a':
+                    if (!event.ctrlKey) {
+                        this.setSelectedTool(9);
+                    }
+                    break;
                 case 'c':
                     this.setSelectedTool(0);
                     break;
+                case 'e':
+                    this.setSelectedTool(8);
+                    break;
+                case 'i':
+                    this.setSelectedTool(6);
+                    break;
                 case 'l':
                     this.setSelectedTool(2);
+                    break;
+                case 'r':
+                    this.setSelectedTool(10);
+                    break;
+                case 's':
+                    this.setSelectedTool(7);
                     break;
                 case 'w':
                     this.setSelectedTool(1);
@@ -53,15 +77,15 @@ export class SidebarComponent implements OnInit {
                 // tslint:enable: no-magic-numbers
                 case 'z': {
                     if (event.ctrlKey) {
-                        this.commandService.undo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.undo();
+                        event.preventDefault();
                     }
                     break;
                 }
                 case 'Z': {
                     if (event.ctrlKey) {
-                        this.commandService.redo();
-                        this.toolSelectorService.selectedTool.onToolDeselection();
+                        this.redo();
+                        event.preventDefault();
                     }
                     break;
                 }
@@ -93,7 +117,7 @@ export class SidebarComponent implements OnInit {
     }
 
     openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 350, y: 440 });
+        this.modalService.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
     }
 
     openImportExportModal(): void {
@@ -110,5 +134,15 @@ export class SidebarComponent implements OnInit {
 
     openGalleryModal(): void {
         this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });
+    }
+
+    undo(): void {
+        this.commandService.undo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
+    }
+
+    redo(): void {
+        this.commandService.redo();
+        this.toolSelectorService.selectedTool.onToolDeselection();
     }
 }

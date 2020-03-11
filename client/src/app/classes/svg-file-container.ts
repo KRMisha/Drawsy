@@ -3,4 +3,5 @@ export interface SvgFileContainer {
     labels: string[];
     link: string;
     drawingRoot: SVGSVGElement;
+    url: string;
 }
