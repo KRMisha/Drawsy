@@ -58,6 +58,7 @@ export class DrawingSerializerService {
 
         this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
 
+        this.drawingService.clearStoredElements();
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {
             this.drawingService.addElement(element as SVGElement);

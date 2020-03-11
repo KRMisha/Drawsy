@@ -15,14 +15,14 @@
                         [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addLabel($event)"
                     />
-                    <mat-error *ngIf="labelForm.invalid">Étiquette invalide</mat-error>
+                    <mat-error *ngIf="labelForm.invalid">{{ getLabelError() }}</mat-error>
                 </mat-chip-list>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Titre</mat-label>
                 <input matInput [formControl]="titleForm" />
-                <mat-error *ngIf="titleForm.invalid">Titre invalide</mat-error>
+                <mat-error *ngIf="titleForm.invalid">{{ getTitleError() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
@@ -44,6 +44,8 @@
     </mat-dialog-content>
     <div class="item-buttons">
         <button mat-raised-button mat-dialog-close class="save-button">Annuler</button>
-        <button mat-raised-button class="save-button">Sauvegarder le dessin</button>
+        <button mat-raised-button class="save-button" [disabled]="titleForm.invalid || labelForm.invalid" (click)="saveOnServer()">
+            Sauvegarder le dessin
+        </button>
     </div>
 </div>

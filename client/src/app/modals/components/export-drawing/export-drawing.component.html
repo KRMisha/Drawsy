@@ -1,24 +1,6 @@
 <div class="container">
     <mat-dialog-content class="item-content">
         <form>
-            <mat-form-field class="chip-list">
-                <mat-chip-list #chipList aria-label="Label selection">
-                    <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
-                        {{ label }}
-                        <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                    <input
-                        name="martine"
-                        placeholder="Nouvelle étiquette..."
-                        [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        [matChipInputAddOnBlur]="addOnBlur"
-                        (matChipInputTokenEnd)="addLabel($event)"
-                    />
-                    <mat-error *ngIf="labelForm.invalid">Étiquette invalide</mat-error>
-                </mat-chip-list>
-            </mat-form-field>
-
             <mat-form-field>
                 <mat-label>Titre</mat-label>
                 <input matInput [formControl]="titleForm" />
@@ -43,8 +25,14 @@
         </form>
     </mat-dialog-content>
     <div class="item-buttons">
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsSvg()">Sauvegarder en format SVG</button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()">Sauvegarder en format PNG</button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()">Sauvegarder en format JPEG</button>
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsSvg()" [disabled]="titleForm.invalid">
+            Sauvegarder en format SVG
+        </button>
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()" [disabled]="titleForm.invalid">
+            Sauvegarder en format PNG
+        </button>
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()" [disabled]="titleForm.invalid">
+            Sauvegarder en format JPEG
+        </button>
     </div>
 </div>

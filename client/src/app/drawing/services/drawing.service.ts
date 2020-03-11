@@ -37,6 +37,7 @@ export class DrawingService {
 
     title = 'Sans titre';
     labels: string[] = [];
+    drawingId = -1;
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
