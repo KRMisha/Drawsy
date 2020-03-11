@@ -22,14 +22,14 @@ export class DrawingService {
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
-    
+
     readonly svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
-    
+
     elementClicked$ = this.elementClickedSource.asObservable();
-    
+
     renderer: Renderer2;
-    
-    drawingRoot: SVGSVGElement; 
+
+    drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
 

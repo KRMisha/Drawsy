@@ -1,0 +1,29 @@
+.chip-list {
+    width: 100%;
+    ::ng-deep {
+        .mat-chip-list-wrapper {
+            max-width: 100%;
+        }
+    }
+}
+
+.container {
+    width: 95%;
+    display: grid;
+    grid-template-rows: 78vh auto;
+}
+
+.item-content {
+    max-height: unset !important;
+}
+
+.item-buttons {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.save-button {
+    width: 20%;
+    margin: 4px;
+}

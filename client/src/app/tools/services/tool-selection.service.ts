@@ -86,7 +86,7 @@ export class ToolSelectionService extends Tool {
         if (this.controlPointHeld !== ControlPoints.None) {
             return;
         }
-        
+
         this.isMouseDownInside = Tool.isMouseInside;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (Tool.isMouseInside) {

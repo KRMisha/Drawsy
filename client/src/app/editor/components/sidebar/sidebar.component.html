@@ -32,11 +32,23 @@
             <button
                 mat-stroked-button
                 class="option-button"
-                (click)="openImportExportModal()"
-                matTooltip="Importer/exporter dessin"
+                (click)="openExportModal()"
+                matTooltip="Exporter le dessin"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">import_export</mat-icon>
+                <mat-icon class="mat-icon">arrow_upward</mat-icon>
+            </button>
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openSaveModal()"
+                matTooltip="Sauvegarder le dessin"
+                matTooltipPosition="right"
+            >
+                <mat-icon class="mat-icon">save</mat-icon>
+            </button>
+            <button mat-stroked-button class="option-button" (click)="openGalleryModal()" matTooltip="Galerie" matTooltipPosition="right">
+                <mat-icon class="mat-icon">photo</mat-icon>
             </button>
             <button
                 mat-stroked-button

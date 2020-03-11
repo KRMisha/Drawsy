@@ -3,9 +3,11 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
+import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
+import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
 
@@ -119,8 +121,12 @@ export class SidebarComponent implements OnInit {
         this.modalService.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
     }
 
-    openImportExportModal(): void {
-        this.modalService.openDialog(ImportExportDrawingComponent, { x: 1000, y: 1000 });
+    openExportModal(): void {
+        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+    }
+
+    openSaveModal(): void {
+        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
     }
 
     openNewDrawingModal(): void {
@@ -129,6 +135,10 @@ export class SidebarComponent implements OnInit {
 
     openGuideModal(): void {
         this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    openGalleryModal(): void {
+        this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });
     }
 
     undo(): void {
