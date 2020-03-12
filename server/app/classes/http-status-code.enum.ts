@@ -39,7 +39,7 @@ export enum HttpStatusCode {
     UnsupportedMediaType = 415,
     RangeNotSatisfiable = 416,
     ExpectationFailed = 417,
-    IAmATeapot = 418,
+    ImATeapot = 418,
     MisdirectedRequest = 421,
     UnprocessableEntity = 422,
     Locked = 423,

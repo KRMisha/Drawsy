@@ -3,17 +3,19 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
+import { HttpException } from '../classes/http-exception';
+import { HttpStatusCode } from '../classes/http-status-code.enum';
+import { DatabaseController } from '../controllers/database.controller';
 import { DateController } from '../controllers/date.controller';
 import { IndexController } from '../controllers/index.controller';
 import Types from '../types';
-import { HttpException } from './http-exception';
-import { HttpStatusCode } from './http-status-code.enum';
 
 @injectable()
 export class Application {
     app = express();
 
     constructor(
+        @inject(Types.DatabaseController) private databaseController: DatabaseController,
         @inject(Types.IndexController) private indexController: IndexController,
         @inject(Types.DateController) private dateController: DateController,
     ) {
@@ -31,6 +33,7 @@ export class Application {
     }
 
     private setupRoutes(): void {
+        this.app.use('/api', this.databaseController.router);
         this.app.use('/api/index', this.indexController.router);
         this.app.use('/api/date', this.dateController.router);
     }
@@ -41,11 +44,8 @@ export class Application {
         });
 
         this.app.use((err: HttpException, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            res.status(err.status || HttpStatusCode.InternalServerError);
-            res.send({
-                status: err.status,
-                message: err.message,
-            });
+            console.error(err.stack);
+            res.status(err.status || HttpStatusCode.InternalServerError).send({ message: err.message });
         });
     }
 }
