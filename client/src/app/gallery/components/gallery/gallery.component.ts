@@ -1,26 +1,25 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { GalleryService } from '@app/gallery/services/gallery/gallery.service';
+import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { ServerService } from '@app/server/service/server-service.service';
+import { Message } from '../../../../../../common/communication/message';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
 })
-export class GalleryComponent {
+export class GalleryComponent implements OnInit {
     containers: SvgFileContainer[] = [];
     searchLabels: string[] = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private galleryService: GalleryService) {}
-
-    createSvgFileContainer(files: FileList): void {
-        this.galleryService.createSvgFileContainer(files);
-        this.containers = this.galleryService.containers;
+    constructor(private drawingSerializerService: DrawingSerializerService, private serverService: ServerService) {}
+    ngOnInit(): void {
+        this.getAllDrawings();
     }
-
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
@@ -55,5 +54,13 @@ export class GalleryComponent {
             }
         }
         return false;
+    }
+
+    private getAllDrawings(): void {
+        this.serverService.getAllDrawings().subscribe((messages: Message[]): void => {
+            for (const message of messages) {
+                this.containers.push(this.drawingSerializerService.importSvgFileContainerFromMessage(message));
+            }
+        });
     }
 }

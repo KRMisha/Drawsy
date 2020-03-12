@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Message } from '../../../../../common/communication/message';
 import { SvgUtilitiesService } from './svg-utilities.service';
 
 @Injectable({
@@ -43,14 +44,13 @@ export class DrawingSerializerService {
     async importSvgDrawing(file: File): Promise<SvgFileContainer> {
         const fileContent = await this.readFile(file);
 
-        const domParser = new DOMParser();
-        const document = domParser.parseFromString(fileContent, 'image/svg+xml');
+        return this.svgFileContainerFromString(fileContent);
+    }
 
-        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
-        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-        const fileUrl = URL.createObjectURL(file);
-        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, url: fileUrl } as SvgFileContainer;
+    importSvgFileContainerFromMessage(message: Message): SvgFileContainer {
+        const svgFileContainer = this.svgFileContainerFromString(message.body);
+        svgFileContainer.id = message.title;
+        return svgFileContainer;
     }
 
     loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
@@ -76,5 +76,15 @@ export class DrawingSerializerService {
             };
             fileReader.readAsText(file);
         });
+    }
+
+    private svgFileContainerFromString(content: string): SvgFileContainer {
+        const domParser = new DOMParser();
+        const document = domParser.parseFromString(content, 'image/svg+xml');
+
+        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
+        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
+        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
     }
 }
