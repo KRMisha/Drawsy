@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
 import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
+import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { ToolEllipseService } from '@app/tools/services/shapes/tool-ellipse.service';
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
 import { Tool } from '@app/tools/services/tool';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
-import { ToolSelectionService } from '@app/tools/services/tool-selection.service';
 import { ToolPolygonService } from './shapes/tool-polygon.service';
 import { ToolEraserService } from './tool-eraser.service';
 import { ToolEyedropperService } from './tool-eyedropper.service';

@@ -10,12 +10,12 @@ import { ButtonId } from '@app/editor/enums/button-id.enum';
 })
 export class SidebarColorPickerComponent {
     // tslint:disable-next-line: variable-name
-    private color_ = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
+    private _color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
     set color(color: Color) {
-        this.color_ = color;
+        this._color = color;
     }
     get color(): Color {
-        return this.color_;
+        return this._color;
     }
 
     private isPrimarySelected = true;

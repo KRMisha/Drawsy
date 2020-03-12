@@ -7,12 +7,12 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { Shape } from '@app/tools/services/shapes/shape';
+import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ToolEllipseService extends Shape {
+export class ToolEllipseService extends ToolShape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Ellipse);
         this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
