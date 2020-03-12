@@ -13,10 +13,9 @@ describe('A starting set of test examples to showcase test-suite behaviour', () 
             }, 1000);
         });
     };
-
     // When called, return a promise that resolves with a number
     function* promiseGenerator(): IterableIterator<Promise<number>> {
-        while (true) {
+        for (;;) {
             yield Promise.resolve(Math.random() * 100);
         }
     }
