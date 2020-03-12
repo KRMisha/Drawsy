@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
@@ -52,6 +53,10 @@ export class ToolSprayCanService extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         this.stopSpray();
+    }
+
+    onPrimaryColorChange(color: Color): void {
+        this.renderer.setAttribute(this.groupElement, 'fill', color.toRgbaString());
     }
 
     private stopSpray(): void {

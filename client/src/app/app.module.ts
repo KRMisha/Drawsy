@@ -70,8 +70,8 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
-import { ImportDrawingComponent } from '@app/modals/components/import-drawing/import-drawing.component';
-import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
+// import { ImportDrawingComponent } from '@app/modals/components/import-drawing/import-drawing.component';
+// import { ImportExportDrawingComponent } from '@app/modals/components/import-export-drawing/import-export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from './modals/components/save-drawing/save-drawing.component';
 
@@ -115,8 +115,8 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         GuideWelcomeComponent,
         HomeComponent,
         HueSliderComponent,
-        ImportDrawingComponent,
-        ImportExportDrawingComponent,
+        // ImportDrawingComponent,
+        // ImportExportDrawingComponent,
         NewDrawingComponent,
         SidebarColorPickerComponent,
         SidebarComponent,
@@ -183,8 +183,8 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         GuideStampComponent,
         GuideTextComponent,
         GuideWelcomeComponent,
-        ImportDrawingComponent,
-        ImportExportDrawingComponent,
+        // ImportDrawingComponent,
+        // ImportExportDrawingComponent,
         NewDrawingComponent,
         SaveDrawingComponent,
     ],

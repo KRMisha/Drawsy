@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SvgUtilitiesService } from './svg-utilities.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,7 @@ export class DrawingSerializerService {
     constructor(
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
+        private svgUtilitiesService: SvgUtilitiesService,
         private rendererFactory: RendererFactory2,
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
@@ -32,7 +34,7 @@ export class DrawingSerializerService {
     async exportDrawing(fileName: string, fileType: string): Promise<void> {
         const link = this.renderer.createElement('a');
         link.download = fileName;
-        const canvas = await this.drawingService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
         link.href = canvas.toDataURL(fileType);
         link.click();
     }

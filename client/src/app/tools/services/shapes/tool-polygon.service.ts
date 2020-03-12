@@ -7,12 +7,12 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { Shape } from './shape';
+import { ToolShape } from './tool-shape';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ToolPolygonService extends Shape {
+export class ToolPolygonService extends ToolShape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Polygon);
         this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);
