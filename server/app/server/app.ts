@@ -6,19 +6,13 @@ import * as logger from 'morgan';
 import { HttpException } from '../classes/http-exception';
 import { HttpStatusCode } from '../classes/http-status-code.enum';
 import { DatabaseController } from '../controllers/database.controller';
-import { DateController } from '../controllers/date.controller';
-import { IndexController } from '../controllers/index.controller';
 import Types from '../types';
 
 @injectable()
 export class Application {
     app = express();
 
-    constructor(
-        @inject(Types.DatabaseController) private databaseController: DatabaseController,
-        @inject(Types.IndexController) private indexController: IndexController,
-        @inject(Types.DateController) private dateController: DateController,
-    ) {
+    constructor(@inject(Types.DatabaseController) private databaseController: DatabaseController) {
         this.setupMiddleware();
         this.setupRoutes();
         this.setupErrorHandler();
@@ -34,8 +28,6 @@ export class Application {
 
     private setupRoutes(): void {
         this.app.use('/api', this.databaseController.router);
-        this.app.use('/api/index', this.indexController.router);
-        this.app.use('/api/date', this.dateController.router);
     }
 
     private setupErrorHandler(): void {
