@@ -20,6 +20,7 @@ export class GalleryComponent implements OnInit {
     ngOnInit(): void {
         this.getAllDrawings();
     }
+
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
@@ -59,7 +60,7 @@ export class GalleryComponent implements OnInit {
     private getAllDrawings(): void {
         this.serverService.getAllDrawings().subscribe((messages: Message[]): void => {
             for (const message of messages) {
-                this.containers.push(this.drawingSerializerService.importSvgFileContainerFromMessage(message));
+                this.containers.push(this.drawingSerializerService.convertMessageToSvgFileContainer(message));
             }
         });
     }

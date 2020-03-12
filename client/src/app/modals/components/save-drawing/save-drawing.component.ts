@@ -2,9 +2,12 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
+import { ServerService } from '@app/server/service/server-service.service';
 import { Subscription } from 'rxjs';
+import { Message } from '../../../../../../common/communication/message';
 
 const labelPattern = '^([0-9a-zA-Z ])*$';
 const titlePattern = '^([0-9a-zA-Z ])*$';
@@ -34,7 +37,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingPreviewService: DrawingPreviewService) {
+    constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService) {
         this.labelForm.setValue(this.labels);
     }
 
@@ -57,6 +60,22 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();
+        const svgFileContainer: SvgFileContainer = {
+            title: this.title,
+            labels: this.labels,
+            drawingRoot: this.drawingPreviewService.drawingPreviewRoot,
+            id: this.id,
+        };
+        if (this.id === '') {
+            this.serverService.createDrawing(svgFileContainer).subscribe((message: Message): void => {
+                // ERROR HANDDLING
+            });
+        } else {
+            this.serverService.updateDrawing(svgFileContainer).subscribe((message: Message): void => {
+                // ERROR HANDDLING
+                console.log('WHATTTTTTT');
+            });
+        }
     }
 
     addLabel(event: MatChipInputEvent): void {
@@ -105,7 +124,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     get title(): string {
         return this.drawingPreviewService.title;
     }
-
     set title(title: string) {
         this.drawingPreviewService.title = title;
     }
@@ -113,15 +131,19 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     get labels(): string[] {
         return this.drawingPreviewService.labels;
     }
-
     set labels(labels: string[]) {
         this.drawingPreviewService.labels = labels;
     }
 
+    get id(): string {
+        return this.drawingPreviewService.id;
+    }
+    set id(id: string) {
+        this.drawingPreviewService.id = this.id;
+    }
     get previewFilter(): PreviewFilter {
         return this.drawingPreviewService.previewFilter;
     }
-
     set previewFilter(previewFilter: PreviewFilter) {
         this.drawingPreviewService.previewFilter = previewFilter;
     }
@@ -147,7 +169,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     protected saveOnServer(): void {
         if (this.labelForm.valid && this.titleForm.valid) {
-            console.log('SERVER DOWN');
+            this.saveDrawing();
         }
     }
 }
