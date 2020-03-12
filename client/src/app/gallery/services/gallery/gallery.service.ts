@@ -37,6 +37,8 @@ export class GalleryService {
     }
 
     createSvgFileContainer(files: FileList): void {
+        // FileList interface does not provide an iterable
+        // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < files.length; i++) {
             this.addSvgFileContainer(files[i]);
         }
