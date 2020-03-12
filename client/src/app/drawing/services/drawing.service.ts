@@ -99,6 +99,20 @@ export class DrawingService {
         return this.svgElements.length > 0;
     }
 
+    confirmNewDrawing(dimensions: Vec2, backgroundColor: Color): boolean {
+        const confirmationMessage =
+            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
+            'Désirez-vous continuer et abandonner vos changements?';
+        if (this.isDrawingStarted() && !confirm(confirmationMessage)) {
+            return false;
+        }
+
+        this.dimensions = dimensions;
+        this.backgroundColor = this.backgroundColor;
+        this.clearStoredElements();
+        return true;
+    }
+
     moveElementList(elements: SVGElement[], moveOffset: Vec2): void {
         for (const element of elements) {
             const transformations = this.transformationMap.get(element);
