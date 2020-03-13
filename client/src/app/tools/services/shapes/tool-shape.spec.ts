@@ -14,6 +14,7 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolShape } from './tool-shape';
 
 class ToolShapeMock extends ToolShape {
+    constructor(ds: DrawingService, cs: ColorService, cmds: CommandService, name: ToolName) {super(ds, cs, cmds, name);}
     createNewShape(): SVGElement {return {} as SVGElement;}
     updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {}
 }
