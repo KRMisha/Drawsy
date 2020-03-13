@@ -36,10 +36,10 @@ lint:client:
         - yarn lint
         - popd
 lint:server:
-   only:
+    only:
        - master
-   stage: lint
-   script:
+    stage: lint
+    script:
        - pushd server
        - yarn lint
        - popd
@@ -57,13 +57,13 @@ build:client:
 build:server:
     only:
         - master
-   stage: build
-   script:
-       - pushd server
-       - yarn tsc
-       - popd
-   artifacts:
-       paths:
+    stage: build
+    script:
+        - pushd server
+        - yarn tsc
+        - popd
+    artifacts:
+        paths:
            - server/out/
 # test:client:
 #     only:
