@@ -2,6 +2,7 @@ import { Injectable, Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { DrawingService } from './drawing.service';
 import { GeometryService } from './geometry.service';
 
 @Injectable({
@@ -11,12 +12,59 @@ export class SvgUtilitiesService {
     renderer: Renderer2;
     drawingRoot: SVGSVGElement;
 
+    constructor(private drawingService: DrawingService) {}
+
     getElementsUnderPoint(svgElements: SVGElement[], point: Vec2): SVGElement[] {
         return this.getElementsUnderArea(svgElements, { x: point.x, y: point.y, width: 0, height: 0 });
     }
 
     getElementsUnderArea(svgElements: SVGElement[], area: Rect): SVGElement[] {
         return svgElements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
+    }
+
+    getElementUnderAreaPixelPerfect(svgElements: SVGElement[], area: Rect): SVGElement | undefined {
+        const drawingRect = this.drawingRoot.getBoundingClientRect() as DOMRect;
+
+        const elementIndices = new Map<SVGElement, number>();
+        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
+            elementIndices.set(this.drawingService.svgElements[i], i);
+        }
+
+        const availableElementsSet = new Set<SVGElement>();
+        for (const element of svgElements) {
+            availableElementsSet.add(element);
+        }
+
+        let topMostElement: SVGElement | undefined;
+        let topMostElementIndex = 0;
+
+        const samplingRatio = 0.1;
+        const stepSize: Vec2 = {
+            x: Math.round(Math.max(1, area.width * samplingRatio)),
+            y: Math.round(Math.max(1, area.height * samplingRatio)),
+        };
+        const startIndexLoop: Vec2 = { x: Math.round((area.width % stepSize.x) / 2), y: Math.round((area.height % stepSize.y) / 2) };
+
+        for (let i = startIndexLoop.x; i < area.width + stepSize.x; i += stepSize.x) {
+            for (let j = startIndexLoop.y; j < area.height + stepSize.y; j += stepSize.y) {
+                const x = drawingRect.x + area.x + i;
+                const y = drawingRect.y + area.y + j;
+                const elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGElement;
+                if (
+                    elementUnderPoint === undefined ||
+                    !elementIndices.has(elementUnderPoint) ||
+                    !availableElementsSet.has(elementUnderPoint)
+                ) {
+                    continue;
+                }
+                const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
+                if (topMostElement === undefined || elementUnderPointIndex > topMostElementIndex) {
+                    topMostElement = elementUnderPoint;
+                    topMostElementIndex = elementUnderPointIndex;
+                }
+            }
+        }
+        return topMostElement;
     }
 
     updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
