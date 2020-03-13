@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
+import { NewFileId } from '../../../common/communication/new-file-id';
 import { HttpStatusCode } from '../classes/http-status-code.enum';
 import { DatabaseService } from '../services/database.service';
 import Types from '../types';
@@ -18,7 +19,7 @@ export class DatabaseController {
             async (req: Request, res: Response, next: NextFunction): Promise<void> => {
                 try {
                     const insertedId = await this.databaseService.createFile(req.body.content);
-                    res.status(HttpStatusCode.Created).send({ id: insertedId });
+                    res.status(HttpStatusCode.Created).send({ id: insertedId } as NewFileId);
                 } catch (error) {
                     return next(error);
                 }

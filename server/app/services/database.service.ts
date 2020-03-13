@@ -1,10 +1,11 @@
 import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
+import { SavedFile } from '../../../common/communication/saved-file';
+import { descRegex } from '../../../common/validation/desc-regex';
 import { FileSchema } from '../classes/file-schema';
 import { HttpException } from '../classes/http-exception';
 import { HttpStatusCode } from '../classes/http-status-code.enum';
-import { descRegex } from '../../../common/validation/desc-regex';
 
 const connectionUrl = 'mongodb+srv://htmales:lLOKpwsJzmaoSitj@log2990-toreo.mongodb.net/test?retryWrites=true&w=majority';
 const databaseName = 'database';
@@ -55,8 +56,8 @@ export class DatabaseService {
         }
     }
 
-    async getFiles(): Promise<FileSchema[]> {
-        return await this.collection.find().toArray();
+    async getFiles(): Promise<SavedFile[]> {
+        return await this.collection.find().toArray() as SavedFile[];
     }
 
     private isFileValid(fileContent: string): boolean {
