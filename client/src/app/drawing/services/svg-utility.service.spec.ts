@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SvgUtilitiesService } from './svg-utilities.service';
+import { SvgUtilityService } from './svg-utility.service';
 
-describe('SvgUtilitiesService', () => {
+describe('SvgUtilityService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: SvgUtilitiesService = TestBed.get(SvgUtilitiesService);
+        const service: SvgUtilityService = TestBed.get(SvgUtilityService);
         expect(service).toBeTruthy();
     });
 });

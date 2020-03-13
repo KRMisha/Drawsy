@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
@@ -22,7 +22,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     constructor(
         private renderer: Renderer2,
         private drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        private svgUtilitiesService: SvgUtilityService,
         private toolSelectorService: ToolSelectorService,
         private gridService: GridService,
         private modalService: ModalService,

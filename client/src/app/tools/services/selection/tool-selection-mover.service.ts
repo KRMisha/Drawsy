@@ -3,7 +3,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ToolSelectionStateService } from './tool-selection-state.service';
 
 const controlPointSideSize = 10;
@@ -26,7 +26,7 @@ export class ToolSelectionMoverService {
 
     constructor(
         private drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        private svgUtilitiesService: SvgUtilityService,
         private toolSelectionStateService: ToolSelectionStateService,
         private commandService: CommandService,
     ) {}

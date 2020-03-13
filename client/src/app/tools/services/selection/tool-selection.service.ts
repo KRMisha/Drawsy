@@ -6,7 +6,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -42,7 +42,7 @@ export class ToolSelectionService extends Tool {
         commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        private svgUtilitiesService: SvgUtilityService,
     ) {
         super(drawingService, colorService, commandService, ToolName.Selection);
     }
