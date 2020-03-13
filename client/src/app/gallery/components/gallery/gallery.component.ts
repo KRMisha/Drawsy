@@ -4,7 +4,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/service/server-service.service';
-import { Message } from '../../../../../../common/communication/message';
+import { SavedFile } from '../../../../../../common/communication/saved-file';
 
 @Component({
     selector: 'app-gallery',
@@ -19,11 +19,11 @@ export class GalleryComponent implements OnInit {
     constructor(private drawingSerializerService: DrawingSerializerService, private serverService: ServerService) {}
     ngOnInit(): void {
         this.getAllDrawings();
-    constructor(private galleryService: GalleryService) {}
-
-    createSvgFileContainer(): void {
-        this.containers = this.galleryService.containers;
     }
+
+    // createSvgFileContainer(): void {
+    //     this.containers = this.serverService.getAllDrawings();
+    // }
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
@@ -62,9 +62,9 @@ export class GalleryComponent implements OnInit {
     }
 
     private getAllDrawings(): void {
-        this.serverService.getAllDrawings().subscribe((messages: Message[]): void => {
+        this.serverService.getAllDrawings().subscribe((messages: SavedFile[]): void => {
             for (const message of messages) {
-                this.containers.push(this.drawingSerializerService.convertMessageToSvgFileContainer(message));
+                this.containers.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(message));
             }
         });
     }

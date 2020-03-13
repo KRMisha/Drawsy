@@ -1,11 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Message } from '../../../../../common/communication/message';
+import { NewFile } from '../../../../../common/communication/new-file';
+import { SavedFile } from '../../../../../common/communication/saved-file';
 
 const serverUrl = 'localhost:3000/api';
+const httpOption = {headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+})}
 
 @Injectable({
     providedIn: 'root',
@@ -13,26 +17,28 @@ const serverUrl = 'localhost:3000/api';
 export class ServerService {
     constructor(private httpService: HttpClient) {}
 
-    createDrawing(svgFileContainer: SvgFileContainer): Observable<Message> {
+    createDrawing(svgFileContainer: SvgFileContainer): Observable<NewFile> {
+        const newFile: NewFile = {content: svgFileContainer.drawingRoot.outerHTML};
         return this.httpService
-            .post<Message>(serverUrl + '/create', svgFileContainer.drawingRoot.outerHTML)
-            .pipe(catchError(this.handdleError<Message>('create')));
+            .post<NewFile>(serverUrl + '/create', JSON.stringify(newFile), httpOption)
+            .pipe(catchError(this.handdleError<NewFile>('create')));
     }
 
-    updateDrawing(svgFileContainer: SvgFileContainer): Observable<Message> {
+    updateDrawing(svgFileContainer: SvgFileContainer): Observable<SavedFile> {
+        const savedFile: SavedFile = {id: svgFileContainer.id, content: svgFileContainer.drawingRoot.outerHTML};
         return this.httpService
-            .put<Message>(serverUrl + '/update/' + svgFileContainer.id, svgFileContainer.drawingRoot.outerHTML)
-            .pipe(catchError(this.handdleError<Message>('updateDrawing' + svgFileContainer.id)));
+            .put<SavedFile>(serverUrl + '/update/' + savedFile.id, savedFile, httpOption)
+            .pipe(catchError(this.handdleError<SavedFile>('updateDrawing' + svgFileContainer.id)));
     }
 
-    getAllDrawings(): Observable<Message[]> {
-        return this.httpService.get<Message[]>(serverUrl + '/getAll').pipe(catchError(this.handdleError<Message[]>('getAllDrawings')));
+    getAllDrawings(): Observable<SavedFile[]> {
+        return this.httpService.get<SavedFile[]>(serverUrl + '/getAll').pipe(catchError(this.handdleError<SavedFile[]>('getAllDrawings')));
     }
 
-    deleteDrawing(svgFileContainer: SvgFileContainer): Observable<Message> {
+    deleteDrawing(svgFileContainer: SvgFileContainer): Observable<SavedFile> {
         return this.httpService
-            .delete<Message>(serverUrl + '/delete/' + svgFileContainer.id)
-            .pipe(catchError(this.handdleError<Message>('deleteDrawing' + svgFileContainer.id)));
+            .delete<SavedFile>(serverUrl + '/delete/' + svgFileContainer.id)
+            .pipe(catchError(this.handdleError<SavedFile>('deleteDrawing' + svgFileContainer.id)));
     }
 
     // WTF IS THIS!!!!!!!!!!!!!!!!

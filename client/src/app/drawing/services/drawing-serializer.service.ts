@@ -3,7 +3,7 @@ import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Message } from '../../../../../common/communication/message';
+import { SavedFile } from '../../../../../common/communication/saved-file';
 import { SvgUtilitiesService } from './svg-utilities.service';
 
 @Injectable({
@@ -32,9 +32,9 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    convertMessageToSvgFileContainer(message: Message): SvgFileContainer {
-        const svgFileContainer = this.svgFileContainerFromString(message.body);
-        svgFileContainer.id = message.title;
+    convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
+        const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
+        svgFileContainer.id = savedFile.id;
         return svgFileContainer;
     }
 

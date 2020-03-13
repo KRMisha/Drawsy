@@ -7,7 +7,7 @@ import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/service/server-service.service';
 import { Subscription } from 'rxjs';
-import { Message } from '../../../../../../common/communication/message';
+import { SavedFile } from '../../../../../../common/communication/saved-file';
 
 const labelPattern = '^([0-9a-zA-Z ])*$';
 const titlePattern = '^([0-9a-zA-Z ])*$';
@@ -67,11 +67,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             id: this.id,
         };
         if (this.id === '') {
-            this.serverService.createDrawing(svgFileContainer).subscribe((message: Message): void => {
+            this.serverService.createDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
                 // ERROR HANDDLING
             });
         } else {
-            this.serverService.updateDrawing(svgFileContainer).subscribe((message: Message): void => {
+            this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
                 // ERROR HANDDLING
                 console.log('WHATTTTTTT');
             });
