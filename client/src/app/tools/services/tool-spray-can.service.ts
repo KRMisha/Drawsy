@@ -20,8 +20,8 @@ export class ToolSprayCanService extends Tool {
     private groupElement?: SVGGElement;
     private mousePosition: Vec2;
     private interval: number;
-    constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolName.SprayCan);
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
+        super(drawingService, colorService, commandService, ToolName.SprayCan);
         this.toolSettings.set(ToolSetting.SprayRadius, ToolDefaults.defaultSprayRadius);
         this.toolSettings.set(ToolSetting.SpraySpeed, ToolDefaults.defaultSpraySpeed);
     }

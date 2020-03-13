@@ -84,6 +84,8 @@ export class DrawingSerializerService {
         const importedDrawingRoot = document.getElementsByTagName('svg')[0];
         const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
         const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
+        const penis = { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
+        console.log(penis);
+        return penis;
     }
 }

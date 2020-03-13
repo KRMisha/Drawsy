@@ -25,7 +25,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
     titleFormSubscription: Subscription;
-    labelFormSubscription: Subscription;
 
     saveDrawingFormGroup = new FormGroup({
         labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
@@ -50,9 +49,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             if (this.saveDrawingFormGroup.controls.titleForm.valid) {
                 this.title = this.saveDrawingFormGroup.controls.titleForm.value;
             }
-        });
-        this.labelFormSubscription = this.saveDrawingFormGroup.controls.labelForm.valueChanges.subscribe(() => {
-            this.saveDrawingFormGroup.controls.labelForm.updateValueAndValidity({ emitEvent: false });
         });
     }
 
@@ -83,13 +79,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const inputValue = event.value;
-
         const control = this.saveDrawingFormGroup.controls.labelForm;
 
         if ((inputValue || '').trim()) {
             control.setErrors(null);
             control.setValue(inputValue);
-            control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
@@ -104,14 +98,12 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
-
         const control = this.saveDrawingFormGroup.controls.labelForm;
 
         if (index >= 0) {
             this.labels.splice(index, 1);
         }
 
-        control.updateValueAndValidity();
         control.markAsDirty();
     }
 

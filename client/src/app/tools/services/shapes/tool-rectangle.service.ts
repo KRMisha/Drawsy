@@ -12,7 +12,7 @@ import { ToolShape } from './tool-shape';
     providedIn: 'root',
 })
 export class ToolRectangleService extends ToolShape {
-    constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Rectangle);
     }
 

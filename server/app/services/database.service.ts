@@ -57,7 +57,7 @@ export class DatabaseService {
     }
 
     async getFiles(): Promise<SavedFile[]> {
-        return (await this.collection.find().toArray()) as SavedFile[];
+        return await this.collection.find().toArray() as SavedFile[];
     }
 
     private isFileValid(fileContent: string): boolean {

@@ -4,6 +4,7 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
+import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
@@ -31,11 +32,12 @@ export class ToolEraserService extends Tool {
     private drawingElementsCopy: SVGElement[] = [];
 
     constructor(
-        protected drawingService: DrawingService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
         private svgUtilitiesService: SvgUtilitiesService,
-        private commandService: CommandService,
     ) {
-        super(drawingService, ToolName.Eraser);
+        super(drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
     }
 

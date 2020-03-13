@@ -11,8 +11,8 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolRecolorService extends Tool {
-    constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolName.Recolor);
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
+        super(drawingService, colorService, commandService, ToolName.Recolor);
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
