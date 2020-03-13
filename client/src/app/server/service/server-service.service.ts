@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { NewFile } from '../../../../../common/communication/new-file';
 import { SavedFile } from '../../../../../common/communication/saved-file';
 
-const serverUrl = 'localhost:3000/api';
+const serverUrl = 'http://localhost:3000/api';
 const httpOption = {headers: new HttpHeaders({
     'Content-Type':  'application/json',
 })}
@@ -27,12 +27,13 @@ export class ServerService {
     updateDrawing(svgFileContainer: SvgFileContainer): Observable<SavedFile> {
         const savedFile: SavedFile = {id: svgFileContainer.id, content: svgFileContainer.drawingRoot.outerHTML};
         return this.httpService
-            .put<SavedFile>(serverUrl + '/update/' + savedFile.id, savedFile, httpOption)
+            .put<SavedFile>(serverUrl + '/update/' + savedFile.id, JSON.stringify(savedFile), httpOption)
             .pipe(catchError(this.handdleError<SavedFile>('updateDrawing' + svgFileContainer.id)));
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/getAll').pipe(catchError(this.handdleError<SavedFile[]>('getAllDrawings')));
+        return this.httpService.get<SavedFile[]>(serverUrl + '/get_all')
+            .pipe(catchError(this.handdleError<SavedFile[]>('getAllDrawings')));
     }
 
     deleteDrawing(svgFileContainer: SvgFileContainer): Observable<SavedFile> {
