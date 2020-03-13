@@ -8,7 +8,7 @@ import { GeometryService } from './geometry.service';
 @Injectable({
     providedIn: 'root',
 })
-export class SvgUtilitiesService {
+export class SvgUtilityService {
     renderer: Renderer2;
     drawingRoot: SVGSVGElement;
 
@@ -49,6 +49,7 @@ export class SvgUtilitiesService {
             for (let j = startIndexLoop.y; j < area.height + stepSize.y; j += stepSize.y) {
                 const x = drawingRect.x + area.x + i;
                 const y = drawingRect.y + area.y + j;
+                // Function does not exist in Renderer2
                 const elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGElement;
                 if (
                     elementUnderPoint === undefined ||

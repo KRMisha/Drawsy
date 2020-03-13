@@ -7,7 +7,7 @@ import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-nei
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -37,7 +37,7 @@ export class ToolEraserService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        private svgUtilitiesService: SvgUtilityService,
     ) {
         super(drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
@@ -59,7 +59,7 @@ export class ToolEraserService extends Tool {
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
         this.updateEraserRect(mousePosition);
-        const delayMsBetweenCalls = 50;
+        const delayMsBetweenCalls = 16.67;
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
                 this.onMousePositionChange(mousePosition);
