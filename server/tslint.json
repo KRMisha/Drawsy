@@ -1,6 +1,8 @@
 {
-    "extends": "../common/tslint.json",
+    "extends": [
+        "../common/tslint.json",
+        "tslint-config-prettier"
+    ],
     "rulesDirectory": [],
-    "defaultSeverity": "error",
     "rules": {}
 }

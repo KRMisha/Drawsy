@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from './tool';
@@ -11,7 +12,11 @@ import { Tool } from './tool';
     providedIn: 'root',
 })
 export class ToolEyedropperService extends Tool {
-    constructor(protected drawingService: DrawingService, private colorService: ColorService) {
+    constructor(
+        protected drawingService: DrawingService,
+        private colorService: ColorService,
+        private svgUtilitiesService: SvgUtilitiesService,
+    ) {
         super(drawingService, ToolName.Eyedropper);
     }
 
@@ -29,7 +34,7 @@ export class ToolEyedropperService extends Tool {
         pixel.x = Math.round(pixel.x);
         pixel.y = Math.round(pixel.y);
 
-        const canvas = await this.drawingService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
         const colorIndex = pixel.y * (canvas.width * valuesPerColorCount) + pixel.x * valuesPerColorCount;

@@ -58,7 +58,12 @@ export class SidebarComponent implements OnInit {
                     this.setSelectedTool(0);
                     break;
                 case 'e':
-                    this.setSelectedTool(8);
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+                    } else {
+                        this.setSelectedTool(8);
+                    }
                     break;
                 case 'i':
                     this.setSelectedTool(6);
@@ -70,7 +75,12 @@ export class SidebarComponent implements OnInit {
                     this.setSelectedTool(10);
                     break;
                 case 's':
-                    this.setSelectedTool(7);
+                    if (event.ctrlKey) {
+                        event.preventDefault();
+                        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
+                    } else {
+                        this.setSelectedTool(7);
+                    }
                     break;
                 case 'w':
                     this.setSelectedTool(1);

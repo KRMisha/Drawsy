@@ -142,7 +142,7 @@ export class ToolLineService extends Tool {
         if (!this.isCurrentlyDrawing) {
             return;
         }
-        this.renderer.setAttribute(this.polyline, 'stroke', color.toRgbaString());
+        this.renderer.setAttribute(this.groupElement, 'stroke', color.toRgbaString());
 
         const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
         previewColor.alpha /= 2;
@@ -167,7 +167,9 @@ export class ToolLineService extends Tool {
         this.junctionSize = junction.junctionSize;
 
         const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
-        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) - junctionSizeActualValue);
+        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) / 2 - junctionSizeActualValue);
+
+        console.log(padding);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
@@ -251,6 +253,8 @@ export class ToolLineService extends Tool {
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', `${this.junctionSize / 2}`);
+        this.renderer.setAttribute(circle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(circle, 'stroke', 'none');
         this.junctionPoints.push(circle);
         return circle;
     }

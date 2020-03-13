@@ -12,7 +12,7 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
-export class Shape extends Tool {
+export abstract class ToolShape extends Tool {
     private shape?: SVGElement;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
@@ -29,11 +29,8 @@ export class Shape extends Tool {
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
 
-    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {} // tslint:disable-line: no-empty
-
-    protected createNewShape(): SVGElement {
-        return {} as SVGElement;
-    }
+    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
+    protected abstract createNewShape(): SVGElement;
 
     onPrimaryColorChange(color: Color): void {
         if (this.shape !== undefined) {

@@ -35,14 +35,14 @@ lint:client:
         - pushd client
         - yarn lint
         - popd
-# lint:server:
-#    only:
-#        - master
-#    stage: lint
-#    script:
-#        - pushd server
-#        - yarn lint
-#        - popd
+lint:server:
+   only:
+       - master
+   stage: lint
+   script:
+       - pushd server
+       - yarn lint
+       - popd
 build:client:
     only:
         - master
@@ -54,17 +54,17 @@ build:client:
     artifacts:
         paths:
             - client/dist/
-# build:server:
-#     only:
-#         - master
-#    stage: build
-#    script:
-#        - pushd server
-#        - yarn tsc
-#        - popd
-#    artifacts:
-#        paths:
-#            - server/out/
+build:server:
+    only:
+        - master
+   stage: build
+   script:
+       - pushd server
+       - yarn tsc
+       - popd
+   artifacts:
+       paths:
+           - server/out/
 # test:client:
 #     only:
 #         - master

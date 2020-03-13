@@ -34,7 +34,7 @@ export abstract class Tool {
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
     onToolDeselection(): void {}
-    // tslint:enable: empty
+    // tslint:enable: no-empty
 
     protected getMousePosition(event: MouseEvent): Vec2 {
         const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;

@@ -16,8 +16,7 @@ export class GalleryComponent {
 
     constructor(private galleryService: GalleryService) {}
 
-    createSvgFileContainer(files: FileList): void {
-        this.galleryService.createSvgFileContainer(files);
+    createSvgFileContainer(): void {
         this.containers = this.galleryService.containers;
     }
 
