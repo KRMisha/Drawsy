@@ -17,9 +17,9 @@ export class DrawingService {
 
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
-    private elementClickedSource = new Subject<SvgClickEvent>();
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
-    readonly svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+    private elementClickedSource = new Subject<SvgClickEvent>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
 
@@ -43,6 +43,10 @@ export class DrawingService {
         return this._backgroundColor;
     }
 
+    get svgElements(): SVGElement[] {
+        return this._svgElements;
+    }
+
     addElement(element: SVGElement, elementNextNeighbour?: SVGElement): void {
         if (elementNextNeighbour === undefined) {
             this.svgElements.push(element);
@@ -54,7 +58,7 @@ export class DrawingService {
         this.transformationMap.set(element, new SvgTransformations());
 
         const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next({ svgElement: element, mouseEvent: event });
+            this.elementClickedSource.next({ element: element, mouseEvent: event });
         });
 
         this.mouseUpFunctionMap.set(element, mouseUpFunction);
@@ -108,7 +112,7 @@ export class DrawingService {
         }
 
         this.dimensions = dimensions;
-        this.backgroundColor = this.backgroundColor;
+        this.backgroundColor = backgroundColor;
         this.clearStoredElements();
         return true;
     }

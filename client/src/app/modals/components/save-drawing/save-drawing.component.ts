@@ -1,16 +1,16 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/service/server-service.service';
 import { Subscription } from 'rxjs';
+import { NewFileId } from '../../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
+import { descRegex } from '../../../../../../common/validation/desc-regex';
 
-const labelPattern = '^([0-9a-zA-Z ])*$';
-const titlePattern = '^([0-9a-zA-Z ])*$';
 const maxInputStringLength = 15;
 
 export interface Label {
@@ -27,30 +27,32 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     titleFormSubscription: Subscription;
     labelFormSubscription: Subscription;
 
-    labelForm = new FormControl('', [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]);
-
-    titleForm = new FormControl(this.drawingPreviewService.title, [
-        Validators.required,
-        Validators.pattern(titlePattern),
-        Validators.maxLength(maxInputStringLength),
-    ]);
+    saveDrawingFormGroup = new FormGroup({
+        labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
+        titleForm: new FormControl(this.drawingPreviewService.title, [
+            Validators.required,
+            Validators.pattern(descRegex),
+            Validators.maxLength(maxInputStringLength),
+        ]),
+    });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService) {
-        this.labelForm.setValue(this.labels);
+        this.saveDrawingFormGroup.controls.labelForm.setValue(this.labels);
     }
 
     ngOnInit(): void {
         this.title = this.drawingPreviewService.title;
         this.labels = this.drawingPreviewService.labels;
-        this.titleFormSubscription = this.titleForm.valueChanges.subscribe(() => {
-            if (this.titleForm.valid) {
-                this.title = this.titleForm.value;
+        this.titleFormSubscription = this.saveDrawingFormGroup.controls.titleForm.valueChanges.subscribe(() => {
+            console.log(this.saveDrawingFormGroup.valid);
+            if (this.saveDrawingFormGroup.controls.titleForm.valid) {
+                this.title = this.saveDrawingFormGroup.controls.titleForm.value;
             }
         });
-        this.labelFormSubscription = this.labelForm.valueChanges.subscribe(() => {
-            this.labelForm.updateValueAndValidity();
+        this.labelFormSubscription = this.saveDrawingFormGroup.controls.labelForm.valueChanges.subscribe(() => {
+            this.saveDrawingFormGroup.controls.labelForm.updateValueAndValidity({ emitEvent: false });
         });
     }
 
@@ -67,8 +69,8 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             id: this.id,
         };
         if (this.id === '') {
-            this.serverService.createDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
-                // ERROR HANDDLING
+            this.serverService.createDrawing(svgFileContainer).subscribe((newFileId: NewFileId): void => {
+                console.log('PENISSSSS');
             });
         } else {
             this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
@@ -80,27 +82,19 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
-        const value = event.value;
+        const inputValue = event.value;
 
-        const control = this.labelForm;
+        const control = this.saveDrawingFormGroup.controls.labelForm;
 
-        if ((value || '').trim()) {
+        if ((inputValue || '').trim()) {
             control.setErrors(null);
-            const tempLabels = this.labels;
-            tempLabels.push(value.trim());
-            control.setValue(value);
+            control.setValue(inputValue);
             control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
-            } else {
-                const index = this.labels.findIndex((tmpString: string): boolean => tmpString === value.trim());
-                if (index !== -1) {
-                    this.labels.splice(index, 1);
-                }
+                this.labels.push(inputValue);
             }
-        } else {
-            control.updateValueAndValidity();
         }
 
         if (input !== undefined) {
@@ -111,7 +105,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
 
-        const control = this.labelForm;
+        const control = this.saveDrawingFormGroup.controls.labelForm;
 
         if (index >= 0) {
             this.labels.splice(index, 1);
@@ -149,26 +143,25 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     protected getLabelError(): string {
-        console.log(this.labelForm.hasError('maxlength'));
-        return this.labelForm.hasError('pattern')
+        return this.saveDrawingFormGroup.controls.labelForm.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.labelForm.hasError('maxlength')
+            : this.saveDrawingFormGroup.controls.labelForm.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'
             : '';
     }
 
     protected getTitleError(): string {
-        return this.titleForm.hasError('pattern')
+        return this.saveDrawingFormGroup.controls.titleForm.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.titleForm.hasError('maxlength')
+            : this.saveDrawingFormGroup.controls.titleForm.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'
-            : this.titleForm.hasError('required')
+            : this.saveDrawingFormGroup.controls.titleForm.hasError('required')
             ? 'Titre obligatoire'
             : '';
     }
 
     protected saveOnServer(): void {
-        if (this.labelForm.valid && this.titleForm.valid) {
+        if (this.saveDrawingFormGroup.valid) {
             this.saveDrawing();
         }
     }

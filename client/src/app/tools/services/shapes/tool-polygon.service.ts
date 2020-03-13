@@ -15,6 +15,7 @@ import { ToolShape } from './tool-shape';
 export class ToolPolygonService extends ToolShape {
     constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Polygon);
+        this.isShapeRegular = true;
         this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);
     }
 
@@ -47,11 +48,11 @@ export class ToolPolygonService extends ToolShape {
             points.push(point);
         }
 
-        let pointsStr = '';
+        let pointsString = '';
         for (const point of points) {
-            pointsStr += `${point.x}, ${point.y} `;
+            pointsString += `${point.x}, ${point.y} `;
         }
 
-        this.renderer.setAttribute(shape, 'points', pointsStr);
+        this.renderer.setAttribute(shape, 'points', pointsString);
     }
 }

@@ -3,7 +3,8 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            "@app/*": ["src/app/*"]
+            "@app/*": ["src/app/*"],
+            "tslib": ["node_modules/tslib"]
         },
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
