@@ -9,7 +9,7 @@
                     </mat-chip>
                     <input
                         name="martine"
-                        placeholder="Nouvelle étiquette..."
+                        placeholder="Nouvelle étiquette (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
                         [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur"
@@ -44,7 +44,7 @@
     </mat-dialog-content>
     <div class="item-buttons">
         <button mat-raised-button mat-dialog-close class="save-button">Annuler</button>
-        <button mat-raised-button class="save-button" [disabled]="saveDrawingFormGroup.invalid" (click)="saveOnServer()">
+        <button mat-raised-button class="save-button" [disabled]="saveDrawingFormGroup.controls.titleForm.invalid" (click)="saveOnServer()">
             Sauvegarder le dessin
         </button>
     </div>
