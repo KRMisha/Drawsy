@@ -30,7 +30,7 @@ export class ToolSelectorService implements OnDestroy {
         });
 
         this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
-            this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.svgElement);
+            this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
         });
     }
 

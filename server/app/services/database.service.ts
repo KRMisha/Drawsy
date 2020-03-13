@@ -4,12 +4,11 @@ import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } fro
 import { FileSchema } from '../classes/file-schema';
 import { HttpException } from '../classes/http-exception';
 import { HttpStatusCode } from '../classes/http-status-code.enum';
+import { descRegex } from '../../../common/validation/desc-regex';
 
 const connectionUrl = 'mongodb+srv://htmales:lLOKpwsJzmaoSitj@log2990-toreo.mongodb.net/test?retryWrites=true&w=majority';
 const databaseName = 'database';
 const collectionName = 'images';
-
-const descRegex = /[\w ]+/;
 
 @injectable()
 export class DatabaseService {

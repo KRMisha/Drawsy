@@ -5,9 +5,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { Subscription } from 'rxjs';
+import { descRegex } from '../../../../../../common/validation/desc-regex';
 
-const labelPattern = '^([0-9a-zA-Z ])*$';
-const titlePattern = '^([0-9a-zA-Z ])*$';
 const maxInputStringLength = 15;
 
 export interface Label {
@@ -24,11 +23,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     titleFormSubscription: Subscription;
     labelFormSubscription: Subscription;
 
-    labelForm = new FormControl('', [Validators.pattern(labelPattern), Validators.maxLength(maxInputStringLength)]);
+    labelForm = new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]);
 
     titleForm = new FormControl(this.drawingPreviewService.title, [
         Validators.required,
-        Validators.pattern(titlePattern),
+        Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
     ]);
 
@@ -61,27 +60,19 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
-        const value = event.value;
+        const inputValue = event.value;
 
         const control = this.labelForm;
 
-        if ((value || '').trim()) {
+        if ((inputValue || '').trim()) {
             control.setErrors(null);
-            const tempLabels = this.labels;
-            tempLabels.push(value.trim());
-            control.setValue(value);
+            control.setValue(inputValue);
             control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
-            } else {
-                const index = this.labels.findIndex((tmpString: string): boolean => tmpString === value.trim());
-                if (index !== -1) {
-                    this.labels.splice(index, 1);
-                }
+                this.labels.push(inputValue);
             }
-        } else {
-            control.updateValueAndValidity();
         }
 
         if (input !== undefined) {
@@ -127,7 +118,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     protected getLabelError(): string {
-        console.log(this.labelForm.hasError('maxlength'));
         return this.labelForm.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.labelForm.hasError('maxlength')
