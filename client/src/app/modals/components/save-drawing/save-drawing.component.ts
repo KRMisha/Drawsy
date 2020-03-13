@@ -120,11 +120,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     protected getLabelError(): string {
-<<<<<<< HEAD
-        return this.labelForm.hasError('pattern')
-=======
         return this.saveDrawingFormGroup.controls.labelForm.hasError('pattern')
->>>>>>> hotfix/save-drawing-form-group
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.saveDrawingFormGroup.controls.labelForm.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'

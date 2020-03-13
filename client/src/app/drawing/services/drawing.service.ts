@@ -18,7 +18,7 @@ export class DrawingService {
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
 
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
-    
+
     private elementClickedSource = new Subject<SvgClickEvent>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
@@ -58,7 +58,7 @@ export class DrawingService {
         this.transformationMap.set(element, new SvgTransformations());
 
         const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next({ element: element, mouseEvent: event });
+            this.elementClickedSource.next({ element, mouseEvent: event });
         });
 
         this.mouseUpFunctionMap.set(element, mouseUpFunction);
