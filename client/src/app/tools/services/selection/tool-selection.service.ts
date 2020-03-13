@@ -64,7 +64,7 @@ export class ToolSelectionService extends Tool {
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'height', controlPointSideSize.toString());
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'fill', 'black');
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'display', 'none');
-            this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'pointer-events', 'all');
+            this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'pointer-events', 'z');
             this.drawingService.addUiElement(this.toolSelectionStateService.svgControlPoints[i]);
 
             this.renderer.listen(this.toolSelectionStateService.svgControlPoints[i], 'mousedown', (event: MouseEvent) => {

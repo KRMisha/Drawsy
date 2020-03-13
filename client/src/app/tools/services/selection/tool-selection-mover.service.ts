@@ -107,6 +107,7 @@ export class ToolSelectionMoverService {
             this.toolSelectionStateService.selectionRect = elementsBounds;
         } else {
             this.hideSvgSelectedShapesRect();
+            this.toolSelectionStateService.selectionRect = undefined;
         }
     }
 
