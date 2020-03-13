@@ -54,6 +54,8 @@ describe('NewDrawingComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    // START NOTE: MOVE THESE TESTS TO DRAWING SERVICE!
+
     it('#onSubmit should create a new drawing if no drawing is started', () => {
         spyOn(drawingServiceMock, 'clearStoredElements').and.callThrough();
         drawingServiceMock.isDrawingStarted = false;
@@ -84,6 +86,8 @@ describe('NewDrawingComponent', () => {
         expect(drawingServiceMock.clearStoredElements).toHaveBeenCalled();
         expect(routerSpyObj.navigate).toHaveBeenCalled();
     });
+
+    // END NOTE
 
     // it('should remember the dimensions were modified if they were modified manually', () => {
     //     component.drawingForm.controls.width.setValue(123);

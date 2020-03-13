@@ -58,7 +58,7 @@
         ],
         "prefer-switch": true,
         "no-invalid-this": true,
-        "triple-equals": { "options": ["allow-null-check", "allow-undefined-check"] },
+        "triple-equals": true,
         "no-string-throw": true,
         "promise-function-async": true,
         "variable-name": {

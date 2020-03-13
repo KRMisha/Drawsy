@@ -22,9 +22,8 @@ export class DrawingSerializerService {
     }
 
     exportDrawingAsSvg(fileName: string): void {
-        const xmlHeader = '<?xml version="1.0" standalone="yes"?>\n';
         const xmlSerializer = new XMLSerializer();
-        const content = xmlHeader + xmlSerializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
+        const content = xmlSerializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
         const blob = new Blob([content], { type: 'image/svg+xml' });
 
         const link = this.renderer.createElement('a');

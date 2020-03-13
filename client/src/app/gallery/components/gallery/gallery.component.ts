@@ -19,6 +19,10 @@ export class GalleryComponent implements OnInit {
     constructor(private drawingSerializerService: DrawingSerializerService, private serverService: ServerService) {}
     ngOnInit(): void {
         this.getAllDrawings();
+    constructor(private galleryService: GalleryService) {}
+
+    createSvgFileContainer(): void {
+        this.containers = this.galleryService.containers;
     }
 
     addLabel(event: MatChipInputEvent): void {
