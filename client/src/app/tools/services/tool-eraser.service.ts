@@ -87,6 +87,8 @@ export class ToolEraserService extends Tool {
     onToolDeselection(): void {
         this.svgEraserElement.setAttribute('display', 'none');
         this.svgSelectedShapeRect.setAttribute('display', 'none');
+        this.restoreElementUnderCursorAttributes();
+        this.svgElementUnderCursor = undefined;
     }
 
     private onMousePositionChange(mousePosition: Vec2): void {
@@ -151,9 +153,9 @@ export class ToolEraserService extends Tool {
             const distanceFromRed = Math.sqrt(
                 Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2),
             );
-            const maxDistanceFromRed = 45;
+            const maxDistanceFromRed = 50;
             if (distanceFromRed <= maxDistanceFromRed) {
-                borderColor = 'rgb(165, 0, 0)';
+                borderColor = 'rgb(150, 0, 0)';
             }
         }
 
