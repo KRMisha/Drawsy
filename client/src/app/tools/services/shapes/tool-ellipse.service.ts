@@ -13,7 +13,7 @@ import { ToolShape } from '@app/tools/services/shapes/tool-shape';
     providedIn: 'root',
 })
 export class ToolEllipseService extends ToolShape {
-    constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Ellipse);
         this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
     }

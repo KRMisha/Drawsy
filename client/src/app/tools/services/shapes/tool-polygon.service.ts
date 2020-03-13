@@ -13,7 +13,7 @@ import { ToolShape } from './tool-shape';
     providedIn: 'root',
 })
 export class ToolPolygonService extends ToolShape {
-    constructor(protected drawingService: DrawingService, protected colorService: ColorService, protected commandService: CommandService) {
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Polygon);
         this.isShapeRegular = true;
         this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);

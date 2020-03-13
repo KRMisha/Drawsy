@@ -21,12 +21,12 @@ export abstract class ToolShape extends Tool {
     protected isShapeRegular = false;
 
     constructor(
-        protected drawingService: DrawingService,
-        protected colorService: ColorService,
-        protected commandService: CommandService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
         name: ToolName,
     ) {
-        super(drawingService, name);
+        super(drawingService, colorService, commandService, name);
         this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
