@@ -11,6 +11,7 @@ import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
+import { ColorService } from '@app/drawing/services/color.service';
 
 @Injectable({
     providedIn: 'root',
@@ -31,11 +32,12 @@ export class ToolEraserService extends Tool {
     private drawingElementsCopy: SVGElement[] = [];
 
     constructor(
-        protected drawingService: DrawingService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
         private svgUtilitiesService: SvgUtilitiesService,
-        private commandService: CommandService,
     ) {
-        super(drawingService, ToolName.Eraser);
+        super(drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
     }
 

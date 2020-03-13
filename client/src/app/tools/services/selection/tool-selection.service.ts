@@ -10,6 +10,8 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolSelectionMoverService } from './tool-selection-mover.service';
 import { ToolSelectionStateService } from './tool-selection-state.service';
+import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 
 const controlPointSideSize = 10;
 
@@ -35,12 +37,14 @@ export class ToolSelectionService extends Tool {
     private isMovingSelection = false;
 
     constructor(
-        protected drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
+        private svgUtilitiesService: SvgUtilitiesService,
     ) {
-        super(drawingService, ToolName.Selection);
+        super(drawingService, colorService, commandService, ToolName.Selection);
     }
 
     afterDrawingInit(): void {
