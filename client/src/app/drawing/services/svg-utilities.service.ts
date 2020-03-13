@@ -30,8 +30,8 @@ export class SvgUtilitiesService {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const paddingStr = element.getAttribute('shape-padding') as string;
-        const paddingValue = paddingStr === null ? 0 : +paddingStr;
+        const paddingString = element.getAttribute('shape-padding') as string;
+        const paddingValue = paddingString === null ? 0 : +paddingString;
 
         return {
             x: svgElementBounds.x - drawingRootBounds.x - paddingValue,

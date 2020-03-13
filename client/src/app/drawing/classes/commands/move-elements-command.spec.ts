@@ -5,18 +5,18 @@ import { MoveElementsCommand } from './move-elements-command';
 describe('MoveElementsCommand', () => {
     let command: MoveElementsCommand;
     let drawingService: DrawingService;
-    let svgElement: SVGElement[];
+    let elements: SVGElement[];
     let moveValue: Vec2;
 
     beforeEach(() => {
-        svgElement = ({} as unknown) as SVGElement[];
+        elements = ({} as unknown) as SVGElement[];
         drawingService = {
-            moveElementList: (elements: SVGElement[], move: Vec2) => {
+            moveElementList: (elements: SVGElement[], moveOffset: Vec2) => {
                 return;
             },
         } as DrawingService;
         moveValue = { x: 1, y: 1 };
-        command = new MoveElementsCommand(drawingService, svgElement, moveValue);
+        command = new MoveElementsCommand(drawingService, elements, moveValue);
     });
 
     it('should create an instance', () => {
@@ -27,12 +27,12 @@ describe('MoveElementsCommand', () => {
         spyOn(drawingService, 'moveElementList');
         command.undo();
         const inverseMoveValue: Vec2 = { x: -moveValue.x, y: -moveValue.y };
-        expect(drawingService.moveElementList).toHaveBeenCalledWith(svgElement, inverseMoveValue);
+        expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, inverseMoveValue);
     });
 
     it('#redo should forward moveElementList calling to drawingService', () => {
         spyOn(drawingService, 'moveElementList');
         command.redo();
-        expect(drawingService.moveElementList).toHaveBeenCalledWith(svgElement, moveValue);
+        expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, moveValue);
     });
 });

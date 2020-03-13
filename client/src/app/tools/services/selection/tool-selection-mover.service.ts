@@ -44,7 +44,6 @@ export class ToolSelectionMoverService {
 
     onKeyDown(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, true);
-        console.log(this.arrowDownHeld);
         if (!this.isMovingWithArrows && (this.arrowUpHeld || this.arrowDownHeld || this.arrowLeftHeld || this.arrowRightHeld)) {
             this.isMovingWithArrows = true;
             this.moveSelectionInArrowDirection();
@@ -136,8 +135,6 @@ export class ToolSelectionMoverService {
     }
 
     private moveSelectionInArrowDirection(): void {
-        console.log(this.arrowDownHeld);
-
         const moveDirection: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
         if (this.arrowLeftHeld !== this.arrowRightHeld) {
