@@ -9,10 +9,10 @@ describe('AppendElementCommand', () => {
     beforeEach(() => {
         element = ({} as unknown) as SVGElement;
         drawingService = {
-            removeElement: (element: SVGElement) => {
+            removeElement: (_: SVGElement) => {
                 return;
             },
-            addElement: (element: SVGElement) => {
+            addElement: (_: SVGElement) => {
                 return;
             },
         } as DrawingService;

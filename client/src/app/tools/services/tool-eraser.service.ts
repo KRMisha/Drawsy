@@ -4,6 +4,7 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
+import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
@@ -11,7 +12,6 @@ import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
-import { ColorService } from '@app/drawing/services/color.service';
 
 @Injectable({
     providedIn: 'root',
@@ -26,10 +26,12 @@ export class ToolEraserService extends Tool {
     private elementUnderCursorStrokeColor: string;
 
     private isMouseDownInside = false;
-
+    private drawingElementsCopy: SVGElement[] = [];
     private svgElementsDeletedDuringDrag: ElementAndItsNeighbour[] = [];
 
-    private drawingElementsCopy: SVGElement[] = [];
+    private eraserRect: Rect;
+
+    private timerId?: number;
 
     constructor(
         drawingService: DrawingService,
@@ -55,13 +57,21 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.onMousePositionChange(this.getMousePosition(event));
+        const mousePosition = this.getMousePosition(event);
+        this.updateEraserRect(mousePosition);
+        const delayMsBetweenCalls = 50;
+        if (this.timerId === undefined) {
+            this.timerId = window.setTimeout(() => {
+                this.onMousePositionChange(mousePosition);
+            }, delayMsBetweenCalls);
+        }
     }
 
     onMouseDown(event: MouseEvent): void {
+        const mousePosition = this.getMousePosition(event);
         this.isMouseDownInside = Tool.isMouseInside;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
-        this.onMousePositionChange(this.getMousePosition(event));
+        this.onMousePositionChange(mousePosition);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -93,20 +103,27 @@ export class ToolEraserService extends Tool {
         this.svgElementUnderCursor = undefined;
     }
 
-    private onMousePositionChange(mousePosition: Vec2): void {
+    private updateEraserRect(mousePosition: Vec2): void {
         this.eraserSize = this.toolSettings.get(ToolSetting.EraserSize) as number;
-        const eraserRect = this.getEraserRectFromMousePosition(mousePosition);
-        this.updateVisibleRect(this.svgEraserElement, eraserRect);
+        this.eraserRect = this.getEraserRectFromMousePosition(mousePosition);
+        this.updateVisibleRect(this.svgEraserElement, this.eraserRect);
+    }
 
-        const elementsUnderEraser = this.svgUtilitiesService.getElementsUnderArea(this.drawingService.svgElements, eraserRect);
-        if (elementsUnderEraser.length === 0) {
+    private onMousePositionChange(mousePosition: Vec2): void {
+        this.timerId = undefined;
+        const elementToConsider = this.svgUtilitiesService.getElementUnderAreaPixelPerfect(
+            this.drawingService.svgElements,
+            this.eraserRect,
+        );
+
+        // const elementsUnderEraser = this.svgUtilitiesService.getElementsUnderArea(this.drawingService.svgElements, eraserRect);
+        if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
             this.svgElementUnderCursor = undefined;
             return;
         }
 
-        const elementToConsider = elementsUnderEraser[elementsUnderEraser.length - 1];
         if (elementToConsider !== this.svgElementUnderCursor) {
             this.restoreElementUnderCursorAttributes();
             this.svgElementUnderCursor = elementToConsider;

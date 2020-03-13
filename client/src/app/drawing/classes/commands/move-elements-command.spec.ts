@@ -11,7 +11,7 @@ describe('MoveElementsCommand', () => {
     beforeEach(() => {
         elements = ({} as unknown) as SVGElement[];
         drawingService = {
-            moveElementList: (elements: SVGElement[], moveOffset: Vec2) => {
+            moveElementList: (_: SVGElement[], moveOffset: Vec2) => {
                 return;
             },
         } as DrawingService;
