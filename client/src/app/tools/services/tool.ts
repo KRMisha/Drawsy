@@ -16,10 +16,12 @@ export abstract class Tool {
     renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
 
-    constructor(protected drawingService: DrawingService,
-                protected colorService: ColorService,
-                protected commandService: CommandService,
-                name: ToolName) {
+    constructor(
+        protected drawingService: DrawingService,
+        protected colorService: ColorService,
+        protected commandService: CommandService,
+        name: ToolName,
+    ) {
         this.name = name;
     }
 

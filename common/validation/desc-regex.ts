@@ -1,1 +1,1 @@
-export const descRegex = /[\w ]+/;
+export const descRegex = /^[\w ]+$/;

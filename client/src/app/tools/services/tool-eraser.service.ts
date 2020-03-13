@@ -4,6 +4,7 @@ import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
+import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
@@ -11,7 +12,6 @@ import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
-import { ColorService } from '@app/drawing/services/color.service';
 
 @Injectable({
     providedIn: 'root',

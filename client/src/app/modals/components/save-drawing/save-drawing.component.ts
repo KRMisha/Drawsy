@@ -21,7 +21,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
     titleFormSubscription: Subscription;
-    labelFormSubscription: Subscription;
 
     saveDrawingFormGroup = new FormGroup({
         labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
@@ -47,9 +46,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
                 this.title = this.saveDrawingFormGroup.controls.titleForm.value;
             }
         });
-        this.labelFormSubscription = this.saveDrawingFormGroup.controls.labelForm.valueChanges.subscribe(() => {
-            this.saveDrawingFormGroup.controls.labelForm.updateValueAndValidity({ emitEvent: false });
-        });
     }
 
     ngOnDestroy(): void {
@@ -69,7 +65,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         if ((inputValue || '').trim()) {
             control.setErrors(null);
             control.setValue(inputValue);
-            control.updateValueAndValidity();
+            // control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
