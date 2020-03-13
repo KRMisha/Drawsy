@@ -23,7 +23,7 @@ describe('Shape', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorService: ColorService;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
-    let name: ToolName;
+    const name: ToolName = ToolName.Brush;
     let shape: ToolShapeMock;
 
     beforeEach(() => {
@@ -34,7 +34,6 @@ describe('Shape', () => {
         commandServiceSpyObj = jasmine.createSpyObj('CommandService', [
             'addCommand'
         ]);
-        name = {} as ToolName;
         shape = new ToolShapeMock(drawingServiceSpyObj, colorService, commandServiceSpyObj, name);
     });
     it('should create an instance', () => {
