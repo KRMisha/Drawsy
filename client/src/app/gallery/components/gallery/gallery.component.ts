@@ -5,6 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ServerService } from '@app/server/services/server.service';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
@@ -31,6 +32,7 @@ export class GalleryComponent implements OnInit {
         private drawingSerializerService: DrawingSerializerService,
         private serverService: ServerService,
         private snackBar: MatSnackBar,
+        private drawingService: DrawingService,
     ) {}
 
     ngOnInit(): void {
@@ -84,6 +86,11 @@ export class GalleryComponent implements OnInit {
     }
 
     deleteDrawing(selectedContainer: SvgFileContainer): void {
+        const confirmationMessage =
+            'Attention! La suppression du dessin est irréversible. ' + 'Désirez-vous quand même supprimer le dessin?';
+        if (!confirm(confirmationMessage)) {
+            return;
+        }
         this.serverService.deleteDrawing(selectedContainer).subscribe(() => {
             this.getAllDrawings();
         });
@@ -93,6 +100,12 @@ export class GalleryComponent implements OnInit {
     }
 
     loadDrawing(selectedContainer: SvgFileContainer): void {
+        const confirmationMessage =
+            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
+            'Désirez-vous charger le dessin et abandonner vos changements?';
+        if (this.drawingService.isDrawingStarted() && !confirm(confirmationMessage)) {
+            return;
+        }
         this.drawingSerializerService.loadSvgDrawing(selectedContainer);
         this.snackBar.open(`Dessin chargé : ${selectedContainer.title}`, undefined, {
             duration: 4000,
