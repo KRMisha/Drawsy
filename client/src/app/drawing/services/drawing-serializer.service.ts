@@ -34,7 +34,7 @@ export class DrawingSerializerService {
 
     convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
         const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
-        svgFileContainer.id = savedFile._id;
+        svgFileContainer.id = savedFile.id;
         return svgFileContainer;
     }
 
