@@ -80,9 +80,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
                     this.gridService.toggleGrid();
                     break;
                 case '+':
-                    if (event.shiftKey) {
-                        this.gridService.raiseGridSize();
-                    }
+                    this.gridService.raiseGridSize();
                     break;
                 case '-':
                     this.gridService.lowerGridSize();
