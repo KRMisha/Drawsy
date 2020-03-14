@@ -31,8 +31,6 @@ export class ToolEraserService extends Tool {
 
     private eraserRect: Rect;
 
-    private timerId?: number;
-
     constructor(
         drawingService: DrawingService,
         colorService: ColorService,
@@ -59,12 +57,7 @@ export class ToolEraserService extends Tool {
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
         this.updateEraserRect(mousePosition);
-        const delayMsBetweenCalls = 16.67;
-        if (this.timerId === undefined) {
-            this.timerId = window.setTimeout(() => {
-                this.onMousePositionChange(mousePosition);
-            }, delayMsBetweenCalls);
-        }
+        this.onMousePositionChange(mousePosition);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -110,13 +103,11 @@ export class ToolEraserService extends Tool {
     }
 
     private onMousePositionChange(mousePosition: Vec2): void {
-        this.timerId = undefined;
         const elementToConsider = this.svgUtilitiesService.getElementUnderAreaPixelPerfect(
             this.drawingService.svgElements,
             this.eraserRect,
         );
 
-        // const elementsUnderEraser = this.svgUtilitiesService.getElementsUnderArea(this.drawingService.svgElements, eraserRect);
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
