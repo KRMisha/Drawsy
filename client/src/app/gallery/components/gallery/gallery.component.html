@@ -21,23 +21,21 @@
     </div>
     <mat-dialog-content class="content">
         <div class="card-container" *ngFor="let container of containers">
-            <div *ngIf="hasSearchLabel(container)">
+            <div *ngIf="hasSearchLabel(container)" class="c-container">
                 <mat-card class="card">
                     <mat-card-header>
                         <mat-card-title>{{ container.title }}</mat-card-title>
                     </mat-card-header>
                     <mat-divider></mat-divider>
-                    <mat-card-content>
-                        <div class="drawing-container">
-                            <div class="drawing" [innerHTML]="container.drawingRoot.outerHTML | safeHtml"></div>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <mat-chip-list #chipList class="drawing-chip-list">
+                    <div class="drawing" [innerHTML]="container.drawingRoot.outerHTML | safeHtml"></div>
+                    <mat-divider></mat-divider>
+                    <div class="drawing-chip-list">
+                        <mat-chip-list #chipList>
                             <mat-chip *ngFor="let label of container.labels">
                                 {{ label }}
                             </mat-chip>
                         </mat-chip-list>
-                    </mat-card-content>
+                    </div>
                     <mat-card-actions align="end">
                         <button mat-raised-button class="button" (click)="deleteDrawing(container)">Effacer</button>
                         <button mat-raised-button class="button" (click)="loadDrawing(container)">Charger</button>
