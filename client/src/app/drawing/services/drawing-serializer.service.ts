@@ -34,7 +34,7 @@ export class DrawingSerializerService {
 
     convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
         const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
-        svgFileContainer.id = savedFile.id;
+        svgFileContainer.id = savedFile._id;
         return svgFileContainer;
     }
 
@@ -80,12 +80,10 @@ export class DrawingSerializerService {
     private svgFileContainerFromString(content: string): SvgFileContainer {
         const domParser = new DOMParser();
         const document = domParser.parseFromString(content, 'image/svg+xml');
-
         const importedDrawingRoot = document.getElementsByTagName('svg')[0];
         const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
         const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
         const penis = { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
-        console.log(penis);
         return penis;
     }
 }

@@ -29,7 +29,7 @@
                     <mat-divider></mat-divider>
                     <mat-card-content>
                         <div class="drawing-container">
-                            <div class="drawing" [attr.innerHTML]="container.drawingRoot.outerHTML"></div>
+                            <div class="drawing" [innerHTML]="container.drawingRoot.outerHTML | safeHtml"></div>
                         </div>
                         <mat-divider></mat-divider>
                         <mat-chip-list #chipList class="drawing-chip-list">

@@ -5,8 +5,7 @@ import { SvgFileContainer } from '@app/classes/svg-file-container';
     providedIn: 'root',
 })
 export class GalleryService {
-    // tslint:disable-next-line: variable-name
-    private _containers: SvgFileContainer[] = [];
+    private _containers: SvgFileContainer[] = []; // tslint:disable-line: variable-name
     get containers(): SvgFileContainer[] {
         return this._containers;
     }

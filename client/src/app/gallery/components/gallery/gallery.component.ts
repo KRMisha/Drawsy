@@ -4,8 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
-// import { GalleryService } from '@app/gallery/services/gallery/gallery.service';
-import { ServerService } from '@app/server/service/server-service.service';
+import { ServerService } from '@app/server/services/server.service';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
@@ -79,8 +78,9 @@ export class GalleryComponent implements OnInit {
     }
 
     deleteDrawing(selectedContainer: SvgFileContainer): void {
-        console.log(selectedContainer.id);
-        this.serverService.deleteDrawing(selectedContainer);
+        this.serverService.deleteDrawing(selectedContainer).subscribe(() => {
+            this.getAllDrawings();
+        });
     }
 
     loadDrawing(selectedContainer: SvgFileContainer): void {
@@ -89,13 +89,13 @@ export class GalleryComponent implements OnInit {
 
     private getAllDrawings(): void {
         this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]): void => {
+            this.containers = [];
             for (const savedFile of savedFiles) {
-                console.log(savedFile.id);
                 this.containers.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
             }
         });
     }
-    
+
     protected getLabelError(): string {
         return this.galleryFormGroup.controls.labelForm.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'

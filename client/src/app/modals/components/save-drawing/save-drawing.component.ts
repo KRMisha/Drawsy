@@ -5,7 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
-import { ServerService } from '@app/server/service/server-service.service';
+import { ServerService } from '@app/server/services/server.service';
 import { Subscription } from 'rxjs';
 import { NewFileId } from '../../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
@@ -45,7 +45,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         this.title = this.drawingPreviewService.title;
         this.labels = this.drawingPreviewService.labels;
         this.titleFormSubscription = this.saveDrawingFormGroup.controls.titleForm.valueChanges.subscribe(() => {
-            console.log(this.saveDrawingFormGroup.valid);
             if (this.saveDrawingFormGroup.controls.titleForm.valid) {
                 this.title = this.saveDrawingFormGroup.controls.titleForm.value;
             }

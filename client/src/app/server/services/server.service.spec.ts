@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ServerService } from './server-service.service';
+import { ServerService } from './server.service';
 
-describe('ServerServic', () => {
+describe('ServerService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {

@@ -8,7 +8,7 @@ import { NewFileId } from '../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../common/communication/saved-file';
 
 const serverUrl = 'http://localhost:3000/api';
-const httpOption = {
+const options = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
     }),
@@ -22,17 +22,15 @@ export class ServerService {
 
     createDrawing(svgFileContainer: SvgFileContainer): Observable<NewFileId> {
         const newFile: NewFileContent = { content: svgFileContainer.drawingRoot.outerHTML };
-        console.log(JSON.stringify(newFile));
-        console.log(serverUrl + '/create');
         return this.httpService
-            .post<NewFileId>(serverUrl + '/create', JSON.stringify(newFile), httpOption)
+            .post<NewFileId>(serverUrl + '/create', JSON.stringify(newFile), options)
             .pipe(catchError(this.handleError<NewFileId>('create')));
     }
 
     updateDrawing(svgFileContainer: SvgFileContainer): Observable<SavedFile> {
         const savedFile: SavedFile = { id: svgFileContainer.id, content: svgFileContainer.drawingRoot.outerHTML };
         return this.httpService
-            .put<SavedFile>(serverUrl + '/update/' + savedFile.id, JSON.stringify(savedFile), httpOption)
+            .put<SavedFile>(serverUrl + '/update/' + savedFile.id, JSON.stringify(savedFile), options)
             .pipe(catchError(this.handleError<SavedFile>('updateDrawing' + svgFileContainer.id)));
     }
 
