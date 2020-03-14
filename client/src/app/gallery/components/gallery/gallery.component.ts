@@ -1,10 +1,11 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { GalleryService } from '@app/gallery/services/gallery/gallery.service';
-import { Subscription } from 'rxjs';
+import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { ServerService } from '@app/server/services/server.service';
+import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
@@ -14,11 +15,9 @@ const maxInputStringLength = 15;
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
 })
-export class GalleryComponent {
+export class GalleryComponent implements OnInit {
     containers: SvgFileContainer[] = [];
     searchLabels: string[] = [];
-
-    labelFormSubscription: Subscription;
 
     galleryFormGroup = new FormGroup({
         labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
@@ -26,16 +25,15 @@ export class GalleryComponent {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private galleryService: GalleryService) {}
+    constructor(private drawingSerializerService: DrawingSerializerService, private serverService: ServerService) {}
 
-    createSvgFileContainer(): void {
-        this.containers = this.galleryService.containers;
+    ngOnInit(): void {
+        this.getAllDrawings();
     }
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-
         const control = this.galleryFormGroup.controls.labelForm;
 
         if ((value || '').trim()) {
@@ -55,14 +53,12 @@ export class GalleryComponent {
 
     removeLabel(label: string): void {
         const index = this.searchLabels.indexOf(label, 0);
-
         const control = this.galleryFormGroup.controls.labelForm;
 
         if (index >= 0) {
             this.searchLabels.splice(index, 1);
         }
 
-        control.updateValueAndValidity();
         control.markAsDirty();
     }
 
@@ -79,6 +75,25 @@ export class GalleryComponent {
             }
         }
         return false;
+    }
+
+    deleteDrawing(selectedContainer: SvgFileContainer): void {
+        this.serverService.deleteDrawing(selectedContainer).subscribe(() => {
+            this.getAllDrawings();
+        });
+    }
+
+    loadDrawing(selectedContainer: SvgFileContainer): void {
+        this.drawingSerializerService.loadSvgDrawing(selectedContainer);
+    }
+
+    private getAllDrawings(): void {
+        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]): void => {
+            this.containers = [];
+            for (const savedFile of savedFiles) {
+                this.containers.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
+            }
+        });
     }
 
     protected getLabelError(): string {

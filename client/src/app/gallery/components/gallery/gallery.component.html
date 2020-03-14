@@ -29,7 +29,7 @@
                     <mat-divider></mat-divider>
                     <mat-card-content>
                         <div class="drawing-container">
-                            <div class="drawing"></div>
+                            <div class="drawing" [innerHTML]="container.drawingRoot.outerHTML | safeHtml"></div>
                         </div>
                         <mat-divider></mat-divider>
                         <mat-chip-list #chipList class="drawing-chip-list">
@@ -39,8 +39,8 @@
                         </mat-chip-list>
                     </mat-card-content>
                     <mat-card-actions align="end">
-                        <button mat-raised-button class="button">Effacer</button>
-                        <button mat-raised-button class="button">Charger</button>
+                        <button mat-raised-button class="button" (click)="deleteDrawing(container)">Effacer</button>
+                        <button mat-raised-button class="button" (click)="loadDrawing(container)">Charger</button>
                     </mat-card-actions>
                 </mat-card>
             </div>

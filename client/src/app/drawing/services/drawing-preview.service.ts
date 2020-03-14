@@ -61,4 +61,11 @@ export class DrawingPreviewService {
     set labels(labels: string[]) {
         this.drawingService.labels = labels;
     }
+
+    get id(): string {
+        return this.drawingService.drawingId;
+    }
+    set id(id: string) {
+        this.drawingService.drawingId = id;
+    }
 }

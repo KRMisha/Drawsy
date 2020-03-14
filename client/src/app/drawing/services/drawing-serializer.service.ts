@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SavedFile } from '../../../../../common/communication/saved-file';
 import { SvgUtilityService } from './svg-utility.service';
 
 @Injectable({
@@ -31,25 +32,10 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    async exportDrawing(fileName: string, fileType: string): Promise<void> {
-        const link = this.renderer.createElement('a');
-        link.download = fileName;
-        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
-        link.href = canvas.toDataURL(fileType);
-        link.click();
-    }
-
-    async importSvgDrawing(file: File): Promise<SvgFileContainer> {
-        const fileContent = await this.readFile(file);
-
-        const domParser = new DOMParser();
-        const document = domParser.parseFromString(fileContent, 'image/svg+xml');
-
-        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
-        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-        const fileUrl = URL.createObjectURL(file);
-        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, url: fileUrl } as SvgFileContainer;
+    convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
+        const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
+        svgFileContainer.id = savedFile.id;
+        return svgFileContainer;
     }
 
     loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
@@ -67,6 +53,20 @@ export class DrawingSerializerService {
         }
     }
 
+    async exportDrawing(fileName: string, fileType: string): Promise<void> {
+        const link = this.renderer.createElement('a');
+        link.download = fileName;
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        link.href = canvas.toDataURL(fileType);
+        link.click();
+    }
+
+    async importSvgDrawing(file: File): Promise<SvgFileContainer> {
+        const fileContent = await this.readFile(file);
+
+        return this.svgFileContainerFromString(fileContent);
+    }
+
     private async readFile(file: File): Promise<string> {
         return new Promise<string>((resolve: (fileContent: string) => void): void => {
             const fileReader: FileReader = new FileReader();
@@ -75,5 +75,15 @@ export class DrawingSerializerService {
             };
             fileReader.readAsText(file);
         });
+    }
+
+    private svgFileContainerFromString(content: string): SvgFileContainer {
+        const domParser = new DOMParser();
+        const document = domParser.parseFromString(content, 'image/svg+xml');
+        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
+        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
+        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        const penis = { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
+        return penis;
     }
 }

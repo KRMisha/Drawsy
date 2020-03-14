@@ -3,8 +3,8 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
+import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
 import { HttpException } from '../classes/http-exception';
-import { HttpStatusCode } from '../classes/http-status-code.enum';
 import { DatabaseController } from '../controllers/database.controller';
 import Types from '../types';
 

@@ -2,9 +2,13 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
+import { ServerService } from '@app/server/services/server.service';
 import { Subscription } from 'rxjs';
+import { NewFileId } from '../../../../../../common/communication/new-file-id';
+import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
@@ -33,7 +37,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingPreviewService: DrawingPreviewService) {
+    constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService) {
         this.saveDrawingFormGroup.controls.labelForm.setValue(this.labels);
     }
 
@@ -41,7 +45,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         this.title = this.drawingPreviewService.title;
         this.labels = this.drawingPreviewService.labels;
         this.titleFormSubscription = this.saveDrawingFormGroup.controls.titleForm.valueChanges.subscribe(() => {
-            console.log(this.saveDrawingFormGroup.valid);
             if (this.saveDrawingFormGroup.controls.titleForm.valid) {
                 this.title = this.saveDrawingFormGroup.controls.titleForm.value;
             }
@@ -54,18 +57,32 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();
+        const svgFileContainer: SvgFileContainer = {
+            title: this.title,
+            labels: this.labels,
+            drawingRoot: this.drawingPreviewService.drawingPreviewRoot,
+            id: this.id,
+        };
+        if (this.id === '') {
+            this.serverService.createDrawing(svgFileContainer).subscribe((newFileId: NewFileId): void => {
+                console.log('PENISSSSS');
+            });
+        } else {
+            this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
+                // ERROR HANDDLING
+                console.log('WHATTTTTTT');
+            });
+        }
     }
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const inputValue = event.value;
-
         const control = this.saveDrawingFormGroup.controls.labelForm;
 
         if ((inputValue || '').trim()) {
             control.setErrors(null);
             control.setValue(inputValue);
-            // control.updateValueAndValidity();
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
@@ -80,21 +97,18 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
-
         const control = this.saveDrawingFormGroup.controls.labelForm;
 
         if (index >= 0) {
             this.labels.splice(index, 1);
         }
 
-        control.updateValueAndValidity();
         control.markAsDirty();
     }
 
     get title(): string {
         return this.drawingPreviewService.title;
     }
-
     set title(title: string) {
         this.drawingPreviewService.title = title;
     }
@@ -102,15 +116,19 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     get labels(): string[] {
         return this.drawingPreviewService.labels;
     }
-
     set labels(labels: string[]) {
         this.drawingPreviewService.labels = labels;
     }
 
+    get id(): string {
+        return this.drawingPreviewService.id;
+    }
+    set id(id: string) {
+        this.drawingPreviewService.id = this.id;
+    }
     get previewFilter(): PreviewFilter {
         return this.drawingPreviewService.previewFilter;
     }
-
     set previewFilter(previewFilter: PreviewFilter) {
         this.drawingPreviewService.previewFilter = previewFilter;
     }
@@ -135,7 +153,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     protected saveOnServer(): void {
         if (this.saveDrawingFormGroup.valid) {
-            console.log('SERVER DOWN');
+            this.saveDrawing();
         }
     }
 }

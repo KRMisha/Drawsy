@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
+import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
 import { NewFileId } from '../../../common/communication/new-file-id';
-import { HttpStatusCode } from '../classes/http-status-code.enum';
 import { DatabaseService } from '../services/database.service';
 import Types from '../types';
 
