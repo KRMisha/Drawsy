@@ -2,6 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
@@ -10,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { NewFileId } from '../../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
+
 
 const maxInputStringLength = 15;
 
@@ -37,7 +39,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService) {
+    constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService, private snackBar: MatSnackBar) {
         this.saveDrawingFormGroup.controls.labelForm.setValue(this.labels);
     }
 
@@ -74,6 +76,9 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
                 console.log('Drawing updated');
             });
         }
+        this.snackBar.open(`Dessin sauvegardé : ${svgFileContainer.title}`, undefined, {
+          duration: 4000,
+        });
     }
 
     addLabel(event: MatChipInputEvent): void {
