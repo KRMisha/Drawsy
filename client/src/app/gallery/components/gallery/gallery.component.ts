@@ -19,6 +19,7 @@ const maxInputStringLength = 15;
 export class GalleryComponent implements OnInit {
     containers: SvgFileContainer[] = [];
     searchLabels: string[] = [];
+    isLoaded = false;
 
     galleryFormGroup = new FormGroup({
         labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
@@ -34,9 +35,6 @@ export class GalleryComponent implements OnInit {
 
     ngOnInit(): void {
         this.getAllDrawings();
-        this.snackBar.open('This is dope', undefined, {
-            duration: 20000,
-        });
     }
 
     addLabel(event: MatChipInputEvent): void {
@@ -89,10 +87,16 @@ export class GalleryComponent implements OnInit {
         this.serverService.deleteDrawing(selectedContainer).subscribe(() => {
             this.getAllDrawings();
         });
+        this.snackBar.open(`Dessin supprimé : ${selectedContainer.title}`, undefined, {
+            duration: 4000,
+        });
     }
 
     loadDrawing(selectedContainer: SvgFileContainer): void {
         this.drawingSerializerService.loadSvgDrawing(selectedContainer);
+        this.snackBar.open(`Dessin chargé : ${selectedContainer.title}`, undefined, {
+            duration: 4000,
+        });
     }
 
     private getAllDrawings(): void {
@@ -101,6 +105,7 @@ export class GalleryComponent implements OnInit {
             for (const savedFile of savedFiles) {
                 this.containers.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
             }
+            this.isLoaded = true;
         });
     }
 
