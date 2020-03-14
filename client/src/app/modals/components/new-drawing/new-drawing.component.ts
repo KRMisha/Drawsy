@@ -52,6 +52,9 @@ export class NewDrawingComponent implements OnInit {
     onSubmit(): void {
         const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
         if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
+            this.drawingService.drawingId = '';
+            this.drawingService.title = '';
+            this.drawingService.labels = [];
             this.router.navigate(['/editor']);
         }
     }

@@ -12,7 +12,6 @@ import { NewFileId } from '../../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
-
 const maxInputStringLength = 15;
 
 export interface Label {
@@ -77,7 +76,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             });
         }
         this.snackBar.open(`Dessin sauvegardé : ${svgFileContainer.title}`, undefined, {
-          duration: 4000,
+            duration: 4000,
         });
     }
 
