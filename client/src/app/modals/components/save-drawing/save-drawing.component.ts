@@ -61,16 +61,17 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             title: this.title,
             labels: this.labels,
             drawingRoot: this.drawingPreviewService.drawingPreviewRoot,
-            id: this.id,
+            id: this.drawingPreviewService.id,
         };
         if (this.id === '') {
             this.serverService.createDrawing(svgFileContainer).subscribe((newFileId: NewFileId): void => {
-                console.log('PENISSSSS');
+                console.log('Drawing created');
+                this.drawingPreviewService.id = newFileId.id;
             });
         } else {
             this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
-                // ERROR HANDDLING
-                console.log('updatedd');
+                // ERROR HANDLING
+                console.log('Drawing updated');
             });
         }
     }
