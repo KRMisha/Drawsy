@@ -1,6 +1,8 @@
 import { Renderer2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
+import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
@@ -14,7 +16,12 @@ export abstract class Tool {
     renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
 
-    constructor(protected drawingService: DrawingService, name: ToolName) {
+    constructor(
+        protected drawingService: DrawingService,
+        protected colorService: ColorService,
+        protected commandService: CommandService,
+        name: ToolName,
+    ) {
         this.name = name;
     }
 

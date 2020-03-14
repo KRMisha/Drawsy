@@ -18,13 +18,10 @@ export abstract class ToolShape extends Tool {
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
 
-    constructor(
-        protected drawingService: DrawingService,
-        protected colorService: ColorService,
-        protected commandService: CommandService,
-        name: ToolName,
-    ) {
-        super(drawingService, name);
+    protected isShapeRegular = false;
+
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService, name: ToolName) {
+        super(drawingService, colorService, commandService, name);
         this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
@@ -93,7 +90,7 @@ export abstract class ToolShape extends Tool {
         const isCurrentMouseBelowOrigin = mousePositionCopy.y >= this.origin.y;
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
 
-        if (this.isShiftDown) {
+        if (this.isShiftDown || this.isShapeRegular) {
             const dimensions: Vec2 = { x: Math.abs(mousePositionCopy.x - this.origin.x), y: Math.abs(mousePositionCopy.y - this.origin.y) };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
             const deltaDimensions: Vec2 = { x: Math.abs(dimensions.x - desiredSideSize), y: Math.abs(dimensions.y - desiredSideSize) };

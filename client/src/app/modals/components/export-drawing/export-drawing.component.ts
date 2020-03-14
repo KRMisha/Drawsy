@@ -5,8 +5,8 @@ import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { Subscription } from 'rxjs';
+import { descRegex } from '../../../../../../common/validation/desc-regex';
 
-const titlePattern = '^([0-9a-zA-Z ])*$';
 const maxInputStringLength = 15;
 
 @Component({
@@ -21,7 +21,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     titleForm = new FormControl('Sans titre', [
         Validators.required,
-        Validators.pattern(titlePattern),
+        Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
     ]);
 

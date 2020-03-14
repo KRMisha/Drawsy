@@ -1,6 +1,6 @@
 <div class="container">
     <mat-dialog-content class="item-content">
-        <form>
+        <form [formGroup]="saveDrawingFormGroup">
             <mat-form-field class="chip-list">
                 <mat-chip-list #chipList aria-label="Label selection">
                     <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
@@ -9,20 +9,20 @@
                     </mat-chip>
                     <input
                         name="martine"
-                        placeholder="Nouvelle étiquette..."
+                        placeholder="Nouvelle étiquette (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
                         [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addLabel($event)"
                     />
-                    <mat-error *ngIf="labelForm.invalid">{{ getLabelError() }}</mat-error>
+                    <mat-error *ngIf="saveDrawingFormGroup.controls.labelForm.invalid">{{ getLabelError() }}</mat-error>
                 </mat-chip-list>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Titre</mat-label>
-                <input matInput [formControl]="titleForm" />
-                <mat-error *ngIf="titleForm.invalid">{{ getTitleError() }}</mat-error>
+                <input matInput formControlName="titleForm" />
+                <mat-error *ngIf="saveDrawingFormGroup.controls.titleForm.invalid">{{ getTitleError() }}</mat-error>
             </mat-form-field>
 
             <mat-form-field>
@@ -44,7 +44,7 @@
     </mat-dialog-content>
     <div class="item-buttons">
         <button mat-raised-button mat-dialog-close class="save-button">Annuler</button>
-        <button mat-raised-button class="save-button" [disabled]="titleForm.invalid || labelForm.invalid" (click)="saveOnServer()">
+        <button mat-raised-button class="save-button" [disabled]="saveDrawingFormGroup.controls.titleForm.invalid" (click)="saveOnServer()">
             Sauvegarder le dessin
         </button>
     </div>

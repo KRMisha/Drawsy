@@ -34,8 +34,8 @@ export class ToolLineService extends Tool {
     private hasJunction: boolean;
     private junctionSize: number;
 
-    constructor(protected drawingService: DrawingService, private colorService: ColorService, private commandService: CommandService) {
-        super(drawingService, ToolName.Line);
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
+        super(drawingService, colorService, commandService, ToolName.Line);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
             hasJunction: false,
@@ -168,8 +168,6 @@ export class ToolLineService extends Tool {
 
         const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
         const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) / 2 - junctionSizeActualValue);
-
-        console.log(padding);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());

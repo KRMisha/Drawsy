@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from './tool';
@@ -13,11 +14,12 @@ import { Tool } from './tool';
 })
 export class ToolEyedropperService extends Tool {
     constructor(
-        protected drawingService: DrawingService,
-        private colorService: ColorService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
+        private svgUtilitiesService: SvgUtilityService,
     ) {
-        super(drawingService, ToolName.Eyedropper);
+        super(drawingService, colorService, commandService, ToolName.Eyedropper);
     }
 
     onMouseDown(event: MouseEvent): void {

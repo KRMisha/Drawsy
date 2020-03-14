@@ -11,8 +11,6 @@ stages:
     - build
 #     - test
 install:
-    only:
-        - master
     stage: install
     script:
         - pushd client
@@ -28,24 +26,18 @@ install:
             - server/node_modules/
         policy: pull-push
 lint:client:
-    only:
-        - master
     stage: lint
     script:
         - pushd client
         - yarn lint
         - popd
 lint:server:
-   only:
-       - master
-   stage: lint
-   script:
+    stage: lint
+    script:
        - pushd server
        - yarn lint
        - popd
 build:client:
-    only:
-        - master
     stage: build
     script:
         - pushd client
@@ -55,15 +47,13 @@ build:client:
         paths:
             - client/dist/
 build:server:
-    only:
-        - master
-   stage: build
-   script:
-       - pushd server
-       - yarn tsc
-       - popd
-   artifacts:
-       paths:
+    stage: build
+    script:
+        - pushd server
+        - yarn tsc
+        - popd
+    artifacts:
+        paths:
            - server/out/
 # test:client:
 #     only:

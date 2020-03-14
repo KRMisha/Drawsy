@@ -7,10 +7,7 @@ describe('RecolorCommand', () => {
     let command: RecolorCommand;
 
     beforeEach(() => {
-        svgElementSpyObj = jasmine.createSpyObj('SVGElement', [
-            'setAttribute',
-            'removeAttribute'
-        ]);
+        svgElementSpyObj = jasmine.createSpyObj('SVGElement', ['setAttribute', 'removeAttribute']);
         attributesBefore = new Map<string, string | undefined>();
         attributesBefore.set('color', 'white');
         attributesBefore.set('transparency', undefined);

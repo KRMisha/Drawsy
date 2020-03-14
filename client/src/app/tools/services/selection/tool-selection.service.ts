@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
+import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { SvgUtilitiesService } from '@app/drawing/services/svg-utilities.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -35,12 +37,14 @@ export class ToolSelectionService extends Tool {
     private isMovingSelection = false;
 
     constructor(
-        protected drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
+        private svgUtilitiesService: SvgUtilityService,
     ) {
-        super(drawingService, ToolName.Selection);
+        super(drawingService, colorService, commandService, ToolName.Selection);
     }
 
     afterDrawingInit(): void {

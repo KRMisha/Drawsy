@@ -3,7 +3,8 @@ import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilitiesService } from './svg-utilities.service';
+import { SavedFile } from '../../../../../common/communication/saved-file';
+import { SvgUtilityService } from './svg-utility.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +15,7 @@ export class DrawingSerializerService {
     constructor(
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
-        private svgUtilitiesService: SvgUtilitiesService,
+        private svgUtilitiesService: SvgUtilityService,
         private rendererFactory: RendererFactory2,
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
@@ -31,6 +32,31 @@ export class DrawingSerializerService {
         link.click();
     }
 
+    convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
+        const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
+        svgFileContainer.id = savedFile.id;
+        return svgFileContainer;
+    }
+
+    loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
+        this.drawingService.dimensions.x = svgFileContainer.drawingRoot.viewBox.baseVal.width;
+        this.drawingService.dimensions.y = svgFileContainer.drawingRoot.viewBox.baseVal.height;
+
+        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+
+        this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
+        this.drawingService.drawingId = svgFileContainer.id;
+        this.drawingService.labels = svgFileContainer.labels;
+        this.drawingService.title = svgFileContainer.title;
+
+        this.drawingService.clearStoredElements();
+        const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
+        for (const element of Array.from(svgDrawingContent.children)) {
+            const elementClone = element.cloneNode(true);
+            this.drawingService.addElement(elementClone as SVGElement);
+        }
+    }
+
     async exportDrawing(fileName: string, fileType: string): Promise<void> {
         const link = this.renderer.createElement('a');
         link.download = fileName;
@@ -42,29 +68,7 @@ export class DrawingSerializerService {
     async importSvgDrawing(file: File): Promise<SvgFileContainer> {
         const fileContent = await this.readFile(file);
 
-        const domParser = new DOMParser();
-        const document = domParser.parseFromString(fileContent, 'image/svg+xml');
-
-        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
-        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-        const fileUrl = URL.createObjectURL(file);
-        return { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, url: fileUrl } as SvgFileContainer;
-    }
-
-    loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
-        this.drawingService.dimensions.x = svgFileContainer.drawingRoot.viewBox.baseVal.width;
-        this.drawingService.dimensions.y = svgFileContainer.drawingRoot.viewBox.baseVal.height;
-
-        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
-
-        this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
-
-        this.drawingService.clearStoredElements();
-        const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
-        for (const element of Array.from(svgDrawingContent.children)) {
-            this.drawingService.addElement(element as SVGElement);
-        }
+        return this.svgFileContainerFromString(fileContent);
     }
 
     private async readFile(file: File): Promise<string> {
@@ -75,5 +79,15 @@ export class DrawingSerializerService {
             };
             fileReader.readAsText(file);
         });
+    }
+
+    private svgFileContainerFromString(content: string): SvgFileContainer {
+        const domParser = new DOMParser();
+        const document = domParser.parseFromString(content, 'image/svg+xml');
+        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
+        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
+        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        const penis = { title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot, id: '' } as SvgFileContainer;
+        return penis;
     }
 }

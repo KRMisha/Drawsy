@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -71,6 +72,7 @@ import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SafeHtmlPipe } from './gallery/pipes/safe-html.pipe';
 import { SaveDrawingComponent } from './modals/components/save-drawing/save-drawing.component';
 
 @NgModule({
@@ -119,6 +121,7 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         SidebarDrawerComponent,
         GridSettingsComponent,
         SaveDrawingComponent,
+        SafeHtmlPipe,
     ],
     imports: [
         AppRoutingModule,
@@ -147,6 +150,7 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         MatSidenavModule,
         MatSliderModule,
         MatSlideToggleModule,
+        MatSnackBarModule,
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,

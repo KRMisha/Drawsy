@@ -1,6 +1,6 @@
 <div class="container">
     <h1 class="mat-h1">{{ getToolName() }}</h1>
-    <h2 class="mat-h2">Couleur</h2>
+    <h2 class="mat-h2 color-title">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
 
@@ -20,7 +20,7 @@
         <h2 class="mat-h2">Taille bordure</h2>
         <form [formGroup]="strokeSizeGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="size" [matTooltip]="getStrokeSizeErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>px</span>
             </mat-form-field>
         </form>
@@ -37,7 +37,7 @@
         <h2 class="mat-h2">Taille de l'efface</h2>
         <form [formGroup]="eraserSizeGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="size" [matTooltip]="getEraserSizeErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>px</span>
             </mat-form-field>
         </form>
@@ -112,8 +112,18 @@
         </mat-form-field>
         <mat-divider class="divider"></mat-divider>
     </div>
-    <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)">
+    <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
         <h2 class="mat-h2">Nombre de faces</h2>
+        <form [formGroup]="polygonSideCountGroup" class="form">
+            <mat-form-field class="form-field">
+                <input
+                    matInput
+                    formControlName="polygonSideCount"
+                    [matTooltip]="getPolygonSideCountErrorMessage()"
+                    matTooltipClass="error-tooltip"
+                />
+            </mat-form-field>
+        </form>
         <mat-slider
             min="3"
             max="12"
@@ -127,7 +137,7 @@
         <h2 class="mat-h2">Diamètre du jet</h2>
         <form [formGroup]="sprayRadiusGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="sprayRadius" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="sprayRadius" [matTooltip]="getSprayRadiusErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>px</span>
             </mat-form-field>
         </form>
@@ -144,7 +154,7 @@
         <h2 class="mat-h2">Vitesse du jet</h2>
         <form [formGroup]="spraySpeedGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="spraySpeed" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="spraySpeed" [matTooltip]="getSpraySpeedErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>jets/s</span>
             </mat-form-field>
         </form>

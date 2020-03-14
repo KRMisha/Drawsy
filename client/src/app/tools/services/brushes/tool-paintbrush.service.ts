@@ -11,7 +11,7 @@ import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
     providedIn: 'root',
 })
 export class ToolPaintbrushService extends ToolBrush {
-    constructor(protected drawingService: DrawingService, colorService: ColorService, protected commandService: CommandService) {
+    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
         super(drawingService, colorService, commandService, ToolName.Brush);
         this.toolSettings.set(ToolSetting.Texture, ToolDefaults.defaultTexture);
     }

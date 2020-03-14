@@ -9,10 +9,7 @@ describe('RemoveElementCommand', () => {
 
     beforeEach(() => {
         elements = [{} as ElementAndItsNeighbour, {} as ElementAndItsNeighbour] as ElementAndItsNeighbour[];
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
-            'addElement',
-            'removeElement'
-        ]);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
         command = new RemoveElementsCommand(drawingServiceSpyObj, elements);
     });
 

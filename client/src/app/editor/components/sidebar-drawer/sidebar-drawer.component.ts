@@ -16,6 +16,7 @@ const maximumEraserSize = 50;
 const minimumEraserSize = 3;
 const maximumJunctionSize = 500;
 const maximumPolygonSideCount = 12;
+const minimumPolygonSideCount = 3;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -93,7 +94,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             Validators.compose([
                 Validators.required,
                 Validators.max(maximumPolygonSideCount),
-                Validators.min(1),
+                Validators.min(minimumPolygonSideCount),
                 Validators.pattern(integerRegexPattern),
             ]),
         ),
@@ -256,12 +257,32 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.redoClicked.emit();
     }
 
+    getSizeErrorMessage(): string {
+        return this.getErrorMessage(this.sizeGroup.controls.size);
+    }
+
     getJunctionSizeErrorMessage(): string {
         return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
     }
 
-    getSizeErrorMessage(): string {
-        return this.getErrorMessage(this.sizeGroup.controls.size);
+    getStrokeSizeErrorMessage(): string {
+        return this.getErrorMessage(this.strokeSizeGroup.controls.size);
+    }
+
+    getEraserSizeErrorMessage(): string {
+        return this.getErrorMessage(this.eraserSizeGroup.controls.size);
+    }
+
+    getPolygonSideCountErrorMessage(): string {
+        return this.getErrorMessage(this.polygonSideCountGroup.controls.polygonSideCount);
+    }
+
+    getSpraySpeedErrorMessage(): string {
+        return this.getErrorMessage(this.spraySpeedGroup.controls.spraySpeed);
+    }
+
+    getSprayRadiusErrorMessage(): string {
+        return this.getErrorMessage(this.sprayRadiusGroup.controls.sprayRadius);
     }
 
     private getErrorMessage(formControl: AbstractControl): string {

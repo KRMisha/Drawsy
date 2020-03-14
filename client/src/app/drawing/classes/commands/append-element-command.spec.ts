@@ -3,16 +3,13 @@ import { AppendElementCommand } from './append-element-command';
 
 describe('AppendElementCommand', () => {
     let command: AppendElementCommand;
-    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let svgElement: SVGElement;
+    let drawingService: jasmine.SpyObj<DrawingService>;
+    let element: SVGElement;
 
     beforeEach(() => {
-        svgElement = ({} as unknown) as SVGElement;
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
-            'removeElement',
-            'addElement'
-        ]);
-        command = new AppendElementCommand(drawingServiceSpyObj, svgElement);
+        element = ({} as unknown) as SVGElement;
+        drawingService = jasmine.createSpyObj('DrawingService', ['removeElement', 'addElement']);
+        command = new AppendElementCommand(drawingService, element);
     });
 
     it('should create an instance', () => {
@@ -21,11 +18,11 @@ describe('AppendElementCommand', () => {
 
     it('#undo should forward removeElement calling to drawingService', () => {
         command.undo();
-        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(svgElement);
+        expect(drawingService.removeElement).toHaveBeenCalledWith(element);
     });
 
     it('#redo should forward addElement calling to drawingService', () => {
         command.redo();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(svgElement);
+        expect(drawingService.addElement).toHaveBeenCalledWith(element);
     });
 });
