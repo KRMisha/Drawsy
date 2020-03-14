@@ -4,19 +4,17 @@ import { MoveElementsCommand } from './move-elements-command';
 
 describe('MoveElementsCommand', () => {
     let command: MoveElementsCommand;
-    let drawingService: DrawingService;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let svgElement: SVGElement[];
     let moveValue: Vec2;
 
     beforeEach(() => {
         svgElement = ({} as unknown) as SVGElement[];
-        drawingService = {
-            moveElementList: (elements: SVGElement[], move: Vec2) => {
-                return;
-            },
-        } as DrawingService;
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
+            'moveElementList'
+        ]);
         moveValue = { x: 1, y: 1 };
-        command = new MoveElementsCommand(drawingService, svgElement, moveValue);
+        command = new MoveElementsCommand(drawingServiceSpyObj, svgElement, moveValue);
     });
 
     it('should create an instance', () => {
@@ -24,15 +22,13 @@ describe('MoveElementsCommand', () => {
     });
 
     it('#undo should forward moveElementList calling to drawingService', () => {
-        spyOn(drawingService, 'moveElementList');
         command.undo();
         const inverseMoveValue: Vec2 = { x: -moveValue.x, y: -moveValue.y };
-        expect(drawingService.moveElementList).toHaveBeenCalledWith(svgElement, inverseMoveValue);
+        expect(drawingServiceSpyObj.moveElementList).toHaveBeenCalledWith(svgElement, inverseMoveValue);
     });
 
     it('#redo should forward moveElementList calling to drawingService', () => {
-        spyOn(drawingService, 'moveElementList');
         command.redo();
-        expect(drawingService.moveElementList).toHaveBeenCalledWith(svgElement, moveValue);
+        expect(drawingServiceSpyObj.moveElementList).toHaveBeenCalledWith(svgElement, moveValue);
     });
 });
