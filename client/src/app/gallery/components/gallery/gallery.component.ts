@@ -2,6 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/services/server.service';
@@ -25,10 +26,17 @@ export class GalleryComponent implements OnInit {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingSerializerService: DrawingSerializerService, private serverService: ServerService) {}
+    constructor(
+        private drawingSerializerService: DrawingSerializerService,
+        private serverService: ServerService,
+        private snackBar: MatSnackBar,
+    ) {}
 
     ngOnInit(): void {
         this.getAllDrawings();
+        this.snackBar.open('This is dope', undefined, {
+            duration: 20000,
+        });
     }
 
     addLabel(event: MatChipInputEvent): void {

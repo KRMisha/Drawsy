@@ -70,7 +70,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         } else {
             this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
                 // ERROR HANDDLING
-                console.log('WHATTTTTTT');
+                console.log('updatedd');
             });
         }
     }

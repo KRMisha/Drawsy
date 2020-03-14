@@ -45,11 +45,12 @@ export class DrawingSerializerService {
         const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
 
         this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
-
+        this.drawingService.drawingId = svgFileContainer.id;
         this.drawingService.clearStoredElements();
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {
-            this.drawingService.addElement(element as SVGElement);
+            const elementClone = element.cloneNode(true);
+            this.drawingService.addElement(elementClone as SVGElement);
         }
     }
 
