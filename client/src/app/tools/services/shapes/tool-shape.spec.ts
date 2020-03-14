@@ -1,17 +1,3 @@
-// import { Color } from '@app/classes/color';
-// import { Rect } from '@app/classes/rect';
-// import { Vec2 } from '@app/classes/vec2';
-// import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
-import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
-import { DrawingService } from '@app/drawing/services/drawing.service';
-// import { GeometryService } from '@app/drawing/services/geometry.service';
-// import { ButtonId } from '@app/editor/enums/button-id.enum';
-// import ToolDefaults from '@app/tools/enums/tool-defaults';
-// import { ToolName } from '@app/tools/enums/tool-name.enum';
-// import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
-// import { Tool } from '@app/tools/services/tool';
-// import { ToolShape } from './tool-shape';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
