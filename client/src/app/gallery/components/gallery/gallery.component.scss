@@ -5,19 +5,27 @@
 .card {
     background-color: #505050;
     text-align: center;
+    height: max-content;
+}
+
+.card-container {
+    margin: 10px;
 }
 
 .chip-list {
     width: 100%;
 }
 
+.drawing-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .drawing {
-    background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     display: flex;
-    margin: 10px;
+    height: 450px;
+    width: auto;
+    max-width: 100%;
 }
 
 .content {
@@ -27,16 +35,11 @@
     justify-content: space-between;
 }
 
-.ng-star-inserted,
-.mat-card {
-    height: 100%;
-}
-
 .drawing-chip-list {
     margin-top: 20px;
 }
 
-.dialog-actions {
+.mat-dialog-actions {
     max-height: 50px !important;
     min-height: 50px !important;
     padding: 0px !important;
