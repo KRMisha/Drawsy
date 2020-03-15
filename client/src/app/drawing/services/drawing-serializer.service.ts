@@ -1,10 +1,11 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
+import { Vec2 } from '@app/classes/vec2';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { SavedFile } from '../../../../../common/communication/saved-file';
-import { SvgUtilityService } from './svg-utility.service';
 
 @Injectable({
     providedIn: 'root',
@@ -38,23 +39,28 @@ export class DrawingSerializerService {
         return svgFileContainer;
     }
 
-    loadSvgDrawing(svgFileContainer: SvgFileContainer): void {
-        this.drawingService.dimensions.x = svgFileContainer.drawingRoot.viewBox.baseVal.width;
-        this.drawingService.dimensions.y = svgFileContainer.drawingRoot.viewBox.baseVal.height;
+    loadSvgDrawing(svgFileContainer: SvgFileContainer): boolean {
+        const dimensions: Vec2 =  { x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
+                                    y: svgFileContainer.drawingRoot.viewBox.baseVal.height };
 
         const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
+        const backgroundColor = Color.fromRgbaString(backgroundRectFillString);
 
-        this.drawingService.backgroundColor = Color.fromRgbaString(backgroundRectFillString);
-        this.drawingService.drawingId = svgFileContainer.id;
+        if (!this.drawingService.confirmNewDrawing(dimensions, backgroundColor)) {
+            return false;
+        }
+        
+        this.drawingService.id = svgFileContainer.id;
         this.drawingService.labels = svgFileContainer.labels;
         this.drawingService.title = svgFileContainer.title;
 
-        this.drawingService.clearStoredElements();
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {
             const elementClone = element.cloneNode(true);
             this.drawingService.addElement(elementClone as SVGElement);
         }
+
+        return true;
     }
 
     async exportDrawing(fileName: string, fileType: string): Promise<void> {

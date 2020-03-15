@@ -62,10 +62,10 @@ export class DrawingPreviewService {
         this.drawingService.labels = labels;
     }
 
-    get id(): string {
-        return this.drawingService.drawingId;
+    get id(): string | undefined {
+        return this.drawingService.id;
     }
-    set id(id: string) {
-        this.drawingService.drawingId = id;
+    set id(id: string | undefined ) {
+        this.drawingService.id = id;
     }
 }
