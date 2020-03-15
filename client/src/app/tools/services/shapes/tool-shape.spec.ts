@@ -1,7 +1,7 @@
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-describe('Shape', () => {
+describe('ToolShape', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorService: ColorService;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
