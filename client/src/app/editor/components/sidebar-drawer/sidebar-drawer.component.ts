@@ -31,7 +31,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     ToolSetting = ToolSetting;
     Texture = Texture;
     StrokeType = StrokeType;
-
     sizeSubscription: Subscription;
     strokeSizeSubscription: Subscription;
     eraserSizeSubscription: Subscription;

@@ -19,7 +19,7 @@ export class SidebarColorPickerComponent {
     }
 
     private isPrimarySelected = true;
-    protected isColorPickerDisplayEnabled = false;
+    isColorPickerDisplayEnabled = false;
 
     private isMouseInside = false;
 

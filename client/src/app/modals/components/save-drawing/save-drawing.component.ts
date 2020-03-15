@@ -3,13 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/services/server.service';
 import { Subscription } from 'rxjs';
 import { NewFileId } from '../../../../../../common/communication/new-file-id';
-import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
@@ -25,57 +23,72 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
-    titleFormSubscription: Subscription;
+    titleSubscription: Subscription;
 
-    saveDrawingFormGroup = new FormGroup({
-        labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
-        titleForm: new FormControl(this.drawingPreviewService.title, [
+    saveDrawingGroup = new FormGroup({
+        title: new FormControl(this.drawingPreviewService.title, [
             Validators.required,
             Validators.pattern(descRegex),
             Validators.maxLength(maxInputStringLength),
         ]),
+        labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService, private snackBar: MatSnackBar) {
-        this.saveDrawingFormGroup.controls.labelForm.setValue(this.labels);
+        this.saveDrawingGroup.controls.labels.setValue(this.labels);
     }
 
     ngOnInit(): void {
         this.title = this.drawingPreviewService.title;
         this.labels = this.drawingPreviewService.labels;
-        this.titleFormSubscription = this.saveDrawingFormGroup.controls.titleForm.valueChanges.subscribe(() => {
-            if (this.saveDrawingFormGroup.controls.titleForm.valid) {
-                this.title = this.saveDrawingFormGroup.controls.titleForm.value;
+        this.titleSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
+            if (this.saveDrawingGroup.controls.title.valid) {
+                this.title = this.saveDrawingGroup.controls.title.value;
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.titleFormSubscription.unsubscribe();
+        this.titleSubscription.unsubscribe();
+    }
+
+    get title(): string {
+        return this.drawingPreviewService.title;
+    }
+    set title(title: string) {
+        this.drawingPreviewService.title = title;
+    }
+
+    get labels(): string[] {
+        return this.drawingPreviewService.labels;
+    }
+    set labels(labels: string[]) {
+        this.drawingPreviewService.labels = labels;
+    }
+
+    get previewFilter(): PreviewFilter {
+        return this.drawingPreviewService.previewFilter;
+    }
+    set previewFilter(previewFilter: PreviewFilter) {
+        this.drawingPreviewService.previewFilter = previewFilter;
     }
 
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();
-        const svgFileContainer: SvgFileContainer = {
-            title: this.title,
-            labels: this.labels,
-            drawingRoot: this.drawingPreviewService.drawingPreviewRoot,
-            id: this.drawingPreviewService.id,
-        };
-        if (this.id === '') {
-            this.serverService.createDrawing(svgFileContainer).subscribe((newFileId: NewFileId): void => {
+        if (this.drawingPreviewService.id === undefined) {
+            this.serverService.createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML).subscribe((newFileId: NewFileId): void => {
                 console.log('Drawing created');
                 this.drawingPreviewService.id = newFileId.id;
             });
         } else {
-            this.serverService.updateDrawing(svgFileContainer).subscribe((savedFile: SavedFile): void => {
+            this.serverService.updateDrawing(this.drawingPreviewService.id, this.drawingPreviewService.drawingPreviewRoot.outerHTML ).subscribe((): void => {
                 // ERROR HANDLING
                 console.log('Drawing updated');
             });
         }
-        this.snackBar.open(`Dessin sauvegardé : ${svgFileContainer.title}`, undefined, {
+        this.snackBar.open(`Dessin sauvegardé : ${this.title}`, undefined, {
             duration: 4000,
         });
     }
@@ -83,7 +96,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const inputValue = event.value;
-        const control = this.saveDrawingFormGroup.controls.labelForm;
+        const control = this.saveDrawingGroup.controls.labels;
 
         if ((inputValue || '').trim()) {
             control.setErrors(null);
@@ -102,7 +115,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     removeLabel(label: string): void {
         const index = this.labels.indexOf(label);
-        const control = this.saveDrawingFormGroup.controls.labelForm;
+        const control = this.saveDrawingGroup.controls.labels;
 
         if (index >= 0) {
             this.labels.splice(index, 1);
@@ -111,53 +124,26 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         control.markAsDirty();
     }
 
-    get title(): string {
-        return this.drawingPreviewService.title;
-    }
-    set title(title: string) {
-        this.drawingPreviewService.title = title;
-    }
-
-    get labels(): string[] {
-        return this.drawingPreviewService.labels;
-    }
-    set labels(labels: string[]) {
-        this.drawingPreviewService.labels = labels;
-    }
-
-    get id(): string {
-        return this.drawingPreviewService.id;
-    }
-    set id(id: string) {
-        this.drawingPreviewService.id = this.id;
-    }
-    get previewFilter(): PreviewFilter {
-        return this.drawingPreviewService.previewFilter;
-    }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.drawingPreviewService.previewFilter = previewFilter;
-    }
-
-    protected getLabelError(): string {
-        return this.saveDrawingFormGroup.controls.labelForm.hasError('pattern')
+    getLabelError(): string {
+        return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingFormGroup.controls.labelForm.hasError('maxlength')
+            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'
             : '';
     }
 
-    protected getTitleError(): string {
-        return this.saveDrawingFormGroup.controls.titleForm.hasError('pattern')
+    getTitleError(): string {
+        return this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingFormGroup.controls.titleForm.hasError('maxlength')
+            : this.saveDrawingGroup.controls.title.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'
-            : this.saveDrawingFormGroup.controls.titleForm.hasError('required')
+            : this.saveDrawingGroup.controls.title.hasError('required')
             ? 'Titre obligatoire'
             : '';
     }
 
-    protected saveOnServer(): void {
-        if (this.saveDrawingFormGroup.valid) {
+    saveOnServer(): void {
+        if (this.saveDrawingGroup.valid) {
             this.saveDrawing();
         }
     }
