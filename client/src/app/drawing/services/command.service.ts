@@ -36,4 +36,9 @@ export class CommandService {
     hasRedoCommands(): boolean {
         return this.redoCommands.length > 0;
     }
+
+    clearCommands(): void {
+        this.undoCommands = [];
+        this.redoCommands = [];
+    }
 }

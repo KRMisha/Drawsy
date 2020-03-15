@@ -72,11 +72,11 @@ export class GridSettingsComponent implements OnInit {
         this.gridService.isDisplayed ? (this.icon = 'grid_off') : (this.icon = 'grid_on');
     }
 
-    protected getSizeErrorMessage(): string {
+    getSizeErrorMessage(): string {
         return this.getErrorMessage(this.sizeGroup.controls.size);
     }
 
-    protected getOpacityErrorMessage(): string {
+    getOpacityErrorMessage(): string {
         return this.getErrorMessage(this.opacityGroup.controls.opacity);
     }
 

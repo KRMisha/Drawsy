@@ -17,9 +17,9 @@ const maxInputStringLength = 15;
 export class ExportDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
-    titleFormSubscription: Subscription;
+    titleFormControlSubscription: Subscription;
 
-    titleForm = new FormControl('Sans titre', [
+    titleFormControl = new FormControl('Sans titre', [
         Validators.required,
         Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
@@ -30,33 +30,33 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 
     ngOnInit(): void {
-        this.titleFormSubscription = this.titleForm.valueChanges.subscribe(() => {
-            if (this.titleForm.valid) {
-                this.title = this.titleForm.value;
+        this.titleFormControlSubscription = this.titleFormControl.valueChanges.subscribe(() => {
+            if (this.titleFormControl.valid) {
+                this.title = this.titleFormControl.value;
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.titleFormSubscription.unsubscribe();
+        this.titleFormControlSubscription.unsubscribe();
     }
 
     exportDrawingAsSvg(): void {
-        if (this.titleForm.valid) {
+        if (this.titleFormControl.valid) {
             this.drawingPreviewService.finalizePreview();
             this.drawingSerializerService.exportDrawingAsSvg(this.drawingPreviewService.title);
         }
     }
 
     exportDrawingAsPng(): void {
-        if (this.titleForm.valid) {
+        if (this.titleFormControl.valid) {
             this.drawingPreviewService.finalizePreview();
             this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.png', 'image/png');
         }
     }
 
     exportDrawingAsJpeg(): void {
-        if (this.titleForm.valid) {
+        if (this.titleFormControl.valid) {
             this.drawingPreviewService.finalizePreview();
             this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.jpeg', 'image/jpeg');
         }

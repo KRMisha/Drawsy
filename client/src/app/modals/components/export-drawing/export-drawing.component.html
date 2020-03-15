@@ -1,38 +1,37 @@
-<div class="container">
-    <mat-dialog-content class="item-content">
-        <form>
-            <mat-form-field>
-                <mat-label>Titre</mat-label>
-                <input matInput [formControl]="titleForm" />
-                <mat-error *ngIf="titleForm.invalid">Titre invalide</mat-error>
-            </mat-form-field>
+<h1 mat-dialog-title class="mat-h1">Exporter le dessin</h1>
+<form>
+    <mat-dialog-content class="content">
+        <mat-form-field>
+            <mat-label>Titre</mat-label>
+            <input matInput [formControl]="titleFormControl" />
+            <mat-error *ngIf="titleFormControl.invalid">Titre invalide</mat-error>
+        </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>Type de filtre</mat-label>
-                <mat-select [(value)]="previewFilter">
-                    <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
-                    <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
-                    <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
-                    <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
-                    <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
-                    <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-card>
-                <mat-card-title>Aperçu</mat-card-title>
-                <app-drawing-preview></app-drawing-preview>
-            </mat-card>
-        </form>
+        <mat-form-field>
+            <mat-label>Type de filtre</mat-label>
+            <mat-select [(value)]="previewFilter">
+                <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
+                <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
+                <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
+                <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
+                <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
+                <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-card>
+            <mat-card-title>Aperçu</mat-card-title>
+            <app-drawing-preview></app-drawing-preview>
+        </mat-card>
     </mat-dialog-content>
-    <div class="item-buttons">
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsSvg()" [disabled]="titleForm.invalid">
+    <mat-dialog-actions align="center">
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsSvg()" [disabled]="titleFormControl.invalid">
             Sauvegarder en format SVG
         </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()" [disabled]="titleForm.invalid">
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()" [disabled]="titleFormControl.invalid">
             Sauvegarder en format PNG
         </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()" [disabled]="titleForm.invalid">
+        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()" [disabled]="titleFormControl.invalid">
             Sauvegarder en format JPEG
         </button>
-    </div>
-</div>
+    </mat-dialog-actions>
+</form>
