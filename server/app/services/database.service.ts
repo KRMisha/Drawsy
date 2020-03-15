@@ -68,7 +68,7 @@ export class DatabaseService {
         const drawingRoot = dom.window.document.getElementsByTagName('svg')[0];
 
         const title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        const labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML;
 
         return this.isTitleValid(title) && this.areLabelsValid(labels);
     }
@@ -77,7 +77,10 @@ export class DatabaseService {
         return descRegex.test(title);
     }
 
-    private areLabelsValid(labels: string[]): boolean {
-        return labels.every((label: string) => descRegex.test(label));
+    private areLabelsValid(labels: string): boolean {
+        if (labels.length === 0) {
+            return true;
+        }
+        return labels.split(',').every((label: string) => descRegex.test(label));
     }
 }
