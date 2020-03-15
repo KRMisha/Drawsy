@@ -17,7 +17,7 @@ export class NewDrawingComponent implements OnInit {
     wereDimensionsModified = false;
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    drawingFormGroup = new FormGroup({
+    drawingGroup = new FormGroup({
         width: new FormControl(
             window.innerWidth - widthMargin,
             Validators.compose([
@@ -41,19 +41,30 @@ export class NewDrawingComponent implements OnInit {
     constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.drawingFormGroup.controls.width.valueChanges.subscribe(() => {
+        this.drawingGroup.controls.width.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
-        this.drawingFormGroup.controls.height.valueChanges.subscribe(() => {
+        this.drawingGroup.controls.height.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
     }
 
     onSubmit(): void {
-        const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
+        const dimensions = { x: this.drawingGroup.controls.width.value, y: this.drawingGroup.controls.height.value };
         if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
+            this.drawingService.id = undefined;
+            this.drawingService.title = '';
+            this.drawingService.labels = [];
             this.router.navigate(['/editor']);
         }
+    }
+
+    getWidthErrorMessage(): string {
+        return this.getErrorMessage(this.drawingGroup.controls.width);
+    }
+
+    getHeightErrorMessage(): string {
+        return this.getErrorMessage(this.drawingGroup.controls.height);
     }
 
     private getErrorMessage(formControl: AbstractControl): string {
@@ -68,19 +79,11 @@ export class NewDrawingComponent implements OnInit {
             : '';
     }
 
-    protected getWidthErrorMessage(): string {
-        return this.getErrorMessage(this.drawingFormGroup.controls.width);
-    }
-
-    protected getHeightErrorMessage(): string {
-        return this.getErrorMessage(this.drawingFormGroup.controls.height);
-    }
-
     @HostListener('window:resize', ['$event'])
     onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
-            this.drawingFormGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
-            this.drawingFormGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
+            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
+            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
         }
     }
 }

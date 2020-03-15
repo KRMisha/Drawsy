@@ -34,7 +34,6 @@ export class ToolSelectionService extends Tool {
     private controlPointHeld = ControlPoints.None;
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
     private isMouseButtonDown = false;
-    private isMovingSelection = false;
 
     constructor(
         drawingService: DrawingService,
@@ -78,7 +77,7 @@ export class ToolSelectionService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.controlPointHeld !== ControlPoints.None) {
+        if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
             return;
         }
 
@@ -86,7 +85,7 @@ export class ToolSelectionService extends Tool {
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (Tool.isMouseInside) {
             if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
-                this.isMovingSelection = true;
+                this.toolSelectionStateService.isMovingSelectionWithMouse = true;
                 this.toolSelectionMoverService.totalSelectionMoveValue = { x: 0, y: 0 };
             } else {
                 const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
@@ -106,11 +105,11 @@ export class ToolSelectionService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (this.controlPointHeld !== ControlPoints.None) {
+        if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
             return;
         }
         if (this.isMouseButtonDown && this.isMouseDownInside) {
-            if (this.isMovingSelection) {
+            if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
                 const currentMousePos = this.getMousePosition(event);
                 this.toolSelectionMoverService.moveSelection(currentMousePos, this.lastMousePosition);
                 this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
@@ -143,11 +142,11 @@ export class ToolSelectionService extends Tool {
             return;
         }
 
-        if (!this.isMovingSelection || this.isSimpleClick(event)) {
+        if (!this.toolSelectionStateService.isMovingSelectionWithMouse || this.isSimpleClick(event)) {
             this.updateSelectionOnMouseUp(event);
         }
 
-        if (this.isMovingSelection) {
+        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             this.toolSelectionMoverService.addMoveCommand();
         }
 
@@ -157,7 +156,7 @@ export class ToolSelectionService extends Tool {
         }
 
         this.hasUserJustClickedOnShape = false;
-        this.isMovingSelection = false;
+        this.toolSelectionStateService.isMovingSelectionWithMouse = false;
         this.lastMousePosition = this.getMousePosition(event);
     }
 
@@ -176,7 +175,7 @@ export class ToolSelectionService extends Tool {
 
     onElementClick(event: MouseEvent, element: SVGElement): void {
         this.hasUserJustClickedOnShape = true;
-        if (this.isMovingSelection) {
+        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             return;
         }
         if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {

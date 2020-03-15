@@ -1,10 +1,13 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { GalleryService } from '@app/gallery/services/gallery/gallery.service';
-import { Subscription } from 'rxjs';
+import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { ServerService } from '@app/server/services/server.service';
+import { SavedFile } from '../../../../../../common/communication/saved-file';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
@@ -14,29 +17,32 @@ const maxInputStringLength = 15;
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
 })
-export class GalleryComponent {
-    containers: SvgFileContainer[] = [];
+export class GalleryComponent implements OnInit {
+    drawings: SvgFileContainer[] = [];
     searchLabels: string[] = [];
+    isLoaded = false;
 
-    labelFormSubscription: Subscription;
-
-    galleryFormGroup = new FormGroup({
-        labelForm: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
+    galleryGroup = new FormGroup({
+        labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private galleryService: GalleryService) {}
+    constructor(
+        private router: Router,
+        private drawingSerializerService: DrawingSerializerService,
+        private serverService: ServerService,
+        private snackBar: MatSnackBar,
+    ) {}
 
-    createSvgFileContainer(): void {
-        this.containers = this.galleryService.containers;
+    ngOnInit(): void {
+        this.getAllDrawings();
     }
 
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-
-        const control = this.galleryFormGroup.controls.labelForm;
+        const control = this.galleryGroup.controls.labels;
 
         if ((value || '').trim()) {
             control.setErrors(null);
@@ -55,37 +61,62 @@ export class GalleryComponent {
 
     removeLabel(label: string): void {
         const index = this.searchLabels.indexOf(label, 0);
-
-        const control = this.galleryFormGroup.controls.labelForm;
+        const control = this.galleryGroup.controls.labels;
 
         if (index >= 0) {
             this.searchLabels.splice(index, 1);
         }
 
-        control.updateValueAndValidity();
         control.markAsDirty();
     }
 
-    hasSearchLabel(container: SvgFileContainer): boolean {
+    hasSearchLabel(drawing: SvgFileContainer): boolean {
         if (this.searchLabels.length === 0) {
             return true;
         }
 
-        for (const label of container.labels) {
-            for (const searchLabel of this.searchLabels) {
-                if (label === searchLabel) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return drawing.labels.some((label: string) => this.searchLabels.includes(label));
     }
 
-    protected getLabelError(): string {
-        return this.galleryFormGroup.controls.labelForm.hasError('pattern')
+    deleteDrawing(selectedDrawing: SvgFileContainer): void {
+        const confirmationMessage =
+            'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
+        if (!confirm(confirmationMessage)) {
+            return;
+        }
+
+        this.serverService.deleteDrawing(selectedDrawing.id).subscribe(() => {
+            this.getAllDrawings(); // TODO: move to gallery service
+        });
+        this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
+            duration: 4000,
+        });
+    }
+
+    loadDrawing(selectedDrawing: SvgFileContainer): void {
+        if (this.drawingSerializerService.loadSvgDrawing(selectedDrawing)) {
+            this.snackBar.open(`Dessin chargé : ${selectedDrawing.title}`, undefined, {
+                duration: 4000,
+            });
+            this.router.navigate(['/editor']);
+        }
+    }
+
+    getLabelError(): string {
+        return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.galleryFormGroup.controls.labelForm.hasError('maxlength')
+            : this.galleryGroup.controls.labels.hasError('maxlength')
             ? 'Longueur maximale 15 caractères'
             : '';
+    }
+
+    private getAllDrawings(): void {
+        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]): void => {
+            this.drawings = [];
+            for (const savedFile of savedFiles) {
+                this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
+            }
+            this.isLoaded = true;
+        });
     }
 }

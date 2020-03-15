@@ -3,6 +3,7 @@ import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
+import { CommandService } from '@app/drawing/services/command.service';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
@@ -31,9 +32,11 @@ export class DrawingService {
 
     dimensions: Vec2 = defaultDimensions;
 
+    id?: string;
     title = 'Sans titre';
     labels: string[] = [];
-    drawingId = -1;
+
+    constructor(private commandService: CommandService) {}
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
@@ -97,6 +100,7 @@ export class DrawingService {
         while (this.svgElements.length > 0) {
             this.removeElement(this.svgElements[0]);
         }
+        
     }
 
     isDrawingStarted(): boolean {
@@ -114,6 +118,7 @@ export class DrawingService {
         this.dimensions = dimensions;
         this.backgroundColor = backgroundColor;
         this.clearStoredElements();
+        this.commandService.clearCommands();
         return true;
     }
 

@@ -7,23 +7,11 @@
     }
 }
 
-.container {
-    width: 95%;
-    display: grid;
-    grid-template-rows: 78vh auto;
-}
-
-.item-content {
+.content {
     max-height: unset !important;
 }
 
-.item-buttons {
-    display: flex;
-    margin-top: 10px;
-    justify-content: center;
-}
-
-.save-button {
+.button {
     width: 20%;
     min-width: max-content;
     margin: 4px;

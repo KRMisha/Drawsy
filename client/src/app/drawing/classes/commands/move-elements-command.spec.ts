@@ -4,17 +4,13 @@ import { MoveElementsCommand } from './move-elements-command';
 
 describe('MoveElementsCommand', () => {
     let command: MoveElementsCommand;
-    let drawingService: DrawingService;
+    let drawingService: jasmine.SpyObj<DrawingService>;
     let elements: SVGElement[];
     let moveValue: Vec2;
 
     beforeEach(() => {
         elements = ({} as unknown) as SVGElement[];
-        drawingService = {
-            moveElementList: (_: SVGElement[], moveOffset: Vec2) => {
-                return;
-            },
-        } as DrawingService;
+        drawingService = jasmine.createSpyObj('DrawingService', ['moveElementList']);
         moveValue = { x: 1, y: 1 };
         command = new MoveElementsCommand(drawingService, elements, moveValue);
     });

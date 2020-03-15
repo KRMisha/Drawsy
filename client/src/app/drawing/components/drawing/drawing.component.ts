@@ -22,7 +22,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     constructor(
         private renderer: Renderer2,
         private drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilityService: SvgUtilityService,
         private toolSelectorService: ToolSelectorService,
         private gridService: GridService,
         private modalService: ModalService,
@@ -30,12 +30,12 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.drawingService.renderer = this.renderer;
-        this.svgUtilitiesService.renderer = this.renderer;
+        this.svgUtilityService.renderer = this.renderer;
         this.toolSelectorService.setRenderer(this.renderer);
     }
 
     ngAfterViewInit(): void {
-        this.svgUtilitiesService.drawingRoot = this.drawingRoot.nativeElement;
+        this.svgUtilityService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
@@ -80,12 +80,10 @@ export class DrawingComponent implements OnInit, AfterViewInit {
                     this.gridService.toggleGrid();
                     break;
                 case '+':
-                    if (event.shiftKey) {
-                        this.gridService.raiseGridSize();
-                    }
+                    this.gridService.increaseGridSize();
                     break;
                 case '-':
-                    this.gridService.lowerGridSize();
+                    this.gridService.decreaseGridSize();
                     break;
             }
         }

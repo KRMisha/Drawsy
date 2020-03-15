@@ -58,10 +58,10 @@ export class ToolEraserService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
-        this.updateEraserRect(mousePosition);
-        const delayMsBetweenCalls = 16.67;
+        const delayMsBetweenCalls = 10;
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
+                this.updateEraserRect(mousePosition);
                 this.onMousePositionChange(mousePosition);
             }, delayMsBetweenCalls);
         }
@@ -116,7 +116,6 @@ export class ToolEraserService extends Tool {
             this.eraserRect,
         );
 
-        // const elementsUnderEraser = this.svgUtilitiesService.getElementsUnderArea(this.drawingService.svgElements, eraserRect);
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');

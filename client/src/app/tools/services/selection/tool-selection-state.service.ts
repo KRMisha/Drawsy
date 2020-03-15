@@ -10,4 +10,7 @@ export class ToolSelectionStateService {
     svgUserSelectionRect: SVGRectElement;
     svgControlPoints: SVGElement[] = [];
     selectionRect?: Rect = undefined;
+
+    isMovingSelectionWithArrows = false;
+    isMovingSelectionWithMouse = false;
 }

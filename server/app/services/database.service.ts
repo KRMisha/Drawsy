@@ -57,7 +57,10 @@ export class DatabaseService {
     }
 
     async getFiles(): Promise<SavedFile[]> {
-        return await this.collection.find().toArray() as SavedFile[];
+        const collection = await this.collection.find().toArray();
+        const convertSchemaToSavedFile = (element: FileSchema & { _id: ObjectId }) =>
+            ({ id: element._id.toString(), content: element.content } as SavedFile);
+        return collection.map(convertSchemaToSavedFile);
     }
 
     private isFileValid(fileContent: string): boolean {
