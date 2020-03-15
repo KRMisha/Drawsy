@@ -30,7 +30,7 @@ export class GridService {
         this.updateGridSize();
     }
 
-    raiseGridSize(): void {
+    increaseGridSize(): void {
         if (Math.floor(this.gridSize) + gridSizeVariation <= maximumSize) {
             const sizeModulo = this.gridSize % gridSizeVariation;
             this.gridSize = Math.floor(this.gridSize) + gridSizeVariation - sizeModulo;
@@ -38,7 +38,7 @@ export class GridService {
         }
     }
 
-    lowerGridSize(): void {
+    decreaseGridSize(): void {
         if (this.gridSize - gridSizeVariation >= minimumSize) {
             const sizeModulo = this.gridSize % gridSizeVariation;
             sizeModulo === 0 ? (this.gridSize -= gridSizeVariation) : (this.gridSize -= sizeModulo);
