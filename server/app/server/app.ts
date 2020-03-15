@@ -20,8 +20,8 @@ export class Application {
 
     private setupMiddleware(): void {
         this.app.use(logger('dev'));
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.json({ limit: '16mb' }));
+        this.app.use(express.urlencoded({ limit: '16mb', extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
     }
