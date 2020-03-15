@@ -20,8 +20,6 @@ export class ToolSelectionMoverService {
     private movingIntervalId?: number;
     private movingTimeout?: number;
 
-    private isMovingWithArrows = false;
-
     totalSelectionMoveValue: Vec2 = { x: 0, y: 0 };
 
     constructor(
@@ -43,9 +41,15 @@ export class ToolSelectionMoverService {
     }
 
     onKeyDown(event: KeyboardEvent): void {
+        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
+            return;
+        }
         this.setArrowStateFromEvent(event, true);
-        if (!this.isMovingWithArrows && (this.arrowUpHeld || this.arrowDownHeld || this.arrowLeftHeld || this.arrowRightHeld)) {
-            this.isMovingWithArrows = true;
+        if (
+            !this.toolSelectionStateService.isMovingSelectionWithArrows &&
+            (this.arrowUpHeld || this.arrowDownHeld || this.arrowLeftHeld || this.arrowRightHeld)
+        ) {
+            this.toolSelectionStateService.isMovingSelectionWithArrows = true;
             this.moveSelectionInArrowDirection();
             const timeoutDurationMs = 500;
             this.movingTimeout = window.setTimeout(() => {
@@ -69,7 +73,7 @@ export class ToolSelectionMoverService {
             }
             window.clearInterval(this.movingIntervalId);
             this.movingIntervalId = undefined;
-            this.isMovingWithArrows = false;
+            this.toolSelectionStateService.isMovingSelectionWithArrows = false;
         }
     }
 
