@@ -72,7 +72,7 @@ export class ToolSprayCanService extends Tool {
         const newCircle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(newCircle, 'cx', (this.mousePosition.x + randomOffset.x).toString());
         this.renderer.setAttribute(newCircle, 'cy', (this.mousePosition.y + randomOffset.y).toString());
-        this.renderer.setAttribute(newCircle, 'r', '1');
+        this.renderer.setAttribute(newCircle, 'r', '1.5');
         return newCircle;
     }
 

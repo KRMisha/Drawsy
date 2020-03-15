@@ -22,6 +22,7 @@ export class SvgUtilityService {
         return svgElements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
+    // tslint:disable-next-line: cyclomatic-complexity
     getElementUnderAreaPixelPerfect(svgElements: SVGElement[], area: Rect): SVGElement | undefined {
         const drawingRect = this.drawingRoot.getBoundingClientRect() as DOMRect;
 
@@ -30,27 +31,36 @@ export class SvgUtilityService {
             elementIndices.set(this.drawingService.svgElements[i], i);
         }
 
-        const availableElementsSet = new Set<SVGElement>();
-        for (const element of svgElements) {
-            availableElementsSet.add(element);
-        }
+        const availableElementsSet = new Set<SVGElement>(svgElements);
 
         let topMostElement: SVGElement | undefined;
         let topMostElementIndex = 0;
 
-        const samplingRatio = 0.1;
-        const stepSize: Vec2 = {
-            x: Math.round(Math.max(1, area.width * samplingRatio)),
-            y: Math.round(Math.max(1, area.height * samplingRatio)),
-        };
-        const startIndexLoop: Vec2 = { x: Math.round((area.width % stepSize.x) / 2), y: Math.round((area.height % stepSize.y) / 2) };
+        const samplingMap = this.getSampleArrayFromArea(area);
 
-        for (let i = startIndexLoop.x; i < area.width + stepSize.x; i += stepSize.x) {
-            for (let j = startIndexLoop.y; j < area.height + stepSize.y; j += stepSize.y) {
+        if (samplingMap === undefined) {
+            return;
+        }
+
+        for (let i = 0; i < samplingMap.length; i++) {
+            for (let j = 0; j < samplingMap[i].length; j++) {
+                if (!samplingMap[i][j]) {
+                    continue;
+                }
+
                 const x = drawingRect.x + area.x + i;
                 const y = drawingRect.y + area.y + j;
+
                 // Function does not exist in Renderer2
-                const elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGElement;
+                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGElement;
+
+                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGElement) {
+                    const parentElement = (elementUnderPoint.parentElement || undefined) as SVGElement;
+                    if (parentElement !== undefined && availableElementsSet.has(parentElement as SVGElement)) {
+                        elementUnderPoint = parentElement;
+                    }
+                }
+
                 if (
                     elementUnderPoint === undefined ||
                     !elementIndices.has(elementUnderPoint) ||
@@ -58,6 +68,7 @@ export class SvgUtilityService {
                 ) {
                     continue;
                 }
+
                 const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
                 if (topMostElement === undefined || elementUnderPointIndex > topMostElementIndex) {
                     topMostElement = elementUnderPoint;
@@ -65,6 +76,7 @@ export class SvgUtilityService {
                 }
             }
         }
+
         return topMostElement;
     }
 
@@ -139,5 +151,43 @@ export class SvgUtilityService {
             };
             image.src = 'data:image/svg+xml;base64,' + svg64;
         });
+    }
+
+    private getSampleArrayFromArea(area: Rect): boolean[][] | undefined {
+        if (area.width === 0 || area.height === 0) {
+            return undefined;
+        }
+
+        const bitMap = new Array<boolean[]>(area.width);
+        // tslint:disable-next-line: variable-name
+        for (let i = 0; i < bitMap.length; i++) {
+            bitMap[i] = new Array<boolean>(area.height);
+        }
+
+        for (let i = 0; i < bitMap.length; i++) {
+            const colLenght = bitMap[i].length;
+            bitMap[i][0] = i % 2 === 0;
+            bitMap[i][colLenght - 1] = true;
+            if (i === 0 || i === bitMap.length - 1) {
+                for (let j = 0; j < bitMap[i].length; j += 2) {
+                    bitMap[i][j] = true;
+                }
+            }
+        }
+
+        const samplingRatio = 0.1;
+        const stepSize: Vec2 = {
+            x: Math.round(Math.max(1, area.width * samplingRatio)),
+            y: Math.round(Math.max(1, area.height * samplingRatio)),
+        };
+        const startIndexLoop: Vec2 = { x: Math.round((area.width % stepSize.x) / 2), y: Math.round((area.height % stepSize.y) / 2) };
+
+        for (let i = startIndexLoop.x; i < area.width; i += stepSize.x) {
+            for (let j = startIndexLoop.y; j < area.height; j += stepSize.y) {
+                bitMap[i][j] = true;
+            }
+        }
+
+        return bitMap;
     }
 }
