@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { Subscription } from 'rxjs';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
@@ -24,7 +23,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     titleSubscription: Subscription;
 
     saveDrawingGroup = new FormGroup({
-        title: new FormControl(this.drawingPreviewService.title, [
+        title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
             Validators.pattern(descRegex),
             Validators.maxLength(maxInputStringLength),
@@ -34,13 +33,34 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private drawingPreviewService: DrawingPreviewService, private saveDrawingService: SaveDrawingService) {
+    get title(): string {
+        return this.saveDrawingService.title;
+    }
+    set title(title: string) {
+        this.saveDrawingService.title = title;
+    }
+
+    get labels(): string[] {
+        return this.saveDrawingService.labels;
+    }
+    set labels(labels: string[]) {
+        this.saveDrawingService.labels = labels;
+    }
+
+    get previewFilter(): PreviewFilter {
+        return this.saveDrawingService.previewFilter;
+    }
+    set previewFilter(previewFilter: PreviewFilter) {
+        this.saveDrawingService.previewFilter = previewFilter;
+    }
+
+    constructor(private saveDrawingService: SaveDrawingService) {
         this.saveDrawingGroup.controls.labels.setValue(this.saveDrawingService.labels);
     }
 
     ngOnInit(): void {
-        this.saveDrawingService.title = this.drawingPreviewService.title;
-        this.saveDrawingService.labels = this.drawingPreviewService.labels;
+        this.saveDrawingService.title = this.saveDrawingService.title;
+        this.saveDrawingService.labels = this.saveDrawingService.labels;
         this.titleSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
             if (this.saveDrawingGroup.controls.title.valid) {
                 this.saveDrawingService.title = this.saveDrawingGroup.controls.title.value;
@@ -63,7 +83,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             if (control.valid) {
                 control.markAsDirty();
                 input.value = '';
-                this.saveDrawingService.labels.push(inputValue);
+                this.labels.push(inputValue);
             }
         }
 
@@ -73,11 +93,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     removeLabel(label: string): void {
-        const index = this.saveDrawingService.labels.indexOf(label);
+        const index = this.labels.indexOf(label);
         const control = this.saveDrawingGroup.controls.labels;
 
         if (index >= 0) {
-            this.saveDrawingService.labels.splice(index, 1);
+            this.labels.splice(index, 1);
         }
 
         control.markAsDirty();

@@ -9,12 +9,6 @@ import { NewFileId } from '../../../../../common/communication/new-file-id';
     providedIn: 'root',
 })
 export class SaveDrawingService {
-    constructor(
-        private drawingPreviewService: DrawingPreviewService,
-        private serverService: ServerService,
-        private snackBar: MatSnackBar,
-    ) {}
-
     get title(): string {
         return this.drawingPreviewService.title;
     }
@@ -35,6 +29,12 @@ export class SaveDrawingService {
     set previewFilter(previewFilter: PreviewFilter) {
         this.drawingPreviewService.previewFilter = previewFilter;
     }
+
+    constructor(
+        private drawingPreviewService: DrawingPreviewService,
+        private serverService: ServerService,
+        private snackBar: MatSnackBar,
+    ) {}
 
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();

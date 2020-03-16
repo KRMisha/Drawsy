@@ -90,6 +90,7 @@ export class GalleryComponent implements OnInit {
 
     private async getAllDrawings(): Promise<void> {
         this.isLoaded = false;
+        this.drawings = [];
         this.drawings = await this.galleryService.getAllDrawings();
         this.isLoaded = true;
     }

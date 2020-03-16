@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NewFileContent } from '../../../../../common/communication/new-file-content';
 import { NewFileId } from '../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../common/communication/saved-file';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 const serverUrl = 'http://localhost:3000/api';
 const options = {
@@ -48,9 +48,10 @@ export class ServerService {
         return (error: Error): Observable<T> => {
             console.error(error);
 
-            this.snackBar.open("Erreur: " + request + "\nMessage: " + error.message, undefined, {
+            this.snackBar.open('Erreur: ' + request + '\nMessage: ' + error.message, undefined, {
                 duration: 4000,
             });
+
             return of(result as T);
         };
     }

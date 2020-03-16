@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/services/server.service';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { SavedFile } from '../../../../../common/communication/saved-file';
 
 @Injectable({
     providedIn: 'root',
@@ -28,7 +31,7 @@ export class GalleryService {
         }
 
         this.serverService.deleteDrawing(selectedDrawing.id).subscribe(() => {
-            this.getAllDrawings(); // TODO: move to gallery service
+            this.getAllDrawings();
         });
         this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
             duration: 4000,
@@ -45,11 +48,26 @@ export class GalleryService {
     }
 
     async getAllDrawings(): Promise<SvgFileContainer[]> {
-        const savedFiles = await this.serverService.getAllDrawings().toPromise();
+        const savedFiles = await this.serverService
+            .getAllDrawings()
+            .pipe(catchError(this.handleError<SavedFile[]>('getAllDrawings')))
+            .toPromise();
         this._drawings = [];
         for (const savedFile of savedFiles) {
             this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
         }
         return this.drawings;
+    }
+
+    private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
+        return (error: Error): Observable<T> => {
+            console.error(error);
+
+            this.snackBar.open('Erreur: ' + request + '\nMessage: ' + error.message, undefined, {
+                duration: 4000,
+            });
+
+            return of(result as T);
+        };
     }
 }
