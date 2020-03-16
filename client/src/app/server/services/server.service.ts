@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { NewFileContent } from '../../../../../common/communication/new-file-content';
 import { NewFileId } from '../../../../../common/communication/new-file-id';
 import { SavedFile } from '../../../../../common/communication/saved-file';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const serverUrl = 'http://localhost:3000/api';
 const options = {
@@ -17,7 +18,7 @@ const options = {
     providedIn: 'root',
 })
 export class ServerService {
-    constructor(private httpService: HttpClient) {}
+    constructor(private httpService: HttpClient, private snackBar: MatSnackBar) {}
 
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
@@ -45,6 +46,11 @@ export class ServerService {
 
     private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
         return (error: Error): Observable<T> => {
+            console.error(error);
+
+            this.snackBar.open("Erreur: " + request + "\nMessage: " + error.message, undefined, {
+                duration: 4000,
+            });
             return of(result as T);
         };
     }
