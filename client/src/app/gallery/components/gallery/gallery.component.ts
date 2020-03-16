@@ -2,12 +2,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
-import { ServerService } from '@app/server/services/server.service';
-import { SavedFile } from '../../../../../../common/communication/saved-file';
+import { GalleryService } from '@app/gallery/services/gallery.service';
 import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
@@ -28,12 +24,7 @@ export class GalleryComponent implements OnInit {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(
-        private router: Router,
-        private drawingSerializerService: DrawingSerializerService,
-        private serverService: ServerService,
-        private snackBar: MatSnackBar,
-    ) {}
+    constructor(private galleryService: GalleryService) {}
 
     ngOnInit(): void {
         this.getAllDrawings();
@@ -78,30 +69,6 @@ export class GalleryComponent implements OnInit {
         return drawing.labels.some((label: string) => this.searchLabels.includes(label));
     }
 
-    deleteDrawing(selectedDrawing: SvgFileContainer): void {
-        const confirmationMessage =
-            'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
-        if (!confirm(confirmationMessage)) {
-            return;
-        }
-
-        this.serverService.deleteDrawing(selectedDrawing.id).subscribe(() => {
-            this.getAllDrawings(); // TODO: move to gallery service
-        });
-        this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
-            duration: 4000,
-        });
-    }
-
-    loadDrawing(selectedDrawing: SvgFileContainer): void {
-        if (this.drawingSerializerService.loadSvgDrawing(selectedDrawing)) {
-            this.snackBar.open(`Dessin chargé : ${selectedDrawing.title}`, undefined, {
-                duration: 4000,
-            });
-            this.router.navigate(['/editor']);
-        }
-    }
-
     getLabelError(): string {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
@@ -110,13 +77,18 @@ export class GalleryComponent implements OnInit {
             : '';
     }
 
-    private getAllDrawings(): void {
-        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]): void => {
-            this.drawings = [];
-            for (const savedFile of savedFiles) {
-                this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
-            }
-            this.isLoaded = true;
-        });
+    deleteDrawing(selectedDrawing: SvgFileContainer): void {
+        this.galleryService.deleteDrawing(selectedDrawing);
+        this.getAllDrawings();
+    }
+
+    loadDrawing(selectedDrawing: SvgFileContainer): void {
+        this.galleryService.loadDrawing(selectedDrawing);
+    }
+
+    private async getAllDrawings(): Promise<void> {
+        this.isLoaded = false;
+        this.drawings = await this.galleryService.getAllDrawings();
+        this.isLoaded = true;
     }
 }

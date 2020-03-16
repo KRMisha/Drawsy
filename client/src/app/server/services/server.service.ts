@@ -29,7 +29,7 @@ export class ServerService {
     updateDrawing(fileId: string, fileContent: string): Observable<void> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .put<void>(serverUrl + '/update/' + fileId, JSON.stringify(newFileContent) , options)
+            .put<void>(serverUrl + '/update/' + fileId, JSON.stringify(newFileContent), options)
             .pipe(catchError(this.handleError<void>('updateDrawing' + fileId)));
     }
 

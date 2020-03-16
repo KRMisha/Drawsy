@@ -20,7 +20,7 @@
 
         <mat-form-field>
             <mat-label>Titre</mat-label>
-            <input matInput formControlName="titleForm" />
+            <input matInput formControlName="title" />
             <mat-error *ngIf="saveDrawingGroup.controls.title.invalid">{{ getTitleError() }}</mat-error>
         </mat-form-field>
 

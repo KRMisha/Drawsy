@@ -23,27 +23,27 @@
     </div>
     <mat-dialog-content class="content" *ngIf="isLoaded">
         <div *ngFor="let drawing of drawings">
-                <mat-card class="card" *ngIf="hasSearchLabel(drawing)">
-                    <mat-card-header>
-                        <mat-card-title>{{ drawing.title }}</mat-card-title>
-                    </mat-card-header>
-                    <mat-divider></mat-divider>
-                    <div class="drawing-container">
-                        <div class="drawing" [innerHTML]="drawing.drawingRoot.outerHTML | safeHtml"></div>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <div class="drawing-chip-list">
-                        <mat-chip-list #chipList>
-                            <mat-chip *ngFor="let label of drawing.labels">
-                                {{ label }}
-                            </mat-chip>
-                        </mat-chip-list>
-                    </div>
-                    <mat-card-actions align="end">
-                        <button mat-raised-button (click)="deleteDrawing(drawing)">Effacer</button>
-                        <button mat-raised-button mat-dialog-close (click)="loadDrawing(drawing)">Charger</button>
-                    </mat-card-actions>
-                </mat-card>
+            <mat-card class="card" *ngIf="hasSearchLabel(drawing)">
+                <mat-card-header>
+                    <mat-card-title>{{ drawing.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-divider></mat-divider>
+                <div class="drawing-container">
+                    <div class="drawing" [innerHTML]="drawing.drawingRoot.outerHTML | safeHtml"></div>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="drawing-chip-list">
+                    <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let label of drawing.labels">
+                            {{ label }}
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+                <mat-card-actions align="end">
+                    <button mat-raised-button (click)="deleteDrawing(drawing)">Effacer</button>
+                    <button mat-raised-button mat-dialog-close (click)="loadDrawing(drawing)">Charger</button>
+                </mat-card-actions>
+            </mat-card>
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">

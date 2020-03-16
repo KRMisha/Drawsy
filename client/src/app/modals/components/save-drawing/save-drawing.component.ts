@@ -78,15 +78,19 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();
         if (this.drawingPreviewService.id === undefined) {
-            this.serverService.createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML).subscribe((newFileId: NewFileId): void => {
-                console.log('Drawing created');
-                this.drawingPreviewService.id = newFileId.id;
-            });
+            this.serverService
+                .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
+                .subscribe((newFileId: NewFileId): void => {
+                    console.log('Drawing created');
+                    this.drawingPreviewService.id = newFileId.id;
+                });
         } else {
-            this.serverService.updateDrawing(this.drawingPreviewService.id, this.drawingPreviewService.drawingPreviewRoot.outerHTML ).subscribe((): void => {
-                // ERROR HANDLING
-                console.log('Drawing updated');
-            });
+            this.serverService
+                .updateDrawing(this.drawingPreviewService.id, this.drawingPreviewService.drawingPreviewRoot.outerHTML)
+                .subscribe((): void => {
+                    // ERROR HANDLING
+                    console.log('Drawing updated');
+                });
         }
         this.snackBar.open(`Dessin sauvegardé : ${this.title}`, undefined, {
             duration: 4000,

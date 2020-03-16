@@ -40,8 +40,10 @@ export class DrawingSerializerService {
     }
 
     loadSvgDrawing(svgFileContainer: SvgFileContainer): boolean {
-        const dimensions: Vec2 =  { x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
-                                    y: svgFileContainer.drawingRoot.viewBox.baseVal.height };
+        const dimensions: Vec2 = {
+            x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
+            y: svgFileContainer.drawingRoot.viewBox.baseVal.height,
+        };
 
         const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
         const backgroundColor = Color.fromRgbaString(backgroundRectFillString);
@@ -49,7 +51,7 @@ export class DrawingSerializerService {
         if (!this.drawingService.confirmNewDrawing(dimensions, backgroundColor)) {
             return false;
         }
-        
+
         this.drawingService.id = svgFileContainer.id;
         this.drawingService.labels = svgFileContainer.labels;
         this.drawingService.title = svgFileContainer.title;
