@@ -65,7 +65,7 @@ export class DrawingPreviewService {
     get id(): string | undefined {
         return this.drawingService.id;
     }
-    set id(id: string | undefined ) {
+    set id(id: string | undefined) {
         this.drawingService.id = id;
     }
 }

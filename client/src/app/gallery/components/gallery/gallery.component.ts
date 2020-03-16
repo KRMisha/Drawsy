@@ -59,6 +59,16 @@ export class GalleryComponent implements OnInit {
         }
     }
 
+    getDrawingsWithLabels(): SvgFileContainer[] {
+        if (this.searchLabels.length === 0) {
+            return this.drawings;
+        }
+
+        return this.drawings.filter((drawing: SvgFileContainer) =>
+            drawing.labels.some((label: string) => this.searchLabels.includes(label)),
+        );
+    }
+
     removeLabel(label: string): void {
         const index = this.searchLabels.indexOf(label, 0);
         const control = this.galleryGroup.controls.labels;
@@ -70,17 +80,8 @@ export class GalleryComponent implements OnInit {
         control.markAsDirty();
     }
 
-    hasSearchLabel(drawing: SvgFileContainer): boolean {
-        if (this.searchLabels.length === 0) {
-            return true;
-        }
-
-        return drawing.labels.some((label: string) => this.searchLabels.includes(label));
-    }
-
     deleteDrawing(selectedDrawing: SvgFileContainer): void {
-        const confirmationMessage =
-            'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
+        const confirmationMessage = 'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
         if (!confirm(confirmationMessage)) {
             return;
         }

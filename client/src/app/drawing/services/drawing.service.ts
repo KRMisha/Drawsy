@@ -100,7 +100,6 @@ export class DrawingService {
         while (this.svgElements.length > 0) {
             this.removeElement(this.svgElements[0]);
         }
-        
     }
 
     isDrawingStarted(): boolean {
