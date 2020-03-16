@@ -1,5 +1,5 @@
-import 'reflect-metadata';
 import { Container } from 'inversify';
+import 'reflect-metadata';
 import { DatabaseController } from './controllers/database.controller';
 import { Application } from './server/app';
 import { Server } from './server/server';
