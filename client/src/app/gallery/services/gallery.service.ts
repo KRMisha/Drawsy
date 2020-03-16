@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/services/server.service';
-import { SavedFile } from '../../../../../common/communication/saved-file';
 
 @Injectable({
     providedIn: 'root',

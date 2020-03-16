@@ -61,12 +61,14 @@ export class GalleryComponent implements OnInit {
         control.markAsDirty();
     }
 
-    hasSearchLabel(drawing: SvgFileContainer): boolean {
+    getDrawingsWithLabels(): SvgFileContainer[] {
         if (this.searchLabels.length === 0) {
-            return true;
+            return this.drawings;
         }
 
-        return drawing.labels.some((label: string) => this.searchLabels.includes(label));
+        return this.drawings.filter((drawing: SvgFileContainer) =>
+            drawing.labels.some((label: string) => this.searchLabels.includes(label)),
+        );
     }
 
     getLabelError(): string {
