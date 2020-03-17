@@ -1,12 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/services/server.service';
-import { Observable, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { SavedFile } from '../../../../../common/communication/saved-file';
+import { HttpStatusCode } from '../../../../../common/communication/http-status-code.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -30,12 +31,20 @@ export class GalleryService {
             return;
         }
 
-        this.serverService.deleteDrawing(selectedDrawing.id).subscribe(() => {
-            this.getAllDrawings();
-        });
-        this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
-            duration: 4000,
-        });
+        this.serverService
+            .deleteDrawing(selectedDrawing.id)
+            .pipe(catchError(this.deleteDrawingErrorAlert()))
+            .subscribe(
+                () => {
+                    this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
+                        duration: 4000,
+                    });
+                    this.updateDrawings();
+                },
+                (error: Error) => {
+                    return;
+                },
+            );
     }
 
     loadDrawing(selectedDrawing: SvgFileContainer): void {
@@ -47,27 +56,62 @@ export class GalleryService {
         }
     }
 
-    async getAllDrawings(): Promise<SvgFileContainer[]> {
-        const savedFiles = await this.serverService
-            .getAllDrawings()
-            .pipe(catchError(this.handleError<SavedFile[]>('getAllDrawings')))
-            .toPromise();
+    async updateDrawings(): Promise<void> {
         this._drawings = [];
-        for (const savedFile of savedFiles) {
-            this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
-        }
-        return this.drawings;
+        try {
+            const savedFiles = await this.serverService
+                .getAllDrawings()
+                .pipe(catchError(this.getAllDrawingsErrorAlert()))
+                .toPromise();
+            for (const savedFile of savedFiles) {
+                this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
+            }
+        } catch (error) {} // tslint:disable-line: no-empty
     }
 
-    private handleError<T>(request: string, result?: T): (error: Error) => Observable<T> {
-        return (error: Error): Observable<T> => {
-            console.error(error);
+    private getAllDrawingsErrorAlert(): (error: Error) => Observable<never> {
+        return (error: HttpErrorResponse): Observable<never> => {
+            let errorMessage = '';
+            switch (error.status) {
+                case HttpStatusCode.NotFound:
+                    errorMessage = "Erreur: Les dessins n'ont pas été trouvés.";
+                    break;
 
-            this.snackBar.open('Erreur: ' + request + '\nMessage: ' + error.message, undefined, {
-                duration: 4000,
-            });
+                case HttpStatusCode.BadRequest:
+                    errorMessage = 'Erreur: Requête invalide.';
+                    break;
+            }
 
-            return of(result as T);
+            if (errorMessage !== '') {
+                this.snackBar.open(errorMessage, undefined, {
+                    duration: 4000,
+                });
+            }
+
+            return throwError(error);
+        };
+    }
+
+    private deleteDrawingErrorAlert(): (error: Error) => Observable<never> {
+        return (error: HttpErrorResponse): Observable<never> => {
+            let errorMessage = '';
+            switch (error.status) {
+                case HttpStatusCode.NotFound:
+                    errorMessage = "Erreur: Le dessin à supprimer n'a pas été trouvé.";
+                    break;
+
+                case HttpStatusCode.BadRequest:
+                    errorMessage = 'Erreur: Requête invalide.';
+                    break;
+            }
+
+            if (errorMessage !== '') {
+                this.snackBar.open(errorMessage, undefined, {
+                    duration: 4000,
+                });
+            }
+
+            return throwError(error);
         };
     }
 }

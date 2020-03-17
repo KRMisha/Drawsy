@@ -45,7 +45,10 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <h1 *ngIf="getDrawingsWithLabels().length === 0" class="mat-h1">
+        <h1 *ngIf="!hasDrawings()" class="mat-h1">
+            La galerie ne contient aucuns dessins.
+        </h1>
+        <h1 *ngIf="hasDrawings() && getDrawingsWithLabels().length === 0" class="mat-h1">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h1>
     </mat-dialog-content>

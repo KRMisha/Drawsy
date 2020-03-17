@@ -71,6 +71,10 @@ export class GalleryComponent implements OnInit {
         );
     }
 
+    hasDrawings(): boolean {
+        return this.drawings.length !== 0;
+    }
+
     getLabelError(): string {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
@@ -81,6 +85,7 @@ export class GalleryComponent implements OnInit {
 
     deleteDrawing(selectedDrawing: SvgFileContainer): void {
         this.galleryService.deleteDrawing(selectedDrawing);
+        this.drawings.splice(this.drawings.indexOf(selectedDrawing), 1);
         this.getAllDrawings();
     }
 
@@ -90,8 +95,8 @@ export class GalleryComponent implements OnInit {
 
     private async getAllDrawings(): Promise<void> {
         this.isLoaded = false;
-        this.drawings = [];
-        this.drawings = await this.galleryService.getAllDrawings();
+        await this.galleryService.updateDrawings();
+        this.drawings = this.galleryService.drawings;
         this.isLoaded = true;
     }
 }
