@@ -25,7 +25,7 @@ describe('MoveElementsCommand', () => {
         expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, inverseMoveValue);
     });
 
-    it('#redo should forward moveElementList calling to drawingService', () => {
+    it('#redo should forward moveElementList call to drawingService', () => {
         command.redo();
         expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, moveValue);
     });
