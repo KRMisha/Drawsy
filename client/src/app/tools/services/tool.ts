@@ -28,7 +28,7 @@ export abstract class Tool {
         this.name = name;
     }
 
-    // Deactivate tslint for method stubs below because not all derived service classes
+    // Disable tslint for method stubs below because not all derived service classes
     // may need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
     afterDrawingInit(): void {}
