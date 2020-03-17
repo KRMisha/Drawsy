@@ -1,8 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/services/server.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpStatusCode } from '../../../../../common/communication/http-status-code.enum';
 import { NewFileId } from '../../../../../common/communication/new-file-id';
 
 @Injectable({
@@ -38,23 +42,85 @@ export class SaveDrawingService {
 
     saveDrawing(): void {
         this.drawingPreviewService.finalizePreview();
-        if (this.drawingPreviewService.id === undefined) {
-            this.serverService
-                .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
-                .subscribe((newFileId: NewFileId): void => {
-                    console.log('Drawing created');
+        this.drawingPreviewService.id === undefined ? this.createDrawing() : this.updateDrawing();
+    }
+
+    private createDrawing(): void {
+        this.serverService
+            .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
+            .pipe(catchError(this.createDrawingErrorAlert()))
+            .subscribe(
+                (newFileId: NewFileId): void => {
                     this.drawingPreviewService.id = newFileId.id;
+                    this.snackBar.open(`Dessin sauvegardé : ${this.title}`, undefined, {
+                        duration: 4000,
+                    });
+                },
+                (error: Error): void => {
+                    this.drawingPreviewService.id = undefined;
+                },
+            );
+    }
+
+    private updateDrawing(): void {
+        this.serverService
+            .updateDrawing(this.drawingPreviewService.id!, this.drawingPreviewService.drawingPreviewRoot.outerHTML) // tslint:disable-line: no-non-null-assertion
+            .pipe(catchError(this.updateDrawingErrorAlert()))
+            .subscribe(
+                (): void => {
+                    this.snackBar.open(`Dessin mis à jour : ${this.title}`, undefined, {
+                        duration: 4000,
+                    });
+                },
+                (error: Error): void => {
+                    this.drawingPreviewService.id = undefined;
+                },
+            );
+    }
+
+    private createDrawingErrorAlert(): (error: Error) => Observable<never> {
+        return (error: HttpErrorResponse): Observable<never> => {
+            let errorMessage = '';
+            switch (error.status) {
+                case HttpStatusCode.NotFound:
+                    errorMessage = "Erreur: Le dessin à ajouter n'a pas été trouvé.";
+                    break;
+
+                case HttpStatusCode.BadRequest:
+                    errorMessage = 'Erreur: Requête invalide.';
+                    break;
+            }
+
+            if (errorMessage !== '') {
+                this.snackBar.open(errorMessage, undefined, {
+                    duration: 4000,
                 });
-        } else {
-            this.serverService
-                .updateDrawing(this.drawingPreviewService.id, this.drawingPreviewService.drawingPreviewRoot.outerHTML)
-                .subscribe((): void => {
-                    // ERROR HANDLING
-                    console.log('Drawing updated');
+            }
+
+            return throwError(error);
+        };
+    }
+
+    private updateDrawingErrorAlert(): (error: Error) => Observable<never> {
+        return (error: HttpErrorResponse): Observable<never> => {
+            let errorMessage = '';
+            switch (error.status) {
+                case HttpStatusCode.NotFound:
+                    errorMessage = "Erreur: Le dessin à mettre à jour n'a pas été trouvé.";
+                    break;
+
+                case HttpStatusCode.BadRequest:
+                    errorMessage = 'Erreur: Requête invalide.';
+                    break;
+            }
+
+            if (errorMessage !== '') {
+                this.snackBar.open(errorMessage, undefined, {
+                    duration: 4000,
                 });
-        }
-        this.snackBar.open(`Dessin sauvegardé : ${this.title}`, undefined, {
-            duration: 4000,
-        });
+            }
+
+            return throwError(error);
+        };
     }
 }
