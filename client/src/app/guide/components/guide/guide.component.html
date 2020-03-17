@@ -1,5 +1,5 @@
 <div class="container">
-    <app-guide-sidebar
+    <app-guide-sidebar cdkFocusInitial
         #appSidebar
         class="item-sidebar"
         (selectGuide)="selectGuide($event)"
@@ -18,7 +18,7 @@
             </button>
         </div>
         <div class="next">
-            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()" cdkFocusInitial>
+            <button mat-icon-button *ngIf="hasNextGuide" class="navigation-button" (click)="selectNextGuide()">
                 Suivant <mat-icon class="icon">keyboard_arrow_right</mat-icon>
             </button>
         </div>

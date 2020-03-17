@@ -5,11 +5,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers
@@ -19,10 +18,10 @@ describe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;
     let fixture: ComponentFixture<SidebarDrawerComponent>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
-    let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
+    let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
 
     beforeEach(async(() => {
-        toolSelectorServiceSpyObj = jasmine.createSpyObj({
+        currentToolServiceSpyObj = jasmine.createSpyObj({
             hasSetting: () => {},
             getToolName: () => {},
             getSetting: () => {},
@@ -40,7 +39,7 @@ describe('SidebarDrawerComponent', () => {
             declarations: [SidebarDrawerComponent],
             imports: [BrowserAnimationsModule, MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
             providers: [
-                { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
+                { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: ColorService, useValue: colorServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -57,42 +56,42 @@ describe('SidebarDrawerComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#getToolName() should call getToolName from toolSelectorService', () => {
+    it('#getToolName() should call getToolName from currentToolService', () => {
         spyOn(component, 'getToolName').and.callThrough();
         component.getToolName();
         expect(component.getToolName).toHaveBeenCalled();
-        expect(component['toolSelectorService'].getToolName).toHaveBeenCalled();
+        expect(component['currentToolService'].getToolName).toHaveBeenCalled();
     });
 
-    it('#getSetting() should call getSetting from toolSelectorService with the chosen ToolSetting', () => {
+    it('#getSetting() should call getSetting from currentToolService with the chosen ToolSetting', () => {
         spyOn(component, 'getSetting').and.callThrough();
         component.getSetting(ToolSetting.Size);
         expect(component.getSetting).toHaveBeenCalled();
-        expect(component['toolSelectorService'].getSetting).toHaveBeenCalledWith(ToolSetting.Size);
+        expect(component['currentToolService'].getSetting).toHaveBeenCalledWith(ToolSetting.Size);
     });
 
-    it('#setSetting() should call getSetting from toolSelectorService with the chosen ToolSetting and value', () => {
+    it('#setSetting() should call getSetting from currentToolService with the chosen ToolSetting and value', () => {
         spyOn(component, 'setSetting').and.callThrough();
         component.setSetting(ToolSetting.Size, 3);
         expect(component.setSetting).toHaveBeenCalled();
-        expect(component['toolSelectorService'].setSetting).toHaveBeenCalledWith(ToolSetting.Size, 3);
+        expect(component['currentToolService'].setSetting).toHaveBeenCalledWith(ToolSetting.Size, 3);
     });
 
-    it('#hasSetting() should call hasSetting from toolSelectorService with the chosen ToolSetting', () => {
+    it('#hasSetting() should call hasSetting from currentToolService with the chosen ToolSetting', () => {
         spyOn(component, 'hasSetting').and.callThrough();
         component.hasSetting(ToolSetting.Size);
         expect(component.hasSetting).toHaveBeenCalled();
-        expect(component['toolSelectorService'].hasSetting).toHaveBeenCalledWith(ToolSetting.Size);
+        expect(component['currentToolService'].hasSetting).toHaveBeenCalledWith(ToolSetting.Size);
     });
 
-    // it('#getPrimaryColor() should call getPrimaryColor from toolSelectorService', () => {
+    // it('#getPrimaryColor() should call getPrimaryColor from currentToolService', () => {
     //     spyOn(component, 'getPrimaryColor').and.callThrough();
     //     component.getPrimaryColor();
     //     expect(component.getPrimaryColor).toHaveBeenCalled();
     //     expect(component['colorService'].getPrimaryColor).toHaveBeenCalled();
     // });
 
-    // it('#getSecondaryColor() should call getSecondaryColor from toolSelectorService', () => {
+    // it('#getSecondaryColor() should call getSecondaryColor from currentToolService', () => {
     //     spyOn(component, 'getSecondaryColor').and.callThrough();
     //     component.getSecondaryColor();
     //     expect(component.getSecondaryColor).toHaveBeenCalled();
