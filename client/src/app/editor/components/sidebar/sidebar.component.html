@@ -5,8 +5,6 @@
                 <mat-icon class="mat-icon">dehaze</mat-icon>
             </button>
 
-            <p class="mat-body-2">Outils</p>
-
             <button
                 mat-stroked-button
                 *ngFor="let button of buttons; let i = index"
@@ -23,44 +21,44 @@
             <button
                 mat-stroked-button
                 class="option-button"
-                (click)="openSettingsModal()"
-                matTooltip="Paramètres"
-                matTooltipPosition="right"
-            >
-                <mat-icon class="mat-icon">settings</mat-icon>
-            </button>
-            <button
-                mat-stroked-button
-                class="option-button"
-                (click)="openExportModal()"
-                matTooltip="Exporter le dessin"
-                matTooltipPosition="right"
-            >
-                <mat-icon class="mat-icon">arrow_upward</mat-icon>
-            </button>
-            <button
-                mat-stroked-button
-                class="option-button"
-                (click)="openSaveModal()"
-                matTooltip="Sauvegarder le dessin"
-                matTooltipPosition="right"
-            >
-                <mat-icon class="mat-icon">save</mat-icon>
-            </button>
-            <button mat-stroked-button class="option-button" (click)="openGalleryModal()" matTooltip="Galerie" matTooltipPosition="right">
-                <mat-icon class="mat-icon">photo</mat-icon>
-            </button>
-            <button
-                mat-stroked-button
-                class="option-button"
                 (click)="openNewDrawingModal()"
                 matTooltip="Nouveau dessin"
                 matTooltipPosition="right"
             >
                 <mat-icon class="mat-icon">add</mat-icon>
             </button>
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openExportModal()"
+                matTooltip="Exporter le dessin localement"
+                matTooltipPosition="right"
+            >
+                <mat-icon class="mat-icon">save_alt</mat-icon>
+            </button>
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openSaveModal()"
+                matTooltip="Sauvegarder le dessin sur le serveur"
+                matTooltipPosition="right"
+            >
+                <mat-icon class="mat-icon">cloud_upload</mat-icon>
+            </button>
+            <button mat-stroked-button class="option-button" (click)="openGalleryModal()" matTooltip="Galerie" matTooltipPosition="right">
+                <mat-icon class="mat-icon">collections</mat-icon>
+            </button>
+            <button
+                mat-stroked-button
+                class="option-button"
+                (click)="openSettingsModal()"
+                matTooltip="Paramètres"
+                matTooltipPosition="right"
+            >
+                <mat-icon class="mat-icon">settings</mat-icon>
+            </button>
             <button mat-stroked-button class="option-button" (click)="openGuideModal()" matTooltip="Aide" matTooltipPosition="right">
-                <mat-icon class="mat-icon">help</mat-icon>
+                <mat-icon class="mat-icon">help_outline</mat-icon>
             </button>
             <button mat-stroked-button class="option-button" routerLink="/home" matTooltip="Accueil" matTooltipPosition="right">
                 <mat-icon class="mat-icon">home</mat-icon>

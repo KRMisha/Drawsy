@@ -20,8 +20,7 @@ export class Server {
     }
 
     private normalizePort(val: number | string): number | string | boolean {
-        const radix = 10;
-        const port: number = typeof val === 'string' ? parseInt(val, radix) : val;
+        const port = +val;
         if (isNaN(port)) {
             return val;
         }

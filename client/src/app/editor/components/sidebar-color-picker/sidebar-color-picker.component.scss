@@ -1,10 +1,3 @@
-.old-colors {
-    display: flex;
-    justify-content: space-between;
-    align-content: flex-start;
-    margin-bottom: 8px;
-}
-
 .current-colors {
     display: flex;
     width: 100%;
@@ -15,23 +8,26 @@
     height: 22px;
     border-radius: 11px;
     background-color: white;
+    cursor: pointer;
 }
 
 .primary-color,
-.secondary-color,
-.big-circle {
+.secondary-color {
     width: 32px;
     height: 32px;
     border-radius: 16px;
     background-color: white;
+    cursor: pointer;
 }
 
 .primary-color {
     width: 50%;
+    cursor: pointer;
 }
 
 .secondary-color {
     width: 25%;
+    cursor: pointer;
 }
 
 .swap-colors-button {
@@ -42,6 +38,13 @@
         top: -4px;
         left: 11.25px;
     }
+}
+
+.previous-colors {
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-start;
+    margin-bottom: 8px;
 }
 
 .margin-colors {

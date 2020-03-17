@@ -17,7 +17,7 @@ export class DrawingSerializerService {
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
         private svgUtilitiesService: SvgUtilityService,
-        private rendererFactory: RendererFactory2,
+        private rendererFactory: RendererFactory2
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
@@ -33,6 +33,14 @@ export class DrawingSerializerService {
         link.click();
     }
 
+    async exportDrawing(fileName: string, fileType: 'image/png' | 'image/jpeg'): Promise<void> {
+        const link = this.renderer.createElement('a');
+        link.download = fileName;
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        link.href = canvas.toDataURL(fileType);
+        link.click();
+    }
+
     convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
         const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
         svgFileContainer.id = savedFile.id;
@@ -40,8 +48,10 @@ export class DrawingSerializerService {
     }
 
     loadSvgDrawing(svgFileContainer: SvgFileContainer): boolean {
-        const dimensions: Vec2 =  { x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
-                                    y: svgFileContainer.drawingRoot.viewBox.baseVal.height };
+        const dimensions: Vec2 = {
+            x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
+            y: svgFileContainer.drawingRoot.viewBox.baseVal.height,
+        };
 
         const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill') as string;
         const backgroundColor = Color.fromRgbaString(backgroundRectFillString);
@@ -49,7 +59,7 @@ export class DrawingSerializerService {
         if (!this.drawingService.confirmNewDrawing(dimensions, backgroundColor)) {
             return false;
         }
-        
+
         this.drawingService.id = svgFileContainer.id;
         this.drawingService.labels = svgFileContainer.labels;
         this.drawingService.title = svgFileContainer.title;
@@ -61,14 +71,6 @@ export class DrawingSerializerService {
         }
 
         return true;
-    }
-
-    async exportDrawing(fileName: string, fileType: string): Promise<void> {
-        const link = this.renderer.createElement('a');
-        link.download = fileName;
-        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
-        link.href = canvas.toDataURL(fileType);
-        link.click();
     }
 
     async importSvgDrawing(file: File): Promise<SvgFileContainer> {

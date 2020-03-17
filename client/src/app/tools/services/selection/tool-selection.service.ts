@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
@@ -36,14 +36,15 @@ export class ToolSelectionService extends Tool {
     private isMouseButtonDown = false;
 
     constructor(
+        rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilitiesService: SvgUtilityService
     ) {
-        super(drawingService, colorService, commandService, ToolName.Selection);
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection);
     }
 
     afterDrawingInit(): void {
@@ -67,7 +68,7 @@ export class ToolSelectionService extends Tool {
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'height', controlPointSideSize.toString());
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'fill', 'black');
             this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'display', 'none');
-            this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'pointer-events', 'z');
+            this.renderer.setAttribute(this.toolSelectionStateService.svgControlPoints[i], 'pointer-events', 'auto');
             this.drawingService.addUiElement(this.toolSelectionStateService.svgControlPoints[i]);
 
             this.renderer.listen(this.toolSelectionStateService.svgControlPoints[i], 'mousedown', (event: MouseEvent) => {
@@ -81,9 +82,9 @@ export class ToolSelectionService extends Tool {
             return;
         }
 
-        this.isMouseDownInside = Tool.isMouseInside;
+        this.isMouseDownInside = Tool.isMouseInsideDrawing;
         this.userSelectionStartCoords = this.getMousePosition(event);
-        if (Tool.isMouseInside) {
+        if (Tool.isMouseInsideDrawing) {
             if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
                 this.toolSelectionStateService.isMovingSelectionWithMouse = true;
                 this.toolSelectionMoverService.totalSelectionMoveValue = { x: 0, y: 0 };
@@ -119,14 +120,14 @@ export class ToolSelectionService extends Tool {
                 if (this.currentMouseButtonDown === ButtonId.Left) {
                     this.toolSelectionStateService.selectedElements = this.svgUtilitiesService.getElementsUnderArea(
                         this.drawingService.svgElements,
-                        userSelectionRect,
+                        userSelectionRect
                     );
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
                 } else if (this.currentMouseButtonDown === ButtonId.Right) {
                     const selectedElementsCopy = Object.assign([], this.toolSelectionStateService.selectedElements);
                     const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
                         this.drawingService.svgElements,
-                        userSelectionRect,
+                        userSelectionRect
                     );
                     this.inverseObjectsSelection(currentSelectedElements, selectedElementsCopy);
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(selectedElementsCopy);
@@ -214,14 +215,14 @@ export class ToolSelectionService extends Tool {
     private updateSelectionOnMouseUp(event: MouseEvent): void {
         this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
 
-        if (Tool.isMouseInside && this.isMouseDownInside) {
+        if (Tool.isMouseInsideDrawing && this.isMouseDownInside) {
             const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
             const isSimpleClick = this.isSimpleClick(event);
             const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
             const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
                 this.drawingService.svgElements,
-                userSelectionRect,
+                userSelectionRect
             );
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {

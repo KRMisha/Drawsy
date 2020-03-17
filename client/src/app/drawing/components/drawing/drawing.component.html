@@ -1,12 +1,12 @@
 <svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.width]="getWidth()" [attr.height]="getHeight()" [attr.viewBox]="getViewBox()">
     <defs>
         <filter id="brushTexture1" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence2" />
+            <feDisplacementMap in2="turbulence2" in="SourceGraphic" scale="15" />
         </filter>
 
         <filter id="brushTexture2" filterUnits="userSpaceOnUse">
-            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence2" />
-            <feDisplacementMap in2="turbulence2" in="SourceGraphic" scale="15" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
         </filter>
 
         <filter id="brushTexture3" filterUnits="userSpaceOnUse">

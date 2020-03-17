@@ -39,14 +39,6 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     constructor(private colorPickerService: ColorPickerService) {}
 
-    private calculateMouseXPositionFromHue(currentMouseX: number, hue: number): number {
-        if (this.isSliderPositionClipedRight) {
-            hue = Color.maxHue;
-        }
-        const mouseXPosition = (hue / Color.maxHue) * canvasWidth;
-        return mouseXPosition;
-    }
-
     ngAfterViewInit(): void {
         this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.canvas = this.hueCanvas.nativeElement;
@@ -64,37 +56,6 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.colorChangedSubscription.unsubscribe();
-    }
-
-    draw(): void {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
-
-        this.context.clearRect(0, 0, width, height);
-
-        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
-        // tslint:disable: no-magic-numbers
-        horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
-        horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
-        horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
-        horizontalGradient.addColorStop(3 / 6, ColorGradient.Cyan);
-        horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
-        horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
-        horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
-        // tslint:enable: no-magic-numbers
-        this.context.fillStyle = horizontalGradient;
-        const padding = 0;
-        this.context.fillRect(0, padding, width, height - 2 * padding);
-
-        this.hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
-
-        const circle = new Path2D();
-        circle.arc(this.sliderXPosition, height / 2, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = this.hueColor.toRgbString();
-        this.context.fill(circle);
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = 'white';
-        this.context.stroke(circle);
     }
 
     @HostListener('document:mousedown', ['$event'])
@@ -125,7 +86,7 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = true;
     }
 
-    update(event: MouseEvent): void {
+    private update(event: MouseEvent): void {
         if (!this.isMouseDown) {
             return;
         }
@@ -138,5 +99,44 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         const hue = (this.sliderXPosition / this.canvas.width) * Color.maxHue;
         this.colorPickerService.hue = hue;
         this.draw();
+    }
+
+    private draw(): void {
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+
+        this.context.clearRect(0, 0, width, height);
+
+        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        // tslint:disable: no-magic-numbers
+        horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
+        horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
+        horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
+        horizontalGradient.addColorStop(3 / 6, ColorGradient.Cyan);
+        horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
+        horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
+        horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
+        // tslint:enable: no-magic-numbers
+        this.context.fillStyle = horizontalGradient;
+        const padding = 0;
+        this.context.fillRect(0, padding, width, height - 2 * padding);
+
+        this.hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
+
+        const circle = new Path2D();
+        circle.arc(this.sliderXPosition, height / 2, radius, 0, 2 * Math.PI);
+        this.context.fillStyle = this.hueColor.toRgbString();
+        this.context.fill(circle);
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = 'white';
+        this.context.stroke(circle);
+    }
+
+    private calculateMouseXPositionFromHue(currentMouseX: number, hue: number): number {
+        if (this.isSliderPositionClipedRight) {
+            hue = Color.maxHue;
+        }
+        const mouseXPosition = (hue / Color.maxHue) * canvasWidth;
+        return mouseXPosition;
     }
 }

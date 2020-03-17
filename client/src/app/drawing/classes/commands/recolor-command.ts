@@ -4,7 +4,7 @@ export class RecolorCommand implements Command {
     constructor(
         private element: SVGElement,
         private attributesBefore: Map<string, string | undefined>,
-        private attributesAfter: Map<string, string | undefined>,
+        private attributesAfter: Map<string, string | undefined>
     ) {}
 
     undo(): void {

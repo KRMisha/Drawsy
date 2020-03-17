@@ -4,7 +4,7 @@ export default {
     defaultSize: 5,
     defaultStrokeSize: 5,
     defaultJunctionSize: 10,
-    defaultTexture: Texture.Blur,
+    defaultTexture: Texture.Graffiti,
     defaultStrokeType: StrokeType.FillWithBorder,
     defaultPolygonSideCount: 3,
     defaultSpraySpeed: 20,
