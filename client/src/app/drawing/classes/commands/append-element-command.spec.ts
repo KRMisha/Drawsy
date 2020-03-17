@@ -21,7 +21,7 @@ describe('AppendElementCommand', () => {
         expect(drawingService.removeElement).toHaveBeenCalledWith(element);
     });
 
-    it('#redo should forward addElement calling to drawingService', () => {
+    it('#redo should forward addElement call to drawingService', () => {
         command.redo();
         expect(drawingService.addElement).toHaveBeenCalledWith(element);
     });
