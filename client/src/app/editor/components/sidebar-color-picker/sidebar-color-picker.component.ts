@@ -9,20 +9,31 @@ import { ButtonId } from '@app/editor/enums/button-id.enum';
     styleUrls: ['./sidebar-color-picker.component.scss'],
 })
 export class SidebarColorPickerComponent {
-    private _color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
-    set color(color: Color) {
-        this._color = color;
-    }
-    get color(): Color {
-        return this._color;
-    }
+    color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    private isPrimaryColorSelected = true;
     isColorPickerDisplayEnabled = false;
 
+    private isPrimaryColorSelected = true;
     private isMouseInside = false;
 
     constructor(private colorService: ColorService) {}
+
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
+        this.isMouseInside = false;
+    }
+
+    @HostListener('mouseenter')
+    onMouseEnter(): void {
+        this.isMouseInside = true;
+    }
+
+    @HostListener('document:mousedown')
+    onMouseDown(): void {
+        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
+            this.confirmColor();
+        }
+    }
 
     selectPrimaryColor(): void {
         this.isPrimaryColorSelected = true;
@@ -75,22 +86,5 @@ export class SidebarColorPickerComponent {
             this.colorService.setSecondaryColor(this.color);
         }
         this.isColorPickerDisplayEnabled = false;
-    }
-
-    @HostListener('mouseleave')
-    onMouseLeave(): void {
-        this.isMouseInside = false;
-    }
-
-    @HostListener('mouseenter')
-    onMouseEnter(): void {
-        this.isMouseInside = true;
-    }
-
-    @HostListener('document:mousedown')
-    onMouseDown(): void {
-        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
-            this.confirmColor();
-        }
     }
 }

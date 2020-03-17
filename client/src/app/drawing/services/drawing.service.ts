@@ -12,38 +12,30 @@ const defaultDimensions: Vec2 = { x: 1300, y: 800 };
     providedIn: 'root',
 })
 export class DrawingService {
-    private renderer: Renderer2;
-
-    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
-    private transformationMap = new Map<SVGElement, SvgTransformations>();
-
-    private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
-    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
-
-    private elementClickedSource = new Subject<SvgClickEvent>();
-
-    elementClicked$ = this.elementClickedSource.asObservable();
-
     drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
 
     dimensions: Vec2 = defaultDimensions;
+    backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     id?: string;
     title = 'Sans titre';
     labels: string[] = [];
 
+    private renderer: Renderer2;
+
+    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
+    private transformationMap = new Map<SVGElement, SvgTransformations>();
+
+    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+
+    private elementClickedSource = new Subject<SvgClickEvent>();
+
+    elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
+
     constructor(private rendererFactory: RendererFactory2, private commandService: CommandService) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
-    }
-
-    set backgroundColor(color: Color) {
-        this._backgroundColor = color;
-    }
-
-    get backgroundColor(): Color {
-        return this._backgroundColor;
     }
 
     get svgElements(): SVGElement[] {

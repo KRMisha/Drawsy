@@ -7,8 +7,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     providedIn: 'root',
 })
 export class DrawingPreviewService {
-    private renderer: Renderer2;
-
     drawingPreviewRoot: SVGSVGElement;
     svgTitle: SVGTitleElement;
     svgDesc: SVGDescElement;
@@ -16,6 +14,8 @@ export class DrawingPreviewService {
     svgDrawingContent: SVGGElement;
 
     previewFilter = PreviewFilter.None;
+
+    private renderer: Renderer2;
 
     constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
         this.renderer = this.rendererFactory.createRenderer(null, null);

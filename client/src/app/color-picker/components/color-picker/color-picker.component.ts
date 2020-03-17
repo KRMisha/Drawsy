@@ -9,24 +9,19 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
     providers: [ColorPickerService],
 })
 export class ColorPickerComponent {
-    get color(): Color {
-        return this.colorPickerService.getColor();
-    }
-
     @Input()
     set colorModel(color: Color) {
         this.colorPickerService.setColor(color);
     }
-
     @Output() colorModelChange = new EventEmitter<Color>();
-
-    getColor(): Color {
-        return this.colorPickerService.getColor();
-    }
 
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.colorModelChange.emit(color);
         });
+    }
+
+    get color(): Color {
+        return this.colorPickerService.getColor();
     }
 }

@@ -12,10 +12,10 @@ export abstract class Tool {
     static isMouseDown = false;
     static isMouseInsideDrawing = false;
 
-    protected renderer: Renderer2;
-
     name: ToolName;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
+
+    protected renderer: Renderer2;
 
     constructor(
         private rendererFactory: RendererFactory2,

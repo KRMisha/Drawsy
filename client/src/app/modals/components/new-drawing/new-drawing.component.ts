@@ -49,6 +49,14 @@ export class NewDrawingComponent implements OnInit {
         });
     }
 
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event): void {
+        if (!this.wereDimensionsModified) {
+            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
+            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
+        }
+    }
+
     onSubmit(): void {
         const dimensions = { x: this.drawingGroup.controls.width.value, y: this.drawingGroup.controls.height.value };
         if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
@@ -77,13 +85,5 @@ export class NewDrawingComponent implements OnInit {
             : formControl.hasError('pattern')
             ? 'Nombre entier invalide'
             : '';
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize(event: Event): void {
-        if (!this.wereDimensionsModified) {
-            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
-            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
-        }
     }
 }

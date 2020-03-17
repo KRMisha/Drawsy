@@ -4,19 +4,21 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class ColorPickerService {
+    color = new Color();
+
     private hueChangedSource = new Subject<number>();
     private saturationChangedSource = new Subject<number>();
     private valueChangedSource = new Subject<number>();
     private alphaChangedSource = new Subject<number>();
     private colorChangedSource = new Subject<Color>();
 
+    // tslint:disable: member-ordering
     hueChanged$ = this.hueChangedSource.asObservable();
     saturationChanged$ = this.saturationChangedSource.asObservable();
     valueChanged$ = this.valueChangedSource.asObservable();
     alphaChanged$ = this.alphaChangedSource.asObservable();
     colorChanged$ = this.colorChangedSource.asObservable();
-
-    color = new Color();
+    // tslint:enable: member-ordering
 
     // tslint:disable: variable-name
     private _hue = 0;
@@ -25,14 +27,18 @@ export class ColorPickerService {
     private _alpha = 1;
     // tslint:enable: variable-name
 
+    get hue(): number {
+        return this._hue;
+    }
+
     set hue(hue: number) {
         this._hue = hue;
         this.emitColorChanged();
         this.hueChangedSource.next(hue);
     }
 
-    get hue(): number {
-        return this._hue;
+    get saturation(): number {
+        return this._saturation;
     }
 
     set saturation(saturation: number) {
@@ -41,8 +47,8 @@ export class ColorPickerService {
         this.saturationChangedSource.next(saturation);
     }
 
-    get saturation(): number {
-        return this._saturation;
+    get value(): number {
+        return this._value;
     }
 
     set value(value: number) {
@@ -51,8 +57,8 @@ export class ColorPickerService {
         this.valueChangedSource.next(value);
     }
 
-    get value(): number {
-        return this._value;
+    get alpha(): number {
+        return this._alpha;
     }
 
     set alpha(alpha: number) {
@@ -61,14 +67,10 @@ export class ColorPickerService {
         this.alphaChangedSource.next(alpha);
     }
 
-    get alpha(): number {
-        return this._alpha;
-    }
-
-    private emitColorChanged(): void {
+    getColor(): Color {
         this.color.setHsv(this.hue, this.saturation, this.value);
         this.color.alpha = this.alpha;
-        this.colorChangedSource.next(Color.fromColor(this.color));
+        return this.color;
     }
 
     setColor(color: Color): void {
@@ -89,13 +91,13 @@ export class ColorPickerService {
         this.alphaChangedSource.next(this.alpha);
     }
 
-    getColor(): Color {
-        this.color.setHsv(this.hue, this.saturation, this.value);
-        this.color.alpha = this.alpha;
-        return this.color;
-    }
-
     getHex(): string {
         return this.getColor().getHex();
+    }
+
+    private emitColorChanged(): void {
+        this.color.setHsv(this.hue, this.saturation, this.value);
+        this.color.alpha = this.alpha;
+        this.colorChangedSource.next(Color.fromColor(this.color));
     }
 }

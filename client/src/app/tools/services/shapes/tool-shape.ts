@@ -34,9 +34,6 @@ export abstract class ToolShape extends Tool {
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
 
-    protected abstract getShapeString(): string;
-    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
-
     onPrimaryColorChange(color: Color): void {
         if (this.shape !== undefined) {
             this.renderer.setAttribute(this.shape, 'fill', color.toRgbaString());
@@ -93,6 +90,10 @@ export abstract class ToolShape extends Tool {
             this.updateShapeArea();
         }
     }
+
+    protected abstract getShapeString(): string;
+
+    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
 
     private createNewShape(): SVGElement {
         const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
