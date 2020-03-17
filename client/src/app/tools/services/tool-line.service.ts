@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
@@ -34,8 +34,13 @@ export class ToolLineService extends Tool {
     private hasJunction: boolean;
     private junctionSize: number;
 
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolName.Line);
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Line);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
             hasJunction: false,
@@ -44,7 +49,7 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInside) {
+        if (!Tool.isMouseInsideDrawing) {
             return;
         }
 
@@ -173,7 +178,7 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
-        this.renderer.setAttribute(this.groupElement, 'shape-padding', padding.toString());
+        this.renderer.setAttribute(this.groupElement, 'padding', padding.toString());
 
         this.drawingService.addElement(this.groupElement);
 
@@ -202,8 +207,8 @@ export class ToolLineService extends Tool {
         this.nextPoint = this.calculateNextPointPosition(this.lastPoint, this.mousePosition, this.isShiftDown, this.isCurrentlyDrawing);
     }
 
-    private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, currentlyDrawing: boolean): Vec2 {
-        if (!currentlyDrawing || !isShiftDown) {
+    private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, isCurrentlyDrawing: boolean): Vec2 {
+        if (!isCurrentlyDrawing || !isShiftDown) {
             return mousePosition;
         }
 

@@ -24,17 +24,17 @@ export class CommandService {
         }
     }
 
-    addCommand(command: Command): void {
-        this.undoCommands.push(command);
-        this.redoCommands = [];
-    }
-
     hasUndoCommands(): boolean {
         return this.undoCommands.length > 0;
     }
 
     hasRedoCommands(): boolean {
         return this.redoCommands.length > 0;
+    }
+
+    addCommand(command: Command): void {
+        this.undoCommands.push(command);
+        this.redoCommands = [];
     }
 
     clearCommands(): void {

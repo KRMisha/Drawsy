@@ -33,6 +33,14 @@ export class DrawingSerializerService {
         link.click();
     }
 
+    async exportDrawing(fileName: string, fileType: 'image/png' | 'image/jpeg'): Promise<void> {
+        const link = this.renderer.createElement('a');
+        link.download = fileName;
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        link.href = canvas.toDataURL(fileType);
+        link.click();
+    }
+
     convertSavedFileToSvgFileContainer(savedFile: SavedFile): SvgFileContainer {
         const svgFileContainer = this.svgFileContainerFromString(savedFile.content);
         svgFileContainer.id = savedFile.id;
@@ -63,14 +71,6 @@ export class DrawingSerializerService {
         }
 
         return true;
-    }
-
-    async exportDrawing(fileName: string, fileType: string): Promise<void> {
-        const link = this.renderer.createElement('a');
-        link.download = fileName;
-        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
-        link.href = canvas.toDataURL(fileType);
-        link.click();
     }
 
     async importSvgDrawing(file: File): Promise<SvgFileContainer> {

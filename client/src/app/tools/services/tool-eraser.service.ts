@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
@@ -34,12 +34,13 @@ export class ToolEraserService extends Tool {
     private timerId?: number;
 
     constructor(
+        rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
         private svgUtilitiesService: SvgUtilityService,
     ) {
-        super(drawingService, colorService, commandService, ToolName.Eraser);
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
     }
 
@@ -58,18 +59,18 @@ export class ToolEraserService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
-        const delayMsBetweenCalls = 10;
+        const msDelayBetweenCalls = 32;
+        this.updateEraserRect(mousePosition);
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
-                this.updateEraserRect(mousePosition);
                 this.onMousePositionChange(mousePosition);
-            }, delayMsBetweenCalls);
+            }, msDelayBetweenCalls);
         }
     }
 
     onMouseDown(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
-        this.isMouseDownInside = Tool.isMouseInside;
+        this.isMouseDownInside = Tool.isMouseInsideDrawing;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
         this.onMousePositionChange(mousePosition);
     }

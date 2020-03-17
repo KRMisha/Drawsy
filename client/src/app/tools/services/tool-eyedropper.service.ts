@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
@@ -14,16 +14,17 @@ import { Tool } from './tool';
 })
 export class ToolEyedropperService extends Tool {
     constructor(
+        rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
         private svgUtilitiesService: SvgUtilityService,
     ) {
-        super(drawingService, colorService, commandService, ToolName.Eyedropper);
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Eyedropper);
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (Tool.isMouseInside) {
+        if (Tool.isMouseInsideDrawing) {
             this.setColor(event);
         }
     }

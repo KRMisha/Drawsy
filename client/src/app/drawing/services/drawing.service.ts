@@ -1,4 +1,4 @@
-import { Injectable, Renderer2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
@@ -12,19 +12,17 @@ const defaultDimensions: Vec2 = { x: 1300, y: 800 };
     providedIn: 'root',
 })
 export class DrawingService {
-    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
+    private renderer: Renderer2;
 
+    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
     private transformationMap = new Map<SVGElement, SvgTransformations>();
 
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb); // tslint:disable-line: variable-name
-
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
 
     elementClicked$ = this.elementClickedSource.asObservable();
-
-    renderer: Renderer2;
 
     drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
@@ -36,7 +34,9 @@ export class DrawingService {
     title = 'Sans titre';
     labels: string[] = [];
 
-    constructor(private commandService: CommandService) {}
+    constructor(private rendererFactory: RendererFactory2, private commandService: CommandService) {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
+    }
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
