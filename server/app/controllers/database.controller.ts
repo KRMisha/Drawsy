@@ -23,7 +23,7 @@ export class DatabaseController {
                 } catch (error) {
                     return next(error);
                 }
-            },
+            }
         );
 
         this.router.put(
@@ -35,7 +35,7 @@ export class DatabaseController {
                 } catch (error) {
                     return next(error);
                 }
-            },
+            }
         );
 
         this.router.delete(
@@ -47,7 +47,7 @@ export class DatabaseController {
                 } catch (error) {
                     return next(error);
                 }
-            },
+            }
         );
 
         this.router.get(
@@ -59,7 +59,7 @@ export class DatabaseController {
                 } catch (error) {
                     return next(error);
                 }
-            },
+            }
         );
     }
 }
