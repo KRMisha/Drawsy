@@ -19,7 +19,7 @@ describe('MoveElementsCommand', () => {
         expect(command).toBeTruthy();
     });
 
-    it('#undo should forward moveElementList calling to drawingService', () => {
+    it('#undo should forward moveElementList call to drawingService', () => {
         command.undo();
         const inverseMoveValue: Vec2 = { x: -moveValue.x, y: -moveValue.y };
         expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, inverseMoveValue);
