@@ -9,14 +9,12 @@ export class ColorPickerService {
     private valueChangedSource = new Subject<number>();
     private alphaChangedSource = new Subject<number>();
     private colorChangedSource = new Subject<Color>();
-    private colorSubmittedSource = new Subject();
 
     hueChanged$ = this.hueChangedSource.asObservable();
     saturationChanged$ = this.saturationChangedSource.asObservable();
     valueChanged$ = this.valueChangedSource.asObservable();
     alphaChanged$ = this.alphaChangedSource.asObservable();
     colorChanged$ = this.colorChangedSource.asObservable();
-    colorSubmitted$ = this.colorSubmittedSource.asObservable();
 
     color = new Color();
 
@@ -89,10 +87,6 @@ export class ColorPickerService {
         this.saturationChangedSource.next(this.saturation);
         this.valueChangedSource.next(this.value);
         this.alphaChangedSource.next(this.alpha);
-    }
-
-    onColorSubmit(): void {
-        this.colorSubmittedSource.next();
     }
 
     getColor(): Color {
