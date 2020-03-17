@@ -16,7 +16,7 @@ describe('AppendElementCommand', () => {
         expect(command).toBeTruthy();
     });
 
-    it('#undo should forward removeElement calling to drawingService', () => {
+    it('#undo should forward removeElement call to drawingService', () => {
         command.undo();
         expect(drawingService.removeElement).toHaveBeenCalledWith(element);
     });
