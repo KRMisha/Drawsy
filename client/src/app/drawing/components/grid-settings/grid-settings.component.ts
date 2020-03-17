@@ -63,7 +63,7 @@ export class GridSettingsComponent implements OnInit {
 
         this.opacitySubscription = this.opacityGroup.controls.opacity.valueChanges.subscribe(() => {
             if (this.opacityGroup.controls.opacity.valid) {
-                this.gridService.updateOpacity(this.opacityGroup.controls.opacity.value);
+                this.gridService.setOpacity(this.opacityGroup.controls.opacity.value);
             }
         });
     }
