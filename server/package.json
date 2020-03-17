@@ -1,15 +1,15 @@
 {
     "name": "server",
     "version": "1.1.0",
-    "private": true,
     "scripts": {
         "start": "nodemon",
-        "format": "prettier --config ../.prettierrc.yaml --write \"app/**/*\"",
-        "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish",
         "test": "mocha",
-        "coverage": "nyc mocha"
+        "coverage": "nyc --reporter=html --reporter=text mocha",
+        "format": "prettier --config ../.prettierrc.yaml --write \"app/**/*\"",
+        "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish"
     },
     "nyc": {
+        "extends": "@instanbuljs/nyc-config-typescript",
         "check-coverage": true,
         "per-file": true,
         "include": [
@@ -34,42 +34,40 @@
         "instrument": true
     },
     "dependencies": {
-        "cookie-parser": "1.4.4",
+        "cookie-parser": "^1.4.5",
         "cors": "2.8.5",
         "debug": "^4.1.1",
         "express": "~4.17.1",
         "helmet": "^3.21.3",
         "inversify": "^5.0.1",
         "jsdom": "^16.2.1",
-        "mongodb": "^3.4.1",
+        "mongodb": "^3.5.5",
         "morgan": "^1.9.1",
-        "reflect-metadata": "^0.1.10",
-        "serve-favicon": "~2.5.0"
+        "reflect-metadata": "^0.1.10"
     },
     "devDependencies": {
-        "@types/chai": "^4.2.7",
+        "@types/chai": "^4.2.11",
         "@types/cookie-parser": "1.4.2",
         "@types/cors": "2.8.6",
-        "@types/express": "4.17.1",
+        "@types/express": "^4.17.3",
         "@types/helmet": "0.0.45",
         "@types/jsdom": "^16.1.0",
-        "@types/mocha": "5.2.7",
-        "@types/mongodb": "^3.3.14",
-        "@types/morgan": "~1.7.35",
-        "@types/node": "^12.7.12",
-        "@types/sinon": "^7.5.1",
+        "@types/mocha": "^7.0.2",
+        "@types/mongodb": "^3.5.2",
+        "@types/morgan": "^1.9.0",
+        "@types/node": "^13.9.1",
+        "@types/sinon": "^7.5.2",
         "chai": "~4.2.0",
-        "mocha": "^6.2.2",
+        "mocha": "^7.1.0",
+        "mongodb-memory-server": "^6.3.3",
         "nodemon": "^2.0.2",
-        "nyc": "^14.1.1",
+        "nyc": "^15.0.0",
         "prettier": "^1.19.1",
-        "rimraf": "3.0.0",
-        "sinon": "7.5.0",
-        "ts-node": "^8.6.0",
-        "tslint": "~5.18.0",
+        "sinon": "^9.0.1",
+        "ts-node": "^8.6.2",
+        "tslint": "^6.1.0",
         "tslint-config-prettier": "^1.18.0",
-        "tslint-eslint-rules": "5.4.0",
-        "tslint-microsoft-contrib": "6.2.0",
-        "typescript": "~3.5.3"
+        "tslint-no-unused-expression-chai": "^0.1.4",
+        "typescript": "^3.8.3"
     }
 }
