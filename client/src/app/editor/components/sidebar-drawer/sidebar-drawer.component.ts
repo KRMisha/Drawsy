@@ -4,7 +4,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
@@ -125,34 +125,32 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     @Input()
     set selectedButtonIndex(index: number) {
-        if (this.toolSelectorService.hasSetting(ToolSetting.Size)) {
-            this.sizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.Size));
+        if (this.currentToolService.hasSetting(ToolSetting.Size)) {
+            this.sizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.Size));
         }
-        if (this.toolSelectorService.hasSetting(ToolSetting.StrokeSize)) {
-            this.strokeSizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.StrokeSize));
+        if (this.currentToolService.hasSetting(ToolSetting.StrokeSize)) {
+            this.strokeSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.StrokeSize));
         }
-        if (this.toolSelectorService.hasSetting(ToolSetting.EraserSize)) {
-            this.eraserSizeGroup.controls.size.setValue(this.toolSelectorService.getSetting(ToolSetting.EraserSize));
+        if (this.currentToolService.hasSetting(ToolSetting.EraserSize)) {
+            this.eraserSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.EraserSize));
         }
-        if (this.toolSelectorService.hasSetting(ToolSetting.JunctionSettings)) {
-            const junctionSize = (this.toolSelectorService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
+        if (this.currentToolService.hasSetting(ToolSetting.JunctionSettings)) {
+            const junctionSize = (this.currentToolService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
             this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
         }
-        if (this.toolSelectorService.hasSetting(ToolSetting.PolygonSideCount)) {
-            this.polygonSideCountGroup.controls.polygonSideCount.setValue(
-                this.toolSelectorService.getSetting(ToolSetting.PolygonSideCount),
-            );
+        if (this.currentToolService.hasSetting(ToolSetting.PolygonSideCount)) {
+            this.polygonSideCountGroup.controls.polygonSideCount.setValue(this.currentToolService.getSetting(ToolSetting.PolygonSideCount));
         }
-        if (this.toolSelectorService.hasSetting(ToolSetting.SpraySpeed)) {
-            this.spraySpeedGroup.controls.spraySpeed.setValue(this.toolSelectorService.getSetting(ToolSetting.SpraySpeed));
+        if (this.currentToolService.hasSetting(ToolSetting.SpraySpeed)) {
+            this.spraySpeedGroup.controls.spraySpeed.setValue(this.currentToolService.getSetting(ToolSetting.SpraySpeed));
         }
 
-        if (this.toolSelectorService.hasSetting(ToolSetting.SprayRadius)) {
-            this.sprayRadiusGroup.controls.sprayRadius.setValue(this.toolSelectorService.getSetting(ToolSetting.SprayRadius));
+        if (this.currentToolService.hasSetting(ToolSetting.SprayRadius)) {
+            this.sprayRadiusGroup.controls.sprayRadius.setValue(this.currentToolService.getSetting(ToolSetting.SprayRadius));
         }
     }
 
-    constructor(private toolSelectorService: ToolSelectorService, private commandService: CommandService) {}
+    constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
 
     ngOnInit(): void {
         this.sizeGroup.controls.size.setValue(ToolDefaults.defaultSize);
@@ -160,25 +158,25 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+                this.currentToolService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
             }
         });
 
         this.strokeSizeSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.strokeSizeGroup.controls.size.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
+                this.currentToolService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
             }
         });
 
         this.eraserSizeSubscription = this.eraserSizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.eraserSizeGroup.controls.size.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.EraserSize, this.eraserSizeGroup.controls.size.value);
+                this.currentToolService.setSetting(ToolSetting.EraserSize, this.eraserSizeGroup.controls.size.value);
             }
         });
 
         this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.JunctionSettings, {
+                this.currentToolService.setSetting(ToolSetting.JunctionSettings, {
                     hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
                     junctionSize: this.junctionSizeGroup.controls.junctionSize.value,
                 } as JunctionSettings);
@@ -187,7 +185,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
         this.polygonSideCountSubscription = this.polygonSideCountGroup.controls.polygonSideCount.valueChanges.subscribe(() => {
             if (this.polygonSideCountGroup.controls.polygonSideCount.valid) {
-                this.toolSelectorService.setSetting(
+                this.currentToolService.setSetting(
                     ToolSetting.PolygonSideCount,
                     this.polygonSideCountGroup.controls.polygonSideCount.value,
                 );
@@ -196,13 +194,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
         this.spraySpeedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
             if (this.spraySpeedGroup.controls.spraySpeed.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
+                this.currentToolService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
             }
         });
 
         this.sprayRadiusSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
             if (this.sprayRadiusGroup.controls.sprayRadius.valid) {
-                this.toolSelectorService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
+                this.currentToolService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
             }
         });
     }
@@ -218,11 +216,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     getToolName(): string {
-        return this.toolSelectorService.getToolName();
+        return this.currentToolService.getToolName();
     }
 
     getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | Texture {
-        return this.toolSelectorService.getSetting(setting);
+        return this.currentToolService.getSetting(setting);
     }
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | Texture): void {
@@ -233,11 +231,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.junctionSizeGroup.controls.junctionSize.disable();
             }
         }
-        this.toolSelectorService.setSetting(setting, value);
+        this.currentToolService.setSetting(setting, value);
     }
 
     hasSetting(setting: ToolSetting): boolean {
-        return this.toolSelectorService.hasSetting(setting);
+        return this.currentToolService.hasSetting(setting);
     }
 
     isUndoAvailable(): boolean {

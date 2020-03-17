@@ -5,7 +5,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
@@ -28,11 +28,11 @@ describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
     let drawingServiceMock: MockDrawingService;
-    let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
+    let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
 
     beforeEach(async(() => {
         drawingServiceMock = new MockDrawingService();
-        toolSelectorServiceSpyObj = jasmine.createSpyObj('ToolSelectorService', [
+        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [
             'setRenderer',
             'onMouseMove',
             'onMouseDown',
@@ -51,7 +51,7 @@ describe('DrawingComponent', () => {
             providers: [
                 { provide: Renderer2, useValue: {} as Renderer2 },
                 { provide: DrawingService, useValue: drawingServiceMock },
-                { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
+                { provide: currentToolServiceSpyObj, useValue: currentToolServiceSpyObj },
             ],
         }).compileComponents();
     }));
@@ -66,14 +66,6 @@ describe('DrawingComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("#ngOnInit should set DrawingService and ToolSelectorService's renderers", () => {
-        delete drawingServiceMock.renderer;
-        component['renderer'] = {} as Renderer2;
-        component.ngOnInit();
-        expect(drawingServiceMock.renderer).toEqual({} as Renderer2);
-        expect(toolSelectorServiceSpyObj.setRenderer).toHaveBeenCalledWith({} as Renderer2);
-    });
-
     it("#ngAfterViewInit should set DrawingService's rootElement and call reappendStoredElements", () => {
         delete drawingServiceMock.rootElement;
         spyOn(drawingServiceMock, 'reappendStoredElements').and.callThrough();
@@ -83,60 +75,60 @@ describe('DrawingComponent', () => {
         expect(drawingServiceMock.reappendStoredElements).toHaveBeenCalled();
     });
 
-    it('should forward HostListener events to the appropriate ToolSelectorService methods', () => {
+    it('should forward HostListener events to the appropriate CurrentToolService methods', () => {
         component.onMouseMove({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onMouseMove).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onMouseMove).toHaveBeenCalled();
 
         component.onMouseDown({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onMouseDown).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onMouseDown).toHaveBeenCalled();
 
         component.onMouseUp({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onMouseUp).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onMouseUp).toHaveBeenCalled();
 
         component.onMouseDoubleClick({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onMouseDoubleClick).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onMouseDoubleClick).toHaveBeenCalled();
 
         component.onKeyDown({} as KeyboardEvent);
-        expect(toolSelectorServiceSpyObj.onKeyDown).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onKeyDown).toHaveBeenCalled();
 
         component.onKeyUp({} as KeyboardEvent);
-        expect(toolSelectorServiceSpyObj.onKeyUp).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onKeyUp).toHaveBeenCalled();
 
         component.onEnter({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onEnter).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onEnter).toHaveBeenCalled();
 
         component.onLeave({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.onLeave).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.onLeave).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should call ToolSelectorService.setMouseDown with true if event button is a left click', () => {
+    it('#onMouseDown should call CurrentToolService.setMouseDown with true if event button is a left click', () => {
         component.onMouseDown({ button: ButtonId.Left } as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseDown).toHaveBeenCalledWith(true);
+        expect(currentToolServiceSpyObj.setMouseDown).toHaveBeenCalledWith(true);
     });
 
-    it('#onMouseDown should not call ToolSelectorService.setMouseDown if event button is not a left click', () => {
+    it('#onMouseDown should not call CurrentToolService.setMouseDown if event button is not a left click', () => {
         component.onMouseDown({ button: ButtonId.Right } as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp should call ToolSelectorService.setMouseDown with false if event button is a left click', () => {
+    it('#onMouseUp should call CurrentToolService.setMouseDown with false if event button is a left click', () => {
         component.onMouseUp({ button: ButtonId.Left } as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseDown).toHaveBeenCalledWith(false);
+        expect(currentToolServiceSpyObj.setMouseDown).toHaveBeenCalledWith(false);
     });
 
-    it('#onMouseUp should not call ToolSelectorService.setMouseDown if event button is not a left click', () => {
+    it('#onMouseUp should not call CurrentToolService.setMouseDown if event button is not a left click', () => {
         component.onMouseUp({ button: ButtonId.Right } as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
     });
 
-    it('#onEnter should call ToolSelectorService.setMouseInside with true', () => {
+    it('#onEnter should call CurrentToolService.setMouseInside with true', () => {
         component.onEnter({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseInside).toHaveBeenCalledWith(true);
+        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(true);
     });
 
-    it('#onLeave should call ToolSelectorService.setMouseInside with false', () => {
+    it('#onLeave should call CurrentToolService.setMouseInside with false', () => {
         component.onLeave({} as MouseEvent);
-        expect(toolSelectorServiceSpyObj.setMouseInside).toHaveBeenCalledWith(false);
+        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(false);
     });
 
     it('#getWidth should return the width from DrawingService', () => {
