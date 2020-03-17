@@ -37,7 +37,6 @@ export class SidebarComponent implements OnInit {
     // tslint:disable-next-line: cyclomatic-complexity
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             switch (event.key) {
                 // tslint:disable: no-magic-numbers

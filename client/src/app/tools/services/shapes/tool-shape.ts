@@ -70,7 +70,7 @@ export abstract class ToolShape extends Tool {
         if (event.button === ButtonId.Left && this.shape !== undefined) {
             const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
             const isValidRegular = isShapeRegular && (this.origin.x !== this.mousePosition.x || this.origin.y !== this.mousePosition.y);
-            const isValidNonRegular = !isShapeRegular && (this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y);
+            const isValidNonRegular = !isShapeRegular && this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y;
             if (isValidRegular || isValidNonRegular) {
                 this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
             } else {
@@ -98,16 +98,19 @@ export abstract class ToolShape extends Tool {
         const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
         this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
-        
-        const fillValue = this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly ? 'none' : this.colorService.getPrimaryColor().toRgbaString();
+
+        const fillValue =
+            this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly
+                ? 'none'
+                : this.colorService.getPrimaryColor().toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
-        
+
         if (this.toolSettings.get(ToolSetting.StrokeType) !== StrokeType.FillOnly) {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
         }
-        
-        this.renderer.setAttribute(shape, 'padding', `${this.toolSettings.get(ToolSetting.StrokeSize) as number / 2}`);
-        
+
+        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2}`);
+
         return shape;
     }
 
@@ -119,12 +122,15 @@ export abstract class ToolShape extends Tool {
         const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
         const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
-        
+
         const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
-            const dimensions: Vec2 = { x: Math.abs(this.mousePosition.x - this.origin.x), y: Math.abs(this.mousePosition.y - this.origin.y) };
+            const dimensions: Vec2 = {
+                x: Math.abs(this.mousePosition.x - this.origin.x),
+                y: Math.abs(this.mousePosition.y - this.origin.y),
+            };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
-            
+
             mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
             mousePositionCopy.y = this.origin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
         }

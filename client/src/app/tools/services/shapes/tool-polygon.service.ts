@@ -34,8 +34,8 @@ export class ToolPolygonService extends ToolShape {
         let angle = -Math.PI / 2;
         for (let i = 0; i < numSides; i++) {
             const point = {
-                x: (Math.cos(angle) * shapeArea.width / 2) * scale.x + shapeArea.x + shapeArea.width / 2,
-                y: (Math.sin(angle) * shapeArea.height / 2) * scale.y + shapeArea.y + shapeArea.height / 2,
+                x: ((Math.cos(angle) * shapeArea.width) / 2) * scale.x + shapeArea.x + shapeArea.width / 2,
+                y: ((Math.sin(angle) * shapeArea.height) / 2) * scale.y + shapeArea.y + shapeArea.height / 2,
             } as Vec2;
             points.push(point);
             angle += (2 * Math.PI) / numSides;
