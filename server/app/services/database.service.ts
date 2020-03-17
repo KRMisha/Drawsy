@@ -9,10 +9,11 @@ import { HttpException } from '../classes/http-exception';
 
 const connectionUrl = 'mongodb+srv://htmales:lLOKpwsJzmaoSitj@log2990-toreo.mongodb.net/test?retryWrites=true&w=majority';
 const databaseName = 'database';
-const collectionName = 'images';
+const collectionName = 'drawings';
 
 @injectable()
 export class DatabaseService {
+    private client: MongoClient;
     private collection: Collection<FileSchema>;
 
     constructor() {
@@ -26,8 +27,13 @@ export class DatabaseService {
                 throw error;
             }
 
+            this.client = client;
             this.collection = client.db(databaseName).collection(collectionName);
         });
+    }
+
+    async closeConnection(): Promise<void> {
+        await this.client.close();
     }
 
     async createFile(fileContent: string): Promise<string> {
