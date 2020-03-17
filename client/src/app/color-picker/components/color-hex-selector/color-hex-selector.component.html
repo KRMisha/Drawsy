@@ -1,4 +1,4 @@
-<form class="container" [formGroup]="hexSelectorGroup" (ngSubmit)="colorPickerService.onColorSubmit()">
+<form class="container" [formGroup]="hexSelectorGroup">
     <mat-form-field *ngIf="isCombinedHex" class="form-field">
         <mat-label>Hex # </mat-label>
         <input matInput formControlName="hexCombinedRgb" />

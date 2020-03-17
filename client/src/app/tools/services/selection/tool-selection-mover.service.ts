@@ -12,21 +12,21 @@ const controlPointSideSize = 10;
     providedIn: 'root',
 })
 export class ToolSelectionMoverService {
-    private arrowUpHeld = false;
-    private arrowDownHeld = false;
-    private arrowLeftHeld = false;
-    private arrowRightHeld = false;
+    totalSelectionMoveValue: Vec2 = { x: 0, y: 0 };
+
+    private isArrowUpHeld = false;
+    private isArrowDownHeld = false;
+    private isArrowLeftHeld = false;
+    private isArrowRightHeld = false;
 
     private movingIntervalId?: number;
     private movingTimeout?: number;
-
-    totalSelectionMoveValue: Vec2 = { x: 0, y: 0 };
 
     constructor(
         private drawingService: DrawingService,
         private svgUtilitiesService: SvgUtilityService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private commandService: CommandService,
+        private commandService: CommandService
     ) {}
 
     moveSelection(currentMousePos: Vec2, lastMousePos: Vec2): void {
@@ -47,7 +47,7 @@ export class ToolSelectionMoverService {
         this.setArrowStateFromEvent(event, true);
         if (
             !this.toolSelectionStateService.isMovingSelectionWithArrows &&
-            (this.arrowUpHeld || this.arrowDownHeld || this.arrowLeftHeld || this.arrowRightHeld)
+            (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld)
         ) {
             this.toolSelectionStateService.isMovingSelectionWithArrows = true;
             this.moveSelectionInArrowDirection();
@@ -63,7 +63,7 @@ export class ToolSelectionMoverService {
 
     onKeyUp(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, false);
-        if (!this.arrowDownHeld && !this.arrowUpHeld && !this.arrowLeftHeld && !this.arrowRightHeld) {
+        if (!this.isArrowDownHeld && !this.isArrowUpHeld && !this.isArrowLeftHeld && !this.isArrowRightHeld) {
             if (this.totalSelectionMoveValue.x !== 0 || this.totalSelectionMoveValue.y !== 0) {
                 this.addMoveCommand();
             }
@@ -99,11 +99,11 @@ export class ToolSelectionMoverService {
             for (let i = 0; i < positions.length; i++) {
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute(
                     'x',
-                    (positions[i].x - controlPointSideSize / 2).toString(),
+                    (positions[i].x - controlPointSideSize / 2).toString()
                 );
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute(
                     'y',
-                    (positions[i].y - controlPointSideSize / 2).toString(),
+                    (positions[i].y - controlPointSideSize / 2).toString()
                 );
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute('display', 'block');
             }
@@ -124,16 +124,16 @@ export class ToolSelectionMoverService {
     private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
         switch (event.key) {
             case 'ArrowUp':
-                this.arrowUpHeld = state;
+                this.isArrowUpHeld = state;
                 break;
             case 'ArrowDown':
-                this.arrowDownHeld = state;
+                this.isArrowDownHeld = state;
                 break;
             case 'ArrowLeft':
-                this.arrowLeftHeld = state;
+                this.isArrowLeftHeld = state;
                 break;
             case 'ArrowRight':
-                this.arrowRightHeld = state;
+                this.isArrowRightHeld = state;
                 break;
         }
     }
@@ -141,11 +141,11 @@ export class ToolSelectionMoverService {
     private moveSelectionInArrowDirection(): void {
         const moveDirection: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
-        if (this.arrowLeftHeld !== this.arrowRightHeld) {
-            moveDirection.x = this.arrowRightHeld ? moveDelta : -moveDelta;
+        if (this.isArrowLeftHeld !== this.isArrowRightHeld) {
+            moveDirection.x = this.isArrowRightHeld ? moveDelta : -moveDelta;
         }
-        if (this.arrowUpHeld !== this.arrowDownHeld) {
-            moveDirection.y = this.arrowDownHeld ? moveDelta : -moveDelta;
+        if (this.isArrowUpHeld !== this.isArrowDownHeld) {
+            moveDirection.y = this.isArrowDownHeld ? moveDelta : -moveDelta;
         }
 
         this.totalSelectionMoveValue.x += moveDirection.x;

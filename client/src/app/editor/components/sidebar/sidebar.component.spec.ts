@@ -11,7 +11,7 @@ import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.compone
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
-import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers
@@ -25,11 +25,11 @@ class MockModalService {
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
-    let toolSelectorServiceSpyObj: jasmine.SpyObj<ToolSelectorService>;
+    let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let mockModalService: MockModalService;
 
     beforeEach(async(() => {
-        toolSelectorServiceSpyObj = jasmine.createSpyObj({
+        currentToolServiceSpyObj = jasmine.createSpyObj({
             setSelectedTool: () => {},
         });
         mockModalService = new MockModalService();
@@ -37,7 +37,7 @@ describe('SidebarComponent', () => {
             declarations: [SidebarComponent],
             imports: [BrowserAnimationsModule, MatSidenavModule, MatIconModule, MatSliderModule, MatDialogModule],
             providers: [
-                { provide: ToolSelectorService, useValue: toolSelectorServiceSpyObj },
+                { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: ModalService, useValue: mockModalService },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -57,7 +57,7 @@ describe('SidebarComponent', () => {
     it('#ngOnInit should set the selected tool of injected tool selector service', () => {
         component.ngOnInit();
 
-        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalled();
     });
 
     it('#onKeyDown should set the selected tool in the tool selector if there are no modals shown and shortcuts are enabled', () => {
@@ -138,7 +138,7 @@ describe('SidebarComponent', () => {
         component.setSelectedTool(4);
         expect(component.drawer.open).not.toHaveBeenCalled();
         // Expect to have been called once because it will have been called in the ngOnInit
-        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalledTimes(1);
+        expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalledTimes(1);
     });
 
     it("#setSelectedTool should update its selected button and the tool selector's tool if index is in range", () => {
@@ -147,7 +147,7 @@ describe('SidebarComponent', () => {
 
         component.setSelectedTool(1);
         expect(component.drawer.open).toHaveBeenCalled();
-        expect(toolSelectorServiceSpyObj.setSelectedTool).toHaveBeenCalled();
+        expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalled();
     });
 
     it('#openGuideModal should forward the request to modal service', () => {

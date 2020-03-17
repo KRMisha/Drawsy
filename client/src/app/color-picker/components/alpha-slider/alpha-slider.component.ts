@@ -47,22 +47,6 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.colorChangedSubscription.unsubscribe();
     }
 
-    private draw(): void {
-        this.context.clearRect(0, 0, canvasWidth, canvasHeight);
-        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
-        horizontalGradient.addColorStop(0, `rgba(${this.color.red}, ${this.color.green}, ${this.color.blue}, 0)`);
-        horizontalGradient.addColorStop(1, this.color.toRgbString());
-        this.context.fillStyle = horizontalGradient;
-        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-        const circle = new Path2D();
-        circle.arc(this.mouseXPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
-        this.context.fill(circle);
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = 'white';
-        this.context.stroke(circle);
-    }
-
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
@@ -91,7 +75,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = true;
     }
 
-    update(event: MouseEvent): void {
+    private update(event: MouseEvent): void {
         if (!this.isMouseDown) {
             return;
         }
@@ -100,5 +84,21 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         const alpha = this.mouseXPosition / this.canvas.width;
         this.colorPickerService.alpha = alpha;
         this.draw();
+    }
+
+    private draw(): void {
+        this.context.clearRect(0, 0, canvasWidth, canvasHeight);
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
+        horizontalGradient.addColorStop(0, `rgba(${this.color.red}, ${this.color.green}, ${this.color.blue}, 0)`);
+        horizontalGradient.addColorStop(1, this.color.toRgbString());
+        this.context.fillStyle = horizontalGradient;
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        const circle = new Path2D();
+        circle.arc(this.mouseXPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
+        this.context.fill(circle);
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = 'white';
+        this.context.stroke(circle);
     }
 }

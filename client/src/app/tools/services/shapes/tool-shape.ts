@@ -1,3 +1,4 @@
+import { RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
@@ -9,7 +10,7 @@ import { GeometryService } from '@app/drawing/services/geometry.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import ToolDefaults from '@app/tools/enums/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
@@ -17,17 +18,21 @@ export abstract class ToolShape extends Tool {
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
+    private isShapeAlwaysRegular: boolean;
 
-    protected isShapeRegular = false;
-
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService, name: ToolName) {
-        super(drawingService, colorService, commandService, name);
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
+        name: ToolName,
+        isShapeAlwaysRegular: boolean
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, name);
+        this.isShapeAlwaysRegular = isShapeAlwaysRegular;
         this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
         this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
     }
-
-    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
-    protected abstract createNewShape(): SVGElement;
 
     onPrimaryColorChange(color: Color): void {
         if (this.shape !== undefined) {
@@ -50,9 +55,8 @@ export abstract class ToolShape extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseInside) {
+        if (Tool.isMouseInsideDrawing) {
             this.shape = this.createNewShape();
-            this.shape.setAttribute('shape-padding', ((this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2).toString());
             this.origin = this.getMousePosition(event);
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
@@ -61,7 +65,14 @@ export abstract class ToolShape extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         if (event.button === ButtonId.Left && this.shape !== undefined) {
-            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
+            const isValidRegular = isShapeRegular && (this.origin.x !== this.mousePosition.x || this.origin.y !== this.mousePosition.y);
+            const isValidNonRegular = !isShapeRegular && this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y;
+            if (isValidRegular || isValidNonRegular) {
+                this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            } else {
+                this.drawingService.removeElement(this.shape);
+            }
             this.shape = undefined;
         }
     }
@@ -80,23 +91,49 @@ export abstract class ToolShape extends Tool {
         }
     }
 
+    protected abstract getShapeString(): string;
+
+    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
+
+    private createNewShape(): SVGElement {
+        const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
+
+        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
+
+        const fillValue =
+            this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly
+                ? 'none'
+                : this.colorService.getPrimaryColor().toRgbaString();
+        this.renderer.setAttribute(shape, 'fill', fillValue);
+
+        if (this.toolSettings.get(ToolSetting.StrokeType) !== StrokeType.FillOnly) {
+            this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+        }
+
+        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2}`);
+
+        return shape;
+    }
+
     private updateShapeArea(): void {
         if (this.shape === undefined || !Tool.isMouseDown) {
             return;
         }
 
-        const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
-        const isCurrentMouseRightOfOrigin = mousePositionCopy.x >= this.origin.x;
-        const isCurrentMouseBelowOrigin = mousePositionCopy.y >= this.origin.y;
+        const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
+        const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
 
-        if (this.isShiftDown || this.isShapeRegular) {
-            const dimensions: Vec2 = { x: Math.abs(mousePositionCopy.x - this.origin.x), y: Math.abs(mousePositionCopy.y - this.origin.y) };
+        const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
+        if (this.isShiftDown || this.isShapeAlwaysRegular) {
+            const dimensions: Vec2 = {
+                x: Math.abs(this.mousePosition.x - this.origin.x),
+                y: Math.abs(this.mousePosition.y - this.origin.y),
+            };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
-            const deltaDimensions: Vec2 = { x: Math.abs(dimensions.x - desiredSideSize), y: Math.abs(dimensions.y - desiredSideSize) };
 
-            mousePositionCopy.x += isCurrentMouseRightOfOrigin ? deltaDimensions.x : -deltaDimensions.x;
-            mousePositionCopy.y += isCurrentMouseBelowOrigin ? deltaDimensions.y : -deltaDimensions.y;
+            mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
+            mousePositionCopy.y = this.origin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
         }
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);

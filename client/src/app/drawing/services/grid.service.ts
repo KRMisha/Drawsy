@@ -46,14 +46,14 @@ export class GridService {
         }
     }
 
+    setOpacity(gridOpacity: number): void {
+        this.gridOpacity = gridOpacity;
+        this.gridPatternElement.setAttribute('stroke-opacity', `${this.gridOpacity}`);
+    }
+
     private updateGridSize(): void {
         this.gridPathElement.setAttribute('d', `M ${this.gridSize} 0 L 0 0 0 ${this.gridSize}`);
         this.gridPatternElement.setAttribute('width', this.gridSize.toString());
         this.gridPatternElement.setAttribute('height', this.gridSize.toString());
-    }
-
-    updateOpacity(gridOpacity: number): void {
-        this.gridOpacity = gridOpacity;
-        this.gridPatternElement.setAttribute('stroke-opacity', `${this.gridOpacity}`);
     }
 }

@@ -17,7 +17,7 @@ export class DrawingSerializerService {
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
         private svgUtilitiesService: SvgUtilityService,
-        private rendererFactory: RendererFactory2,
+        private rendererFactory: RendererFactory2
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
@@ -30,6 +30,14 @@ export class DrawingSerializerService {
         const link = this.renderer.createElement('a');
         link.download = fileName + '.svg';
         link.href = window.URL.createObjectURL(blob);
+        link.click();
+    }
+
+    async exportDrawing(fileName: string, fileType: 'image/png' | 'image/jpeg'): Promise<void> {
+        const link = this.renderer.createElement('a');
+        link.download = fileName;
+        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        link.href = canvas.toDataURL(fileType);
         link.click();
     }
 
@@ -63,14 +71,6 @@ export class DrawingSerializerService {
         }
 
         return true;
-    }
-
-    async exportDrawing(fileName: string, fileType: string): Promise<void> {
-        const link = this.renderer.createElement('a');
-        link.download = fileName;
-        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
-        link.href = canvas.toDataURL(fileType);
-        link.click();
     }
 
     async importSvgDrawing(file: File): Promise<SvgFileContainer> {

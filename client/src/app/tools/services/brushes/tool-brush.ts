@@ -1,3 +1,4 @@
+import { RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
@@ -12,13 +13,19 @@ import { Tool } from '@app/tools/services/tool';
 export abstract class ToolBrush extends Tool {
     private path?: SVGPathElement;
 
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService, name: ToolName) {
-        super(drawingService, colorService, commandService, name);
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
+        name: ToolName
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, name);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (Tool.isMouseDown && Tool.isMouseInside) {
+        if (Tool.isMouseDown && Tool.isMouseInsideDrawing) {
             const mousePosition = this.getMousePosition(event);
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
@@ -26,7 +33,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (Tool.isMouseInside && event.button === ButtonId.Left) {
+        if (Tool.isMouseInsideDrawing && event.button === ButtonId.Left) {
             this.path = this.createNewPath();
 
             const mousePosition = this.getMousePosition(event);
@@ -55,7 +62,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onPrimaryColorChange(color: Color): void {
-        if (!Tool.isMouseInside || !Tool.isMouseDown) {
+        if (!Tool.isMouseInsideDrawing || !Tool.isMouseDown) {
             return;
         }
         this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
@@ -65,7 +72,7 @@ export abstract class ToolBrush extends Tool {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(path, 'shape-padding', ((this.toolSettings.get(ToolSetting.Size) as number) / 2).toString());
+        this.renderer.setAttribute(path, 'padding', ((this.toolSettings.get(ToolSetting.Size) as number) / 2).toString());
         this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');

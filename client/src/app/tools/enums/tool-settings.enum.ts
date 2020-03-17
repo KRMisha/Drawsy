@@ -11,8 +11,8 @@ export enum ToolSetting {
 }
 
 export enum Texture {
-    Blur = 1,
-    Graffiti,
+    Graffiti = 1,
+    Blur,
     Shadow,
     Matte,
     Fabric,

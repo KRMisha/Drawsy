@@ -5,7 +5,7 @@
 // import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 // import { Tool } from '@app/tools/services/tool';
 // import { ToolHolderService } from '@app/tools/services/tool-holder.service';
-// import { ToolSelectorService } from '@app/tools/services/tool-selector.service';
+// import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-magic-numbers
 
@@ -31,13 +31,13 @@
 // }
 // tslint:enable: max-classes-per-file
 
-describe('ToolSelectorService', () => {
-    // let service: ToolSelectorService;
+describe('CurrentToolService', () => {
+    // let service: CurrentToolService;
     // beforeEach(() => {
     //     TestBed.configureTestingModule({
     //         providers: [{ provide: ToolHolderService, useValue: new MockToolHolderService() }],
     //     });
-    //     service = TestBed.get(ToolSelectorService);
+    //     service = TestBed.get(CurrentToolService);
     //     service.selectedTool = new MockTool({} as DrawingService);
     // });
     // it('should be created', () => {
