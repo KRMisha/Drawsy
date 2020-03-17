@@ -9,7 +9,7 @@ import { GeometryService } from '@app/drawing/services/geometry.service';
     providedIn: 'root',
 })
 export class SvgUtilityService {
-    renderer: Renderer2;
+    private renderer: Renderer2;
 
     constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
