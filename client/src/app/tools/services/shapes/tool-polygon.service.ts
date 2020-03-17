@@ -17,7 +17,7 @@ export class ToolPolygonService extends ToolShape {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Polygon, true);
         this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);

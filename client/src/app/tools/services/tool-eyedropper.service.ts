@@ -18,7 +18,7 @@ export class ToolEyedropperService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilitiesService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eyedropper);
     }

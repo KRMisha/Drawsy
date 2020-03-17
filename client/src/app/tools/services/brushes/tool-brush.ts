@@ -18,7 +18,7 @@ export abstract class ToolBrush extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        name: ToolName,
+        name: ToolName
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
         this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);

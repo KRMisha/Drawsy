@@ -32,7 +32,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.max(maximumSize),
                 Validators.min(minimumSize),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -44,7 +44,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.max(maximumOpacity),
                 Validators.min(minimumOpacity),
                 Validators.pattern(precisionRegexPattern),
-            ]),
+            ])
         ),
     });
 

@@ -27,7 +27,7 @@ export class SidebarComponent implements OnInit {
     constructor(
         private currentToolService: CurrentToolService,
         private modalService: ModalService,
-        private commandService: CommandService,
+        private commandService: CommandService
     ) {}
 
     ngOnInit(): void {

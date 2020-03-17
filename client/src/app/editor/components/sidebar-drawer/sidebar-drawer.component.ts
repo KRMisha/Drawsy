@@ -47,7 +47,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumSize),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -59,7 +59,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumStrokeSize),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -71,7 +71,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumEraserSize),
                 Validators.min(minimumEraserSize),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -83,7 +83,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumJunctionSize),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -95,7 +95,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumPolygonSideCount),
                 Validators.min(minimumPolygonSideCount),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -107,7 +107,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumSpraySpeed),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -119,7 +119,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 Validators.max(maximumSprayRadius),
                 Validators.min(1),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -187,7 +187,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             if (this.polygonSideCountGroup.controls.polygonSideCount.valid) {
                 this.currentToolService.setSetting(
                     ToolSetting.PolygonSideCount,
-                    this.polygonSideCountGroup.controls.polygonSideCount.value,
+                    this.polygonSideCountGroup.controls.polygonSideCount.value
                 );
             }
         });

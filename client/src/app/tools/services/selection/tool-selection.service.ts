@@ -42,7 +42,7 @@ export class ToolSelectionService extends Tool {
         commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilitiesService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection);
     }
@@ -120,14 +120,14 @@ export class ToolSelectionService extends Tool {
                 if (this.currentMouseButtonDown === ButtonId.Left) {
                     this.toolSelectionStateService.selectedElements = this.svgUtilitiesService.getElementsUnderArea(
                         this.drawingService.svgElements,
-                        userSelectionRect,
+                        userSelectionRect
                     );
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
                 } else if (this.currentMouseButtonDown === ButtonId.Right) {
                     const selectedElementsCopy = Object.assign([], this.toolSelectionStateService.selectedElements);
                     const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
                         this.drawingService.svgElements,
-                        userSelectionRect,
+                        userSelectionRect
                     );
                     this.inverseObjectsSelection(currentSelectedElements, selectedElementsCopy);
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(selectedElementsCopy);
@@ -222,7 +222,7 @@ export class ToolSelectionService extends Tool {
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
             const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
                 this.drawingService.svgElements,
-                userSelectionRect,
+                userSelectionRect
             );
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {

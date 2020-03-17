@@ -38,7 +38,7 @@ export class ToolEraserService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilitiesService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
@@ -114,7 +114,7 @@ export class ToolEraserService extends Tool {
         this.timerId = undefined;
         const elementToConsider = this.svgUtilitiesService.getElementUnderAreaPixelPerfect(
             this.drawingService.svgElements,
-            this.eraserRect,
+            this.eraserRect
         );
 
         if (elementToConsider === undefined) {
@@ -170,7 +170,7 @@ export class ToolEraserService extends Tool {
         if (this.elementUnderCursorStrokeColor !== 'none') {
             const elementColor = this.getColorFromStr(this.elementUnderCursorStrokeColor);
             const distanceFromRed = Math.sqrt(
-                Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2),
+                Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2)
             );
             const maxDistanceFromRed = 50;
             if (distanceFromRed <= maxDistanceFromRed) {

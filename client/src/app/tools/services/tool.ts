@@ -22,7 +22,7 @@ export abstract class Tool {
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected commandService: CommandService,
-        name: ToolName,
+        name: ToolName
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
         this.name = name;

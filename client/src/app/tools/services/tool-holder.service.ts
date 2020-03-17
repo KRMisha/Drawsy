@@ -29,7 +29,7 @@ export class ToolHolderService {
         private tool8: ToolEyedropperService,
         private tool9: ToolRecolorService,
         private tool10: ToolSelectionService,
-        private tool11: ToolEraserService,
+        private tool11: ToolEraserService
     ) {
         this.tools = [
             this.tool1,

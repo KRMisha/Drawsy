@@ -25,7 +25,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
         height: new FormControl(
             window.innerHeight,
@@ -34,7 +34,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 

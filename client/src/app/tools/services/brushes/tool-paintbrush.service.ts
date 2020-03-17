@@ -15,7 +15,7 @@ export class ToolPaintbrushService extends ToolBrush {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Brush);
         this.toolSettings.set(ToolSetting.Texture, ToolDefaults.defaultTexture);

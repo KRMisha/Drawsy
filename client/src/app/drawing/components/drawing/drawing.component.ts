@@ -22,7 +22,7 @@ export class DrawingComponent implements AfterViewInit {
         private drawingService: DrawingService,
         private currentToolService: CurrentToolService,
         private gridService: GridService,
-        private modalService: ModalService,
+        private modalService: ModalService
     ) {}
 
     ngAfterViewInit(): void {

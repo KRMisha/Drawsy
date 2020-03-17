@@ -26,7 +26,7 @@ export class ToolSelectionMoverService {
         private drawingService: DrawingService,
         private svgUtilitiesService: SvgUtilityService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private commandService: CommandService,
+        private commandService: CommandService
     ) {}
 
     moveSelection(currentMousePos: Vec2, lastMousePos: Vec2): void {
@@ -99,11 +99,11 @@ export class ToolSelectionMoverService {
             for (let i = 0; i < positions.length; i++) {
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute(
                     'x',
-                    (positions[i].x - controlPointSideSize / 2).toString(),
+                    (positions[i].x - controlPointSideSize / 2).toString()
                 );
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute(
                     'y',
-                    (positions[i].y - controlPointSideSize / 2).toString(),
+                    (positions[i].y - controlPointSideSize / 2).toString()
                 );
                 this.toolSelectionStateService.svgControlPoints[i].setAttribute('display', 'block');
             }

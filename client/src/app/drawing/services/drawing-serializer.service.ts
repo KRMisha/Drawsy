@@ -17,7 +17,7 @@ export class DrawingSerializerService {
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
         private svgUtilitiesService: SvgUtilityService,
-        private rendererFactory: RendererFactory2,
+        private rendererFactory: RendererFactory2
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }

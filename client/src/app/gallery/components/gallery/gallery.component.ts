@@ -32,7 +32,7 @@ export class GalleryComponent implements OnInit {
         private router: Router,
         private drawingSerializerService: DrawingSerializerService,
         private serverService: ServerService,
-        private snackBar: MatSnackBar,
+        private snackBar: MatSnackBar
     ) {}
 
     ngOnInit(): void {
@@ -65,7 +65,7 @@ export class GalleryComponent implements OnInit {
         }
 
         return this.drawings.filter((drawing: SvgFileContainer) =>
-            drawing.labels.some((label: string) => this.searchLabels.includes(label)),
+            drawing.labels.some((label: string) => this.searchLabels.includes(label))
         );
     }
 

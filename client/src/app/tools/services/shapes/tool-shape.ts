@@ -26,7 +26,7 @@ export abstract class ToolShape extends Tool {
         colorService: ColorService,
         commandService: CommandService,
         name: ToolName,
-        isShapeAlwaysRegular: boolean,
+        isShapeAlwaysRegular: boolean
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
