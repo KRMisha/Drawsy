@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -24,7 +25,7 @@ import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide
 export interface GuideNode {
     name: string;
     children?: GuideNode[];
-    guide?: Type<any>; // tslint:disable-line: no-any
+    guide?: Type<GuideContent>;
 }
 
 export const guideData: GuideNode[] = [
