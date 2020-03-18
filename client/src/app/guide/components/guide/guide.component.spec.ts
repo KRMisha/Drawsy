@@ -8,6 +8,7 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { GuideService } from '@app/guide/services/guide.service';
 import { of } from 'rxjs';
+import { GuideContent } from '@app/guide/classes/guide-content';
 
 // tslint:disable: no-magic-numbers
 // tslint:disable: max-classes-per-file
@@ -31,8 +32,7 @@ class MockGuidePencilComponent {}
 // class MockGuidePaintbrushComponent {}
 
 describe('GuideComponent', () => {
-    // tslint:disable-next-line: no-any
-    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
+    const mockGuides: Type<GuideContent>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;

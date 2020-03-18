@@ -23,11 +23,10 @@ import { GuideRectangleComponent } from '@app/guide/components/guide-content/gui
 import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
+import { GuideContent } from '../classes/guide-content';
 // tslint:enable: max-line-length
 
-// Type<any> to prevent all components needing to inherit from a parent component
-// tslint:disable-next-line: no-any
-const guides: Type<any>[] = [
+const guides: Type<GuideContent>[] = [
     GuideWelcomeComponent,
     GuideSpraypaintComponent,
     GuidePencilComponent,
@@ -55,8 +54,7 @@ const guides: Type<any>[] = [
     providedIn: 'root',
 })
 export class GuideService {
-    // tslint:disable-next-line: no-any
-    getGuides(): Type<any>[] {
+    getGuides(): Type<GuideContent>[] {
         return guides;
     }
 }

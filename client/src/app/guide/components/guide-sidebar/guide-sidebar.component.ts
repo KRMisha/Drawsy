@@ -2,6 +2,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, EventEmitter, Input, Output, Type } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { guideData, GuideNode } from '@app/guide/classes/guide-node';
+import { GuideContent } from '@app/guide/classes/guide-content';
 
 @Component({
     selector: 'app-guide-sidebar',
@@ -12,7 +13,7 @@ export class GuideSidebarComponent {
     treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
     dataSource = new MatTreeNestedDataSource<GuideNode>();
 
-    @Output() selectGuide = new EventEmitter<Type<any>>(); // tslint:disable-line: no-any
+    @Output() selectGuide = new EventEmitter<Type<GuideContent>>();
     @Input() selectedComponentButton: string;
 
     constructor() {

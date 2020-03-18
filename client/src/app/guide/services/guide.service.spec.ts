@@ -25,11 +25,11 @@ import { GuideRectangleComponent } from '@app/guide/components/guide-content/gui
 import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
+import { GuideContent } from '../classes/guide-content';
 // tslint:enable: max-line-length
 
 describe('GuideService', () => {
-    // tslint:disable-next-line: no-any
-    const guides: Type<any>[] = [
+    const guides: Type<GuideContent>[] = [
         GuideWelcomeComponent,
         GuideSpraypaintComponent,
         GuidePencilComponent,
