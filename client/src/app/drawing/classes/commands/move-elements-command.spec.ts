@@ -19,15 +19,13 @@ describe('MoveElementsCommand', () => {
         expect(command).toBeTruthy();
     });
 
-    it('#undo should forward moveElementList calling to drawingService', () => {
-        spyOn(drawingService, 'moveElementList');
+    it('#undo should forward moveElementList call to drawingService', () => {
         command.undo();
         const inverseMoveValue: Vec2 = { x: -moveValue.x, y: -moveValue.y };
         expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, inverseMoveValue);
     });
 
-    it('#redo should forward moveElementList calling to drawingService', () => {
-        spyOn(drawingService, 'moveElementList');
+    it('#redo should forward moveElementList call to drawingService', () => {
         command.redo();
         expect(drawingService.moveElementList).toHaveBeenCalledWith(elements, moveValue);
     });

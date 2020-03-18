@@ -16,14 +16,12 @@ describe('AppendElementCommand', () => {
         expect(command).toBeTruthy();
     });
 
-    it('#undo should forward removeElement calling to drawingService', () => {
-        spyOn(drawingService, 'removeElement');
+    it('#undo should forward removeElement call to drawingService', () => {
         command.undo();
         expect(drawingService.removeElement).toHaveBeenCalledWith(element);
     });
 
-    it('#redo should forward addElement calling to drawingService', () => {
-        spyOn(drawingService, 'addElement');
+    it('#redo should forward addElement call to drawingService', () => {
         command.redo();
         expect(drawingService.addElement).toHaveBeenCalledWith(element);
     });
