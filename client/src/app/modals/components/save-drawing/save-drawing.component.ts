@@ -39,8 +39,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     constructor(private saveDrawingService: SaveDrawingService) {}
 
     ngOnInit(): void {
-        this.saveDrawingService.title = this.saveDrawingService.title;
-        this.saveDrawingService.labels = this.saveDrawingService.labels;
         this.titleSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
             if (this.saveDrawingGroup.controls.title.valid) {
                 this.saveDrawingService.title = this.saveDrawingGroup.controls.title.value;
@@ -83,10 +81,14 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         control.markAsDirty();
     }
 
+    onSubmit(): void {
+        this.saveDrawingService.saveDrawing();
+    }
+
     getLabelError(): string {
         return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
+            : this.saveDrawingGroup.controls.labels.hasError('maxLength')
             ? 'Longueur maximale 15 caractères'
             : '';
     }
@@ -94,17 +96,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     getTitleError(): string {
         return this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxlength')
+            : this.saveDrawingGroup.controls.title.hasError('maxLength')
             ? 'Longueur maximale 15 caractères'
             : this.saveDrawingGroup.controls.title.hasError('required')
             ? 'Titre obligatoire'
             : '';
-    }
-
-    saveOnServer(): void {
-        if (this.saveDrawingGroup.valid) {
-            this.saveDrawingService.saveDrawing();
-        }
     }
 
     get title(): string {
