@@ -11,11 +11,11 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements AfterViewInit {
-    @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
-    @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
-    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
-    @ViewChild('appGridPattern', { static: false }) private svgGridPattern: ElementRef<SVGPatternElement>;
-    @ViewChild('appGridPath', { static: false }) private svgGridPath: ElementRef<SVGPathElement>;
+    @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
+    @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
+    @ViewChild('appGridPattern') private svgGridPattern: ElementRef<SVGPatternElement>;
+    @ViewChild('appGridPath') private svgGridPath: ElementRef<SVGPathElement>;
     private areShortcutsEnabled = true;
 
     constructor(

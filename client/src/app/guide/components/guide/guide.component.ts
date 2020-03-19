@@ -15,8 +15,8 @@ export class GuideComponent implements OnInit, AfterViewInit {
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
     currentComponent: string;
-    @ViewChild('appSidebar', { static: false }) sidebar: GuideSidebarComponent;
-    @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
+    @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
+    @ViewChild(GuideDirective) guideHost: GuideDirective;
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
 

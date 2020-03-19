@@ -7,11 +7,11 @@ import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.ser
     styleUrls: ['./drawing-preview.component.scss'],
 })
 export class DrawingPreviewComponent implements AfterViewInit {
-    @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
-    @ViewChild('appTitle', { static: false }) private svgTitle: ElementRef<SVGTitleElement>;
-    @ViewChild('appDesc', { static: false }) private svgDesc: ElementRef<SVGDescElement>;
-    @ViewChild('appDefs', { static: false }) private svgDefs: ElementRef<SVGDefsElement>;
-    @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
+    @ViewChild('appTitle') private svgTitle: ElementRef<SVGTitleElement>;
+    @ViewChild('appDesc') private svgDesc: ElementRef<SVGDescElement>;
+    @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
+    @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
 
     constructor(private drawingPreviewService: DrawingPreviewService) {}
 

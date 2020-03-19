@@ -17,7 +17,7 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
-    @ViewChild('appDrawer', { static: false }) drawer: MatDrawer;
+    @ViewChild('appDrawer') drawer: MatDrawer;
 
     buttons: SidebarButton[] = sidebarButtons;
     selectedButton: SidebarButton = this.buttons[0];
