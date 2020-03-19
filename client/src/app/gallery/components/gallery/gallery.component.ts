@@ -18,6 +18,8 @@ const maxInputStringLength = 15;
     styleUrls: ['./gallery.component.scss'],
 })
 export class GalleryComponent implements OnInit {
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     drawings: SvgFileContainer[] = [];
     searchLabels: string[] = [];
     isLoaded = false;
@@ -25,8 +27,6 @@ export class GalleryComponent implements OnInit {
     galleryGroup = new FormGroup({
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(
         private router: Router,

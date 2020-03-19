@@ -17,6 +17,8 @@ const maxInputStringLength = 15;
 export class ExportDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     titleFormControlSubscription: Subscription;
 
     titleFormControl = new FormControl('Sans titre', [
@@ -24,8 +26,6 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
         Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
     ]);
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 

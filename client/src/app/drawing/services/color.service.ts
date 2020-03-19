@@ -25,7 +25,7 @@ export class ColorService {
     private primaryColor = defaultPrimaryColor;
     private secondaryColor = defaultSecondaryColor;
 
-    private lastColors: Color[] = defaultColors;
+    private previousColors: Color[] = defaultColors;
 
     private primaryColorChangedSource = new Subject<Color>();
     private secondaryColorChangedSource = new Subject<Color>();
@@ -53,8 +53,8 @@ export class ColorService {
         this.secondaryColorChangedSource.next(this.secondaryColor);
     }
 
-    getLastColors(): Color[] {
-        return this.lastColors;
+    getPreviousColors(): Color[] {
+        return this.previousColors;
     }
 
     getPrimaryColor(): Color {
@@ -67,13 +67,13 @@ export class ColorService {
 
     private addColor(color: Color): void {
         const isColorPresent = (element: Color) => color.getHex() === element.getHex();
-        const index = this.lastColors.findIndex(isColorPresent);
+        const index = this.previousColors.findIndex(isColorPresent);
 
         if (index === -1) {
-            this.lastColors.pop();
-            this.lastColors.unshift(color);
+            this.previousColors.pop();
+            this.previousColors.unshift(color);
         } else {
-            this.lastColors[index] = color;
+            this.previousColors[index] = color;
         }
     }
 }

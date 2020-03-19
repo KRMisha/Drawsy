@@ -23,6 +23,8 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     titleSubscription: Subscription;
 
     saveDrawingGroup = new FormGroup({
@@ -33,8 +35,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         ]),
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService, private snackBar: MatSnackBar) {
         this.saveDrawingGroup.controls.labels.setValue(this.labels);

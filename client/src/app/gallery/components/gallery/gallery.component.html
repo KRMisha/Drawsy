@@ -11,7 +11,7 @@
                     placeholder="Rercherche par étiquette (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
+                    matChipInputAddOnBlur="true"
                     (matChipInputTokenEnd)="addLabel($event)"
                 />
                 <mat-error *ngIf="galleryGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
@@ -33,7 +33,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <div class="drawing-chip-list">
-                    <mat-chip-list #chipList>
+                    <mat-chip-list>
                         <mat-chip *ngFor="let label of drawing.labels">
                             {{ label }}
                         </mat-chip>
