@@ -7,7 +7,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolShape } from './tool-shape';
+import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 
 @Injectable({
     providedIn: 'root',

@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { ServerService } from '@app/server/services/server.service';
-import { SavedFile } from '../../../../../../common/communication/saved-file';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
+import { SavedFile } from '@common/communication/saved-file';
+import { descRegex } from '@common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 
@@ -18,6 +18,8 @@ const maxInputStringLength = 15;
     styleUrls: ['./gallery.component.scss'],
 })
 export class GalleryComponent implements OnInit {
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     drawings: SvgFileContainer[] = [];
     searchLabels: string[] = [];
     isLoaded = false;
@@ -25,8 +27,6 @@ export class GalleryComponent implements OnInit {
     galleryGroup = new FormGroup({
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(
         private router: Router,

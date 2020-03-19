@@ -11,7 +11,7 @@
                     placeholder="Nouvelle étiquette (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
+                    matChipInputAddOnBlur="true"
                     (matChipInputTokenEnd)="addLabel($event)"
                 />
                 <mat-error *ngIf="saveDrawingGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
@@ -20,7 +20,7 @@
 
         <mat-form-field>
             <mat-label>Titre</mat-label>
-            <input matInput formControlName="titleForm" />
+            <input matInput formControlName="title" />
             <mat-error *ngIf="saveDrawingGroup.controls.title.invalid">{{ getTitleError() }}</mat-error>
         </mat-form-field>
 

@@ -1,4 +1,4 @@
-import { Command } from './command';
+import { Command } from '@app/drawing/classes/commands/command';
 
 export class RecolorCommand implements Command {
     constructor(

@@ -9,9 +9,9 @@ import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
+import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Tool } from '@app/tools/services/tool';
-import { ToolSelectionMoverService } from './tool-selection-mover.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
 
 const controlPointSideSize = 10;
 

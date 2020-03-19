@@ -6,9 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/services/server.service';
+import { NewFileId } from '@common/communication/new-file-id';
+import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
-import { NewFileId } from '../../../../../../common/communication/new-file-id';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 
@@ -23,6 +23,8 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     titleSubscription: Subscription;
 
     saveDrawingGroup = new FormGroup({
@@ -33,8 +35,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         ]),
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingPreviewService: DrawingPreviewService, private serverService: ServerService, private snackBar: MatSnackBar) {
         this.saveDrawingGroup.controls.labels.setValue(this.labels);

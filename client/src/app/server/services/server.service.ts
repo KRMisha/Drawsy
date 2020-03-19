@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NewFileContent } from '@common/communication/new-file-content';
+import { NewFileId } from '@common/communication/new-file-id';
+import { SavedFile } from '@common/communication/saved-file';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { NewFileContent } from '../../../../../common/communication/new-file-content';
-import { NewFileId } from '../../../../../common/communication/new-file-id';
-import { SavedFile } from '../../../../../common/communication/saved-file';
 
 const serverUrl = 'http://localhost:3000/api';
 const options = {

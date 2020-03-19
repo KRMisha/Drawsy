@@ -12,8 +12,8 @@ export class SidebarColorPickerComponent {
     color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     isColorPickerDisplayEnabled = false;
+    isPrimaryColorSelected = true;
 
-    private isPrimaryColorSelected = true;
     private isMouseInside = false;
 
     constructor(private colorService: ColorService) {}
@@ -77,6 +77,18 @@ export class SidebarColorPickerComponent {
         }
         this.color = Color.fromColor(color);
         this.isColorPickerDisplayEnabled = false;
+    }
+
+    get primaryColor(): string {
+        return this.colorService.getPrimaryColor().toRgbString();
+    }
+
+    get secondaryColor(): string {
+        return this.colorService.getSecondaryColor().toRgbString();
+    }
+
+    get previousColors(): Color[] {
+        return this.colorService.getPreviousColors();
     }
 
     private confirmColor(): void {

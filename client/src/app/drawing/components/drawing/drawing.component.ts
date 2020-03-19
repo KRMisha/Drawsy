@@ -11,11 +11,9 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements AfterViewInit {
-    @ViewChild('appDrawingRoot', { static: false }) private drawingRoot: ElementRef<SVGSVGElement>;
-    @ViewChild('appDrawingContent', { static: false }) private svgDrawingContent: ElementRef<SVGGElement>;
-    @ViewChild('appUserInterfaceContent', { static: false }) private svgUserInterfaceContent: ElementRef<SVGGElement>;
-    @ViewChild('appGridPattern', { static: false }) private svgGridPattern: ElementRef<SVGPatternElement>;
-    @ViewChild('appGridPath', { static: false }) private svgGridPath: ElementRef<SVGPathElement>;
+    @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
+    @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
     private areShortcutsEnabled = true;
 
     constructor(
@@ -30,7 +28,6 @@ export class DrawingComponent implements AfterViewInit {
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
-        this.gridService.setElementRoots(this.svgGridPattern.nativeElement, this.svgGridPath.nativeElement);
         this.drawingService.reappendStoredElements();
         this.currentToolService.afterDrawingInit();
     }
@@ -67,13 +64,13 @@ export class DrawingComponent implements AfterViewInit {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             switch (event.key) {
                 case 'g':
-                    this.gridService.toggleGrid();
+                    this.gridService.toggleDisplay();
                     break;
                 case '+':
-                    this.gridService.increaseGridSize();
+                    this.gridService.increaseSize();
                     break;
                 case '-':
-                    this.gridService.decreaseGridSize();
+                    this.gridService.decreaseSize();
                     break;
             }
         }
@@ -110,19 +107,31 @@ export class DrawingComponent implements AfterViewInit {
         this.currentToolService.onLeave(event);
     }
 
-    getWidth(): number {
+    get width(): number {
         return this.drawingService.dimensions.x;
     }
 
-    getHeight(): number {
+    get height(): number {
         return this.drawingService.dimensions.y;
     }
 
-    getViewBox(): string {
-        return `0 0 ${this.getWidth()} ${this.getHeight()}`;
+    get viewBox(): string {
+        return `0 0 ${this.width} ${this.height}`;
     }
 
-    getBackgroundColor(): string {
+    get isGridDisplayEnabled(): boolean {
+        return this.gridService.isDisplayEnabled;
+    }
+
+    get gridSize(): number {
+        return this.gridService.size;
+    }
+
+    get gridOpacity(): number {
+        return this.gridService.opacity;
+    }
+
+    get backgroundColor(): string {
         return this.drawingService.backgroundColor.toRgbaString();
     }
 }

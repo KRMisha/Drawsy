@@ -7,7 +7,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { Tool } from './tool';
+import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
     providedIn: 'root',

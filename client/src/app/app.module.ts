@@ -46,6 +46,7 @@ import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-colo
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
+import { SafeHtmlPipe } from '@app/gallery/pipes/safe-html.pipe';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -73,8 +74,7 @@ import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SafeHtmlPipe } from './gallery/pipes/safe-html.pipe';
-import { SaveDrawingComponent } from './modals/components/save-drawing/save-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 
 @NgModule({
     declarations: [
@@ -89,6 +89,7 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         EditorComponent,
         ExportDrawingComponent,
         GalleryComponent,
+        GridSettingsComponent,
         GuideCalligraphyComponent,
         GuideCalligraphyComponent,
         GuideColorComponent,
@@ -117,12 +118,11 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         HomeComponent,
         HueSliderComponent,
         NewDrawingComponent,
+        SafeHtmlPipe,
+        SaveDrawingComponent,
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
-        GridSettingsComponent,
-        SaveDrawingComponent,
-        SafeHtmlPipe,
     ],
     imports: [
         AppRoutingModule,
@@ -158,35 +158,6 @@ import { SaveDrawingComponent } from './modals/components/save-drawing/save-draw
         MatTooltipModule,
         MatTreeModule,
         ReactiveFormsModule,
-    ],
-    entryComponents: [
-        DrawingSettingsComponent,
-        ExportDrawingComponent,
-        GalleryComponent,
-        GuideCalligraphyComponent,
-        GuideColorComponent,
-        GuideColorPickerComponent,
-        GuideComponent,
-        GuideEllipseComponent,
-        GuideEraserComponent,
-        GuideExportDrawingComponent,
-        GuideFillComponent,
-        GuideGridComponent,
-        GuideLineComponent,
-        GuidePaintbrushComponent,
-        GuidePencilComponent,
-        GuidePolygonComponent,
-        GuideRecolorComponent,
-        GuideRectangleComponent,
-        GuideSaveDrawingComponent,
-        GuideSelectComponent,
-        GuideSnapToGridComponent,
-        GuideSpraypaintComponent,
-        GuideStampComponent,
-        GuideTextComponent,
-        GuideWelcomeComponent,
-        NewDrawingComponent,
-        SaveDrawingComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

@@ -22,7 +22,7 @@ describe('ModalService', () => {
         TestBed.configureTestingModule({
             providers: [{ provide: MatDialog, useValue: matDialogSpyObj }],
         });
-        service = TestBed.get(ModalService);
+        service = TestBed.inject(ModalService);
     });
 
     it('should be created', () => {
