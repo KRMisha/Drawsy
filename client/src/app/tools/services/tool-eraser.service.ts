@@ -38,7 +38,7 @@ export class ToolEraserService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        private svgUtilitiesService: SvgUtilityService
+        private svgUtilityService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser);
         this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
@@ -52,7 +52,7 @@ export class ToolEraserService extends Tool {
         this.drawingService.addUiElement(this.svgEraserElement);
 
         const borderColor = Color.fromRgb(235, 64, 52); // tslint:disable-line: no-magic-numbers
-        this.svgSelectedShapeRect = this.svgUtilitiesService.createDashedRectBorder(borderColor);
+        this.svgSelectedShapeRect = this.svgUtilityService.createDashedRectBorder(borderColor);
         this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
         this.drawingService.addUiElement(this.svgSelectedShapeRect);
     }
@@ -112,7 +112,7 @@ export class ToolEraserService extends Tool {
 
     private onMousePositionChange(mousePosition: Vec2): void {
         this.timerId = undefined;
-        const elementToConsider = this.svgUtilitiesService.getElementUnderAreaPixelPerfect(
+        const elementToConsider = this.svgUtilityService.getElementUnderAreaPixelPerfect(
             this.drawingService.svgElements,
             this.eraserRect
         );
@@ -155,7 +155,7 @@ export class ToolEraserService extends Tool {
     }
 
     private updateVisibleRect(element: SVGRectElement, rect: Rect): void {
-        this.svgUtilitiesService.updateSvgRectFromRect(element, rect);
+        this.svgUtilityService.updateSvgRectFromRect(element, rect);
         this.renderer.setAttribute(element, 'display', 'block');
     }
 
@@ -202,7 +202,7 @@ export class ToolEraserService extends Tool {
     }
 
     private displayRedRectAroundElement(element: SVGElement): void {
-        const rect = this.svgUtilitiesService.getElementBounds(element);
+        const rect = this.svgUtilityService.getElementBounds(element);
         this.updateVisibleRect(this.svgSelectedShapeRect, rect);
         this.renderer.setAttribute(this.svgElementUnderCursor, 'display', 'block');
     }
