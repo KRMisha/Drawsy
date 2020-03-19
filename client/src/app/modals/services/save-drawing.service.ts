@@ -52,7 +52,7 @@ export class SaveDrawingService {
             .subscribe(
                 (newFileId: NewFileId): void => {
                     this.drawingPreviewService.id = newFileId.id;
-                    this.snackBar.open(`Dessin sauvegardé : ${this.title}`, undefined, {
+                    this.snackBar.open('Dessin sauvegardé : ' + this.title, undefined, {
                         duration: 4000,
                     });
                 },
@@ -64,11 +64,12 @@ export class SaveDrawingService {
 
     private updateDrawing(): void {
         this.serverService
-            .updateDrawing(this.drawingPreviewService.id!, this.drawingPreviewService.drawingPreviewRoot.outerHTML) // tslint:disable-line: no-non-null-assertion
+            // tslint:disable-next-line: no-non-null-assertion
+            .updateDrawing(this.drawingPreviewService.id!, this.drawingPreviewService.drawingPreviewRoot.outerHTML)
             .pipe(catchError(this.updateDrawingErrorAlert()))
             .subscribe(
                 (): void => {
-                    this.snackBar.open(`Dessin mis à jour : ${this.title}`, undefined, {
+                    this.snackBar.open('Dessin mis à jour : ' + this.title, undefined, {
                         duration: 4000,
                     });
                 },

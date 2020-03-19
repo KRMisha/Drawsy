@@ -1,6 +1,3 @@
-// Disable max line length for long imports due to detailed nesting
-// tslint:disable: max-line-length
-
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

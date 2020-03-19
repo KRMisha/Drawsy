@@ -49,7 +49,7 @@ export class GalleryService {
 
     loadDrawing(selectedDrawing: SvgFileContainer): void {
         if (this.drawingSerializerService.loadSvgDrawing(selectedDrawing)) {
-            this.snackBar.open(`Dessin chargé : ${selectedDrawing.title}`, undefined, {
+            this.snackBar.open('Dessin chargé : ' + selectedDrawing.title, undefined, {
                 duration: 4000,
             });
             this.router.navigate(['/editor']);

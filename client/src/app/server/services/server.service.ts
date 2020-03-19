@@ -36,15 +36,11 @@ export class ServerService {
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService
-            .delete<void>(serverUrl + '/delete/' + fileId)
-            .pipe(catchError(this.handleError('delete/' + fileId)));
+        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.handleError('delete/' + fileId)));
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService
-            .get<SavedFile[]>(serverUrl + '/get-all')
-            .pipe(catchError(this.handleError('get-all')));
+        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.handleError('get-all')));
     }
 
     private handleError(request: string): (error: Error) => Observable<never> {

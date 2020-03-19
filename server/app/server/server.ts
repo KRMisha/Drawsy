@@ -38,11 +38,11 @@ export class Server {
         const bind: string = typeof this.port === 'string' ? `Pipe ${this.port}` : `Port ${this.port}`;
         switch (error.code) {
             case 'EACCES':
-                console.error(`${bind} requires elevated privileges`);
+                console.error(bind + ' requires elevated privileges');
                 process.exit(1);
                 break;
             case 'EADDRINUSE':
-                console.error(`${bind} is already in use`);
+                console.error(bind + ' is already in use');
                 process.exit(1);
                 break;
             default:
@@ -54,6 +54,6 @@ export class Server {
         const address = this.server.address();
         // tslint:disable-next-line: no-non-null-assertion
         const bind: string = typeof address === 'string' ? `pipe ${address}` : `port ${address!.port}`;
-        console.log(`Listening on ${bind}`);
+        console.log('Listening on ' + bind);
     }
 }
