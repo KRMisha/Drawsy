@@ -9,10 +9,8 @@ describe('ToolPolygonService', () => {
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', []);
         TestBed.configureTestingModule({
-           providers: [
-                { provide: DrawingService, useValue: drawingServiceSpyObj },
-            ],
-        });     
+            providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
+        });
         service = TestBed.get(ToolPolygonService);
     });
 

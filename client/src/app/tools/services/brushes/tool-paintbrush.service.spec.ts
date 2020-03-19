@@ -26,14 +26,12 @@ describe('ToolPaintbrushService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
 
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
-            'setAttribute',
-        ])
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: ({ addElement: (element: MockSvgElement) => {} } as unknown) as DrawingService },
                 { provide: ColorService, useValue: new MockColorService() },
-                { provide: Renderer2, useValue: renderer2SpyObj}
+                { provide: Renderer2, useValue: renderer2SpyObj },
             ],
         });
 
@@ -43,5 +41,4 @@ describe('ToolPaintbrushService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-
 });

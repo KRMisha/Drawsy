@@ -12,15 +12,10 @@ describe('DrawingService', () => {
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                {provide: Renderer2, useValue: rendererSpyObj},
-            ]
+            providers: [{ provide: Renderer2, useValue: rendererSpyObj }],
         });
         service = TestBed.get(DrawingService);
-        rendererSpyObj = jasmine.createSpyObj('renderer2', [
-            'appendChild',
-            'removeChild',
-        ]);
+        rendererSpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild']);
     });
 
     it('should be created', () => {

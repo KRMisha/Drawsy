@@ -15,7 +15,7 @@ class MockColor {
     toRgbaString = () => 'rgba(69, 69, 69, 1)';
 }
 
-class MockDrawingService{
+class MockDrawingService {
     renderer: Renderer2;
     rootElement: SVGElement;
     drawingDimensions: Vec2;
