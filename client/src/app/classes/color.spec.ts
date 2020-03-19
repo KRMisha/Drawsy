@@ -145,4 +145,11 @@ describe('Color', () => {
         color.alpha = 0.9;
         expect(color.toRgbaString()).toEqual('rgba(123, 124, 125, 0.9)');
     });
+
+    it('#fromRgbaString should forward appropriate color values to #fromRgba when receiving the expected template (red, green, blue, alpha) where red, green, blue, alpha are floats or integers', () => {
+        const rgbaString = '(123.0, 123.5, 123, 0.4)';
+        spyOn(Color, 'fromRgba');
+        Color.fromRgbaString(rgbaString);
+        expect(Color.fromRgba).toHaveBeenCalledWith(123.0, 123.5, 123, 0.4);
+    });
 });

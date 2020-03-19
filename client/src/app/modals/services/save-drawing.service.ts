@@ -37,7 +37,7 @@ export class SaveDrawingService {
     constructor(
         private drawingPreviewService: DrawingPreviewService,
         private serverService: ServerService,
-        private snackBar: MatSnackBar,
+        private snackBar: MatSnackBar
     ) {}
 
     saveDrawing(): void {
@@ -58,7 +58,7 @@ export class SaveDrawingService {
                 },
                 (error: Error): void => {
                     this.drawingPreviewService.id = undefined;
-                },
+                }
             );
     }
 
@@ -74,7 +74,7 @@ export class SaveDrawingService {
                 },
                 (error: Error): void => {
                     this.drawingPreviewService.id = undefined;
-                },
+                }
             );
     }
 
@@ -85,7 +85,6 @@ export class SaveDrawingService {
                 case HttpStatusCode.NotFound:
                     errorMessage = "Erreur: Le dessin à ajouter n'a pas été trouvé.";
                     break;
-
                 case HttpStatusCode.BadRequest:
                     errorMessage = 'Erreur: Requête invalide.';
                     break;
@@ -108,7 +107,6 @@ export class SaveDrawingService {
                 case HttpStatusCode.NotFound:
                     errorMessage = "Erreur: Le dessin à mettre à jour n'a pas été trouvé.";
                     break;
-
                 case HttpStatusCode.BadRequest:
                     errorMessage = 'Erreur: Requête invalide.';
                     break;

@@ -70,34 +70,6 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         this.valueChangedSubscription.unsubscribe();
     }
 
-    draw(): void {
-        const color = Color.fromHsv(this.colorPickerService.hue, 1, 1);
-        this.context.fillStyle = color.toRgbString();
-        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
-        horizontalGradient.addColorStop(0, ColorString.OpaqueWhite);
-        horizontalGradient.addColorStop(1, ColorString.TransparentWhite);
-        this.context.fillStyle = horizontalGradient;
-        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-        const verticalGradient = this.context.createLinearGradient(0, 0, 0, canvasHeight);
-        verticalGradient.addColorStop(0, ColorString.TransparentBlack);
-        verticalGradient.addColorStop(1, ColorString.OpaqueBlack);
-        this.context.fillStyle = verticalGradient;
-        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-        color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
-        const circle = new Path2D();
-        const radius = 10;
-        circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = color.toRgbString();
-        this.context.fill(circle);
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = ColorString.OpaqueWhite;
-        this.context.stroke(circle);
-    }
-
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
@@ -126,7 +98,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = true;
     }
 
-    updateColor(event: MouseEvent): void {
+    private updateColor(event: MouseEvent): void {
         if (!this.isMouseDown) {
             return;
         }
@@ -142,5 +114,33 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         this.colorPickerService.saturation = this.sliderPosition.x / canvasWidth;
         this.colorPickerService.value = 1.0 - this.sliderPosition.y / canvasHeight;
         this.draw();
+    }
+
+    private draw(): void {
+        const color = Color.fromHsv(this.colorPickerService.hue, 1, 1);
+        this.context.fillStyle = color.toRgbString();
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
+        horizontalGradient.addColorStop(0, ColorString.OpaqueWhite);
+        horizontalGradient.addColorStop(1, ColorString.TransparentWhite);
+        this.context.fillStyle = horizontalGradient;
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        const verticalGradient = this.context.createLinearGradient(0, 0, 0, canvasHeight);
+        verticalGradient.addColorStop(0, ColorString.TransparentBlack);
+        verticalGradient.addColorStop(1, ColorString.OpaqueBlack);
+        this.context.fillStyle = verticalGradient;
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
+        const circle = new Path2D();
+        const radius = 10;
+        circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
+        this.context.fillStyle = color.toRgbString();
+        this.context.fill(circle);
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = ColorString.OpaqueWhite;
+        this.context.stroke(circle);
     }
 }

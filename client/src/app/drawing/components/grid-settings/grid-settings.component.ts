@@ -32,7 +32,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.max(maximumSize),
                 Validators.min(minimumSize),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -44,7 +44,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.max(maximumOpacity),
                 Validators.min(minimumOpacity),
                 Validators.pattern(precisionRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -63,7 +63,7 @@ export class GridSettingsComponent implements OnInit {
 
         this.opacitySubscription = this.opacityGroup.controls.opacity.valueChanges.subscribe(() => {
             if (this.opacityGroup.controls.opacity.valid) {
-                this.gridService.updateOpacity(this.opacityGroup.controls.opacity.value);
+                this.gridService.setOpacity(this.opacityGroup.controls.opacity.value);
             }
         });
     }

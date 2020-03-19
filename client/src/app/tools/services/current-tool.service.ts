@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { ColorService } from '@app/drawing/services/color.service';
@@ -12,8 +12,7 @@ import { Subscription } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class ToolSelectorService implements OnDestroy {
-    renderer: Renderer2;
+export class CurrentToolService implements OnDestroy {
     selectedTool: Tool;
 
     private primaryColorSubscription: Subscription;
@@ -82,15 +81,8 @@ export class ToolSelectorService implements OnDestroy {
         Tool.isMouseDown = isMouseDown;
     }
 
-    setMouseInside(isMouseInside: boolean): void {
-        Tool.isMouseInside = isMouseInside;
-    }
-
-    setRenderer(renderer: Renderer2): void {
-        this.renderer = renderer;
-        for (const tool of this.toolHolderService.tools) {
-            tool.renderer = this.renderer;
-        }
+    setMouseInsideDrawing(isMouseInsideDrawing: boolean): void {
+        Tool.isMouseInsideDrawing = isMouseInsideDrawing;
     }
 
     setSelectedTool(toolIndex: number): void {

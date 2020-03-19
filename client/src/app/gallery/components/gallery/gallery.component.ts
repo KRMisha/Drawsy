@@ -67,7 +67,7 @@ export class GalleryComponent implements OnInit {
         }
 
         return this.drawings.filter((drawing: SvgFileContainer) =>
-            drawing.labels.some((label: string) => this.searchLabels.includes(label)),
+            drawing.labels.some((label: string) => this.searchLabels.includes(label))
         );
     }
 

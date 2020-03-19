@@ -22,7 +22,7 @@ export class GalleryService {
         private serverService: ServerService,
         private router: Router,
         private drawingSerializerService: DrawingSerializerService,
-        private snackBar: MatSnackBar,
+        private snackBar: MatSnackBar
     ) {}
 
     deleteDrawing(selectedDrawing: SvgFileContainer): void {
@@ -43,7 +43,7 @@ export class GalleryService {
                 },
                 (error: Error) => {
                     return;
-                },
+                }
             );
     }
 
@@ -76,7 +76,6 @@ export class GalleryService {
                 case HttpStatusCode.NotFound:
                     errorMessage = "Erreur: Les dessins n'ont pas été trouvés.";
                     break;
-
                 case HttpStatusCode.BadRequest:
                     errorMessage = 'Erreur: Requête invalide.';
                     break;
@@ -99,7 +98,6 @@ export class GalleryService {
                 case HttpStatusCode.NotFound:
                     errorMessage = "Erreur: Le dessin à supprimer n'a pas été trouvé.";
                     break;
-
                 case HttpStatusCode.BadRequest:
                     errorMessage = 'Erreur: Requête invalide.';
                     break;

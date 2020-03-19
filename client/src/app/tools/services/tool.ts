@@ -1,31 +1,34 @@
-import { Renderer2 } from '@angular/core';
+import { Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { ToolName } from '../enums/tool-name.enum';
 
 export abstract class Tool {
     static isMouseDown = false;
-    static isMouseInside = false;
+    static isMouseInsideDrawing = false;
 
     name: ToolName;
-    renderer: Renderer2;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
 
+    protected renderer: Renderer2;
+
     constructor(
+        private rendererFactory: RendererFactory2,
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected commandService: CommandService,
-        name: ToolName,
+        name: ToolName
     ) {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
         this.name = name;
     }
 
-    // Deactivate tslint for method stubs below because not all derived service classes
+    // Disable tslint for method stubs below because not all derived service classes
     // may need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
     afterDrawingInit(): void {}

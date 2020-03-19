@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -11,8 +11,13 @@ import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
     providedIn: 'root',
 })
 export class ToolPaintbrushService extends ToolBrush {
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolName.Brush);
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Brush);
         this.toolSettings.set(ToolSetting.Texture, ToolDefaults.defaultTexture);
     }
 

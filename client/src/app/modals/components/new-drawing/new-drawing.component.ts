@@ -25,7 +25,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
         height: new FormControl(
             window.innerHeight,
@@ -34,7 +34,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.min(1),
                 Validators.max(maximumDimension),
                 Validators.pattern(integerRegexPattern),
-            ]),
+            ])
         ),
     });
 
@@ -47,6 +47,14 @@ export class NewDrawingComponent implements OnInit {
         this.drawingGroup.controls.height.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event): void {
+        if (!this.wereDimensionsModified) {
+            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
+            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
+        }
     }
 
     onSubmit(): void {
@@ -77,13 +85,5 @@ export class NewDrawingComponent implements OnInit {
             : formControl.hasError('pattern')
             ? 'Nombre entier invalide'
             : '';
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize(event: Event): void {
-        if (!this.wereDimensionsModified) {
-            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
-            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
-        }
     }
 }

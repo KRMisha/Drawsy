@@ -1,53 +1,44 @@
-import { Injectable, Renderer2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Rect } from '@app/classes/rect';
 import { Vec2 } from '@app/classes/vec2';
-import { DrawingService } from './drawing.service';
-import { GeometryService } from './geometry.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { GeometryService } from '@app/drawing/services/geometry.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SvgUtilityService {
-    renderer: Renderer2;
-    drawingRoot: SVGSVGElement;
+    private renderer: Renderer2;
 
-    constructor(private drawingService: DrawingService) {}
-
-    getElementsUnderPoint(svgElements: SVGElement[], point: Vec2): SVGElement[] {
-        return this.getElementsUnderArea(svgElements, { x: point.x, y: point.y, width: 0, height: 0 });
+    constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    getElementsUnderArea(svgElements: SVGElement[], area: Rect): SVGElement[] {
-        return svgElements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
+    getElementsUnderPoint(elements: SVGElement[], point: Vec2): SVGElement[] {
+        return this.getElementsUnderArea(elements, { x: point.x, y: point.y, width: 0, height: 0 });
+    }
+
+    getElementsUnderArea(elements: SVGElement[], area: Rect): SVGElement[] {
+        return elements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
     // tslint:disable-next-line: cyclomatic-complexity
-    getElementUnderAreaPixelPerfect(svgElements: SVGElement[], area: Rect): SVGElement | undefined {
-        const drawingRect = this.drawingRoot.getBoundingClientRect() as DOMRect;
+    getElementUnderAreaPixelPerfect(elements: SVGElement[], area: Rect): SVGElement | undefined {
+        const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
         const elementIndices = new Map<SVGElement, number>();
         for (let i = 0; i < this.drawingService.svgElements.length; i++) {
             elementIndices.set(this.drawingService.svgElements[i], i);
         }
 
-        const availableElementsSet = new Set<SVGElement>(svgElements);
+        const availableElementsSet = new Set<SVGElement>(elements);
 
         let topMostElement: SVGElement | undefined;
         let topMostElementIndex = 0;
 
-        const samplingMap = this.getSampleArrayFromArea(area);
-
-        if (samplingMap === undefined) {
-            return;
-        }
-
-        for (let i = 0; i < samplingMap.length; i++) {
-            for (let j = 0; j < samplingMap[i].length; j++) {
-                if (!samplingMap[i][j]) {
-                    continue;
-                }
-
+        for (let i = 0; i < area.width; i++) {
+            for (let j = 0; j < area.height; j++) {
                 const x = drawingRect.x + area.x + i;
                 const y = drawingRect.y + area.y + j;
 
@@ -89,10 +80,10 @@ export class SvgUtilityService {
 
     getElementBounds(element: SVGElement): Rect {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
-        const drawingRootBounds = this.drawingRoot.getBoundingClientRect() as DOMRect;
+        const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const paddingString = element.getAttribute('shape-padding') as string;
-        const paddingValue = paddingString === null ? 0 : +paddingString;
+        const paddingString = element.getAttribute('padding') || undefined;
+        const paddingValue = paddingString === undefined ? 0 : +paddingString;
 
         return {
             x: svgElementBounds.x - drawingRootBounds.x - paddingValue,
@@ -131,19 +122,19 @@ export class SvgUtilityService {
         return svgRect;
     }
 
-    async getCanvasFromSvgRoot(root: SVGSVGElement): Promise<HTMLCanvasElement> {
+    async getCanvasFromSvgRoot(drawingRoot: SVGSVGElement): Promise<HTMLCanvasElement> {
         const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
-        this.renderer.setAttribute(canvas, 'width', root.viewBox.baseVal.width.toString());
-        this.renderer.setAttribute(canvas, 'height', root.viewBox.baseVal.height.toString());
+        this.renderer.setAttribute(canvas, 'width', drawingRoot.viewBox.baseVal.width.toString());
+        this.renderer.setAttribute(canvas, 'height', drawingRoot.viewBox.baseVal.height.toString());
 
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        const image = await this.getImageFromSvgRoot(root);
+        const image = await this.getImageFromSvgRoot(drawingRoot);
         context.drawImage(image, 0, 0);
         return canvas;
     }
 
-    private async getImageFromSvgRoot(root: SVGSVGElement): Promise<HTMLImageElement> {
-        const svg64 = btoa(root.outerHTML);
+    private async getImageFromSvgRoot(drawingRoot: SVGSVGElement): Promise<HTMLImageElement> {
+        const svg64 = btoa(drawingRoot.outerHTML);
         const image = new Image();
         return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
             image.onload = () => {
@@ -151,43 +142,5 @@ export class SvgUtilityService {
             };
             image.src = 'data:image/svg+xml;base64,' + svg64;
         });
-    }
-
-    private getSampleArrayFromArea(area: Rect): boolean[][] | undefined {
-        if (area.width === 0 || area.height === 0) {
-            return undefined;
-        }
-
-        const bitMap = new Array<boolean[]>(area.width);
-        // tslint:disable-next-line: variable-name
-        for (let i = 0; i < bitMap.length; i++) {
-            bitMap[i] = new Array<boolean>(area.height);
-        }
-
-        for (let i = 0; i < bitMap.length; i++) {
-            const colLenght = bitMap[i].length;
-            bitMap[i][0] = i % 2 === 0;
-            bitMap[i][colLenght - 1] = true;
-            if (i === 0 || i === bitMap.length - 1) {
-                for (let j = 0; j < bitMap[i].length; j += 2) {
-                    bitMap[i][j] = true;
-                }
-            }
-        }
-
-        const samplingRatio = 0.1;
-        const stepSize: Vec2 = {
-            x: Math.round(Math.max(1, area.width * samplingRatio)),
-            y: Math.round(Math.max(1, area.height * samplingRatio)),
-        };
-        const startIndexLoop: Vec2 = { x: Math.round((area.width % stepSize.x) / 2), y: Math.round((area.height % stepSize.y) / 2) };
-
-        for (let i = startIndexLoop.x; i < area.width; i += stepSize.x) {
-            for (let j = startIndexLoop.y; j < area.height; j += stepSize.y) {
-                bitMap[i][j] = true;
-            }
-        }
-
-        return bitMap;
     }
 }

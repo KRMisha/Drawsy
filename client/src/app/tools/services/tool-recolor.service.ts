@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
@@ -11,8 +11,13 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolRecolorService extends Tool {
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolName.Recolor);
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Recolor);
     }
 
     onElementClick(event: MouseEvent, element: SVGElement): void {

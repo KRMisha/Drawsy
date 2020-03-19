@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
@@ -11,8 +11,6 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from './tool';
 
-const oneSecondInMilliseconds = 1000;
-
 @Injectable({
     providedIn: 'root',
 })
@@ -20,15 +18,21 @@ export class ToolSprayCanService extends Tool {
     private groupElement?: SVGGElement;
     private mousePosition: Vec2;
     private interval: number;
-    constructor(drawingService: DrawingService, colorService: ColorService, commandService: CommandService) {
-        super(drawingService, colorService, commandService, ToolName.SprayCan);
+
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.SprayCan);
         this.toolSettings.set(ToolSetting.SprayRadius, ToolDefaults.defaultSprayRadius);
         this.toolSettings.set(ToolSetting.SpraySpeed, ToolDefaults.defaultSpraySpeed);
     }
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseDown && Tool.isMouseInside && this.groupElement) {
+        if (Tool.isMouseDown && Tool.isMouseInsideDrawing && this.groupElement) {
             window.clearInterval(this.interval);
             this.createSpray();
             this.createSprayInterval();
@@ -38,7 +42,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInside || event.button !== ButtonId.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== ButtonId.Left) {
             return;
         }
 
@@ -72,7 +76,7 @@ export class ToolSprayCanService extends Tool {
         const newCircle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(newCircle, 'cx', (this.mousePosition.x + randomOffset.x).toString());
         this.renderer.setAttribute(newCircle, 'cy', (this.mousePosition.y + randomOffset.y).toString());
-        this.renderer.setAttribute(newCircle, 'r', '1.5');
+        this.renderer.setAttribute(newCircle, 'r', '1');
         return newCircle;
     }
 
@@ -92,6 +96,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private createSprayInterval(): void {
+        const oneSecondInMilliseconds = 1000;
         this.interval = window.setInterval(() => {
             this.createSpray();
         }, oneSecondInMilliseconds / (this.toolSettings.get(ToolSetting.SpraySpeed) as number));

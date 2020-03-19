@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 import { ToolPolygonService } from './tool-polygon.service';
 
 describe('ToolPolygonService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+    let service: ToolPolygonService;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    beforeEach(() => {
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', []);
+        TestBed.configureTestingModule({
+            providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
+        });
+        service = TestBed.get(ToolPolygonService);
+    });
 
     it('should be created', () => {
-        const service: ToolPolygonService = TestBed.get(ToolPolygonService);
         expect(service).toBeTruthy();
     });
 });

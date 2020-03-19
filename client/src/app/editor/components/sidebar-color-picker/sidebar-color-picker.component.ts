@@ -9,30 +9,40 @@ import { ButtonId } from '@app/editor/enums/button-id.enum';
     styleUrls: ['./sidebar-color-picker.component.scss'],
 })
 export class SidebarColorPickerComponent {
-    // tslint:disable-next-line: variable-name
-    private _color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
-    set color(color: Color) {
-        this._color = color;
-    }
-    get color(): Color {
-        return this._color;
-    }
+    color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    private isPrimarySelected = true;
     isColorPickerDisplayEnabled = false;
 
+    private isPrimaryColorSelected = true;
     private isMouseInside = false;
 
     constructor(private colorService: ColorService) {}
 
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
+        this.isMouseInside = false;
+    }
+
+    @HostListener('mouseenter')
+    onMouseEnter(): void {
+        this.isMouseInside = true;
+    }
+
+    @HostListener('document:mousedown')
+    onMouseDown(): void {
+        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
+            this.confirmColor();
+        }
+    }
+
     selectPrimaryColor(): void {
-        this.isPrimarySelected = true;
+        this.isPrimaryColorSelected = true;
         this.isColorPickerDisplayEnabled = true;
         this.color = this.colorService.getPrimaryColor();
     }
 
     selectSecondaryColor(): void {
-        this.isPrimarySelected = false;
+        this.isPrimaryColorSelected = false;
         this.isColorPickerDisplayEnabled = true;
         this.color = this.colorService.getSecondaryColor();
     }
@@ -43,7 +53,7 @@ export class SidebarColorPickerComponent {
 
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
-        if (this.isPrimarySelected) {
+        if (this.isPrimaryColorSelected) {
             this.color = this.colorService.getPrimaryColor();
         } else {
             this.color = this.colorService.getSecondaryColor();
@@ -51,7 +61,7 @@ export class SidebarColorPickerComponent {
     }
 
     getSelectedColor(): Color {
-        if (this.isPrimarySelected) {
+        if (this.isPrimaryColorSelected) {
             return this.colorService.getPrimaryColor();
         }
         return this.colorService.getSecondaryColor();
@@ -70,28 +80,11 @@ export class SidebarColorPickerComponent {
     }
 
     private confirmColor(): void {
-        if (this.isPrimarySelected) {
+        if (this.isPrimaryColorSelected) {
             this.colorService.setPrimaryColor(this.color);
         } else {
             this.colorService.setSecondaryColor(this.color);
         }
         this.isColorPickerDisplayEnabled = false;
-    }
-
-    @HostListener('mouseleave')
-    onMouseLeave(): void {
-        this.isMouseInside = false;
-    }
-
-    @HostListener('mouseenter')
-    onMouseEnter(): void {
-        this.isMouseInside = true;
-    }
-
-    @HostListener('document:mousedown')
-    onMouseDown(): void {
-        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
-            this.confirmColor();
-        }
     }
 }
