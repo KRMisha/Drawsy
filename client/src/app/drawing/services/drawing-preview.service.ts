@@ -48,6 +48,13 @@ export class DrawingPreviewService {
         return this.drawingService.backgroundColor;
     }
 
+    get id(): string | undefined {
+        return this.drawingService.id;
+    }
+    set id(id: string | undefined) {
+        this.drawingService.id = id;
+    }
+
     get title(): string {
         return this.drawingService.title;
     }
@@ -60,12 +67,5 @@ export class DrawingPreviewService {
     }
     set labels(labels: string[]) {
         this.drawingService.labels = labels;
-    }
-
-    get id(): string | undefined {
-        return this.drawingService.id;
-    }
-    set id(id: string | undefined) {
-        this.drawingService.id = id;
     }
 }

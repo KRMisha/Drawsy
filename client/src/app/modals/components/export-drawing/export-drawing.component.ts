@@ -1,6 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { FileType } from '@app/drawing/enums/file-type.enum';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
@@ -15,7 +16,9 @@ const maxInputStringLength = 15;
     styleUrls: ['./export-drawing.component.scss'],
 })
 export class ExportDrawingComponent implements OnInit, OnDestroy {
-    PreviewFilter = PreviewFilter; // Make enum available to template
+    // Make enums available to template
+    PreviewFilter = PreviewFilter;
+    FileType = FileType;
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -41,24 +44,10 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
         this.titleFormControlSubscription.unsubscribe();
     }
 
-    exportDrawingAsSvg(): void {
+    exportDrawing(fileType: FileType): void {
         if (this.titleFormControl.valid) {
             this.drawingPreviewService.finalizePreview();
-            this.drawingSerializerService.exportDrawingAsSvg(this.drawingPreviewService.title);
-        }
-    }
-
-    exportDrawingAsPng(): void {
-        if (this.titleFormControl.valid) {
-            this.drawingPreviewService.finalizePreview();
-            this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.png', 'image/png');
-        }
-    }
-
-    exportDrawingAsJpeg(): void {
-        if (this.titleFormControl.valid) {
-            this.drawingPreviewService.finalizePreview();
-            this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title + '.jpeg', 'image/jpeg');
+            this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title, fileType);
         }
     }
 
