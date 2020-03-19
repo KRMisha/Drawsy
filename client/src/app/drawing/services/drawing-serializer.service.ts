@@ -5,7 +5,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { SavedFile } from '../../../../../common/communication/saved-file';
+import { SavedFile } from '@common/communication/saved-file';
 
 @Injectable({
     providedIn: 'root',
@@ -22,20 +22,20 @@ export class DrawingSerializerService {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    exportDrawingAsSvg(fileName: string): void {
+    exportDrawingAsSvg(filename: string): void {
         const xmlSerializer = new XMLSerializer();
         const content = xmlSerializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
         const blob = new Blob([content], { type: 'image/svg+xml' });
 
         const link = this.renderer.createElement('a');
-        link.download = fileName + '.svg';
+        link.download = filename + '.svg';
         link.href = window.URL.createObjectURL(blob);
         link.click();
     }
 
-    async exportDrawing(fileName: string, fileType: 'image/png' | 'image/jpeg'): Promise<void> {
+    async exportDrawing(filename: string, fileType: 'image/png' | 'image/jpeg'): Promise<void> {
         const link = this.renderer.createElement('a');
-        link.download = fileName;
+        link.download = filename;
         const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
         link.href = canvas.toDataURL(fileType);
         link.click();
@@ -61,8 +61,8 @@ export class DrawingSerializerService {
         }
 
         this.drawingService.id = svgFileContainer.id;
-        this.drawingService.labels = svgFileContainer.labels;
         this.drawingService.title = svgFileContainer.title;
+        this.drawingService.labels = svgFileContainer.labels;
 
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {

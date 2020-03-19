@@ -44,7 +44,7 @@ describe('DrawingSettingsComponent', () => {
         component.color = { red: 10, blue: 10, green: 20, alpha: 0.1 } as Color;
         component.confirmColor();
         expect(component.confirmColor).toHaveBeenCalled();
-        const drawingService = TestBed.get(DrawingService);
+        const drawingService = TestBed.inject(DrawingService);
         expect(drawingService.backgroundColor).toEqual({ red: 10, blue: 10, green: 20, alpha: 0.1 } as Color);
     });
 });

@@ -8,7 +8,7 @@ describe('ColorService', () => {
     let service: ColorService;
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.get(ColorService);
+        service = TestBed.inject(ColorService);
     });
 
     it('should be created', () => {
@@ -26,9 +26,9 @@ describe('ColorService', () => {
         service.setPrimaryColor(color1);
         service.setSecondaryColor(color2);
         service.setPrimaryColor(color3);
-        expect(service.getLastColors()[0]).toEqual(color2);
-        expect(service.getLastColors()[1]).toEqual(color1);
-        expect(service.getLastColors()[2]).toEqual(new Color());
+        expect(service.getPreviousColors()[0]).toEqual(color2);
+        expect(service.getPreviousColors()[1]).toEqual(color1);
+        expect(service.getPreviousColors()[2]).toEqual(new Color());
     });
 
     it('#swapPrimaryAndSecondaryColors should swap the primary and secondary color attribute', () => {

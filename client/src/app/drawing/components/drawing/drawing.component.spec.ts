@@ -12,26 +12,24 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
-class MockColor extends Color {
+class ColorMock {
     toRgbaString = () => 'rgba(69, 69, 69, 1)';
-}
-
-class MockDrawingService extends DrawingService {
-    renderer: Renderer2;
-    rootElement: SVGElement;
-    drawingDimensions: Vec2;
-    backgroundColor = new MockColor();
-    reappendStoredElements = () => {};
 }
 
 describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
-    let drawingServiceMock: MockDrawingService;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
 
     beforeEach(async(() => {
-        drawingServiceMock = new MockDrawingService();
+        drawingServiceSpyObj = jasmine.createSpyObj(
+            'DrawingService',
+            ['reappendStoredElements'],
+            ['renderer', 'drawingRoot', 'dimensions', 'backgroundColor']
+        );
+        drawingServiceSpyObj.backgroundColor = new ColorMock() as Color;
+
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [
             'setRenderer',
             'onMouseMove',
@@ -43,15 +41,15 @@ describe('DrawingComponent', () => {
             'onEnter',
             'onLeave',
             'setMouseDown',
-            'setMouseInside',
+            'setMouseInsideDrawing',
         ]);
 
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
                 { provide: Renderer2, useValue: {} as Renderer2 },
-                { provide: DrawingService, useValue: drawingServiceMock },
-                { provide: currentToolServiceSpyObj, useValue: currentToolServiceSpyObj },
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
             ],
         }).compileComponents();
     }));
@@ -67,12 +65,12 @@ describe('DrawingComponent', () => {
     });
 
     it("#ngAfterViewInit should set DrawingService's rootElement and call reappendStoredElements", () => {
-        delete drawingServiceMock.rootElement;
-        spyOn(drawingServiceMock, 'reappendStoredElements').and.callThrough();
+        delete drawingServiceSpyObj.drawingRoot;
+        spyOn(drawingServiceSpyObj, 'reappendStoredElements').and.callThrough();
 
         component.ngAfterViewInit();
-        // expect(drawingServiceMock.rootElement).toBe(component['svg'].nativeElement);
-        expect(drawingServiceMock.reappendStoredElements).toHaveBeenCalled();
+        // expect(drawingServiceMock.drawingRoot).toBe(component['svg'].nativeElement);
+        expect(drawingServiceSpyObj.reappendStoredElements).toHaveBeenCalled();
     });
 
     it('should forward HostListener events to the appropriate CurrentToolService methods', () => {
@@ -123,21 +121,21 @@ describe('DrawingComponent', () => {
 
     it('#onEnter should call CurrentToolService.setMouseInside with true', () => {
         component.onEnter({} as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(true);
+        expect(currentToolServiceSpyObj.setMouseInsideDrawing).toHaveBeenCalledWith(true);
     });
 
     it('#onLeave should call CurrentToolService.setMouseInside with false', () => {
         component.onLeave({} as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(false);
+        expect(currentToolServiceSpyObj.setMouseInsideDrawing).toHaveBeenCalledWith(false);
     });
 
     it('#getWidth should return the width from DrawingService', () => {
-        drawingServiceMock.drawingDimensions = { x: 1234, y: 2345 };
+        drawingServiceSpyObj.dimensions = { x: 1234, y: 2345 };
         expect(component.getWidth()).toEqual(1234);
     });
 
     it('#getHeight should return the height from DrawingService', () => {
-        drawingServiceMock.drawingDimensions = { x: 1234, y: 2345 };
+        drawingServiceSpyObj.dimensions = { x: 1234, y: 2345 };
         expect(component.getHeight()).toEqual(2345);
     });
 

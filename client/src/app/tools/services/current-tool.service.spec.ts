@@ -37,7 +37,7 @@ describe('CurrentToolService', () => {
     //     TestBed.configureTestingModule({
     //         providers: [{ provide: ToolHolderService, useValue: new MockToolHolderService() }],
     //     });
-    //     service = TestBed.get(CurrentToolService);
+    //     service = TestBed.inject(CurrentToolService);
     //     service.selectedTool = new MockTool({} as DrawingService);
     // });
     // it('should be created', () => {
@@ -80,7 +80,7 @@ describe('CurrentToolService', () => {
     //     expect(service.selectedTool.isMouseInside).toEqual(true);
     // }));
     // it("should set its internal renderer and all of the tool holder's tools renderers to the passed renderer", () => {
-    //     const toolHolderService = TestBed.get(ToolHolderService);
+    //     const toolHolderService = TestBed.inject(ToolHolderService);
     //     spyOn(service, 'setRenderer').and.callThrough();
     //     service.setRenderer({} as Renderer2);
     //     expect(service.setRenderer).toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('CurrentToolService', () => {
     //     expect(toolHolderService.tools[2].renderer).toEqual({} as Renderer2);
     // });
     // it('should set the internal selected tool', () => {
-    //     const toolHolderService = TestBed.get(ToolHolderService);
+    //     const toolHolderService = TestBed.inject(ToolHolderService);
     //     spyOn(service, 'setSelectedTool').and.callThrough();
     //     toolHolderService.tools[0] = {} as MockTool;
     //     service.selectedTool = new MockTool({} as DrawingService);

@@ -1,4 +1,4 @@
-import { RecolorCommand } from './recolor-command';
+import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 
 describe('RecolorCommand', () => {
     let svgElementSpyObj: jasmine.SpyObj<SVGElement>;

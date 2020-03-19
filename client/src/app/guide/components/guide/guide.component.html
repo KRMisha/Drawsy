@@ -1,6 +1,5 @@
 <div class="container">
     <app-guide-sidebar
-        cdkFocusInitial
         #appSidebar
         class="item-sidebar"
         (selectGuide)="selectGuide($event)"
@@ -10,7 +9,7 @@
         <mat-icon class="icon">close</mat-icon>
     </button>
     <div mat-dialog-content class="item-guide-content">
-        <ng-template appGuide></ng-template>
+        <ng-template appGuide cdkFocusInitial></ng-template>
     </div>
     <div mat-dialog-actions align="center" class="item-buttons">
         <div class="previous">

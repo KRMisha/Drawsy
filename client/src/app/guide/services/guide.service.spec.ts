@@ -4,6 +4,7 @@ import { GuideService } from '@app/guide/services/guide.service';
 
 // Disable max line length for long imports due to detailed nesting
 // tslint:disable: max-line-length
+import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -28,8 +29,7 @@ import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide
 // tslint:enable: max-line-length
 
 describe('GuideService', () => {
-    // tslint:disable-next-line: no-any
-    const guides: Type<any>[] = [
+    const guides: Type<GuideContent>[] = [
         GuideWelcomeComponent,
         GuideSpraypaintComponent,
         GuidePencilComponent,
@@ -57,7 +57,7 @@ describe('GuideService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.get(GuideService);
+        service = TestBed.inject(GuideService);
     });
 
     it('should be created', () => {

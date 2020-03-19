@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
-const widthMargin = 324;
+const sidebarWidth = 324;
 const maximumDimension = 10000;
 const integerRegexPattern = '^[0-9]*$';
 
@@ -19,7 +19,7 @@ export class NewDrawingComponent implements OnInit {
 
     drawingGroup = new FormGroup({
         width: new FormControl(
-            window.innerWidth - widthMargin,
+            window.innerWidth - sidebarWidth,
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
@@ -52,7 +52,7 @@ export class NewDrawingComponent implements OnInit {
     @HostListener('window:resize', ['$event'])
     onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
-            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - widthMargin, { emitEvent: false });
+            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - sidebarWidth, { emitEvent: false });
             this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
         }
     }
@@ -60,9 +60,6 @@ export class NewDrawingComponent implements OnInit {
     onSubmit(): void {
         const dimensions = { x: this.drawingGroup.controls.width.value, y: this.drawingGroup.controls.height.value };
         if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
-            this.drawingService.id = undefined;
-            this.drawingService.title = '';
-            this.drawingService.labels = [];
             this.router.navigate(['/editor']);
         }
     }

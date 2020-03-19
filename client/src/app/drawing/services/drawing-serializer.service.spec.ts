@@ -6,7 +6,7 @@ describe('DrawingSerializerService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: DrawingSerializerService = TestBed.get(DrawingSerializerService);
+        const service: DrawingSerializerService = TestBed.inject(DrawingSerializerService);
         expect(service).toBeTruthy();
     });
 });

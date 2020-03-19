@@ -1,7 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from '@app/app.module';
-import { environment } from './environments/environment';
+import { environment } from '@env/environment';
 
 if (environment.production) {
     enableProdMode();
@@ -9,4 +9,4 @@ if (environment.production) {
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
-    .catch((err: any) => console.error(err)); // tslint:disable-line: no-any
+    .catch((error: Error) => console.error(error));

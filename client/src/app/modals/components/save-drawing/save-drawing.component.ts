@@ -4,8 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
+import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 
@@ -20,6 +20,8 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     titleSubscription: Subscription;
 
     saveDrawingGroup = new FormGroup({
@@ -28,35 +30,13 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             Validators.pattern(descRegex),
             Validators.maxLength(maxInputStringLength),
         ]),
-        labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
+        labels: new FormControl(this.saveDrawingService.labels, [
+            Validators.pattern(descRegex),
+            Validators.maxLength(maxInputStringLength),
+        ]),
     });
 
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
-    get title(): string {
-        return this.saveDrawingService.title;
-    }
-    set title(title: string) {
-        this.saveDrawingService.title = title;
-    }
-
-    get labels(): string[] {
-        return this.saveDrawingService.labels;
-    }
-    set labels(labels: string[]) {
-        this.saveDrawingService.labels = labels;
-    }
-
-    get previewFilter(): PreviewFilter {
-        return this.saveDrawingService.previewFilter;
-    }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.saveDrawingService.previewFilter = previewFilter;
-    }
-
-    constructor(private saveDrawingService: SaveDrawingService) {
-        this.saveDrawingGroup.controls.labels.setValue(this.saveDrawingService.labels);
-    }
+    constructor(private saveDrawingService: SaveDrawingService) {}
 
     ngOnInit(): void {
         this.saveDrawingService.title = this.saveDrawingService.title;
@@ -125,5 +105,26 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         if (this.saveDrawingGroup.valid) {
             this.saveDrawingService.saveDrawing();
         }
+    }
+
+    get title(): string {
+        return this.saveDrawingService.title;
+    }
+    set title(title: string) {
+        this.saveDrawingService.title = title;
+    }
+
+    get labels(): string[] {
+        return this.saveDrawingService.labels;
+    }
+    set labels(labels: string[]) {
+        this.saveDrawingService.labels = labels;
+    }
+
+    get previewFilter(): PreviewFilter {
+        return this.saveDrawingService.previewFilter;
+    }
+    set previewFilter(previewFilter: PreviewFilter) {
+        this.saveDrawingService.previewFilter = previewFilter;
     }
 }

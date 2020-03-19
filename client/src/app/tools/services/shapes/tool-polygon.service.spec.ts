@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-
-import { ToolPolygonService } from './tool-polygon.service';
+import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
 
 describe('ToolPolygonService', () => {
     let service: ToolPolygonService;
@@ -11,7 +10,7 @@ describe('ToolPolygonService', () => {
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
         });
-        service = TestBed.get(ToolPolygonService);
+        service = TestBed.inject(ToolPolygonService);
     });
 
     it('should be created', () => {

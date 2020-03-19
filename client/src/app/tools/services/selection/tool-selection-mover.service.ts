@@ -4,7 +4,7 @@ import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 
 const controlPointSideSize = 10;
 

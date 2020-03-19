@@ -1,5 +1,5 @@
+import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { AppendElementCommand } from './append-element-command';
 
 describe('AppendElementCommand', () => {
     let command: AppendElementCommand;

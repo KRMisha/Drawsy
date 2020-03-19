@@ -14,13 +14,13 @@ describe('ColorPickerComponent', () => {
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
 
     beforeEach(async(() => {
-        const lastColorsMock: Color[] = [];
+        const previousColorsMock: Color[] = [];
         for (let i = 0; i < 10; i++) {
-            lastColorsMock.push(new Color());
+            previousColorsMock.push(new Color());
         }
         // tslint:disable: no-empty
         colorServiceSpyObj = jasmine.createSpyObj({
-            getLastColors: lastColorsMock,
+            getPreviousColors: previousColorsMock,
             setPrimaryColor: () => {},
             setSecondaryColor: () => {},
         });
@@ -78,9 +78,9 @@ describe('ColorPickerComponent', () => {
     //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
     // });
 
-    // it('#getLastColors should call #getLastColors of colorService', () => {
-    //     component.getLastColors();
-    //     expect(colorServiceSpyObj.getLastColors).toHaveBeenCalled();
+    // it('#getPreviousColors should call #getPreviousColors of colorService', () => {
+    //     component.getPreviousColors();
+    //     expect(colorServiceSpyObj.getPreviousColors).toHaveBeenCalled();
     // });
 
     // it("#oldColorClick should set colorService's primary color when using a left click", () => {

@@ -3,7 +3,7 @@
 // import { ColorService } from '@app/drawing/services/color.service';
 // import { DrawingService } from '@app/drawing/services/drawing.service';
 // import { ToolLineService } from '@app/tools/services/tool-line.service';
-// import { ToolSetting } from '../enums/tool-settings.enum';
+// import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
@@ -38,7 +38,7 @@ describe('ToolLineService', () => {
     //             { provide: ColorService, useValue: colorServiceSpyObj },
     //         ],
     //     });
-    //     service = TestBed.get(ToolLineService);
+    //     service = TestBed.inject(ToolLineService);
     //     service.renderer = {
     //         setAttribute: (element: MockSvgElement, name: string, value: string) => {},
     //         createElement: (name: string, namespace?: string) => new MockSvgElement(),

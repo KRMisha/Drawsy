@@ -36,7 +36,7 @@ describe('ToolRectangleService', () => {
     //             { provide: ColorService, useValue: colorServiceSpyObj },
     //         ],
     //     });
-    //     service = TestBed.get(ToolRectangleService);
+    //     service = TestBed.inject(ToolRectangleService);
     //     service.renderer = {
     //         setAttribute: (component: MockSvgElement, attributeName: string, attributeValue: string) => {},
     //         createElement: (a: string, b: string) => {

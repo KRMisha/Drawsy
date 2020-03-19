@@ -1,12 +1,13 @@
+import { HttpException } from '@app/classes/http-exception';
+import { DatabaseController } from '@app/controllers/database.controller';
+import Types from '@app/types';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
+import * as helmet from 'helmet';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
-import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
-import { HttpException } from '../classes/http-exception';
-import { DatabaseController } from '../controllers/database.controller';
-import Types from '../types';
 
 @injectable()
 export class Application {
@@ -24,6 +25,7 @@ export class Application {
         this.app.use(express.urlencoded({ limit: '16mb', extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
+        this.app.use(helmet());
     }
 
     private setupRoutes(): void {

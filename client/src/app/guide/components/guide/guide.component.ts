@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
+import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideService } from '@app/guide/services/guide.service';
@@ -9,13 +10,13 @@ import { GuideService } from '@app/guide/services/guide.service';
     styleUrls: ['./guide.component.scss'],
 })
 export class GuideComponent implements OnInit, AfterViewInit {
-    guides: Type<any>[]; // tslint:disable-line: no-any
+    guides: Type<GuideContent>[];
     selectedGuideIndex: number;
     hasPreviousGuide: boolean;
     hasNextGuide: boolean;
     currentComponent: string;
-    @ViewChild('appSidebar', { static: false }) sidebar: GuideSidebarComponent;
-    @ViewChild(GuideDirective, { static: false }) guideHost: GuideDirective;
+    @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
+    @ViewChild(GuideDirective) guideHost: GuideDirective;
 
     constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
 
@@ -31,8 +32,7 @@ export class GuideComponent implements OnInit, AfterViewInit {
         this.selectGuide(this.guides[this.selectedGuideIndex]);
     }
 
-    // tslint:disable-next-line: no-any
-    selectGuide(guide: Type<any>): void {
+    selectGuide(guide: Type<GuideContent>): void {
         const selectedGuideIndex = this.guides.indexOf(guide);
         if (selectedGuideIndex === -1) {
             return;

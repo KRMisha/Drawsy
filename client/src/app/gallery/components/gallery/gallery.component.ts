@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { GalleryService } from '@app/gallery/services/gallery.service';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
+import { descRegex } from '@common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 
@@ -14,6 +14,8 @@ const maxInputStringLength = 15;
     styleUrls: ['./gallery.component.scss'],
 })
 export class GalleryComponent implements OnInit {
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     drawings: SvgFileContainer[] = [];
     searchLabels: string[] = [];
     isLoaded = false;
@@ -21,8 +23,6 @@ export class GalleryComponent implements OnInit {
     galleryGroup = new FormGroup({
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
     });
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private galleryService: GalleryService) {}
 

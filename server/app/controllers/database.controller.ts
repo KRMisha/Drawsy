@@ -1,9 +1,9 @@
+import { DatabaseService } from '@app/services/database.service';
+import Types from '@app/types';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { NewFileId } from '@common/communication/new-file-id';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
-import { NewFileId } from '../../../common/communication/new-file-id';
-import { DatabaseService } from '../services/database.service';
-import Types from '../types';
 
 @injectable()
 export class DatabaseController {
@@ -51,7 +51,7 @@ export class DatabaseController {
         );
 
         this.router.get(
-            '/get_all',
+            '/get-all',
             async (req: Request, res: Response, next: NextFunction): Promise<void> => {
                 try {
                     const files = await this.databaseService.getFiles();

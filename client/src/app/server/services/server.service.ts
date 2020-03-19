@@ -1,12 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { NewFileContent } from '@common/communication/new-file-content';
+import { NewFileId } from '@common/communication/new-file-id';
+import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpStatusCode } from '../../../../../common/communication/http-status-code.enum';
-import { NewFileContent } from '../../../../../common/communication/new-file-content';
-import { NewFileId } from '../../../../../common/communication/new-file-id';
-import { SavedFile } from '../../../../../common/communication/saved-file';
 
 const serverUrl = 'http://localhost:3000/api';
 const options = {
@@ -36,13 +36,11 @@ export class ServerService {
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get_all').pipe(catchError(this.handleError('getAllDrawings')));
+        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.handleError('getAllDrawings')));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService
-            .delete<void>(serverUrl + '/delete/' + fileId)
-            .pipe(catchError(this.handleError('deleteDrawing' + fileId)));
+        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.handleError('deleteDrawing' + fileId)));
     }
 
     private handleError(request: string): (error: Error) => Observable<never> {

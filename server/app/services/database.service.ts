@@ -1,18 +1,19 @@
+import { FileSchema } from '@app/classes/file-schema';
+import { HttpException } from '@app/classes/http-exception';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { SavedFile } from '@common/communication/saved-file';
+import { descRegex } from '@common/validation/desc-regex';
 import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
-import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
-import { SavedFile } from '../../../common/communication/saved-file';
-import { descRegex } from '../../../common/validation/desc-regex';
-import { FileSchema } from '../classes/file-schema';
-import { HttpException } from '../classes/http-exception';
 
 const connectionUrl = 'mongodb+srv://htmales:lLOKpwsJzmaoSitj@log2990-toreo.mongodb.net/test?retryWrites=true&w=majority';
 const databaseName = 'database';
-const collectionName = 'images';
+const collectionName = 'drawings';
 
 @injectable()
 export class DatabaseService {
+    private client: MongoClient;
     private collection: Collection<FileSchema>;
 
     constructor() {
@@ -26,8 +27,13 @@ export class DatabaseService {
                 throw error;
             }
 
+            this.client = client;
             this.collection = client.db(databaseName).collection(collectionName);
         });
+    }
+
+    async disconnect(): Promise<void> {
+        await this.client.close();
     }
 
     async createFile(fileContent: string): Promise<string> {

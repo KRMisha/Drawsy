@@ -2,6 +2,7 @@ import { Injectable, Type } from '@angular/core';
 
 // Disable max line length for long imports due to detailed nesting
 // tslint:disable: max-line-length
+import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -25,9 +26,7 @@ import { GuideTextComponent } from '@app/guide/components/guide-content/guide-to
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
 // tslint:enable: max-line-length
 
-// Type<any> to prevent all components needing to inherit from a parent component
-// tslint:disable-next-line: no-any
-const guides: Type<any>[] = [
+const guides: Type<GuideContent>[] = [
     GuideWelcomeComponent,
     GuideSpraypaintComponent,
     GuidePencilComponent,
@@ -55,8 +54,7 @@ const guides: Type<any>[] = [
     providedIn: 'root',
 })
 export class GuideService {
-    // tslint:disable-next-line: no-any
-    getGuides(): Type<any>[] {
+    getGuides(): Type<GuideContent>[] {
         return guides;
     }
 }

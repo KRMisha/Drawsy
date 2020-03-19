@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { GuideContent } from '@app/guide/classes/guide-content';
 
 @Component({
     selector: 'app-guide-color',
     templateUrl: './guide-color.component.html',
     styleUrls: ['./guide-color.component.scss'],
 })
-export class GuideColorComponent {}
+export class GuideColorComponent implements GuideContent {}

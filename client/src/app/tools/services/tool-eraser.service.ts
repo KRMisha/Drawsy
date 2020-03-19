@@ -8,10 +8,10 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import ToolDefaults from '@app/tools/enums/tool-defaults';
+import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
-import { Tool } from './tool';
+import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
     providedIn: 'root',

@@ -1,59 +1,49 @@
 import { Injectable } from '@angular/core';
 
-const maximumSize = 1000;
-const minimumSize = 10;
 const gridSizeVariation = 5;
 
 @Injectable({
     providedIn: 'root',
 })
 export class GridService {
-    gridSize = 100;
-    gridOpacity = 1;
-    isDisplayed = false;
-    private gridPatternElement: SVGPatternElement;
-    private gridPathElement: SVGPathElement;
+    readonly minimumSize = 10;
+    readonly maximumSize = 1000;
+    readonly minimumOpacity = 0.1;
+    readonly maximumOpacity = 1;
 
-    setElementRoots(patternRoot: SVGPatternElement, pathRoot: SVGPathElement): void {
-        this.gridPatternElement = patternRoot;
-        this.gridPathElement = pathRoot;
+    private _isDisplayEnabled = false; // tslint:disable-line: variable-name
+    private _size = 100; // tslint:disable-line: variable-name
+    private _opacity = 1; // tslint:disable-line: variable-name
+
+    get isDisplayEnabled(): boolean {
+        return this._isDisplayEnabled;
     }
 
-    toggleGrid(): void {
-        this.isDisplayed = !this.isDisplayed;
-        const visibility = this.isDisplayed ? 'visible' : 'hidden';
-        this.gridPathElement.setAttribute('visibility', visibility);
+    toggleDisplay(): void {
+        this._isDisplayEnabled = !this._isDisplayEnabled;
     }
 
-    setGridSize(gridSize: number): void {
-        this.gridSize = gridSize;
-        this.updateGridSize();
+    get size(): number {
+        return this._size;
     }
 
-    increaseGridSize(): void {
-        if (Math.floor(this.gridSize) + gridSizeVariation <= maximumSize) {
-            const sizeModulo = this.gridSize % gridSizeVariation;
-            this.gridSize = Math.floor(this.gridSize) + gridSizeVariation - sizeModulo;
-            this.updateGridSize();
-        }
+    set size(size: number) {
+        this._size = Math.min(Math.max(size, this.minimumSize), this.maximumSize);
     }
 
-    decreaseGridSize(): void {
-        if (this.gridSize - gridSizeVariation >= minimumSize) {
-            const sizeModulo = this.gridSize % gridSizeVariation;
-            sizeModulo === 0 ? (this.gridSize -= gridSizeVariation) : (this.gridSize -= sizeModulo);
-            this.updateGridSize();
-        }
+    increaseSize(): void {
+        this.size = Math.min(Math.floor((this.size + gridSizeVariation) / gridSizeVariation) * gridSizeVariation, this.maximumSize);
     }
 
-    setOpacity(gridOpacity: number): void {
-        this.gridOpacity = gridOpacity;
-        this.gridPatternElement.setAttribute('stroke-opacity', `${this.gridOpacity}`);
+    decreaseSize(): void {
+        this.size = Math.max(Math.ceil((this.size - gridSizeVariation) / gridSizeVariation) * gridSizeVariation, this.minimumSize);
     }
 
-    private updateGridSize(): void {
-        this.gridPathElement.setAttribute('d', `M ${this.gridSize} 0 L 0 0 0 ${this.gridSize}`);
-        this.gridPatternElement.setAttribute('width', this.gridSize.toString());
-        this.gridPatternElement.setAttribute('height', this.gridSize.toString());
+    get opacity(): number {
+        return this._opacity;
+    }
+
+    set opacity(size: number) {
+        this._opacity = Math.min(Math.max(size, this.minimumOpacity), this.maximumOpacity);
     }
 }

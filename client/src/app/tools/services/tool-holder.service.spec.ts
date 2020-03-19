@@ -18,7 +18,7 @@ describe('ToolHolderService', () => {
     });
 
     it('should be created', () => {
-        const service: ToolHolderService = TestBed.get(ToolHolderService);
+        const service: ToolHolderService = TestBed.inject(ToolHolderService);
         expect(service).toBeTruthy();
     });
 });

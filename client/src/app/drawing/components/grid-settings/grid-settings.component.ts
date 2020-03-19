@@ -3,13 +3,8 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { GridService } from '@app/drawing/services/grid.service';
 import { Subscription } from 'rxjs';
 
-const maximumSize = 1000;
-const minimumSize = 10;
-const maximumOpacity = 1;
-const minimumOpacity = 0.1;
 const integerRegexPattern = '^[0-9]*$';
 const precisionRegexPattern = '^[0-9.]*$';
-const sliderRange = 100;
 
 @Component({
     selector: 'app-grid-settings',
@@ -17,10 +12,8 @@ const sliderRange = 100;
     styleUrls: ['./grid-settings.component.scss'],
 })
 export class GridSettingsComponent implements OnInit {
-    // Make constant available to template
-    sliderRange = sliderRange;
+    readonly sliderRange = 100;
 
-    icon = 'grid_off';
     sizeSubscription: Subscription;
     opacitySubscription: Subscription;
 
@@ -29,8 +22,8 @@ export class GridSettingsComponent implements OnInit {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumSize),
-                Validators.min(minimumSize),
+                Validators.min(this.gridService.minimumSize),
+                Validators.max(this.gridService.maximumSize),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -41,8 +34,8 @@ export class GridSettingsComponent implements OnInit {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumOpacity),
-                Validators.min(minimumOpacity),
+                Validators.min(this.gridService.minimumOpacity),
+                Validators.max(this.gridService.maximumOpacity),
                 Validators.pattern(precisionRegexPattern),
             ])
         ),
@@ -51,25 +44,44 @@ export class GridSettingsComponent implements OnInit {
     constructor(private gridService: GridService) {}
 
     ngOnInit(): void {
-        this.selectIcon();
-        this.sizeGroup.controls.size.setValue(this.gridService.gridSize);
-        this.opacityGroup.controls.opacity.setValue(this.gridService.gridOpacity);
+        this.sizeGroup.controls.size.setValue(this.gridService.size);
+        this.opacityGroup.controls.opacity.setValue(this.gridService.opacity);
 
         this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
-                this.gridService.setGridSize(this.sizeGroup.controls.size.value);
+                this.gridService.size = this.sizeGroup.controls.size.value;
             }
         });
 
         this.opacitySubscription = this.opacityGroup.controls.opacity.valueChanges.subscribe(() => {
             if (this.opacityGroup.controls.opacity.valid) {
-                this.gridService.setOpacity(this.opacityGroup.controls.opacity.value);
+                this.gridService.opacity = this.opacityGroup.controls.opacity.value;
             }
         });
     }
 
-    selectIcon(): void {
-        this.gridService.isDisplayed ? (this.icon = 'grid_off') : (this.icon = 'grid_on');
+    get isGridDisplayEnabled(): boolean {
+        return this.gridService.isDisplayEnabled;
+    }
+
+    toggleGridDisplay(): void {
+        this.gridService.toggleDisplay();
+    }
+
+    get gridSize(): number {
+        return this.gridService.size;
+    }
+
+    set gridSize(gridSize: number) {
+        this.gridService.size = gridSize;
+    }
+
+    increaseGridSize(): void {
+        this.gridService.increaseSize();
+    }
+
+    decreaseGridSize(): void {
+        this.gridService.decreaseSize();
     }
 
     getSizeErrorMessage(): string {

@@ -4,8 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 
@@ -17,15 +17,15 @@ const maxInputStringLength = 15;
 export class ExportDrawingComponent implements OnInit, OnDestroy {
     PreviewFilter = PreviewFilter; // Make enum available to template
 
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
     titleFormControlSubscription: Subscription;
 
-    titleFormControl = new FormControl('Sans titre', [
+    titleFormControl = new FormControl(this.drawingPreviewService.title, [
         Validators.required,
         Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
     ]);
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 
