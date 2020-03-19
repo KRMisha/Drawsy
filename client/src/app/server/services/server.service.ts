@@ -41,7 +41,7 @@ export class ServerService {
 
     deleteDrawing(fileId: string): Observable<void> {
         return this.httpService
-            .delete<void>(serverUrl + '/delete/pipi' + fileId)
+            .delete<void>(serverUrl + '/delete/' + fileId)
             .pipe(catchError(this.handleError('deleteDrawing' + fileId)));
     }
 
