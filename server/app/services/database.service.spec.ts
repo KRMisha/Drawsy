@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { MongoCallback, MongoClient, MongoClientOptions, ObjectId } from 'mongodb';
+import { MongoCallback, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
 import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
@@ -32,20 +32,13 @@ describe('DatabaseService', () => {
             sinon
                 .stub(MongoClient, 'connect')
                 .callsFake((uri: string, options: MongoClientOptions, callback: MongoCallback<MongoClient>): void => {
-                    originalConnectFunction(inMemoryServerUrl, options, callback);
+                    originalConnectFunction(inMemoryServerUrl, options, (error: MongoError, client: MongoClient) => {
+                        callback(error, client);
+                        done();
+                    });
                 });
 
             databaseService = container.get<DatabaseService>(Types.DatabaseService);
-
-            const waitUntilServerIsConnected = () => {
-                if (databaseService['client'] !== undefined) {
-                    done();
-                } else {
-                    const msDelayBetweenChecks = 1;
-                    setTimeout(waitUntilServerIsConnected, msDelayBetweenChecks);
-                }
-            };
-            waitUntilServerIsConnected();
         });
 
         afterEach(async () => {
