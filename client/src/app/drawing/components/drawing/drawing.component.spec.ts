@@ -1,7 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
@@ -131,15 +130,15 @@ describe('DrawingComponent', () => {
 
     it('#getWidth should return the width from DrawingService', () => {
         drawingServiceSpyObj.dimensions = { x: 1234, y: 2345 };
-        expect(component.getWidth()).toEqual(1234);
+        expect(component.width).toEqual(1234);
     });
 
     it('#getHeight should return the height from DrawingService', () => {
         drawingServiceSpyObj.dimensions = { x: 1234, y: 2345 };
-        expect(component.getHeight()).toEqual(2345);
+        expect(component.height).toEqual(2345);
     });
 
     it('#getBackgroundColor should return the background color from DrawingService', () => {
-        expect(component.getBackgroundColor()).toEqual('rgba(69, 69, 69, 1)');
+        expect(component.backgroundColor).toEqual('rgba(69, 69, 69, 1)');
     });
 });

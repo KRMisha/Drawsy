@@ -23,13 +23,13 @@ describe('RecolorCommand', () => {
 
     it('#undo should change the element attributes to attributesBefore', () => {
         command.undo();
-        expect(svgElementSpyObj.setAttribute).toHaveBeenCalledWith('color', attributesBefore.get('color'));
+        expect(svgElementSpyObj.setAttribute).toHaveBeenCalledWith('color', attributesBefore.get('color')!); // tslint:disable-line: no-non-null-assertion
         expect(svgElementSpyObj.removeAttribute).toHaveBeenCalledWith('transparency');
     });
 
     it('#redo should change the element attributes to attributesAfter', () => {
         command.redo();
-        expect(svgElementSpyObj.setAttribute).toHaveBeenCalledWith('color', attributesAfter.get('color'));
+        expect(svgElementSpyObj.setAttribute).toHaveBeenCalledWith('color', attributesAfter.get('color')!); // tslint:disable-line: no-non-null-assertion
         expect(svgElementSpyObj.removeAttribute).toHaveBeenCalledWith('opacity');
     });
 });
