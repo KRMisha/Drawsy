@@ -24,31 +24,35 @@ export class ServerService {
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .post<NewFileId>(serverUrl + '/create', JSON.stringify(newFileContent), options)
+            .post<NewFileId>(serverUrl + '/create', newFileContent, options)
             .pipe(catchError(this.handleError('create')));
     }
 
     updateDrawing(fileId: string, fileContent: string): Observable<void> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .put<void>(serverUrl + '/update/' + fileId, JSON.stringify(newFileContent), options)
-            .pipe(catchError(this.handleError('updateDrawing' + fileId)));
-    }
-
-    getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.handleError('getAllDrawings')));
+            .put<void>(serverUrl + '/update/' + fileId, newFileContent, options)
+            .pipe(catchError(this.handleError('update/' + fileId)));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.handleError('deleteDrawing' + fileId)));
+        return this.httpService
+            .delete<void>(serverUrl + '/delete/' + fileId)
+            .pipe(catchError(this.handleError('delete/' + fileId)));
+    }
+
+    getAllDrawings(): Observable<SavedFile[]> {
+        return this.httpService
+            .get<SavedFile[]>(serverUrl + '/get-all')
+            .pipe(catchError(this.handleError('get-all')));
     }
 
     private handleError(request: string): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
+            let errorMessage: string;
             switch (error.status) {
                 case 0:
-                    errorMessage = 'Erreur: La communication avec le serveur a échouée.';
+                    errorMessage = 'Erreur: La communication avec le serveur a échoué.';
                     break;
                 case HttpStatusCode.InternalServerError:
                     errorMessage = 'Erreur: Un problème interne est survenu.';
