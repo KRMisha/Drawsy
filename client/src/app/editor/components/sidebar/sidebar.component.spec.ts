@@ -8,37 +8,35 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { SidebarButton } from '@app/editor/classes/sidebar-button';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
+import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers
-
-class MockModalService {
-    isModalPresent = false;
-    openDialog = () => {};
-}
-
 // tslint:disable: no-string-literal
+
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
-    let mockModalService: MockModalService;
+    let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
 
     beforeEach(async(() => {
         currentToolServiceSpyObj = jasmine.createSpyObj({
             setSelectedTool: () => {},
         });
-        mockModalService = new MockModalService();
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', ['openDialog'], ['isModalPresent']);
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             imports: [BrowserAnimationsModule, MatSidenavModule, MatIconModule, MatSliderModule, MatDialogModule],
             providers: [
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
-                { provide: ModalService, useValue: mockModalService },
+                { provide: ModalService, useValue: modalServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -61,7 +59,6 @@ describe('SidebarComponent', () => {
     });
 
     it('#onKeyDown should set the selected tool in the tool selector if there are no modals shown and shortcuts are enabled', () => {
-        mockModalService.isModalPresent = false;
         component['areShortcutsEnabled'] = true;
 
         spyOn(component, 'setSelectedTool');
@@ -80,7 +77,6 @@ describe('SidebarComponent', () => {
     });
 
     it('#onKeyDown should not change the selected tool in the tool selector if the shortcut is not linked to a tool', () => {
-        mockModalService.isModalPresent = false;
         component['areShortcutsEnabled'] = true;
 
         spyOn(component, 'setSelectedTool');
@@ -92,15 +88,12 @@ describe('SidebarComponent', () => {
     it('#onKeyDown should not change selectedTool if modal is shown or shortcuts are disabled', () => {
         spyOn(component, 'setSelectedTool');
 
-        mockModalService.isModalPresent = true;
         component['areShortcutsEnabled'] = true;
         component.onKeyDown({ key: 'w' } as KeyboardEvent);
 
-        mockModalService.isModalPresent = false;
         component['areShortcutsEnabled'] = false;
         component.onKeyDown({ key: 'w' } as KeyboardEvent);
 
-        mockModalService.isModalPresent = true;
         component['areShortcutsEnabled'] = false;
         component.onKeyDown({ key: 'w' } as KeyboardEvent);
 
@@ -150,24 +143,36 @@ describe('SidebarComponent', () => {
         expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalled();
     });
 
-    it('#openGuideModal should forward the request to modal service', () => {
-        spyOn(mockModalService, 'openDialog');
+    it('#openSettingsModal should forward the request to modal service', () => {
+        component.openSettingsModal();
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(DrawingSettingsComponent, { x: 425, y: 675 });
+    });
+
+    it('#openExportModal should forward the request to modal service', () => {
         component.openGuideModal();
 
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(ExportDrawingComponent, { x: 1000, y: 1000 });
+    });
+
+    it('#openSaveModal should forward the request to modal service', () => {
+        component.openNewDrawingModal();
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(SaveDrawingComponent, { x: 1000, y: 1000 });
     });
 
     it('#openNewDrawingModal should forward the request to modal service', () => {
-        spyOn(mockModalService, 'openDialog');
-        component.openNewDrawingModal();
-
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(NewDrawingComponent);
-    });
-
-    it('#openSettingsModal should forward the request to modal service', () => {
-        spyOn(mockModalService, 'openDialog');
         component.openSettingsModal();
-
-        expect(mockModalService.openDialog).toHaveBeenCalledWith(DrawingSettingsComponent);
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(NewDrawingComponent, { x: 425, y: 500 });
     });
+
+    it('#openGuideModal should forward the request to modal service', () => {
+        component.openGuideModal();
+
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
+    });
+
+    it('#openGalleryModal should forward the request to modal service', () => {
+        component.openNewDrawingModal();
+        expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GalleryComponent, { x: 1920, y: 900 });
+    });
+
 });
