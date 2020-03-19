@@ -23,34 +23,25 @@ class MockSvgElement {
 
 describe('ToolPaintbrushService', () => {
     let service: ToolPaintbrushService;
+    let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
 
     beforeEach(() => {
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
+            'setAttribute',
+        ])
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: ({ addElement: (element: MockSvgElement) => {} } as unknown) as DrawingService },
                 { provide: ColorService, useValue: new MockColorService() },
+                { provide: Renderer2, useValue: renderer2SpyObj}
             ],
         });
 
         service = TestBed.get(ToolPaintbrushService);
-        service.renderer = {
-            setAttribute: (element: MockSvgElement, name: string, value: string) => {},
-            createElement: (name: string, namespace?: string) => new MockSvgElement(),
-        } as Renderer2;
-        spyOn(service.renderer, 'setAttribute').and.callThrough();
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    // it('#onMouseDown should create a new path with filter if mouse is in bounds', () => {
-    //     service.isMouseInside = true;
-    //     service.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(service.renderer.setAttribute).toHaveBeenCalledWith(
-    //         service['path'],
-    //         'filter',
-    //         'url(#texture' + service.toolSettings.get(ToolSetting.Texture) + ')',
-    //     );
-    // });
 });

@@ -1,6 +1,5 @@
 import { Renderer2 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Color } from '@app/classes/color';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -12,11 +11,11 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
-class MockColor extends Color {
+class MockColor {
     toRgbaString = () => 'rgba(69, 69, 69, 1)';
 }
 
-class MockDrawingService extends DrawingService {
+class MockDrawingService{
     renderer: Renderer2;
     rootElement: SVGElement;
     drawingDimensions: Vec2;
@@ -43,7 +42,7 @@ describe('DrawingComponent', () => {
             'onEnter',
             'onLeave',
             'setMouseDown',
-            'setMouseInside',
+            'setMouseInsideDrawing',
         ]);
 
         TestBed.configureTestingModule({
@@ -51,7 +50,7 @@ describe('DrawingComponent', () => {
             providers: [
                 { provide: Renderer2, useValue: {} as Renderer2 },
                 { provide: DrawingService, useValue: drawingServiceMock },
-                { provide: currentToolServiceSpyObj, useValue: currentToolServiceSpyObj },
+                { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
             ],
         }).compileComponents();
     }));
@@ -123,12 +122,12 @@ describe('DrawingComponent', () => {
 
     it('#onEnter should call CurrentToolService.setMouseInside with true', () => {
         component.onEnter({} as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(true);
+        expect(currentToolServiceSpyObj.setMouseInsideDrawing).toHaveBeenCalledWith(true);
     });
 
     it('#onLeave should call CurrentToolService.setMouseInside with false', () => {
         component.onLeave({} as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseInside).toHaveBeenCalledWith(false);
+        expect(currentToolServiceSpyObj.setMouseInsideDrawing).toHaveBeenCalledWith(false);
     });
 
     it('#getWidth should return the width from DrawingService', () => {
