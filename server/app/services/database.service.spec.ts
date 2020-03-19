@@ -19,21 +19,22 @@ const expect = chai.expect;
 describe('DatabaseService', () => {
     describe('With active server', () => {
         let mongoServer: MongoMemoryServer;
+        let inMemoryServerUrl: string;
         let databaseService: DatabaseService;
 
         before(async () => {
             mongoServer = new MongoMemoryServer();
-            const inMemoryServerUrl = await mongoServer.getUri('database');
+            inMemoryServerUrl = await mongoServer.getUri('database');
+        });
 
+        beforeEach((done: Mocha.Done) => {
             const originalConnectFunction = MongoClient.connect;
             sinon
                 .stub(MongoClient, 'connect')
                 .callsFake((uri: string, options: MongoClientOptions, callback: MongoCallback<MongoClient>): void => {
                     originalConnectFunction(inMemoryServerUrl, options, callback);
                 });
-        });
 
-        beforeEach((done: Mocha.Done) => {
             databaseService = container.get<DatabaseService>(Types.DatabaseService);
 
             const waitUntilServerIsConnected = () => {
@@ -48,12 +49,12 @@ describe('DatabaseService', () => {
         });
 
         afterEach(async () => {
+            sinon.restore();
             await databaseService['collection'].deleteMany({});
             await databaseService.disconnect();
         });
 
         after(async () => {
-            sinon.restore();
             await mongoServer.stop();
         });
 
