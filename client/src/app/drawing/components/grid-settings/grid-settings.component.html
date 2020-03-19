@@ -1,6 +1,6 @@
 <div class="container">
-    <button mat-raised-button class="toggle-button" (click)="gridService.toggleGrid(); selectIcon()">
-        <mat-icon>{{ icon }}</mat-icon>
+    <button mat-raised-button class="toggle-button" (click)="toggleGridDisplay();">
+        <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
     </button>
     <div class="size-buttons-container">
         <form [formGroup]="sizeGroup">
@@ -8,7 +8,7 @@
                 <input
                     matInput
                     class="size-input"
-                    value="{{ gridService.gridSize }}"
+                    value="{{ gridSize }}"
                     placeholder="Taille des carrés"
                     formControlName="size"
                     [matTooltip]="getSizeErrorMessage()"
@@ -16,10 +16,10 @@
                 />
             </mat-form-field>
         </form>
-        <button mat-raised-button class="input-button" (click)="gridService.decreaseGridSize()">
+        <button mat-raised-button class="input-button" (click)="decreaseGridSize()">
             <mat-icon>remove</mat-icon>
         </button>
-        <button mat-raised-button class="input-button" (click)="gridService.increaseGridSize()">
+        <button mat-raised-button class="input-button" (click)="increaseGridSize()">
             <mat-icon>add</mat-icon>
         </button>
     </div>

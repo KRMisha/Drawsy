@@ -12,8 +12,8 @@ const maximumSize = 500;
 const maximumStrokeSize = 100;
 const maximumSpraySpeed = 100;
 const maximumSprayRadius = 100;
-const maximumEraserSize = 50;
 const minimumEraserSize = 3;
+const maximumEraserSize = 50;
 const maximumJunctionSize = 500;
 const maximumPolygonSideCount = 12;
 const minimumPolygonSideCount = 3;
@@ -44,8 +44,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumSize),
                 Validators.min(1),
+                Validators.max(maximumSize),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -56,8 +56,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumStrokeSize),
                 Validators.min(1),
+                Validators.max(maximumStrokeSize),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -68,8 +68,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumEraserSize),
                 Validators.min(minimumEraserSize),
+                Validators.max(maximumEraserSize),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -80,8 +80,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             { value: 0, disabled: true },
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumJunctionSize),
                 Validators.min(1),
+                Validators.max(maximumJunctionSize),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -92,8 +92,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             { value: 0, disabled: false },
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumPolygonSideCount),
                 Validators.min(minimumPolygonSideCount),
+                Validators.max(maximumPolygonSideCount),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -104,8 +104,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumSpraySpeed),
                 Validators.min(1),
+                Validators.max(maximumSpraySpeed),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -116,8 +116,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.max(maximumSprayRadius),
                 Validators.min(1),
+                Validators.max(maximumSprayRadius),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
