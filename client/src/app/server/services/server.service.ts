@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileContent } from '@common/communication/new-file-content';
 import { NewFileId } from '@common/communication/new-file-id';
@@ -9,7 +10,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 const serverUrl = 'http://localhost:3000/api';
-const options = {
+const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
     }),
@@ -24,34 +25,34 @@ export class ServerService {
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .post<NewFileId>(serverUrl + '/create', newFileContent, options)
-            .pipe(catchError(this.handleError('create')));
+            .post<NewFileId>(serverUrl + '/create', newFileContent, httpOptions)
+            .pipe(catchError(this.alertRequestError('create')));
     }
 
     updateDrawing(fileId: string, fileContent: string): Observable<void> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .put<void>(serverUrl + '/update/' + fileId, newFileContent, options)
-            .pipe(catchError(this.handleError('update/' + fileId)));
+            .put<void>(serverUrl + '/update/' + fileId, newFileContent, httpOptions)
+            .pipe(catchError(this.alertRequestError('update/' + fileId)));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.handleError('delete/' + fileId)));
+        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.alertRequestError('delete/' + fileId)));
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.handleError('get-all')));
+        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
-    private handleError(request: string): (error: Error) => Observable<never> {
+    private alertRequestError(request: string): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage: string;
+            let errorMessage = '';
             switch (error.status) {
                 case 0:
                     errorMessage = 'Erreur: La communication avec le serveur a échoué.';
                     break;
                 case HttpStatusCode.InternalServerError:
-                    errorMessage = 'Erreur: Un problème interne est survenu.';
+                    errorMessage = 'Erreur: Une erreur interne est survenue sur le serveur.';
                     break;
                 case HttpStatusCode.NotImplemented:
                     errorMessage = "Erreur: Cette requête n'est pas encore implémentée.";
@@ -83,14 +84,15 @@ export class ServerService {
                 case HttpStatusCode.NetworkAuthenticationRequired:
                     errorMessage = 'Erreur: Une authentification est nécessaire.';
                     break;
-                default:
-                    errorMessage = 'Une erreur est survenue.';
             }
 
-            this.snackBar.open(errorMessage, undefined, {
-                duration: 4000,
-            });
-            console.error('Failed Request: ' + request);
+            if (errorMessage !== '') {
+                this.snackBar.open(errorMessage, undefined, {
+                    duration: snackBarDuration,
+                });
+            }
+
+            console.error('Failed request: ' + request);
 
             return throwError(error);
         };
