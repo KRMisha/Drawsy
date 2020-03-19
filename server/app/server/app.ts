@@ -1,6 +1,7 @@
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
+import * as helmet from 'helmet';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
 import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
@@ -24,6 +25,7 @@ export class Application {
         this.app.use(express.urlencoded({ limit: '16mb', extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
+        this.app.use(helmet());
     }
 
     private setupRoutes(): void {
