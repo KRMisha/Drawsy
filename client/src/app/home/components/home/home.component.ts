@@ -30,7 +30,7 @@ export class HomeComponent {
         this.router.navigate(['/editor']);
     }
 
-    isDrawingStarted(): boolean {
+    get isDrawingStarted(): boolean {
         return this.drawingService.isDrawingStarted();
     }
 }
