@@ -1,15 +1,15 @@
+import { FileSchema } from '@app/classes/file-schema';
+import { HttpException } from '@app/classes/http-exception';
+import { container } from '@app/inversify.config';
+import { DatabaseService } from '@app/services/database.service';
+import Types from '@app/types';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { SavedFile } from '@common/communication/saved-file';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { MongoCallback, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
-import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
-import { SavedFile } from '../../../common/communication/saved-file';
-import { FileSchema } from '../classes/file-schema';
-import { HttpException } from '../classes/http-exception';
-import { container } from '../inversify.config';
-import Types from '../types';
-import { DatabaseService } from './database.service';
 
 // tslint:disable: no-string-literal
 

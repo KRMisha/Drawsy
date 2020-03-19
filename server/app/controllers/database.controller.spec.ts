@@ -1,15 +1,15 @@
+import { HttpException } from '@app/classes/http-exception';
+import { container } from '@app/inversify.config';
+import { Application } from '@app/server/app';
+import { DatabaseService } from '@app/services/database.service';
+import Types from '@app/types';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { NewFileContent } from '@common/communication/new-file-content';
+import { SavedFile } from '@common/communication/saved-file';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
-import { HttpStatusCode } from '../../../common/communication/http-status-code.enum';
-import { NewFileContent } from '../../../common/communication/new-file-content';
-import { SavedFile } from '../../../common/communication/saved-file';
-import { HttpException } from '../classes/http-exception';
-import { container } from '../inversify.config';
-import { Application } from '../server/app';
-import { DatabaseService } from '../services/database.service';
-import Types from '../types';
 
 chai.use(sinonChai);
 const expect = chai.expect;

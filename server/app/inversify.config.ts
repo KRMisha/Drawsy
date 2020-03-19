@@ -1,10 +1,11 @@
-import { Container } from 'inversify';
 import 'reflect-metadata';
-import { DatabaseController } from './controllers/database.controller';
-import { Application } from './server/app';
-import { Server } from './server/server';
-import { DatabaseService } from './services/database.service';
-import Types from './types';
+
+import { DatabaseController } from '@app/controllers/database.controller';
+import { Application } from '@app/server/app';
+import { Server } from '@app/server/server';
+import { DatabaseService } from '@app/services/database.service';
+import Types from '@app/types';
+import { Container } from 'inversify';
 
 export const container = new Container();
 
