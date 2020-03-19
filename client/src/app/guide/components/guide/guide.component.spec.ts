@@ -56,6 +56,7 @@ describe('GuideComponent', () => {
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
+            // TODO: Test if entryComponents and overrideModule are still necessary
             .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [MockGuideWelcomeComponent] } })
             .compileComponents();
     }));
