@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { ToolSelectionStateService } from './tool-selection-state.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 
 describe('ToolSelectionStateService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

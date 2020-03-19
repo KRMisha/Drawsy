@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { DrawingPreviewService } from './drawing-preview.service';
+import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 
 describe('DrawingPreviewService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

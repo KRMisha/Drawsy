@@ -4,8 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 

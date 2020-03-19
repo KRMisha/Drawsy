@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { ToolEllipseService } from './tool-ellipse.service';
+import { ToolEllipseService } from '@app/tools/services/shapes/tool-ellipse.service';
 
 describe('ToolEllipseService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { SvgUtilityService } from './svg-utility.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 
 describe('SvgUtilityService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

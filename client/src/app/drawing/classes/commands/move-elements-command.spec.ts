@@ -1,6 +1,6 @@
 import { Vec2 } from '@app/classes/vec2';
+import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { MoveElementsCommand } from './move-elements-command';
 
 describe('MoveElementsCommand', () => {
     let command: MoveElementsCommand;

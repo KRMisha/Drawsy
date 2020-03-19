@@ -6,9 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { ServerService } from '@app/server/services/server.service';
+import { NewFileId } from '@common/communication/new-file-id';
+import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
-import { NewFileId } from '../../../../../../common/communication/new-file-id';
-import { descRegex } from '../../../../../../common/validation/desc-regex';
 
 const maxInputStringLength = 15;
 

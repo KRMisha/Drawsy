@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { CommandService } from './command.service';
+import { CommandService } from '@app/drawing/services/command.service';
 
 describe('CommandServiceService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

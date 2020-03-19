@@ -5,7 +5,7 @@ import { Vec2 } from '@app/classes/vec2';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { SavedFile } from '../../../../../common/communication/saved-file';
+import { SavedFile } from '@common/communication/saved-file';
 
 @Injectable({
     providedIn: 'root',

@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SaveDrawingComponent } from './save-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 
 describe('SaveDrawingComponent', () => {
     let component: SaveDrawingComponent;

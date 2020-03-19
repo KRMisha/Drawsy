@@ -1,6 +1,6 @@
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { RemoveElementsCommand } from './remove-elements-command';
 
 describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;

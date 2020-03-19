@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { GeometryService } from './geometry.service';
+import { GeometryService } from '@app/drawing/services/geometry.service';
 
 describe('GeometryService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

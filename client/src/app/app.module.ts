@@ -73,8 +73,7 @@ import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SafeHtmlPipe } from './gallery/pipes/safe-html.pipe';
-import { SaveDrawingComponent } from './modals/components/save-drawing/save-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 
 @NgModule({
     declarations: [
