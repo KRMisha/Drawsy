@@ -57,7 +57,7 @@ describe('GuideService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.get(GuideService);
+        service = TestBed.inject(GuideService);
     });
 
     it('should be created', () => {

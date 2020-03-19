@@ -38,7 +38,7 @@ describe('ToolLineService', () => {
     //             { provide: ColorService, useValue: colorServiceSpyObj },
     //         ],
     //     });
-    //     service = TestBed.get(ToolLineService);
+    //     service = TestBed.inject(ToolLineService);
     //     service.renderer = {
     //         setAttribute: (element: MockSvgElement, name: string, value: string) => {},
     //         createElement: (name: string, namespace?: string) => new MockSvgElement(),

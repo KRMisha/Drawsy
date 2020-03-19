@@ -32,7 +32,7 @@ describe('ToolPaintbrushService', () => {
             ],
         });
 
-        service = TestBed.get(ToolPaintbrushService);
+        service = TestBed.inject(ToolPaintbrushService);
         service.renderer = {
             setAttribute: (element: MockSvgElement, name: string, value: string) => {},
             createElement: (name: string, namespace?: string) => new MockSvgElement(),

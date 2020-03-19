@@ -6,7 +6,7 @@ describe('GeometryService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: GeometryService = TestBed.get(GeometryService);
+        const service: GeometryService = TestBed.inject(GeometryService);
         expect(service).toBeTruthy();
     });
 });

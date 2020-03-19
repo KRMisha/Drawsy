@@ -6,7 +6,7 @@ describe('ToolEyedropperService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ToolEyedropperService = TestBed.get(ToolEyedropperService);
+        const service: ToolEyedropperService = TestBed.inject(ToolEyedropperService);
         expect(service).toBeTruthy();
     });
 });

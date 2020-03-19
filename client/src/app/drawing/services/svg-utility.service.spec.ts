@@ -6,7 +6,7 @@ describe('SvgUtilityService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: SvgUtilityService = TestBed.get(SvgUtilityService);
+        const service: SvgUtilityService = TestBed.inject(SvgUtilityService);
         expect(service).toBeTruthy();
     });
 });

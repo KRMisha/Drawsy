@@ -6,7 +6,7 @@ describe('ToolSprayCanService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ToolSprayCanService = TestBed.get(ToolSprayCanService);
+        const service: ToolSprayCanService = TestBed.inject(ToolSprayCanService);
         expect(service).toBeTruthy();
     });
 });

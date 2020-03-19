@@ -11,7 +11,7 @@ describe('DrawingService', () => {
     let service: DrawingService;
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.get(DrawingService);
+        service = TestBed.inject(DrawingService);
         service.renderer = {
             appendChild: (parent: any, newChild: any) => {},
             removeChild: (parent: any, newChild: any) => {},

@@ -6,7 +6,7 @@ describe('ToolEllipseService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ToolEllipseService = TestBed.get(ToolEllipseService);
+        const service: ToolEllipseService = TestBed.inject(ToolEllipseService);
         expect(service).toBeTruthy();
     });
 });

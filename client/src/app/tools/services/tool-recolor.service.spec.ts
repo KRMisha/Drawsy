@@ -6,7 +6,7 @@ describe('ToolRecolorService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ToolRecolorService = TestBed.get(ToolRecolorService);
+        const service: ToolRecolorService = TestBed.inject(ToolRecolorService);
         expect(service).toBeTruthy();
     });
 });

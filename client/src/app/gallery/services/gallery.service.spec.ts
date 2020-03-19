@@ -6,7 +6,7 @@ describe('GalleryService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: GalleryService = TestBed.get(GalleryService);
+        const service: GalleryService = TestBed.inject(GalleryService);
         expect(service).toBeTruthy();
     });
 });

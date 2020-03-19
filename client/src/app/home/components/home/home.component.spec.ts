@@ -30,7 +30,7 @@ describe('HomeComponent', () => {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
 
-        mockModalService = TestBed.get(ModalService);
+        mockModalService = TestBed.inject(ModalService);
     }));
 
     beforeEach(() => {
