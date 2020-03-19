@@ -6,7 +6,7 @@ import { Server } from './server/server';
 import { DatabaseService } from './services/database.service';
 import Types from './types';
 
-export const container: Container = new Container();
+export const container = new Container();
 
 container.bind<Server>(Types.Server).to(Server);
 container.bind<Application>(Types.Application).to(Application);
