@@ -13,7 +13,6 @@ npm-debug.log
 *.js.map
 *.js
 
-
 # Keep necessary files for tests
 !systemjs.config.js
 !karma.conf.js

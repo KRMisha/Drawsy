@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
@@ -31,8 +32,7 @@ class MockGuidePencilComponent {}
 // class MockGuidePaintbrushComponent {}
 
 describe('GuideComponent', () => {
-    // tslint:disable-next-line: no-any
-    const mockGuides: Type<any>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
+    const mockGuides: Type<GuideContent>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
     let component: GuideComponent;
     let fixture: ComponentFixture<GuideComponent>;
     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;

@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { container } from './inversify.config';
 import { Server } from './server/server';
 import Types from './types';

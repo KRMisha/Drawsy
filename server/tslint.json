@@ -1,8 +1,9 @@
 {
     "extends": [
         "../common/tslint.json",
-        "tslint-config-prettier"
+        "tslint-config-prettier",
+        "tslint-no-unused-expression-chai"
     ],
-    "rulesDirectory": [],
-    "rules": {}
+    "rules": {},
+    "rulesDirectory": []
 }
