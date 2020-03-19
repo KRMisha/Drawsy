@@ -21,7 +21,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     titleFormControlSubscription: Subscription;
 
-    titleFormControl = new FormControl('Sans titre', [
+    titleFormControl = new FormControl(this.drawingPreviewService.title, [
         Validators.required,
         Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),

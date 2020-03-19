@@ -61,8 +61,8 @@ export class DrawingSerializerService {
         }
 
         this.drawingService.id = svgFileContainer.id;
-        this.drawingService.labels = svgFileContainer.labels;
         this.drawingService.title = svgFileContainer.title;
+        this.drawingService.labels = svgFileContainer.labels;
 
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {

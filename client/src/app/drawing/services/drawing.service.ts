@@ -7,6 +7,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
+const defaultTitle = 'Sans titre';
 
 @Injectable({
     providedIn: 'root',
@@ -20,7 +21,7 @@ export class DrawingService {
     backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     id?: string;
-    title = 'Sans titre';
+    title = defaultTitle;
     labels: string[] = [];
 
     private renderer: Renderer2;
@@ -108,6 +109,11 @@ export class DrawingService {
 
         this.dimensions = dimensions;
         this.backgroundColor = backgroundColor;
+
+        this.id = undefined;
+        this.title = defaultTitle;
+        this.labels = [];
+
         this.clearStoredElements();
         this.commandService.clearCommands();
         return true;
