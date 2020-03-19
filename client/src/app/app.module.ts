@@ -46,6 +46,7 @@ import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-colo
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
+import { SafeHtmlPipe } from '@app/gallery/pipes/safe-html.pipe';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
