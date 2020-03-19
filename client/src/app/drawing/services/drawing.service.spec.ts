@@ -10,12 +10,13 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 describe('DrawingService', () => {
     let service: DrawingService;
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;
+
     beforeEach(() => {
+        rendererSpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild']);
         TestBed.configureTestingModule({
             providers: [{ provide: Renderer2, useValue: rendererSpyObj }],
         });
-        service = TestBed.get(DrawingService);
-        rendererSpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild']);
+        service = TestBed.inject(DrawingService);
     });
 
     it('should be created', () => {

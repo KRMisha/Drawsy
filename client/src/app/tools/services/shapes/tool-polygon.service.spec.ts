@@ -11,7 +11,7 @@ describe('ToolPolygonService', () => {
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
         });
-        service = TestBed.get(ToolPolygonService);
+        service = TestBed.inject(ToolPolygonService);
     });
 
     it('should be created', () => {
