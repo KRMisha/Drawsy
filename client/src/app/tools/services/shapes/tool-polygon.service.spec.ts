@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-
 import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
 
 describe('ToolPolygonService', () => {
