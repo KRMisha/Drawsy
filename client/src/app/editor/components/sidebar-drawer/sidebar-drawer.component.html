@@ -65,11 +65,11 @@
         </form>
 
         <mat-slide-toggle
-            [ngModel]="getSetting(ToolSetting.JunctionSettings).hasJunction"
+            [ngModel]="asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).hasJunction"
             (ngModelChange)="
                 setSetting(ToolSetting.JunctionSettings, {
                     hasJunction: $event,
-                    junctionSize: getSetting(ToolSetting.JunctionSettings).junctionSize
+                    junctionSize: asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).junctionSize
                 })
             "
             class="toggle"
@@ -79,7 +79,7 @@
             max="500"
             (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
             [value]="junctionSizeGroup.controls.junctionSize.value"
-            [disabled]="!getSetting(ToolSetting.JunctionSettings).hasJunction"
+            [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).hasJunction"
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>

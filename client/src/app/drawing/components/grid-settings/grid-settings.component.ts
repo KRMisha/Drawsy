@@ -60,7 +60,7 @@ export class GridSettingsComponent implements OnInit {
         });
     }
 
-    get isGridDisplayEnabled(): boolean { 
+    get isGridDisplayEnabled(): boolean {
         return this.gridService.isDisplayEnabled;
     }
 

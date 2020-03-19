@@ -282,6 +282,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.getErrorMessage(this.sprayRadiusGroup.controls.sprayRadius);
     }
 
+    asJunctionSettings(value: number | JunctionSettings): JunctionSettings {
+        return value as JunctionSettings;
+    }
+
     private getErrorMessage(formControl: AbstractControl): string {
         return formControl.hasError('required')
             ? 'Entrez une taille'

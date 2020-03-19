@@ -45,8 +45,13 @@
         </filter>
 
         <pattern id="grid" [attr.width]="gridSize" [attr.size]="gridSize" patternUnits="userSpaceOnUse" [attr.stroke-opacity]="gridOpacity">
-            <path fill="none" stroke="gray" stroke-width="5" [attr.d]="'M ' + gridSize + ' 0 L 0 0 0 ' + gridSize"
-                [style.visibility]="isGridDisplayEnabled ? 'visible' : 'hidden'" />
+            <path
+                fill="none"
+                stroke="gray"
+                stroke-width="5"
+                [attr.d]="'M ' + gridSize + ' 0 L 0 0 0 ' + gridSize"
+                [style.visibility]="isGridDisplayEnabled ? 'visible' : 'hidden'"
+            />
         </pattern>
     </defs>
 
