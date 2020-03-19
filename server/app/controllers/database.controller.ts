@@ -51,7 +51,7 @@ export class DatabaseController {
         );
 
         this.router.get(
-            '/get_all',
+            '/get-all',
             async (req: Request, res: Response, next: NextFunction): Promise<void> => {
                 try {
                     const files = await this.databaseService.getFiles();

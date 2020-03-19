@@ -34,7 +34,7 @@ export class ServerService {
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get_all').pipe(catchError(this.handleError<SavedFile[]>('getAllDrawings')));
+        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.handleError<SavedFile[]>('getAllDrawings')));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
