@@ -22,7 +22,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    titleFormControlSubscription: Subscription;
+    titleFormControlChangedSubscription: Subscription;
 
     titleFormControl = new FormControl(this.drawingPreviewService.title, [
         Validators.required,
@@ -33,7 +33,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
 
     ngOnInit(): void {
-        this.titleFormControlSubscription = this.titleFormControl.valueChanges.subscribe(() => {
+        this.titleFormControlChangedSubscription = this.titleFormControl.valueChanges.subscribe(() => {
             if (this.titleFormControl.valid) {
                 this.title = this.titleFormControl.value;
             }
@@ -41,7 +41,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.titleFormControlSubscription.unsubscribe();
+        this.titleFormControlChangedSubscription.unsubscribe();
     }
 
     exportDrawing(fileType: FileType): void {

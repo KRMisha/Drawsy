@@ -15,28 +15,28 @@ import { Subscription } from 'rxjs';
 export class CurrentToolService implements OnDestroy {
     selectedTool: Tool;
 
-    private primaryColorSubscription: Subscription;
-    private secondaryColorSubscription: Subscription;
-    private elementClickSubscription: Subscription;
+    private primaryColorChangedSubscription: Subscription;
+    private secondaryColorChangedSubscription: Subscription;
+    private elementClickedSubscription: Subscription;
 
     constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
-        this.primaryColorSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
+        this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.selectedTool.onPrimaryColorChange(color);
         });
 
-        this.secondaryColorSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
+        this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.selectedTool.onSecondaryColorChange(color);
         });
 
-        this.elementClickSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
+        this.elementClickedSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
             this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
         });
     }
 
     ngOnDestroy(): void {
-        this.primaryColorSubscription.unsubscribe();
-        this.secondaryColorSubscription.unsubscribe();
-        this.elementClickSubscription.unsubscribe();
+        this.primaryColorChangedSubscription.unsubscribe();
+        this.secondaryColorChangedSubscription.unsubscribe();
+        this.elementClickedSubscription.unsubscribe();
     }
 
     afterDrawingInit(): void {
