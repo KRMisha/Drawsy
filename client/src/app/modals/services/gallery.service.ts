@@ -63,6 +63,9 @@ export class GalleryService {
                 this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
             );
             this._areDrawingsLoaded = true;
+        },
+        (error: HttpErrorResponse) => {
+            this._areDrawingsLoaded = true;
         });
     }
 
