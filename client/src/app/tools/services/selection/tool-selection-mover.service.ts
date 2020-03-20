@@ -12,7 +12,7 @@ const controlPointSideSize = 10;
     providedIn: 'root',
 })
 export class ToolSelectionMoverService {
-    totalSelectionMoveValue: Vec2 = { x: 0, y: 0 };
+    totalSelectionMoveOffset: Vec2 = { x: 0, y: 0 };
 
     private isArrowUpHeld = false;
     private isArrowDownHeld = false;
@@ -34,8 +34,8 @@ export class ToolSelectionMoverService {
             x: currentMousePos.x - lastMousePos.x,
             y: currentMousePos.y - lastMousePos.y,
         };
-        this.totalSelectionMoveValue.x += deltaMousePos.x;
-        this.totalSelectionMoveValue.y += deltaMousePos.y;
+        this.totalSelectionMoveOffset.x += deltaMousePos.x;
+        this.totalSelectionMoveOffset.y += deltaMousePos.y;
 
         this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
     }
@@ -64,7 +64,7 @@ export class ToolSelectionMoverService {
     onKeyUp(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, false);
         if (!this.isArrowDownHeld && !this.isArrowUpHeld && !this.isArrowLeftHeld && !this.isArrowRightHeld) {
-            if (this.totalSelectionMoveValue.x !== 0 || this.totalSelectionMoveValue.y !== 0) {
+            if (this.totalSelectionMoveOffset.x !== 0 || this.totalSelectionMoveOffset.y !== 0) {
                 this.addMoveCommand();
             }
             if (this.movingTimeout !== undefined) {
@@ -79,8 +79,8 @@ export class ToolSelectionMoverService {
 
     addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalSelectionMoveValue));
-        this.totalSelectionMoveValue = { x: 0, y: 0 };
+        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalSelectionMoveOffset));
+        this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
     updateSvgSelectedShapesRect(selectedElement: SVGElement[]): void {
@@ -148,8 +148,8 @@ export class ToolSelectionMoverService {
             moveDirection.y = this.isArrowDownHeld ? moveDelta : -moveDelta;
         }
 
-        this.totalSelectionMoveValue.x += moveDirection.x;
-        this.totalSelectionMoveValue.y += moveDirection.y;
+        this.totalSelectionMoveOffset.x += moveDirection.x;
+        this.totalSelectionMoveOffset.y += moveDirection.y;
         this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
         this.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
     }

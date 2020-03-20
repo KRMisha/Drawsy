@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SaveDrawingService } from './save-drawing.service';
+import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 
 describe('SaveDrawingService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

@@ -39,10 +39,6 @@ export class DrawingService {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    get svgElements(): SVGElement[] {
-        return this._svgElements;
-    }
-
     addElement(element: SVGElement, elementNextNeighbor?: SVGElement): void {
         if (elementNextNeighbor === undefined) {
             this.svgElements.push(element);
@@ -129,5 +125,9 @@ export class DrawingService {
             transformations.translation.y += moveOffset.y;
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
+    }
+
+    get svgElements(): SVGElement[] {
+        return this._svgElements;
     }
 }
