@@ -49,15 +49,13 @@ export class SaveDrawingService {
     private createDrawing(): void {
         this.serverService
             .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
-            .pipe(catchError(this.createDrawingErrorAlert()))
-            .subscribe(
-                (newFileId: NewFileId): void => {
-                    this.drawingPreviewService.id = newFileId.id;
-                    this.snackBar.open('Dessin sauvegardé : ' + this.title, undefined, {
-                        duration: snackBarDuration,
-                    });
-                }
-            );
+            .pipe(catchError(this.alertCreateDrawingError()))
+            .subscribe((newFileId: NewFileId): void => {
+                this.drawingPreviewService.id = newFileId.id;
+                this.snackBar.open('Dessin sauvegardé : ' + this.title, undefined, {
+                    duration: snackBarDuration,
+                });
+            });
     }
 
     private updateDrawing(): void {
@@ -65,7 +63,7 @@ export class SaveDrawingService {
             // ID will not be undefined if this method is called
             // tslint:disable-next-line: no-non-null-assertion
             .updateDrawing(this.drawingPreviewService.id!, this.drawingPreviewService.drawingPreviewRoot.outerHTML)
-            .pipe(catchError(this.updateDrawingErrorAlert()))
+            .pipe(catchError(this.alertUpdateDrawingError()))
             .subscribe(
                 (): void => {
                     this.snackBar.open('Dessin mis à jour : ' + this.title, undefined, {
@@ -80,15 +78,12 @@ export class SaveDrawingService {
             );
     }
 
-    private createDrawingErrorAlert(): (error: Error) => Observable<never> {
+    private alertCreateDrawingError(): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage = '';
             switch (error.status) {
-                case HttpStatusCode.NotFound:
-                    errorMessage = "Erreur: Le dessin à ajouter n'a pas pu être trouvé.";
-                    break;
                 case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur: Titre ou étiquettes invalides.';
+                    errorMessage = 'Erreur : titre ou étiquettes invalides.';
                     break;
             }
 
@@ -102,16 +97,17 @@ export class SaveDrawingService {
         };
     }
 
-    private updateDrawingErrorAlert(): (error: Error) => Observable<never> {
+    private alertUpdateDrawingError(): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage = '';
             switch (error.status) {
                 case HttpStatusCode.NotFound:
-                    errorMessage = 'Erreur: Le dessin à mettre à jour n\'a pas pu être trouvé.\n' +
-                                   'Réessayez pour le sauvegarder en tant que nouveau dessin.';
+                    errorMessage =
+                        "Erreur : le dessin à mettre à jour n'a pas pu être trouvé.\n" +
+                        'Réessayez pour le sauvegarder en tant que nouveau dessin.';
                     break;
                 case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur: Titre ou étiquettes invalides.';
+                    errorMessage = 'Erreur : titre ou étiquettes invalides.';
                     break;
             }
 

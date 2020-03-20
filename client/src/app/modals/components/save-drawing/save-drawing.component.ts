@@ -71,14 +71,12 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     removeLabel(label: string): void {
-        const index = this.labels.indexOf(label);
-        const control = this.saveDrawingGroup.controls.labels;
-
-        if (index >= 0) {
-            this.labels.splice(index, 1);
+        const labelIndex = this.labels.indexOf(label);
+        if (labelIndex >= 0) {
+            this.labels.splice(labelIndex, 1);
         }
 
-        control.markAsDirty();
+        this.saveDrawingGroup.controls.labels.markAsDirty();
     }
 
     onSubmit(): void {

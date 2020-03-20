@@ -46,51 +46,51 @@ export class ServerService {
 
     private alertRequestError(request: string): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
+            let errorMessage: string;
             switch (error.status) {
                 case 0:
-                    errorMessage = 'Erreur: La communication avec le serveur a échoué.';
+                    errorMessage = 'Erreur : la communication avec le serveur a échoué.';
                     break;
                 case HttpStatusCode.InternalServerError:
-                    errorMessage = 'Erreur: Une erreur interne est survenue sur le serveur.';
+                    errorMessage = 'Erreur : une erreur interne est survenue sur le serveur.';
                     break;
                 case HttpStatusCode.NotImplemented:
-                    errorMessage = "Erreur: Cette requête n'est pas encore implémentée.";
+                    errorMessage = "Erreur : cette requête n'est pas encore implémentée.";
                     break;
                 case HttpStatusCode.BadGateway:
-                    errorMessage = 'Erreur: La réponse reçue depuis le serveur est invalide.';
+                    errorMessage = 'Erreur : la réponse reçue depuis le serveur est invalide.';
                     break;
                 case HttpStatusCode.ServiceUnavailable:
-                    errorMessage = 'Erreur: Ce service est temporairement indisponible.';
+                    errorMessage = 'Erreur : ce service est temporairement indisponible.';
                     break;
                 case HttpStatusCode.GatewayTimeout:
-                    errorMessage = "Erreur: Le temps d'attente de la réponse du serveur est écoulé.";
+                    errorMessage = "Erreur : le temps d'attente de la réponse du serveur est écoulé.";
                     break;
                 case HttpStatusCode.HttpVersionNotSupported:
-                    errorMessage = "Erreur: Cette version HTTP n'est pas supportée.";
+                    errorMessage = "Erreur : cette version HTTP n'est pas supportée.";
                     break;
                 case HttpStatusCode.VariantAlsoNegotiates:
-                    errorMessage = 'Erreur: Problème de négociation.';
+                    errorMessage = 'Erreur : problème de négociation.';
                     break;
                 case HttpStatusCode.InsufficientStorage:
-                    errorMessage = "Erreur: L'espace pour effectuer cette requête est insuffisant.";
+                    errorMessage = "Erreur : l'espace pour effectuer cette requête est insuffisant.";
                     break;
                 case HttpStatusCode.LoopDetected:
-                    errorMessage = 'Erreur: Une boucle infinie a été détectée lors de la requête.';
+                    errorMessage = 'Erreur : une boucle infinie a été détectée lors de la requête.';
                     break;
                 case HttpStatusCode.NotExtended:
-                    errorMessage = 'Erreur: Des extensions sont nécessaires pour satisfaire la requête.';
+                    errorMessage = 'Erreur : des extensions sont nécessaires pour satisfaire la requête.';
                     break;
                 case HttpStatusCode.NetworkAuthenticationRequired:
-                    errorMessage = 'Erreur: Une authentification est nécessaire.';
+                    errorMessage = 'Erreur : une authentification est nécessaire.';
                     break;
+                default:
+                    errorMessage = 'Erreur : erreur inconnue';
             }
 
-            if (errorMessage !== '') {
-                this.snackBar.open(errorMessage, undefined, {
-                    duration: snackBarDuration,
-                });
-            }
+            this.snackBar.open(errorMessage, undefined, {
+                duration: snackBarDuration,
+            });
 
             console.error('Failed request: ' + request);
 
