@@ -174,5 +174,4 @@ describe('SidebarComponent', () => {
         component.openNewDrawingModal();
         expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GalleryComponent, { x: 1920, y: 900 });
     });
-
 });

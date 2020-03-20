@@ -25,9 +25,9 @@ describe('HomeComponent', () => {
             declarations: [HomeComponent],
             imports: [MatSidenavModule, MatCardModule, MatDialogModule],
             providers: [
-                {provide: DrawingService, useValue: drawingServiceSpyObj},
-                {provide: ModalService, useValue: modalServiceSpyObj},
-                {provide: Router, useValue: routerSpyObj},
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: ModalService, useValue: modalServiceSpyObj },
+                { provide: Router, useValue: routerSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -58,8 +58,8 @@ describe('HomeComponent', () => {
         expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GalleryComponent, { x: 1920, y: 900 });
     });
 
-    it('#continueDrawing should route to /editor using angular\s router', () => {
+    it('#continueDrawing should route to /editor using angulars router', () => {
         component.continueDrawing();
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
-    })
+    });
 });
