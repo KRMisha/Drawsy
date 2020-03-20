@@ -114,20 +114,18 @@ export class ShortcutService {
                 case 'w':
                     this.selectToolPaintbrushShortcutSource.next();
                     break;
-                case 'z': {
+                case 'z':
                     if (event.ctrlKey) {
                         this.undoShortcutSource.next();
                         event.preventDefault();
                     }
                     break;
-                }
-                case 'Z': {
+                case 'Z':
                     if (event.ctrlKey) {
                         this.redoShortcutSource.next();
                         event.preventDefault();
                     }
                     break;
-                }
                 case '+':
                     this.increaseGridSizeSource.next();
                     break;
