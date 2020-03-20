@@ -31,13 +31,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     ToolSetting = ToolSetting;
     Texture = Texture;
     StrokeType = StrokeType;
-    sizeSubscription: Subscription;
-    strokeSizeSubscription: Subscription;
-    eraserSizeSubscription: Subscription;
-    junctionSizeSubscription: Subscription;
-    polygonSideCountSubscription: Subscription;
-    spraySpeedSubscription: Subscription;
-    sprayRadiusSubscription: Subscription;
+
+    sizeChangedSubscription: Subscription;
+    strokeSizeChangedSubscription: Subscription;
+    eraserSizeChangedSubscription: Subscription;
+    junctionSizeChangedSubscription: Subscription;
+    polygonSideCountChangedSubscription: Subscription;
+    spraySpeedChangedSubscription: Subscription;
+    sprayRadiusChangedSubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -156,25 +157,25 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.sizeGroup.controls.size.setValue(ToolDefaults.defaultSize);
         this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.defaultJunctionSize);
 
-        this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
+        this.sizeChangedSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.sizeGroup.controls.size.valid) {
                 this.currentToolService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
             }
         });
 
-        this.strokeSizeSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
+        this.strokeSizeChangedSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.strokeSizeGroup.controls.size.valid) {
                 this.currentToolService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
             }
         });
 
-        this.eraserSizeSubscription = this.eraserSizeGroup.controls.size.valueChanges.subscribe(() => {
+        this.eraserSizeChangedSubscription = this.eraserSizeGroup.controls.size.valueChanges.subscribe(() => {
             if (this.eraserSizeGroup.controls.size.valid) {
                 this.currentToolService.setSetting(ToolSetting.EraserSize, this.eraserSizeGroup.controls.size.value);
             }
         });
 
-        this.junctionSizeSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
+        this.junctionSizeChangedSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
             if (this.junctionSizeGroup.controls.junctionSize.valid) {
                 this.currentToolService.setSetting(ToolSetting.JunctionSettings, {
                     hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
@@ -183,7 +184,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.polygonSideCountSubscription = this.polygonSideCountGroup.controls.polygonSideCount.valueChanges.subscribe(() => {
+        this.polygonSideCountChangedSubscription = this.polygonSideCountGroup.controls.polygonSideCount.valueChanges.subscribe(() => {
             if (this.polygonSideCountGroup.controls.polygonSideCount.valid) {
                 this.currentToolService.setSetting(
                     ToolSetting.PolygonSideCount,
@@ -192,13 +193,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.spraySpeedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
+        this.spraySpeedChangedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
             if (this.spraySpeedGroup.controls.spraySpeed.valid) {
                 this.currentToolService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
             }
         });
 
-        this.sprayRadiusSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
+        this.sprayRadiusChangedSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
             if (this.sprayRadiusGroup.controls.sprayRadius.valid) {
                 this.currentToolService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
             }
@@ -206,13 +207,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sizeSubscription.unsubscribe();
-        this.junctionSizeSubscription.unsubscribe();
-        this.strokeSizeSubscription.unsubscribe();
-        this.eraserSizeSubscription.unsubscribe();
-        this.polygonSideCountSubscription.unsubscribe();
-        this.spraySpeedSubscription.unsubscribe();
-        this.sprayRadiusSubscription.unsubscribe();
+        this.sizeChangedSubscription.unsubscribe();
+        this.junctionSizeChangedSubscription.unsubscribe();
+        this.strokeSizeChangedSubscription.unsubscribe();
+        this.eraserSizeChangedSubscription.unsubscribe();
+        this.polygonSideCountChangedSubscription.unsubscribe();
+        this.spraySpeedChangedSubscription.unsubscribe();
+        this.sprayRadiusChangedSubscription.unsubscribe();
     }
 
     getToolName(): string {

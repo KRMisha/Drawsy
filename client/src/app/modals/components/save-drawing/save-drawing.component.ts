@@ -22,7 +22,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    titleSubscription: Subscription;
+    titleChangedSubscription: Subscription;
 
     saveDrawingGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
@@ -39,7 +39,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     constructor(private saveDrawingService: SaveDrawingService) {}
 
     ngOnInit(): void {
-        this.titleSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
+        this.titleChangedSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
             if (this.saveDrawingGroup.controls.title.valid) {
                 this.saveDrawingService.title = this.saveDrawingGroup.controls.title.value;
             }
@@ -47,7 +47,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.titleSubscription.unsubscribe();
+        this.titleChangedSubscription.unsubscribe();
     }
 
     addLabel(event: MatChipInputEvent): void {
