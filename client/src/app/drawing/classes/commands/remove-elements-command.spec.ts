@@ -1,14 +1,14 @@
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
-import { ElementAndItsNeighbour } from '@app/drawing/classes/element-and-its-neighbour';
+import { ElementAndItsNeighbor } from '@app/drawing/classes/element-and-its-neighbor';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let elements: ElementAndItsNeighbour[];
+    let elements: ElementAndItsNeighbor[];
     let command: RemoveElementsCommand;
 
     beforeEach(() => {
-        elements = [{} as ElementAndItsNeighbour, {} as ElementAndItsNeighbour] as ElementAndItsNeighbour[];
+        elements = [{} as ElementAndItsNeighbor, {} as ElementAndItsNeighbor] as ElementAndItsNeighbor[];
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
         command = new RemoveElementsCommand(drawingServiceSpyObj, elements);
     });
@@ -21,7 +21,7 @@ describe('RemoveElementCommand', () => {
         command.undo();
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(elements.length);
         for (const element of elements) {
-            expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(element.element, element.neighbour);
+            expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(element.element, element.neighbor);
         }
     });
 

@@ -1,6 +1,3 @@
-// Disable max line length for long imports due to detailed nesting
-// tslint:disable: max-line-length
-
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,8 +42,6 @@ import { EditorComponent } from '@app/editor/components/editor/editor.component'
 import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
-import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
-import { SafeHtmlPipe } from '@app/gallery/pipes/safe-html.pipe';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
@@ -73,8 +68,10 @@ import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
 
 @NgModule({
     declarations: [

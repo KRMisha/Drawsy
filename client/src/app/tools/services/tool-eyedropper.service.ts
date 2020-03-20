@@ -18,7 +18,7 @@ export class ToolEyedropperService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        private svgUtilitiesService: SvgUtilityService
+        private svgUtilityService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eyedropper);
     }
@@ -37,7 +37,7 @@ export class ToolEyedropperService extends Tool {
         pixel.x = Math.round(pixel.x);
         pixel.y = Math.round(pixel.y);
 
-        const canvas = await this.svgUtilitiesService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
         const colorIndex = pixel.y * (canvas.width * valuesPerColorCount) + pixel.x * valuesPerColorCount;

@@ -24,7 +24,7 @@ export class ToolSelectionMoverService {
 
     constructor(
         private drawingService: DrawingService,
-        private svgUtilitiesService: SvgUtilityService,
+        private svgUtilityService: SvgUtilityService,
         private toolSelectionStateService: ToolSelectionStateService,
         private commandService: CommandService
     ) {}
@@ -84,9 +84,9 @@ export class ToolSelectionMoverService {
     }
 
     updateSvgSelectedShapesRect(selectedElement: SVGElement[]): void {
-        const elementsBounds = this.svgUtilitiesService.getElementListBounds(selectedElement);
+        const elementsBounds = this.svgUtilityService.getElementListBounds(selectedElement);
         if (elementsBounds !== undefined) {
-            this.svgUtilitiesService.updateSvgRectFromRect(this.toolSelectionStateService.svgSelectedShapesRect, elementsBounds);
+            this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionStateService.svgSelectedShapesRect, elementsBounds);
             this.toolSelectionStateService.svgSelectedShapesRect.setAttribute('display', 'block');
 
             this.toolSelectionStateService.selectionRect = elementsBounds;

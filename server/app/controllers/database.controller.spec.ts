@@ -67,7 +67,7 @@ describe('DatabaseController', () => {
         databaseService.updateFile.rejects(error);
 
         const response = await supertest(app)
-            .put(`/api/update/${fileId}`)
+            .put('/api/update/' + fileId)
             .send(newFileContent)
             .expect(HttpStatusCode.ImATeapot);
         expect(databaseService.updateFile).to.have.been.calledWith(fileId, newFileContent.content);
@@ -76,7 +76,7 @@ describe('DatabaseController', () => {
 
     it('#put /api/update should return a valid status code when the service succeeds', async () => {
         await supertest(app)
-            .put(`/api/update/${fileId}`)
+            .put('/api/update/' + fileId)
             .send(newFileContent)
             .expect(HttpStatusCode.Ok);
         expect(databaseService.updateFile).to.have.been.calledWith(fileId, newFileContent.content);
@@ -87,7 +87,7 @@ describe('DatabaseController', () => {
         databaseService.deleteFile.rejects(error);
 
         const response = await supertest(app)
-            .delete(`/api/delete/${fileId}`)
+            .delete('/api/delete/' + fileId)
             .expect(HttpStatusCode.ImATeapot);
         expect(databaseService.deleteFile).to.have.been.calledWith(fileId);
         expect(response.body.message).to.equal(error.message);
@@ -95,7 +95,7 @@ describe('DatabaseController', () => {
 
     it('#delete /api/delete should return a valid status code when the service succeeds', async () => {
         await supertest(app)
-            .delete(`/api/delete/${fileId}`)
+            .delete('/api/delete/' + fileId)
             .expect(HttpStatusCode.NoContent);
         expect(databaseService.deleteFile).to.have.been.calledWith(fileId);
     });
@@ -115,7 +115,7 @@ describe('DatabaseController', () => {
         const expectedFiles: SavedFile[] = [];
         const fileCount = 3;
         for (let i = 0; i < fileCount; i++) {
-            const uniqueFileId = `5e72c22ec84f93ed6dc389e{i}`;
+            const uniqueFileId = `5e72c22ec84f93ed6dc389e${i}`;
             const uniqueFileContent =
                 '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
                 `<title>Title${i}</title><desc>Label1,Label2</desc></svg>`;

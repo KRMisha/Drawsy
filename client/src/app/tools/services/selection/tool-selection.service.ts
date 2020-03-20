@@ -42,7 +42,7 @@ export class ToolSelectionService extends Tool {
         commandService: CommandService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private svgUtilitiesService: SvgUtilityService
+        private svgUtilityService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection);
     }
@@ -55,7 +55,7 @@ export class ToolSelectionService extends Tool {
         this.renderer.setAttribute(this.toolSelectionStateService.svgSelectedShapesRect, 'display', 'none');
 
         const borderColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
-        this.toolSelectionStateService.svgUserSelectionRect = this.svgUtilitiesService.createDashedRectBorder(borderColor);
+        this.toolSelectionStateService.svgUserSelectionRect = this.svgUtilityService.createDashedRectBorder(borderColor);
         this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
 
         this.drawingService.addUiElement(this.toolSelectionStateService.svgSelectedShapesRect);
@@ -118,14 +118,14 @@ export class ToolSelectionService extends Tool {
                 const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
                 this.updateVisibleRect(this.toolSelectionStateService.svgUserSelectionRect, userSelectionRect);
                 if (this.currentMouseButtonDown === ButtonId.Left) {
-                    this.toolSelectionStateService.selectedElements = this.svgUtilitiesService.getElementsUnderArea(
+                    this.toolSelectionStateService.selectedElements = this.svgUtilityService.getElementsUnderArea(
                         this.drawingService.svgElements,
                         userSelectionRect
                     );
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
                 } else if (this.currentMouseButtonDown === ButtonId.Right) {
                     const selectedElementsCopy = Object.assign([], this.toolSelectionStateService.selectedElements);
-                    const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
+                    const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
                         this.drawingService.svgElements,
                         userSelectionRect
                     );
@@ -220,10 +220,7 @@ export class ToolSelectionService extends Tool {
             const isSimpleClick = this.isSimpleClick(event);
             const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
-            const currentSelectedElements = this.svgUtilitiesService.getElementsUnderArea(
-                this.drawingService.svgElements,
-                userSelectionRect
-            );
+            const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(this.drawingService.svgElements, userSelectionRect);
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {
                     this.toolSelectionStateService.selectedElements = currentSelectedElements;
@@ -240,7 +237,7 @@ export class ToolSelectionService extends Tool {
     }
 
     private updateVisibleRect(element: SVGRectElement, rect: Rect): void {
-        this.svgUtilitiesService.updateSvgRectFromRect(element, rect);
+        this.svgUtilityService.updateSvgRectFromRect(element, rect);
         this.renderer.setAttribute(element, 'display', 'block');
     }
 

@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { GalleryService } from '@app/gallery/services/gallery.service';
 
-describe('GalleryService', () => {
+import { SaveDrawingService } from './save-drawing.service';
+
+describe('SaveDrawingService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: GalleryService = TestBed.inject(GalleryService);
+        const service: SaveDrawingService = TestBed.inject(SaveDrawingService);
         expect(service).toBeTruthy();
     });
 });

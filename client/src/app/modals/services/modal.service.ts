@@ -7,13 +7,9 @@ import { Vec2 } from '@app/classes/vec2';
 })
 export class ModalService {
     // Type<any> to prevent all dialogs needing to inherit from a parent component
-    // tslint:disable-next-line: no-any
-    private dialogRef: MatDialogRef<Type<any>>;
+    private dialogRef: MatDialogRef<Type<any>>; // tslint:disable-line: no-any
 
     private _isModalPresent = false; // tslint:disable-line: variable-name
-    get isModalPresent(): boolean {
-        return this._isModalPresent;
-    }
 
     constructor(private dialog: MatDialog) {}
 
@@ -31,5 +27,9 @@ export class ModalService {
             this._isModalPresent = false;
         });
         this._isModalPresent = true;
+    }
+
+    get isModalPresent(): boolean {
+        return this._isModalPresent;
     }
 }
