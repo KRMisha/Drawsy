@@ -21,7 +21,7 @@ export abstract class ToolBrush extends Tool {
         name: ToolName
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
+        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultSize);
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -72,8 +72,8 @@ export abstract class ToolBrush extends Tool {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(path, 'padding', ((this.toolSettings.get(ToolSetting.Size) as number) / 2).toString());
-        this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
+        this.renderer.setAttribute(path, 'padding', ((this.toolSettings.get(ToolSetting.LineWidth) as number) / 2).toString());
+        this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         return path;

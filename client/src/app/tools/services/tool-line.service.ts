@@ -31,8 +31,8 @@ export class ToolLineService extends Tool {
     private points: number[] = [];
     private junctionPoints: SVGCircleElement[] = [];
 
-    private hasJunction: boolean;
-    private junctionSize: number;
+    private isJunctionEnabled: boolean;
+    private junctionDiameter: number;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -41,10 +41,10 @@ export class ToolLineService extends Tool {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Line);
-        this.toolSettings.set(ToolSetting.Size, ToolDefaults.defaultSize);
+        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultSize);
         this.toolSettings.set(ToolSetting.JunctionSettings, {
-            hasJunction: false,
-            junctionSize: ToolDefaults.defaultJunctionSize,
+            isEnabled: false,
+            diameter: ToolDefaults.defaultJunctionDiameter,
         } as JunctionSettings);
     }
 
@@ -70,7 +70,7 @@ export class ToolLineService extends Tool {
         this.points.push(this.nextPoint.y);
         this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
 
-        if (this.hasJunction) {
+        if (this.isJunctionEnabled) {
             const circle = this.createNewJunction();
             this.renderer.setAttribute(circle, 'cx', this.nextPoint.x.toString());
             this.renderer.setAttribute(circle, 'cy', this.nextPoint.y.toString());
@@ -167,17 +167,17 @@ export class ToolLineService extends Tool {
     private startDrawingShape(): void {
         this.isCurrentlyDrawing = true;
 
-        const junction = this.toolSettings.get(ToolSetting.JunctionSettings) as JunctionSettings;
-        this.hasJunction = junction.hasJunction;
-        this.junctionSize = junction.junctionSize;
+        ({ isEnabled: this.isJunctionEnabled, diameter: this.junctionDiameter } = this.toolSettings.get(
+            ToolSetting.JunctionSettings
+        ) as JunctionSettings);
 
-        const junctionSizeActualValue = this.hasJunction ? this.junctionSize : 0;
-        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.Size) as number) / 2 - junctionSizeActualValue);
+        const junctionDiameterActualValue = this.isJunctionEnabled ? this.junctionDiameter : 0;
+        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.LineWidth) as number) / 2 - junctionDiameterActualValue);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.Size) as number).toString());
+        this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
         this.renderer.setAttribute(this.groupElement, 'padding', padding.toString());
 
         this.drawingService.addElement(this.groupElement);
@@ -255,7 +255,7 @@ export class ToolLineService extends Tool {
 
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(circle, 'r', `${this.junctionSize / 2}`);
+        this.renderer.setAttribute(circle, 'r', `${this.junctionDiameter / 2}`);
         this.renderer.setAttribute(circle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(circle, 'stroke', 'none');
         this.junctionPoints.push(circle);

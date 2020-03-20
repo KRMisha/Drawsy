@@ -31,7 +31,7 @@ export abstract class ToolShape extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
-        this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
+        this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultBorderWidth);
         this.toolSettings.set(ToolSetting.ShapeType, ToolDefaults.defaultShapeType);
     }
 
@@ -99,7 +99,7 @@ export abstract class ToolShape extends Tool {
     private createNewShape(): SVGElement {
         const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
-        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
+        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number).toString());
 
         const fillValue =
             this.toolSettings.get(ToolSetting.ShapeType) === ShapeType.BorderOnly
@@ -111,7 +111,7 @@ export abstract class ToolShape extends Tool {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
         }
 
-        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2}`);
+        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number) / 2}`);
 
         return shape;
     }

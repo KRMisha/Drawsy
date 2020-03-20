@@ -4,31 +4,37 @@
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
 
-    <div *ngIf="hasSetting(ToolSetting.Size)" class="size-container">
+    <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
         <h2 class="mat-h2">Taille</h2>
-        <form [formGroup]="sizeGroup" class="form">
+        <form [formGroup]="lineWidthGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="size" [matTooltip]="getSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="lineWidth" [matTooltip]="getLineWidthErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>px</span>
             </mat-form-field>
         </form>
-        <mat-slider min="1" max="500" (input)="sizeGroup.controls.size.setValue($event.value)" [value]="sizeGroup.controls.size.value">
+        <mat-slider
+            min="1"
+            max="500"
+            (input)="lineWidthGroup.controls.lineWidth.setValue($event.value)"
+            [value]="lineWidthGroup.controls.lineWidth.value"
+        >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
-    <div *ngIf="hasSetting(ToolSetting.StrokeSize)" class="size-container">
-        <h2 class="mat-h2">Taille bordure</h2>
-        <form [formGroup]="strokeSizeGroup" class="form">
+
+    <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
+        <h2 class="mat-h2">Taille de bordure</h2>
+        <form [formGroup]="borderWidthGroup" class="form">
             <mat-form-field class="form-field">
-                <input matInput formControlName="size" [matTooltip]="getStrokeSizeErrorMessage()" matTooltipClass="error-tooltip" />
+                <input matInput formControlName="borderWidth" [matTooltip]="getBorderWidthErrorMessage()" matTooltipClass="error-tooltip" />
                 <span matSuffix>px</span>
             </mat-form-field>
         </form>
         <mat-slider
             min="1"
             max="100"
-            (input)="strokeSizeGroup.controls.size.setValue($event.value)"
-            [value]="strokeSizeGroup.controls.size.value"
+            (input)="borderWidthGroup.controls.borderWidth.setValue($event.value)"
+            [value]="borderWidthGroup.controls.borderWidth.value"
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
@@ -52,12 +58,12 @@
     </div>
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
         <h2 class="mat-h2">Taille jonction</h2>
-        <form [formGroup]="junctionSizeGroup">
+        <form [formGroup]="junctionDiameterGroup">
             <mat-form-field class="form-field">
                 <input
                     matInput
-                    formControlName="junctionSize"
-                    [matTooltip]="getJunctionSizeErrorMessage()"
+                    formControlName="junctionDiameter"
+                    [matTooltip]="getJunctionDiameterErrorMessage()"
                     matTooltipClass="error-tooltip"
                 />
                 <span matSuffix>px</span>
@@ -65,11 +71,11 @@
         </form>
 
         <mat-slide-toggle
-            [ngModel]="asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).hasJunction"
+            [ngModel]="asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
             (ngModelChange)="
                 setSetting(ToolSetting.JunctionSettings, {
-                    hasJunction: $event,
-                    junctionSize: asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).junctionSize
+                    isEnabled: $event,
+                    diameter: asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).diameter
                 })
             "
             class="toggle"
@@ -77,9 +83,9 @@
         <mat-slider
             min="1"
             max="500"
-            (input)="junctionSizeGroup.controls.junctionSize.setValue($event.value)"
-            [value]="junctionSizeGroup.controls.junctionSize.value"
-            [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).hasJunction"
+            (input)="junctionDiameterGroup.controls.junctionDiameter.setValue($event.value)"
+            [value]="junctionDiameterGroup.controls.junctionDiameter.value"
+            [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
@@ -87,10 +93,7 @@
     <div *ngIf="hasSetting(ToolSetting.ShapeType)">
         <h2 class="mat-h2">Type de tracé</h2>
         <div class="toggle-buttons-container">
-            <mat-button-toggle-group
-                [value]="getSetting(ToolSetting.ShapeType)"
-                (change)="setSetting(ToolSetting.ShapeType, $event.value)"
-            >
+            <mat-button-toggle-group [value]="getSetting(ToolSetting.ShapeType)" (change)="setSetting(ToolSetting.ShapeType, $event.value)">
                 <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
                 <mat-button-toggle [value]="ShapeType.FillOnly">Plein</mat-button-toggle>
                 <mat-button-toggle [value]="ShapeType.BorderOnly">Contour</mat-button-toggle>
@@ -102,7 +105,10 @@
         <h2 class="mat-h2">Type de texture</h2>
         <mat-form-field class="dropdown">
             <mat-label>Sélection</mat-label>
-            <mat-select [value]="getSetting(ToolSetting.BrushTexture)" (selectionChange)="setSetting(ToolSetting.BrushTexture, $event.value)">
+            <mat-select
+                [value]="getSetting(ToolSetting.BrushTexture)"
+                (selectionChange)="setSetting(ToolSetting.BrushTexture, $event.value)"
+            >
                 <mat-option [value]="BrushTexture.Graffiti">Âme fragile</mat-option>
                 <mat-option [value]="BrushTexture.Blur">Vent d'automne</mat-option>
                 <mat-option [value]="BrushTexture.Shadow">Ombre du matin</mat-option>

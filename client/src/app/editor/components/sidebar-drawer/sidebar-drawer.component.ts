@@ -11,12 +11,12 @@ import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
 const maximumSize = 500;
-const maximumStrokeSize = 100;
+const maximumBorderWidth = 100;
 const maximumSpraySpeed = 100;
 const maximumSprayRadius = 100;
 const minimumEraserSize = 3;
 const maximumEraserSize = 50;
-const maximumJunctionSize = 500;
+const maximumjunctionDiameter = 500;
 const maximumPolygonSideCount = 12;
 const minimumPolygonSideCount = 3;
 
@@ -34,16 +34,16 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     BrushTexture = BrushTexture;
     ShapeType = ShapeType;
 
-    sizeChangedSubscription: Subscription;
-    strokeSizeChangedSubscription: Subscription;
+    lineWidthChangedSubscription: Subscription;
+    borderWidthChangedSubscription: Subscription;
     eraserSizeChangedSubscription: Subscription;
-    junctionSizeChangedSubscription: Subscription;
+    junctionDiameterChangedSubscription: Subscription;
     polygonSideCountChangedSubscription: Subscription;
     spraySpeedChangedSubscription: Subscription;
     sprayRadiusChangedSubscription: Subscription;
 
-    sizeGroup = new FormGroup({
-        size: new FormControl(
+    lineWidthGroup = new FormGroup({
+        lineWidth: new FormControl(
             0,
             Validators.compose([
                 Validators.required,
@@ -54,13 +54,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
-    strokeSizeGroup = new FormGroup({
-        size: new FormControl(
+    borderWidthGroup = new FormGroup({
+        borderWidth: new FormControl(
             0,
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
-                Validators.max(maximumStrokeSize),
+                Validators.max(maximumBorderWidth),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -78,13 +78,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         ),
     });
 
-    junctionSizeGroup = new FormGroup({
-        junctionSize: new FormControl(
+    junctionDiameterGroup = new FormGroup({
+        junctionDiameter: new FormControl(
             { value: 0, disabled: true },
             Validators.compose([
                 Validators.required,
                 Validators.min(1),
-                Validators.max(maximumJunctionSize),
+                Validators.max(maximumjunctionDiameter),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -128,18 +128,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     @Input()
     set selectedButtonIndex(index: number) {
-        if (this.currentToolService.hasSetting(ToolSetting.Size)) {
-            this.sizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.Size));
+        if (this.currentToolService.hasSetting(ToolSetting.LineWidth)) {
+            this.lineWidthGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.LineWidth));
         }
-        if (this.currentToolService.hasSetting(ToolSetting.StrokeSize)) {
-            this.strokeSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.StrokeSize));
+        if (this.currentToolService.hasSetting(ToolSetting.ShapeBorderWidth)) {
+            this.borderWidthGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.ShapeBorderWidth));
         }
         if (this.currentToolService.hasSetting(ToolSetting.EraserSize)) {
             this.eraserSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.EraserSize));
         }
         if (this.currentToolService.hasSetting(ToolSetting.JunctionSettings)) {
-            const junctionSize = (this.currentToolService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
-            this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
+            const junctionDiameter = (this.currentToolService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).diameter;
+            this.junctionDiameterGroup.controls.junctionDiameter.setValue(junctionDiameter);
         }
         if (this.currentToolService.hasSetting(ToolSetting.PolygonSideCount)) {
             this.polygonSideCountGroup.controls.polygonSideCount.setValue(this.currentToolService.getSetting(ToolSetting.PolygonSideCount));
@@ -147,7 +147,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolService.hasSetting(ToolSetting.SpraySpeed)) {
             this.spraySpeedGroup.controls.spraySpeed.setValue(this.currentToolService.getSetting(ToolSetting.SpraySpeed));
         }
-
         if (this.currentToolService.hasSetting(ToolSetting.SprayRadius)) {
             this.sprayRadiusGroup.controls.sprayRadius.setValue(this.currentToolService.getSetting(ToolSetting.SprayRadius));
         }
@@ -156,18 +155,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
 
     ngOnInit(): void {
-        this.sizeGroup.controls.size.setValue(ToolDefaults.defaultSize);
-        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.defaultJunctionSize);
+        this.lineWidthGroup.controls.size.setValue(ToolDefaults.defaultSize);
+        this.junctionDiameterGroup.controls.junctionDiameter.setValue(ToolDefaults.defaultJunctionDiameter);
 
-        this.sizeChangedSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.sizeGroup.controls.size.valid) {
-                this.currentToolService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+        this.lineWidthChangedSubscription = this.lineWidthGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.lineWidthGroup.controls.size.valid) {
+                this.currentToolService.setSetting(ToolSetting.LineWidth, this.lineWidthGroup.controls.size.value);
             }
         });
 
-        this.strokeSizeChangedSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.strokeSizeGroup.controls.size.valid) {
-                this.currentToolService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
+        this.borderWidthChangedSubscription = this.borderWidthGroup.controls.size.valueChanges.subscribe(() => {
+            if (this.borderWidthGroup.controls.size.valid) {
+                this.currentToolService.setSetting(ToolSetting.ShapeBorderWidth, this.borderWidthGroup.controls.size.value);
             }
         });
 
@@ -177,11 +176,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.junctionSizeChangedSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
-            if (this.junctionSizeGroup.controls.junctionSize.valid) {
+        this.junctionDiameterChangedSubscription = this.junctionDiameterGroup.controls.junctionDiameter.valueChanges.subscribe(() => {
+            if (this.junctionDiameterGroup.controls.junctionDiameter.valid) {
                 this.currentToolService.setSetting(ToolSetting.JunctionSettings, {
-                    hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
-                    junctionSize: this.junctionSizeGroup.controls.junctionSize.value,
+                    isEnabled: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).isEnabled,
+                    diameter: this.junctionDiameterGroup.controls.junctionDiameter.value,
                 } as JunctionSettings);
             }
         });
@@ -209,9 +208,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sizeChangedSubscription.unsubscribe();
-        this.junctionSizeChangedSubscription.unsubscribe();
-        this.strokeSizeChangedSubscription.unsubscribe();
+        this.lineWidthChangedSubscription.unsubscribe();
+        this.junctionDiameterChangedSubscription.unsubscribe();
+        this.borderWidthChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.spraySpeedChangedSubscription.unsubscribe();
@@ -228,10 +227,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {
         if (setting === ToolSetting.JunctionSettings) {
-            if ((value as JunctionSettings).hasJunction) {
-                this.junctionSizeGroup.controls.junctionSize.enable();
+            if ((value as JunctionSettings).isEnabled) {
+                this.junctionDiameterGroup.controls.junctionDiameter.enable();
             } else {
-                this.junctionSizeGroup.controls.junctionSize.disable();
+                this.junctionDiameterGroup.controls.junctionDiameter.disable();
             }
         }
         this.currentToolService.setSetting(setting, value);
@@ -257,20 +256,20 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.redoClicked.emit();
     }
 
-    getSizeErrorMessage(): string {
-        return this.getErrorMessage(this.sizeGroup.controls.size);
+    getLineWidthErrorMessage(): string {
+        return this.getErrorMessage(this.lineWidthGroup.controls.lineWidth);
     }
 
-    getJunctionSizeErrorMessage(): string {
-        return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
-    }
-
-    getStrokeSizeErrorMessage(): string {
-        return this.getErrorMessage(this.strokeSizeGroup.controls.size);
+    getBorderWidthErrorMessage(): string {
+        return this.getErrorMessage(this.borderWidthGroup.controls.borderWidth);
     }
 
     getEraserSizeErrorMessage(): string {
         return this.getErrorMessage(this.eraserSizeGroup.controls.size);
+    }
+
+    getJunctionDiameterErrorMessage(): string {
+        return this.getErrorMessage(this.junctionDiameterGroup.controls.junctionDiameter);
     }
 
     getPolygonSideCountErrorMessage(): string {
