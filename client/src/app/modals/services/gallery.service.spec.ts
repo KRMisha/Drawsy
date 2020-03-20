@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { GalleryService } from '@app/gallery/services/gallery.service';
+import { GalleryService } from '@app/modals/services/gallery.service';
 
 describe('GalleryService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));

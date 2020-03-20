@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { GalleryService } from '@app/gallery/services/gallery.service';
+import { GalleryService } from '@app/modals/services/gallery.service';
 import { descRegex } from '@common/validation/desc-regex';
 
 const maxInputStringLength = 15;

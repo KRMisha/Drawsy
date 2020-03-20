@@ -3,7 +3,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
-import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';

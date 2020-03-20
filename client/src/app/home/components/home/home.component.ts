@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { GalleryComponent } from '@app/gallery/components/gallery/gallery.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
