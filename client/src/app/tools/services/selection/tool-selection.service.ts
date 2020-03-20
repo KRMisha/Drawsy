@@ -87,7 +87,7 @@ export class ToolSelectionService extends Tool {
         if (Tool.isMouseInsideDrawing) {
             if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
                 this.toolSelectionStateService.isMovingSelectionWithMouse = true;
-                this.toolSelectionMoverService.totalSelectionMoveValue = { x: 0, y: 0 };
+                this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {
                 const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
                 this.updateVisibleRect(this.toolSelectionStateService.svgUserSelectionRect, rect);
