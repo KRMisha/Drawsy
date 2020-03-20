@@ -18,9 +18,7 @@ export class GuideComponent implements AfterViewInit, OnDestroy {
     constructor(private componentFactoryResolver: ComponentFactoryResolver, private guideService: GuideService) {}
 
     ngAfterViewInit(): void {
-        this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe((guide: Type<GuideContent>) => {
-            this.loadGuide(guide);
-        });
+        this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe(this.loadGuide.bind(this));
     }
 
     ngOnDestroy(): void {
