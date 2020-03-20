@@ -220,10 +220,7 @@ export class ToolSelectionService extends Tool {
             const isSimpleClick = this.isSimpleClick(event);
             const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
-            const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
-                this.drawingService.svgElements,
-                userSelectionRect
-            );
+            const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(this.drawingService.svgElements, userSelectionRect);
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {
                     this.toolSelectionStateService.selectedElements = currentSelectedElements;
