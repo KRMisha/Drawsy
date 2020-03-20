@@ -4,6 +4,6 @@ import { GuideContent } from '@app/guide/classes/guide-content';
 @Component({
     selector: 'app-guide-polygon',
     templateUrl: './guide-polygon.component.html',
-    styleUrls: ['./guide-polygon.component.scss'],
+    styleUrls: ['../../../common.scss', './guide-polygon.component.scss'],
 })
 export class GuidePolygonComponent implements GuideContent {}
