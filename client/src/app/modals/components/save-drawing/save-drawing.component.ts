@@ -86,16 +86,16 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     getLabelError(): string {
         return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxLength')
-            ? 'Longueur maximale 15 caractères'
+            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
+            ? 'Longueur maximale de 15 caractères'
             : '';
     }
 
     getTitleError(): string {
         return this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxLength')
-            ? 'Longueur maximale 15 caractères'
+            : this.saveDrawingGroup.controls.title.hasError('maxlength')
+            ? 'Longueur maximale de 15 caractères'
             : this.saveDrawingGroup.controls.title.hasError('required')
             ? 'Titre obligatoire'
             : '';

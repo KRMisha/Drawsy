@@ -18,12 +18,12 @@ export class ToolPaintbrushService extends ToolBrush {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Brush);
-        this.toolSettings.set(ToolSetting.Texture, ToolDefaults.defaultTexture);
+        this.toolSettings.set(ToolSetting.BrushTexture, ToolDefaults.defaultBrushTexture);
     }
 
     protected createNewPath(): SVGPathElement {
         const path = super.createNewPath();
-        this.renderer.setAttribute(path, 'filter', `url(#brushTexture${this.toolSettings.get(ToolSetting.Texture)})`);
+        this.renderer.setAttribute(path, 'filter', `url(#brushTexture${this.toolSettings.get(ToolSetting.BrushTexture)})`);
         return path;
     }
 }

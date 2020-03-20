@@ -4,18 +4,10 @@ export enum ToolSetting {
     EraserSize,
     JunctionSettings,
     StrokeType,
-    Texture,
+    BrushTexture,
     PolygonSideCount,
     SpraySpeed,
     SprayRadius,
-}
-
-export enum Texture {
-    Graffiti = 1,
-    Blur,
-    Shadow,
-    Matte,
-    Fabric,
 }
 
 export enum StrokeType {

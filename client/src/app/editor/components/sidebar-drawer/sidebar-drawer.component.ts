@@ -3,7 +3,8 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -29,7 +30,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     // Make enums available to template
     ToolSetting = ToolSetting;
-    Texture = Texture;
+    BrushTexture = BrushTexture;
     StrokeType = StrokeType;
 
     sizeChangedSubscription: Subscription;
@@ -220,11 +221,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.currentToolService.getToolName();
     }
 
-    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | Texture {
+    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | BrushTexture {
         return this.currentToolService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | Texture): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | BrushTexture): void {
         if (setting === ToolSetting.JunctionSettings) {
             if ((value as JunctionSettings).hasJunction) {
                 this.junctionSizeGroup.controls.junctionSize.enable();

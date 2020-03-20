@@ -6,14 +6,15 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 
 export abstract class Tool {
     static isMouseDown = false;
     static isMouseInsideDrawing = false;
 
     name: ToolName;
-    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
+    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | BrushTexture>();
 
     protected renderer: Renderer2;
 

@@ -72,8 +72,8 @@ export class GalleryComponent implements OnInit {
     getLabelError(): string {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.galleryGroup.controls.labels.hasError('maxLength')
-            ? 'Longueur maximale 15 caractères'
+            : this.galleryGroup.controls.labels.hasError('maxlength')
+            ? 'Longueur maximale de 15 caractères'
             : '';
     }
 

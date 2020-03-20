@@ -98,16 +98,16 @@
         </div>
         <mat-divider class="divider"></mat-divider>
     </div>
-    <div *ngIf="hasSetting(ToolSetting.Texture)">
+    <div *ngIf="hasSetting(ToolSetting.BrushTexture)">
         <h2 class="mat-h2">Type de texture</h2>
         <mat-form-field class="dropdown">
             <mat-label>Sélection</mat-label>
-            <mat-select [value]="getSetting(ToolSetting.Texture)" (selectionChange)="setSetting(ToolSetting.Texture, $event.value)">
-                <mat-option [value]="Texture.Graffiti">Âme fragile</mat-option>
-                <mat-option [value]="Texture.Blur">Vent d'automne</mat-option>
-                <mat-option [value]="Texture.Shadow">Ombre du matin</mat-option>
-                <mat-option [value]="Texture.Matte">Chlorophylle</mat-option>
-                <mat-option [value]="Texture.Fabric">Innocence juvénile</mat-option>
+            <mat-select [value]="getSetting(ToolSetting.BrushTexture)" (selectionChange)="setSetting(ToolSetting.BrushTexture, $event.value)">
+                <mat-option [value]="BrushTexture.Graffiti">Âme fragile</mat-option>
+                <mat-option [value]="BrushTexture.Blur">Vent d'automne</mat-option>
+                <mat-option [value]="BrushTexture.Shadow">Ombre du matin</mat-option>
+                <mat-option [value]="BrushTexture.Matte">Chlorophylle</mat-option>
+                <mat-option [value]="BrushTexture.Fabric">Innocence juvénile</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-divider class="divider"></mat-divider>

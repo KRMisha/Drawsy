@@ -30,7 +30,7 @@ export class DrawingPreviewComponent implements AfterViewInit {
         return this.drawingPreviewService.backgroundColor.toRgbaString();
     }
 
-    get filter(): DrawingFilter {
+    get drawingFilter(): DrawingFilter {
         return this.drawingPreviewService.drawingFilter;
     }
 }
