@@ -1,6 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/classes/color';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class DrawingPreviewService {
     svgDefs: SVGDefsElement;
     svgDrawingContent: SVGGElement;
 
-    previewFilter = PreviewFilter.None;
+    drawingFilter = DrawingFilter.None;
 
     private renderer: Renderer2;
 

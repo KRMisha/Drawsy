@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 
 @Component({
@@ -25,11 +26,11 @@ export class DrawingPreviewComponent implements AfterViewInit {
         this.drawingPreviewService.initializePreview();
     }
 
-    getBackgroundColor(): string {
+    get backgroundColor(): string {
         return this.drawingPreviewService.backgroundColor.toRgbaString();
     }
 
-    getFilter(): string {
-        return `url(#previewFilter${this.drawingPreviewService.previewFilter})`;
+    get filter(): DrawingFilter {
+        return this.drawingPreviewService.drawingFilter;
     }
 }

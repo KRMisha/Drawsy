@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
 import { ServerService } from '@app/server/services/server.service';
@@ -41,11 +41,11 @@ export class SaveDrawingService {
         this.drawingPreviewService.labels = labels;
     }
 
-    get previewFilter(): PreviewFilter {
-        return this.drawingPreviewService.previewFilter;
+    get drawingFilter(): DrawingFilter {
+        return this.drawingPreviewService.drawingFilter;
     }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.drawingPreviewService.previewFilter = previewFilter;
+    set drawingFilter(drawingFilter: DrawingFilter) {
+        this.drawingPreviewService.drawingFilter = drawingFilter;
     }
 
     private createDrawing(): void {

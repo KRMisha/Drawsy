@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ export interface Label {
     styleUrls: ['./save-drawing.component.scss'],
 })
 export class SaveDrawingComponent implements OnInit, OnDestroy {
-    PreviewFilter = PreviewFilter; // Make enum available to template
+    DrawingFilter = DrawingFilter; // Make enum available to template
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -115,10 +115,10 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         this.saveDrawingService.labels = labels;
     }
 
-    get previewFilter(): PreviewFilter {
-        return this.saveDrawingService.previewFilter;
+    get drawingFilter(): DrawingFilter {
+        return this.saveDrawingService.drawingFilter;
     }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.saveDrawingService.previewFilter = previewFilter;
+    set drawingFilter(drawingFilter: DrawingFilter) {
+        this.saveDrawingService.drawingFilter = drawingFilter;
     }
 }
