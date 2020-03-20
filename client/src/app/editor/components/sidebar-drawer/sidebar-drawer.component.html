@@ -84,16 +84,16 @@
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
-    <div *ngIf="hasSetting(ToolSetting.StrokeType)">
+    <div *ngIf="hasSetting(ToolSetting.ShapeType)">
         <h2 class="mat-h2">Type de tracé</h2>
         <div class="toggle-buttons-container">
             <mat-button-toggle-group
-                [value]="getSetting(ToolSetting.StrokeType)"
-                (change)="setSetting(ToolSetting.StrokeType, $event.value)"
+                [value]="getSetting(ToolSetting.ShapeType)"
+                (change)="setSetting(ToolSetting.ShapeType, $event.value)"
             >
-                <mat-button-toggle [value]="StrokeType.FillWithBorder">Complet</mat-button-toggle>
-                <mat-button-toggle [value]="StrokeType.FillOnly">Plein</mat-button-toggle>
-                <mat-button-toggle [value]="StrokeType.BorderOnly">Contour</mat-button-toggle>
+                <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
+                <mat-button-toggle [value]="ShapeType.FillOnly">Plein</mat-button-toggle>
+                <mat-button-toggle [value]="ShapeType.BorderOnly">Contour</mat-button-toggle>
             </mat-button-toggle-group>
         </div>
         <mat-divider class="divider"></mat-divider>

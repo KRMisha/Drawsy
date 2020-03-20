@@ -3,15 +3,9 @@ export enum ToolSetting {
     StrokeSize,
     EraserSize,
     JunctionSettings,
-    StrokeType,
+    ShapeType,
     BrushTexture,
     PolygonSideCount,
     SpraySpeed,
     SprayRadius,
-}
-
-export enum StrokeType {
-    FillWithBorder,
-    FillOnly,
-    BorderOnly,
 }

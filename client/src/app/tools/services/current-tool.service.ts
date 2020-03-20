@@ -5,7 +5,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
-import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
@@ -97,12 +98,12 @@ export class CurrentToolService implements OnDestroy {
         return this.selectedTool.name;
     }
 
-    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | BrushTexture {
+    getSetting(setting: ToolSetting): number | JunctionSettings | ShapeType | BrushTexture {
         const value = this.selectedTool.toolSettings.get(setting);
-        return value as number | JunctionSettings | StrokeType | BrushTexture;
+        return value as number | JunctionSettings | ShapeType | BrushTexture;
     }
 
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | BrushTexture): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {
         this.selectedTool.toolSettings.set(setting, value);
     }
 

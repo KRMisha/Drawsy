@@ -4,7 +4,8 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
-import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -31,7 +32,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     // Make enums available to template
     ToolSetting = ToolSetting;
     BrushTexture = BrushTexture;
-    StrokeType = StrokeType;
+    ShapeType = ShapeType;
 
     sizeChangedSubscription: Subscription;
     strokeSizeChangedSubscription: Subscription;
@@ -221,11 +222,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.currentToolService.getToolName();
     }
 
-    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | BrushTexture {
+    getSetting(setting: ToolSetting): number | JunctionSettings | ShapeType | BrushTexture {
         return this.currentToolService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | BrushTexture): void {
+    setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {
         if (setting === ToolSetting.JunctionSettings) {
             if ((value as JunctionSettings).hasJunction) {
                 this.junctionSizeGroup.controls.junctionSize.enable();
