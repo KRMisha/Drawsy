@@ -18,12 +18,12 @@
             </mat-chip-list>
         </mat-form-field>
     </div>
-    <div *ngIf="!isLoaded" class="spinner-container">
+    <div *ngIf="!areDrawingsLoaded" class="spinner-container">
         <mat-spinner class="mat-spinner"></mat-spinner>
     </div>
-    <mat-dialog-content *ngIf="isLoaded">
+    <mat-dialog-content *ngIf="areDrawingsLoaded">
         <div class="content">
-            <mat-card *ngFor="let drawing of getDrawingsWithLabels()" class="card">
+            <mat-card *ngFor="let drawing of drawingsWithLabels" class="card">
                 <mat-card-header>
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
@@ -45,7 +45,10 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <h1 *ngIf="getDrawingsWithLabels().length === 0" class="mat-h1">
+        <h1 *ngIf="!hasDrawings()" class="mat-h1">
+            La galerie ne contient aucun dessin.
+        </h1>
+        <h1 *ngIf="hasDrawings() && drawingsWithLabels.length === 0" class="mat-h1">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h1>
     </mat-dialog-content>

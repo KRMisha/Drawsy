@@ -27,16 +27,16 @@
         <button
             mat-raised-button
             class="export-button"
-            (click)="exportDrawingAsSvg()"
+            (click)="exportDrawing(FileType.Svg)"
             [disabled]="titleFormControl.invalid"
             cdkFocusInitial
         >
             Sauvegarder en format SVG
         </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsPng()" [disabled]="titleFormControl.invalid">
+        <button mat-raised-button class="export-button" (click)="exportDrawing(FileType.Png)" [disabled]="titleFormControl.invalid">
             Sauvegarder en format PNG
         </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawingAsJpeg()" [disabled]="titleFormControl.invalid">
+        <button mat-raised-button class="export-button" (click)="exportDrawing(FileType.Jpeg)" [disabled]="titleFormControl.invalid">
             Sauvegarder en format JPEG
         </button>
     </mat-dialog-actions>

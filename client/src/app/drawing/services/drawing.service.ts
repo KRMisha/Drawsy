@@ -39,17 +39,13 @@ export class DrawingService {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    get svgElements(): SVGElement[] {
-        return this._svgElements;
-    }
-
-    addElement(element: SVGElement, elementNextNeighbour?: SVGElement): void {
-        if (elementNextNeighbour === undefined) {
+    addElement(element: SVGElement, elementNextNeighbor?: SVGElement): void {
+        if (elementNextNeighbor === undefined) {
             this.svgElements.push(element);
             this.renderer.appendChild(this.svgDrawingContent, element);
         } else {
-            this.svgElements.splice(this.svgElements.indexOf(elementNextNeighbour), 0, element);
-            this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbour);
+            this.svgElements.splice(this.svgElements.indexOf(elementNextNeighbor), 0, element);
+            this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
         }
         this.transformationMap.set(element, new SvgTransformations());
 
@@ -129,5 +125,9 @@ export class DrawingService {
             transformations.translation.y += moveOffset.y;
             this.renderer.setAttribute(element, 'transform', transformations.toString());
         }
+    }
+
+    get svgElements(): SVGElement[] {
+        return this._svgElements;
     }
 }

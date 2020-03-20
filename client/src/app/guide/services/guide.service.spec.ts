@@ -2,8 +2,6 @@ import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GuideService } from '@app/guide/services/guide.service';
 
-// Disable max line length for long imports due to detailed nesting
-// tslint:disable: max-line-length
 import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
 import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
@@ -26,7 +24,6 @@ import { GuideRectangleComponent } from '@app/guide/components/guide-content/gui
 import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
-// tslint:enable: max-line-length
 
 describe('GuideService', () => {
     const guides: Type<GuideContent>[] = [

@@ -120,7 +120,8 @@ describe('SidebarDrawerComponent', () => {
     //     expect(component['color']).toEqual(color);
     // });
 
-    // it('#confirmColor() should set isColorPickerDisplayEnabled to false and call color service setPrimaryColor if isPrimarySelected is true', () => {
+    // it('#confirmColor() should set isColorPickerDisplayEnabled to false and ' +
+    //    'call color service setPrimaryColor if isPrimaryColorSelected is true', () => {
     //     component.isPrimarySelected = true;
     //     component.isColorPickerDisplayEnabled = true;
     //     component['color'] = {} as Color;
@@ -129,7 +130,8 @@ describe('SidebarDrawerComponent', () => {
     //     expect(component['colorService'].setPrimaryColor).toHaveBeenCalledWith(component['color']);
     // });
 
-    // it('#confirmColor() should set isColorPickerDisplayEnabled to false and call color service setSecondaryColor if isPrimarySelected is false', () => {
+    // it('#confirmColor() should set isColorPickerDisplayEnabled to false and ' +
+    //    'call color service setSecondaryColor if isPrimaryColorSelected is false', () => {
     //     component.isPrimarySelected = false;
     //     component.isColorPickerDisplayEnabled = true;
     //     component['color'] = {} as Color;

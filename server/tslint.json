@@ -1,7 +1,6 @@
 {
     "extends": [
         "../common/tslint.json",
-        "tslint-config-prettier",
         "tslint-no-unused-expression-chai"
     ],
     "rules": {},

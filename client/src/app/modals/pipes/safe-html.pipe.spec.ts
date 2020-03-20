@@ -1,4 +1,4 @@
-// import { SafeHtmlPipe } from './safe-html.pipe';
+// import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
 
 // describe('SafeHtmlPipe', () => {
 //     it('create an instance', () => {
