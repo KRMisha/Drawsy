@@ -4,6 +4,6 @@ import { GuideContent } from '@app/guide/classes/guide-content';
 @Component({
     selector: 'app-guide-calligraphy',
     templateUrl: './guide-calligraphy.component.html',
-    styleUrls: ['./guide-calligraphy.component.scss'],
+    styleUrls: ['../../../common.scss', './guide-calligraphy.component.scss'],
 })
 export class GuideCalligraphyComponent implements GuideContent {}
