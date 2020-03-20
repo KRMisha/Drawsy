@@ -6,7 +6,7 @@ import { GuideSaveDrawingComponent } from '@app/guide/components/guide-content/g
 import { GuideCalligraphyComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
 import { GuidePaintbrushComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
 import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
-import { GuideSpraypaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spraypaint/guide-spraypaint.component';
+import { GuideSprayPaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spray-paint/guide-spray-paint.component';
 import { GuideColorPickerComponent } from '@app/guide/components/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
 import { GuideColorComponent } from '@app/guide/components/guide-content/guide-tools/guide-color/guide-color.component';
 import { GuideEraserComponent } from '@app/guide/components/guide-content/guide-tools/guide-eraser/guide-eraser.component';
@@ -21,51 +21,88 @@ import { GuideStampComponent } from '@app/guide/components/guide-content/guide-t
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
 
-export const guideData: GuideNode[] = [
-    { name: 'Bienvenue', guide: GuideWelcomeComponent },
-    {
-        name: 'Outils',
-        children: [
-            {
-                name: 'Outils de traçage',
-                children: [
-                    { name: 'Aérosol', guide: GuideSpraypaintComponent },
-                    { name: 'Crayon', guide: GuidePencilComponent },
-                    { name: 'Pinceau', guide: GuidePaintbrushComponent },
-                    { name: 'Plume', guide: GuideCalligraphyComponent },
-                ],
-            },
-            {
-                name: 'Formes',
-                children: [
-                    { name: 'Ellipse', guide: GuideEllipseComponent },
-                    { name: 'Polygone', guide: GuidePolygonComponent },
-                    { name: 'Rectangle', guide: GuideRectangleComponent },
-                ],
-            },
-            { name: 'Applicateur de couleur', guide: GuideRecolorComponent },
-            { name: 'Couleur', guide: GuideColorComponent },
-            { name: 'Efface', guide: GuideEraserComponent },
-            { name: 'Étampe', guide: GuideStampComponent },
-            { name: 'Ligne', guide: GuideLineComponent },
-            { name: 'Pipette', guide: GuideColorPickerComponent },
-            { name: 'Seau de peinture', guide: GuideFillComponent },
-            { name: 'Texte', guide: GuideTextComponent },
-            { name: 'Sélection', guide: GuideSelectComponent },
-        ],
-    },
-    {
-        name: 'Surface de dessin',
-        children: [
-            { name: 'Grille', guide: GuideGridComponent },
-            { name: 'Magnétisme', guide: GuideSnapToGridComponent },
-        ],
-    },
-    {
-        name: 'Option de fichiers',
-        children: [
-            { name: 'Exporter le dessin', guide: GuideExportDrawingComponent },
-            { name: 'Sauvegarder le dessin', guide: GuideSaveDrawingComponent },
-        ],
-    },
-];
+// Leaf nodes
+const guideWelcomeNode: GuideNode = { name: 'Bienvenue', guide: GuideWelcomeComponent, previousGuideNode: undefined };
+
+const guideSprayPaintNode: GuideNode = { name: 'Aérosol', guide: GuideSprayPaintComponent, previousGuideNode: guideWelcomeNode };
+const guidePencilNode: GuideNode = { name: 'Crayon', guide: GuidePencilComponent, previousGuideNode: guideSprayPaintNode };
+const guidePaintbrushNode: GuideNode = { name: 'Pinceau', guide: GuidePaintbrushComponent, previousGuideNode: guidePencilNode };
+const guideCalligraphyNode: GuideNode = { name: 'Plume', guide: GuideCalligraphyComponent, previousGuideNode: guidePaintbrushNode };
+
+const guideEllipseNode: GuideNode = { name: 'Ellipse', guide: GuideEllipseComponent, previousGuideNode: guideCalligraphyNode };
+const guidePolygonNode: GuideNode = { name: 'Polygone', guide: GuidePolygonComponent, previousGuideNode: guideEllipseNode };
+const guideRectangleNode: GuideNode = { name: 'Rectangle', guide: GuideRectangleComponent, previousGuideNode: guidePolygonNode };
+
+const guideRecolorNode: GuideNode = { name: 'Applicateur de couleur', guide: GuideRecolorComponent, previousGuideNode: guideRectangleNode };
+const guideColorNode: GuideNode = { name: 'Couleur', guide: GuideColorComponent, previousGuideNode: guideRecolorNode };
+const guideEraserNode: GuideNode = { name: 'Efface', guide: GuideEraserComponent, previousGuideNode: guideColorNode };
+const guideStampNode: GuideNode = { name: 'Étampe', guide: GuideStampComponent, previousGuideNode: guideEraserNode };
+const guideLineNode: GuideNode = { name: 'Ligne', guide: GuideLineComponent, previousGuideNode: guideStampNode };
+const guideColorPickerNode: GuideNode = { name: 'Pipette', guide: GuideColorPickerComponent, previousGuideNode: guideLineNode };
+const guideFillNode: GuideNode = { name: 'Seau de peinture', guide: GuideFillComponent, previousGuideNode: guideColorPickerNode };
+const guideTextNode: GuideNode = { name: 'Texte', guide: GuideTextComponent, previousGuideNode: guideFillNode };
+const guideSelectNode: GuideNode = { name: 'Sélection', guide: GuideSelectComponent, previousGuideNode: guideTextNode };
+
+const guideGridNode: GuideNode = { name: 'Grille', guide: GuideGridComponent, previousGuideNode: guideSelectNode };
+const guideSnapToGridNode: GuideNode = { name: 'Magnétisme', guide: GuideSnapToGridComponent, previousGuideNode: guideGridNode };
+
+const guideExportDrawingNode: GuideNode = {
+    name: 'Exporter le dessin',
+    guide: GuideExportDrawingComponent,
+    previousGuideNode: guideSnapToGridNode,
+};
+const guideSaveDrawingNode: GuideNode = {
+    name: 'Sauvegarder le dessin',
+    guide: GuideSaveDrawingComponent,
+    previousGuideNode: guideExportDrawingNode,
+};
+
+guideWelcomeNode.nextGuideNode = guideSprayPaintNode;
+guideSprayPaintNode.nextGuideNode = guidePencilNode;
+guidePencilNode.nextGuideNode = guidePaintbrushNode;
+guidePaintbrushNode.nextGuideNode = guideCalligraphyNode;
+guideCalligraphyNode.nextGuideNode = guideEllipseNode;
+guideEllipseNode.nextGuideNode = guidePolygonNode;
+guidePolygonNode.nextGuideNode = guideRectangleNode;
+guideRectangleNode.nextGuideNode = guideRecolorNode;
+guideRecolorNode.nextGuideNode = guideColorNode;
+guideColorNode.nextGuideNode = guideEraserNode;
+guideEraserNode.nextGuideNode = guideStampNode;
+guideStampNode.nextGuideNode = guideLineNode;
+guideLineNode.nextGuideNode = guideColorPickerNode;
+guideColorPickerNode.nextGuideNode = guideFillNode;
+guideFillNode.nextGuideNode = guideTextNode;
+guideTextNode.nextGuideNode = guideSelectNode;
+guideSelectNode.nextGuideNode = guideGridNode;
+guideGridNode.nextGuideNode = guideSnapToGridNode;
+guideSnapToGridNode.nextGuideNode = guideExportDrawingNode;
+guideExportDrawingNode.nextGuideNode = guideSaveDrawingNode;
+guideSaveDrawingNode.nextGuideNode = undefined;
+
+// Groups
+const guideBrushToolsNode: GuideNode = {
+    name: 'Outils de traçage',
+    children: [guideSprayPaintNode, guidePencilNode, guidePaintbrushNode, guideCalligraphyNode],
+};
+const guideShapeToolsNode: GuideNode = { name: 'Formes', children: [guideEllipseNode, guidePolygonNode, guideRectangleNode] };
+const guideToolsNode: GuideNode = {
+    name: 'Outils',
+    children: [
+        guideBrushToolsNode,
+        guideShapeToolsNode,
+        guideRecolorNode,
+        guideColorNode,
+        guideEraserNode,
+        guideStampNode,
+        guideLineNode,
+        guideColorPickerNode,
+        guideFillNode,
+        guideTextNode,
+        guideSelectNode,
+    ],
+};
+const guideDrawingOptionsNode = { name: 'Surface de dessin', children: [guideGridNode, guideSnapToGridNode] };
+const guideFileOptionsNode = { name: 'Options de fichiers', children: [guideExportDrawingNode, guideSaveDrawingNode] };
+
+// Top-level tree structure
+export const guideData: GuideNode[] = [guideWelcomeNode, guideToolsNode, guideDrawingOptionsNode, guideFileOptionsNode];

@@ -5,4 +5,7 @@ export interface GuideNode {
     name: string;
     children?: GuideNode[];
     guide?: Type<GuideContent>;
+
+    previousGuideNode?: GuideNode;
+    nextGuideNode?: GuideNode;
 }
