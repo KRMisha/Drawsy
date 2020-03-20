@@ -16,9 +16,7 @@ const maxInputStringLength = 15;
 export class GalleryComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    drawings: SvgFileContainer[] = [];
     searchLabels: string[] = [];
-    isLoaded = false;
 
     galleryGroup = new FormGroup({
         labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
@@ -27,7 +25,7 @@ export class GalleryComponent implements OnInit {
     constructor(private galleryService: GalleryService) {}
 
     ngOnInit(): void {
-        this.getAllDrawings();
+        this.galleryService.getAllDrawings();
     }
 
     addLabel(event: MatChipInputEvent): void {
@@ -51,52 +49,39 @@ export class GalleryComponent implements OnInit {
     }
 
     removeLabel(label: string): void {
-        const index = this.searchLabels.indexOf(label, 0);
-        const control = this.galleryGroup.controls.labels;
-
-        if (index >= 0) {
-            this.searchLabels.splice(index, 1);
+        const labelIndex = this.searchLabels.indexOf(label, 0);
+        if (labelIndex >= 0) {
+            this.searchLabels.splice(labelIndex, 1);
         }
 
-        control.markAsDirty();
+        this.galleryGroup.controls.labels.markAsDirty();
     }
 
-    getDrawingsWithLabels(): SvgFileContainer[] {
-        if (this.searchLabels.length === 0) {
-            return this.drawings;
-        }
+    loadDrawing(drawing: SvgFileContainer): void {
+        this.galleryService.loadDrawing(drawing);
+    }
 
-        return this.drawings.filter((drawing: SvgFileContainer) =>
-            drawing.labels.some((label: string) => this.searchLabels.includes(label))
-        );
+    deleteDrawing(drawing: SvgFileContainer): void {
+        this.galleryService.deleteDrawing(drawing);
     }
 
     hasDrawings(): boolean {
-        return this.drawings.length !== 0;
+        return this.galleryService.hasDrawings();
     }
 
     getLabelError(): string {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.galleryGroup.controls.labels.hasError('maxlength')
+            : this.galleryGroup.controls.labels.hasError('maxLength')
             ? 'Longueur maximale 15 caractères'
             : '';
     }
 
-    deleteDrawing(selectedDrawing: SvgFileContainer): void {
-        this.galleryService.deleteDrawing(selectedDrawing);
-        this.drawings.splice(this.drawings.indexOf(selectedDrawing), 1);
-        this.getAllDrawings();
+    get areDrawingsLoaded(): boolean {
+        return this.galleryService.areDrawingsLoaded;
     }
 
-    loadDrawing(selectedDrawing: SvgFileContainer): void {
-        this.galleryService.loadDrawing(selectedDrawing);
-    }
-
-    private async getAllDrawings(): Promise<void> {
-        this.isLoaded = false;
-        await this.galleryService.updateDrawings();
-        this.drawings = this.galleryService.drawings;
-        this.isLoaded = true;
+    get drawingsWithLabels(): SvgFileContainer[] {
+        return this.galleryService.getDrawingsWithLabels(this.searchLabels);
     }
 }

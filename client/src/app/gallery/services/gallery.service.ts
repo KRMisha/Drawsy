@@ -4,19 +4,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
 import { ServerService } from '@app/server/services/server.service';
+import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpStatusCode } from '../../../../../common/communication/http-status-code.enum';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
-    get drawings(): SvgFileContainer[] {
-        return this._drawings;
-    }
+    private _areDrawingsLoaded = false; // tslint:disable-line: variable-name
 
     constructor(
         private serverService: ServerService,
@@ -25,87 +25,75 @@ export class GalleryService {
         private snackBar: MatSnackBar
     ) {}
 
-    deleteDrawing(selectedDrawing: SvgFileContainer): void {
+    loadDrawing(drawing: SvgFileContainer): void {
+        if (this.drawingSerializerService.loadDrawing(drawing)) {
+            this.snackBar.open('Dessin chargé : ' + drawing.title, undefined, {
+                duration: snackBarDuration,
+            });
+            this.router.navigate(['/editor']);
+        }
+    }
+
+    deleteDrawing(drawing: SvgFileContainer): void {
         const confirmationMessage = 'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
         if (!confirm(confirmationMessage)) {
             return;
         }
 
         this.serverService
-            .deleteDrawing(selectedDrawing.id)
-            .pipe(catchError(this.deleteDrawingErrorAlert()))
-            .subscribe(
-                () => {
-                    this.snackBar.open(`Dessin supprimé : ${selectedDrawing.title}`, undefined, {
-                        duration: 4000,
-                    });
-                    this.updateDrawings();
-                },
-                (error: Error) => {
-                    return;
-                }
-            );
-    }
-
-    loadDrawing(selectedDrawing: SvgFileContainer): void {
-        if (this.drawingSerializerService.loadSvgDrawing(selectedDrawing)) {
-            this.snackBar.open('Dessin chargé : ' + selectedDrawing.title, undefined, {
-                duration: 4000,
-            });
-            this.router.navigate(['/editor']);
-        }
-    }
-
-    async updateDrawings(): Promise<void> {
-        this._drawings = [];
-        try {
-            const savedFiles = await this.serverService
-                .getAllDrawings()
-                .pipe(catchError(this.getAllDrawingsErrorAlert()))
-                .toPromise();
-            for (const savedFile of savedFiles) {
-                this.drawings.push(this.drawingSerializerService.convertSavedFileToSvgFileContainer(savedFile));
-            }
-        } catch (error) {} // tslint:disable-line: no-empty
-    }
-
-    private getAllDrawingsErrorAlert(): (error: Error) => Observable<never> {
-        return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
-            switch (error.status) {
-                case HttpStatusCode.NotFound:
-                    errorMessage = "Erreur: Les dessins n'ont pas été trouvés.";
-                    break;
-                case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur: Requête invalide.';
-                    break;
-            }
-
-            if (errorMessage !== '') {
-                this.snackBar.open(errorMessage, undefined, {
-                    duration: 4000,
+            .deleteDrawing(drawing.id)
+            .pipe(catchError(this.alertDeleteDrawingError()))
+            .subscribe(() => {
+                this.snackBar.open('Dessin supprimé : ' + drawing.title, undefined, {
+                    duration: snackBarDuration,
                 });
-            }
 
-            return throwError(error);
-        };
+                const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
+                if (drawingToRemoveIndex >= 0) {
+                    this._drawings.splice(drawingToRemoveIndex, 1);
+                }
+            });
     }
 
-    private deleteDrawingErrorAlert(): (error: Error) => Observable<never> {
+    getAllDrawings(): void {
+        this._areDrawingsLoaded = false;
+
+        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]) => {
+            this._drawings = savedFiles.map((savedFile: SavedFile) =>
+                this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+            );
+            this._areDrawingsLoaded = true;
+        });
+    }
+
+    getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {
+        if (labels.length === 0) {
+            return this._drawings;
+        }
+
+        return this._drawings.filter((drawing: SvgFileContainer) => drawing.labels.some((label: string) => labels.includes(label)));
+    }
+
+    hasDrawings(): boolean {
+        return this._drawings.length > 0;
+    }
+
+    get areDrawingsLoaded(): boolean {
+        return this._areDrawingsLoaded;
+    }
+
+    private alertDeleteDrawingError(): (error: Error) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage = '';
             switch (error.status) {
                 case HttpStatusCode.NotFound:
-                    errorMessage = "Erreur: Le dessin à supprimer n'a pas été trouvé.";
-                    break;
-                case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur: Requête invalide.';
+                    errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
                     break;
             }
 
             if (errorMessage !== '') {
                 this.snackBar.open(errorMessage, undefined, {
-                    duration: 4000,
+                    duration: snackBarDuration,
                 });
             }
 
