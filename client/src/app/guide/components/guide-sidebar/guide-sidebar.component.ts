@@ -2,7 +2,8 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, EventEmitter, Input, Output, Type } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { GuideContent } from '@app/guide/classes/guide-content';
-import { guideData, GuideNode } from '@app/guide/classes/guide-node';
+import { GuideNode } from '@app/guide/classes/guide-node';
+import { guideData } from '@app/guide/constants/guide-data';
 
 @Component({
     selector: 'app-guide-sidebar',
