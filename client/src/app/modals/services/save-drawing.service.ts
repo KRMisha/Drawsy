@@ -10,6 +10,8 @@ import { NewFileId } from '@common/communication/new-file-id';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides.';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -78,17 +80,10 @@ export class SaveDrawingService {
             );
     }
 
-    private alertCreateDrawingError(): (error: Error) => Observable<never> {
+    private alertCreateDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
-            switch (error.status) {
-                case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur : titre ou étiquettes invalides.';
-                    break;
-            }
-
-            if (errorMessage !== '') {
-                this.snackBar.open(errorMessage, undefined, {
+            if (error.status === HttpStatusCode.BadRequest) {
+                this.snackBar.open(badRequestErrorMessage, undefined, {
                     duration: snackBarDuration,
                 });
             }
@@ -97,21 +92,14 @@ export class SaveDrawingService {
         };
     }
 
-    private alertUpdateDrawingError(): (error: Error) => Observable<never> {
+    private alertUpdateDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
-            switch (error.status) {
-                case HttpStatusCode.NotFound:
-                    errorMessage =
-                        "Erreur : le dessin à mettre à jour n'a pas pu être trouvé.\n" +
-                        'Réessayez pour le sauvegarder en tant que nouveau dessin.';
-                    break;
-                case HttpStatusCode.BadRequest:
-                    errorMessage = 'Erreur : titre ou étiquettes invalides.';
-                    break;
-            }
+            if (error.status === HttpStatusCode.NotFound || error.status === HttpStatusCode.BadRequest) {
+                const notFoundErrorMessage =
+                    "Erreur : le dessin à mettre à jour n'a pas pu être trouvé.\n" +
+                    'Réessayez pour le sauvegarder en tant que nouveau dessin.';
+                const errorMessage = error.status === HttpStatusCode.NotFound ? notFoundErrorMessage : badRequestErrorMessage;
 
-            if (errorMessage !== '') {
                 this.snackBar.open(errorMessage, undefined, {
                     duration: snackBarDuration,
                 });

@@ -44,7 +44,7 @@ export class ServerService {
         return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
-    private alertRequestError(request: string): (error: Error) => Observable<never> {
+    private alertRequestError(request: string): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage: string;
             switch (error.status) {
@@ -86,6 +86,7 @@ export class ServerService {
                     break;
                 default:
                     errorMessage = 'Erreur : erreur inconnue';
+                    break;
             }
 
             this.snackBar.open(errorMessage, undefined, {

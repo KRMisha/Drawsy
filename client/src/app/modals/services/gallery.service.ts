@@ -82,16 +82,10 @@ export class GalleryService {
         return this._areDrawingsLoaded;
     }
 
-    private alertDeleteDrawingError(): (error: Error) => Observable<never> {
+    private alertDeleteDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
-            let errorMessage = '';
-            switch (error.status) {
-                case HttpStatusCode.NotFound:
-                    errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
-                    break;
-            }
-
-            if (errorMessage !== '') {
+            if (error.status === HttpStatusCode.NotFound) {
+                const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
                 this.snackBar.open(errorMessage, undefined, {
                     duration: snackBarDuration,
                 });
