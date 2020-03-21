@@ -98,9 +98,9 @@ export class CurrentToolService implements OnDestroy {
         return this.selectedTool.name;
     }
 
-    getSetting(setting: ToolSetting): number | JunctionSettings | ShapeType | BrushTexture {
+    getSetting(setting: ToolSetting): number | BrushTexture | JunctionSettings | ShapeType {
         const value = this.selectedTool.toolSettings.get(setting);
-        return value as number | JunctionSettings | ShapeType | BrushTexture;
+        return value as number | BrushTexture | JunctionSettings | ShapeType;
     }
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {

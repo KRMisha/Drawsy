@@ -1,11 +1,11 @@
 export enum ToolSetting {
     LineWidth,
-    ShapeBorderWidth,
-    EraserSize,
-    JunctionSettings,
-    ShapeType,
     BrushTexture,
+    JunctionSettings,
+    SprayDiameter,
+    SprayRate,
+    ShapeType,
+    ShapeBorderWidth,
     PolygonSideCount,
-    SpraySpeed,
-    SprayRadius,
+    EraserSize,
 }

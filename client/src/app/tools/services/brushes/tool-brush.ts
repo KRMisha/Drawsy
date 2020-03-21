@@ -21,7 +21,7 @@ export abstract class ToolBrush extends Tool {
         name: ToolName
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
-        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultSize);
+        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
     }
 
     onMouseMove(event: MouseEvent): void {

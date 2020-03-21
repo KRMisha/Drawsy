@@ -41,11 +41,8 @@ export class ToolLineService extends Tool {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Line);
-        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultSize);
-        this.toolSettings.set(ToolSetting.JunctionSettings, {
-            isEnabled: false,
-            diameter: ToolDefaults.defaultJunctionDiameter,
-        } as JunctionSettings);
+        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
+        this.toolSettings.set(ToolSetting.JunctionSettings, ToolDefaults.defaultJunctionSettings);
     }
 
     onMouseMove(event: MouseEvent): void {

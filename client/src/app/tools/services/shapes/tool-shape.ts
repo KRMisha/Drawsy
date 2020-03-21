@@ -31,8 +31,8 @@ export abstract class ToolShape extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
-        this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultBorderWidth);
         this.toolSettings.set(ToolSetting.ShapeType, ToolDefaults.defaultShapeType);
+        this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultShapeBorderWidth);
     }
 
     onPrimaryColorChange(color: Color): void {
