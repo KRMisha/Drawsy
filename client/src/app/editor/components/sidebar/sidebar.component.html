@@ -9,7 +9,7 @@
                 mat-stroked-button
                 *ngFor="let button of buttons; let i = index"
                 class="option-button"
-                [class.selected]="button === selectedButton"
+                [class.selected-button]="button === selectedButton"
                 (click)="setSelectedTool(i)"
                 matTooltip="{{ button.name }}"
                 matTooltipPosition="right"

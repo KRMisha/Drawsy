@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
+import { ThemeService } from '@app/theme/services/theme.service';
 
 @Component({
     selector: 'app-root',
@@ -9,7 +10,7 @@ import { ModalService } from '@app/modals/services/modal.service';
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    constructor(private modalService: ModalService) {}
+    constructor(private modalService: ModalService, private themeService: ThemeService) {}
 
     @HostListener('contextmenu', ['$event'])
     onRightClick(event: MouseEvent): void {
@@ -25,5 +26,9 @@ export class AppComponent {
             event.preventDefault();
             this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });
         }
+    }
+
+    get theme(): string {
+        return this.themeService.getTheme();
     }
 }
