@@ -10,15 +10,20 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
 const integerRegexPattern = '^[0-9]*$';
-const maximumSize = 500;
+const minimumLineWidth = 1;
+const maximumLineWidth = 500;
+const minimumBorderWidth = 1;
 const maximumBorderWidth = 100;
+const minimumSpraySpeed = 1;
 const maximumSpraySpeed = 100;
+const minimumSprayRadius = 1;
 const maximumSprayRadius = 100;
 const minimumEraserSize = 3;
 const maximumEraserSize = 50;
-const maximumjunctionDiameter = 500;
-const maximumPolygonSideCount = 12;
+const minimumJunctionDiameter = 1;
+const maximumJunctionDiameter = 500;
 const minimumPolygonSideCount = 3;
+const maximumPolygonSideCount = 12;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -47,8 +52,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.min(1),
-                Validators.max(maximumSize),
+                Validators.min(minimumLineWidth),
+                Validators.max(maximumLineWidth),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -59,7 +64,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.min(1),
+                Validators.min(minimumBorderWidth),
                 Validators.max(maximumBorderWidth),
                 Validators.pattern(integerRegexPattern),
             ])
@@ -83,8 +88,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             { value: 0, disabled: true },
             Validators.compose([
                 Validators.required,
-                Validators.min(1),
-                Validators.max(maximumjunctionDiameter),
+                Validators.min(minimumJunctionDiameter),
+                Validators.max(maximumJunctionDiameter),
                 Validators.pattern(integerRegexPattern),
             ])
         ),
@@ -107,7 +112,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.min(1),
+                Validators.min(minimumSpraySpeed),
                 Validators.max(maximumSpraySpeed),
                 Validators.pattern(integerRegexPattern),
             ])
@@ -119,7 +124,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             0,
             Validators.compose([
                 Validators.required,
-                Validators.min(1),
+                Validators.min(minimumSprayRadius),
                 Validators.max(maximumSprayRadius),
                 Validators.pattern(integerRegexPattern),
             ])
