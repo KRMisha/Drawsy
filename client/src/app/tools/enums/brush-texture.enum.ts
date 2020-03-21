@@ -1,5 +1,5 @@
 export enum BrushTexture {
-    Graffiti = 1,
+    Graffiti,
     Blur,
     Shadow,
     Matte,

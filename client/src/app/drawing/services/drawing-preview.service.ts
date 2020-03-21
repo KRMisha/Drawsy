@@ -24,7 +24,7 @@ export class DrawingPreviewService {
         const viewBoxString = `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
         this.renderer.setAttribute(this.drawingPreviewRoot, 'viewBox', viewBoxString);
 
-        for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].children)) {
+        for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {
             this.renderer.appendChild(this.svgDefs, filter.cloneNode(true));
         }
 
