@@ -48,6 +48,12 @@ export class ToolLineService extends Tool {
         } as JunctionSettings);
     }
 
+    onMouseMove(event: MouseEvent): void {
+        this.mousePosition = this.getMousePosition(event);
+        this.updateNextPointPosition();
+        this.updatePreviewLinePosition();
+    }
+
     onMouseDown(event: MouseEvent): void {
         if (!Tool.isMouseInsideDrawing) {
             return;
@@ -77,12 +83,6 @@ export class ToolLineService extends Tool {
             this.renderer.appendChild(this.groupElement, circle);
         }
 
-        this.updateNextPointPosition();
-        this.updatePreviewLinePosition();
-    }
-
-    onMouseMove(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
         this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }

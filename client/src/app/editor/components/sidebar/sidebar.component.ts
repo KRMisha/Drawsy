@@ -35,8 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private selectToolRecolorShortcutSubscription: Subscription;
     private selectToolSelectionShortcutSubscription: Subscription;
     private selectToolEraserShortcutSubscription: Subscription;
-    private saveDrawingShortcutSubscription: Subscription;
     private exportDrawingShortcutSubscription: Subscription;
+    private saveDrawingShortcutSubscription: Subscription;
     private undoShortcutSubscription: Subscription;
     private redoShortcutSubscription: Subscription;
 
@@ -83,11 +83,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolEraserShortcutSubscription = this.shortcutService.selectToolEraserShortcut$.subscribe(() => {
             this.setSelectedTool(10); // tslint:disable-line: no-magic-numbers
         });
-        this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
-            this.openSaveModal();
-        });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
             this.openExportModal();
+        });
+        this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
+            this.openSaveModal();
         });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
             this.undo();
@@ -109,8 +109,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolRecolorShortcutSubscription.unsubscribe();
         this.selectToolSelectionShortcutSubscription.unsubscribe();
         this.selectToolEraserShortcutSubscription.unsubscribe();
-        this.saveDrawingShortcutSubscription.unsubscribe();
         this.exportDrawingShortcutSubscription.unsubscribe();
+        this.saveDrawingShortcutSubscription.unsubscribe();
         this.undoShortcutSubscription.unsubscribe();
         this.redoShortcutSubscription.unsubscribe();
     }

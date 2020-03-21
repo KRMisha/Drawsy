@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
-            this.modalService.openDialog(NewDrawingComponent, { x: 500, y: 500 });
+            this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
         });
         this.galleryShortcutSubscription = this.shortcutService.openGalleryShortcut$.subscribe(() => {
             this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });

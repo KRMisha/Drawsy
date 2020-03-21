@@ -19,9 +19,9 @@ export class ShortcutService {
     private selectToolRecolorShortcutSource = new Subject<void>();
     private selectToolSelectionShortcutSource = new Subject<void>();
     private selectToolEraserShortcutSource = new Subject<void>();
+    private openNewDrawingShortcutSource = new Subject<void>();
     private openExportDrawingShortcutSource = new Subject<void>();
     private openSaveDrawingShortcutSource = new Subject<void>();
-    private openNewDrawingShortcutSource = new Subject<void>();
     private openGalleryShortcutSource = new Subject<void>();
     private undoShortcutSource = new Subject<void>();
     private redoShortcutSource = new Subject<void>();
@@ -41,9 +41,9 @@ export class ShortcutService {
     selectToolRecoloShortcut$ = this.selectToolRecolorShortcutSource.asObservable();
     selectToolSelectionShortcut$ = this.selectToolSelectionShortcutSource.asObservable();
     selectToolEraserShortcut$ = this.selectToolEraserShortcutSource.asObservable();
+    openNewDrawingShortcut$ = this.openNewDrawingShortcutSource.asObservable();
     openExportDrawingShortcut$ = this.openExportDrawingShortcutSource.asObservable();
     openSaveDrawingShortcut$ = this.openSaveDrawingShortcutSource.asObservable();
-    openNewDrawingShortcut$ = this.openNewDrawingShortcutSource.asObservable();
     openGalleryShortcut$ = this.openGalleryShortcutSource.asObservable();
     undoShortcut$ = this.undoShortcutSource.asObservable();
     redoShortcut$ = this.redoShortcutSource.asObservable();
@@ -54,6 +54,7 @@ export class ShortcutService {
 
     constructor(private modalService: ModalService) {}
 
+    // Switch statement represents a specialized lookup table to centralize and dispatch shortcut events
     // tslint:disable-next-line: cyclomatic-complexity
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
@@ -73,7 +74,9 @@ export class ShortcutService {
                     }
                     break;
                 case 'c':
-                    this.selectToolPencilShortcutSource.next();
+                    if (!event.ctrlKey) {
+                        this.selectToolPencilShortcutSource.next();
+                    }
                     break;
                 case 'e':
                     if (event.ctrlKey) {
@@ -117,14 +120,14 @@ export class ShortcutService {
                     break;
                 case 'z':
                     if (event.ctrlKey) {
-                        this.undoShortcutSource.next();
                         event.preventDefault();
+                        this.undoShortcutSource.next();
                     }
                     break;
                 case 'Z':
                     if (event.ctrlKey) {
-                        this.redoShortcutSource.next();
                         event.preventDefault();
+                        this.redoShortcutSource.next();
                     }
                     break;
                 case '+':
