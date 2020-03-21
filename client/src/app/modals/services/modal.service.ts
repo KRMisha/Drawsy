@@ -1,6 +1,12 @@
 import { Injectable, Type } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Vec2 } from '@app/classes/vec2';
+import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 
 @Injectable({
     providedIn: 'root',
@@ -13,8 +19,36 @@ export class ModalService {
 
     constructor(private dialog: MatDialog) {}
 
+    openSettingsModal(): void {
+        this.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
+    }
+
+    openExportModal(): void {
+        this.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+    }
+
+    openSaveModal(): void {
+        this.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
+    }
+
+    openNewDrawingModal(): void {
+        this.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+    }
+
+    openGuideModal(): void {
+        this.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    }
+
+    openGalleryModal(): void {
+        this.openDialog(GalleryComponent, { x: 1920, y: 900 });
+    }
+
+    get isModalPresent(): boolean {
+        return this._isModalPresent;
+    }
+
     // tslint:disable-next-line: no-any
-    openDialog(component: Type<any>, dimensions: Vec2): void {
+    private openDialog(component: Type<any>, dimensions: Vec2): void {
         if (this.isModalPresent) {
             return;
         }
@@ -27,9 +61,5 @@ export class ModalService {
             this._isModalPresent = false;
         });
         this._isModalPresent = true;
-    }
-
-    get isModalPresent(): boolean {
-        return this._isModalPresent;
     }
 }

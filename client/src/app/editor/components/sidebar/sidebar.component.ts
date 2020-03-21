@@ -1,14 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
-import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
-import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
-import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
@@ -125,27 +119,27 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
+        this.modalService.openSettingsModal();
     }
 
     openExportModal(): void {
-        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+        this.modalService.openExportModal();
     }
 
     openSaveModal(): void {
-        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
+        this.modalService.openSaveModal();
     }
 
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+        this.modalService.openNewDrawingModal();
     }
 
     openGuideModal(): void {
-        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+        this.modalService.openGuideModal();
     }
 
     openGalleryModal(): void {
-        this.modalService.openDialog(GalleryComponent, { x: 1920, y: 900 });
+        this.modalService.openGalleryModal();
     }
 
     undo(): void {
