@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-guide',
     templateUrl: './guide.component.html',
     styleUrls: ['./guide.component.scss'],
+    providers: [GuideService],
 })
 export class GuideComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSidebar') sidebar: GuideSidebarComponent;

@@ -4,9 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { GalleryService } from '@app/modals/services/gallery.service';
-import { descRegex } from '@common/validation/desc-regex';
-
-const maxInputStringLength = 15;
+import DescValidation from '@common/validation/desc-validation';
 
 @Component({
     selector: 'app-gallery',
@@ -19,7 +17,7 @@ export class GalleryComponent implements OnInit {
     searchLabels: string[] = [];
 
     galleryGroup = new FormGroup({
-        labels: new FormControl('', [Validators.pattern(descRegex), Validators.maxLength(maxInputStringLength)]),
+        labels: new FormControl('', [Validators.pattern(DescValidation.descRegex), Validators.maxLength(DescValidation.maxLabelLength)]),
     });
 
     constructor(private galleryService: GalleryService) {}
@@ -73,7 +71,7 @@ export class GalleryComponent implements OnInit {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.galleryGroup.controls.labels.hasError('maxlength')
-            ? 'Longueur maximale de 15 caractères'
+            ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
             : '';
     }
 

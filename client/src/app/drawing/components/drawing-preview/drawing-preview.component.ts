@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
     selector: 'app-drawing-preview',
@@ -14,7 +15,7 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
 
-    constructor(private drawingPreviewService: DrawingPreviewService) {}
+    constructor(private drawingService: DrawingService, private drawingPreviewService: DrawingPreviewService) {}
 
     ngAfterViewInit(): void {
         this.drawingPreviewService.drawingPreviewRoot = this.drawingRoot.nativeElement;
@@ -35,7 +36,7 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
     }
 
     get backgroundColor(): string {
-        return this.drawingPreviewService.backgroundColor.toRgbaString();
+        return this.drawingService.backgroundColor.toRgbaString();
     }
 
     get drawingFilter(): DrawingFilter {
