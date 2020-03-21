@@ -18,9 +18,11 @@ export class SidebarColorPickerComponent {
 
     constructor(private colorService: ColorService) {}
 
-    @HostListener('mouseleave')
-    onMouseLeave(): void {
-        this.isMouseInside = false;
+    @HostListener('document:mousedown')
+    onMouseDown(): void {
+        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
+            this.confirmColor();
+        }
     }
 
     @HostListener('mouseenter')
@@ -28,11 +30,9 @@ export class SidebarColorPickerComponent {
         this.isMouseInside = true;
     }
 
-    @HostListener('document:mousedown')
-    onMouseDown(): void {
-        if (!this.isMouseInside && this.isColorPickerDisplayEnabled) {
-            this.confirmColor();
-        }
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
+        this.isMouseInside = false;
     }
 
     selectPrimaryColor(): void {
