@@ -49,7 +49,7 @@ export class ModalService {
 
     // tslint:disable-next-line: no-any
     private openDialog(component: Type<any>, dimensions: Vec2): void {
-        if (this.isModalPresent) {
+        if (this._isModalPresent) {
             return;
         }
 
