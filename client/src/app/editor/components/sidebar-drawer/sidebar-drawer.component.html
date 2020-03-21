@@ -16,12 +16,7 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider
-            min="1"
-            max="500"
-            [value]="lineWidthFormControl.value"
-            (input)="lineWidthFormControl.setValue($event.value)"
-        >
+        <mat-slider min="1" max="500" [value]="lineWidthFormControl.value" (input)="lineWidthFormControl.setValue($event.value)">
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -87,12 +82,7 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider
-            min="10"
-            max="100"
-            (input)="sprayDiameterFormControl.setValue($event.value)"
-            [value]="sprayDiameterFormControl.value"
-        >
+        <mat-slider min="10" max="100" (input)="sprayDiameterFormControl.setValue($event.value)" [value]="sprayDiameterFormControl.value">
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -107,12 +97,7 @@
             />
             <span matSuffix>jets/s</span>
         </mat-form-field>
-        <mat-slider
-            min="10"
-            max="100"
-            (input)="sprayRateFormControl.setValue($event.value)"
-            [value]="sprayRateFormControl.value"
-        >
+        <mat-slider min="10" max="100" (input)="sprayRateFormControl.setValue($event.value)" [value]="sprayRateFormControl.value">
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -181,12 +166,7 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider
-            min="3"
-            max="50"
-            [value]="eraserSizeFormControl.value"
-            (input)="eraserSizeFormControl.setValue($event.value)"
-        >
+        <mat-slider min="3" max="50" [value]="eraserSizeFormControl.value" (input)="eraserSizeFormControl.setValue($event.value)">
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
