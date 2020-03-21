@@ -6,10 +6,8 @@ import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { descRegex } from '@common/validation/desc-regex';
+import DescValidation from '@common/validation/desc-validation';
 import { Subscription } from 'rxjs';
-
-const maxInputStringLength = 15;
 
 @Component({
     selector: 'app-export-drawing',
@@ -27,8 +25,8 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
-        Validators.pattern(descRegex),
-        Validators.maxLength(maxInputStringLength),
+        Validators.pattern(DescValidation.descRegex),
+        Validators.maxLength(DescValidation.maxTitleLength),
     ]);
 
     constructor(
