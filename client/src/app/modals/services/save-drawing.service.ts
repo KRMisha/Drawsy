@@ -17,8 +17,8 @@ const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides.';
 })
 export class SaveDrawingService {
     constructor(
-        private drawingPreviewService: DrawingPreviewService,
         private drawingService: DrawingService,
+        private drawingPreviewService: DrawingPreviewService,
         private serverService: ServerService,
         private snackBar: MatSnackBar
     ) {}

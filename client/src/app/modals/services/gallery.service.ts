@@ -54,6 +54,7 @@ export class GalleryService {
                 if (drawingToRemoveIndex >= 0) {
                     this._drawings.splice(drawingToRemoveIndex, 1);
                 }
+
                 this.drawingService.id = undefined;
             });
     }
