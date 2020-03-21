@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { ModalService } from '@app/modals/services/modal.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 @Component({
@@ -10,18 +9,12 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent implements AfterViewInit {
+export class DrawingComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
-    private areShortcutsEnabled = true;
 
-    constructor(
-        private drawingService: DrawingService,
-        private currentToolService: CurrentToolService,
-        private gridService: GridService,
-        private modalService: ModalService
-    ) {}
+    constructor(private drawingService: DrawingService, private currentToolService: CurrentToolService, private gridService: GridService) {}
 
     ngAfterViewInit(): void {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
@@ -30,6 +23,12 @@ export class DrawingComponent implements AfterViewInit {
         this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
         this.drawingService.reappendStoredElements();
         this.currentToolService.afterDrawingInit();
+    }
+
+    ngOnDestroy(): void {
+        delete this.drawingService.drawingRoot;
+        delete this.drawingService.svgDrawingContent;
+        delete this.drawingService.svgUserInterfaceContent;
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -61,33 +60,6 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.currentToolService.onKeyDown(event);
-        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
-            switch (event.key) {
-                case 'g':
-                    this.gridService.toggleDisplay();
-                    break;
-                case '+':
-                    this.gridService.increaseSize();
-                    break;
-                case '-':
-                    this.gridService.decreaseSize();
-                    break;
-            }
-        }
-    }
-
-    @HostListener('document:focusin', ['$event'])
-    onFocusIn(event: FocusEvent): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.areShortcutsEnabled = false;
-        }
-    }
-
-    @HostListener('document:focusout', ['$event'])
-    onFocusOut(event: FocusEvent): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.areShortcutsEnabled = true;
-        }
     }
 
     @HostListener('document:keyup', ['$event'])

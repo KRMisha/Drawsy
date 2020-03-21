@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.ser
     templateUrl: './drawing-preview.component.html',
     styleUrls: ['./drawing-preview.component.scss'],
 })
-export class DrawingPreviewComponent implements AfterViewInit {
+export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appTitle') private svgTitle: ElementRef<SVGTitleElement>;
     @ViewChild('appDesc') private svgDesc: ElementRef<SVGDescElement>;
@@ -23,6 +23,14 @@ export class DrawingPreviewComponent implements AfterViewInit {
         this.drawingPreviewService.svgDrawingContent = this.svgDrawingContent.nativeElement;
 
         this.drawingPreviewService.initializePreview();
+    }
+
+    ngOnDestroy(): void {
+        delete this.drawingPreviewService.drawingPreviewRoot;
+        delete this.drawingPreviewService.svgTitle;
+        delete this.drawingPreviewService.svgDesc;
+        delete this.drawingPreviewService.svgDefs;
+        delete this.drawingPreviewService.svgDrawingContent;
     }
 
     getBackgroundColor(): string {
