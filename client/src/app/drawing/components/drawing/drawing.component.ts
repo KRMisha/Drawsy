@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
@@ -9,7 +9,7 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent implements AfterViewInit {
+export class DrawingComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
@@ -23,6 +23,12 @@ export class DrawingComponent implements AfterViewInit {
         this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
         this.drawingService.reappendStoredElements();
         this.currentToolService.afterDrawingInit();
+    }
+
+    ngOnDestroy(): void {
+        delete this.drawingService.drawingRoot;
+        delete this.drawingService.svgDrawingContent;
+        delete this.drawingService.svgUserInterfaceContent;
     }
 
     @HostListener('document:mousemove', ['$event'])

@@ -26,13 +26,11 @@ export class DrawingPreviewService {
         this.renderer.setAttribute(this.drawingPreviewRoot, 'viewBox', viewBoxString);
 
         for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].children)) {
-            const filterCopy = filter.cloneNode(true);
-            this.renderer.appendChild(this.svgDefs, filterCopy);
+            this.renderer.appendChild(this.svgDefs, filter.cloneNode(true));
         }
 
         for (const element of this.drawingService.svgElements) {
-            const elementCopy = element.cloneNode(true);
-            this.renderer.appendChild(this.svgDrawingContent, elementCopy);
+            this.renderer.appendChild(this.svgDrawingContent, element.cloneNode(true));
         }
     }
 
