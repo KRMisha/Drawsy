@@ -4,10 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
-import { descRegex } from '@common/validation/desc-regex';
+import DescValidation from '@common/validation/desc-validation';
 import { Subscription } from 'rxjs';
-
-const maxInputStringLength = 15;
 
 export interface Label {
     name: string;
@@ -27,12 +25,12 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     saveDrawingGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
-            Validators.pattern(descRegex),
-            Validators.maxLength(maxInputStringLength),
+            Validators.pattern(DescValidation.descRegex),
+            Validators.maxLength(DescValidation.maxTitleLength),
         ]),
         labels: new FormControl(this.saveDrawingService.labels, [
-            Validators.pattern(descRegex),
-            Validators.maxLength(maxInputStringLength),
+            Validators.pattern(DescValidation.descRegex),
+            Validators.maxLength(DescValidation.maxLabelLength),
         ]),
     });
 
