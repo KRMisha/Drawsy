@@ -1,5 +1,4 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -40,30 +39,5 @@ export class DrawingPreviewService {
 
         const labelsText = this.renderer.createText(this.drawingService.labels.join());
         this.renderer.appendChild(this.svgDesc, labelsText);
-    }
-
-    get backgroundColor(): Color {
-        return this.drawingService.backgroundColor;
-    }
-
-    get id(): string | undefined {
-        return this.drawingService.id;
-    }
-    set id(id: string | undefined) {
-        this.drawingService.id = id;
-    }
-
-    get title(): string {
-        return this.drawingService.title;
-    }
-    set title(title: string) {
-        this.drawingService.title = title;
-    }
-
-    get labels(): string[] {
-        return this.drawingService.labels;
-    }
-    set labels(labels: string[]) {
-        this.drawingService.labels = labels;
     }
 }

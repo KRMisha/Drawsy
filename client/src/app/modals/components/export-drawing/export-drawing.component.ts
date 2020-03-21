@@ -5,6 +5,7 @@ import { FileType } from '@app/drawing/enums/file-type.enum';
 import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { descRegex } from '@common/validation/desc-regex';
 import { Subscription } from 'rxjs';
 
@@ -24,13 +25,17 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     titleFormControlChangedSubscription: Subscription;
 
-    titleFormControl = new FormControl(this.drawingPreviewService.title, [
+    titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
         Validators.pattern(descRegex),
         Validators.maxLength(maxInputStringLength),
     ]);
 
-    constructor(private drawingSerializerService: DrawingSerializerService, private drawingPreviewService: DrawingPreviewService) {}
+    constructor(
+        private drawingSerializerService: DrawingSerializerService,
+        private drawingService: DrawingService,
+        private drawingPreviewService: DrawingPreviewService
+    ) {}
 
     ngOnInit(): void {
         this.titleFormControlChangedSubscription = this.titleFormControl.valueChanges.subscribe(() => {
@@ -42,27 +47,26 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.titleFormControlChangedSubscription.unsubscribe();
+        this.previewFilter = PreviewFilter.None;
     }
 
     exportDrawing(fileType: FileType): void {
         if (this.titleFormControl.valid) {
             this.drawingPreviewService.finalizePreview();
-            this.drawingSerializerService.exportDrawing(this.drawingPreviewService.title, fileType);
+            this.drawingSerializerService.exportDrawing(this.drawingService.title, fileType);
         }
     }
 
     get title(): string {
-        return this.drawingPreviewService.title;
+        return this.drawingService.title;
     }
-
     set title(title: string) {
-        this.drawingPreviewService.title = title;
+        this.drawingService.title = title;
     }
 
     get previewFilter(): PreviewFilter {
         return this.drawingPreviewService.previewFilter;
     }
-
     set previewFilter(previewFilter: PreviewFilter) {
         this.drawingPreviewService.previewFilter = previewFilter;
     }
