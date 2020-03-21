@@ -88,6 +88,7 @@ export class ShortcutService {
                     break;
                 case 'g':
                     if (event.ctrlKey) {
+                        event.preventDefault();
                         this.openGalleryShortcutSource.next();
                     } else {
                         this.toggleGridSource.next();
