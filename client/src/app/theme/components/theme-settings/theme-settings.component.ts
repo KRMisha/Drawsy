@@ -14,11 +14,11 @@ export class ThemeSettingsComponent {
     toggleDarkTheme(): void {
         this.themeService.toggleDarkTheme();
     }
-    
+
     set color(color: string) {
         this.themeService.color = color;
     }
-    
+
     get isDarkTheme(): boolean {
         return this.themeService.isDarkTheme;
     }

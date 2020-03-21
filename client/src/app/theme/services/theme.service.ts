@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ThemeService {
-    private _color = 'blue';
-    private _isDarkTheme = true;
+    private _color = 'blue'; // tslint:disable-line: variable-name
+    private _isDarkTheme = true; // tslint:disable-line: variable-name
 
     constructor(private overlayContainer: OverlayContainer) {
         overlayContainer.getContainerElement().classList.add('blue-dark-theme');
