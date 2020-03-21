@@ -1,7 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
-import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
-import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { Subscription } from 'rxjs';
 
@@ -18,10 +16,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
-            this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+            this.modalService.openNewDrawingModal();
         });
         this.galleryShortcutSubscription = this.shortcutService.openGalleryShortcut$.subscribe(() => {
-            this.modalService.openDialog(GalleryComponent, { x: 1920, y: 1000 });
+            this.modalService.openGalleryModal();
         });
     }
 
