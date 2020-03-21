@@ -50,6 +50,7 @@ export class ShortcutService {
     toggleGrid$ = this.toggleGridSource.asObservable();
     increaseGridSize$ = this.increaseGridSizeSource.asObservable();
     decreaseGridSize$ = this.decreaseGridSizeSource.asObservable();
+    // tslint:enable: member-ordering
 
     constructor(private modalService: ModalService) {}
 
