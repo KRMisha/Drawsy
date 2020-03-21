@@ -77,34 +77,6 @@ export class ToolSelectionService extends Tool {
         }
     }
 
-    onMouseDown(event: MouseEvent): void {
-        if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
-            return;
-        }
-
-        this.isMouseDownInside = Tool.isMouseInsideDrawing;
-        this.userSelectionStartCoords = this.getMousePosition(event);
-        if (Tool.isMouseInsideDrawing) {
-            if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
-                this.toolSelectionStateService.isMovingSelectionWithMouse = true;
-                this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
-            } else {
-                const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
-                this.updateVisibleRect(this.toolSelectionStateService.svgUserSelectionRect, rect);
-            }
-        } else {
-            this.toolSelectionStateService.selectedElements = [];
-            this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
-            this.hideSelectedShapesRect();
-        }
-
-        if (this.currentMouseButtonDown === undefined) {
-            this.isMouseButtonDown = true;
-            this.currentMouseButtonDown = event.button;
-        }
-        this.lastMousePosition = this.getMousePosition(event);
-    }
-
     onMouseMove(event: MouseEvent): void {
         if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
             return;
@@ -133,6 +105,34 @@ export class ToolSelectionService extends Tool {
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(selectedElementsCopy);
                 }
             }
+        }
+        this.lastMousePosition = this.getMousePosition(event);
+    }
+
+    onMouseDown(event: MouseEvent): void {
+        if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
+            return;
+        }
+
+        this.isMouseDownInside = Tool.isMouseInsideDrawing;
+        this.userSelectionStartCoords = this.getMousePosition(event);
+        if (Tool.isMouseInsideDrawing) {
+            if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
+                this.toolSelectionStateService.isMovingSelectionWithMouse = true;
+                this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
+            } else {
+                const rect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.userSelectionStartCoords);
+                this.updateVisibleRect(this.toolSelectionStateService.svgUserSelectionRect, rect);
+            }
+        } else {
+            this.toolSelectionStateService.selectedElements = [];
+            this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
+            this.hideSelectedShapesRect();
+        }
+
+        if (this.currentMouseButtonDown === undefined) {
+            this.isMouseButtonDown = true;
+            this.currentMouseButtonDown = event.button;
         }
         this.lastMousePosition = this.getMousePosition(event);
     }
