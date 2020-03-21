@@ -10,7 +10,7 @@ import { GuideSaveDrawingComponent } from '@app/guide/components/guide-content/g
 import { GuideCalligraphyComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
 import { GuidePaintbrushComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
 import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
-import { GuideSpraypaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spraypaint/guide-spraypaint.component';
+import { GuideSprayPaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spray-paint/guide-spray-paint.component';
 import { GuideColorPickerComponent } from '@app/guide/components/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
 import { GuideColorComponent } from '@app/guide/components/guide-content/guide-tools/guide-color/guide-color.component';
 import { GuideEraserComponent } from '@app/guide/components/guide-content/guide-tools/guide-eraser/guide-eraser.component';
@@ -28,7 +28,7 @@ import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide
 describe('GuideService', () => {
     const guides: Type<GuideContent>[] = [
         GuideWelcomeComponent,
-        GuideSpraypaintComponent,
+        GuideSprayPaintComponent,
         GuidePencilComponent,
         GuidePaintbrushComponent,
         GuideCalligraphyComponent,
