@@ -1,67 +1,58 @@
-import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, Type, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, OnDestroy, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { GuideContent } from '@app/guide/classes/guide-content';
-import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideService } from '@app/guide/services/guide.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-guide',
     templateUrl: './guide.component.html',
     styleUrls: ['./guide.component.scss'],
 })
-export class GuideComponent implements OnInit, AfterViewInit {
-    guides: Type<GuideContent>[];
-    selectedGuideIndex: number;
-    hasPreviousGuide: boolean;
-    hasNextGuide: boolean;
-    currentComponent: string;
+export class GuideComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
-    @ViewChild(GuideDirective) guideHost: GuideDirective;
+    @ViewChild('appGuideContent', { read: ViewContainerRef }) guideContent: ViewContainerRef;
 
-    constructor(private guideService: GuideService, private componentFactoryResolver: ComponentFactoryResolver) {}
+    currentGuideChangedSubscription: Subscription;
 
-    ngOnInit(): void {
-        this.guides = this.guideService.getGuides();
-        this.currentComponent = 'GuideWelcomeComponent';
-        this.selectedGuideIndex = 0;
-        this.hasPreviousGuide = false;
-        this.hasNextGuide = true;
-    }
+    constructor(private componentFactoryResolver: ComponentFactoryResolver, private guideService: GuideService) {}
 
     ngAfterViewInit(): void {
-        this.selectGuide(this.guides[this.selectedGuideIndex]);
+        this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe((guide: Type<GuideContent>) => {
+            this.loadGuide(guide);
+        });
     }
 
-    selectGuide(guide: Type<GuideContent>): void {
-        const selectedGuideIndex = this.guides.indexOf(guide);
-        if (selectedGuideIndex === -1) {
-            return;
-        }
-
-        this.selectedGuideIndex = selectedGuideIndex;
-        this.hasNextGuide = this.selectedGuideIndex < this.guides.length - 1;
-        this.hasPreviousGuide = this.selectedGuideIndex > 0;
-
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(guide);
-
-        const viewContainerRef = this.guideHost.viewContainerRef;
-        viewContainerRef.clear();
-
-        viewContainerRef.createComponent(componentFactory);
-        this.currentComponent = guide.name;
-    }
-
-    selectNextGuide(): void {
-        if (this.hasNextGuide) {
-            this.selectGuide(this.guides[++this.selectedGuideIndex]);
-        }
-        this.sidebar.expandAllMenus();
+    ngOnDestroy(): void {
+        this.currentGuideChangedSubscription.unsubscribe();
     }
 
     selectPreviousGuide(): void {
-        if (this.hasPreviousGuide) {
-            this.selectGuide(this.guides[--this.selectedGuideIndex]);
+        if (this.guideService.currentGuideNode.previousGuideNode !== undefined) {
+            this.guideService.currentGuideNode = this.guideService.currentGuideNode.previousGuideNode;
         }
         this.sidebar.expandAllMenus();
+    }
+
+    selectNextGuide(): void {
+        if (this.guideService.currentGuideNode.nextGuideNode !== undefined) {
+            this.guideService.currentGuideNode = this.guideService.currentGuideNode.nextGuideNode;
+        }
+        this.sidebar.expandAllMenus();
+    }
+
+    get hasPreviousGuide(): boolean {
+        return this.guideService.currentGuideNode.previousGuideNode !== undefined;
+    }
+
+    get hasNextGuide(): boolean {
+        return this.guideService.currentGuideNode.nextGuideNode !== undefined;
+    }
+
+    private loadGuide(guide: Type<GuideContent>): void {
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(guide);
+        this.guideContent.clear();
+        const componentRef = this.guideContent.createComponent(componentFactory);
+        componentRef.changeDetectorRef.detectChanges();
     }
 }

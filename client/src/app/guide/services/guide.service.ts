@@ -1,57 +1,29 @@
 import { Injectable, Type } from '@angular/core';
-
 import { GuideContent } from '@app/guide/classes/guide-content';
-import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
-import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
-import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-export-drawing/guide-export-drawing.component';
-import { GuideSaveDrawingComponent } from '@app/guide/components/guide-content/guide-file-options/guide-save-drawing/guide-save-drawing.component';
-import { GuideCalligraphyComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
-import { GuidePaintbrushComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
-import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
-import { GuideSpraypaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spraypaint/guide-spraypaint.component';
-import { GuideColorPickerComponent } from '@app/guide/components/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
-import { GuideColorComponent } from '@app/guide/components/guide-content/guide-tools/guide-color/guide-color.component';
-import { GuideEraserComponent } from '@app/guide/components/guide-content/guide-tools/guide-eraser/guide-eraser.component';
-import { GuideFillComponent } from '@app/guide/components/guide-content/guide-tools/guide-fill/guide-fill.component';
-import { GuideLineComponent } from '@app/guide/components/guide-content/guide-tools/guide-line/guide-line.component';
-import { GuideRecolorComponent } from '@app/guide/components/guide-content/guide-tools/guide-recolor/guide-recolor.component';
-import { GuideSelectComponent } from '@app/guide/components/guide-content/guide-tools/guide-select/guide-select.component';
-import { GuideEllipseComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-ellipse/guide-ellipse.component';
-import { GuidePolygonComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-polygon/guide-polygon.component';
-import { GuideRectangleComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-rectangle/guide-rectangle.component';
-import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
-import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
-import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
-
-const guides: Type<GuideContent>[] = [
-    GuideWelcomeComponent,
-    GuideSpraypaintComponent,
-    GuidePencilComponent,
-    GuidePaintbrushComponent,
-    GuideCalligraphyComponent,
-    GuideEllipseComponent,
-    GuidePolygonComponent,
-    GuideRectangleComponent,
-    GuideRecolorComponent,
-    GuideColorComponent,
-    GuideEraserComponent,
-    GuideStampComponent,
-    GuideLineComponent,
-    GuideColorPickerComponent,
-    GuideFillComponent,
-    GuideTextComponent,
-    GuideSelectComponent,
-    GuideGridComponent,
-    GuideSnapToGridComponent,
-    GuideExportDrawingComponent,
-    GuideSaveDrawingComponent,
-];
+import { GuideNode } from '@app/guide/classes/guide-node';
+import { guideData } from '@app/guide/constants/guide-data';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GuideService {
-    getGuides(): Type<GuideContent>[] {
-        return guides;
+    private _currentGuideNode: GuideNode = guideData[0]; // tslint:disable-line: variable-name
+
+    // The first GuideNode always has a valid guide because it is the welcome guide
+    // tslint:disable-next-line: no-non-null-assertion
+    private currentGuideChangedSource = new BehaviorSubject<Type<GuideContent>>(this._currentGuideNode.guide!);
+
+    currentGuideChanged$ = this.currentGuideChangedSource.asObservable(); // tslint:disable-line: member-ordering
+
+    get currentGuideNode(): GuideNode {
+        return this._currentGuideNode;
+    }
+
+    set currentGuideNode(guideNode: GuideNode) {
+        this._currentGuideNode = guideNode;
+        if (this._currentGuideNode.guide !== undefined) {
+            this.currentGuideChangedSource.next(this._currentGuideNode.guide);
+        }
     }
 }

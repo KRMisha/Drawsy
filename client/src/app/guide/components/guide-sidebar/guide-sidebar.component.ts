@@ -1,8 +1,9 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, EventEmitter, Input, Output, Type } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { GuideContent } from '@app/guide/classes/guide-content';
-import { guideData, GuideNode } from '@app/guide/classes/guide-node';
+import { GuideNode } from '@app/guide/classes/guide-node';
+import { guideData } from '@app/guide/constants/guide-data';
+import { GuideService } from '@app/guide/services/guide.service';
 
 @Component({
     selector: 'app-guide-sidebar',
@@ -13,30 +14,30 @@ export class GuideSidebarComponent {
     treeControl = new NestedTreeControl<GuideNode>((node: GuideNode) => node.children);
     dataSource = new MatTreeNestedDataSource<GuideNode>();
 
-    @Output() selectGuide = new EventEmitter<Type<GuideContent>>();
-    @Input() selectedComponentButton: string;
-
-    constructor() {
+    constructor(private guideService: GuideService) {
         this.dataSource.data = guideData;
-        this.selectedComponentButton = 'GuideWelcomeComponent';
     }
 
     hasChild = (_: number, node: GuideNode) => node.children !== undefined && node.children.length > 0;
-
-    expandLayer(nodes: GuideNode[]): void {
-        for (const node of nodes) {
-            if (node.children) {
-                this.expandLayer(node.children);
-                this.treeControl.expand(node);
-            }
-        }
-    }
 
     expandAllMenus(): void {
         this.expandLayer(this.dataSource.data);
     }
 
-    updateGuideButton(nodeName: string): void {
-        this.selectedComponentButton = nodeName;
+    get currentGuideNode(): GuideNode {
+        return this.guideService.currentGuideNode;
+    }
+
+    set currentGuideNode(guideNode: GuideNode) {
+        this.guideService.currentGuideNode = guideNode;
+    }
+
+    private expandLayer(nodes: GuideNode[]): void {
+        for (const node of nodes) {
+            if (node.children !== undefined) {
+                this.expandLayer(node.children);
+                this.treeControl.expand(node);
+            }
+        }
     }
 }

@@ -27,6 +27,7 @@
 }
 
 .item-sidebar {
+    overflow-x: hidden;
     overflow-y: auto;
     grid-area: sidebar;
 }

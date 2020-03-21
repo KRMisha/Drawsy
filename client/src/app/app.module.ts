@@ -49,7 +49,7 @@ import { GuideSaveDrawingComponent } from '@app/guide/components/guide-content/g
 import { GuideCalligraphyComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
 import { GuidePaintbrushComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
 import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
-import { GuideSpraypaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spraypaint/guide-spraypaint.component';
+import { GuideSprayPaintComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spray-paint/guide-spray-paint.component';
 import { GuideColorPickerComponent } from '@app/guide/components/guide-content/guide-tools/guide-color-picker/guide-color-picker.component';
 import { GuideColorComponent } from '@app/guide/components/guide-content/guide-tools/guide-color/guide-color.component';
 import { GuideEraserComponent } from '@app/guide/components/guide-content/guide-tools/guide-eraser/guide-eraser.component';
@@ -63,7 +63,6 @@ import { GuideRectangleComponent } from '@app/guide/components/guide-content/gui
 import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
 import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
-import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
@@ -92,7 +91,6 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
         GuideColorComponent,
         GuideColorPickerComponent,
         GuideComponent,
-        GuideDirective,
         GuideEllipseComponent,
         GuideEraserComponent,
         GuideExportDrawingComponent,
@@ -108,7 +106,7 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
         GuideSelectComponent,
         GuideSidebarComponent,
         GuideSnapToGridComponent,
-        GuideSpraypaintComponent,
+        GuideSprayPaintComponent,
         GuideStampComponent,
         GuideTextComponent,
         GuideWelcomeComponent,
