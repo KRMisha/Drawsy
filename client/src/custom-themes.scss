@@ -2,39 +2,16 @@
 @include mat-core();
 
 $red-warn: mat-palette($mat-red);
-
-$red-palette: mat-palette($mat-red, A700);
-$pink-palette: mat-palette($mat-pink, 300);
-$purple-palette: mat-palette($mat-purple, A400);
-$indigo-palette: mat-palette($mat-indigo, 200);
-$blue-palette: mat-palette($mat-light-blue, 500);
-$green-palette: mat-palette($mat-light-green, 500);
-$yellow-palette: mat-palette($mat-yellow, 500);
-$orange-palette: mat-palette($mat-orange, 500);
-
-$red-dark-theme: mat-dark-theme($red-palette, $red-palette, $red-warn);
-$red-light-theme: mat-light-theme($red-palette, $red-palette, $red-warn);
-
-$pink-dark-theme: mat-dark-theme($pink-palette, $pink-palette, $red-warn);
-$pink-light-theme: mat-light-theme($pink-palette, $pink-palette, $red-warn);
-
-$purple-dark-theme: mat-dark-theme($purple-palette, $purple-palette, $red-warn);
-$purple-light-theme: mat-light-theme($purple-palette, $purple-palette, $red-warn);
-
-$indigo-dark-theme: mat-dark-theme($indigo-palette, $indigo-palette, $red-warn);
-$indigo-light-theme: mat-light-theme($indigo-palette, $indigo-palette, $red-warn);
-
-$blue-dark-theme: mat-dark-theme($blue-palette, $blue-palette, $red-warn);
-$blue-light-theme: mat-light-theme($blue-palette, $blue-palette, $red-warn);
-
-$green-dark-theme: mat-dark-theme($green-palette, $green-palette, $red-warn);
-$green-light-theme: mat-light-theme($green-palette, $green-palette, $red-warn);
-
-$yellow-dark-theme: mat-dark-theme($yellow-palette, $yellow-palette, $red-warn);
-$yellow-light-theme: mat-light-theme($yellow-palette, $yellow-palette, $red-warn);
-
-$orange-dark-theme: mat-dark-theme($orange-palette, $orange-palette, $red-warn);
-$orange-light-theme: mat-light-theme($orange-palette, $orange-palette, $red-warn);
+$theme-colors: (
+    pink: mat-palette($mat-pink, 300),
+    purple: mat-palette($mat-purple, A400),
+    indigo: mat-palette($mat-indigo, 200),
+    blue: mat-palette($mat-light-blue, 500),
+    green: mat-palette($mat-light-green, 500),
+    yellow: mat-palette($mat-yellow, 500),
+    orange: mat-palette($mat-orange, 500),
+    red: mat-palette($mat-red, A700),
+);
 
 @mixin theme-mixin($theme) {
     @include angular-material-theme($theme);
@@ -43,36 +20,10 @@ $orange-light-theme: mat-light-theme($orange-palette, $orange-palette, $red-warn
     $accent: map-get($theme, accent);
     $warn: map-get($theme, warn);
 
-    .red-theme-color {
-        background-color: mat-color($red-palette);
-    }
-
-    .pink-theme-color {
-        background-color: mat-color($pink-palette);
-    }
-
-    .purple-theme-color {
-        background-color: mat-color($purple-palette);
-    }
-
-    .indigo-theme-color {
-        background-color: mat-color($indigo-palette);
-    }
-
-    .blue-theme-color {
-        background-color: mat-color($blue-palette);
-    }
-
-    .green-theme-color {
-        background-color: mat-color($green-palette);
-    }
-
-    .yellow-theme-color {
-        background-color: mat-color($yellow-palette);
-    }
-
-    .orange-theme-color {
-        background-color: mat-color($orange-palette);
+    @each $color-name, $theme-color in $theme-colors {
+        .#{$color-name}-theme-color {
+            background-color: mat-color($theme-color);
+        }
     }
 
     .selected-button {
@@ -88,66 +39,12 @@ $orange-light-theme: mat-light-theme($orange-palette, $orange-palette, $red-warn
     }
 }
 
-.red-dark-theme {
-    @include theme-mixin($red-dark-theme);
-}
+@each $color-name, $theme-color in $theme-colors {
+    .#{$color-name}-light-theme {
+        @include theme-mixin(mat-light-theme($theme-color, $theme-color, $red-warn));
+    }
 
-.red-light-theme {
-    @include theme-mixin($red-light-theme);
-}
-
-.pink-dark-theme {
-    @include theme-mixin($pink-dark-theme);
-}
-
-.pink-light-theme {
-    @include theme-mixin($pink-light-theme);
-}
-
-.purple-dark-theme {
-    @include theme-mixin($purple-dark-theme);
-}
-
-.purple-light-theme {
-    @include theme-mixin($purple-light-theme);
-}
-
-.indigo-dark-theme {
-    @include theme-mixin($indigo-dark-theme);
-}
-
-.indigo-light-theme {
-    @include theme-mixin($indigo-light-theme);
-}
-
-.blue-dark-theme {
-    @include theme-mixin($blue-dark-theme);
-}
-
-.blue-light-theme {
-    @include theme-mixin($blue-light-theme);
-}
-
-.green-dark-theme {
-    @include theme-mixin($green-dark-theme);
-}
-
-.green-light-theme {
-    @include theme-mixin($green-light-theme);
-}
-
-.yellow-dark-theme {
-    @include theme-mixin($yellow-dark-theme);
-}
-
-.yellow-light-theme {
-    @include theme-mixin($yellow-light-theme);
-}
-
-.orange-dark-theme {
-    @include theme-mixin($orange-dark-theme);
-}
-
-.orange-light-theme {
-    @include theme-mixin($orange-light-theme);
+    .#{$color-name}-dark-theme {
+        @include theme-mixin(mat-dark-theme($theme-color, $theme-color, $red-warn));
+    }
 }
