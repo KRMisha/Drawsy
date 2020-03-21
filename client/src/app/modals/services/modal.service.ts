@@ -19,28 +19,28 @@ export class ModalService {
 
     constructor(private dialog: MatDialog) {}
 
-    openSettingsModal(): void {
-        this.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
-    }
-
-    openExportModal(): void {
-        this.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
-    }
-
-    openSaveModal(): void {
-        this.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
-    }
-
     openNewDrawingModal(): void {
         this.openDialog(NewDrawingComponent, { x: 425, y: 500 });
     }
 
-    openGuideModal(): void {
-        this.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    openExportDrawingModal(): void {
+        this.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+    }
+
+    openSaveDrawingModal(): void {
+        this.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
     }
 
     openGalleryModal(): void {
         this.openDialog(GalleryComponent, { x: 1920, y: 900 });
+    }
+
+    openDrawingSettingsModal(): void {
+        this.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
+    }
+
+    openGuideModal(): void {
+        this.openDialog(GuideComponent, { x: 1920, y: 1080 });
     }
 
     get isModalPresent(): boolean {

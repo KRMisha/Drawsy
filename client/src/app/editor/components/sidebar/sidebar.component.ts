@@ -78,10 +78,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
             this.setSelectedTool(10); // tslint:disable-line: no-magic-numbers
         });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
-            this.openExportModal();
+            this.openExportDrawingModal();
         });
         this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
-            this.openSaveModal();
+            this.openSaveDrawingModal();
         });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
             this.undo();
@@ -118,28 +118,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.currentToolService.setSelectedTool(toolIndex);
     }
 
-    openSettingsModal(): void {
-        this.modalService.openSettingsModal();
-    }
-
-    openExportModal(): void {
-        this.modalService.openExportModal();
-    }
-
-    openSaveModal(): void {
-        this.modalService.openSaveModal();
-    }
-
     openNewDrawingModal(): void {
         this.modalService.openNewDrawingModal();
     }
 
-    openGuideModal(): void {
-        this.modalService.openGuideModal();
+    openExportDrawingModal(): void {
+        this.modalService.openExportDrawingModal();
+    }
+
+    openSaveDrawingModal(): void {
+        this.modalService.openSaveDrawingModal();
     }
 
     openGalleryModal(): void {
         this.modalService.openGalleryModal();
+    }
+
+    openDrawingSettingsModal(): void {
+        this.modalService.openDrawingSettingsModal();
+    }
+
+    openGuideModal(): void {
+        this.modalService.openGuideModal();
     }
 
     undo(): void {

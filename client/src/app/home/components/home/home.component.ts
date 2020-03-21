@@ -15,12 +15,12 @@ export class HomeComponent {
         this.modalService.openNewDrawingModal();
     }
 
-    openGuideModal(): void {
-        this.modalService.openGuideModal();
-    }
-
     openGalleryModal(): void {
         this.modalService.openGalleryModal();
+    }
+
+    openGuideModal(): void {
+        this.modalService.openGuideModal();
     }
 
     continueDrawing(): void {
