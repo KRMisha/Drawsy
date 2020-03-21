@@ -3,11 +3,11 @@
     <desc #appDesc></desc>
 
     <defs #appDefs>
-        <filter id="previewFilter0">
+        <filter id="previewFilter0" filterUnits="userSpaceOnUse">
             <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite" />
         </filter>
 
-        <filter id="previewFilter1" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+        <filter id="previewFilter1" filterUnits="userSpaceOnUse">
             <feColorMatrix
                 type="matrix"
                 values="0 1 0 0 0
@@ -65,7 +65,7 @@
         </filter>
     </defs>
 
-    <rect width="100%" height="100%" [attr.fill]="getBackgroundColor()" [attr.filter]="getFilter()" />
+    <rect width="100%" height="100%" [attr.fill]="backgroundColor" [attr.filter]="getFilter()" />
 
     <g #appDrawingContent [attr.filter]="getFilter()"></g>
 </svg>

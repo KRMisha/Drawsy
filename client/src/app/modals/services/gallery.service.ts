@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
 import { ServerService } from '@app/server/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
@@ -22,7 +23,8 @@ export class GalleryService {
         private serverService: ServerService,
         private router: Router,
         private drawingSerializerService: DrawingSerializerService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private drawingService: DrawingService
     ) {}
 
     loadDrawing(drawing: SvgFileContainer): void {
@@ -52,6 +54,7 @@ export class GalleryService {
                 if (drawingToRemoveIndex >= 0) {
                     this._drawings.splice(drawingToRemoveIndex, 1);
                 }
+                this.drawingService.id = undefined;
             });
     }
 
