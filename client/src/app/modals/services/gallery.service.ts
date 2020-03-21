@@ -9,7 +9,7 @@ import { ServerService } from '@app/server/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -58,15 +58,18 @@ export class GalleryService {
     getAllDrawings(): void {
         this._areDrawingsLoaded = false;
 
-        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]) => {
-            this._drawings = savedFiles.map((savedFile: SavedFile) =>
-                this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
-            );
-            this._areDrawingsLoaded = true;
-        },
-        (error: HttpErrorResponse) => {
-            this._areDrawingsLoaded = true;
-        });
+        this.serverService
+            .getAllDrawings()
+            .pipe(
+                finalize(() => {
+                    this._areDrawingsLoaded = true;
+                })
+            )
+            .subscribe((savedFiles: SavedFile[]) => {
+                this._drawings = savedFiles.map((savedFile: SavedFile) =>
+                    this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+                );
+            });
     }
 
     getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {
