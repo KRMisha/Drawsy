@@ -3,11 +3,11 @@ import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
-    selector: 'app-drawing-settings',
-    templateUrl: './drawing-settings.component.html',
-    styleUrls: ['./drawing-settings.component.scss'],
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
 })
-export class DrawingSettingsComponent {
+export class SettingsComponent {
     color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     constructor(private drawingService: DrawingService) {}

@@ -2,14 +2,14 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Color } from '@app/classes/color';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SettingsComponent } from '@app/modals/components/settings/settings.component';
 import { of } from 'rxjs';
 
-describe('DrawingSettingsComponent', () => {
-    let component: DrawingSettingsComponent;
-    let fixture: ComponentFixture<DrawingSettingsComponent>;
-    let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<DrawingSettingsComponent>>;
+describe('SettingsComponent', () => {
+    let component: SettingsComponent;
+    let fixture: ComponentFixture<SettingsComponent>;
+    let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<SettingsComponent>>;
 
     beforeEach(async(() => {
         dialogRefSpyObj = jasmine.createSpyObj({
@@ -20,7 +20,7 @@ describe('DrawingSettingsComponent', () => {
         });
 
         TestBed.configureTestingModule({
-            declarations: [DrawingSettingsComponent],
+            declarations: [SettingsComponent],
             providers: [
                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
                 { provide: DrawingService, useValue: ({ backgroundColor: {} as Color } as unknown) as DrawingService },
@@ -30,7 +30,7 @@ describe('DrawingSettingsComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DrawingSettingsComponent);
+        fixture = TestBed.createComponent(SettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

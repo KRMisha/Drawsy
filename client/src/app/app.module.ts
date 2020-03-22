@@ -35,9 +35,7 @@ import { ColorHexSelectorComponent } from '@app/color-picker/components/color-he
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
 import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
 import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
-import { GridSettingsComponent } from '@app/drawing/components/grid-settings/grid-settings.component';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-color-picker/sidebar-color-picker.component';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -70,8 +68,10 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings.component';
+import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
-import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/theme-settings.component';
 
 @NgModule({
     declarations: [
@@ -82,7 +82,7 @@ import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/the
         ColorPickerComponent,
         DrawingComponent,
         DrawingPreviewComponent,
-        DrawingSettingsComponent,
+        SettingsComponent,
         EditorComponent,
         ExportDrawingComponent,
         GalleryComponent,
