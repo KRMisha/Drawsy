@@ -24,10 +24,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     readonly minimumLineWidth = 1;
     readonly maximumLineWidth = 500;
-    readonly minimumJunctionDiameter = 1;
+    readonly minimumJunctionDiameter = 5;
     readonly maximumJunctionDiameter = 500;
-    readonly minimumSprayDiameter = 10;
-    readonly maximumSprayDiameter = 250;
+    readonly minimumSprayDiameter = 20;
+    readonly maximumSprayDiameter = 350;
     readonly minimumSprayRate = 10;
     readonly maximumSprayRate = 100;
     readonly minimumShapeBorderWidth = 1;
