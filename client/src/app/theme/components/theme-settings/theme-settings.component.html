@@ -1,5 +1,5 @@
-<h3 class="mat-h3">Couleur du thème</h3>
-<div class="color-container">
+<h3 class="title">Couleur du thème</h3>
+<div class="container">
     <div
         *ngFor="let themeColor of themeColors"
         class="circle mat-elevation-z2"
@@ -8,7 +8,7 @@
         (click)="color = themeColor"
     ></div>
 </div>
-<div class="lighting-container">
-    <h3 class="mat-h3">Clair - Sombre</h3>
+<div class="container">
+    <h3 class="title">Clair - Sombre</h3>
     <mat-slide-toggle [checked]="isDarkTheme" (change)="toggleDarkTheme()"></mat-slide-toggle>
 </div>

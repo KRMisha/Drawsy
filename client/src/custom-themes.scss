@@ -1,7 +1,6 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-$red-warn: mat-palette($mat-red);
 $theme-colors: (
     pink: mat-palette($mat-pink, 300),
     purple: mat-palette($mat-purple, A400),
@@ -21,7 +20,7 @@ $theme-colors: (
     $warn: map-get($theme, warn);
 
     @each $color-name, $theme-color in $theme-colors {
-        .#{$color-name}-theme-color {
+        .#{$color-name + "-theme-color"} {
             background-color: mat-color($theme-color);
         }
     }
@@ -40,11 +39,11 @@ $theme-colors: (
 }
 
 @each $color-name, $theme-color in $theme-colors {
-    .#{$color-name}-light-theme {
-        @include theme-mixin(mat-light-theme($theme-color, $theme-color, $red-warn));
+    .#{$color-name + "-light-theme"} {
+        @include theme-mixin(mat-light-theme($theme-color, $theme-color));
     }
 
-    .#{$color-name}-dark-theme {
-        @include theme-mixin(mat-dark-theme($theme-color, $theme-color, $red-warn));
+    .#{$color-name + "-dark-theme"} {
+        @include theme-mixin(mat-dark-theme($theme-color, $theme-color));
     }
 }

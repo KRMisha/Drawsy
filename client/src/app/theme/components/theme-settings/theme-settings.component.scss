@@ -1,4 +1,9 @@
-.mat-h3 {
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.title {
     margin-top: 4px;
     margin-bottom: 4px;
     margin-right: 4px;
@@ -11,16 +16,6 @@
     border-radius: 11px;
     cursor: pointer;
     margin: 4px;
-}
-
-.color-container {
-    display: flex;
-    justify-content: center;
-}
-
-.lighting-container {
-    display: flex;
-    justify-content: center;
 }
 
 .mat-slide-toggle {
