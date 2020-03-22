@@ -56,7 +56,7 @@ describe('DatabaseService', () => {
             expect(databaseService['collection']).to.be.ok;
         });
 
-        it('#createFile should throw a 400 error and reject a file with an invalid title', async () => {
+        it('#createFile should throw a 400 error and reject a file with a title that is invalid due to its content', async () => {
             const fileContent =
                 '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
                 '<title>!@#</title><desc></desc></svg>';
@@ -65,10 +65,28 @@ describe('DatabaseService', () => {
                 .and.have.property('status', HttpStatusCode.BadRequest);
         });
 
-        it('#createFile should throw a 400 error and reject a file with invalid labels', async () => {
+        it('#createFile should throw a 400 error and reject a file with a label that is invalid due to its content', async () => {
             const fileContent =
                 '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
                 '<title>Title</title><desc>Label,!@#</desc></svg>';
+            await expect(databaseService.createFile(fileContent))
+                .to.eventually.be.rejectedWith(HttpException, 'Invalid file')
+                .and.have.property('status', HttpStatusCode.BadRequest);
+        });
+
+        it('#createFile should throw a 400 error and reject a file with a title that is invalid due to its length', async () => {
+            const fileContent =
+                '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
+                '<title>ThisTitleIsOverTwentyFiveCharactersLong</title><desc></desc></svg>';
+            await expect(databaseService.createFile(fileContent))
+                .to.eventually.be.rejectedWith(HttpException, 'Invalid file')
+                .and.have.property('status', HttpStatusCode.BadRequest);
+        });
+
+        it('#createFile should throw a 400 error and reject a file with a label that is invalid due to its length', async () => {
+            const fileContent =
+                '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
+                '<title>Title</title><desc>Label,ThisLabelIsOverFifteenCharactersLong</desc></svg>';
             await expect(databaseService.createFile(fileContent))
                 .to.eventually.be.rejectedWith(HttpException, 'Invalid file')
                 .and.have.property('status', HttpStatusCode.BadRequest);
