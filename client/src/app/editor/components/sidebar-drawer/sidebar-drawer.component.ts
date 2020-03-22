@@ -34,7 +34,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     readonly minimumPolygonSideCount = 3;
     readonly maximumPolygonSideCount = 12;
     readonly minimumEraserSize = 3;
-    readonly maximumEraserSize = 50;
+    readonly maximumEraserSize = 25;
 
     @Output() undoClicked = new EventEmitter<void>();
     @Output() redoClicked = new EventEmitter<void>();
@@ -49,54 +49,54 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     lineWidthFormControl = new FormControl(ToolDefaults.defaultLineWidth, [
         Validators.required,
-        Validators.min(this.minimumLineWidth),
-        Validators.max(this.maximumLineWidth),
         Validators.pattern(Regexes.integerRegex),
+        Validators.max(this.maximumLineWidth),
+        Validators.min(this.minimumLineWidth),
     ]);
 
     junctionDiameterFormControl = new FormControl(
         { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
         [
             Validators.required,
+            Validators.pattern(Regexes.integerRegex),
             Validators.min(this.minimumJunctionDiameter),
             Validators.max(this.maximumJunctionDiameter),
-            Validators.pattern(Regexes.integerRegex),
         ]
     );
 
     sprayDiameterFormControl = new FormControl(ToolDefaults.defaultSprayDiameter, [
         Validators.required,
+        Validators.pattern(Regexes.integerRegex),
         Validators.min(this.minimumSprayDiameter),
         Validators.max(this.maximumSprayDiameter),
-        Validators.pattern(Regexes.integerRegex),
     ]);
 
     sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
         Validators.required,
+        Validators.pattern(Regexes.integerRegex),
         Validators.min(this.minimumSprayRate),
         Validators.max(this.maximumSprayRate),
-        Validators.pattern(Regexes.integerRegex),
     ]);
 
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
+        Validators.pattern(Regexes.integerRegex),
         Validators.min(this.minimumPolygonSideCount),
         Validators.max(this.maximumPolygonSideCount),
-        Validators.pattern(Regexes.integerRegex),
     ]);
 
     shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
         Validators.required,
+        Validators.pattern(Regexes.integerRegex),
         Validators.min(this.minimumShapeBorderWidth),
         Validators.max(this.maximumShapeBorderWidth),
-        Validators.pattern(Regexes.integerRegex),
     ]);
 
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
         Validators.required,
+        Validators.pattern(Regexes.integerRegex),
         Validators.min(this.minimumEraserSize),
         Validators.max(this.maximumEraserSize),
-        Validators.pattern(Regexes.integerRegex),
     ]);
 
     constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
@@ -246,12 +246,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private getErrorMessage(formControl: AbstractControl): string {
         return formControl.hasError('required')
             ? 'Entrez une taille'
+            : formControl.hasError('pattern')
+            ? 'Nombre entier invalide'
             : formControl.hasError('min')
             ? 'Valeur trop petite'
             : formControl.hasError('max')
             ? 'Valeur trop grande'
-            : formControl.hasError('pattern')
-            ? 'Nombre entier invalide'
             : '';
     }
 }
