@@ -1,4 +1,4 @@
-export const hexRegex = new RegExp('^[0-9a-fA-F]{6}$');
+import Regexes from '@app/constants/regexes';
 
 export class Color {
     static readonly maxRgb = 255;
@@ -74,15 +74,28 @@ export class Color {
         return newColor;
     }
 
+    static fromRgbString(rgbString: string): Color {
+        const regexRgbaValues = Regexes.rgbRegex.exec(rgbString);
+        // tslint:disable-next-line: no-non-null-assertion
+        const rgbaValues = regexRgbaValues!.map((floatString: string) => {
+            return parseFloat(floatString);
+        });
+        const redIndex = 1;
+        const greenIndex = 2;
+        const blueIndex = 3;
+        return this.fromRgb(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex]);
+    }
+
     static fromRgbaString(rgbaString: string): Color {
-        const rgbaValues = rgbaString
-            .substring(rgbaString.indexOf('(') + 1, rgbaString.lastIndexOf(')'))
-            .split(',')
-            .map((x: string) => parseFloat(x.trim()));
-        const redIndex = 0;
-        const greenIndex = 1;
-        const blueIndex = 2;
-        const alphaIndex = 3;
+        const regexRgbaValues = Regexes.rgbaRegex.exec(rgbaString);
+        // tslint:disable-next-line: no-non-null-assertion
+        const rgbaValues = regexRgbaValues!.map((floatString: string) => {
+            return parseFloat(floatString);
+        });
+        const redIndex = 1;
+        const greenIndex = 2;
+        const blueIndex = 3;
+        const alphaIndex = 4;
         return this.fromRgba(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex], rgbaValues[alphaIndex]);
     }
 
@@ -126,7 +139,7 @@ export class Color {
     }
 
     setHex(hex: string): boolean {
-        if (hexRegex.test(hex)) {
+        if (Regexes.sixHexRegex.test(hex)) {
             // tslint:disable: no-magic-numbers
             const radix = 16;
             this.red = parseInt(hex.substring(0, 2), radix);

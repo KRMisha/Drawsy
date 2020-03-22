@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import Regexes from '@app/constants/regexes';
 import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
@@ -9,7 +10,6 @@ import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
-const integerRegex = /^[0-9]*$/;
 const minimumLineWidth = 1;
 const maximumLineWidth = 500;
 const minimumJunctionDiameter = 1;
@@ -51,7 +51,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.min(minimumLineWidth),
         Validators.max(maximumLineWidth),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     junctionDiameterFormControl = new FormControl(
@@ -60,7 +60,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             Validators.required,
             Validators.min(minimumJunctionDiameter),
             Validators.max(maximumJunctionDiameter),
-            Validators.pattern(integerRegex),
+            Validators.pattern(Regexes.integerRegex),
         ]
     );
 
@@ -68,35 +68,35 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.min(minimumSprayDiameter),
         Validators.max(maximumSprayDiameter),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
         Validators.required,
         Validators.min(minimumSprayRate),
         Validators.max(maximumSprayRate),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
         Validators.min(minimumPolygonSideCount),
         Validators.max(maximumPolygonSideCount),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
         Validators.required,
         Validators.min(minimumShapeBorderWidth),
         Validators.max(maximumShapeBorderWidth),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
         Validators.required,
         Validators.min(minimumEraserSize),
         Validators.max(maximumEraserSize),
-        Validators.pattern(integerRegex),
+        Validators.pattern(Regexes.integerRegex),
     ]);
 
     constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}

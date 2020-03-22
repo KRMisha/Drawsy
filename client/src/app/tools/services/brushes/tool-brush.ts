@@ -35,7 +35,6 @@ export abstract class ToolBrush extends Tool {
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === ButtonId.Left) {
             this.path = this.createNewPath();
-
             const mousePosition = this.getMousePosition(event);
             const pathString = this.getPathStartString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);

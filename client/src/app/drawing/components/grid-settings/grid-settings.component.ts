@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import Regexes from '@app/constants/regexes';
 import { GridService } from '@app/drawing/services/grid.service';
 import { Subscription } from 'rxjs';
-
-const integerRegexPattern = '^[0-9]*$';
-const precisionRegexPattern = '^[0-9.]*$';
 
 @Component({
     selector: 'app-grid-settings',
@@ -24,7 +22,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.required,
                 Validators.min(this.gridService.minimumSize),
                 Validators.max(this.gridService.maximumSize),
-                Validators.pattern(integerRegexPattern),
+                Validators.pattern(Regexes.integerRegex),
             ])
         ),
     });
@@ -36,7 +34,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.required,
                 Validators.min(this.gridService.minimumOpacity),
                 Validators.max(this.gridService.maximumOpacity),
-                Validators.pattern(precisionRegexPattern),
+                Validators.pattern(Regexes.precisionRegex),
             ])
         ),
     });
