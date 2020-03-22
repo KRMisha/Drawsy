@@ -1,4 +1,4 @@
 export interface JunctionSettings {
-    hasJunction: boolean;
-    junctionSize: number;
+    isEnabled: boolean;
+    diameter: number;
 }

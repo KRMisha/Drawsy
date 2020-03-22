@@ -1,14 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
-import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
-import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
-import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
@@ -84,10 +78,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
             this.setSelectedTool(10); // tslint:disable-line: no-magic-numbers
         });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
-            this.openExportModal();
+            this.openExportDrawingModal();
         });
         this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
-            this.openSaveModal();
+            this.openSaveDrawingModal();
         });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
             this.undo();
@@ -124,28 +118,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.currentToolService.setSelectedTool(toolIndex);
     }
 
-    openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 425, y: 760 });
-    }
-
-    openExportModal(): void {
-        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
-    }
-
-    openSaveModal(): void {
-        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
-    }
-
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+        this.modalService.openNewDrawingModal();
     }
 
-    openGuideModal(): void {
-        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    openExportDrawingModal(): void {
+        this.modalService.openExportDrawingModal();
+    }
+
+    openSaveDrawingModal(): void {
+        this.modalService.openSaveDrawingModal();
     }
 
     openGalleryModal(): void {
-        this.modalService.openDialog(GalleryComponent, { x: 1920, y: 900 });
+        this.modalService.openGalleryModal();
+    }
+
+    openDrawingSettingsModal(): void {
+        this.modalService.openDrawingSettingsModal();
+    }
+
+    openGuideModal(): void {
+        this.modalService.openGuideModal();
     }
 
     undo(): void {

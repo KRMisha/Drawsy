@@ -5,15 +5,17 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
+import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
+import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 export abstract class Tool {
     static isMouseDown = false;
     static isMouseInsideDrawing = false;
 
     name: ToolName;
-    toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
+    toolSettings = new Map<ToolSetting, number | JunctionSettings | ShapeType | BrushTexture>();
 
     protected renderer: Renderer2;
 

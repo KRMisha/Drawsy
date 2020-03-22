@@ -1,49 +1,5 @@
 <svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox">
     <defs>
-        <filter id="brushTexture1" filterUnits="userSpaceOnUse">
-            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence2" />
-            <feDisplacementMap in2="turbulence2" in="SourceGraphic" scale="15" />
-        </filter>
-
-        <filter id="brushTexture2" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
-        </filter>
-
-        <filter id="brushTexture3" filterUnits="userSpaceOnUse">
-            <feDropShadow stdDeviation="5" in="SourceGraphic" dx="10" dy="10" flood-color="#80868b" result="shadow3" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur3" />
-            <feMerge>
-                <feMergeNode in="SourceGraphic" />
-                <feMergeNode in="shadow3" />
-                <feMergeNode in="blur3" />
-            </feMerge>
-        </filter>
-
-        <filter id="brushTexture4" filterUnits="userSpaceOnUse">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur4" />
-            <feSpecularLighting
-                in="blur4"
-                surfaceScale="5"
-                specularConstant=".17"
-                specularExponent="50"
-                lighting-color="#e4e4e4"
-                result="specular4"
-            >
-                <fePointLight x="10000" y="10000" z="30000" />
-            </feSpecularLighting>
-            <feComposite in="specular4" in2="SourceAlpha" operator="in" result="specular4" />
-            <feComposite in="SourceGraphic" in2="specular4" operator="arithmetic" k2="1" k3="1" />
-        </filter>
-
-        <filter id="brushTexture5" filterUnits="userSpaceOnUse">
-            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence5" />
-            <feDiffuseLighting surfaceScale="5" diffuseConstant="0.05" in="turbulence5" result="diffuse5">
-                <feDistantLight azimuth="6" elevation="5" />
-            </feDiffuseLighting>
-            <feComposite in="diffuse5" in2="SourceAlpha" operator="in" result="result5" />
-            <feComposite in="SourceGraphic" in2="result5" operator="arithmetic" k2="1" k3="1" />
-        </filter>
-
         <pattern id="grid" [attr.width]="gridSize" [attr.size]="gridSize" patternUnits="userSpaceOnUse" [attr.stroke-opacity]="gridOpacity">
             <path
                 fill="none"
@@ -53,6 +9,50 @@
                 [style.visibility]="isGridDisplayEnabled ? 'visible' : 'hidden'"
             />
         </pattern>
+
+        <filter id="brushTexture0" filterUnits="userSpaceOnUse">
+            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence0" />
+            <feDisplacementMap in2="turbulence0" in="SourceGraphic" scale="15" />
+        </filter>
+
+        <filter id="brushTexture1" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+        </filter>
+
+        <filter id="brushTexture2" filterUnits="userSpaceOnUse">
+            <feDropShadow stdDeviation="5" in="SourceGraphic" dx="10" dy="10" flood-color="#80868b" result="shadow2" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur2" />
+            <feMerge>
+                <feMergeNode in="SourceGraphic" />
+                <feMergeNode in="shadow2" />
+                <feMergeNode in="blur2" />
+            </feMerge>
+        </filter>
+
+        <filter id="brushTexture3" filterUnits="userSpaceOnUse">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur3" />
+            <feSpecularLighting
+                in="blur3"
+                surfaceScale="5"
+                specularConstant=".17"
+                specularExponent="50"
+                lighting-color="#e4e4e4"
+                result="specular3"
+            >
+                <fePointLight x="10000" y="10000" z="30000" />
+            </feSpecularLighting>
+            <feComposite in="specular3" in2="SourceAlpha" operator="in" result="specular3" />
+            <feComposite in="SourceGraphic" in2="specular3" operator="arithmetic" k2="1" k3="1" />
+        </filter>
+
+        <filter id="brushTexture4" filterUnits="userSpaceOnUse">
+            <feTurbulence type="turbulence" baseFrequency="0.1 0.1" numOctaves="4" result="turbulence4" />
+            <feDiffuseLighting surfaceScale="5" diffuseConstant="0.05" in="turbulence4" result="diffuse4">
+                <feDistantLight azimuth="6" elevation="5" />
+            </feDiffuseLighting>
+            <feComposite in="diffuse4" in2="SourceAlpha" operator="in" result="result4" />
+            <feComposite in="SourceGraphic" in2="result4" operator="arithmetic" k2="1" k3="1" />
+        </filter>
     </defs>
 
     <rect width="100%" height="100%" [attr.fill]="backgroundColor" />

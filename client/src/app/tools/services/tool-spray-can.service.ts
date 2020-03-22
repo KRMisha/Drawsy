@@ -8,7 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -26,8 +26,8 @@ export class ToolSprayCanService extends Tool {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.SprayCan);
-        this.toolSettings.set(ToolSetting.SprayRadius, ToolDefaults.defaultSprayRadius);
-        this.toolSettings.set(ToolSetting.SpraySpeed, ToolDefaults.defaultSpraySpeed);
+        this.toolSettings.set(ToolSetting.SprayDiameter, ToolDefaults.defaultSprayDiameter);
+        this.toolSettings.set(ToolSetting.SprayRate, ToolDefaults.defaultSprayRate);
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -81,7 +81,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private createSpray(): void {
-        const density = this.toolSettings.get(ToolSetting.SprayRadius) as number;
+        const density = this.toolSettings.get(ToolSetting.SprayDiameter) as number;
         for (let i = 0; i < density; i++) {
             this.createRandomPoint();
         }
@@ -90,7 +90,7 @@ export class ToolSprayCanService extends Tool {
     private createRandomPoint(): void {
         const angle = Math.random() * 2 * Math.PI;
 
-        const radius = Math.random() * (this.toolSettings.get(ToolSetting.SprayRadius) as number);
+        const radius = (Math.random() * (this.toolSettings.get(ToolSetting.SprayDiameter) as number)) / 2;
         const position: Vec2 = { x: Math.floor(radius * Math.cos(angle)), y: Math.floor(radius * Math.sin(angle)) };
         this.renderer.appendChild(this.groupElement, this.createCircle(position));
     }
@@ -99,6 +99,6 @@ export class ToolSprayCanService extends Tool {
         const oneSecondInMilliseconds = 1000;
         this.interval = window.setInterval(() => {
             this.createSpray();
-        }, oneSecondInMilliseconds / (this.toolSettings.get(ToolSetting.SpraySpeed) as number));
+        }, oneSecondInMilliseconds / (this.toolSettings.get(ToolSetting.SprayRate) as number));
     }
 }

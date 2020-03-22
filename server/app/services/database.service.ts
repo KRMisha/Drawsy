@@ -2,7 +2,7 @@ import { FileSchema } from '@app/classes/file-schema';
 import { HttpException } from '@app/classes/http-exception';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
-import { descRegex } from '@common/validation/desc-regex';
+import DescValidation from '@common/validation/desc-validation';
 import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
@@ -80,13 +80,15 @@ export class DatabaseService {
     }
 
     private isTitleValid(title: string): boolean {
-        return descRegex.test(title);
+        return DescValidation.descRegex.test(title) && title.length <= DescValidation.maxTitleLength;
     }
 
     private areLabelsValid(labels: string): boolean {
         if (labels.length === 0) {
             return true;
         }
-        return labels.split(',').every((label: string) => descRegex.test(label));
+        return labels
+            .split(',')
+            .every((label: string) => DescValidation.descRegex.test(label) && label.length <= DescValidation.maxLabelLength);
     }
 }
