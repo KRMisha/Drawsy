@@ -17,7 +17,10 @@ export class GalleryComponent implements OnInit {
     searchLabels: string[] = [];
 
     galleryGroup = new FormGroup({
-        labels: new FormControl('', [Validators.pattern(MetadataValidation.contentRegex), Validators.maxLength(MetadataValidation.maxLabelLength)]),
+        labels: new FormControl('', [
+            Validators.pattern(MetadataValidation.contentRegex),
+            Validators.maxLength(MetadataValidation.maxLabelLength),
+        ]),
     });
 
     constructor(private galleryService: GalleryService) {}
