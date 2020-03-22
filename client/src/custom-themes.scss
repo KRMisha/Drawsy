@@ -1,9 +1,49 @@
-$polydessin-theme-primary: mat-palette($mat-indigo, 200);
-$polydessin-theme-accent: mat-palette($mat-indigo, 200);
-$polydessin-theme-warn: mat-palette($mat-red);
+@import '~@angular/material/theming';
+@include mat-core();
 
-$polydessin-theme: mat-dark-theme($polydessin-theme-primary, $polydessin-theme-accent, $polydessin-theme-warn);
+$theme-colors: (
+    pink: mat-palette($mat-pink, 300),
+    purple: mat-palette($mat-purple, A400),
+    indigo: mat-palette($mat-indigo, 200),
+    blue: mat-palette($mat-light-blue, 500),
+    green: mat-palette($mat-light-green, 500),
+    yellow: mat-palette($mat-yellow, 500),
+    orange: mat-palette($mat-orange, 500),
+    red: mat-palette($mat-red, A700),
+);
 
-$primary: mat-color($polydessin-theme-primary);
-$accent: mat-color($polydessin-theme-accent);
-$warn: mat-color($polydessin-theme-warn);
+@mixin theme-mixin($theme) {
+    @include angular-material-theme($theme);
+
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+
+    @each $color-name, $theme-color in $theme-colors {
+        .#{$color-name + "-theme-color"} {
+            background-color: mat-color($theme-color);
+        }
+    }
+
+    .selected-button {
+        background-color: mat-color($primary);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: mat-color($primary);
+    }
+
+    .error-tooltip {
+        color: mat-color($warn) !important;
+    }
+}
+
+@each $color-name, $theme-color in $theme-colors {
+    .#{$color-name + "-light-theme"} {
+        @include theme-mixin(mat-light-theme($theme-color, $theme-color));
+    }
+
+    .#{$color-name + "-dark-theme"} {
+        @include theme-mixin(mat-dark-theme($theme-color, $theme-color));
+    }
+}

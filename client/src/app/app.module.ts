@@ -71,6 +71,7 @@ import { GalleryComponent } from '@app/modals/components/gallery/gallery.compone
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
+import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/theme-settings.component';
 
 @NgModule({
     declarations: [
@@ -118,6 +119,7 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        ThemeSettingsComponent,
     ],
     imports: [
         AppRoutingModule,

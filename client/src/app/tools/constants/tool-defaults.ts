@@ -6,7 +6,7 @@ export default {
     defaultLineWidth: 5,
     defaultBrushTexture: BrushTexture.Graffiti,
     defaultJunctionSettings: { isEnabled: false, diameter: 10 } as JunctionSettings,
-    defaultSprayDiameter: 20,
+    defaultSprayDiameter: 30,
     defaultSprayRate: 20,
     defaultShapeType: ShapeType.FillWithBorder,
     defaultShapeBorderWidth: 5,
