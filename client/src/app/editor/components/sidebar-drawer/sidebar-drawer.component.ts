@@ -10,20 +10,6 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
 const integerRegex = /^[0-9]*$/;
-const minimumLineWidth = 1;
-const maximumLineWidth = 500;
-const minimumJunctionDiameter = 1;
-const maximumJunctionDiameter = 500;
-const minimumSprayDiameter = 1;
-const maximumSprayDiameter = 250;
-const minimumSprayRate = 1;
-const maximumSprayRate = 100;
-const minimumShapeBorderWidth = 1;
-const maximumShapeBorderWidth = 100;
-const minimumPolygonSideCount = 3;
-const maximumPolygonSideCount = 12;
-const minimumEraserSize = 3;
-const maximumEraserSize = 50;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -35,6 +21,21 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     ToolSetting = ToolSetting;
     BrushTexture = BrushTexture;
     ShapeType = ShapeType;
+
+    readonly minimumLineWidth = 1;
+    readonly maximumLineWidth = 500;
+    readonly minimumJunctionDiameter = 1;
+    readonly maximumJunctionDiameter = 500;
+    readonly minimumSprayDiameter = 10;
+    readonly maximumSprayDiameter = 250;
+    readonly minimumSprayRate = 10;
+    readonly maximumSprayRate = 100;
+    readonly minimumShapeBorderWidth = 1;
+    readonly maximumShapeBorderWidth = 100;
+    readonly minimumPolygonSideCount = 3;
+    readonly maximumPolygonSideCount = 12;
+    readonly minimumEraserSize = 3;
+    readonly maximumEraserSize = 50;
 
     @Output() undoClicked = new EventEmitter<void>();
     @Output() redoClicked = new EventEmitter<void>();
@@ -49,8 +50,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     lineWidthFormControl = new FormControl(ToolDefaults.defaultLineWidth, [
         Validators.required,
-        Validators.min(minimumLineWidth),
-        Validators.max(maximumLineWidth),
+        Validators.min(this.minimumLineWidth),
+        Validators.max(this.maximumLineWidth),
         Validators.pattern(integerRegex),
     ]);
 
@@ -58,44 +59,44 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
         [
             Validators.required,
-            Validators.min(minimumJunctionDiameter),
-            Validators.max(maximumJunctionDiameter),
+            Validators.min(this.minimumJunctionDiameter),
+            Validators.max(this.maximumJunctionDiameter),
             Validators.pattern(integerRegex),
         ]
     );
 
     sprayDiameterFormControl = new FormControl(ToolDefaults.defaultSprayDiameter, [
         Validators.required,
-        Validators.min(minimumSprayDiameter),
-        Validators.max(maximumSprayDiameter),
+        Validators.min(this.minimumSprayDiameter),
+        Validators.max(this.maximumSprayDiameter),
         Validators.pattern(integerRegex),
     ]);
 
     sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
         Validators.required,
-        Validators.min(minimumSprayRate),
-        Validators.max(maximumSprayRate),
+        Validators.min(this.minimumSprayRate),
+        Validators.max(this.maximumSprayRate),
         Validators.pattern(integerRegex),
     ]);
 
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
-        Validators.min(minimumPolygonSideCount),
-        Validators.max(maximumPolygonSideCount),
+        Validators.min(this.minimumPolygonSideCount),
+        Validators.max(this.maximumPolygonSideCount),
         Validators.pattern(integerRegex),
     ]);
 
     shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
         Validators.required,
-        Validators.min(minimumShapeBorderWidth),
-        Validators.max(maximumShapeBorderWidth),
+        Validators.min(this.minimumShapeBorderWidth),
+        Validators.max(this.maximumShapeBorderWidth),
         Validators.pattern(integerRegex),
     ]);
 
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
         Validators.required,
-        Validators.min(minimumEraserSize),
-        Validators.max(maximumEraserSize),
+        Validators.min(this.minimumEraserSize),
+        Validators.max(this.maximumEraserSize),
         Validators.pattern(integerRegex),
     ]);
 

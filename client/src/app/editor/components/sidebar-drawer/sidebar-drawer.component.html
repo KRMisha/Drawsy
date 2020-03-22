@@ -16,7 +16,12 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider min="1" max="500" [value]="lineWidthFormControl.value" (input)="lineWidthFormControl.setValue($event.value)">
+        <mat-slider
+            [min]="minimumLineWidth"
+            [max]="maximumLineWidth"
+            [value]="lineWidthFormControl.value"
+            (input)="lineWidthFormControl.setValue($event.value)"
+        >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -61,8 +66,8 @@
             class="toggle"
         ></mat-slide-toggle>
         <mat-slider
-            min="1"
-            max="500"
+            [min]="minimumJunctionDiameter"
+            [max]="maximumJunctionDiameter"
             [value]="junctionDiameterFormControl.value"
             (input)="junctionDiameterFormControl.setValue($event.value)"
             [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
@@ -82,7 +87,12 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider min="10" max="100" (input)="sprayDiameterFormControl.setValue($event.value)" [value]="sprayDiameterFormControl.value">
+        <mat-slider
+            [min]="minimumSprayDiameter"
+            [max]="maximumSprayDiameter"
+            (input)="sprayDiameterFormControl.setValue($event.value)"
+            [value]="sprayDiameterFormControl.value"
+        >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -97,7 +107,12 @@
             />
             <span matSuffix>jets/s</span>
         </mat-form-field>
-        <mat-slider min="10" max="100" (input)="sprayRateFormControl.setValue($event.value)" [value]="sprayRateFormControl.value">
+        <mat-slider
+            [min]="minimumSprayRate"
+            [max]="maximumSprayRate"
+            (input)="sprayRateFormControl.setValue($event.value)"
+            [value]="sprayRateFormControl.value"
+        >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
@@ -126,8 +141,8 @@
             <span matSuffix>px</span>
         </mat-form-field>
         <mat-slider
-            min="1"
-            max="100"
+            [min]="minimumShapeBorderWidth"
+            [max]="maximumShapeBorderWidth"
             [value]="shapeBorderWidthFormControl.value"
             (input)="shapeBorderWidthFormControl.setValue($event.value)"
         >
@@ -146,8 +161,8 @@
             />
         </mat-form-field>
         <mat-slider
-            min="3"
-            max="12"
+            [min]="minimumPolygonSideCount"
+            [max]="maximumPolygonSideCount"
             [value]="polygonSideCountFormControl.value"
             (input)="polygonSideCountFormControl.setValue($event.value)"
         >
@@ -166,7 +181,12 @@
             />
             <span matSuffix>px</span>
         </mat-form-field>
-        <mat-slider min="3" max="50" [value]="eraserSizeFormControl.value" (input)="eraserSizeFormControl.setValue($event.value)">
+        <mat-slider
+            [min]="minimumEraserSize"
+            [max]="maximumEraserSize"
+            [value]="eraserSizeFormControl.value"
+            (input)="eraserSizeFormControl.setValue($event.value)"
+        >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
     </div>
