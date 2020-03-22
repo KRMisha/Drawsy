@@ -26,7 +26,7 @@ class ToolShapeMock extends ToolShape {
     }
 }
 
-fdescribe('ToolShape', () => {
+describe('ToolShape', () => {
     const name: ToolName = ToolName.Brush;
     const isShapeAlwaysRegular = true;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -34,20 +34,10 @@ fdescribe('ToolShape', () => {
     let toolShape: ToolShapeMock;
 
     beforeEach(() => {
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
-            'addElement',
-            'removeElement'
-        ]);
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', [
-            'addCommand'
-        ]);
-        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', [
-            'createRenderer'
-        ]);
-        const renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
-            'setAttribute',
-            'createElement'
-        ]);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
+        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
+        const renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
         const colorServiceStub = {} as ColorService;
         toolShape = new ToolShapeMock(
