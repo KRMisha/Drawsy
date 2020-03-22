@@ -145,7 +145,7 @@ describe('DatabaseService', () => {
                 .and.have.property('status', HttpStatusCode.NotFound);
         });
 
-        it('#updateFile should delete the file if its ID is found', async () => {
+        it('#deleteFile should delete the file if its ID is found', async () => {
             const fileContent =
                 '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
                 '<title>Title</title><desc>Label1,Label2</desc></svg>';

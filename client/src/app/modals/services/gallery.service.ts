@@ -4,12 +4,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
 import { ServerService } from '@app/server/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +23,8 @@ export class GalleryService {
         private serverService: ServerService,
         private router: Router,
         private drawingSerializerService: DrawingSerializerService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private drawingService: DrawingService
     ) {}
 
     loadDrawing(drawing: SvgFileContainer): void {
@@ -52,18 +54,26 @@ export class GalleryService {
                 if (drawingToRemoveIndex >= 0) {
                     this._drawings.splice(drawingToRemoveIndex, 1);
                 }
+
+                this.drawingService.id = undefined;
             });
     }
 
     getAllDrawings(): void {
         this._areDrawingsLoaded = false;
 
-        this.serverService.getAllDrawings().subscribe((savedFiles: SavedFile[]) => {
-            this._drawings = savedFiles.map((savedFile: SavedFile) =>
-                this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
-            );
-            this._areDrawingsLoaded = true;
-        });
+        this.serverService
+            .getAllDrawings()
+            .pipe(
+                finalize(() => {
+                    this._areDrawingsLoaded = true;
+                })
+            )
+            .subscribe((savedFiles: SavedFile[]) => {
+                this._drawings = savedFiles.map((savedFile: SavedFile) =>
+                    this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+                );
+            });
     }
 
     getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {

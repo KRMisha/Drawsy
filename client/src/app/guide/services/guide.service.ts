@@ -4,9 +4,7 @@ import { GuideNode } from '@app/guide/classes/guide-node';
 import { guideData } from '@app/guide/constants/guide-data';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class GuideService {
     private _currentGuideNode: GuideNode = guideData[0]; // tslint:disable-line: variable-name
 

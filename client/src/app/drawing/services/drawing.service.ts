@@ -26,8 +26,8 @@ export class DrawingService {
 
     private renderer: Renderer2;
 
-    private mouseUpFunctionMap = new Map<SVGElement, () => void>();
     private transformationMap = new Map<SVGElement, SvgTransformations>();
+    private mouseUpUnlistenFunctionMap = new Map<SVGElement, () => void>();
 
     private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
 
@@ -42,41 +42,50 @@ export class DrawingService {
     addElement(element: SVGElement, elementNextNeighbor?: SVGElement): void {
         if (elementNextNeighbor === undefined) {
             this.svgElements.push(element);
-            this.renderer.appendChild(this.svgDrawingContent, element);
+            if (this.svgDrawingContent !== undefined) {
+                this.renderer.appendChild(this.svgDrawingContent, element);
+            }
         } else {
             this.svgElements.splice(this.svgElements.indexOf(elementNextNeighbor), 0, element);
-            this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
+            if (this.svgDrawingContent !== undefined) {
+                this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
+            }
         }
         this.transformationMap.set(element, new SvgTransformations());
 
-        const mouseUpFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
+        const mouseUpUnlistenFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ element, mouseEvent: event });
         });
-
-        this.mouseUpFunctionMap.set(element, mouseUpFunction);
+        this.mouseUpUnlistenFunctionMap.set(element, mouseUpUnlistenFunction);
     }
 
     removeElement(element: SVGElement): void {
         const elementToRemoveIndex = this.svgElements.indexOf(element);
         if (elementToRemoveIndex > -1) {
             this.svgElements.splice(elementToRemoveIndex, 1);
-            this.renderer.removeChild(this.svgDrawingContent, element);
             this.transformationMap.delete(element);
+            if (this.svgDrawingContent !== undefined) {
+                this.renderer.removeChild(this.svgDrawingContent, element);
+            }
         }
 
-        const mouseUpFunction = this.mouseUpFunctionMap.get(element);
-        if (mouseUpFunction) {
-            mouseUpFunction();
+        const mouseUpUnlistenFunction = this.mouseUpUnlistenFunctionMap.get(element);
+        if (mouseUpUnlistenFunction) {
+            mouseUpUnlistenFunction();
         }
-        this.mouseUpFunctionMap.delete(element);
+        this.mouseUpUnlistenFunctionMap.delete(element);
     }
 
     addUiElement(element: SVGElement): void {
-        this.renderer.appendChild(this.svgUserInterfaceContent, element);
+        if (this.svgDrawingContent !== undefined) {
+            this.renderer.appendChild(this.svgUserInterfaceContent, element);
+        }
     }
 
     removeUiElement(element: SVGElement): void {
-        this.renderer.removeChild(this.svgUserInterfaceContent, element);
+        if (this.svgDrawingContent !== undefined) {
+            this.renderer.removeChild(this.svgUserInterfaceContent, element);
+        }
     }
 
     reappendStoredElements(): void {

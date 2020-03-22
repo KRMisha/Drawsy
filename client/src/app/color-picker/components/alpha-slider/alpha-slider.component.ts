@@ -47,6 +47,11 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.colorChangedSubscription.unsubscribe();
     }
 
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent): void {
+        this.update(event);
+    }
+
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
@@ -60,19 +65,14 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseDown = false;
     }
 
-    @HostListener('document:mousemove', ['$event'])
-    onMouseMove(event: MouseEvent): void {
-        this.update(event);
+    @HostListener('mouseenter')
+    onMouseEnter(): void {
+        this.isMouseInside = true;
     }
 
     @HostListener('mouseleave')
     onMouseLeave(): void {
         this.isMouseInside = false;
-    }
-
-    @HostListener('mouseenter')
-    onMouseEnter(): void {
-        this.isMouseInside = true;
     }
 
     private update(event: MouseEvent): void {

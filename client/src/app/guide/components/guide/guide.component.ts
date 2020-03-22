@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-guide',
     templateUrl: './guide.component.html',
     styleUrls: ['./guide.component.scss'],
+    providers: [GuideService],
 })
 export class GuideComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
@@ -18,9 +19,7 @@ export class GuideComponent implements AfterViewInit, OnDestroy {
     constructor(private componentFactoryResolver: ComponentFactoryResolver, private guideService: GuideService) {}
 
     ngAfterViewInit(): void {
-        this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe((guide: Type<GuideContent>) => {
-            this.loadGuide(guide);
-        });
+        this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe(this.loadGuide.bind(this));
     }
 
     ngOnDestroy(): void {

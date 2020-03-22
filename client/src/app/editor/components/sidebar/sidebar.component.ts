@@ -1,121 +1,112 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
-import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
-import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
-import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
     @ViewChild('appDrawer') drawer: MatDrawer;
 
     buttons: SidebarButton[] = sidebarButtons;
     selectedButton: SidebarButton = this.buttons[0];
 
-    private areShortcutsEnabled = true;
+    private selectToolPencilShortcutSubscription: Subscription;
+    private selectToolPaintbrushShortcutSubscription: Subscription;
+    private selectToolLineShortcutSubscription: Subscription;
+    private selectToolSprayCanShortcutSubscription: Subscription;
+    private selectToolRectangleShortcutSubscription: Subscription;
+    private selectToolEllipseShortcutSubscription: Subscription;
+    private selectToolPolygonShortcutSubscription: Subscription;
+    private selectToolEyedropperShortcutSubscription: Subscription;
+    private selectToolRecolorShortcutSubscription: Subscription;
+    private selectToolSelectionShortcutSubscription: Subscription;
+    private selectToolEraserShortcutSubscription: Subscription;
+    private exportDrawingShortcutSubscription: Subscription;
+    private saveDrawingShortcutSubscription: Subscription;
+    private undoShortcutSubscription: Subscription;
+    private redoShortcutSubscription: Subscription;
 
     constructor(
         private currentToolService: CurrentToolService,
         private modalService: ModalService,
-        private commandService: CommandService
+        private commandService: CommandService,
+        private shortcutService: ShortcutService
     ) {}
 
     ngOnInit(): void {
         this.currentToolService.setSelectedTool(this.selectedButton.toolIndex);
+
+        this.selectToolPencilShortcutSubscription = this.shortcutService.selectToolPencilShortcut$.subscribe(() => {
+            this.setSelectedTool(0);
+        });
+        this.selectToolPaintbrushShortcutSubscription = this.shortcutService.selectToolPaintbrushShortcut$.subscribe(() => {
+            this.setSelectedTool(1);
+        });
+        this.selectToolLineShortcutSubscription = this.shortcutService.selectToolLineShortcut$.subscribe(() => {
+            this.setSelectedTool(2);
+        });
+        this.selectToolSprayCanShortcutSubscription = this.shortcutService.selectToolSprayCanShortcut$.subscribe(() => {
+            this.setSelectedTool(3); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolRectangleShortcutSubscription = this.shortcutService.selectToolRectangleShortcut$.subscribe(() => {
+            this.setSelectedTool(4); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolEllipseShortcutSubscription = this.shortcutService.selectToolEllipseShortcut$.subscribe(() => {
+            this.setSelectedTool(5); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolPolygonShortcutSubscription = this.shortcutService.selectToolPolygonShortcut$.subscribe(() => {
+            this.setSelectedTool(6); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
+            this.setSelectedTool(7); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecoloShortcut$.subscribe(() => {
+            this.setSelectedTool(8); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolSelectionShortcutSubscription = this.shortcutService.selectToolSelectionShortcut$.subscribe(() => {
+            this.setSelectedTool(9); // tslint:disable-line: no-magic-numbers
+        });
+        this.selectToolEraserShortcutSubscription = this.shortcutService.selectToolEraserShortcut$.subscribe(() => {
+            this.setSelectedTool(10); // tslint:disable-line: no-magic-numbers
+        });
+        this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
+            this.openExportDrawingModal();
+        });
+        this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
+            this.openSaveDrawingModal();
+        });
+        this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
+            this.undo();
+        });
+        this.redoShortcutSubscription = this.shortcutService.redoShortcut$.subscribe(() => {
+            this.redo();
+        });
     }
 
-    // tslint:disable-next-line: cyclomatic-complexity
-    @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
-            switch (event.key) {
-                // tslint:disable: no-magic-numbers
-                case '1':
-                    this.setSelectedTool(4);
-                    break;
-                case '2':
-                    this.setSelectedTool(5);
-                    break;
-                case '3':
-                    this.setSelectedTool(6);
-                    break;
-                case 'a':
-                    if (!event.ctrlKey) {
-                        this.setSelectedTool(3);
-                    }
-                    break;
-                case 'c':
-                    this.setSelectedTool(0);
-                    break;
-                case 'e':
-                    if (event.ctrlKey) {
-                        event.preventDefault();
-                        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
-                    } else {
-                        this.setSelectedTool(10);
-                    }
-                    break;
-                case 'i':
-                    this.setSelectedTool(7);
-                    break;
-                case 'l':
-                    this.setSelectedTool(2);
-                    break;
-                case 'r':
-                    this.setSelectedTool(8);
-                    break;
-                case 's':
-                    if (event.ctrlKey) {
-                        event.preventDefault();
-                        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
-                    } else {
-                        this.setSelectedTool(9);
-                    }
-                    break;
-                case 'w':
-                    this.setSelectedTool(1);
-                    break;
-                // tslint:enable: no-magic-numbers
-                case 'z': {
-                    if (event.ctrlKey) {
-                        this.undo();
-                        event.preventDefault();
-                    }
-                    break;
-                }
-                case 'Z': {
-                    if (event.ctrlKey) {
-                        this.redo();
-                        event.preventDefault();
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    @HostListener('document:focusin', ['$event'])
-    onFocusIn(event: FocusEvent): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.areShortcutsEnabled = false;
-        }
-    }
-
-    @HostListener('document:focusout', ['$event'])
-    onFocusOut(event: FocusEvent): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.areShortcutsEnabled = true;
-        }
+    ngOnDestroy(): void {
+        this.selectToolPencilShortcutSubscription.unsubscribe();
+        this.selectToolPaintbrushShortcutSubscription.unsubscribe();
+        this.selectToolLineShortcutSubscription.unsubscribe();
+        this.selectToolSprayCanShortcutSubscription.unsubscribe();
+        this.selectToolRectangleShortcutSubscription.unsubscribe();
+        this.selectToolEllipseShortcutSubscription.unsubscribe();
+        this.selectToolPolygonShortcutSubscription.unsubscribe();
+        this.selectToolEyedropperShortcutSubscription.unsubscribe();
+        this.selectToolRecolorShortcutSubscription.unsubscribe();
+        this.selectToolSelectionShortcutSubscription.unsubscribe();
+        this.selectToolEraserShortcutSubscription.unsubscribe();
+        this.exportDrawingShortcutSubscription.unsubscribe();
+        this.saveDrawingShortcutSubscription.unsubscribe();
+        this.undoShortcutSubscription.unsubscribe();
+        this.redoShortcutSubscription.unsubscribe();
     }
 
     setSelectedTool(toolIndex: number): void {
@@ -127,28 +118,28 @@ export class SidebarComponent implements OnInit {
         this.currentToolService.setSelectedTool(toolIndex);
     }
 
-    openSettingsModal(): void {
-        this.modalService.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
-    }
-
-    openExportModal(): void {
-        this.modalService.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
-    }
-
-    openSaveModal(): void {
-        this.modalService.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
-    }
-
     openNewDrawingModal(): void {
-        this.modalService.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+        this.modalService.openNewDrawingModal();
     }
 
-    openGuideModal(): void {
-        this.modalService.openDialog(GuideComponent, { x: 1920, y: 1080 });
+    openExportDrawingModal(): void {
+        this.modalService.openExportDrawingModal();
+    }
+
+    openSaveDrawingModal(): void {
+        this.modalService.openSaveDrawingModal();
     }
 
     openGalleryModal(): void {
-        this.modalService.openDialog(GalleryComponent, { x: 1920, y: 900 });
+        this.modalService.openGalleryModal();
+    }
+
+    openDrawingSettingsModal(): void {
+        this.modalService.openDrawingSettingsModal();
+    }
+
+    openGuideModal(): void {
+        this.modalService.openGuideModal();
     }
 
     undo(): void {

@@ -10,14 +10,14 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private eraserSize = ToolDefaults.defaultSize;
+    private eraserSize = ToolDefaults.defaultEraserSize;
     private svgEraserElement: SVGRectElement;
     private svgSelectedShapeRect: SVGRectElement;
 
@@ -41,7 +41,7 @@ export class ToolEraserService extends Tool {
         private svgUtilityService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser);
-        this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultSize);
+        this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultLineWidth);
     }
 
     afterDrawingInit(): void {

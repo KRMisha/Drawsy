@@ -9,13 +9,13 @@
 
         <mat-form-field>
             <mat-label>Type de filtre</mat-label>
-            <mat-select [(value)]="previewFilter">
-                <mat-option [value]="PreviewFilter.None">Aucun filtre</mat-option>
-                <mat-option [value]="PreviewFilter.BlackAndWhite">Noir et blanc</mat-option>
-                <mat-option [value]="PreviewFilter.Sepia">Sepia</mat-option>
-                <mat-option [value]="PreviewFilter.Pixel">Pixel</mat-option>
-                <mat-option [value]="PreviewFilter.Eighties">1980</mat-option>
-                <mat-option [value]="PreviewFilter.Corrupt">Corrompu</mat-option>
+            <mat-select [(value)]="drawingFilter">
+                <mat-option [value]="DrawingFilter.None">Aucun filtre</mat-option>
+                <mat-option [value]="DrawingFilter.BlackAndWhite">Noir et blanc</mat-option>
+                <mat-option [value]="DrawingFilter.Sepia">Sepia</mat-option>
+                <mat-option [value]="DrawingFilter.Pixel">Pixel</mat-option>
+                <mat-option [value]="DrawingFilter.Eighties">1980</mat-option>
+                <mat-option [value]="DrawingFilter.Corrupt">Corrompu</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-card>

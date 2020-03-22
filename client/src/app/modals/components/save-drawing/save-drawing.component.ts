@@ -2,12 +2,9 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
-import { descRegex } from '@common/validation/desc-regex';
+import DescValidation from '@common/validation/desc-validation';
 import { Subscription } from 'rxjs';
-
-const maxInputStringLength = 15;
 
 export interface Label {
     name: string;
@@ -18,8 +15,6 @@ export interface Label {
     styleUrls: ['./save-drawing.component.scss'],
 })
 export class SaveDrawingComponent implements OnInit, OnDestroy {
-    PreviewFilter = PreviewFilter; // Make enum available to template
-
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     titleChangedSubscription: Subscription;
@@ -27,12 +22,12 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     saveDrawingGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
-            Validators.pattern(descRegex),
-            Validators.maxLength(maxInputStringLength),
+            Validators.pattern(DescValidation.descRegex),
+            Validators.maxLength(DescValidation.maxTitleLength),
         ]),
         labels: new FormControl(this.saveDrawingService.labels, [
-            Validators.pattern(descRegex),
-            Validators.maxLength(maxInputStringLength),
+            Validators.pattern(DescValidation.descRegex),
+            Validators.maxLength(DescValidation.maxLabelLength),
         ]),
     });
 
@@ -83,21 +78,21 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         this.saveDrawingService.saveDrawing();
     }
 
-    getLabelError(): string {
-        return this.saveDrawingGroup.controls.labels.hasError('pattern')
+    getTitleError(): string {
+        return this.saveDrawingGroup.controls.title.hasError('required')
+            ? 'Titre obligatoire'
+            : this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxLength')
-            ? 'Longueur maximale 15 caractères'
+            : this.saveDrawingGroup.controls.title.hasError('maxlength')
+            ? `Longueur maximale de ${DescValidation.maxTitleLength} caractères`
             : '';
     }
 
-    getTitleError(): string {
-        return this.saveDrawingGroup.controls.title.hasError('pattern')
+    getLabelError(): string {
+        return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxLength')
-            ? 'Longueur maximale 15 caractères'
-            : this.saveDrawingGroup.controls.title.hasError('required')
-            ? 'Titre obligatoire'
+            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
+            ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
             : '';
     }
 
@@ -113,12 +108,5 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
     set labels(labels: string[]) {
         this.saveDrawingService.labels = labels;
-    }
-
-    get previewFilter(): PreviewFilter {
-        return this.saveDrawingService.previewFilter;
-    }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.saveDrawingService.previewFilter = previewFilter;
     }
 }
