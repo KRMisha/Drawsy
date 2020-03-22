@@ -24,11 +24,11 @@ export class ModalService {
     }
 
     openExportDrawingModal(): void {
-        this.openDialog(ExportDrawingComponent, { x: 1000, y: 1000 });
+        this.openDialog(ExportDrawingComponent, { x: 1000, y: 850 });
     }
 
     openSaveDrawingModal(): void {
-        this.openDialog(SaveDrawingComponent, { x: 1000, y: 1000 });
+        this.openDialog(SaveDrawingComponent, { x: 1000, y: 900 });
     }
 
     openGalleryModal(): void {
@@ -36,7 +36,7 @@ export class ModalService {
     }
 
     openDrawingSettingsModal(): void {
-        this.openDialog(DrawingSettingsComponent, { x: 425, y: 675 });
+        this.openDialog(DrawingSettingsComponent, { x: 425, y: 750 });
     }
 
     openGuideModal(): void {
