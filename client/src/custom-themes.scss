@@ -34,7 +34,7 @@ $theme-colors: (
     }
 
     .error-tooltip {
-        color: mat-color($warn) !important;
+        color: mat-color($warn);
     }
 }
 
