@@ -20,7 +20,7 @@ $theme-colors: (
     $warn: map-get($theme, warn);
 
     @each $color-name, $theme-color in $theme-colors {
-        .#{$color-name + "-theme-color"} {
+        .#{$color-name + '-theme-color'} {
             background-color: mat-color($theme-color);
         }
     }
@@ -39,11 +39,11 @@ $theme-colors: (
 }
 
 @each $color-name, $theme-color in $theme-colors {
-    .#{$color-name + "-light-theme"} {
+    .#{$color-name + '-light-theme'} {
         @include theme-mixin(mat-light-theme($theme-color, $theme-color));
     }
 
-    .#{$color-name + "-dark-theme"} {
+    .#{$color-name + '-dark-theme'} {
         @include theme-mixin(mat-dark-theme($theme-color, $theme-color));
     }
 }
