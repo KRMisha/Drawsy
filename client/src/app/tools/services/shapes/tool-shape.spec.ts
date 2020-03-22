@@ -38,31 +38,17 @@ describe('ToolShape', () => {
     let toolShape: ToolShapeMock;
 
     beforeEach(() => {
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
-            'addElement',
-            'removeElement'
-        ], [
-            'drawingRoot'
-        ]);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement'], ['drawingRoot']);
 
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', [
-            'getBoundingClientRect'
-        ]);
-        drawingRootSpyObj.getBoundingClientRect.and.returnValue({x: 0, y: 0} as DOMRect);
+        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
+        drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 0, y: 0 } as DOMRect);
         drawingServiceSpyObj.drawingRoot = drawingRootSpyObj;
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', [
-            'addCommand'
-        ]);
+        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
 
-        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', [
-            'createRenderer'
-        ]);
+        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
 
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
-            'setAttribute',
-            'createElement'
-        ]);
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
         const colorServiceStub = {} as ColorService;
