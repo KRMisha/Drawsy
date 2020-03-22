@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Color, hexRegex } from '@app/classes/color';
+import { Color } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import Regexes from '@app/constants/regexes';
 import { Subscription } from 'rxjs';
-
-const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 
 @Component({
     selector: 'app-color-hex-selector',
@@ -13,10 +12,10 @@ const singleComponentRegex = new RegExp('^[0-9a-fA-F]{2}$');
 })
 export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     hexSelectorGroup = new FormGroup({
-        hexCombinedRgb: new FormControl('000000', [Validators.required, Validators.pattern(hexRegex)]),
-        hexRed: new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]),
-        hexGreen: new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]),
-        hexBlue: new FormControl('00', [Validators.required, Validators.pattern(singleComponentRegex)]),
+        hexCombinedRgb: new FormControl('000000', [Validators.required, Validators.pattern(Regexes.sixHexRegex)]),
+        hexRed: new FormControl('00', [Validators.required, Validators.pattern(Regexes.twoHexRegex)]),
+        hexGreen: new FormControl('00', [Validators.required, Validators.pattern(Regexes.twoHexRegex)]),
+        hexBlue: new FormControl('00', [Validators.required, Validators.pattern(Regexes.twoHexRegex)]),
     });
     isCombinedHex = true;
 
