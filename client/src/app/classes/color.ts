@@ -75,28 +75,33 @@ export class Color {
     }
 
     static fromRgbString(rgbString: string): Color {
-        const regexRgbaValues = Regexes.rgbRegex.exec(rgbString);
-        // tslint:disable-next-line: no-non-null-assertion
-        const rgbaValues = regexRgbaValues!.map((floatString: string) => {
-            return parseFloat(floatString);
-        });
+        const matches = rgbString.match(Regexes.rgbRegex) || undefined;
+        if (matches === undefined) {
+            return new Color();
+        }
+
         const redIndex = 1;
         const greenIndex = 2;
         const blueIndex = 3;
-        return this.fromRgb(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex]);
+        return this.fromRgb(parseFloat(matches[redIndex]), parseFloat(matches[greenIndex]), parseFloat(matches[blueIndex]));
     }
 
     static fromRgbaString(rgbaString: string): Color {
-        const regexRgbaValues = Regexes.rgbaRegex.exec(rgbaString);
-        // tslint:disable-next-line: no-non-null-assertion
-        const rgbaValues = regexRgbaValues!.map((floatString: string) => {
-            return parseFloat(floatString);
-        });
+        const matches = rgbaString.match(Regexes.rgbaRegex) || undefined;
+        if (matches === undefined) {
+            return new Color();
+        }
+
         const redIndex = 1;
         const greenIndex = 2;
         const blueIndex = 3;
         const alphaIndex = 4;
-        return this.fromRgba(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex], rgbaValues[alphaIndex]);
+        return this.fromRgba(
+            parseFloat(matches[redIndex]),
+            parseFloat(matches[greenIndex]),
+            parseFloat(matches[blueIndex]),
+            parseFloat(matches[alphaIndex])
+        );
     }
 
     setHsv(hue: number, saturation: number, value: number): void {

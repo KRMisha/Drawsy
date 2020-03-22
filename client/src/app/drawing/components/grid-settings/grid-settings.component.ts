@@ -34,7 +34,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.required,
                 Validators.min(this.gridService.minimumOpacity),
                 Validators.max(this.gridService.maximumOpacity),
-                Validators.pattern(Regexes.precisionRegex),
+                Validators.pattern(Regexes.decimalRegex),
             ])
         ),
     });

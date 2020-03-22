@@ -78,7 +78,7 @@ export class NewDrawingComponent implements OnInit {
             : formControl.hasError('min')
             ? 'Valeur négative ou nulle invalide'
             : formControl.hasError('max')
-            ? 'Valeur maximale de 10000 px'
+            ? `Valeur maximale de ${maximumDimension} px`
             : formControl.hasError('pattern')
             ? 'Nombre entier invalide'
             : '';
