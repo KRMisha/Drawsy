@@ -1,12 +1,12 @@
 <div class="container">
-    <app-guide-sidebar #appSidebar class="item-sidebar"></app-guide-sidebar>
-    <button mat-icon-button mat-dialog-close class="item-exit-button">
+    <app-guide-sidebar #appSidebar class="sidebar-item"></app-guide-sidebar>
+    <button mat-icon-button mat-dialog-close class="exit-button-item">
         <mat-icon class="icon">close</mat-icon>
     </button>
-    <div mat-dialog-content class="item-guide-content">
+    <div mat-dialog-content class="guide-content-item">
         <ng-template #appGuideContent cdkFocusInitial></ng-template>
     </div>
-    <div mat-dialog-actions align="center" class="item-buttons">
+    <div mat-dialog-actions align="center" class="buttons-item">
         <div class="previous">
             <button mat-icon-button [disabled]="!hasPreviousGuide" class="navigation-button" (click)="selectPreviousGuide()">
                 <mat-icon class="icon">keyboard_arrow_left</mat-icon> Précédent

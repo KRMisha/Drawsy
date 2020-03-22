@@ -12,7 +12,7 @@
         'sidebar buttons';
 }
 
-.item-guide-content {
+.guide-content-item {
     padding-left: 30px;
     padding-right: 30px;
     height: 100%;
@@ -20,19 +20,19 @@
     grid-area: guide;
 }
 
-.item-exit-button {
+.exit-button-item {
     justify-self: end;
     cursor: pointer;
     grid-area: exit;
 }
 
-.item-sidebar {
+.sidebar-item {
     overflow-x: hidden;
     overflow-y: auto;
     grid-area: sidebar;
 }
 
-.item-buttons {
+.buttons-item {
     grid-area: buttons;
     padding-bottom: 30px;
 }

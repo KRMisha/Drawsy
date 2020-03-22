@@ -8,19 +8,19 @@
         'hex hex';
 }
 
-.item-color-picker {
+.color-picker-item {
     grid-area: color;
 }
 
-.item-hue {
+.hue-item {
     grid-area: hue;
 }
 
-.item-alpha {
+.alpha-item {
     grid-area: alpha;
 }
 
-.item-hex-selector {
+.hex-selector-item {
     grid-area: hex;
 }
 
