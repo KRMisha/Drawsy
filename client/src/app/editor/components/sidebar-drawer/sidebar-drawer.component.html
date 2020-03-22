@@ -121,9 +121,21 @@
         <h2 class="setting-name">Type de tracé</h2>
         <div class="toggle-buttons-container">
             <mat-button-toggle-group [value]="getSetting(ToolSetting.ShapeType)" (change)="setSetting(ToolSetting.ShapeType, $event.value)">
-                <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.FillOnly">Plein</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.BorderOnly">Contour</mat-button-toggle>
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillWithBorder"
+                    [value]="ShapeType.FillWithBorder"
+                    >Complet</mat-button-toggle
+                >
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillOnly"
+                    [value]="ShapeType.FillOnly"
+                    >Plein</mat-button-toggle
+                >
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.BorderOnly"
+                    [value]="ShapeType.BorderOnly"
+                    >Contour</mat-button-toggle
+                >
             </mat-button-toggle-group>
         </div>
         <mat-divider class="divider"></mat-divider>
