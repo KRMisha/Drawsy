@@ -39,14 +39,11 @@
     margin-top: 0px;
 }
 
-.form {
-    justify-self: right;
-}
-
 .form-field {
     grid-area: input-field;
     text-align: right;
     width: 70px !important;
+    justify-self: right;
 }
 
 .mat-slider {

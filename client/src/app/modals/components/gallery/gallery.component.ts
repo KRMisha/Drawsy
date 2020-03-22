@@ -70,7 +70,7 @@ export class GalleryComponent implements OnInit {
     getLabelError(): string {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.galleryGroup.controls.labels.hasError('maxLength')
+            : this.galleryGroup.controls.labels.hasError('maxlength')
             ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
             : '';
     }

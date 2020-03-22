@@ -9,8 +9,9 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
+import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { StrokeType, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
@@ -30,8 +31,8 @@ export abstract class ToolShape extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, commandService, name);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
-        this.toolSettings.set(ToolSetting.StrokeSize, ToolDefaults.defaultStrokeSize);
-        this.toolSettings.set(ToolSetting.StrokeType, ToolDefaults.defaultStrokeType);
+        this.toolSettings.set(ToolSetting.ShapeType, ToolDefaults.defaultShapeType);
+        this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultShapeBorderWidth);
     }
 
     onPrimaryColorChange(color: Color): void {
@@ -98,19 +99,19 @@ export abstract class ToolShape extends Tool {
     private createNewShape(): SVGElement {
         const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
-        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.StrokeSize) as number).toString());
+        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number).toString());
 
         const fillValue =
-            this.toolSettings.get(ToolSetting.StrokeType) === StrokeType.BorderOnly
+            this.toolSettings.get(ToolSetting.ShapeType) === ShapeType.BorderOnly
                 ? 'none'
                 : this.colorService.getPrimaryColor().toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
 
-        if (this.toolSettings.get(ToolSetting.StrokeType) !== StrokeType.FillOnly) {
+        if (this.toolSettings.get(ToolSetting.ShapeType) !== ShapeType.FillOnly) {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
         }
 
-        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.StrokeSize) as number) / 2}`);
+        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number) / 2}`);
 
         return shape;
     }

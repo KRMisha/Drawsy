@@ -83,7 +83,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             ? 'Titre obligatoire'
             : this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxLength')
+            : this.saveDrawingGroup.controls.title.hasError('maxlength')
             ? `Longueur maximale de ${DescValidation.maxTitleLength} caractères`
             : '';
     }
@@ -91,7 +91,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     getLabelError(): string {
         return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxLength')
+            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
             ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
             : '';
     }

@@ -1,22 +1,29 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { CommandService } from '@app/drawing/services/command.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
+import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
+import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
-const integerRegexPattern = '^[0-9]*$';
-const maximumSize = 500;
-const maximumStrokeSize = 100;
-const maximumSpraySpeed = 100;
-const maximumSprayRadius = 100;
+const integerRegex = /^[0-9]*$/;
+const minimumLineWidth = 1;
+const maximumLineWidth = 500;
+const minimumJunctionDiameter = 1;
+const maximumJunctionDiameter = 500;
+const minimumSprayDiameter = 1;
+const maximumSprayDiameter = 250;
+const minimumSprayRate = 1;
+const maximumSprayRate = 100;
+const minimumShapeBorderWidth = 1;
+const maximumShapeBorderWidth = 100;
+const minimumPolygonSideCount = 3;
+const maximumPolygonSideCount = 12;
 const minimumEraserSize = 3;
 const maximumEraserSize = 50;
-const maximumJunctionSize = 500;
-const maximumPolygonSideCount = 12;
-const minimumPolygonSideCount = 3;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -24,213 +31,140 @@ const minimumPolygonSideCount = 3;
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
+    // Make enums available to template
+    ToolSetting = ToolSetting;
+    BrushTexture = BrushTexture;
+    ShapeType = ShapeType;
+
     @Output() undoClicked = new EventEmitter<void>();
     @Output() redoClicked = new EventEmitter<void>();
 
-    // Make enums available to template
-    ToolSetting = ToolSetting;
-    Texture = Texture;
-    StrokeType = StrokeType;
-
-    sizeChangedSubscription: Subscription;
-    strokeSizeChangedSubscription: Subscription;
-    eraserSizeChangedSubscription: Subscription;
-    junctionSizeChangedSubscription: Subscription;
+    lineWidthChangedSubscription: Subscription;
+    junctionDiameterChangedSubscription: Subscription;
+    sprayDiameterChangedSubscription: Subscription;
+    sprayRateChangedSubscription: Subscription;
+    shapeBorderWidthChangedSubscription: Subscription;
     polygonSideCountChangedSubscription: Subscription;
-    spraySpeedChangedSubscription: Subscription;
-    sprayRadiusChangedSubscription: Subscription;
+    eraserSizeChangedSubscription: Subscription;
 
-    sizeGroup = new FormGroup({
-        size: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumSize),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    lineWidthFormControl = new FormControl(ToolDefaults.defaultLineWidth, [
+        Validators.required,
+        Validators.min(minimumLineWidth),
+        Validators.max(maximumLineWidth),
+        Validators.pattern(integerRegex),
+    ]);
 
-    strokeSizeGroup = new FormGroup({
-        size: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumStrokeSize),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    junctionDiameterFormControl = new FormControl(
+        { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
+        [
+            Validators.required,
+            Validators.min(minimumJunctionDiameter),
+            Validators.max(maximumJunctionDiameter),
+            Validators.pattern(integerRegex),
+        ]
+    );
 
-    eraserSizeGroup = new FormGroup({
-        size: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(minimumEraserSize),
-                Validators.max(maximumEraserSize),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    sprayDiameterFormControl = new FormControl(ToolDefaults.defaultSprayDiameter, [
+        Validators.required,
+        Validators.min(minimumSprayDiameter),
+        Validators.max(maximumSprayDiameter),
+        Validators.pattern(integerRegex),
+    ]);
 
-    junctionSizeGroup = new FormGroup({
-        junctionSize: new FormControl(
-            { value: 0, disabled: true },
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumJunctionSize),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
+        Validators.required,
+        Validators.min(minimumSprayRate),
+        Validators.max(maximumSprayRate),
+        Validators.pattern(integerRegex),
+    ]);
 
-    polygonSideCountGroup = new FormGroup({
-        polygonSideCount: new FormControl(
-            { value: 0, disabled: false },
-            Validators.compose([
-                Validators.required,
-                Validators.min(minimumPolygonSideCount),
-                Validators.max(maximumPolygonSideCount),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
+        Validators.required,
+        Validators.min(minimumPolygonSideCount),
+        Validators.max(maximumPolygonSideCount),
+        Validators.pattern(integerRegex),
+    ]);
 
-    spraySpeedGroup = new FormGroup({
-        spraySpeed: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumSpraySpeed),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
+    shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
+        Validators.required,
+        Validators.min(minimumShapeBorderWidth),
+        Validators.max(maximumShapeBorderWidth),
+        Validators.pattern(integerRegex),
+    ]);
 
-    sprayRadiusGroup = new FormGroup({
-        sprayRadius: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumSprayRadius),
-                Validators.pattern(integerRegexPattern),
-            ])
-        ),
-    });
-
-    @Input()
-    set selectedButtonIndex(index: number) {
-        if (this.currentToolService.hasSetting(ToolSetting.Size)) {
-            this.sizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.Size));
-        }
-        if (this.currentToolService.hasSetting(ToolSetting.StrokeSize)) {
-            this.strokeSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.StrokeSize));
-        }
-        if (this.currentToolService.hasSetting(ToolSetting.EraserSize)) {
-            this.eraserSizeGroup.controls.size.setValue(this.currentToolService.getSetting(ToolSetting.EraserSize));
-        }
-        if (this.currentToolService.hasSetting(ToolSetting.JunctionSettings)) {
-            const junctionSize = (this.currentToolService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).junctionSize;
-            this.junctionSizeGroup.controls.junctionSize.setValue(junctionSize);
-        }
-        if (this.currentToolService.hasSetting(ToolSetting.PolygonSideCount)) {
-            this.polygonSideCountGroup.controls.polygonSideCount.setValue(this.currentToolService.getSetting(ToolSetting.PolygonSideCount));
-        }
-        if (this.currentToolService.hasSetting(ToolSetting.SpraySpeed)) {
-            this.spraySpeedGroup.controls.spraySpeed.setValue(this.currentToolService.getSetting(ToolSetting.SpraySpeed));
-        }
-
-        if (this.currentToolService.hasSetting(ToolSetting.SprayRadius)) {
-            this.sprayRadiusGroup.controls.sprayRadius.setValue(this.currentToolService.getSetting(ToolSetting.SprayRadius));
-        }
-    }
+    eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
+        Validators.required,
+        Validators.min(minimumEraserSize),
+        Validators.max(maximumEraserSize),
+        Validators.pattern(integerRegex),
+    ]);
 
     constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
 
     ngOnInit(): void {
-        this.sizeGroup.controls.size.setValue(ToolDefaults.defaultSize);
-        this.junctionSizeGroup.controls.junctionSize.setValue(ToolDefaults.defaultJunctionSize);
-
-        this.sizeChangedSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.sizeGroup.controls.size.valid) {
-                this.currentToolService.setSetting(ToolSetting.Size, this.sizeGroup.controls.size.value);
+        this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
+            if (this.lineWidthFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.LineWidth, this.lineWidthFormControl.value);
             }
         });
 
-        this.strokeSizeChangedSubscription = this.strokeSizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.strokeSizeGroup.controls.size.valid) {
-                this.currentToolService.setSetting(ToolSetting.StrokeSize, this.strokeSizeGroup.controls.size.value);
-            }
-        });
-
-        this.eraserSizeChangedSubscription = this.eraserSizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.eraserSizeGroup.controls.size.valid) {
-                this.currentToolService.setSetting(ToolSetting.EraserSize, this.eraserSizeGroup.controls.size.value);
-            }
-        });
-
-        this.junctionSizeChangedSubscription = this.junctionSizeGroup.controls.junctionSize.valueChanges.subscribe(() => {
-            if (this.junctionSizeGroup.controls.junctionSize.valid) {
+        this.junctionDiameterChangedSubscription = this.junctionDiameterFormControl.valueChanges.subscribe(() => {
+            if (this.junctionDiameterFormControl.valid) {
                 this.currentToolService.setSetting(ToolSetting.JunctionSettings, {
-                    hasJunction: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).hasJunction,
-                    junctionSize: this.junctionSizeGroup.controls.junctionSize.value,
+                    isEnabled: (this.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).isEnabled,
+                    diameter: this.junctionDiameterFormControl.value,
                 } as JunctionSettings);
             }
         });
 
-        this.polygonSideCountChangedSubscription = this.polygonSideCountGroup.controls.polygonSideCount.valueChanges.subscribe(() => {
-            if (this.polygonSideCountGroup.controls.polygonSideCount.valid) {
-                this.currentToolService.setSetting(
-                    ToolSetting.PolygonSideCount,
-                    this.polygonSideCountGroup.controls.polygonSideCount.value
-                );
+        this.sprayDiameterChangedSubscription = this.sprayDiameterFormControl.valueChanges.subscribe(() => {
+            if (this.sprayDiameterFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.SprayDiameter, this.sprayDiameterFormControl.value);
             }
         });
 
-        this.spraySpeedChangedSubscription = this.spraySpeedGroup.controls.spraySpeed.valueChanges.subscribe(() => {
-            if (this.spraySpeedGroup.controls.spraySpeed.valid) {
-                this.currentToolService.setSetting(ToolSetting.SpraySpeed, this.spraySpeedGroup.controls.spraySpeed.value);
+        this.sprayRateChangedSubscription = this.sprayRateFormControl.valueChanges.subscribe(() => {
+            if (this.sprayRateFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.SprayRate, this.sprayRateFormControl.value);
             }
         });
 
-        this.sprayRadiusChangedSubscription = this.sprayRadiusGroup.controls.sprayRadius.valueChanges.subscribe(() => {
-            if (this.sprayRadiusGroup.controls.sprayRadius.valid) {
-                this.currentToolService.setSetting(ToolSetting.SprayRadius, this.sprayRadiusGroup.controls.sprayRadius.value);
+        this.shapeBorderWidthChangedSubscription = this.shapeBorderWidthFormControl.valueChanges.subscribe(() => {
+            if (this.shapeBorderWidthFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.ShapeBorderWidth, this.shapeBorderWidthFormControl.value);
+            }
+        });
+
+        this.polygonSideCountChangedSubscription = this.polygonSideCountFormControl.valueChanges.subscribe(() => {
+            if (this.polygonSideCountFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.PolygonSideCount, this.polygonSideCountFormControl.value);
+            }
+        });
+
+        this.eraserSizeChangedSubscription = this.eraserSizeFormControl.valueChanges.subscribe(() => {
+            if (this.eraserSizeFormControl.valid) {
+                this.currentToolService.setSetting(ToolSetting.EraserSize, this.eraserSizeFormControl.value);
             }
         });
     }
 
     ngOnDestroy(): void {
-        this.sizeChangedSubscription.unsubscribe();
-        this.junctionSizeChangedSubscription.unsubscribe();
-        this.strokeSizeChangedSubscription.unsubscribe();
-        this.eraserSizeChangedSubscription.unsubscribe();
+        this.lineWidthChangedSubscription.unsubscribe();
+        this.junctionDiameterChangedSubscription.unsubscribe();
+        this.sprayDiameterChangedSubscription.unsubscribe();
+        this.sprayRateChangedSubscription.unsubscribe();
+        this.shapeBorderWidthChangedSubscription.unsubscribe();
         this.polygonSideCountChangedSubscription.unsubscribe();
-        this.spraySpeedChangedSubscription.unsubscribe();
-        this.sprayRadiusChangedSubscription.unsubscribe();
+        this.eraserSizeChangedSubscription.unsubscribe();
     }
 
-    getToolName(): string {
-        return this.currentToolService.getToolName();
-    }
-
-    getSetting(setting: ToolSetting): number | JunctionSettings | StrokeType | Texture {
+    getSetting(setting: ToolSetting): number | BrushTexture | JunctionSettings | ShapeType {
         return this.currentToolService.getSetting(setting);
     }
 
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | StrokeType | Texture): void {
+    setSetting(setting: ToolSetting, value: number | BrushTexture | JunctionSettings | ShapeType): void {
         if (setting === ToolSetting.JunctionSettings) {
-            if ((value as JunctionSettings).hasJunction) {
-                this.junctionSizeGroup.controls.junctionSize.enable();
-            } else {
-                this.junctionSizeGroup.controls.junctionSize.disable();
-            }
+            (value as JunctionSettings).isEnabled ? this.junctionDiameterFormControl.enable() : this.junctionDiameterFormControl.disable();
         }
         this.currentToolService.setSetting(setting, value);
     }
@@ -239,52 +173,74 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.currentToolService.hasSetting(setting);
     }
 
-    isUndoAvailable(): boolean {
-        return this.commandService.hasUndoCommands();
+    asJunctionSettings(value: number | JunctionSettings): JunctionSettings {
+        return value as JunctionSettings;
     }
 
-    isRedoAvailable(): boolean {
-        return this.commandService.hasRedoCommands();
+    getLineWidthErrorMessage(): string {
+        return this.getErrorMessage(this.lineWidthFormControl);
     }
 
-    undoCommand(): void {
-        this.undoClicked.emit();
+    getJunctionDiameterErrorMessage(): string {
+        return this.getErrorMessage(this.junctionDiameterFormControl);
     }
 
-    redoCommand(): void {
-        this.redoClicked.emit();
+    getSprayDiameterErrorMessage(): string {
+        return this.getErrorMessage(this.sprayDiameterFormControl);
     }
 
-    getSizeErrorMessage(): string {
-        return this.getErrorMessage(this.sizeGroup.controls.size);
+    getSprayRateErrorMessage(): string {
+        return this.getErrorMessage(this.sprayRateFormControl);
     }
 
-    getJunctionSizeErrorMessage(): string {
-        return this.getErrorMessage(this.junctionSizeGroup.controls.junctionSize);
-    }
-
-    getStrokeSizeErrorMessage(): string {
-        return this.getErrorMessage(this.strokeSizeGroup.controls.size);
-    }
-
-    getEraserSizeErrorMessage(): string {
-        return this.getErrorMessage(this.eraserSizeGroup.controls.size);
+    getShapeBorderWidthErrorMessage(): string {
+        return this.getErrorMessage(this.shapeBorderWidthFormControl);
     }
 
     getPolygonSideCountErrorMessage(): string {
-        return this.getErrorMessage(this.polygonSideCountGroup.controls.polygonSideCount);
+        return this.getErrorMessage(this.polygonSideCountFormControl);
     }
 
-    getSpraySpeedErrorMessage(): string {
-        return this.getErrorMessage(this.spraySpeedGroup.controls.spraySpeed);
+    getEraserSizeErrorMessage(): string {
+        return this.getErrorMessage(this.eraserSizeFormControl);
     }
 
-    getSprayRadiusErrorMessage(): string {
-        return this.getErrorMessage(this.sprayRadiusGroup.controls.sprayRadius);
+    get toolName(): string {
+        return this.currentToolService.getToolName();
     }
 
-    asJunctionSettings(value: number | JunctionSettings): JunctionSettings {
-        return value as JunctionSettings;
+    @Input()
+    set selectedButtonIndex(index: number) {
+        if (this.currentToolService.hasSetting(ToolSetting.LineWidth)) {
+            this.lineWidthFormControl.setValue(this.currentToolService.getSetting(ToolSetting.LineWidth));
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.JunctionSettings)) {
+            const junctionDiameter = (this.currentToolService.getSetting(ToolSetting.JunctionSettings) as JunctionSettings).diameter;
+            this.junctionDiameterFormControl.setValue(junctionDiameter);
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.SprayDiameter)) {
+            this.sprayDiameterFormControl.setValue(this.currentToolService.getSetting(ToolSetting.SprayDiameter));
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.SprayRate)) {
+            this.sprayRateFormControl.setValue(this.currentToolService.getSetting(ToolSetting.SprayRate));
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.ShapeBorderWidth)) {
+            this.shapeBorderWidthFormControl.setValue(this.currentToolService.getSetting(ToolSetting.ShapeBorderWidth));
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.PolygonSideCount)) {
+            this.polygonSideCountFormControl.setValue(this.currentToolService.getSetting(ToolSetting.PolygonSideCount));
+        }
+        if (this.currentToolService.hasSetting(ToolSetting.EraserSize)) {
+            this.eraserSizeFormControl.setValue(this.currentToolService.getSetting(ToolSetting.EraserSize));
+        }
+    }
+
+    get isUndoAvailable(): boolean {
+        return this.commandService.hasUndoCommands();
+    }
+
+    get isRedoAvailable(): boolean {
+        return this.commandService.hasRedoCommands();
     }
 
     private getErrorMessage(formControl: AbstractControl): string {

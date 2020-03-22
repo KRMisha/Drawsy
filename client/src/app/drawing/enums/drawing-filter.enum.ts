@@ -1,4 +1,4 @@
-export enum PreviewFilter {
+export enum DrawingFilter {
     None,
     BlackAndWhite,
     Sepia,

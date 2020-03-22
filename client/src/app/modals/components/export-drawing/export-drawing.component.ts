@@ -1,8 +1,8 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ExportDrawingComponent implements OnInit, OnDestroy {
     // Make enums available to template
-    PreviewFilter = PreviewFilter;
+    DrawingFilter = DrawingFilter;
     FileType = FileType;
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -45,7 +45,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.titleFormControlChangedSubscription.unsubscribe();
-        this.previewFilter = PreviewFilter.None;
+        this.drawingFilter = DrawingFilter.None;
     }
 
     exportDrawing(fileType: FileType): void {
@@ -62,10 +62,11 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
         this.drawingService.title = title;
     }
 
-    get previewFilter(): PreviewFilter {
-        return this.drawingPreviewService.previewFilter;
+    get drawingFilter(): DrawingFilter {
+        return this.drawingPreviewService.drawingFilter;
     }
-    set previewFilter(previewFilter: PreviewFilter) {
-        this.drawingPreviewService.previewFilter = previewFilter;
+
+    set drawingFilter(drawingFilter: DrawingFilter) {
+        this.drawingPreviewService.drawingFilter = drawingFilter;
     }
 }

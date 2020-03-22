@@ -1,5 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { PreviewFilter } from '@app/drawing/enums/preview-filter.enum';
+import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class DrawingPreviewService {
     svgDefs: SVGDefsElement;
     svgDrawingContent: SVGGElement;
 
-    previewFilter = PreviewFilter.None;
+    drawingFilter = DrawingFilter.None;
 
     private renderer: Renderer2;
 
@@ -24,7 +24,7 @@ export class DrawingPreviewService {
         const viewBoxString = `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
         this.renderer.setAttribute(this.drawingPreviewRoot, 'viewBox', viewBoxString);
 
-        for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].children)) {
+        for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {
             this.renderer.appendChild(this.svgDefs, filter.cloneNode(true));
         }
 
