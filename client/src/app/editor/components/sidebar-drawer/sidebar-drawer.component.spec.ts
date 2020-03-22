@@ -56,12 +56,12 @@ describe('SidebarDrawerComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#getToolName() should call getToolName from currentToolService', () => {
-        spyOn(component, 'getToolName').and.callThrough();
-        component.getToolName();
-        expect(component.getToolName).toHaveBeenCalled();
-        expect(component['currentToolService'].getToolName).toHaveBeenCalled();
-    });
+    // it('#getToolName() should call getToolName from currentToolService', () => {
+    //     spyOn(component, 'getToolName').and.callThrough();
+    //     component.getToolName();
+    //     expect(component.getToolName).toHaveBeenCalled();
+    //     expect(component['currentToolService'].getToolName).toHaveBeenCalled();
+    // });
 
     it('#getSetting() should call getSetting from currentToolService with the chosen ToolSetting', () => {
         spyOn(component, 'getSetting').and.callThrough();
