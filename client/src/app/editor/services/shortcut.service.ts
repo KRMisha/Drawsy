@@ -38,7 +38,7 @@ export class ShortcutService {
     selectToolEllipseShortcut$ = this.selectToolEllipseShortcutSource.asObservable();
     selectToolPolygonShortcut$ = this.selectToolPolygonShortcutSource.asObservable();
     selectToolEyedropperShortcut$ = this.selectToolEyedropperShortcutSource.asObservable();
-    selectToolRecoloShortcut$ = this.selectToolRecolorShortcutSource.asObservable();
+    selectToolRecolorShortcut$ = this.selectToolRecolorShortcutSource.asObservable();
     selectToolSelectionShortcut$ = this.selectToolSelectionShortcutSource.asObservable();
     selectToolEraserShortcut$ = this.selectToolEraserShortcutSource.asObservable();
     openNewDrawingShortcut$ = this.openNewDrawingShortcutSource.asObservable();

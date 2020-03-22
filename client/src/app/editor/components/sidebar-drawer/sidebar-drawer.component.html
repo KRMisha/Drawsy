@@ -90,8 +90,8 @@
         <mat-slider
             [min]="minimumSprayDiameter"
             [max]="maximumSprayDiameter"
-            (input)="sprayDiameterFormControl.setValue($event.value)"
             [value]="sprayDiameterFormControl.value"
+            (input)="sprayDiameterFormControl.setValue($event.value)"
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
@@ -110,8 +110,8 @@
         <mat-slider
             [min]="minimumSprayRate"
             [max]="maximumSprayRate"
-            (input)="sprayRateFormControl.setValue($event.value)"
             [value]="sprayRateFormControl.value"
+            (input)="sprayRateFormControl.setValue($event.value)"
         >
         </mat-slider>
         <mat-divider class="divider"></mat-divider>
