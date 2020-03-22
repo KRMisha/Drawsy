@@ -1,17 +1,18 @@
 <div class="container">
     <h1 class="mat-h1">{{ toolName }}</h1>
 
-    <h2 class="mat-h2 color-title">Couleur</h2>
+    <h3 class="option-name color-title">Couleur</h3>
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
 
     <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
-        <h2 class="mat-h2">Largeur du trait</h2>
+        <h3 class="option-name">Largeur du trait</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="lineWidthFormControl"
-                [matTooltip]="getLineWidthErrorMessage()"
+                [matTooltip]="getErrorMessage(lineWidthFormControl)"
+                [matTooltipDisabled]="lineWidthFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
             <span matSuffix>px</span>
@@ -27,7 +28,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.BrushTexture)">
-        <h2 class="mat-h2">Type de texture</h2>
+        <h3 class="option-name">Type de texture</h3>
         <mat-form-field class="dropdown">
             <mat-label>Sélection</mat-label>
             <mat-select
@@ -45,12 +46,13 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
-        <h2 class="mat-h2">Taille jonction</h2>
+        <h3 class="option-name">Taille jonction</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="junctionDiameterFormControl"
-                [matTooltip]="getJunctionDiameterErrorMessage()"
+                [matTooltip]="getErrorMessage(junctionDiameterFormControl)"
+                [matTooltipDisabled]="junctionDiameterFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
             <span matSuffix>px</span>
@@ -77,12 +79,13 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.SprayDiameter)" class="size-container">
-        <h2 class="mat-h2">Diamètre du jet</h2>
+        <h3 class="option-name">Diamètre du jet</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="sprayDiameterFormControl"
-                [matTooltip]="getSprayDiameterErrorMessage()"
+                [matTooltip]="getErrorMessage(sprayDiameterFormControl)"
+                [matTooltipDisabled]="junctionDiameterFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
             <span matSuffix>px</span>
@@ -97,12 +100,13 @@
         <mat-divider class="divider"></mat-divider>
     </div>
     <div *ngIf="hasSetting(ToolSetting.SprayRate)" class="size-container">
-        <h2 class="mat-h2">Vitesse du jet</h2>
+        <h3 class="option-name">Vitesse du jet</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="sprayRateFormControl"
-                [matTooltip]="getSprayRateErrorMessage()"
+                [matTooltip]="getErrorMessage(sprayRateFormControl)"
+                [matTooltipDisabled]="sprayRateFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
             <span matSuffix>jets/s</span>
@@ -118,7 +122,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.ShapeType)">
-        <h2 class="mat-h2">Type de tracé</h2>
+        <h3 class="option-name">Type de tracé</h3>
         <div class="toggle-buttons-container">
             <mat-button-toggle-group [value]="getSetting(ToolSetting.ShapeType)" (change)="setSetting(ToolSetting.ShapeType, $event.value)">
                 <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
@@ -130,12 +134,13 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
-        <h2 class="mat-h2">Taille de bordure</h2>
+        <h3 class="option-name">Taille de bordure</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="shapeBorderWidthFormControl"
-                [matTooltip]="getShapeBorderWidthErrorMessage()"
+                [matTooltip]="getErrorMessage(shapeBorderWidthFormControl)"
+                [matTooltipDisabled]="shapeBorderWidthFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
             <span matSuffix>px</span>
@@ -151,12 +156,13 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
-        <h2 class="mat-h2">Nombre de faces</h2>
+        <h3 class="option-name">Nombre de faces</h3>
         <mat-form-field class="form-field">
             <input
                 matInput
                 [formControl]="polygonSideCountFormControl"
-                [matTooltip]="getPolygonSideCountErrorMessage()"
+                [matTooltip]="getErrorMessage(polygonSideCountFormControl)"
+                [matTooltipDisabled]="polygonSideCountFormControl.valid"
                 matTooltipClass="error-tooltip"
             />
         </mat-form-field>
@@ -171,13 +177,13 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
-        <h2 class="mat-h2">Taille de l'efface</h2>
-        <mat-form-field class="form-field">
+        <h3 class="option-name">Taille de l'efface</h3>
+        <mat-form-field class="form-field"                 [matTooltip]="getErrorMessage(eraserSizeFormControl)"
+                [matTooltipDisabled]="eraserSizeFormControl.valid"
+                matTooltipClass="error-tooltip">
             <input
                 matInput
                 [formControl]="eraserSizeFormControl"
-                [matTooltip]="getEraserSizeErrorMessage()"
-                matTooltipClass="error-tooltip"
             />
             <span matSuffix>px</span>
         </mat-form-field>

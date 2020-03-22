@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import Regexes from '@app/constants/regexes';
 import { CommandService } from '@app/drawing/services/command.service';
+import { ErrorMessageService } from '@app/services/error-message.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
@@ -177,34 +178,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return value as JunctionSettings;
     }
 
-    getLineWidthErrorMessage(): string {
-        return this.getErrorMessage(this.lineWidthFormControl);
-    }
-
-    getJunctionDiameterErrorMessage(): string {
-        return this.getErrorMessage(this.junctionDiameterFormControl);
-    }
-
-    getSprayDiameterErrorMessage(): string {
-        return this.getErrorMessage(this.sprayDiameterFormControl);
-    }
-
-    getSprayRateErrorMessage(): string {
-        return this.getErrorMessage(this.sprayRateFormControl);
-    }
-
-    getShapeBorderWidthErrorMessage(): string {
-        return this.getErrorMessage(this.shapeBorderWidthFormControl);
-    }
-
-    getPolygonSideCountErrorMessage(): string {
-        return this.getErrorMessage(this.polygonSideCountFormControl);
-    }
-
-    getEraserSizeErrorMessage(): string {
-        return this.getErrorMessage(this.eraserSizeFormControl);
-    }
-
     get toolName(): string {
         return this.currentToolService.getToolName();
     }
@@ -235,23 +208,15 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, 'Nombre entier');
+    }
+
     get isUndoAvailable(): boolean {
         return this.commandService.hasUndoCommands();
     }
 
     get isRedoAvailable(): boolean {
         return this.commandService.hasRedoCommands();
-    }
-
-    private getErrorMessage(formControl: AbstractControl): string {
-        return formControl.hasError('required')
-            ? 'Entrez une taille'
-            : formControl.hasError('pattern')
-            ? 'Nombre entier invalide'
-            : formControl.hasError('min')
-            ? 'Valeur trop petite'
-            : formControl.hasError('max')
-            ? 'Valeur trop grande'
-            : '';
     }
 }
