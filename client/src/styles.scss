@@ -13,6 +13,10 @@ body {
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
+    min-width: max(0.5vh, 0.5vw);
+    min-height: max(0.5vh, 0.5vw);
+    max-width: min(2vh, 2vw);
+    max-height: min(2vh, 2vw);
 }
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
