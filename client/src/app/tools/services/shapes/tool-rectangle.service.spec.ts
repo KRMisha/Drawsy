@@ -7,8 +7,9 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
 
-describe('Tool-Rectangle', () => {
+fdescribe('Tool-Rectangle', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
+
     let toolRectangle: ToolRectangleService;
     beforeEach(() => {
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', [
@@ -20,12 +21,17 @@ describe('Tool-Rectangle', () => {
         ]);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
+        const drawingServiceStub = {} as DrawingService;
+
+        const colorServiceStub = {} as ColorService;
+
+        const commandServiceStub = {} as CommandService;
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
-                { provide: DrawingService , useValue: {} as DrawingService },
-                { provide: ColorService, useValue: {} as DrawingService },
-                { provide: CommandService, useValue: {} as CommandService }
+                { provide: DrawingService , useValue: drawingServiceStub },
+                { provide: ColorService, useValue: colorServiceStub },
+                { provide: CommandService, useValue: commandServiceStub }
             ],
         }).compileComponents();
         toolRectangle = TestBed.inject(ToolRectangleService);
