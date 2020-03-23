@@ -18,10 +18,28 @@ $theme-colors: (
     $primary: map-get($theme, primary);
     $accent: map-get($theme, accent);
     $warn: map-get($theme, warn);
+    $foreground: map-get($theme, foreground);
+    $foreground-color: map-get($foreground, foreground);
+    $background: map-get($theme, background);
+    $background-color: map-get($background, background);
 
     @each $color-name, $theme-color in $theme-colors {
         .#{$color-name + '-theme-color'} {
             background-color: mat-color($theme-color);
+        }
+    }
+
+    .theme-background-color {
+        background-color: $background-color;
+    }
+
+    .dialog {
+        mat-dialog-container {
+            background-color: $background-color;
+
+            mat-dialog-content {
+                max-height: 75vh;
+            }
         }
     }
 
