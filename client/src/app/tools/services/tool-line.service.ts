@@ -175,7 +175,7 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
-        this.renderer.setAttribute(this.groupElement, 'padding', padding.toString());
+        this.renderer.setAttribute(this.groupElement, 'data-padding', padding.toString());
 
         this.drawingService.addElement(this.groupElement);
 

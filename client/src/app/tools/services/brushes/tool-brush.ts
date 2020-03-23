@@ -35,7 +35,6 @@ export abstract class ToolBrush extends Tool {
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === ButtonId.Left) {
             this.path = this.createNewPath();
-
             const mousePosition = this.getMousePosition(event);
             const pathString = this.getPathStartString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
@@ -72,7 +71,7 @@ export abstract class ToolBrush extends Tool {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(path, 'padding', ((this.toolSettings.get(ToolSetting.LineWidth) as number) / 2).toString());
+        this.renderer.setAttribute(path, 'data-padding', ((this.toolSettings.get(ToolSetting.LineWidth) as number) / 2).toString());
         this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');

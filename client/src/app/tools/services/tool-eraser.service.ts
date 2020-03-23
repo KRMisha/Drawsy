@@ -165,7 +165,7 @@ export class ToolEraserService extends Tool {
 
         let borderColor = 'rgb(255, 0, 0)';
         if (this.elementUnderCursorStrokeColor !== 'none') {
-            const elementColor = this.getColorFromString(this.elementUnderCursorStrokeColor);
+            const elementColor = Color.fromRgbString(this.elementUnderCursorStrokeColor);
             const distanceFromRed = Math.sqrt(
                 Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2)
             );
@@ -191,11 +191,6 @@ export class ToolEraserService extends Tool {
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke-width', this.elementUnderCursorStrokeWidth);
         }
-    }
-
-    private getColorFromString(str: string): Color {
-        const values = str.substring(str.indexOf('(') + 1, str.length - 1).split(', ');
-        return Color.fromRgb(+values[0], +values[1], +values[2]);
     }
 
     private displayRedRectAroundElement(element: SVGElement): void {
