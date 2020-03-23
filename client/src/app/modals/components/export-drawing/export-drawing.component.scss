@@ -7,16 +7,17 @@
     grid-template-areas:
         'title filter file'
         'preview preview preview';
-    justify-content: space-between;
     align-content: center;
 }
 
 .title-item {
     grid-area: title;
+    padding-right: 16px;
 }
 
 .filter-item {
     grid-area: filter;
+    padding-right: 16px;
 }
 
 .file-item {

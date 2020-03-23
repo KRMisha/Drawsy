@@ -14,7 +14,7 @@ export class ModalService {
     constructor(private dialog: MatDialog) {}
 
     openNewDrawingModal(): void {
-        const width = 425;
+        const width = 325;
         this.openDialog(NewDrawingComponent, width, false);
     }
 
