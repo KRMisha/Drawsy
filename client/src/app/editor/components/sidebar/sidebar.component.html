@@ -1,10 +1,9 @@
 <mat-drawer-container>
-    <div class="button-selection">
-        <div class="option-selection">
-            <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
-                <mat-icon>dehaze</mat-icon>
+    <div class="container">
+        <div class="button-group-container">
+            <button mat-icon-button class="hamburger" (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
             </button>
-
             <button
                 mat-stroked-button
                 *ngFor="let button of buttons; let i = index"
@@ -17,7 +16,8 @@
                 <mat-icon>{{ button.icon }}</mat-icon>
             </button>
         </div>
-        <div class="option-selection">
+
+        <div class="button-group-container">
             <button
                 mat-stroked-button
                 class="option-button"
@@ -65,6 +65,7 @@
             </button>
         </div>
     </div>
+
     <mat-drawer #appDrawer mode="side" position="end" opened class="tool-settings">
         <app-sidebar-drawer
             [selectedButtonIndex]="selectedButton.toolIndex"

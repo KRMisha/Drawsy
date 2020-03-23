@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import Regexes from '@app/constants/regexes';
 import { CommandService } from '@app/drawing/services/command.service';
 import { ErrorMessageService } from '@app/services/error-message.service';
@@ -100,9 +102,21 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.max(this.maximumEraserSize),
     ]);
 
-    constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
+    constructor(
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+        private currentToolService: CurrentToolService,
+        private commandService: CommandService
+    ) {}
 
     ngOnInit(): void {
+        this.iconRegistry.addSvgIcon(
+            'fill-with-border',
+            this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/fill-with-border.svg')
+        );
+        this.iconRegistry.addSvgIcon('fill-only', this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/fill-only.svg'));
+        this.iconRegistry.addSvgIcon('border-only', this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/border-only.svg'));
+
         this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
             if (this.lineWidthFormControl.valid) {
                 this.currentToolService.setSetting(ToolSetting.LineWidth, this.lineWidthFormControl.value);
