@@ -38,6 +38,7 @@ export class GuideComponent implements AfterViewInit, OnDestroy {
             this.guideService.currentGuideNode = this.guideService.currentGuideNode.nextGuideNode;
         }
         this.sidebar.expandAllMenus();
+        console.log(this.sidebar);
     }
 
     get hasPreviousGuide(): boolean {

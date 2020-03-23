@@ -10,9 +10,7 @@ describe('GuideService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                {provide: GuideService},
-            ]
+            providers: [{ provide: GuideService }],
         });
         guideService = TestBed.inject(GuideService);
     });
