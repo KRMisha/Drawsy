@@ -1,3 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.hamburger {
+    margin-top: 8.07px;
+    margin-bottom: 8.07px;
+
+    .mat-icon {
+        transform: scale(1.1);
+    }
+}
+
+.button-group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .option-button {
     height: 40px;
     width: 40px;
@@ -11,19 +33,6 @@
     border-right: solid;
     border-width: 1px;
     width: 280px;
-}
-
-.button-selection {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.option-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 h1,
