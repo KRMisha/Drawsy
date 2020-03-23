@@ -1,10 +1,9 @@
 <mat-drawer-container>
-    <div class="button-selection">
-        <div class="option-selection">
-            <button mat-icon-button class="tool-button" (click)="drawer.toggle()">
-                <mat-icon class="mat-icon">dehaze</mat-icon>
+    <div class="container">
+        <div class="button-group-container">
+            <button mat-icon-button class="hamburger" (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
             </button>
-
             <button
                 mat-stroked-button
                 *ngFor="let button of buttons; let i = index"
@@ -14,10 +13,11 @@
                 matTooltip="{{ button.name }}"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">{{ button.icon }}</mat-icon>
+                <mat-icon>{{ button.icon }}</mat-icon>
             </button>
         </div>
-        <div class="option-selection">
+
+        <div class="button-group-container">
             <button
                 mat-stroked-button
                 class="option-button"
@@ -25,7 +25,7 @@
                 matTooltip="Nouveau dessin"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">add</mat-icon>
+                <mat-icon>add</mat-icon>
             </button>
             <button
                 mat-stroked-button
@@ -34,7 +34,7 @@
                 matTooltip="Exporter le dessin localement"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">save_alt</mat-icon>
+                <mat-icon>save_alt</mat-icon>
             </button>
             <button
                 mat-stroked-button
@@ -43,10 +43,10 @@
                 matTooltip="Sauvegarder le dessin sur le serveur"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">cloud_upload</mat-icon>
+                <mat-icon>cloud_upload</mat-icon>
             </button>
             <button mat-stroked-button class="option-button" (click)="openGalleryModal()" matTooltip="Galerie" matTooltipPosition="right">
-                <mat-icon class="mat-icon">collections</mat-icon>
+                <mat-icon>collections</mat-icon>
             </button>
             <button
                 mat-stroked-button
@@ -55,16 +55,17 @@
                 matTooltip="Paramètres"
                 matTooltipPosition="right"
             >
-                <mat-icon class="mat-icon">settings</mat-icon>
+                <mat-icon>settings</mat-icon>
             </button>
             <button mat-stroked-button class="option-button" (click)="openGuideModal()" matTooltip="Guide" matTooltipPosition="right">
-                <mat-icon class="mat-icon">help_outline</mat-icon>
+                <mat-icon>help_outline</mat-icon>
             </button>
             <button mat-stroked-button class="option-button" routerLink="/home" matTooltip="Accueil" matTooltipPosition="right">
-                <mat-icon class="mat-icon">home</mat-icon>
+                <mat-icon>home</mat-icon>
             </button>
         </div>
     </div>
+
     <mat-drawer #appDrawer mode="side" position="end" opened class="tool-settings">
         <app-sidebar-drawer
             [selectedButtonIndex]="selectedButton.toolIndex"

@@ -10,7 +10,7 @@ export const sidebarButtons: SidebarButton[] = [
     { name: ToolName.Pencil, icon: 'create', toolIndex: 0 },
     { name: ToolName.Brush, icon: 'brush', toolIndex: 1 },
     { name: ToolName.Line, icon: 'timeline', toolIndex: 2 },
-    { name: ToolName.SprayCan, icon: 'grain', toolIndex: 3 },
+    { name: ToolName.SprayCan, icon: 'flare', toolIndex: 3 },
     { name: ToolName.Rectangle, icon: 'crop_5_4', toolIndex: 4 },
     { name: ToolName.Ellipse, icon: 'panorama_fish_eye', toolIndex: 5 },
     { name: ToolName.Polygon, icon: 'star', toolIndex: 6 },

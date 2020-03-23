@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import Regexes from '@app/constants/regexes';
 import { CommandService } from '@app/drawing/services/command.service';
+import { ErrorMessageService } from '@app/services/error-message.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
@@ -99,9 +102,21 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.max(this.maximumEraserSize),
     ]);
 
-    constructor(private currentToolService: CurrentToolService, private commandService: CommandService) {}
+    constructor(
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+        private currentToolService: CurrentToolService,
+        private commandService: CommandService
+    ) {}
 
     ngOnInit(): void {
+        this.iconRegistry.addSvgIcon(
+            'fill-with-border',
+            this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/fill-with-border.svg')
+        );
+        this.iconRegistry.addSvgIcon('fill-only', this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/fill-only.svg'));
+        this.iconRegistry.addSvgIcon('border-only', this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/border-only.svg'));
+
         this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
             if (this.lineWidthFormControl.valid) {
                 this.currentToolService.setSetting(ToolSetting.LineWidth, this.lineWidthFormControl.value);
@@ -177,34 +192,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return value as JunctionSettings;
     }
 
-    getLineWidthErrorMessage(): string {
-        return this.getErrorMessage(this.lineWidthFormControl);
-    }
-
-    getJunctionDiameterErrorMessage(): string {
-        return this.getErrorMessage(this.junctionDiameterFormControl);
-    }
-
-    getSprayDiameterErrorMessage(): string {
-        return this.getErrorMessage(this.sprayDiameterFormControl);
-    }
-
-    getSprayRateErrorMessage(): string {
-        return this.getErrorMessage(this.sprayRateFormControl);
-    }
-
-    getShapeBorderWidthErrorMessage(): string {
-        return this.getErrorMessage(this.shapeBorderWidthFormControl);
-    }
-
-    getPolygonSideCountErrorMessage(): string {
-        return this.getErrorMessage(this.polygonSideCountFormControl);
-    }
-
-    getEraserSizeErrorMessage(): string {
-        return this.getErrorMessage(this.eraserSizeFormControl);
-    }
-
     get toolName(): string {
         return this.currentToolService.getToolName();
     }
@@ -235,23 +222,15 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, 'Nombre entier');
+    }
+
     get isUndoAvailable(): boolean {
         return this.commandService.hasUndoCommands();
     }
 
     get isRedoAvailable(): boolean {
         return this.commandService.hasRedoCommands();
-    }
-
-    private getErrorMessage(formControl: AbstractControl): string {
-        return formControl.hasError('required')
-            ? 'Entrez une taille'
-            : formControl.hasError('pattern')
-            ? 'Nombre entier invalide'
-            : formControl.hasError('min')
-            ? 'Valeur trop petite'
-            : formControl.hasError('max')
-            ? 'Valeur trop grande'
-            : '';
     }
 }
