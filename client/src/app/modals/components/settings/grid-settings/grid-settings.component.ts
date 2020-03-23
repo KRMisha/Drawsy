@@ -74,6 +74,14 @@ export class GridSettingsComponent implements OnInit {
         this.gridService.size = gridSize;
     }
 
+    get opacityFormControl(): AbstractControl {
+        return this.opacityGroup.controls.opacity;
+    }
+
+    get sizeFormControl(): AbstractControl {
+        return this.sizeGroup.controls.size;
+    }
+
     increaseGridSize(): void {
         this.gridService.increaseSize();
     }

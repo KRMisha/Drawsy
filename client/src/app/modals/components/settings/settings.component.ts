@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SettingsService } from '@app/modals/services/settings.service';
 
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
+    providers: [SettingsService]
 })
 export class SettingsComponent {
-    color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
+    constructor(private settingsService: SettingsService) {}
 
-    constructor(private drawingService: DrawingService) {}
-
-    confirmColor(): void {
-        this.drawingService.backgroundColor = this.color;
+    resetInitialSettings(): void {
+        this.settingsService.resetInitialSettings();
     }
 }

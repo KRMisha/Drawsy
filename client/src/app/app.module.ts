@@ -68,6 +68,7 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { BackgroundColorSettingsComponent } from '@app/modals/components/settings/background-color-settings/background-color-settings.component';
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
@@ -120,6 +121,7 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
         SidebarComponent,
         SidebarDrawerComponent,
         ThemeSettingsComponent,
+        BackgroundColorSettingsComponent,
     ],
     imports: [
         AppRoutingModule,

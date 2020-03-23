@@ -1,3 +1,4 @@
+<h2>Grille</h2>
 <div class="container">
     <button mat-raised-button class="toggle-button" (click)="toggleGridDisplay()">
         <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
@@ -12,6 +13,7 @@
                     placeholder="Taille des carrés"
                     formControlName="size"
                     [matTooltip]="getSizeErrorMessage()"
+                    [matTooltipDisabled]="sizeFormControl.valid"
                     matTooltipClass="error-tooltip"
                 />
             </mat-form-field>

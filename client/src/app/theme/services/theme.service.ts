@@ -17,9 +17,7 @@ export class ThemeService {
     }
 
     toggleDarkTheme(): void {
-        const oldTheme = this.getTheme();
-        this._isDarkTheme = !this._isDarkTheme;
-        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
+        this.isDarkTheme = !this.isDarkTheme;
     }
 
     set color(color: string) {
@@ -28,7 +26,17 @@ export class ThemeService {
         this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
     }
 
+    get color(): string {
+        return this._color;
+    }
+
     get isDarkTheme(): boolean {
         return this._isDarkTheme;
+    }
+
+    set isDarkTheme(isDarkTheme: boolean) {
+        this._isDarkTheme = isDarkTheme;
+        const oldTheme = this.getTheme();
+        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
     }
 }
