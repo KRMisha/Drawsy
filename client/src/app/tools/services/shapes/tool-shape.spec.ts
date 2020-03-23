@@ -8,7 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
-// import { Tool } from '@app/tools/services/tool';
+import { Tool } from '@app/tools/services/tool';
 
 class ToolShapeMock extends ToolShape {
     constructor(
@@ -29,20 +29,17 @@ class ToolShapeMock extends ToolShape {
     }
 }
 
-describe('ToolShape', () => {
+fdescribe('ToolShape', () => {
     const name: ToolName = ToolName.Brush;
     const isShapeAlwaysRegular = false;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let toolShape: ToolShapeMock;
 
     beforeEach(() => {
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement'], ['drawingRoot']);
-
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
-        drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 0, y: 0 } as DOMRect);
-        drawingServiceSpyObj.drawingRoot = drawingRootSpyObj;
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
 
         commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
 
@@ -51,11 +48,15 @@ describe('ToolShape', () => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
-        const colorServiceStub = {} as ColorService;
+        colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['getPrimaryColor', 'getSecondaryColor']);
+        const colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
+        colorServiceSpyObj.getPrimaryColor.and.returnValue(colorSpyObj);
+        colorServiceSpyObj.getSecondaryColor.and.returnValue(colorSpyObj);
+
         toolShape = new ToolShapeMock(
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
-            colorServiceStub,
+            colorServiceSpyObj,
             commandServiceSpyObj,
             name,
             isShapeAlwaysRegular
@@ -100,18 +101,36 @@ describe('ToolShape', () => {
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
-    // it('#onMouseMove should call #getMousePosition and #updateShapeArea', () => {
-    //     spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
-    //     Tool.isMouseDown = true;
-    //     toolShape.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
-    //     expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
-    // });
+    it('#onMouseMove should call #getMousePosition and #updateShapeArea', () => {
+        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
+        Tool.isMouseDown = true;
+        toolShape.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        expect(toolShape['getMousePosition']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+    });
 
-    // it('#onMouseDown should call drawingService.addElement with the proper arguments', () => {
-    //     Tool.isMouseInsideDrawing = true;
-    //     toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-    //     expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith();
-    // });
+    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments', () => {
+        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
+        spyOn<any>(toolShape, 'createNewShape').and.callThrough(); // tslint:disable-line: no-any
+
+        Tool.isMouseInsideDrawing = true;
+        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        // tslint:disable: no-string-literal
+        expect(toolShape['createNewShape']).toHaveBeenCalled();
+        expect(toolShape['getMousePosition']).toHaveBeenCalled();
+        expect(toolShape['updateShapeArea']).toHaveBeenCalled();
+        // tslint:enable: no-string-literal
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+    });
+
+    it('#onMouseDown should not make calls if the mouse isnt inside the drawing', () => {
+        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
+        Tool.isMouseInsideDrawing = false;
+        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    });
 
     it('#onMouseUp should call commandService.addCommand if shape is a valid regular shape', () => {
         const shape = {} as SVGElement;
