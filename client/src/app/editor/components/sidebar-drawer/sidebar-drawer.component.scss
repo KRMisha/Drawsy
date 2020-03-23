@@ -40,7 +40,7 @@
 
 .setting-name-item {
     grid-area: setting-name;
-    margin-top: 1em;
+    align-self: end;
     margin-bottom: 0;
 }
 
@@ -76,6 +76,7 @@
 
 .toggle {
     grid-area: toggle;
+    margin-top: 12px;
     align-self: center;
     justify-self: center;
 }
