@@ -30,11 +30,13 @@
 .setting-name {
     grid-area: tool-name;
     text-align: left;
-    margin-top: 16px;
+    margin-top: 1em;
+    margin-bottom: 0;
 }
 
 .color-title {
-    margin-top: 0px;
+    margin-top: 0;
+    margin-bottom: 0.5em;
 }
 
 .form-field {
@@ -42,6 +44,10 @@
     text-align: right;
     width: 70px;
     justify-self: right;
+
+    ::ng-deep .mat-form-field-wrapper {
+        margin-bottom: -1.25em;
+    }
 }
 
 .mat-slider {
