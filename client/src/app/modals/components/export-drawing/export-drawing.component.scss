@@ -1,16 +1,19 @@
-.content {
-    max-height: unset;
+.title {
+    text-align: center;
+}
+
+.container {
     display: grid;
     grid-template-areas:
         'title filter file'
         'preview preview preview';
-    align-content: center;
     justify-content: space-between;
+    align-content: center;
+    max-height: unset;
 }
 
 .title-item {
     grid-area: title;
-    margin-right: 16px;
 }
 
 .filter-item {
@@ -18,17 +21,15 @@
 }
 
 .file-item {
-    margin-bottom: 16px;
     grid-area: file;
-    display: grid;
-    grid-template-columns: auto min-content;
-    justify-content: right;
+    display: flex;
+    margin-bottom: 16px;
 }
 
 .file-type {
     align-self: center;
     margin-bottom: 0;
-    margin-right: 8px;
+    margin-right: 12px;
 }
 
 .preview-item {

@@ -22,6 +22,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     currentFileType: FileType = FileType.Svg;
+
     titleFormControlChangedSubscription: Subscription;
 
     titleFormControl = new FormControl(this.drawingService.title, [
