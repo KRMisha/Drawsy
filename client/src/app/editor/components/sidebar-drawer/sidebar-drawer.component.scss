@@ -6,10 +6,15 @@
     flex-direction: column;
 }
 
+.title {
+    text-align: center;
+    font-weight: 500;
+}
+
 .size-container {
     display: grid;
     grid-template-areas:
-        'tool-name input-field'
+        'setting-name input-field'
         'slider slider'
         'divider divider';
 }
@@ -17,19 +22,21 @@
 .junction-container {
     display: grid;
     grid-template-areas:
-        'tool-name toggle input-field'
+        'setting-name toggle input-field'
         'slider slider slider'
         'divider divider divider';
 }
 
-.tool-name {
-    text-align: center;
-    font-weight: 500;
+.shape-type-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
 }
 
-.setting-name {
-    grid-area: tool-name;
-    text-align: left;
+.setting-name-item {
+    grid-area: setting-name;
     margin-top: 1em;
     margin-bottom: 0;
 }
@@ -37,6 +44,15 @@
 .color-title {
     margin-top: 0;
     margin-bottom: 0.5em;
+}
+
+.brush-texture-title {
+    margin-top: 1em;
+    margin-bottom: 0;
+}
+
+.shape-type-title {
+    margin-bottom: 0;
 }
 
 .form-field {
@@ -69,11 +85,6 @@
 .divider {
     grid-area: divider;
     width: 100%;
-}
-
-.toggle-buttons-container {
-    text-align: center;
-    margin-bottom: 26px;
 }
 
 .undo-redo {
