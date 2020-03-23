@@ -82,7 +82,7 @@ export class SvgUtilityService {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const paddingString = element.getAttribute('padding') || undefined;
+        const paddingString = element.getAttribute('data-padding') || undefined;
         const paddingValue = paddingString === undefined ? 0 : +paddingString;
 
         return {

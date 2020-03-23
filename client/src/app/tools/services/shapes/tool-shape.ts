@@ -111,7 +111,7 @@ export abstract class ToolShape extends Tool {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
         }
 
-        this.renderer.setAttribute(shape, 'padding', `${(this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number) / 2}`);
+        this.renderer.setAttribute(shape, 'data-padding', `${(this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number) / 2}`);
 
         return shape;
     }
