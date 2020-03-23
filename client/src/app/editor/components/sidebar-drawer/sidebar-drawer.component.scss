@@ -22,12 +22,12 @@
         'divider divider divider';
 }
 
-.mat-h1 {
+.tool-name {
     text-align: center;
     font-weight: 500;
 }
 
-.option-name {
+.setting-name {
     grid-area: tool-name;
     text-align: left;
     margin-top: 1em;
@@ -42,7 +42,7 @@
 .form-field {
     grid-area: input-field;
     text-align: right;
-    width: 70px !important;
+    width: 70px;
     justify-self: right;
 
     ::ng-deep .mat-form-field-wrapper {

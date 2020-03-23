@@ -1,4 +1,4 @@
-<h1 mat-dialog-title class="mat-h1">Création de dessin</h1>
+<h1 mat-dialog-title class="title">Création de dessin</h1>
 <form [formGroup]="drawingGroup" (ngSubmit)="onSubmit()">
     <mat-dialog-content class="content">
         <mat-form-field class="form-field">
@@ -15,7 +15,7 @@
     </mat-dialog-content>
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
-        <button mat-raised-button mat-dialog-close type="submit" [disabled]="!drawingGroup.valid" class="button" cdkFocusInitial>
+        <button mat-raised-button mat-dialog-close type="submit" class="button" [disabled]="!drawingGroup.valid" cdkFocusInitial>
             Confirmer
         </button>
     </mat-dialog-actions>
