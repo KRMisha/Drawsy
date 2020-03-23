@@ -1,7 +1,8 @@
 .settings-container {
     display: flex;
     flex-direction: column;
-    max-height: unset !important;
+    max-height: unset;
+    overflow-y: hidden;
 }
 
 .buttons-container {
@@ -10,16 +11,12 @@
     justify-content: center;
 }
 
-.mat-h1 {
+.title {
     text-align: center;
 }
 
 mat-dialog-content::-webkit-scrollbar {
     display: none;
-}
-
-mat-dialog-actions {
-    padding: 10px;
 }
 
 .button {

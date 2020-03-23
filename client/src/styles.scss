@@ -13,13 +13,17 @@ body {
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
+    min-width: max(0.5vh, 0.5vw);
+    min-height: max(0.5vh, 0.5vw);
+    max-width: min(2vh, 2vw);
+    max-height: min(2vh, 2vw);
 }
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(158, 158, 158);
-    border-radius: 10px;
+    background-color: rgb(193, 193, 193);
+    border-radius: 100px;
 }
 
 h1,
@@ -32,8 +36,4 @@ p {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-mat-dialog-container {
-    background: rgba(0, 0, 0, 0);
 }

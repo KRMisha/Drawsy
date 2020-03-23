@@ -4,7 +4,7 @@
         PolyDessin
     </mat-toolbar>
     <div>
-        <mat-card class="item-buttons">
+        <mat-card class="buttons-item">
             <button mat-raised-button class="button" (click)="openNewDrawingModal()">Créer un nouveau dessin</button>
             <button mat-raised-button class="button" (click)="continueDrawing()" *ngIf="isDrawingStarted">
                 Continuer un dessin
@@ -13,9 +13,9 @@
             <button mat-raised-button class="button" (click)="openGuideModal()">Guide d'utilisation</button>
         </mat-card>
     </div>
-    <div class="footer">
+    <div class="footer-item">
         <mat-divider></mat-divider>
-        <p class="mat-body">Équipe 203</p>
-        <p class="mat-body">Francis Pepin • Justin van den Hanenberg • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin</p>
+        <p>Équipe 203</p>
+        <p>Francis Pepin • Justin van den Hanenberg • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin</p>
     </div>
 </div>

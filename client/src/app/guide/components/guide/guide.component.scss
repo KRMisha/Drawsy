@@ -1,8 +1,5 @@
 .container {
     display: grid;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
     grid-template-columns: 220px auto;
     grid-template-rows: 50px auto auto 80px;
     grid-template-areas:
@@ -10,56 +7,51 @@
         'sidebar guide'
         'sidebar guide'
         'sidebar buttons';
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
-.item-guide-content {
+.sidebar-item {
+    grid-area: sidebar;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.exit-button-item {
+    grid-area: exit;
+    justify-self: end;
+    cursor: pointer;
+}
+
+.guide-content-item {
+    grid-area: guide;
+    align-self: start;
     padding-left: 30px;
     padding-right: 30px;
     height: 100%;
-    align-self: start;
-    grid-area: guide;
 }
 
-.item-exit-button {
-    justify-self: end;
-    cursor: pointer;
-    grid-area: exit;
-}
-
-.item-sidebar {
-    overflow-x: hidden;
-    overflow-y: auto;
-    grid-area: sidebar;
-}
-
-.item-buttons {
+.buttons-item {
     grid-area: buttons;
     padding-bottom: 30px;
 }
 
 .navigation-button {
-    height: 60px;
-    width: auto;
-    margin-top: 10px;
+    width: 150px;
+    height: 50px;
     font-size: 18px;
     cursor: pointer;
 }
 
-.previous,
-.next {
-    width: 150px;
-}
-
 .previous {
-    margin-right: 50px;
     grid-area: previous;
+    margin-right: 50px;
+    text-align: right;
 }
 
 .next {
-    margin-left: 50px;
     grid-area: next;
-}
-
-.icon {
-    transform: scale(1.5);
+    margin-left: 50px;
+    text-align: left;
 }

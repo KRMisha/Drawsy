@@ -1,12 +1,12 @@
 <div class="container">
-    <h1 class="mat-h1">{{ toolName }}</h1>
+    <h1 class="tool-name">{{ toolName }}</h1>
 
-    <h2 class="mat-h2 color-title">Couleur</h2>
+    <h2 class="setting-name color-title">Couleur</h2>
     <app-sidebar-color-picker></app-sidebar-color-picker>
     <mat-divider></mat-divider>
 
     <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
-        <h2 class="mat-h2">Largeur du trait</h2>
+        <h2 class="setting-name">Largeur du trait</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -27,7 +27,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.BrushTexture)">
-        <h2 class="mat-h2">Type de texture</h2>
+        <h2 class="setting-name">Type de texture</h2>
         <mat-form-field class="dropdown">
             <mat-label>Sélection</mat-label>
             <mat-select
@@ -45,7 +45,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
-        <h2 class="mat-h2">Taille jonction</h2>
+        <h2 class="setting-name">Taille jonction</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -77,7 +77,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.SprayDiameter)" class="size-container">
-        <h2 class="mat-h2">Diamètre du jet</h2>
+        <h2 class="setting-name">Diamètre du jet</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -97,7 +97,7 @@
         <mat-divider class="divider"></mat-divider>
     </div>
     <div *ngIf="hasSetting(ToolSetting.SprayRate)" class="size-container">
-        <h2 class="mat-h2">Vitesse du jet</h2>
+        <h2 class="setting-name">Vitesse du jet</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -118,19 +118,31 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.ShapeType)">
-        <h2 class="mat-h2">Type de tracé</h2>
+        <h2 class="setting-name">Type de tracé</h2>
         <div class="toggle-buttons-container">
             <mat-button-toggle-group [value]="getSetting(ToolSetting.ShapeType)" (change)="setSetting(ToolSetting.ShapeType, $event.value)">
-                <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.FillOnly">Plein</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.BorderOnly">Contour</mat-button-toggle>
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillWithBorder"
+                    [value]="ShapeType.FillWithBorder"
+                    >Complet</mat-button-toggle
+                >
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillOnly"
+                    [value]="ShapeType.FillOnly"
+                    >Plein</mat-button-toggle
+                >
+                <mat-button-toggle
+                    [class.selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.BorderOnly"
+                    [value]="ShapeType.BorderOnly"
+                    >Contour</mat-button-toggle
+                >
             </mat-button-toggle-group>
         </div>
         <mat-divider class="divider"></mat-divider>
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
-        <h2 class="mat-h2">Taille de bordure</h2>
+        <h2 class="setting-name">Taille de bordure</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -151,7 +163,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
-        <h2 class="mat-h2">Nombre de faces</h2>
+        <h2 class="setting-name">Nombre de faces</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
@@ -171,7 +183,7 @@
     </div>
 
     <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
-        <h2 class="mat-h2">Taille de l'efface</h2>
+        <h2 class="setting-name">Taille de l'efface</h2>
         <mat-form-field class="form-field">
             <input
                 matInput
