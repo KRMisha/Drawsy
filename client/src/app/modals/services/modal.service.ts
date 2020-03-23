@@ -1,6 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Vec2 } from '@app/classes/vec2';
+import { MatDialog } from '@angular/material/dialog';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
@@ -12,54 +11,53 @@ import { SettingsComponent } from '@app/modals/components/settings/settings.comp
     providedIn: 'root',
 })
 export class ModalService {
-    // Type<any> to prevent all dialogs needing to inherit from a parent component
-    private dialogRef: MatDialogRef<Type<any>>; // tslint:disable-line: no-any
-
-    private _isModalPresent = false; // tslint:disable-line: variable-name
-
     constructor(private dialog: MatDialog) {}
 
     openNewDrawingModal(): void {
-        this.openDialog(NewDrawingComponent, { x: 425, y: 500 });
+        const width = 425;
+        this.openDialog(NewDrawingComponent, width, false);
     }
 
     openExportDrawingModal(): void {
-        this.openDialog(ExportDrawingComponent, { x: 1000, y: 850 });
+        const width = 920;
+        this.openDialog(ExportDrawingComponent, width, false);
     }
 
     openSaveDrawingModal(): void {
-        this.openDialog(SaveDrawingComponent, { x: 1000, y: 900 });
+        const width = 920;
+        this.openDialog(SaveDrawingComponent, width, false);
     }
 
     openGalleryModal(): void {
-        this.openDialog(GalleryComponent, { x: 1920, y: 900 });
+        const width = 1920;
+        this.openDialog(GalleryComponent, width, false);
     }
 
     openDrawingSettingsModal(): void {
-        this.openDialog(SettingsComponent, { x: 425, y: 750 });
+        const width = 425;
+        this.openDialog(SettingsComponent, width, false);
     }
 
     openGuideModal(): void {
-        this.openDialog(GuideComponent, { x: 1920, y: 1080 });
+        const width = 1920;
+        this.openDialog(GuideComponent, width, true);
     }
 
     get isModalPresent(): boolean {
-        return this._isModalPresent;
+        return this.dialog.openDialogs.length > 0;
     }
 
     // tslint:disable-next-line: no-any
-    private openDialog(component: Type<any>, dimensions: Vec2): void {
-        if (this._isModalPresent) {
+    private openDialog(component: Type<any>, width: number, shouldFillHeight: boolean): void {
+        if (this.isModalPresent) {
             return;
         }
 
-        this.dialogRef = this.dialog.open(component, {
-            width: `${dimensions.x}px`,
-            height: `${dimensions.y}px`,
+        this.dialog.open(component, {
+            width: `${width}px`,
+            height: shouldFillHeight ? '100%' : 'auto',
+            maxHeight: '95vh',
+            panelClass: 'dialog',
         });
-        this.dialogRef.afterClosed().subscribe(() => {
-            this._isModalPresent = false;
-        });
-        this._isModalPresent = true;
     }
 }
