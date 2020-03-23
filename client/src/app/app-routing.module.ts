@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 import { HomeComponent } from '@app/home/components/home/home.component';
 
@@ -12,7 +11,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [],
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
