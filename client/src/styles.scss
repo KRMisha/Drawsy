@@ -22,7 +22,7 @@ body {
     background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(158, 158, 158);
+    background-color: rgb(193, 193, 193);
     border-radius: 100px;
 }
 
@@ -36,8 +36,4 @@ p {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-mat-dialog-container {
-    background: rgba(0, 0, 0, 0);
 }
