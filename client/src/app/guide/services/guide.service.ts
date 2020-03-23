@@ -14,6 +14,18 @@ export class GuideService {
 
     currentGuideChanged$ = this.currentGuideChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
+    selectPreviousGuide(): void {
+        if (this.currentGuideNode.previousGuideNode !== undefined) {
+            this.currentGuideNode = this.currentGuideNode.previousGuideNode;
+        }
+    }
+
+    selectNextGuide(): void {
+        if (this.currentGuideNode.nextGuideNode !== undefined) {
+            this.currentGuideNode = this.currentGuideNode.nextGuideNode;
+        }
+    }
+
     get currentGuideNode(): GuideNode {
         return this._currentGuideNode;
     }
