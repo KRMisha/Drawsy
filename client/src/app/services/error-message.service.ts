@@ -10,7 +10,7 @@ export class ErrorMessageService {
             ? ErrorMessageService.getRequiredErrorMessage()
             : control.hasError('pattern')
             ? ErrorMessageService.getPatternErrorMessage(
-                humanFriendlyPattern === undefined ? control.getError('pattern').requiredPattern : humanFriendlyPattern
+                  humanFriendlyPattern === undefined ? control.getError('pattern').requiredPattern : humanFriendlyPattern
               )
             : control.hasError('min')
             ? ErrorMessageService.getMinimumValueErrorMessage(control.getError('min').min)
