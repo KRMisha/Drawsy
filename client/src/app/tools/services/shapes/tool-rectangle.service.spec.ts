@@ -7,7 +7,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
 
-fdescribe('Tool-Rectangle', () => {
+describe('Tool-Rectangle', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let toolRectangle: ToolRectangleService;
     beforeEach(() => {

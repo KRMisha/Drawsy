@@ -12,14 +12,9 @@ describe('ToolEllipseService', () => {
     let toolEllipse: ToolEllipseService;
 
     beforeEach(() => {
-        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', [
-            'createRenderer'
-        ]);
+        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
 
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
-            'setAttribute',
-            'createElement'
-        ]);
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
         const drawingServiceStub = {} as DrawingService;
@@ -32,8 +27,8 @@ describe('ToolEllipseService', () => {
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: ColorService, useValue: colorServiceStub },
-                { provide: CommandService, useValue: commandServiceStub }
-            ]
+                { provide: CommandService, useValue: commandServiceStub },
+            ],
         }).compileComponents();
 
         toolEllipse = TestBed.inject(ToolEllipseService);
