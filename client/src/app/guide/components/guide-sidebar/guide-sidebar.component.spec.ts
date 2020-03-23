@@ -25,13 +25,13 @@ fourthGuideNodeMock.children = [firstGuideNodeMock];
 
 const guidesMock = [firstGuideNodeMock, secondGuideNodeMock, thirdGuideNodeMock];
 
-describe('GuideSidebarComponent', () => {
+fdescribe('GuideSidebarComponent', () => {
     let guideSidebarComponent: GuideSidebarComponent;
     let fixture: ComponentFixture<GuideSidebarComponent>;
     let guideServiceSpyObj: jasmine.SpyObj<GuideService>;
 
     beforeEach(async(() => {
-        guideServiceSpyObj = jasmine.createSpyObj('GuideService', [], [{ currentGuideNode: secondGuideNodeMock }]);
+        guideServiceSpyObj = jasmine.createSpyObj('GuideService', [], { currentGuideNode: secondGuideNodeMock });
         TestBed.configureTestingModule({
             declarations: [GuideSidebarComponent],
             providers: [{ provide: GuideService, useValue: guideServiceSpyObj }],
@@ -56,9 +56,9 @@ describe('GuideSidebarComponent', () => {
     });
 
     it('#expandAllMenus should recursively call #expandLayer', () => {
-        spyOn<any>(guideSidebarComponent, 'expandLayer').and.callThrough(); // tslint:disable-line: no-any
+        const exapndLayerSpy = spyOn<any>(guideSidebarComponent, 'expandLayer').and.callThrough(); // tslint:disable-line: no-any
         guideSidebarComponent.expandAllMenus();
-        expect(guideSidebarComponent['expandLayer']).toHaveBeenCalledTimes(2); // tslint:disable-line: no-string-literal
+        expect(exapndLayerSpy).toHaveBeenCalledTimes(2); // tslint:disable-line: no-string-literal
     });
 
     it("#currentGuideNodeGetter should  return the guideSerivce's currentGuideNode attribute", () => {
