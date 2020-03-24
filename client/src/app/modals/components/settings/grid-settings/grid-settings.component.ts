@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import Regexes from '@app/constants/regexes';
+import { Component } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
+import { SettingsService } from '@app/modals/services/settings.service';
+import { ErrorMessageService } from '@app/services/error-message.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,61 +10,38 @@ import { Subscription } from 'rxjs';
     templateUrl: './grid-settings.component.html',
     styleUrls: ['./grid-settings.component.scss'],
 })
-export class GridSettingsComponent implements OnInit {
-    readonly sliderRange = 100;
-
+export class GridSettingsComponent {
     sizeSubscription: Subscription;
     opacitySubscription: Subscription;
 
-    sizeGroup = new FormGroup({
-        size: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(this.gridService.minimumSize),
-                Validators.max(this.gridService.maximumSize),
-                Validators.pattern(Regexes.integerRegex),
-            ])
-        ),
-    });
+    constructor(private settingsService: SettingsService, private gridService: GridService) {}
 
-    opacityGroup = new FormGroup({
-        opacity: new FormControl(
-            0,
-            Validators.compose([
-                Validators.required,
-                Validators.min(this.gridService.minimumOpacity),
-                Validators.max(this.gridService.maximumOpacity),
-                Validators.pattern(Regexes.decimalRegex),
-            ])
-        ),
-    });
+    toggleGridDisplay(): void {
+        this.gridService.toggleDisplay();
+    }
 
-    constructor(private gridService: GridService) {}
+    increaseGridSize(): void {
+        this.gridService.increaseSize();
+    }
 
-    ngOnInit(): void {
-        this.sizeGroup.controls.size.setValue(this.gridService.size);
-        this.opacityGroup.controls.opacity.setValue(this.gridService.opacity);
+    decreaseGridSize(): void {
+        this.gridService.decreaseSize();
+    }
 
-        this.sizeSubscription = this.sizeGroup.controls.size.valueChanges.subscribe(() => {
-            if (this.sizeGroup.controls.size.valid) {
-                this.gridService.size = this.sizeGroup.controls.size.value;
-            }
-        });
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl);
+    }
 
-        this.opacitySubscription = this.opacityGroup.controls.opacity.valueChanges.subscribe(() => {
-            if (this.opacityGroup.controls.opacity.valid) {
-                this.gridService.opacity = this.opacityGroup.controls.opacity.value;
-            }
-        });
+    canIncreaseSize(): boolean {
+        return this.gridService.size < this.gridService.maximumSize;
+    }
+
+    canDecreaseSize(): boolean {
+        return this.gridService.size > this.gridService.minimumSize;
     }
 
     get isGridDisplayEnabled(): boolean {
         return this.gridService.isDisplayEnabled;
-    }
-
-    toggleGridDisplay(): void {
-        this.gridService.toggleDisplay();
     }
 
     get gridSize(): number {
@@ -75,38 +53,14 @@ export class GridSettingsComponent implements OnInit {
     }
 
     get opacityFormControl(): AbstractControl {
-        return this.opacityGroup.controls.opacity;
+        return this.settingsService.settingsFormGroup.controls.gridOpacity;
     }
 
     get sizeFormControl(): AbstractControl {
-        return this.sizeGroup.controls.size;
+        return this.settingsService.settingsFormGroup.controls.gridSize;
     }
 
-    increaseGridSize(): void {
-        this.gridService.increaseSize();
-    }
-
-    decreaseGridSize(): void {
-        this.gridService.decreaseSize();
-    }
-
-    getSizeErrorMessage(): string {
-        return this.getErrorMessage(this.sizeGroup.controls.size);
-    }
-
-    getOpacityErrorMessage(): string {
-        return this.getErrorMessage(this.opacityGroup.controls.opacity);
-    }
-
-    private getErrorMessage(formControl: AbstractControl): string {
-        return formControl.hasError('required')
-            ? 'Entrez une taille'
-            : formControl.hasError('pattern')
-            ? 'Nombre invalide'
-            : formControl.hasError('min')
-            ? 'Valeur trop petite'
-            : formControl.hasError('max')
-            ? 'Valeur trop grande'
-            : '';
+    get formGroup(): FormGroup {
+        return this.settingsService.settingsFormGroup;
     }
 }

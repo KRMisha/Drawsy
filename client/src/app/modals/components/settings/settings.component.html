@@ -1,14 +1,14 @@
-<mat-dialog-content class="settings-container">
-    <h2 mat-dialog-title>Paramètres</h2>
-    <mat-dialog-content>
+<h2 mat-dialog-title>Paramètres</h2>
+<mat-dialog-content>
+    <form [formGroup]="formGroup" autocomplete="off">
         <app-background-color-settings></app-background-color-settings>
         <mat-divider></mat-divider>
         <app-grid-settings></app-grid-settings>
         <mat-divider></mat-divider>
         <app-theme-settings></app-theme-settings>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-        <button mat-button (click)="resetInitialSettings()">Annuler</button>
-        <button mat-button mat-dialog-close>Confirmer</button>
-    </mat-dialog-actions>
+    </form>
 </mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close class="button" (click)="resetInitialSettings()">Annuler</button>
+    <button mat-button mat-dialog-close class="button">Confirmer</button>
+</mat-dialog-actions>

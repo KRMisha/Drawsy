@@ -1,47 +1,65 @@
-<h2>Grille</h2>
-<div class="container">
-    <button mat-raised-button class="toggle-button" (click)="toggleGridDisplay()">
-        <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
-    </button>
-    <div class="size-buttons-container">
-        <form [formGroup]="sizeGroup">
+<h3 class="title">Grille</h3>
+<form [formGroup]="formGroup" autocomplete="off">
+    <div class="grid-settings-container">
+        <!-- SIZE -->
+        <div class="grid-settings-size-container">
+            <button mat-raised-button class="button-item" (click)="toggleGridDisplay()">
+                <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
+            </button>
+            
             <mat-form-field>
                 <input
                     matInput
                     class="size-input"
                     value="{{ gridSize }}"
                     placeholder="Taille des carrés"
-                    formControlName="size"
-                    [matTooltip]="getSizeErrorMessage()"
+                    formControlName="gridSize"
+                    [matTooltip]="getErrorMessage(sizeFormControl)"
                     [matTooltipDisabled]="sizeFormControl.valid"
                     matTooltipClass="error-tooltip"
                 />
             </mat-form-field>
-        </form>
-        <button mat-raised-button class="input-button" (click)="decreaseGridSize()">
-            <mat-icon>remove</mat-icon>
-        </button>
-        <button mat-raised-button class="input-button" (click)="increaseGridSize()">
-            <mat-icon>add</mat-icon>
-        </button>
+            <div>
+                <button
+                    mat-raised-button
+                    class="button-item"
+                    [disabled]="!canDecreaseSize()"
+                    (click)="decreaseGridSize()">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <button
+                    mat-raised-button
+                    class="button-item"
+                    [disabled]="!canIncreaseSize()"
+                    (click)="increaseGridSize()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        <!-- END SIZE -->
+
+        <!-- OPACITY -->
+        <div class="grid-settings-size-container">
+            <mat-form-field>
+                <input
+                    matInput
+                    class="opacity-input"
+                    placeholder="Transparence de la grille"
+                    formControlName="gridOpacity"
+                    [matTooltip]="getErrorMessage(opacityFormControl)"
+                    [matTooltipDisabled]="opacityFormControl.valid"
+                    matTooltipClass="error-tooltip"
+                />
+            </mat-form-field>
+            <mat-slider
+                class="slider"
+                min="0.1"
+                max="1"
+                step="0.01"
+                (input)="opacityFormControl.setValue($event.value)"
+                [value]="opacityFormControl.value"
+            ></mat-slider>
+        </div>
+        <!-- END OPACITY -->
     </div>
-    <form [formGroup]="opacityGroup" class="opacity-form">
-        <mat-form-field>
-            <input
-                matInput
-                class="opacity-input"
-                placeholder="Transparence de la grille"
-                formControlName="opacity"
-                [matTooltip]="getOpacityErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-        </mat-form-field>
-    </form>
-    <mat-slider
-        class="slider"
-        min="10"
-        max="100"
-        (input)="this.opacityGroup.controls.opacity.setValue($event.value / sliderRange)"
-        [value]="opacityGroup.controls.opacity.value * sliderRange"
-    ></mat-slider>
-</div>
+</form>

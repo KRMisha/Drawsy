@@ -1,7 +1,7 @@
 <div mat-dialog-title>
     <h1 class="title">Galerie de dessins</h1>
     <mat-form-field class="chip-list">
-        <mat-chip-list #chipList aria-label="Label selection">
+        <mat-chip-list #chipList aria-label="Sélection des étiquettes">
             <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
                 {{ label }}
                 <mat-icon matChipRemove>cancel</mat-icon>

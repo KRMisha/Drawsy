@@ -20,14 +20,14 @@ export class ThemeService {
         this.isDarkTheme = !this.isDarkTheme;
     }
 
+    get color(): string {
+        return this._color;
+    }
+
     set color(color: string) {
         const oldTheme = this.getTheme();
         this._color = color;
         this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
-    }
-
-    get color(): string {
-        return this._color;
     }
 
     get isDarkTheme(): boolean {

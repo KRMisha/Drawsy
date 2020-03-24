@@ -1,47 +1,32 @@
-.container {
-    display: grid;
-    grid-template-columns: 60px max-content;
-    grid-template-areas:
-        'toggle size-buttons'
-        '. opacity-input'
-        'slider slider';
-    justify-content: center;
+.title {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    text-align: center;
 }
 
-.toggle-button {
-    grid-area: toggle;
+.grid-settings-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.grid-settings-size-container {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.button-item {
     width: 48px;
     height: 48px;
     min-width: unset;
     padding: 0;
+    margin-right: 4px;
 }
 
-.size-buttons-container {
-    grid-area: size-buttons;
-    display: flex;
-}
-
-.input-button {
-    width: 36px;
-    height: 36px;
-    min-width: unset;
-    padding: 0;
-    margin: 4px;
-}
-
-.size-input {
-    text-align: center;
-}
-
-.opacity-input {
-    text-align: right;
-}
-
-.opacity-form {
-    grid-area: opacity-input;
-    justify-self: right;
-}
-
-.slider {
-    grid-area: slider;
+mat-slider {
+    width: 100%;
 }
