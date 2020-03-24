@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CommandService } from '@app/drawing/services/command.service';
 import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
-import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { ModalService } from '@app/modals/services/modal.service';
+import { ShortcutService } from '@app/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 

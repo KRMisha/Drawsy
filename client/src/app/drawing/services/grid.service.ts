@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ShortcutService } from '@app/editor/services/shortcut.service';
+import { ShortcutService } from '@app/services/shortcut.service';
 import { Subscription } from 'rxjs';
 
 const gridSizeVariation = 5;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ShortcutService } from '@app/editor/services/shortcut.service';
+import { ShortcutService } from '@app/services/shortcut.service';
 
 describe('ShortcutService', () => {
     let service: ShortcutService;
