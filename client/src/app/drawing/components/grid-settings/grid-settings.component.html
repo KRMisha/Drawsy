@@ -8,11 +8,12 @@
                 <input
                     matInput
                     class="size-input"
-                    value="{{ gridSize }}"
+                    [value]="gridSize"
                     placeholder="Taille des carrés"
                     formControlName="size"
                     [matTooltip]="getSizeErrorMessage()"
-                    matTooltipClass="error-tooltip"
+                    [matTooltipDisabled]="sizeGroup.controls.size.valid"
+                    matTooltipClass="theme-error-tooltip"
                 />
             </mat-form-field>
         </form>
@@ -31,7 +32,8 @@
                 placeholder="Transparence de la grille"
                 formControlName="opacity"
                 [matTooltip]="getOpacityErrorMessage()"
-                matTooltipClass="error-tooltip"
+                [matTooltipDisabled]="opacityGroup.controls.opacity.valid"
+                matTooltipClass="theme-error-tooltip"
             />
         </mat-form-field>
     </form>
