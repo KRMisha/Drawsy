@@ -6,8 +6,8 @@
         <div
             class="color-preview"
             [style.background-color]="color.toRgbaString()"
-            [matTooltip]="previewTooltip"
-            [matTooltipDisabled]="previewTooltip.length === 0"
+            [matTooltip]="colorPreviewTooltip"
+            [matTooltipDisabled]="colorPreviewTooltip.length === 0"
         ></div>
     </div>
     <app-color-hex-selector class="hex-selector-item"></app-color-hex-selector>
