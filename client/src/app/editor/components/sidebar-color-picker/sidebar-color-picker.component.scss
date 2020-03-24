@@ -1,52 +1,38 @@
-.current-colors {
+.current-colors-container {
     display: flex;
-    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.primary-color-item,
+.secondary-color-item {
+    height: 32px;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.primary-color-item {
+    width: 50%;
+}
+
+.secondary-color-item {
+    width: 25%;
+}
+
+.previous-colors {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.previous-colors-margin {
+    margin-bottom: 20px;
 }
 
 .circle {
     width: 22px;
     height: 22px;
     border-radius: 11px;
-    background-color: white;
     cursor: pointer;
-}
-
-.primary-color,
-.secondary-color {
-    width: 32px;
-    height: 32px;
-    border-radius: 16px;
-    background-color: white;
-    cursor: pointer;
-}
-
-.primary-color {
-    width: 50%;
-    cursor: pointer;
-}
-
-.secondary-color {
-    width: 25%;
-    cursor: pointer;
-}
-
-.swap-colors-button {
-    width: 25%;
-    button {
-        margin: auto auto;
-        position: relative;
-        top: -4px;
-        left: 11.25px;
-    }
-}
-
-.previous-colors {
-    display: flex;
-    justify-content: space-between;
-    align-content: flex-start;
-    margin-bottom: 8px;
-}
-
-.margin-colors {
-    margin-bottom: 20px;
 }

@@ -53,6 +53,22 @@ $theme-colors: (
 
     .mat-action-list .theme-selected-button:focus {
         background-color: mat-color($primary);
+
+        @if $primary ==
+            map-get($theme-colors, purple) or
+            $primary ==
+            map-get($theme-colors, blue) or
+            $primary ==
+            map-get($theme-colors, red)
+        {
+            * {
+                color: white;
+            }
+        } @else {
+            * {
+                color: rgba(0, 0, 0, 0.87);
+            }
+        }
     }
 
     ::-webkit-scrollbar-thumb:hover {
