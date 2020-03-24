@@ -8,7 +8,7 @@
                 <input
                     matInput
                     class="size-input"
-                    value="{{ gridSize }}"
+                    [value]="gridSize"
                     placeholder="Taille des carrés"
                     formControlName="size"
                     [matTooltip]="getSizeErrorMessage()"
