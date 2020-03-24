@@ -45,6 +45,12 @@ $theme-colors: (
 
     .selected-button {
         background-color: mat-color($primary);
+
+        @if $primary == mat-palette($mat-yellow, A700) {
+            * {
+                color: black;
+            }
+        }
     }
 
     ::-webkit-scrollbar-thumb:hover {
