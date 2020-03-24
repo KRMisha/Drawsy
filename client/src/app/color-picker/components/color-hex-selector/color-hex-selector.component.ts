@@ -73,10 +73,6 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
         this.hexSelectorGroup.updateValueAndValidity();
     }
 
-    get swapTooltip(): string {
-        return this.isCombinedHex ? 'Entrée RGB' : 'Entrée hexadécimale';
-    }
-
     private updateHexCombinedRgb(): void {
         const hexCombinedRgbString =
             this.hexSelectorGroup.controls.hexRed.value +

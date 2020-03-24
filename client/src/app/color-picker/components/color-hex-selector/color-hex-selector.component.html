@@ -21,7 +21,12 @@
             <mat-error *ngIf="hexSelectorGroup.controls.hexBlue.invalid">Invalide</mat-error>
         </mat-form-field>
     </div>
-    <button mat-icon-button (click)="swapMode($event)" [matTooltip]="swapTooltip" matTooltipPosition="above">
+    <button
+        mat-icon-button
+        (click)="swapMode($event)"
+        [matTooltip]="isCombinedHex ? 'Entrée RGB' : 'Entrée hexadécimale'"
+        matTooltipPosition="above"
+    >
         <mat-icon>swap_vert</mat-icon>
     </button>
 </form>
