@@ -46,9 +46,19 @@ $theme-colors: (
     .selected-button {
         background-color: mat-color($primary);
 
-        @if $primary == mat-palette($mat-yellow, A700) {
+        @if $primary ==
+            map-get($theme-colors, purple) or
+            $primary ==
+            map-get($theme-colors, blue) or
+            $primary ==
+            map-get($theme-colors, red)
+        {
             * {
-                color: black;
+                color: white;
+            }
+        } @else {
+            * {
+                color: rgba(0, 0, 0, 0.87);
             }
         }
     }
