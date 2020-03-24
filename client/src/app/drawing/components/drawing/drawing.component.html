@@ -1,6 +1,12 @@
 <svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox">
     <defs>
-        <pattern id="grid" [attr.width]="gridSize" [attr.size]="gridSize" patternUnits="userSpaceOnUse" [attr.stroke-opacity]="gridOpacity">
+        <pattern
+            id="grid"
+            [attr.width]="gridSize"
+            [attr.height]="gridSize"
+            patternUnits="userSpaceOnUse"
+            [attr.stroke-opacity]="gridOpacity"
+        >
             <path
                 fill="none"
                 stroke="gray"
