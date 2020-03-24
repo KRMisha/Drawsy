@@ -238,6 +238,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return ErrorMessageService.getErrorMessage(formControl, 'Nombre entier');
     }
 
+    get toolName(): string {
+        return this.currentToolService.getToolName();
+    }
+
     get isUndoAvailable(): boolean {
         return this.commandService.hasUndoCommands();
     }
