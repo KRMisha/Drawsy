@@ -56,9 +56,9 @@ fdescribe('GuideSidebarComponent', () => {
     });
 
     it('#expandAllMenus should recursively call #expandLayer', () => {
-        const exapndLayerSpy = spyOn<any>(guideSidebarComponent, 'expandLayer').and.callThrough(); // tslint:disable-line: no-any
+        const exapandLayerSpy = spyOn<any>(guideSidebarComponent, 'expandLayer').and.callThrough(); // tslint:disable-line: no-any
         guideSidebarComponent.expandAllMenus();
-        expect(exapndLayerSpy).toHaveBeenCalledTimes(2); // tslint:disable-line: no-string-literal
+        expect(exapandLayerSpy).toHaveBeenCalledTimes(2);
     });
 
     it("#currentGuideNodeGetter should  return the guideSerivce's currentGuideNode attribute", () => {

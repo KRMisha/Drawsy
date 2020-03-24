@@ -67,20 +67,27 @@ fdescribe('GuideService', () => {
     });
 
     it('#setter should emit changedGuide observable if the guide of the guideNode is not undefined', () => {
-        // tslint:disable: no-string-literal
-        spyOn(guideService['currentGuideChangedSource'], 'next');
+        const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
+        guideService.currentGuideChanged$.subscribe( (guide: GuideNode) => {
+            subscriberSpyObj.subscribeLogic(guide);
+        });
+        // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
+        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideService.currentGuideNode.guide);
         const guideNodeMock: GuideNode = { name: 'GuideNodeMock', guide: GuideNodeMock, previousGuideNode: GuideNodeMock };
         guideService.currentGuideNode = guideNodeMock;
-        expect(guideService['currentGuideChangedSource'].next).toHaveBeenCalled();
-        // tslint:enable: no-string-literal
+        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideNodeMock.guide);
+        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledTimes(2);
     });
 
     it('#setter should not emit changedGuide observable if the guide of the guideNode is undefined', () => {
-        // tslint:disable: no-string-literal
-        spyOn(guideService['currentGuideChangedSource'], 'next');
+        const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
+        guideService.currentGuideChanged$.subscribe( (guide: GuideNode) => {
+            subscriberSpyObj.subscribeLogic(guide);
+        });
+        // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
+        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideService.currentGuideNode.guide);
         const guideNodeMock: GuideNode = { name: 'GuideNodeMock', guide: undefined, previousGuideNode: GuideNodeMock };
         guideService.currentGuideNode = guideNodeMock;
-        expect(guideService['currentGuideChangedSource'].next).not.toHaveBeenCalled();
-        // tslint:enable: no-string-literal
+        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledTimes(1);
     });
 });
