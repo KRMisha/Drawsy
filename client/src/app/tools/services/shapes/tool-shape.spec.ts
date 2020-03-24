@@ -101,64 +101,70 @@ describe('ToolShape', () => {
 
     it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition left and below origin', () => {
         const shape = {} as SVGElement;
-        toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 } as Vec2); // tslint:disable-line: no-any
-
-        toolShape['isShiftDown'] = true; // tslint:disable-line: no-string-literal
-        toolShape['origin'] = { x: -50, y: -50 } as Vec2; // tslint:disable-line: no-string-literal
+        // tslint:disable: no-string-literal
+        toolShape['shape'] = shape;
+        toolShape['isShiftDown'] = true;
+        toolShape['origin'] = { x: -50, y: -50 };
+        // tslint:enable: no-string-literal
+        // tslint:disable: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 });
+        // tslint:enable: no-any
         Tool.isMouseDown = true;
         const mouseEvent = { offsetX: 5, offsetY: 5 } as MouseEvent;
         toolShape.onMouseMove(mouseEvent);
-        expect(toolShape['getMousePosition']).toHaveBeenCalledWith(mouseEvent); // tslint:disable-line: no-string-literal
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(getMousePositionSpy).toHaveBeenCalledWith(mouseEvent);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
     it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition right and above origin', () => {
         const shape = {} as SVGElement;
-        toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 } as Vec2); // tslint:disable-line: no-any
-
-        toolShape['isShiftDown'] = true; // tslint:disable-line: no-string-literal
-        toolShape['origin'] = { x: 50, y: 50 } as Vec2; // tslint:disable-line: no-string-literal
+        // tslint:disable: no-string-literal
+        toolShape['shape'] = shape;
+        toolShape['isShiftDown'] = true;
+        toolShape['origin'] = { x: 50, y: 50 } as Vec2;
+        // tslint:enable: no-string-literal
+        // tslint:disable: no-any
+        const updateShapeAreanSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 });
+        // tslint:enable: no-any
         Tool.isMouseDown = true;
         const mouseEvent = { offsetX: 5, offsetY: 5 } as MouseEvent;
         toolShape.onMouseMove(mouseEvent);
-        expect(toolShape['getMousePosition']).toHaveBeenCalledWith(mouseEvent); // tslint:disable-line: no-string-literal
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(updateShapeAreanSpy).toHaveBeenCalled();
+        expect(getMousePositionSpy).toHaveBeenCalledWith(mouseEvent);
     });
 
     it('#onMouseMove should not call #updateShapeArea if the mouse is not down', () => {
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
+        // tslint:disable: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 });
+        // tslint:enable: no-any
         Tool.isMouseDown = false;
         const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
         toolShape.onMouseMove(mouseEvent);
-        expect(toolShape['updateShapeArea']).not.toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly shapeType',
     () => {
         const shape = {} as SVGElement;
-        toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
+         // tslint:disable: no-string-literal
+        toolShape['shape'] = shape;
+        toolShape['origin'] = { x: 0, y: 0 };
+         // tslint:enable: no-string-literal
         // tslint:disable: no-any
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 50, y: 50 } as Vec2);
-        spyOn<any>(toolShape, 'createNewShape').and.callThrough();
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 50, y: 50 });
+        const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
         // tslint:enable: no-any
 
         Tool.isMouseInsideDrawing = true;
         toolShape.toolSettings.set(ToolSetting.ShapeType, ShapeType.BorderOnly);
-        toolShape['origin'] = { x: 0, y: 0 } as Vec2; // tslint:disable-line: no-string-literal
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-        // tslint:disable: no-string-literal
-        expect(toolShape['createNewShape']).toHaveBeenCalled();
-        expect(toolShape['getMousePosition']).toHaveBeenCalled();
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled();
-        // tslint:enable: no-string-literal
+        expect(createNewShapeSpy).toHaveBeenCalled();
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
@@ -166,24 +172,22 @@ describe('ToolShape', () => {
     () => {
         const shape = {} as SVGElement;
         toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
-        spyOn<any>(toolShape, 'createNewShape').and.callThrough(); // tslint:disable-line: no-any
-
+        // tslint:disable: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 });
+        const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
+        // tslint:enable: no-any
         Tool.isMouseInsideDrawing = true;
         toolShape.toolSettings.set(ToolSetting.ShapeType, ShapeType.FillOnly);
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-        // tslint:disable: no-string-literal
-        expect(toolShape['createNewShape']).toHaveBeenCalled();
-        expect(toolShape['getMousePosition']).toHaveBeenCalled();
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled();
-        // tslint:enable: no-string-literal
+        expect(createNewShapeSpy).toHaveBeenCalled();
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
     it('#onMouseDown should not make calls if the mouse isnt inside the drawing', () => {
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
+        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 }); // tslint:disable-line: no-any
         Tool.isMouseInsideDrawing = false;
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
@@ -194,8 +198,8 @@ describe('ToolShape', () => {
         // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
-        toolShape['mousePosition'] = { x: 1, y: 0 } as Vec2;
-        toolShape['origin'] = { x: 0, y: 0 } as Vec2;
+        toolShape['mousePosition'] = { x: 1, y: 0 };
+        toolShape['origin'] = { x: 0, y: 0 };
         // tslint:enable: no-string-literal
         toolShape.onMouseUp({ button: ButtonId.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
@@ -206,8 +210,8 @@ describe('ToolShape', () => {
         // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
-        toolShape['mousePosition'] = { x: 0, y: 1 } as Vec2;
-        toolShape['origin'] = { x: 0, y: 0 } as Vec2;
+        toolShape['mousePosition'] = { x: 0, y: 1 };
+        toolShape['origin'] = { x: 0, y: 0 };
         // tslint:enable: no-string-literal
         toolShape.onMouseUp({ button: ButtonId.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
@@ -218,8 +222,8 @@ describe('ToolShape', () => {
         // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = false;
-        toolShape['mousePosition'] = { x: 1, y: 1 } as Vec2;
-        toolShape['origin'] = { x: 0, y: 0 } as Vec2;
+        toolShape['mousePosition'] = { x: 1, y: 1 };
+        toolShape['origin'] = { x: 0, y: 0 };
         // tslint:enable: no-string-literal
         toolShape.onMouseUp({ button: ButtonId.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
         expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
@@ -229,8 +233,8 @@ describe('ToolShape', () => {
         const shape = {} as SVGElement;
         // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
-        toolShape['mousePosition'] = { x: 0, y: 0 } as Vec2;
-        toolShape['origin'] = { x: 0, y: 0 } as Vec2;
+        toolShape['mousePosition'] = { x: 0, y: 0 };
+        toolShape['origin'] = { x: 0, y: 0 };
         // tslint:enable: no-string-literal
         toolShape.onMouseUp({ button: ButtonId.Left, offsetX: 0, offsetY: 0 } as MouseEvent);
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalled();
@@ -242,34 +246,38 @@ describe('ToolShape', () => {
     });
 
     it('#onKeyDown should call #updateShapeArea and set isShiftDown to true', () => {
-        toolShape['isShiftDown'] = false; // tslint:disable-line: no-string-literal
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        // tslint:disable: no-string-literal
+        toolShape['isShiftDown'] = false;
+        // tslint:disable-next-line: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
         toolShape.onKeyDown({ key: 'Shift' } as KeyboardEvent);
-        expect(toolShape['isShiftDown']).toEqual(true); // tslint:disable-line: no-string-literal
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(toolShape['isShiftDown']).toEqual(true);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+        // tslint:enable: no-string-literal
     });
 
     it('#onKeyDown should not make any calls if the shift key isnt pressed', () => {
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
         toolShape.onKeyDown({ key: 'Enter' } as KeyboardEvent);
-        expect(toolShape['updateShapeArea']).not.toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 
     it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as false', () => {
         const shape = {} as SVGElement;
-        toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-
-        toolShape['isShiftDown'] = true; // tslint:disable-line: no-string-literal
-        toolShape['isShapeAlwaysRegular'] = false; // tslint:disable-line: no-string-literal
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        // tslint:disable: no-string-literal
+        toolShape['shape'] = shape;
+        toolShape['isShiftDown'] = true;
+        toolShape['isShapeAlwaysRegular'] = false;
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
         toolShape.onKeyUp({ key: 'Shift' } as KeyboardEvent);
-        expect(toolShape['isShiftDown']).toEqual(false); // tslint:disable-line: no-string-literal
-        expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(toolShape['isShiftDown']).toEqual(false);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+        // tslint:enable: no-string-literal
     });
 
     it('#onKeyUp should not make any calls if the shift key isnt pressed', () => {
-        spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
         toolShape.onKeyUp({ key: 'Enter' } as KeyboardEvent);
-        expect(toolShape['updateShapeArea']).not.toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 });
