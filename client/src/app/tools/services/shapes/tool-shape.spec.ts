@@ -29,13 +29,14 @@ class ToolShapeMock extends ToolShape {
     }
 }
 
-fdescribe('ToolShape', () => {
+describe('ToolShape', () => {
     const name: ToolName = ToolName.Brush;
     const isShapeAlwaysRegular = false;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
+    let colorSpyObj: jasmine.SpyObj<Color>;
     let toolShape: ToolShapeMock;
 
     beforeEach(() => {
@@ -49,7 +50,7 @@ fdescribe('ToolShape', () => {
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['getPrimaryColor', 'getSecondaryColor']);
-        const colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
+        colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
         colorServiceSpyObj.getPrimaryColor.and.returnValue(colorSpyObj);
         colorServiceSpyObj.getSecondaryColor.and.returnValue(colorSpyObj);
 
@@ -68,36 +69,32 @@ fdescribe('ToolShape', () => {
     });
 
     it('#onPrimaryColorChange should call color.toRgbaString and renderer.setAttribute with the proper arguments', () => {
-        const color = jasmine.createSpyObj('Color', ['toRgbaString']);
-        color.toRgbaString.and.returnValue('rgba(0, 0, 0 ,1)');
+        colorSpyObj.toRgbaString.and.returnValue('rgba(0, 0, 0 ,1)');
         const shape = {} as SVGElement;
         toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-        toolShape.onPrimaryColorChange(color);
-        expect(color.toRgbaString).toHaveBeenCalled();
+        toolShape.onPrimaryColorChange(colorSpyObj);
+        expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'fill', 'rgba(0, 0, 0 ,1)');
     });
 
     it('#onPrimaryColorChange should not call renderer.setAttribute if shape is undefined', () => {
-        const color = {} as Color;
-        toolShape.onPrimaryColorChange(color);
+        toolShape['shape'] = undefined; // tslint:disable-line: no-string-literal
+        toolShape.onPrimaryColorChange(colorSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
     it('#onSecondaryColorChange should call renderer.setAtcolor.toRgbaString and renderer.setAttribute with the proper arguments', () => {
-        const color = jasmine.createSpyObj('Color', ['toRgbaString']);
-        color.toRgbaString.and.returnValue('rgba(0, 0, 0 ,1)');
-        const color12 = Color.fromRgb(1, 1, 1);
-        spyOn(color12, 'toRgbString').and.callThrough();
+        colorSpyObj.toRgbaString.and.returnValue('rgba(0, 0, 0 ,1)');
         const shape = {} as SVGElement;
         toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
-        toolShape.onSecondaryColorChange(color);
-        expect(color.toRgbaString).toHaveBeenCalled();
+        toolShape.onSecondaryColorChange(colorSpyObj);
+        expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'stroke', 'rgba(0, 0, 0 ,1)');
     });
 
     it('#onSecondaryColorChange should not call renderer.setAttribute if shape is undefined', () => {
-        const color = {} as Color;
-        toolShape.onSecondaryColorChange(color);
+        toolShape['shape'] = undefined; // tslint:disable-line: no-string-literal
+        toolShape.onSecondaryColorChange(colorSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
@@ -105,8 +102,9 @@ fdescribe('ToolShape', () => {
         spyOn<any>(toolShape, 'updateShapeArea').and.callThrough(); // tslint:disable-line: no-any
         spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 } as Vec2); // tslint:disable-line: no-any
         Tool.isMouseDown = true;
-        toolShape.onMouseMove({ offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(toolShape['getMousePosition']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
+        const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
+        toolShape.onMouseMove(mouseEvent);
+        expect(toolShape['getMousePosition']).toHaveBeenCalledWith(mouseEvent); // tslint:disable-line: no-string-literal
         expect(toolShape['updateShapeArea']).toHaveBeenCalled(); // tslint:disable-line: no-string-literal
     });
 
