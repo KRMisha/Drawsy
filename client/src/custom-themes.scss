@@ -20,9 +20,8 @@ $theme-colors: (
     $accent: map-get($theme, accent);
     $warn: map-get($theme, warn);
     $foreground: map-get($theme, foreground);
-    $foreground-color: map-get($foreground, foreground);
     $background: map-get($theme, background);
-    $background-color: map-get($background, background);
+    $drawer-side-border: solid 1px mat-color($foreground, divider);
 
     @each $color-name, $theme-color in $theme-colors {
         .#{$color-name + '-theme-color'} {
@@ -31,12 +30,12 @@ $theme-colors: (
     }
 
     .theme-background-color {
-        background-color: $background-color;
+        background-color: mat-color($background, background);
     }
 
-    .dialog {
+    .theme-dialog {
         mat-dialog-container {
-            background-color: $background-color;
+            background-color: mat-color($background, background);
 
             mat-dialog-content {
                 max-height: 75vh;
@@ -44,19 +43,27 @@ $theme-colors: (
         }
     }
 
-    .selected-button {
+    .theme-drawer-right-border {
+        border-right: $drawer-side-border;
+    }
+
+    .theme-selected-button {
         background-color: mat-color($primary);
     }
 
-    .mat-action-list .selected-button:focus {
+    .mat-action-list .theme-selected-button:focus {
         background-color: mat-color($primary);
     }
 
     ::-webkit-scrollbar-thumb:hover {
         background: mat-color($primary);
     }
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+        background: mat-color($background, app-bar);
+    }
 
-    .error-tooltip {
+    .theme-error-tooltip {
         color: mat-color($warn);
     }
 }

@@ -57,7 +57,7 @@ export class ModalService {
             width: `${width}px`,
             height: shouldFillHeight ? '100%' : 'auto',
             maxHeight: '95vh',
-            panelClass: 'dialog',
+            panelClass: 'theme-dialog',
         });
     }
 }
