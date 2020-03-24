@@ -35,4 +35,9 @@
     ></div>
 </div>
 
-<app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color" (colorPreviewClicked)="confirmColor()"></app-color-picker>
+<app-color-picker
+    *ngIf="isColorPickerDisplayEnabled"
+    [(colorModel)]="color"
+    (colorPreviewClicked)="confirmColor()"
+    [previewTooltip]="'Confirmer la couleur'"
+></app-color-picker>
