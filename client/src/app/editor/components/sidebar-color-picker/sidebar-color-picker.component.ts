@@ -79,6 +79,15 @@ export class SidebarColorPickerComponent {
         this.isColorPickerDisplayEnabled = false;
     }
 
+    confirmColor(): void {
+        if (this.isPrimaryColorSelected) {
+            this.colorService.setPrimaryColor(this.color);
+        } else {
+            this.colorService.setSecondaryColor(this.color);
+        }
+        this.isColorPickerDisplayEnabled = false;
+    }
+
     get primaryColor(): string {
         return this.colorService.getPrimaryColor().toRgbString();
     }
@@ -89,14 +98,5 @@ export class SidebarColorPickerComponent {
 
     get previousColors(): Color[] {
         return this.colorService.getPreviousColors();
-    }
-
-    private confirmColor(): void {
-        if (this.isPrimaryColorSelected) {
-            this.colorService.setPrimaryColor(this.color);
-        } else {
-            this.colorService.setSecondaryColor(this.color);
-        }
-        this.isColorPickerDisplayEnabled = false;
     }
 }
