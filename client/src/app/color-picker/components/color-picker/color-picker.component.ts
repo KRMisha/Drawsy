@@ -14,11 +14,16 @@ export class ColorPickerComponent {
         this.colorPickerService.setColor(color);
     }
     @Output() colorModelChange = new EventEmitter<Color>();
+    @Output() colorPreviewClicked = new EventEmitter<void>();
 
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.colorModelChange.emit(color);
         });
+    }
+
+    onColorPreviewClick(): void {
+        this.colorPreviewClicked.emit();
     }
 
     get color(): Color {
