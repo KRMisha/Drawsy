@@ -1,17 +1,42 @@
-.chip-list {
-    width: 100%;
-    ::ng-deep {
-        .mat-chip-list-wrapper {
-            max-width: 100%;
-        }
-    }
+.title {
+    text-align: center;
 }
 
-.content {
-    max-height: unset !important;
+.container {
+    display: grid;
+    grid-template-areas:
+        'title filter file'
+        'preview preview preview';
+    justify-content: space-between;
+    align-content: center;
 }
 
-.export-button {
-    width: max-content;
-    margin: 4px;
+.title-item {
+    grid-area: title;
+}
+
+.filter-item {
+    grid-area: filter;
+}
+
+.file-item {
+    grid-area: file;
+    display: flex;
+    margin-bottom: 16px;
+}
+
+.file-type {
+    align-self: center;
+    margin-bottom: 0;
+    margin-right: 12px;
+}
+
+.preview-item {
+    grid-area: preview;
+}
+
+.button {
+    width: 20%;
+    min-width: max-content;
+    margin-right: 4px;
 }

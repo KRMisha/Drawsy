@@ -63,10 +63,10 @@ export class DrawingSerializerService {
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
         const domParser = new DOMParser();
         const document = domParser.parseFromString(content, 'image/svg+xml');
-        const importedDrawingRoot = document.getElementsByTagName('svg')[0];
-        const importedTitle = importedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const importedLabels = importedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
-        return { id: '', title: importedTitle, labels: importedLabels, drawingRoot: importedDrawingRoot } as SvgFileContainer;
+        const parsedDrawingRoot = document.getElementsByTagName('svg')[0];
+        const parsedTitle = parsedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
+        const parsedLabels = parsedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        return { id: '', title: parsedTitle, labels: parsedLabels, drawingRoot: parsedDrawingRoot } as SvgFileContainer;
     }
 
     private exportVectorDrawing(filename: string): void {

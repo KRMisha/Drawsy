@@ -1,13 +1,12 @@
-<h1 mat-dialog-title class="mat-h1">Exporter le dessin</h1>
+<h1 mat-dialog-title class="title">Exporter le dessin</h1>
 <form>
-    <mat-dialog-content class="content">
-        <mat-form-field>
+    <mat-dialog-content class="container">
+        <mat-form-field class="title-item">
             <mat-label>Titre</mat-label>
             <input matInput [formControl]="titleFormControl" />
             <mat-error *ngIf="titleFormControl.invalid">Titre invalide</mat-error>
         </mat-form-field>
-
-        <mat-form-field>
+        <mat-form-field class="filter-item">
             <mat-label>Type de filtre</mat-label>
             <mat-select [(value)]="drawingFilter">
                 <mat-option [value]="DrawingFilter.None">Aucun filtre</mat-option>
@@ -18,26 +17,37 @@
                 <mat-option [value]="DrawingFilter.Corrupt">Corrompu</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-card>
+        <div class="file-item">
+            <h4 class="file-type">Type de fichier :</h4>
+            <mat-button-toggle-group [value]="currentFileType" (change)="currentFileType = $event.value">
+                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
+                    SVG
+                </mat-button-toggle>
+                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
+                    PNG
+                </mat-button-toggle>
+                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
+                    JPEG
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <mat-card class="preview-item">
             <mat-card-title>Aperçu</mat-card-title>
             <app-drawing-preview></app-drawing-preview>
         </mat-card>
     </mat-dialog-content>
     <mat-dialog-actions align="center">
+        <button mat-raised-button mat-dialog-close class="button">
+            Annuler
+        </button>
         <button
             mat-raised-button
-            class="export-button"
-            (click)="exportDrawing(FileType.Svg)"
+            class="button"
             [disabled]="titleFormControl.invalid"
+            (click)="exportDrawing(currentFileType)"
             cdkFocusInitial
         >
-            Sauvegarder en format SVG
-        </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawing(FileType.Png)" [disabled]="titleFormControl.invalid">
-            Sauvegarder en format PNG
-        </button>
-        <button mat-raised-button class="export-button" (click)="exportDrawing(FileType.Jpeg)" [disabled]="titleFormControl.invalid">
-            Sauvegarder en format JPEG
+            Exporter le dessin
         </button>
     </mat-dialog-actions>
 </form>

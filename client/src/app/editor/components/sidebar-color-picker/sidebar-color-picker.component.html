@@ -5,8 +5,8 @@
         matTooltipPosition="above"
         matRipple
         [style.background-color]="primaryColor"
-        [class.mat-elevation-z8]="isPrimaryColorSelected && isColorPickerDisplayEnabled"
-        [class.mat-elevation-z4]="!isPrimaryColorSelected || !isColorPickerDisplayEnabled"
+        [class.mat-elevation-z12]="isPrimaryColorSelected && isColorPickerDisplayEnabled"
+        [class.mat-elevation-z2]="!isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
     ></div>
     <div class="swap-colors-button">
@@ -20,8 +20,8 @@
         matTooltipPosition="above"
         matRipple
         [style.background-color]="secondaryColor"
-        [class.mat-elevation-z8]="!isPrimaryColorSelected && isColorPickerDisplayEnabled"
-        [class.mat-elevation-z4]="isPrimaryColorSelected || !isColorPickerDisplayEnabled"
+        [class.mat-elevation-z12]="!isPrimaryColorSelected && isColorPickerDisplayEnabled"
+        [class.mat-elevation-z2]="isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectSecondaryColor()"
     ></div>
 </div>

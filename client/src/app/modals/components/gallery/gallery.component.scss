@@ -1,9 +1,8 @@
-.mat-h1 {
+.title {
     text-align: center;
 }
 
 .card {
-    background-color: #505050;
     text-align: center;
     height: max-content;
     margin: 10px;
@@ -26,7 +25,7 @@
 }
 
 .content {
-    max-height: 68vh !important;
+    max-height: 68vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: space-between;
@@ -37,9 +36,9 @@
 }
 
 .mat-dialog-actions {
-    max-height: 50px !important;
-    min-height: 50px !important;
-    padding: 0px !important;
+    max-height: 50px;
+    min-height: 50px;
+    padding: 0;
 }
 
 .spinner-container {

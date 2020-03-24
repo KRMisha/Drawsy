@@ -1,3 +1,7 @@
+.title {
+    text-align: center;
+}
+
 .chip-list {
     width: 100%;
     ::ng-deep {
@@ -7,12 +11,8 @@
     }
 }
 
-.content {
-    max-height: unset !important;
-}
-
 .button {
     width: 20%;
     min-width: max-content;
-    margin: 4px;
+    margin-right: 4px;
 }

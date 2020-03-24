@@ -68,7 +68,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
             this.setSelectedTool(7); // tslint:disable-line: no-magic-numbers
         });
-        this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecoloShortcut$.subscribe(() => {
+        this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecolorShortcut$.subscribe(() => {
             this.setSelectedTool(8); // tslint:disable-line: no-magic-numbers
         });
         this.selectToolSelectionShortcutSubscription = this.shortcutService.selectToolSelectionShortcut$.subscribe(() => {
