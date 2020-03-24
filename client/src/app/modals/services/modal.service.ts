@@ -33,7 +33,7 @@ export class ModalService {
         this.openDialog(GalleryComponent, width, false);
     }
 
-    openDrawingSettingsModal(): void {
+    openSettingsModal(): void {
         const width = 425;
         this.openDialog(DrawingSettingsComponent, width, false);
     }
