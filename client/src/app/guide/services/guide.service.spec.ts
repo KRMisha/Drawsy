@@ -68,7 +68,7 @@ fdescribe('GuideService', () => {
 
     it('#setter should emit changedGuide observable if the guide of the guideNode is not undefined', () => {
         const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
-        guideService.currentGuideChanged$.subscribe( (guide: GuideNode) => {
+        guideService.currentGuideChanged$.subscribe((guide: GuideNode) => {
             subscriberSpyObj.subscribeLogic(guide);
         });
         // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
@@ -81,7 +81,7 @@ fdescribe('GuideService', () => {
 
     it('#setter should not emit changedGuide observable if the guide of the guideNode is undefined', () => {
         const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
-        guideService.currentGuideChanged$.subscribe( (guide: GuideNode) => {
+        guideService.currentGuideChanged$.subscribe((guide: GuideNode) => {
             subscriberSpyObj.subscribeLogic(guide);
         });
         // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
