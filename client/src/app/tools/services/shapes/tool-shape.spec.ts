@@ -7,6 +7,7 @@ import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
@@ -22,9 +23,10 @@ class ToolShapeMock extends ToolShape {
         colorService: ColorService,
         commandService: CommandService,
         name: ToolName,
+        icon: ToolIcon,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, name, isShapeAlwaysRegular);
+        super(rendererFactory, drawingService, colorService, commandService, name, icon, isShapeAlwaysRegular);
     }
     getShapeString(): string {
         return '';
@@ -35,8 +37,6 @@ class ToolShapeMock extends ToolShape {
 }
 
 describe('ToolShape', () => {
-    const name: ToolName = ToolName.Paintbrush;
-    const isShapeAlwaysRegular = false;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
@@ -58,14 +58,14 @@ describe('ToolShape', () => {
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['getPrimaryColor', 'getSecondaryColor']);
         colorServiceSpyObj.getPrimaryColor.and.returnValue(colorSpyObj);
         colorServiceSpyObj.getSecondaryColor.and.returnValue(colorSpyObj);
-
         toolShape = new ToolShapeMock(
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
             colorServiceSpyObj,
             commandServiceSpyObj,
-            name,
-            isShapeAlwaysRegular
+            ToolName.Pencil,
+            ToolIcon.Pencil,
+            false
         );
     });
 
@@ -255,6 +255,20 @@ describe('ToolShape', () => {
         const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
         toolShape.onKeyDown({ key: 'Enter' } as KeyboardEvent);
         expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as true', () => {
+        const shape = {} as SVGElement;
+
+        toolShape['shape'] = shape;
+        toolShape['isShiftDown'] = true;
+        toolShape['isShapeAlwaysRegular'] = true;
+
+        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
+        toolShape.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+
+        expect(toolShape['isShiftDown']).toEqual(false);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
     it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as false', () => {
