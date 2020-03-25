@@ -23,7 +23,7 @@ export class SaveDrawingComponent {
             Validators.pattern(MetadataValidation.contentRegex),
             Validators.maxLength(MetadataValidation.maxTitleLength),
         ]),
-        labels: new FormControl(this.saveDrawingService.labels, [
+        labels: new FormControl('', [
             Validators.pattern(MetadataValidation.contentRegex),
             Validators.maxLength(MetadataValidation.maxLabelLength),
         ]),
