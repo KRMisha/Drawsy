@@ -37,7 +37,7 @@ export class DrawingPreviewService {
         const titleText = this.renderer.createText(this.drawingService.title);
         this.renderer.appendChild(this.svgTitle, titleText);
 
-        const labelsText = this.renderer.createText(this.drawingService.labels.join());
+        const labelsText = this.renderer.createText(this.drawingService.labels.join(','));
         this.renderer.appendChild(this.svgDesc, labelsText);
     }
 }

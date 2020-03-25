@@ -65,7 +65,8 @@ export class DrawingSerializerService {
         const document = domParser.parseFromString(content, 'image/svg+xml');
         const parsedDrawingRoot = document.getElementsByTagName('svg')[0];
         const parsedTitle = parsedDrawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const parsedLabels = parsedDrawingRoot.getElementsByTagName('desc')[0].innerHTML.split(',');
+        const parsedLabelsString = parsedDrawingRoot.getElementsByTagName('desc')[0].innerHTML;
+        const parsedLabels = parsedLabelsString.length === 0 ? [] : parsedLabelsString.split(',');
         return { id: '', title: parsedTitle, labels: parsedLabels, drawingRoot: parsedDrawingRoot } as SvgFileContainer;
     }
 
