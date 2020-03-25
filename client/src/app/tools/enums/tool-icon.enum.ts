@@ -1,6 +1,6 @@
 export enum ToolIcon {
     Pencil = 'create',
-    Brush = 'brush',
+    Paintbrush = 'brush',
     Line = 'timeline',
     SprayCan = 'blur_on',
     Rectangle = 'crop_5_4',
