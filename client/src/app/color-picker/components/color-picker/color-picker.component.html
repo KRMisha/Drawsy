@@ -3,7 +3,12 @@
     <app-hue-slider class="hue-item"></app-hue-slider>
     <app-alpha-slider class="alpha-item"></app-alpha-slider>
     <div matRipple class="color-preview-checker mat-elevation-z2" (click)="onColorPreviewClick()">
-        <div class="color-preview" [style.background-color]="color.toRgbaString()"></div>
+        <div
+            class="color-preview"
+            [style.background-color]="color.toRgbaString()"
+            [matTooltip]="colorPreviewTooltip"
+            [matTooltipDisabled]="colorPreviewTooltip.length === 0"
+        ></div>
     </div>
     <app-color-hex-selector class="hex-selector-item"></app-color-hex-selector>
 </div>

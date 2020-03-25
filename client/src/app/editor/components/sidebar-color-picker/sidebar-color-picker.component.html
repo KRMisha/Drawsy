@@ -9,7 +9,7 @@
         [class.mat-elevation-z2]="!isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
     ></div>
-    <button mat-icon-button (click)="swapColors()">
+    <button mat-icon-button (click)="swapColors()" matTooltip="Inverser les couleurs" matTooltipPosition="above">
         <mat-icon>swap_horiz</mat-icon>
     </button>
     <div
@@ -35,4 +35,9 @@
     ></div>
 </div>
 
-<app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color" (colorPreviewClicked)="confirmColor()"></app-color-picker>
+<app-color-picker
+    *ngIf="isColorPickerDisplayEnabled"
+    [(colorModel)]="color"
+    (colorPreviewClicked)="confirmColor()"
+    colorPreviewTooltip="Confirmer la couleur"
+></app-color-picker>

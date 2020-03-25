@@ -9,6 +9,7 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
     providers: [ColorPickerService],
 })
 export class ColorPickerComponent {
+    @Input() colorPreviewTooltip = '';
     @Input()
     set colorModel(color: Color) {
         this.colorPickerService.setColor(color);
