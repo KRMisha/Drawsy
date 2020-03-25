@@ -8,6 +8,7 @@ import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -44,7 +45,7 @@ export class ToolSelectionService extends Tool {
         private toolSelectionStateService: ToolSelectionStateService,
         private svgUtilityService: SvgUtilityService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection);
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection, ToolIcon.Selection);
     }
 
     afterDrawingInit(): void {

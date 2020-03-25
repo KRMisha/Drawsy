@@ -27,16 +27,12 @@ export class GuideComponent implements AfterViewInit, OnDestroy {
     }
 
     selectPreviousGuide(): void {
-        if (this.guideService.currentGuideNode.previousGuideNode !== undefined) {
-            this.guideService.currentGuideNode = this.guideService.currentGuideNode.previousGuideNode;
-        }
+        this.guideService.selectPreviousGuide();
         this.sidebar.expandAllMenus();
     }
 
     selectNextGuide(): void {
-        if (this.guideService.currentGuideNode.nextGuideNode !== undefined) {
-            this.guideService.currentGuideNode = this.guideService.currentGuideNode.nextGuideNode;
-        }
+        this.guideService.selectNextGuide();
         this.sidebar.expandAllMenus();
     }
 

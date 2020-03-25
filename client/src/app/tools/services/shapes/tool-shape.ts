@@ -10,6 +10,7 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -27,9 +28,10 @@ export abstract class ToolShape extends Tool {
         colorService: ColorService,
         commandService: CommandService,
         name: ToolName,
+        icon: ToolIcon,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, name);
+        super(rendererFactory, drawingService, colorService, commandService, name, icon);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
         this.toolSettings.set(ToolSetting.ShapeType, ToolDefaults.defaultShapeType);
         this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultShapeBorderWidth);
@@ -123,7 +125,6 @@ export abstract class ToolShape extends Tool {
 
         const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
         const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
-        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
 
         const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
@@ -132,12 +133,12 @@ export abstract class ToolShape extends Tool {
                 y: Math.abs(this.mousePosition.y - this.origin.y),
             };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
-
             mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
             mousePositionCopy.y = this.origin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
         }
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
+        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
         this.updateShape(shapeArea, scale, this.shape as SVGElement);
     }
 }

@@ -4,12 +4,9 @@
 }
 
 .drawing-container {
-    max-height: 100vh;
     overflow: auto;
 }
 
 .drawing {
     display: grid;
-    width: min-content;
-    height: min-content;
 }

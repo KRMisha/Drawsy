@@ -7,7 +7,7 @@ import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
-const sidebarWidth = 324;
+const sidebarWidth = 337;
 
 @Component({
     selector: 'app-new-drawing',

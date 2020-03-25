@@ -6,6 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -18,9 +19,10 @@ export abstract class ToolBrush extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        name: ToolName
+        name: ToolName,
+        icon: ToolIcon
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, name);
+        super(rendererFactory, drawingService, colorService, commandService, name, icon);
         this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
     }
 

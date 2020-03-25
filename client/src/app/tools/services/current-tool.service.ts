@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
     providedIn: 'root',
 })
 export class CurrentToolService implements OnDestroy {
-    selectedTool: Tool;
+    private _selectedTool: Tool; // tslint:disable-line: variable-name
 
     private primaryColorChangedSubscription: Subscription;
     private secondaryColorChangedSubscription: Subscription;
@@ -87,27 +87,28 @@ export class CurrentToolService implements OnDestroy {
         Tool.isMouseInsideDrawing = isMouseInsideDrawing;
     }
 
-    setSelectedTool(toolIndex: number): void {
-        if (this.selectedTool) {
-            this.selectedTool.onToolDeselection();
-        }
-        this.selectedTool = this.toolHolderService.tools[toolIndex];
+    get selectedTool(): Tool {
+        return this._selectedTool;
     }
 
-    getToolName(): string {
-        return this.selectedTool.name;
+    set selectedTool(tool: Tool) {
+        if (this.selectedTool !== undefined) {
+            this.selectedTool.onToolDeselection();
+        }
+
+        this._selectedTool = tool;
     }
 
     getSetting(setting: ToolSetting): number | BrushTexture | JunctionSettings | ShapeType {
-        const value = this.selectedTool.toolSettings.get(setting);
+        const value = this._selectedTool.toolSettings.get(setting);
         return value as number | BrushTexture | JunctionSettings | ShapeType;
     }
 
     setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {
-        this.selectedTool.toolSettings.set(setting, value);
+        this._selectedTool.toolSettings.set(setting, value);
     }
 
     hasSetting(setting: ToolSetting): boolean {
-        return this.selectedTool.toolSettings.has(setting);
+        return this._selectedTool.toolSettings.has(setting);
     }
 }

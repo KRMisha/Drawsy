@@ -1,8 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSliderModule } from '@angular/material/slider';
 import { EditorComponent } from '@app/editor/components/editor/editor.component';
 
 describe('EditorComponent', () => {
@@ -12,7 +9,6 @@ describe('EditorComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [EditorComponent],
-            imports: [MatIconModule, MatSidenavModule, MatSliderModule],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
