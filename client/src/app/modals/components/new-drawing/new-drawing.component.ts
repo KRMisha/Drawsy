@@ -19,24 +19,18 @@ export class NewDrawingComponent implements OnInit {
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     drawingFormGroup = new FormGroup({
-        width: new FormControl(
-            window.innerWidth - sidebarWidth,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.integerRegex),
-                Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
-                Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ]
-        ),
-        height: new FormControl(
-            window.innerHeight,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.integerRegex),
-                Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
-                Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ]
-        ),
+        width: new FormControl(window.innerWidth - sidebarWidth, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
+        height: new FormControl(window.innerHeight, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
     });
 
     constructor(private router: Router, private drawingService: DrawingService) {}

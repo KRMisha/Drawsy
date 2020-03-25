@@ -22,14 +22,14 @@ export class SettingsService {
             Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
             Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
         ]),
-        gridDisplayEnabled: new FormControl (this.gridService.isDisplayEnabled),
-        gridSize: new FormControl({value: this.gridService.size, disabled: !this.gridService.isDisplayEnabled}, [
+        gridDisplayEnabled: new FormControl(this.gridService.isDisplayEnabled),
+        gridSize: new FormControl({ value: this.gridService.size, disabled: !this.gridService.isDisplayEnabled }, [
             Validators.required,
             Validators.pattern(Regexes.integerRegex),
             Validators.min(this.gridService.minimumSize),
             Validators.max(this.gridService.maximumSize),
         ]),
-        gridOpacity: new FormControl({value: this.gridService.opacity, disabled: !this.gridService.isDisplayEnabled }, [
+        gridOpacity: new FormControl({ value: this.gridService.opacity, disabled: !this.gridService.isDisplayEnabled }, [
             Validators.required,
             Validators.pattern(Regexes.decimalRegex),
             Validators.min(this.gridService.minimumOpacity),

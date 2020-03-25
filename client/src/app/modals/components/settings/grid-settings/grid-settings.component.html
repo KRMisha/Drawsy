@@ -8,7 +8,7 @@
     <div class="grid-setting-container">
         <h4 class="setting-name-item">Taille des carrés</h4>
         <mat-form-field class="form-field-item">
-            <input matInput formControlName="gridSize"/>
+            <input matInput formControlName="gridSize" />
             <span matSuffix>px</span>
             <mat-error *ngIf="formGroup.controls.gridSize.invalid">{{ getErrorMessage(formGroup.controls.gridSize, '0-9') }}</mat-error>
         </mat-form-field>
@@ -27,8 +27,10 @@
     <div class="grid-setting-container">
         <h4 class="setting-name-item">Opacité</h4>
         <mat-form-field class="form-field-item">
-            <input matInput formControlName="gridOpacity"/>
-            <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">{{ getErrorMessage(formGroup.controls.gridOpacity, 'Nombre') }}</mat-error>
+            <input matInput formControlName="gridOpacity" />
+            <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">{{
+                getErrorMessage(formGroup.controls.gridOpacity, 'Nombre')
+            }}</mat-error>
             <span matSuffix></span>
         </mat-form-field>
         <mat-slider

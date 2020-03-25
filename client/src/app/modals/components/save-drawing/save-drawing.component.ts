@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
@@ -55,7 +55,7 @@ export class SaveDrawingComponent {
     }
 
     getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9')
+        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
     }
 
     get title(): string {

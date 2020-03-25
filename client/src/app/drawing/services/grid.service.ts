@@ -20,13 +20,17 @@ export class GridService {
     }
 
     increaseSize(): void {
-        this.size = Math.min(Math.floor((this.size + this.gridSizeVariation) / this.gridSizeVariation) *
-                             this.gridSizeVariation, this.maximumSize);
+        this.size = Math.min(
+            Math.floor((this.size + this.gridSizeVariation) / this.gridSizeVariation) * this.gridSizeVariation,
+            this.maximumSize
+        );
     }
 
     decreaseSize(): void {
-        this.size = Math.max(Math.ceil((this.size - this.gridSizeVariation) / this.gridSizeVariation) *
-                             this.gridSizeVariation, this.minimumSize);
+        this.size = Math.max(
+            Math.ceil((this.size - this.gridSizeVariation) / this.gridSizeVariation) * this.gridSizeVariation,
+            this.minimumSize
+        );
     }
 
     get size(): number {
