@@ -7,9 +7,9 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 
 export abstract class Tool {
     static isLeftMouseButtonDown = false;

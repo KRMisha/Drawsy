@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionButton } from '@app/editor/classes/action-button';
-import { ToolButton } from '@app/editor/classes/tool-button';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { ModalService } from '@app/modals/services/modal.service';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Tool } from '@app/tools/services/tool';
+import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,20 +14,6 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-    readonly toolButtons: ToolButton[] = [
-        { name: ToolName.Pencil, icon: 'create', toolIndex: 0 },
-        { name: ToolName.Brush, icon: 'brush', toolIndex: 1 },
-        { name: ToolName.Line, icon: 'timeline', toolIndex: 2 },
-        { name: ToolName.SprayCan, icon: 'blur_on', toolIndex: 3 },
-        { name: ToolName.Rectangle, icon: 'crop_5_4', toolIndex: 4 },
-        { name: ToolName.Ellipse, icon: 'panorama_fish_eye', toolIndex: 5 },
-        { name: ToolName.Polygon, icon: 'star', toolIndex: 6 },
-        { name: ToolName.Eyedropper, icon: 'colorize', toolIndex: 7 },
-        { name: ToolName.Recolor, icon: 'format_paint', toolIndex: 8 },
-        { name: ToolName.Selection, icon: 'select_all', toolIndex: 9 },
-        { name: ToolName.Eraser, icon: 'delete_sweep', toolIndex: 10 },
-    ];
-
     readonly actionButtons: ActionButton[] = [
         { name: 'Nouveau dessin', icon: 'add', action: this.openNewDrawingModal.bind(this) },
         { name: 'Exporter le dessin localement', icon: 'save_alt', action: this.openExportDrawingModal.bind(this) },
@@ -37,8 +23,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         { name: 'Guide', icon: 'help_outline', action: this.openGuideModal.bind(this) },
         { name: 'Accueil', icon: 'home', action: this.navigateToHome.bind(this) },
     ];
-
-    selectedToolIndex = 0;
 
     private selectToolPencilShortcutSubscription: Subscription;
     private selectToolPaintbrushShortcutSubscription: Subscription;
@@ -57,45 +41,46 @@ export class SidebarComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private currentToolService: CurrentToolService,
+        private toolHolderService: ToolHolderService,
         private modalService: ModalService,
         private shortcutService: ShortcutService
     ) {}
 
     ngOnInit(): void {
-        this.currentToolService.setSelectedTool(this.selectedToolIndex);
+        this.selectedTool = this.toolHolderService.tools[0];
 
         this.selectToolPencilShortcutSubscription = this.shortcutService.selectToolPencilShortcut$.subscribe(() => {
-            this.setSelectedTool(0);
+            this.currentToolService.selectedTool = this.toolHolderService.toolPencilService;
         });
         this.selectToolPaintbrushShortcutSubscription = this.shortcutService.selectToolPaintbrushShortcut$.subscribe(() => {
-            this.setSelectedTool(1);
+            this.currentToolService.selectedTool = this.toolHolderService.toolPaintbrushService;
         });
         this.selectToolLineShortcutSubscription = this.shortcutService.selectToolLineShortcut$.subscribe(() => {
-            this.setSelectedTool(2);
+            this.currentToolService.selectedTool = this.toolHolderService.toolLineService;
         });
         this.selectToolSprayCanShortcutSubscription = this.shortcutService.selectToolSprayCanShortcut$.subscribe(() => {
-            this.setSelectedTool(3); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolSprayCanService;
         });
         this.selectToolRectangleShortcutSubscription = this.shortcutService.selectToolRectangleShortcut$.subscribe(() => {
-            this.setSelectedTool(4); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolRectangleService;
         });
         this.selectToolEllipseShortcutSubscription = this.shortcutService.selectToolEllipseShortcut$.subscribe(() => {
-            this.setSelectedTool(5); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolEllipseService;
         });
         this.selectToolPolygonShortcutSubscription = this.shortcutService.selectToolPolygonShortcut$.subscribe(() => {
-            this.setSelectedTool(6); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolPolygonService;
         });
         this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
-            this.setSelectedTool(7); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolEyedropperService;
         });
         this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecolorShortcut$.subscribe(() => {
-            this.setSelectedTool(8); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolRecolorService;
         });
         this.selectToolSelectionShortcutSubscription = this.shortcutService.selectToolSelectionShortcut$.subscribe(() => {
-            this.setSelectedTool(9); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolSelectionService;
         });
         this.selectToolEraserShortcutSubscription = this.shortcutService.selectToolEraserShortcut$.subscribe(() => {
-            this.setSelectedTool(10); // tslint:disable-line: no-magic-numbers
+            this.currentToolService.selectedTool = this.toolHolderService.toolEraserService;
         });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
             this.openExportDrawingModal();
@@ -119,14 +104,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolEraserShortcutSubscription.unsubscribe();
         this.exportDrawingShortcutSubscription.unsubscribe();
         this.saveDrawingShortcutSubscription.unsubscribe();
-    }
-
-    setSelectedTool(toolIndex: number): void {
-        if (toolIndex < 0 || toolIndex >= this.toolButtons.length) {
-            return;
-        }
-        this.selectedToolIndex = toolIndex;
-        this.currentToolService.setSelectedTool(toolIndex);
     }
 
     openNewDrawingModal(): void {
@@ -155,5 +132,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     navigateToHome(): void {
         this.router.navigate(['/home']);
+    }
+
+    get tools(): Tool[] {
+        return this.toolHolderService.tools;
+    }
+
+    get selectedTool(): Tool {
+        return this.currentToolService.selectedTool;
+    }
+
+    set selectedTool(tool: Tool) {
+        this.currentToolService.selectedTool = tool;
     }
 }

@@ -19,30 +19,30 @@ export class ToolHolderService {
     tools: Tool[];
 
     constructor(
-        private tool1: ToolPencilService,
-        private tool2: ToolPaintbrushService,
-        private tool3: ToolLineService,
-        private tool4: ToolSprayCanService,
-        private tool5: ToolRectangleService,
-        private tool6: ToolEllipseService,
-        private tool7: ToolPolygonService,
-        private tool8: ToolEyedropperService,
-        private tool9: ToolRecolorService,
-        private tool10: ToolSelectionService,
-        private tool11: ToolEraserService
+        public toolPencilService: ToolPencilService,
+        public toolPaintbrushService: ToolPaintbrushService,
+        public toolLineService: ToolLineService,
+        public toolSprayCanService: ToolSprayCanService,
+        public toolRectangleService: ToolRectangleService,
+        public toolEllipseService: ToolEllipseService,
+        public toolPolygonService: ToolPolygonService,
+        public toolEyedropperService: ToolEyedropperService,
+        public toolRecolorService: ToolRecolorService,
+        public toolSelectionService: ToolSelectionService,
+        public toolEraserService: ToolEraserService
     ) {
         this.tools = [
-            this.tool1,
-            this.tool2,
-            this.tool3,
-            this.tool4,
-            this.tool5,
-            this.tool6,
-            this.tool7,
-            this.tool8,
-            this.tool9,
-            this.tool10,
-            this.tool11,
+            this.toolPencilService,
+            this.toolPaintbrushService,
+            this.toolLineService,
+            this.toolSprayCanService,
+            this.toolRectangleService,
+            this.toolEllipseService,
+            this.toolPolygonService,
+            this.toolEyedropperService,
+            this.toolRecolorService,
+            this.toolSelectionService,
+            this.toolEraserService,
         ];
     }
 }
