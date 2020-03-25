@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 
@@ -7,19 +7,19 @@ describe('ShortcutService', () => {
     const modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], { isModalPresent: false });
     let subscriberSpyobj: jasmine.SpyObj<any>; // tslint:disable-line: no-any
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         subscriberSpyobj = jasmine.createSpyObj('Subscriber', ['shortcutNeedingCtrlPressed', 'shortcutNotNeedingCtrlPressed']);
         TestBed.configureTestingModule({
             providers: [{ provide: ModalService, useValue: modalServiceSpyObj }],
         });
         service = TestBed.inject(ShortcutService);
-    });
+    }));
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#onKeyDown should not emit if there is a modal displayed', () => {
+    it('#onKeyDown should not emit if there is a modal displayed', async(() => {
         // tslint:disable-next-line: no-string-literal
         service['modalService'] = jasmine.createSpyObj('ModalService', [], { isModalPresent: true });
         service.selectToolRectangleShortcut$.subscribe(() => {
@@ -30,9 +30,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it('#onKeyDown should not emit if shortcuts are disabled', () => {
+    it('#onKeyDown should not emit if shortcuts are disabled', async(() => {
         service.areShortcutsEnabled = false;
         service.selectToolRectangleShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
@@ -42,9 +42,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit openExportDrawingShortcut$ when shortcut selected is 'ctrl + e'", () => {
+    it("#onKeyDown should emit openExportDrawingShortcut$ when shortcut selected is 'ctrl + e'", async(() => {
         service.openExportDrawingShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -56,9 +56,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit openGalleryShortcut$ when shortcut selected is 'ctrl + g'", () => {
+    it("#onKeyDown should emit openGalleryShortcut$ when shortcut selected is 'ctrl + g'", async(() => {
         service.openGalleryShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -70,9 +70,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit openNewDrawingShortcut$ when shortcut selected is 'ctrl + o'", () => {
+    it("#onKeyDown should emit openNewDrawingShortcut$ when shortcut selected is 'ctrl + o'", async(() => {
         service.openNewDrawingShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -84,9 +84,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit openSaveDrawingShortcut$ when shortcut selected is 'ctrl + s'", () => {
+    it("#onKeyDown should emit openSaveDrawingShortcut$ when shortcut selected is 'ctrl + s'", async(() => {
         service.openSaveDrawingShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -98,9 +98,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit undoShortcut$ when shortcut selected is 'ctrl + z'", () => {
+    it("#onKeyDown should emit undoShortcut$ when shortcut selected is 'ctrl + z'", async(() => {
         service.undoShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -112,9 +112,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit redoShortcut$ when shortcut selected is 'ctrl + Z'", () => {
+    it("#onKeyDown should emit redoShortcut$ when shortcut selected is 'ctrl + Z'", async(() => {
         service.redoShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
@@ -126,9 +126,9 @@ describe('ShortcutService', () => {
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolRectangleShortcut$ when shortcut selected is '1'", () => {
+    it("#onKeyDown should emit selectToolRectangleShortcut$ when shortcut selected is '1'", async(() => {
         service.selectToolRectangleShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -136,9 +136,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolEllipseShortcut$ when shortcut selected is '2'", () => {
+    it("#onKeyDown should emit selectToolEllipseShortcut$ when shortcut selected is '2'", async(() => {
         service.selectToolEllipseShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -146,9 +146,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolPolygonShortcut$ when shortcut selected is '3'", () => {
+    it("#onKeyDown should emit selectToolPolygonShortcut$ when shortcut selected is '3'", async(() => {
         service.selectToolPolygonShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -156,9 +156,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolSprayCanShortcut$ when shortcut selected is 'a'", () => {
+    it("#onKeyDown should emit selectToolSprayCanShortcut$ when shortcut selected is 'a'", async(() => {
         service.selectToolSprayCanShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -166,9 +166,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolPencilShortcut$ when shortcut selected is 'c'", () => {
+    it("#onKeyDown should emit selectToolPencilShortcut$ when shortcut selected is 'c'", async(() => {
         service.selectToolPencilShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -176,9 +176,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolEraserShortcut$ when shortcut selected is 'e'", () => {
+    it("#onKeyDown should emit selectToolEraserShortcut$ when shortcut selected is 'e'", async(() => {
         service.selectToolEraserShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -186,9 +186,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit toggleGridShortcut$ when shortcut selected is 'g'", () => {
+    it("#onKeyDown should emit toggleGridShortcut$ when shortcut selected is 'g'", async(() => {
         service.toggleGrid$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -196,9 +196,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolEyedropperShortcut$ when shortcut selected is 'i'", () => {
+    it("#onKeyDown should emit selectToolEyedropperShortcut$ when shortcut selected is 'i'", async(() => {
         service.selectToolEyedropperShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -206,9 +206,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolLineShortcut$ when shortcut selected is 'l'", () => {
+    it("#onKeyDown should emit selectToolLineShortcut$ when shortcut selected is 'l'", async(() => {
         service.selectToolLineShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -216,9 +216,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolRecolorShortcut$ when shortcut selected is 'r'", () => {
+    it("#onKeyDown should emit selectToolRecolorShortcut$ when shortcut selected is 'r'", async(() => {
         service.selectToolRecolorShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -226,9 +226,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolSelectionShortcut$ when shortcut selected is 's'", () => {
+    it("#onKeyDown should emit selectToolSelectionShortcut$ when shortcut selected is 's'", async(() => {
         service.selectToolSelectionShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -236,9 +236,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit selectToolPaintbrushShortcut$ when shortcut selected is 'w'", () => {
+    it("#onKeyDown should emit selectToolPaintbrushShortcut$ when shortcut selected is 'w'", async(() => {
         service.selectToolPaintbrushShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -246,9 +246,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit increaseGridSize$ when shortcut selected is '+'", () => {
+    it("#onKeyDown should emit increaseGridSize$ when shortcut selected is '+'", async(() => {
         service.increaseGridSize$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -256,9 +256,9 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 
-    it("#onKeyDown should emit decreaseGridSize$ when shortcut selected is '-'", () => {
+    it("#onKeyDown should emit decreaseGridSize$ when shortcut selected is '-'", async(() => {
         service.decreaseGridSize$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
@@ -266,5 +266,5 @@ describe('ShortcutService', () => {
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
-    });
+    }));
 });
