@@ -6,7 +6,7 @@ import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
-import { ServerService } from '@app/server/services/server.service';
+import { ServerService } from '@app/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';

@@ -5,7 +5,7 @@ import { AppendElementCommand } from '@app/drawing/classes/commands/append-eleme
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { MouseButton } from '@app/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
@@ -35,7 +35,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInsideDrawing || event.button !== ButtonId.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
 

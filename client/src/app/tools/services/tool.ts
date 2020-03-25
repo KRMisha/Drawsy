@@ -11,7 +11,7 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 export abstract class Tool {
-    static isMouseDown = false;
+    static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
     name: ToolName;

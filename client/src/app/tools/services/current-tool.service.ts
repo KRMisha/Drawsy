@@ -79,8 +79,8 @@ export class CurrentToolService implements OnDestroy {
         this.selectedTool.onLeave(event);
     }
 
-    setMouseDown(isMouseDown: boolean): void {
-        Tool.isMouseDown = isMouseDown;
+    setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
+        Tool.isLeftMouseButtonDown = isLeftMouseButtonDown;
     }
 
     setMouseInsideDrawing(isMouseInsideDrawing: boolean): void {

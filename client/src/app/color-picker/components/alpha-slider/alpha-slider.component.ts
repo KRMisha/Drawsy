@@ -19,8 +19,8 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
     private canvas: HTMLCanvasElement;
     private color = new Color();
 
+    private isLeftMouseButtonDown = false;
     private isMouseInside = false;
-    private isMouseDown = false;
     private mouseXPosition = 0;
 
     private colorChangedSubscription: Subscription;
@@ -55,14 +55,14 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
-            this.isMouseDown = true;
+            this.isLeftMouseButtonDown = true;
         }
         this.update(event);
     }
 
     @HostListener('document:mouseup')
     onMouseUp(): void {
-        this.isMouseDown = false;
+        this.isLeftMouseButtonDown = false;
     }
 
     @HostListener('mouseenter')
@@ -76,7 +76,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
     }
 
     private update(event: MouseEvent): void {
-        if (!this.isMouseDown) {
+        if (!this.isLeftMouseButtonDown) {
             return;
         }
 

@@ -4,7 +4,7 @@ import { AppendElementCommand } from '@app/drawing/classes/commands/append-eleme
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { MouseButton } from '@app/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
@@ -25,7 +25,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        if (Tool.isMouseDown && Tool.isMouseInsideDrawing) {
+        if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
             const mousePosition = this.getMousePosition(event);
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
@@ -33,7 +33,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (Tool.isMouseInsideDrawing && event.button === ButtonId.Left) {
+        if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
             this.path = this.createNewPath();
             const mousePosition = this.getMousePosition(event);
             const pathString = this.getPathStartString(mousePosition.x, mousePosition.y);
@@ -43,7 +43,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button === ButtonId.Left) {
+        if (event.button === MouseButton.Left) {
             this.stopDrawing();
         }
     }
@@ -53,7 +53,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onLeave(event: MouseEvent): void {
-        if (Tool.isMouseDown) {
+        if (Tool.isLeftMouseButtonDown) {
             const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
             this.stopDrawing();
@@ -61,7 +61,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     onPrimaryColorChange(color: Color): void {
-        if (!Tool.isMouseInsideDrawing || !Tool.isMouseDown) {
+        if (!Tool.isMouseInsideDrawing || !Tool.isLeftMouseButtonDown) {
             return;
         }
         this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
@@ -87,7 +87,7 @@ export abstract class ToolBrush extends Tool {
     }
 
     private stopDrawing(): void {
-        Tool.isMouseDown = false;
+        Tool.isLeftMouseButtonDown = false;
         if (this.path !== undefined) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
             this.path = undefined;

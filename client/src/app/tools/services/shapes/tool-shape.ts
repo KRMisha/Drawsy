@@ -7,7 +7,7 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { MouseButton } from '@app/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
@@ -49,7 +49,7 @@ export abstract class ToolShape extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseDown) {
+        if (Tool.isLeftMouseButtonDown) {
             this.updateShapeArea();
         }
     }
@@ -65,7 +65,7 @@ export abstract class ToolShape extends Tool {
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button === ButtonId.Left && this.shape !== undefined) {
+        if (event.button === MouseButton.Left && this.shape !== undefined) {
             const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
             const isValidRegular = isShapeRegular && (this.origin.x !== this.mousePosition.x || this.origin.y !== this.mousePosition.y);
             const isValidNonRegular = !isShapeRegular && this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y;
@@ -117,7 +117,7 @@ export abstract class ToolShape extends Tool {
     }
 
     private updateShapeArea(): void {
-        if (this.shape === undefined || !Tool.isMouseDown) {
+        if (this.shape === undefined || !Tool.isLeftMouseButtonDown) {
             return;
         }
 

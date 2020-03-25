@@ -25,7 +25,7 @@ export class ToolEraserService extends Tool {
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 
-    private isMouseDownInside = false;
+    private isLeftMouseButtonDownInsideDrawing = false;
     private drawingElementsCopy: SVGElement[] = [];
     private svgElementsDeletedDuringDrag: ElementAndItsNeighbor[] = [];
 
@@ -70,7 +70,7 @@ export class ToolEraserService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         const mousePosition = this.getMousePosition(event);
-        this.isMouseDownInside = Tool.isMouseInsideDrawing;
+        this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
         this.onMousePositionChange(mousePosition);
     }
@@ -128,7 +128,7 @@ export class ToolEraserService extends Tool {
             this.displayRedRectAroundElement(elementToConsider);
         }
 
-        if (this.svgElementUnderCursor !== undefined && Tool.isMouseDown && this.isMouseDownInside) {
+        if (this.svgElementUnderCursor !== undefined && Tool.isLeftMouseButtonDown && this.isLeftMouseButtonDownInsideDrawing) {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
             const elementIndex = this.drawingElementsCopy.indexOf(this.svgElementUnderCursor);
