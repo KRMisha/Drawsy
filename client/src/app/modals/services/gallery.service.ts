@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
+import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';

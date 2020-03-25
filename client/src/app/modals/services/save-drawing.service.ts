@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
+import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileId } from '@common/communication/new-file-id';

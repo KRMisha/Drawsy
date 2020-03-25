@@ -70,7 +70,7 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
-import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
+import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
 import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/theme-settings.component';
 
 @NgModule({
