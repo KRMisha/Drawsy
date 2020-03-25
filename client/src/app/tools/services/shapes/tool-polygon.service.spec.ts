@@ -42,22 +42,21 @@ fdescribe('ToolPolygonService', () => {
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the maximum number of sides", () => {
         const shape = {} as SVGElement;
         const toolSettings = new Map<ToolSetting, number>();
-        // tslint:disable: no-string-literal
-        toolPolygon['shape'] = shape;
-        toolPolygon['toolSettings'] = toolSettings;
-        // tslint:enable: no-string-literal
         toolSettings.set(ToolSetting.PolygonSideCount, 12); // tslint:disable-line: no-magic-numbers
 
         const point: Vec2 = { x: 1, y: 1 };
         const pointArray: Vec2[] = [point, point, point, point, point, point, point, point, point, point, point, point];
         const getPolygonPointsSpy = spyOn<any>(toolPolygon, 'getPolygonPoints').and.returnValue(pointArray); // tslint:disable-line: no-any
 
-        const pointString = '1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 ';
-
         const shapeArea: Rect = { x: 0, y: 0, width: 10, height: 10 };
         const scale: Vec2 = { x: 1, y: 1 };
+        // tslint:disable: no-string-literal
+        toolPolygon['shape'] = shape;
+        toolPolygon['toolSettings'] = toolSettings;
+        toolPolygon['updateShape'](shapeArea, scale, shape);
+        // tslint:enable: no-string-literal
+        const pointString = '1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 ';
 
-        toolPolygon['updateShape'](shapeArea, scale, shape); // tslint:disable-line: no-string-literal
         expect(getPolygonPointsSpy).toHaveBeenCalled();
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'points', pointString);
     });
@@ -65,10 +64,6 @@ fdescribe('ToolPolygonService', () => {
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the minimum number of sides", () => {
         const shape = {} as SVGElement;
         const toolSettings = new Map<ToolSetting, number>();
-        // tslint:disable: no-string-literal
-        toolPolygon['shape'] = shape;
-        toolPolygon['toolSettings'] = toolSettings;
-        // tslint:enable: no-string-literal
         toolSettings.set(ToolSetting.PolygonSideCount, 3); // tslint:disable-line: no-magic-numbers
 
         const point: Vec2 = { x: 1, y: 1 };
@@ -79,8 +74,12 @@ fdescribe('ToolPolygonService', () => {
 
         const shapeArea: Rect = { x: 0, y: 0, width: 10, height: 10 };
         const scale: Vec2 = { x: 1, y: 1 };
+        // tslint:disable: no-string-literal
+        toolPolygon['shape'] = shape;
+        toolPolygon['toolSettings'] = toolSettings;
+        toolPolygon['updateShape'](shapeArea, scale, shape);
+        // tslint:enable: no-string-literal
 
-        toolPolygon['updateShape'](shapeArea, scale, shape); // tslint:disable-line: no-string-literal
         expect(getPolygonPointsSpy).toHaveBeenCalled();
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'points', pointString);
     });
@@ -95,9 +94,8 @@ fdescribe('ToolPolygonService', () => {
         const point4: Vec2 = { x: 0, y: 5 };
         const expectedPoints: Vec2[] = [point1, point2, point3, point4];
 
-        // tslint:disable-next-line: no-string-literal
-        const polygonPoints = toolPolygon['getPolygonPoints'](shapeArea, scale, 4); // tslint:disable-line: no-magic-numbers
-        console.log(polygonPoints);
+        // tslint:disable-next-line: no-string-literal no-magic-numbers
+        const polygonPoints = toolPolygon['getPolygonPoints'](shapeArea, scale, 4);
         for (let i = 0; i < expectedPoints.length; i++) {
             expect(polygonPoints[i].x).toBeCloseTo(expectedPoints[i].x);
             expect(polygonPoints[i].y).toBeCloseTo(expectedPoints[i].y);
