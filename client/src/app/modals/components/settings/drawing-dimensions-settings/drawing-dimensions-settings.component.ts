@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { SettingsService } from '@app/modals/services/settings.service';
-import { ErrorMessageService } from '@app/services/error-message.service';
-import { Subscription } from 'rxjs';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SettingsService } from '@app/modals/services/settings.service';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing-dimensions-settings',

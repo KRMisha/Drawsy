@@ -1,11 +1,11 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
 
@@ -50,9 +50,9 @@ export class ToolEyedropperService extends Tool {
 
     private async setColor(event: MouseEvent): Promise<void> {
         const color = await this.getPixelColor(this.getMousePosition(event));
-        if (event.button === ButtonId.Left) {
+        if (event.button === MouseButton.Left) {
             this.colorService.setPrimaryColor(color);
-        } else if (event.button === ButtonId.Right) {
+        } else if (event.button === MouseButton.Right) {
             this.colorService.setSecondaryColor(color);
         }
     }

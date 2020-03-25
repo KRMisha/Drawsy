@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Color } from '@app/classes/color';
-import Regexes from '@app/constants/regexes';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ErrorMessageService } from '@app/services/error-message.service';
+import { Color } from '@app/shared/classes/color';
+import Regexes from '@app/shared/constants/regexes';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
 const sidebarWidth = 324;
 

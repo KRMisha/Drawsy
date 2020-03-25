@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -63,16 +63,16 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (event.button === ButtonId.Left) {
-            this.currentToolService.setMouseDown(true);
+        if (event.button === MouseButton.Left) {
+            this.currentToolService.setLeftMouseButtonDown(true);
         }
         this.currentToolService.onMouseDown(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        if (event.button === ButtonId.Left) {
-            this.currentToolService.setMouseDown(false);
+        if (event.button === MouseButton.Left) {
+            this.currentToolService.setLeftMouseButtonDown(false);
         }
         this.currentToolService.onMouseUp(event);
     }

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ErrorMessageService } from '@app/services/error-message.service';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
 describe('ErrorMessageService', () => {
     let service: ErrorMessageService;

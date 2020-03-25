@@ -3,9 +3,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 import { Subscription } from 'rxjs';
-import { ErrorMessageService } from '@app/services/error-message.service';
 
 export interface Label {
     name: string;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Rect } from '@app/classes/rect';
+import { Rect } from '@app/shared/classes/rect';
 
 @Injectable({
     providedIn: 'root',

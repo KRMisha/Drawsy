@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
-import { Color } from '@app/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 @Component({
     selector: 'app-sidebar-color-picker',
@@ -64,8 +64,8 @@ export class SidebarColorPickerComponent {
     }
 
     onColorClick(event: MouseEvent, color: Color): void {
-        if (event.button === ButtonId.Left || event.button === ButtonId.Right) {
-            event.button === ButtonId.Left ? this.colorService.setPrimaryColor(color) : this.colorService.setSecondaryColor(color);
+        if (event.button === MouseButton.Left || event.button === MouseButton.Right) {
+            event.button === MouseButton.Left ? this.colorService.setPrimaryColor(color) : this.colorService.setSecondaryColor(color);
         }
         this.color = Color.fromColor(color);
         this.isColorPickerDisplayEnabled = false;

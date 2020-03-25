@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Color } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
 import { Subscription } from 'rxjs';
 
 enum ColorGradient {
@@ -27,8 +27,8 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
+    private isLeftMouseButtonDown = false;
     private isMouseInside = false;
-    private isMouseDown = false;
     private sliderXPosition = 0;
 
     private colorChangedSubscription: Subscription;
@@ -66,14 +66,14 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
-            this.isMouseDown = true;
+            this.isLeftMouseButtonDown = true;
         }
         this.update(event);
     }
 
     @HostListener('document:mouseup')
     onMouseUp(): void {
-        this.isMouseDown = false;
+        this.isLeftMouseButtonDown = false;
     }
 
     @HostListener('mouseenter')
@@ -87,7 +87,7 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     }
 
     private update(event: MouseEvent): void {
-        if (!this.isMouseDown) {
+        if (!this.isLeftMouseButtonDown) {
             return;
         }
 
