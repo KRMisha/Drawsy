@@ -10,14 +10,14 @@
             <mat-action-list dense>
                 <button
                     mat-list-item
-                    *ngFor="let toolButton of toolButtons"
+                    *ngFor="let tool of tools"
                     class="button"
-                    [class.theme-selected-button]="toolButton.toolIndex === selectedToolIndex"
-                    (click)="setSelectedTool(toolButton.toolIndex)"
-                    [matTooltip]="toolButton.name"
+                    [class.theme-selected-button]="tool === selectedTool"
+                    (click)="selectedTool = tool; sidebarDrawerComponent.resetCurrentControls()"
+                    [matTooltip]="tool.name"
                     matTooltipPosition="right"
                 >
-                    <mat-icon>{{ toolButton.icon }}</mat-icon>
+                    <mat-icon>{{ tool.icon }}</mat-icon>
                 </button>
             </mat-action-list>
             <mat-action-list dense>
@@ -36,6 +36,6 @@
     </mat-drawer-content>
 
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings-container">
-        <app-sidebar-drawer [selectedToolIndex]="selectedToolIndex"></app-sidebar-drawer>
+        <app-sidebar-drawer #sidebarDrawerComponent></app-sidebar-drawer>
     </mat-drawer>
 </mat-drawer-container>
