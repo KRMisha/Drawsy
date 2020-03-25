@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Subject } from 'rxjs';
 
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
@@ -7,10 +9,19 @@ import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-
 describe('HueSliderComponent', () => {
     let component: HueSliderComponent;
     let fixture: ComponentFixture<HueSliderComponent>;
-
+    let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
+    let hueChangedSubject: Subject<number>;
     beforeEach(async(() => {
+        hueChangedSubject = new Subject<number>();
+        colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', [], {
+            hue: 10,
+            hueChanged$: hueChangedSubject,
+        });
         TestBed.configureTestingModule({
             declarations: [HueSliderComponent],
+            providers: [
+                {provide: ColorPickerService, useValue: colorPickerServiceSpyObj},
+            ],
         }).compileComponents();
     }));
 
@@ -18,7 +29,6 @@ describe('HueSliderComponent', () => {
         fixture = TestBed.createComponent(HueSliderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        // spyOn(component.hueChange, 'emit').and.callThrough();
         component.onMouseEnter();
     });
 

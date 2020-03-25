@@ -1,29 +1,39 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { ColorHexSelectorComponent } from '@app/color-picker/components/color-hex-selector/color-hex-selector.component';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
+import { Subject } from 'rxjs';
 
 describe('ColorHexSelectorComponent', () => {
     let component: ColorHexSelectorComponent;
-    let fixture: ComponentFixture<ColorHexSelectorComponent>;
+    let colorPickerSpyObj: jasmine.SpyObj<ColorPickerService>;
+    let colorSpyObj: jasmine.SpyObj<Color>;
+    let colorChangedSubject: Subject<Color>;
 
     beforeEach(async(() => {
+        colorChangedSubject = new Subject<Color>();
+        colorPickerSpyObj = jasmine.createSpyObj('ColorPickerService', ['getColor', 'setColor'], {
+            colorChanged$: colorChangedSubject,
+        });
+        colorSpyObj = jasmine.createSpyObj('Color', ['getHex']);
+        colorSpyObj.getHex.and.returnValue('000000');
+        colorPickerSpyObj.getColor.and.returnValue(colorSpyObj);
+
         TestBed.configureTestingModule({
             declarations: [ColorHexSelectorComponent],
-            imports: [MatFormFieldModule, FormsModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                {provide: ColorPickerService, useValue: colorPickerSpyObj},
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(ColorHexSelectorComponent);
+    beforeEach(async(() => {
+        const fixture = TestBed.createComponent(ColorHexSelectorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        // spyOn(component.colorChanged, 'emit');
-    });
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
