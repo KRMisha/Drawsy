@@ -9,11 +9,12 @@ import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-file-line-count
+
 describe('ServerService', () => {
     let service: ServerService;
     let httpClientSpyObj: jasmine.SpyObj<HttpClient>;
     let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
-    let subscriberSpyOBj: jasmine.SpyObj<any>; // tslint:disable-line: no-any
+    let subscriberSpyObj: jasmine.SpyObj<any>; // tslint:disable-line: no-any
     let consoleSpy: jasmine.Spy<any>; // tslint:disable-line: no-any
     let createDrawingSubject: Subject<NewFileId>;
     let updateDrawingSubject: Subject<void>;
@@ -24,7 +25,7 @@ describe('ServerService', () => {
     const existingFileId = '456';
 
     beforeEach(async(() => {
-        subscriberSpyOBj = jasmine.createSpyObj('Subscriber', ['successChannel', 'errorChannel']);
+        subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['successChannel', 'errorChannel']);
 
         httpClientSpyObj = jasmine.createSpyObj('HttpClient', ['post', 'put', 'delete', 'get']);
         createDrawingSubject = new Subject<NewFileId>();
@@ -53,110 +54,110 @@ describe('ServerService', () => {
 
     it('#createDrawing should make http post request and return the received file ID on success', async(() => {
         service.createDrawing(fileContent).subscribe((newId: NewFileId) => {
-            subscriberSpyOBj.successChannel(newId);
+            subscriberSpyObj.successChannel(newId);
         });
         createDrawingSubject.next(newFileId);
-        expect(subscriberSpyOBj.successChannel).toHaveBeenCalled();
+        expect(subscriberSpyObj.successChannel).toHaveBeenCalled();
     }));
 
-    it('#createDrawing should return observable on error channel if post request returns an error', async((done: DoneFn) => {
+    it('#createDrawing should return observable on error channel if post request returns an error', async(() => {
         const returnedError = new HttpErrorResponse({ status: 404 });
         service.createDrawing(fileContent).subscribe(
             (newId: NewFileId) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         createDrawingSubject.error(returnedError);
         expect(consoleSpy).toHaveBeenCalledWith('Failed request: create');
-        expect(subscriberSpyOBj.successChannel).not.toHaveBeenCalled();
-        expect(subscriberSpyOBj.errorChannel).toHaveBeenCalledWith(returnedError);
+        expect(subscriberSpyObj.successChannel).not.toHaveBeenCalled();
+        expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
     it('#updateDrawing should return no value when the request is successfull', async(() => {
         service.updateDrawing(existingFileId, fileContent).subscribe(() => {
-            subscriberSpyOBj.successChannel();
+            subscriberSpyObj.successChannel();
         });
         updateDrawingSubject.next();
-        expect(subscriberSpyOBj.successChannel).toHaveBeenCalled();
+        expect(subscriberSpyObj.successChannel).toHaveBeenCalled();
     }));
 
     it('#updateDrawing should return observable on error channel if post request returns an error', async(() => {
         const returnedError = new HttpErrorResponse({ status: 404 });
         service.updateDrawing(existingFileId, fileContent).subscribe(
             () => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         updateDrawingSubject.error(returnedError);
         expect(consoleSpy).toHaveBeenCalledWith('Failed request: update/' + existingFileId);
-        expect(subscriberSpyOBj.successChannel).not.toHaveBeenCalled();
-        expect(subscriberSpyOBj.errorChannel).toHaveBeenCalledWith(returnedError);
+        expect(subscriberSpyObj.successChannel).not.toHaveBeenCalled();
+        expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
     it('#deleteDrawing should return no value when the request is successfull', async(() => {
         service.deleteDrawing(existingFileId).subscribe(() => {
-            subscriberSpyOBj.successChannel();
+            subscriberSpyObj.successChannel();
         });
         deleteDrawingSubject.next();
-        expect(subscriberSpyOBj.successChannel).toHaveBeenCalled();
+        expect(subscriberSpyObj.successChannel).toHaveBeenCalled();
     }));
 
     it('#deleteDrawing should return observable on error channel if post request returns an error', async(() => {
         const returnedError = new HttpErrorResponse({ status: 404 });
         service.deleteDrawing(existingFileId).subscribe(
             () => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         deleteDrawingSubject.error(returnedError);
         expect(consoleSpy).toHaveBeenCalledWith('Failed request: delete/' + existingFileId);
-        expect(subscriberSpyOBj.successChannel).not.toHaveBeenCalled();
-        expect(subscriberSpyOBj.errorChannel).toHaveBeenCalledWith(returnedError);
+        expect(subscriberSpyObj.successChannel).not.toHaveBeenCalled();
+        expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
     it('#getAllDrawings should return array of SavedFiles when request is successfull', async(() => {
         const savedFile: SavedFile = { id: existingFileId, content: fileContent };
         const savedFileArray = [savedFile, savedFile, savedFile];
         service.getAllDrawings().subscribe((receivedSavedFiles: SavedFile[]) => {
-            subscriberSpyOBj.successChannel(receivedSavedFiles);
+            subscriberSpyObj.successChannel(receivedSavedFiles);
         });
         getAllDrawingsSubject.next(savedFileArray);
-        expect(subscriberSpyOBj.successChannel).toHaveBeenCalledWith(savedFileArray);
+        expect(subscriberSpyObj.successChannel).toHaveBeenCalledWith(savedFileArray);
     }));
 
     it('#getAllDrawings should return observable on error channel if post request returns an error', async(() => {
         const returnedError = new HttpErrorResponse({ status: 404 });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
         expect(consoleSpy).toHaveBeenCalledWith('Failed request: get-all');
-        expect(subscriberSpyOBj.successChannel).not.toHaveBeenCalled();
-        expect(subscriberSpyOBj.errorChannel).toHaveBeenCalledWith(returnedError);
+        expect(subscriberSpyObj.successChannel).not.toHaveBeenCalled();
+        expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
     it('#alertRequestError should display appropriate message when the error is 0', async(() => {
         const returnedError = new HttpErrorResponse({ status: 0 });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -169,10 +170,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.InternalServerError });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -185,10 +186,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.NotImplemented });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -201,10 +202,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -217,10 +218,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -233,10 +234,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.GatewayTimeout });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -249,10 +250,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.HttpVersionNotSupported });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -265,10 +266,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.VariantAlsoNegotiates });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -281,10 +282,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.InsufficientStorage });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -297,10 +298,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.LoopDetected });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -313,10 +314,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.NotExtended });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -331,10 +332,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: HttpStatusCode.NetworkAuthenticationRequired });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
@@ -347,10 +348,10 @@ describe('ServerService', () => {
         const returnedError = new HttpErrorResponse({ status: -1 });
         service.getAllDrawings().subscribe(
             (receivedSavedFiles: SavedFile[]) => {
-                subscriberSpyOBj.successChannel();
+                subscriberSpyObj.successChannel();
             },
             (error: HttpErrorResponse) => {
-                subscriberSpyOBj.errorChannel(error);
+                subscriberSpyObj.errorChannel(error);
             }
         );
         getAllDrawingsSubject.error(returnedError);
