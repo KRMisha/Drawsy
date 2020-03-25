@@ -125,7 +125,6 @@ export abstract class ToolShape extends Tool {
 
         const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
         const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
-        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
 
         const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
@@ -134,12 +133,12 @@ export abstract class ToolShape extends Tool {
                 y: Math.abs(this.mousePosition.y - this.origin.y),
             };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
-
             mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
             mousePositionCopy.y = this.origin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
         }
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
+        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
         this.updateShape(shapeArea, scale, this.shape as SVGElement);
     }
 }

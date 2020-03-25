@@ -1,152 +1,88 @@
-// import { Component, CUSTOM_ELEMENTS_SCHEMA, Type } from '@angular/core';
-// import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-// import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-// import { MatIconModule } from '@angular/material/icon';
-// import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-// import { GuideContent } from '@app/guide/classes/guide-content';
-// import { GuideDirective } from '@app/guide/components/guide-directive/guide.directive';
-// import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
-// import { GuideComponent } from '@app/guide/components/guide/guide.component';
-// import { GuideService } from '@app/guide/services/guide.service';
-// import { of } from 'rxjs';
+import { ComponentFactory, ComponentFactoryResolver, CUSTOM_ELEMENTS_SCHEMA, Type } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
+import { GuideContent } from '@app/guide/classes/guide-content';
+import { GuideNode } from '@app/guide/classes/guide-node';
+import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { GuideService } from '@app/guide/services/guide.service';
+import { Subject } from 'rxjs';
 
-// // tslint:disable: no-magic-numbers
-// // tslint:disable: max-classes-per-file
+class FirstGuideContentMock implements GuideContent {}
+const firstGuideNodeMock: GuideNode = {
+    name: 'FirstGuideNodeMock',
+    guide: FirstGuideContentMock,
+    previousGuideNode: undefined,
+    nextGuideNode: undefined,
+};
 
-// @Component({
-//     selector: 'app-guide-welcome',
-//     template: '<p>Mock Welcome Guide</p>',
-// })
-// class MockGuideWelcomeComponent {}
+describe('GuideComponent', () => {
+    let component: GuideComponent;
+    let currentGuideChangedSubject: Subject<Type<GuideContent>>;
+    let guideSidebarSpyObj: jasmine.SpyObj<GuideSidebarComponent>;
+    let componentFactoryResolverSpyObj: jasmine.SpyObj<ComponentFactoryResolver>;
+    let guideServiceSpyObj: jasmine.SpyObj<GuideService>;
 
-// @Component({
-//     selector: 'app-guide-pencil',
-//     template: '<p>Mock Pencil Guide</p>',
-// })
-// class MockGuidePencilComponent {}
+    beforeEach(async(() => {
+        guideSidebarSpyObj = jasmine.createSpyObj('GuideSideBar', ['expandAllMenus']);
+        componentFactoryResolverSpyObj = jasmine.createSpyObj('ComponentFactoryResolver', ['resolveComponentFactory']);
+        currentGuideChangedSubject = new Subject<Type<GuideContent>>();
+        guideServiceSpyObj = jasmine.createSpyObj('GuideService', ['selectPreviousGuide', 'selectNextGuide'], {
+            currentGuideChanged$: currentGuideChangedSubject,
+        });
 
-// // @Component({
-// //     selector: 'app-guide-paintbrush',
-// //     template: '<p>Mock Paintbrush Guide</p>',
-// // })
-// // class MockGuidePaintbrushComponent {}
+        TestBed.configureTestingModule({
+            declarations: [GuideComponent],
+            providers: [{ provide: GuideService, useValue: guideServiceSpyObj }],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        }).compileComponents();
+    }));
 
-// describe('GuideComponent', () => {
-//     const mockGuides: Type<GuideContent>[] = [MockGuideWelcomeComponent, MockGuidePencilComponent];
-//     let component: GuideComponent;
-//     let fixture: ComponentFixture<GuideComponent>;
-//     let dialogRefSpyObj: jasmine.SpyObj<MatDialogRef<GuideComponent>>;
+    beforeEach(async(() => {
+        const fixture = TestBed.createComponent(GuideComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        component.sidebar = guideSidebarSpyObj;
+        component['guideService'] = guideServiceSpyObj; // tslint:disable-line: no-string-literal
+        component['componentFactoryResolver'] = componentFactoryResolverSpyObj; // tslint:disable-line: no-string-literal
+    }));
 
-//     beforeEach(async(() => {
-//         dialogRefSpyObj = jasmine.createSpyObj({
-//             afterClosed: of({}),
-//             afterOpened: of({}),
-//             open: null,
-//             close: null,
-//         });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-//         const guideServiceSpyObj = jasmine.createSpyObj({ getGuides: mockGuides });
+    it('#ngAfterViewInit should subscribe to the currentGuidechanged observable of guideService', async(() => {
+        const loadGuideSpy = spyOn<any>(component, 'loadGuide').and.callThrough(); // tslint:disable-line: no-any
+        component.ngAfterViewInit();
+        const passedGuide = firstGuideNodeMock.guide!; // tslint:disable-line: no-non-null-assertion
 
-//         TestBed.configureTestingModule({
-//             declarations: [GuideComponent, MockGuideWelcomeComponent, GuideDirective],
-//             imports: [MatIconModule, MatDialogModule],
-//             providers: [
-//                 { provide: MatDialogRef, useValue: dialogRefSpyObj },
-//                 { provide: GuideService, useValue: guideServiceSpyObj },
-//             ],
-//             schemas: [CUSTOM_ELEMENTS_SCHEMA],
-//         })
-//             // TODO: Test if entryComponents and overrideModule are still necessary
-//             .overrideModule(BrowserDynamicTestingModule, { set: { entryComponents: [MockGuideWelcomeComponent] } })
-//             .compileComponents();
-//     }));
+        const componentFactoryStub = {} as ComponentFactory<GuideContent>;
+        componentFactoryResolverSpyObj.resolveComponentFactory.and.returnValue(componentFactoryStub);
+        const changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+        const componentRefSpyObj = jasmine.createSpyObj('ComponentRef<GuideContent>', [], { changeDetectorRef: changeDetectorRefSpyObj });
+        spyOn(component.guideContent, 'createComponent').and.returnValue(componentRefSpyObj);
 
-//     beforeEach(() => {
-//         fixture = TestBed.createComponent(GuideComponent);
-//         component = fixture.componentInstance;
-//         fixture.detectChanges();
-//     });
+        currentGuideChangedSubject.next(passedGuide);
+        expect(loadGuideSpy).toHaveBeenCalledWith(passedGuide);
+        expect(component.guideContent.createComponent).toHaveBeenCalledWith(componentFactoryStub);
+        expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
+    }));
 
-//     it('should create', () => {
-//         expect(component).toBeTruthy();
-//     });
+    it('#ngOnDestroy should unsubscribe from currentGuideChangedSubscription', () => {
+        // tslint:disable-next-line: no-any no-string-literal
+        const subscriptionSpy = spyOn<any>(component['currentGuideChangedSubscription'], 'unsubscribe');
+        component.ngOnDestroy();
+        expect(subscriptionSpy).toHaveBeenCalled();
+    });
 
-//     it('#ngOnInit should initialise attributes to default value and get guides from service', () => {
-//         component.ngOnInit();
-//         expect(component.guides).toEqual(mockGuides);
-//         expect(component.selectedGuideIndex).toEqual(0);
-//         expect(component.hasPreviousGuide).toEqual(false);
-//         expect(component.hasNextGuide).toEqual(true);
-//     });
+    it('#selectPreviousGuide should forward the call to guideService', () => {
+        component.selectPreviousGuide();
+        expect(guideServiceSpyObj.selectPreviousGuide).toHaveBeenCalled();
+        expect(guideSidebarSpyObj.expandAllMenus).toHaveBeenCalled();
+    });
 
-//     it('#ngAfterViewInit should select the guide depending on the index attribute', () => {
-//         spyOn(component, 'selectGuide').and.callThrough();
-
-//         component.ngAfterViewInit();
-//         expect(component.selectGuide).toHaveBeenCalled();
-//     });
-
-//     it('#findIndex should check if index is in range of guides array and return -1 otherwise', () => {
-//         // expect(component.findIndex(MockGuideWelcomeComponent)).toEqual(0);
-//         // expect(component.findIndex(MockGuidePaintbrushComponent)).toEqual(-1);
-//     });
-
-//     it('#selectGuide should update attributes when index is in range of guide array', () => {
-//         component.selectGuide(MockGuidePencilComponent);
-//         expect(component.selectedGuideIndex).toEqual(1);
-//         expect(component.hasNextGuide).toEqual(false);
-//         expect(component.hasPreviousGuide).toEqual(true);
-//     });
-
-//     it('#selectNextGuide should change the selectedGuide attribute if guide has a next and expand its menu', () => {
-//         component.sidebar = {
-//             expandAllMenus: () => {
-//                 return;
-//             },
-//         } as GuideSidebarComponent;
-//         component.selectedGuideIndex = 0;
-//         component.hasNextGuide = true;
-
-//         spyOn(component, 'selectGuide').and.callThrough();
-//         spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
-//         component.selectNextGuide();
-
-//         expect(component.sidebar.expandAllMenus).toHaveBeenCalled();
-//         // expect(component.selectGuide).toHaveBeenCalledWith(1);
-//     });
-
-//     it('#selectPreviousGuide should change the selectedGuide attribute if guide has a previous and expand its menu', () => {
-//         component.sidebar = {
-//             expandAllMenus: () => {
-//                 return;
-//             },
-//         } as GuideSidebarComponent;
-//         component.selectedGuideIndex = 1;
-//         component.hasPreviousGuide = true;
-
-//         spyOn(component, 'selectGuide').and.callThrough();
-//         spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
-//         component.selectPreviousGuide();
-
-//         expect(component.sidebar.expandAllMenus).toHaveBeenCalled();
-//         // expect(component.selectGuide).toHaveBeenCalledWith(0);
-//     });
-
-//     it('#selectPreviousGuide and #selectNextGuide should only expand all menus if there are no previous or next guides', () => {
-//         component.sidebar = {
-//             expandAllMenus: () => {
-//                 return;
-//             },
-//         } as GuideSidebarComponent;
-//         component.hasPreviousGuide = false;
-//         component.hasNextGuide = false;
-
-//         spyOn(component, 'selectGuide').and.callThrough();
-//         spyOn(component.sidebar, 'expandAllMenus').and.callThrough();
-//         component.selectPreviousGuide();
-//         component.selectNextGuide();
-
-//         expect(component.selectGuide).not.toHaveBeenCalled();
-//         expect(component.sidebar.expandAllMenus).toHaveBeenCalledTimes(2);
-//     });
-// });
+    it('#selectNextGuide should forward the call to the guideService', () => {
+        component.selectNextGuide();
+        expect(guideServiceSpyObj.selectNextGuide).toHaveBeenCalled();
+        expect(guideSidebarSpyObj.expandAllMenus).toHaveBeenCalled();
+    });
+});

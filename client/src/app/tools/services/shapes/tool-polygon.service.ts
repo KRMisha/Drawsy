@@ -29,18 +29,8 @@ export class ToolPolygonService extends ToolShape {
     }
 
     protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
-        const points: Vec2[] = [];
-        const numSides = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
-
-        let angle = -Math.PI / 2;
-        for (let i = 0; i < numSides; i++) {
-            const point = {
-                x: ((Math.cos(angle) * shapeArea.width) / 2) * scale.x + shapeArea.x + shapeArea.width / 2,
-                y: ((Math.sin(angle) * shapeArea.height) / 2) * scale.y + shapeArea.y + shapeArea.height / 2,
-            } as Vec2;
-            points.push(point);
-            angle += (2 * Math.PI) / numSides;
-        }
+        const sideCount = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
+        const points = this.calculatePoints(shapeArea, scale, sideCount);
 
         let pointsString = '';
         for (const point of points) {
@@ -48,5 +38,21 @@ export class ToolPolygonService extends ToolShape {
         }
 
         this.renderer.setAttribute(shape, 'points', pointsString);
+    }
+
+    private calculatePoints(shapeArea: Rect, scale: Vec2, sideCount: number): Vec2[] {
+        const points: Vec2[] = [];
+
+        let angle = -Math.PI / 2;
+        for (let i = 0; i < sideCount; i++) {
+            const point = {
+                x: ((Math.cos(angle) * shapeArea.width) / 2) * scale.x + shapeArea.x + shapeArea.width / 2,
+                y: ((Math.sin(angle) * shapeArea.height) / 2) * scale.y + shapeArea.y + shapeArea.height / 2,
+            } as Vec2;
+            points.push(point);
+            angle += (2 * Math.PI) / sideCount;
+        }
+
+        return points;
     }
 }
