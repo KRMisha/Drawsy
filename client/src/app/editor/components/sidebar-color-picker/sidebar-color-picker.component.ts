@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
-import { Color } from '@app/classes/color';
+import { Color } from '@app/shared/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
-import { MouseButton } from '@app/enums/mouse-button.enum';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 @Component({
     selector: 'app-sidebar-color-picker',

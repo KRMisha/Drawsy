@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Color } from '@app/classes/color';
+import { Color } from '@app/shared/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({

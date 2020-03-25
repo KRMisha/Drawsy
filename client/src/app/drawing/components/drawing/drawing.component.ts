@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { MouseButton } from '@app/enums/mouse-button.enum';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 @Component({

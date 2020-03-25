@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
-import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { CommandService } from '@app/drawing/services/command.service';
 import { Subject } from 'rxjs';

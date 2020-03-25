@@ -1,13 +1,13 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
+import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { MouseButton } from '@app/enums/mouse-button.enum';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';

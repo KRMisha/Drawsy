@@ -1,4 +1,4 @@
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AppendElementCommand } from '@app/shared/classes/commands/append-element-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('AppendElementCommand', () => {

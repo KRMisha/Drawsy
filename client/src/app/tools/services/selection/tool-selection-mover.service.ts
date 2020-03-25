@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Vec2 } from '@app/classes/vec2';
-import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MoveElementsCommand } from '@app/shared/classes/commands/move-elements-command';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Vec2 } from '@app/classes/vec2';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
 // import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 // import { Observable } from 'rxjs';

@@ -1,6 +1,6 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';

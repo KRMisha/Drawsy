@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { SvgFileContainer } from '@app/classes/svg-file-container';
-import { Vec2 } from '@app/classes/vec2';
+import { Color } from '@app/shared/classes/color';
+import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';

@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
+import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import Regexes from '@app/constants/regexes';
+import Regexes from '@app/shared/constants/regexes';
 import { GridService } from '@app/drawing/services/grid.service';
 import { Subscription } from 'rxjs';
 

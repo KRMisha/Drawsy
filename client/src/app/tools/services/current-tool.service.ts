@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
+import { Color } from '@app/shared/classes/color';
+import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';

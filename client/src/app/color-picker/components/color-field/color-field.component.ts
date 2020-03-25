@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Subscription } from 'rxjs';
 

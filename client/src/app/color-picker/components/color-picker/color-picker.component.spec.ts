@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
-import { Color } from '@app/classes/color';
+import { Color } from '@app/shared/classes/color';
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
 import { ColorService } from '@app/drawing/services/color.service';
 

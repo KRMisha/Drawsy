@@ -1,5 +1,5 @@
-import { Vec2 } from '@app/classes/vec2';
-import { Command } from '@app/drawing/classes/commands/command';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { Command } from '@app/shared/classes/commands/command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 export class MoveElementsCommand implements Command {

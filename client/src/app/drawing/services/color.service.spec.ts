@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Color } from '@app/classes/color';
+import { Color } from '@app/shared/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
 
 // tslint:disable: no-magic-numbers

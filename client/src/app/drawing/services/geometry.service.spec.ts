@@ -1,5 +1,5 @@
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 
 describe('GeometryService', () => {

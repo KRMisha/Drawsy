@@ -1,5 +1,5 @@
-import { Command } from '@app/drawing/classes/commands/command';
-import { ElementAndItsNeighbor } from '@app/drawing/classes/element-and-its-neighbor';
+import { Command } from '@app/shared/classes/commands/command';
+import { ElementAndItsNeighbor } from '@app/shared/classes/element-and-its-neighbor';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 export class RemoveElementsCommand implements Command {

@@ -65,7 +65,7 @@ import { GuideTextComponent } from '@app/guide/components/guide-content/guide-to
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { HomeComponent } from '@app/home/components/home/home.component';
+import { HomeComponent } from '@app/shared/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';

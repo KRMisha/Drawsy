@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Command } from '@app/drawing/classes/commands/command';
+import { Command } from '@app/shared/classes/commands/command';
 
 @Injectable({
     providedIn: 'root',
