@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { GalleryService } from '@app/modals/services/gallery.service';
+import { ErrorMessageService } from '@app/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 
 @Component({
@@ -16,7 +17,7 @@ export class GalleryComponent implements OnInit {
 
     searchLabels: string[] = [];
 
-    galleryGroup = new FormGroup({
+    galleryFormGroup = new FormGroup({
         labels: new FormControl('', [
             Validators.pattern(MetadataValidation.contentRegex),
             Validators.maxLength(MetadataValidation.maxLabelLength),
@@ -32,7 +33,7 @@ export class GalleryComponent implements OnInit {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-        const control = this.galleryGroup.controls.labels;
+        const control = this.galleryFormGroup.controls.labels;
 
         if ((value || '').trim()) {
             control.setErrors(null);
@@ -55,7 +56,7 @@ export class GalleryComponent implements OnInit {
             this.searchLabels.splice(labelIndex, 1);
         }
 
-        this.galleryGroup.controls.labels.markAsDirty();
+        this.galleryFormGroup.controls.labels.markAsDirty();
     }
 
     loadDrawing(drawing: SvgFileContainer): void {
@@ -71,11 +72,7 @@ export class GalleryComponent implements OnInit {
     }
 
     getLabelError(): string {
-        return this.galleryGroup.controls.labels.hasError('pattern')
-            ? '(A-Z, a-z, 0-9) uniquement'
-            : this.galleryGroup.controls.labels.hasError('maxlength')
-            ? `Longueur maximale de ${MetadataValidation.maxLabelLength} caractères`
-            : '';
+        return ErrorMessageService.getErrorMessage(this.galleryFormGroup.controls.labels, '(A-Z, a-z, 0-9)');
     }
 
     get areDrawingsLoaded(): boolean {

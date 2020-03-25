@@ -5,6 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 import { Subscription } from 'rxjs';
+import { ErrorMessageService } from '@app/services/error-message.service';
 
 export interface Label {
     name: string;
@@ -19,7 +20,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
 
     titleChangedSubscription: Subscription;
 
-    saveDrawingGroup = new FormGroup({
+    saveDrawingFormGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
             Validators.pattern(MetadataValidation.contentRegex),
@@ -34,9 +35,9 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     constructor(private saveDrawingService: SaveDrawingService) {}
 
     ngOnInit(): void {
-        this.titleChangedSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
-            if (this.saveDrawingGroup.controls.title.valid) {
-                this.saveDrawingService.title = this.saveDrawingGroup.controls.title.value;
+        this.titleChangedSubscription = this.saveDrawingFormGroup.controls.title.valueChanges.subscribe(() => {
+            if (this.saveDrawingFormGroup.controls.title.valid) {
+                this.saveDrawingService.title = this.saveDrawingFormGroup.controls.title.value;
             }
         });
     }
@@ -48,7 +49,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     addLabel(event: MatChipInputEvent): void {
         const input = event.input;
         const inputValue = event.value;
-        const control = this.saveDrawingGroup.controls.labels;
+        const control = this.saveDrawingFormGroup.controls.labels;
 
         if ((inputValue || '').trim()) {
             control.setErrors(null);
@@ -71,7 +72,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             this.labels.splice(labelIndex, 1);
         }
 
-        this.saveDrawingGroup.controls.labels.markAsDirty();
+        this.saveDrawingFormGroup.controls.labels.markAsDirty();
     }
 
     onSubmit(): void {
@@ -79,21 +80,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     getTitleError(): string {
-        return this.saveDrawingGroup.controls.title.hasError('required')
-            ? 'Titre obligatoire'
-            : this.saveDrawingGroup.controls.title.hasError('pattern')
-            ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxlength')
-            ? `Longueur maximale de ${MetadataValidation.maxTitleLength} caractères`
-            : '';
+        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.title, '(A-Z, a-z, 0-9)');
     }
 
     getLabelError(): string {
-        return this.saveDrawingGroup.controls.labels.hasError('pattern')
-            ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
-            ? `Longueur maximale de ${MetadataValidation.maxLabelLength} caractères`
-            : '';
+        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.labels, '(A-Z, a-z, 0-9)');
     }
 
     get title(): string {

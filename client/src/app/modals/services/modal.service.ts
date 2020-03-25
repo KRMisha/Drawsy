@@ -5,7 +5,7 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
-import { SettingsComponent } from '@app/modals/components/settings/settings.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 
 @Injectable({
     providedIn: 'root',

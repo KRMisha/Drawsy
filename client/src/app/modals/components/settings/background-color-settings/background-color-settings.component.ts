@@ -8,14 +8,13 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     styleUrls: ['./background-color-settings.component.scss'],
 })
 export class BackgroundColorSettingsComponent {
-
     constructor(private drawingService: DrawingService) {}
-
-    set color(color: Color) {
-        this.drawingService.backgroundColor = color;
-    }
 
     get color(): Color {
         return this.drawingService.backgroundColor;
+    }
+
+    set color(color: Color) {
+        this.drawingService.backgroundColor = color;
     }
 }

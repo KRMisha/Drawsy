@@ -1,0 +1,21 @@
+<h3 class="title">Dimensions du dessin</h3>
+<form [formGroup]="formGroup" autocomplete="off">
+    <div class="container">
+        <mat-form-field>
+            <mat-label>Largeur</mat-label>
+            <input
+                matInput
+                formControlName="drawingWidth"
+                />
+            <mat-error *ngIf="widthForm.invalid">{{ getWidthErrorMessage() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Hauteur</mat-label>
+            <input
+                matInput
+                formControlName="drawingHeight"
+            />
+            <mat-error *ngIf="heightForm.invalid">{{ getHeightErrorMessage() }}</mat-error>
+        </mat-form-field>
+    </div>
+</form>

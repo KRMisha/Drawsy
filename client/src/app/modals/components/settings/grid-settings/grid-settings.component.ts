@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
 import { SettingsService } from '@app/modals/services/settings.service';
@@ -10,11 +10,30 @@ import { Subscription } from 'rxjs';
     templateUrl: './grid-settings.component.html',
     styleUrls: ['./grid-settings.component.scss'],
 })
-export class GridSettingsComponent {
-    sizeSubscription: Subscription;
-    opacitySubscription: Subscription;
+export class GridSettingsComponent implements OnInit, OnDestroy {
+    private sizeSubscription: Subscription;
+    private opacitySubscription: Subscription;
 
     constructor(private settingsService: SettingsService, private gridService: GridService) {}
+
+    ngOnInit(): void {
+        this.sizeSubscription = this.formGroup.controls.gridSize.valueChanges.subscribe(() => {
+            if (this.formGroup.controls.gridSize.valid) {
+                this.gridService.size = this.formGroup.controls.gridSize.value;
+            }
+        });
+
+        this.opacitySubscription = this.formGroup.controls.gridOpacity.valueChanges.subscribe(() => {
+            if (this.formGroup.controls.gridOpacity.valid) {
+                this.gridService.opacity = this.formGroup.controls.gridOpacity.value;
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.sizeSubscription.unsubscribe();
+        this.opacitySubscription.unsubscribe();
+    }
 
     toggleGridDisplay(): void {
         this.gridService.toggleDisplay();
@@ -22,22 +41,24 @@ export class GridSettingsComponent {
 
     increaseGridSize(): void {
         this.gridService.increaseSize();
+        this.formGroup.controls.gridSize.setValue(this.gridService.size, { emitEvent: false });
     }
 
     decreaseGridSize(): void {
         this.gridService.decreaseSize();
+        this.formGroup.controls.gridSize.setValue(this.gridService.size, { emitEvent: false });
+    }
+
+    canIncreaseGridSize(): boolean {
+        return this.gridService.size < this.gridService.maximumSize;
+    }
+
+    canDecreaseGridSize(): boolean {
+        return this.gridService.size > this.gridService.minimumSize;
     }
 
     getErrorMessage(formControl: AbstractControl): string {
         return ErrorMessageService.getErrorMessage(formControl);
-    }
-
-    canIncreaseSize(): boolean {
-        return this.gridService.size < this.gridService.maximumSize;
-    }
-
-    canDecreaseSize(): boolean {
-        return this.gridService.size > this.gridService.minimumSize;
     }
 
     get isGridDisplayEnabled(): boolean {
@@ -52,12 +73,21 @@ export class GridSettingsComponent {
         this.gridService.size = gridSize;
     }
 
-    get opacityFormControl(): AbstractControl {
-        return this.settingsService.settingsFormGroup.controls.gridOpacity;
+    get gridOpacity(): number {
+        return this.gridService.opacity;
     }
 
-    get sizeFormControl(): AbstractControl {
-        return this.settingsService.settingsFormGroup.controls.gridSize;
+    set gridOpacity(gridOpacity: number) {
+        this.gridService.opacity = gridOpacity;
+        this.formGroup.controls.gridOpacity.setValue(gridOpacity, { emitEvent: false });
+    }
+
+    get minGridOpacity(): number {
+        return this.gridService.minimumOpacity;
+    }
+
+    get maxGridOpacity(): number {
+        return this.gridService.maximumOpacity;
     }
 
     get formGroup(): FormGroup {

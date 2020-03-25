@@ -69,8 +69,9 @@ import { GalleryComponent } from '@app/modals/components/gallery/gallery.compone
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { BackgroundColorSettingsComponent } from '@app/modals/components/settings/background-color-settings/background-color-settings.component';
+import { DrawingDimensionsSettingsComponent } from '@app/modals/components/settings/drawing-dimensions-settings/drawing-dimensions-settings.component';
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
-import { SettingsComponent } from '@app/modals/components/settings/settings.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
 
@@ -78,12 +79,13 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
     declarations: [
         AlphaSliderComponent,
         AppComponent,
+        BackgroundColorSettingsComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
         ColorPickerComponent,
         DrawingComponent,
+        DrawingDimensionsSettingsComponent,
         DrawingPreviewComponent,
-        SettingsComponent,
         EditorComponent,
         ExportDrawingComponent,
         GalleryComponent,
@@ -117,11 +119,11 @@ import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
         NewDrawingComponent,
         SafeHtmlPipe,
         SaveDrawingComponent,
+        SettingsComponent,
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
         ThemeSettingsComponent,
-        BackgroundColorSettingsComponent,
     ],
     imports: [
         AppRoutingModule,

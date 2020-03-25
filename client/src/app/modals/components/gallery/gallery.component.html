@@ -13,7 +13,7 @@
                 matChipInputAddOnBlur="true"
                 (matChipInputTokenEnd)="addLabel($event)"
             />
-            <mat-error *ngIf="galleryGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
+            <mat-error *ngIf="galleryFormGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
         </mat-chip-list>
     </mat-form-field>
 </div>
