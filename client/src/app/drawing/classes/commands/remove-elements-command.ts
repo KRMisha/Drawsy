@@ -1,4 +1,4 @@
-import { Command } from '@app/shared/classes/commands/command';
+import { Command } from '@app/drawing/classes/commands/command';
 import { ElementAndItsNeighbor } from '@app/shared/classes/element-and-its-neighbor';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 

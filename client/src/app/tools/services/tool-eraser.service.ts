@@ -2,7 +2,7 @@ import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { RemoveElementsCommand } from '@app/shared/classes/commands/remove-elements-command';
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbor } from '@app/shared/classes/element-and-its-neighbor';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';

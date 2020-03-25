@@ -1,4 +1,4 @@
-import { RemoveElementsCommand } from '@app/shared/classes/commands/remove-elements-command';
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementAndItsNeighbor } from '@app/shared/classes/element-and-its-neighbor';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 

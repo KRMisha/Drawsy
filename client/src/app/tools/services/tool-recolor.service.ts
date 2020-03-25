@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { RecolorCommand } from '@app/shared/classes/commands/recolor-command';
+import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
