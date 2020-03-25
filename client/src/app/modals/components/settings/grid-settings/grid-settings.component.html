@@ -1,7 +1,7 @@
 <h3 class="title">Grille</h3>
 <form [formGroup]="formGroup" autocomplete="off">
     <div class="grid-settings-container">
-        <!-- SIZE -->
+        
         <div class="grid-settings-size-container">
             <button mat-raised-button class="button-item" (click)="toggleGridDisplay()">
                 <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
@@ -34,9 +34,7 @@
                 </button>
             </div>
         </div>
-        <!-- END SIZE -->
-
-        <!-- OPACITY -->
+        
         <div class="grid-settings-size-container">
             <mat-form-field>
                 <mat-label>Opacité de la grille</mat-label>
@@ -57,6 +55,5 @@
                 [value]="gridOpacity"
             ></mat-slider>
         </div>
-        <!-- END OPACITY -->
     </div>
 </form>

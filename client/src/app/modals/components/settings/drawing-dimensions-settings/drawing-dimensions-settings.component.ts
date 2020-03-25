@@ -1,16 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { SettingsService } from '@app/modals/services/settings.service';
 import { ErrorMessageService } from '@app/services/error-message.service';
+import { Subscription } from 'rxjs';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
     selector: 'app-drawing-dimensions-settings',
     templateUrl: './drawing-dimensions-settings.component.html',
     styleUrls: ['./drawing-dimensions-settings.component.scss'],
 })
-export class DrawingDimensionsSettingsComponent {
+export class DrawingDimensionsSettingsComponent implements OnInit, OnDestroy {
+    private widthSubscription: Subscription;
+    private heightSubscription: Subscription;
 
-    constructor(private settingsService: SettingsService) {}
+    constructor(private settingsService: SettingsService, private drawingService: DrawingService) {}
+
+    ngOnInit(): void {
+        this.widthSubscription = this.formGroup.controls.drawingWidth.valueChanges.subscribe(() => {
+            if (this.formGroup.controls.drawingWidth.valid) {
+                this.drawingService.dimensions.x = this.formGroup.controls.drawingWidth.value;
+            }
+        });
+
+        this.heightSubscription = this.formGroup.controls.drawingHeight.valueChanges.subscribe(() => {
+            if (this.formGroup.controls.drawingHeight.valid) {
+                this.drawingService.dimensions.y = this.formGroup.controls.drawingHeight.value;
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.widthSubscription.unsubscribe();
+        this.heightSubscription.unsubscribe();
+    }
 
     getWidthErrorMessage(): string {
         return ErrorMessageService.getErrorMessage(this.widthForm, 'Nombre entier');

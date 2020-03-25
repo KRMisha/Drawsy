@@ -50,6 +50,8 @@ export class SettingsService {
 
     private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);
 
+    private initialDrawingDimensions = { x: this.drawingService.dimensions.x, y: this.drawingService.dimensions.y };
+
     private initialIsGridDisplayEnabled = this.gridService.isDisplayEnabled;
     private initialGridSize = this.gridService.size;
     private initialGridOpacity = this.gridService.opacity;
@@ -62,6 +64,8 @@ export class SettingsService {
     resetInitialSettings(): void {
         this.drawingService.backgroundColor = this.initialBackgroundColor;
 
+        this.drawingService.dimensions = this.initialDrawingDimensions;
+
         this.gridService.isDisplayEnabled = this.initialIsGridDisplayEnabled;
         this.gridService.size = this.initialGridSize;
         this.gridService.opacity = this.initialGridOpacity;
@@ -69,9 +73,10 @@ export class SettingsService {
         this.themeService.color = this.initialThemeColor;
         this.themeService.isDarkTheme = this.initialIsDarkTheme;
 
-        // reste form control values so it updates visually
-        // use .reset(val, { emitEvents: false });
+        this.settingsFormGroup.controls.drawingWidth.reset(this.initialDrawingDimensions.x, { emitEvent: false });
+        this.settingsFormGroup.controls.drawingHeight.reset(this.initialDrawingDimensions.y, { emitEvent: false });
 
-        // see if form.reset resets to initial settings, not null, and if so use it
+        this.settingsFormGroup.controls.gridSize.reset(this.initialGridSize, { emitEvent: false });
+        this.settingsFormGroup.controls.gridOpacity.reset(this.initialGridOpacity, { emitEvent: false });
     }
 }
