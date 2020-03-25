@@ -20,7 +20,7 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.displayEnabledSubscription = this.formGroup.controls.gridDisplayEnabled.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridDisplayEnabled.valid) {
-                this.gridService.isDisplayEnabled = this.formGroup.controls.gridDisplayEnabled.value;
+                this.isGridDisplayEnabled = this.formGroup.controls.gridDisplayEnabled.value;
             }
         });
         this.sizeSubscription = this.formGroup.controls.gridSize.valueChanges.subscribe(() => {
@@ -50,8 +50,15 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
         return this.gridService.isDisplayEnabled;
     }
 
-    set gridDisplayEnabled(isGridDisplayEnabled: boolean) {
+    set isGridDisplayEnabled(isGridDisplayEnabled: boolean) {
         this.gridService.isDisplayEnabled = isGridDisplayEnabled;
+        if (isGridDisplayEnabled) {
+            this.formGroup.controls.gridSize.enable();
+            this.formGroup.controls.gridOpacity.enable();
+        } else {
+            this.formGroup.controls.gridSize.disable();
+            this.formGroup.controls.gridOpacity.disable();
+        }
     }
 
     get gridSize(): number {

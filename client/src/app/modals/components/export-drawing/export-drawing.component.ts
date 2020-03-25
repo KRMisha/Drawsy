@@ -59,7 +59,7 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
     }
 
     getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl, '0-9');
+        return ErrorMessageService.getErrorMessage(formControl);
     }
 
     get title(): string {

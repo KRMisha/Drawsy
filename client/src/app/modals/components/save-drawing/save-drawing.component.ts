@@ -47,23 +47,12 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     addLabel(event: MatChipInputEvent): void {
-        const input = event.input;
-        const inputValue = event.value;
-        const control = this.saveDrawingFormGroup.controls.labels;
-
-        if ((inputValue || '').trim()) {
-            control.setErrors(null);
-            control.setValue(inputValue);
-            if (control.valid) {
-                control.markAsDirty();
-                input.value = '';
-                this.labels.push(inputValue);
-            }
+        if (this.saveDrawingFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
+            return;
         }
 
-        if (input !== undefined) {
-            input.value = '';
-        }
+        this.labels.push(event.value);
+        event.input.value = '';
     }
 
     removeLabel(label: string): void {
@@ -71,8 +60,6 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         if (labelIndex >= 0) {
             this.labels.splice(labelIndex, 1);
         }
-
-        this.saveDrawingFormGroup.controls.labels.markAsDirty();
     }
 
     onSubmit(): void {
@@ -80,11 +67,11 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     getTitleError(): string {
-        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.title, '(A-Z, a-z, 0-9)');
+        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.title, 'A-Z, a-z, 0-9');
     }
 
     getLabelError(): string {
-        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.labels, '(A-Z, a-z, 0-9)');
+        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.labels, 'A-Z, a-z, 0-9');
     }
 
     get title(): string {

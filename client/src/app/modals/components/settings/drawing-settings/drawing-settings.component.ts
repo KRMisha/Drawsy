@@ -2,15 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SettingsService } from '@app/modals/services/settings.service';
+import { Color } from '@app/shared/classes/color';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-drawing-dimensions-settings',
-    templateUrl: './drawing-dimensions-settings.component.html',
-    styleUrls: ['./drawing-dimensions-settings.component.scss'],
+    selector: 'app-drawing-settings',
+    templateUrl: './drawing-settings.component.html',
+    styleUrls: ['./drawing-settings.component.scss'],
 })
-export class DrawingDimensionsSettingsComponent implements OnInit, OnDestroy {
+export class DrawingSettingsComponent implements OnInit, OnDestroy {
     private widthSubscription: Subscription;
     private heightSubscription: Subscription;
 
@@ -37,6 +38,14 @@ export class DrawingDimensionsSettingsComponent implements OnInit, OnDestroy {
 
     getErrorMessage(formControl: AbstractControl): string {
         return ErrorMessageService.getErrorMessage(formControl, '0-9');
+    }
+
+    get color(): Color {
+        return this.drawingService.backgroundColor;
+    }
+
+    set color(color: Color) {
+        this.drawingService.backgroundColor = color;
     }
 
     get formGroup(): FormGroup {

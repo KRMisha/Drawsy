@@ -1,3 +1,4 @@
+// tslint:disable: max-line-length
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -68,8 +69,7 @@ import { ExportDrawingComponent } from '@app/modals/components/export-drawing/ex
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
-import { BackgroundColorSettingsComponent } from '@app/modals/components/settings/background-color-settings/background-color-settings.component';
-import { DrawingDimensionsSettingsComponent } from '@app/modals/components/settings/drawing-dimensions-settings/drawing-dimensions-settings.component';
+import { DrawingSettingsComponent } from '@app/modals/components/settings/drawing-settings/drawing-settings.component';
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
@@ -79,12 +79,11 @@ import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
     declarations: [
         AlphaSliderComponent,
         AppComponent,
-        BackgroundColorSettingsComponent,
         ColorFieldComponent,
         ColorHexSelectorComponent,
         ColorPickerComponent,
         DrawingComponent,
-        DrawingDimensionsSettingsComponent,
+        DrawingSettingsComponent,
         DrawingPreviewComponent,
         EditorComponent,
         ExportDrawingComponent,

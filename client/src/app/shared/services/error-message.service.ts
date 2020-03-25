@@ -18,7 +18,7 @@ export class ErrorMessageService {
             ? ErrorMessageService.getMaximumValueErrorMessage(control.getError('max').max)
             : control.hasError('minlength')
             ? ErrorMessageService.getMinimumLengthErrorMessage(control.getError('minlength').requiredLength)
-            : control.hasError('minlength')
+            : control.hasError('maxlength')
             ? ErrorMessageService.getMaximumLengthErrorMessage(control.getError('maxlength').requiredLength)
             : '';
     }

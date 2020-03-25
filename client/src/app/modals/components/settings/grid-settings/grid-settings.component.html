@@ -15,6 +15,7 @@
         <mat-slider
             class="slider-item"
             step="5"
+            [disabled]="!isGridDisplayEnabled"
             [min]="minGridSize"
             [max]="maxGridSize"
             [value]="gridSize"
@@ -33,6 +34,7 @@
         <mat-slider
             class="slider-item"
             step="0.01"
+            [disabled]="!isGridDisplayEnabled"
             [min]="minGridOpacity"
             [max]="maxGridOpacity"
             [value]="gridOpacity"

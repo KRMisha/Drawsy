@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DrawingDimensionsSettingsComponent } from './drawing-dimensions-settings.component';
+import { DrawingSettingsComponent } from './drawing-dimensions-settings.component';
 
 describe('DrawingDimensionsSettingsComponent', () => {
-    let component: DrawingDimensionsSettingsComponent;
-    let fixture: ComponentFixture<DrawingDimensionsSettingsComponent>;
+    let component: DrawingSettingsComponent;
+    let fixture: ComponentFixture<DrawingSettingsComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawingDimensionsSettingsComponent],
+            declarations: [DrawingSettingsComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DrawingDimensionsSettingsComponent);
+        fixture = TestBed.createComponent(DrawingSettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
