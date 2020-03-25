@@ -8,7 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
 
-fdescribe('ToolPolygonService', () => {
+describe('ToolPolygonService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let toolPolygon: ToolPolygonService;
     beforeEach(() => {

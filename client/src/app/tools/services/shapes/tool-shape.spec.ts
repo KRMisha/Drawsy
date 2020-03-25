@@ -146,8 +146,8 @@ describe('ToolShape', () => {
         expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly shapeType',
-    () => {
+    // tslint:disable-next-line: max-line-length
+    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly shapeType', () => {
         const shape = {} as SVGElement;
         // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
@@ -168,8 +168,8 @@ describe('ToolShape', () => {
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly shapeType',
-    () => {
+    // tslint:disable-next-line: max-line-length
+    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly shapeType', () => {
         const shape = {} as SVGElement;
         toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
         // tslint:disable: no-any
