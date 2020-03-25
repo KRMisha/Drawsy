@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { Color } from '@app/shared/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { Color } from '@app/shared/classes/color';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-magic-numbers

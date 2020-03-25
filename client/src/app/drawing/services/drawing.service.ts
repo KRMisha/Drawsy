@@ -1,9 +1,9 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/shared/classes/color';
-import { Vec2 } from '@app/shared/classes/vec2';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { CommandService } from '@app/drawing/services/command.service';
+import { Color } from '@app/shared/classes/color';
+import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };

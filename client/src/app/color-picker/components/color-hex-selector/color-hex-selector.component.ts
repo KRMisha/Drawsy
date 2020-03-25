@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Color } from '@app/shared/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 import { Subscription } from 'rxjs';
 

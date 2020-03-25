@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
-import { DrawingService } from '@app/drawing/services/drawing.service';
 
 const sidebarWidth = 324;
 const maximumDimension = 10000;

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Color } from '@app/shared/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
 import { Subscription } from 'rxjs';
 
 enum ColorGradient {

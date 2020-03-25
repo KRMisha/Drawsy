@@ -1,7 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ThemeService } from '@app/app/services/theme.service';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { ModalService } from '@app/modals/services/modal.service';
-import { ThemeService } from '@app/app/services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({

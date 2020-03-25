@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
-import { Color } from '@app/shared/classes/color';
 import { ColorService } from '@app/drawing/services/color.service';
+import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 @Component({

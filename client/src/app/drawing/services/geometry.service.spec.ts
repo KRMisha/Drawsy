@@ -1,6 +1,6 @@
+import { GeometryService } from '@app/drawing/services/geometry.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { GeometryService } from '@app/drawing/services/geometry.service';
 
 describe('GeometryService', () => {
     it("#getRectFromPoints's returned Rect should have a width and height of 0 when both Vec2 passed by parameter are the same", () => {

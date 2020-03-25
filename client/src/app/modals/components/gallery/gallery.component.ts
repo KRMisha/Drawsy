@@ -2,8 +2,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { GalleryService } from '@app/modals/services/gallery.service';
+import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import MetadataValidation from '@common/validation/metadata-validation';
 
 @Component({

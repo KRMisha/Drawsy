@@ -1,9 +1,9 @@
 import { RendererFactory2 } from '@angular/core';
-import { Color } from '@app/shared/classes/color';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';

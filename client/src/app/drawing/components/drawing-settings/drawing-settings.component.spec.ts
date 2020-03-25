@@ -1,9 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Color } from '@app/shared/classes/color';
 import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
 import { of } from 'rxjs';
 
 describe('DrawingSettingsComponent', () => {
