@@ -1,12 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
+import Regexes from '@app/shared/constants/regexes';
 
 const sidebarWidth = 324;
 const maximumDimension = 10000;
-const integerRegexPattern = '^[0-9]*$';
 
 @Component({
     selector: 'app-new-drawing',
@@ -24,7 +24,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.required,
                 Validators.min(1),
                 Validators.max(maximumDimension),
-                Validators.pattern(integerRegexPattern),
+                Validators.pattern(Regexes.integerRegex),
             ])
         ),
         height: new FormControl(
@@ -33,7 +33,7 @@ export class NewDrawingComponent implements OnInit {
                 Validators.required,
                 Validators.min(1),
                 Validators.max(maximumDimension),
-                Validators.pattern(integerRegexPattern),
+                Validators.pattern(Regexes.integerRegex),
             ])
         ),
     });
@@ -78,7 +78,7 @@ export class NewDrawingComponent implements OnInit {
             : formControl.hasError('min')
             ? 'Valeur négative ou nulle invalide'
             : formControl.hasError('max')
-            ? 'Valeur maximale de 10000 px'
+            ? `Valeur maximale de ${maximumDimension} px`
             : formControl.hasError('pattern')
             ? 'Nombre entier invalide'
             : '';

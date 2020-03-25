@@ -2,7 +2,7 @@ import { FileSchema } from '@app/classes/file-schema';
 import { HttpException } from '@app/classes/http-exception';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
-import DescValidation from '@common/validation/desc-validation';
+import MetadataValidation from '@common/validation/metadata-validation';
 import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
@@ -74,21 +74,21 @@ export class DatabaseService {
         const drawingRoot = dom.window.document.getElementsByTagName('svg')[0];
 
         const title = drawingRoot.getElementsByTagName('title')[0].innerHTML;
-        const labels = drawingRoot.getElementsByTagName('desc')[0].innerHTML;
+        const labelsString = drawingRoot.getElementsByTagName('desc')[0].innerHTML;
 
-        return this.isTitleValid(title) && this.areLabelsValid(labels);
+        return this.isTitleValid(title) && this.areLabelsValid(labelsString);
     }
 
     private isTitleValid(title: string): boolean {
-        return DescValidation.descRegex.test(title) && title.length <= DescValidation.maxTitleLength;
+        return MetadataValidation.contentRegex.test(title) && title.length <= MetadataValidation.maxTitleLength;
     }
 
-    private areLabelsValid(labels: string): boolean {
-        if (labels.length === 0) {
+    private areLabelsValid(labelsString: string): boolean {
+        if (labelsString.length === 0) {
             return true;
         }
-        return labels
+        return labelsString
             .split(',')
-            .every((label: string) => DescValidation.descRegex.test(label) && label.length <= DescValidation.maxLabelLength);
+            .every((label: string) => MetadataValidation.contentRegex.test(label) && label.length <= MetadataValidation.maxLabelLength);
     }
 }

@@ -1,18 +1,13 @@
-.chip-list {
-    width: 100%;
-    ::ng-deep {
-        .mat-chip-list-wrapper {
-            max-width: 100%;
-        }
-    }
+.title {
+    text-align: center;
 }
 
-.content {
-    max-height: unset !important;
+.chip-list {
+    width: 100%;
 }
 
 .button {
     width: 20%;
     min-width: max-content;
-    margin: 4px;
+    margin-right: 4px;
 }

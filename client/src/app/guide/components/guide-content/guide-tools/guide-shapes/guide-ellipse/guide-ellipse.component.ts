@@ -4,6 +4,6 @@ import { GuideContent } from '@app/guide/classes/guide-content';
 @Component({
     selector: 'app-guide-ellipse',
     templateUrl: './guide-ellipse.component.html',
-    styleUrls: ['../../../common.scss', './guide-ellipse.component.scss'],
+    styleUrls: ['../../../shared.scss', './guide-ellipse.component.scss'],
 })
 export class GuideEllipseComponent implements GuideContent {}

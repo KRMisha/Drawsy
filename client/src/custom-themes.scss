@@ -1,9 +1,95 @@
-$polydessin-theme-primary: mat-palette($mat-indigo, 200);
-$polydessin-theme-accent: mat-palette($mat-indigo, 200);
-$polydessin-theme-warn: mat-palette($mat-red);
+@import '~@angular/material/theming';
 
-$polydessin-theme: mat-dark-theme($polydessin-theme-primary, $polydessin-theme-accent, $polydessin-theme-warn);
+@include mat-core();
 
-$primary: mat-color($polydessin-theme-primary);
-$accent: mat-color($polydessin-theme-accent);
-$warn: mat-color($polydessin-theme-warn);
+$theme-colors: (
+    pink: mat-palette($mat-pink, 300),
+    purple: mat-palette($mat-purple, A400),
+    indigo: mat-palette($mat-indigo, 200),
+    blue: mat-palette($mat-light-blue, 500),
+    green: mat-palette($mat-light-green, 500),
+    yellow: mat-palette($mat-yellow, A700),
+    orange: mat-palette($mat-orange, 500),
+    red: mat-palette($mat-red, A700),
+);
+
+@mixin theme-mixin($theme) {
+    @include angular-material-theme($theme);
+
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $drawer-side-border: solid 1px mat-color($foreground, divider);
+
+    @each $color-name, $theme-color in $theme-colors {
+        .#{$color-name + '-theme-color'} {
+            background-color: mat-color($theme-color);
+        }
+    }
+
+    .theme-background-color {
+        background-color: mat-color($background, background);
+    }
+
+    .theme-dialog {
+        mat-dialog-container {
+            background-color: mat-color($background, background);
+
+            mat-dialog-content {
+                max-height: 75vh;
+            }
+        }
+    }
+
+    .theme-drawer-right-border {
+        border-right: $drawer-side-border;
+    }
+
+    .theme-selected-button {
+        background-color: mat-color($primary);
+    }
+
+    .mat-action-list .theme-selected-button:focus {
+        background-color: mat-color($primary);
+
+        @if $primary ==
+            map-get($theme-colors, purple) or
+            $primary ==
+            map-get($theme-colors, blue) or
+            $primary ==
+            map-get($theme-colors, red)
+        {
+            * {
+                color: white;
+            }
+        } @else {
+            * {
+                color: rgba(0, 0, 0, 0.87);
+            }
+        }
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: mat-color($primary);
+    }
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+        background: mat-color($background, app-bar);
+    }
+
+    .theme-error-tooltip {
+        color: mat-color($warn);
+    }
+}
+
+@each $color-name, $theme-color in $theme-colors {
+    .#{$color-name + '-light-theme'} {
+        @include theme-mixin(mat-light-theme($theme-color, $theme-color));
+    }
+
+    .#{$color-name + '-dark-theme'} {
+        @include theme-mixin(mat-dark-theme($theme-color, $theme-color));
+    }
+}

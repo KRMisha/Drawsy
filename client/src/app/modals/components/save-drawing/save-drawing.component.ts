@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
-import DescValidation from '@common/validation/desc-validation';
+import MetadataValidation from '@common/validation/metadata-validation';
 import { Subscription } from 'rxjs';
 
 export interface Label {
@@ -17,19 +17,19 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    titleChangedSubscription: Subscription;
-
     saveDrawingGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
-            Validators.pattern(DescValidation.descRegex),
-            Validators.maxLength(DescValidation.maxTitleLength),
+            Validators.pattern(MetadataValidation.contentRegex),
+            Validators.maxLength(MetadataValidation.maxTitleLength),
         ]),
         labels: new FormControl(this.saveDrawingService.labels, [
-            Validators.pattern(DescValidation.descRegex),
-            Validators.maxLength(DescValidation.maxLabelLength),
+            Validators.pattern(MetadataValidation.contentRegex),
+            Validators.maxLength(MetadataValidation.maxLabelLength),
         ]),
     });
+
+    private titleChangedSubscription: Subscription;
 
     constructor(private saveDrawingService: SaveDrawingService) {}
 
@@ -84,7 +84,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             : this.saveDrawingGroup.controls.title.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.saveDrawingGroup.controls.title.hasError('maxlength')
-            ? `Longueur maximale de ${DescValidation.maxTitleLength} caractères`
+            ? `Longueur maximale de ${MetadataValidation.maxTitleLength} caractères`
             : '';
     }
 
@@ -92,7 +92,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         return this.saveDrawingGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.saveDrawingGroup.controls.labels.hasError('maxlength')
-            ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
+            ? `Longueur maximale de ${MetadataValidation.maxLabelLength} caractères`
             : '';
     }
 

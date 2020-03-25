@@ -3,24 +3,24 @@
     display: grid;
     grid-template-areas:
         'color color'
-        'hue  preview'
+        'hue preview'
         'alpha preview'
         'hex hex';
 }
 
-.item-color-picker {
+.color-picker-item {
     grid-area: color;
 }
 
-.item-hue {
+.hue-item {
     grid-area: hue;
 }
 
-.item-alpha {
+.alpha-item {
     grid-area: alpha;
 }
 
-.item-hex-selector {
+.hex-selector-item {
     grid-area: hex;
 }
 
@@ -32,7 +32,7 @@
     background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
     background-size: 22px 22px;
-    background-position: 0 0, 0 11px, 11px -11px, -11px 0px;
+    background-position: 0 0, 0 11px, 11px -11px, -11px 0;
     border-radius: 4px;
 }
 
@@ -40,8 +40,4 @@
     width: 100%;
     height: 100%;
     border-radius: 4px;
-}
-
-mat-divider {
-    margin-bottom: 8px;
 }

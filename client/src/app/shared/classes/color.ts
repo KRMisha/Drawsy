@@ -1,4 +1,4 @@
-export const hexRegex = new RegExp('^[0-9a-fA-F]{6}$');
+import Regexes from '@app/shared/constants/regexes';
 
 export class Color {
     static readonly maxRgb = 255;
@@ -74,16 +74,34 @@ export class Color {
         return newColor;
     }
 
+    static fromRgbString(rgbString: string): Color {
+        const matches = rgbString.match(Regexes.rgbRegex) || undefined;
+        if (matches === undefined) {
+            return new Color();
+        }
+
+        const redIndex = 1;
+        const greenIndex = 2;
+        const blueIndex = 3;
+        return this.fromRgb(parseFloat(matches[redIndex]), parseFloat(matches[greenIndex]), parseFloat(matches[blueIndex]));
+    }
+
     static fromRgbaString(rgbaString: string): Color {
-        const rgbaValues = rgbaString
-            .substring(rgbaString.indexOf('(') + 1, rgbaString.lastIndexOf(')'))
-            .split(',')
-            .map((x: string) => parseFloat(x.trim()));
-        const redIndex = 0;
-        const greenIndex = 1;
-        const blueIndex = 2;
-        const alphaIndex = 3;
-        return this.fromRgba(rgbaValues[redIndex], rgbaValues[greenIndex], rgbaValues[blueIndex], rgbaValues[alphaIndex]);
+        const matches = rgbaString.match(Regexes.rgbaRegex) || undefined;
+        if (matches === undefined) {
+            return new Color();
+        }
+
+        const redIndex = 1;
+        const greenIndex = 2;
+        const blueIndex = 3;
+        const alphaIndex = 4;
+        return this.fromRgba(
+            parseFloat(matches[redIndex]),
+            parseFloat(matches[greenIndex]),
+            parseFloat(matches[blueIndex]),
+            parseFloat(matches[alphaIndex])
+        );
     }
 
     setHsv(hue: number, saturation: number, value: number): void {
@@ -126,7 +144,7 @@ export class Color {
     }
 
     setHex(hex: string): boolean {
-        if (hexRegex.test(hex)) {
+        if (Regexes.sixHexRegex.test(hex)) {
             // tslint:disable: no-magic-numbers
             const radix = 16;
             this.red = parseInt(hex.substring(0, 2), radix);

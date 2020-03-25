@@ -14,7 +14,7 @@ export class GuideComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
     @ViewChild('appGuideContent', { read: ViewContainerRef }) guideContent: ViewContainerRef;
 
-    currentGuideChangedSubscription: Subscription;
+    private currentGuideChangedSubscription: Subscription;
 
     constructor(private componentFactoryResolver: ComponentFactoryResolver, private guideService: GuideService) {}
 

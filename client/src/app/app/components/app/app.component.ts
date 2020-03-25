@@ -1,4 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ThemeService } from '@app/app/services/theme.service';
 import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private newDrawingShortcutSubscription: Subscription;
     private galleryShortcutSubscription: Subscription;
 
-    constructor(private modalService: ModalService, private shortcutService: ShortcutService) {}
+    constructor(private modalService: ModalService, private shortcutService: ShortcutService, private themeService: ThemeService) {}
 
     ngOnInit(): void {
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
@@ -50,5 +51,9 @@ export class AppComponent implements OnInit, OnDestroy {
         if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
             this.shortcutService.areShortcutsEnabled = true;
         }
+    }
+
+    get theme(): string {
+        return this.themeService.getTheme();
     }
 }

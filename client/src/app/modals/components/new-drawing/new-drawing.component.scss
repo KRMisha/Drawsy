@@ -1,13 +1,15 @@
-mat-dialog-content::-webkit-scrollbar {
-    display: none;
-}
-
-.form-field,
-.mat-h1,
-.content {
+.title,
+.content,
+.form-field-item {
     text-align: center;
 }
 
+.form-field-item {
+    width: 120px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 .button {
-    width: 27%;
+    width: 120px;
 }

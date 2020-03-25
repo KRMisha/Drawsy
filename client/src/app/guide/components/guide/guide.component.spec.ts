@@ -72,9 +72,10 @@ fdescribe('GuideComponent', () => {
     });
 
     it('#ngOnDestroy should unsubscribe from currentGuideChangedSubscription', () => {
-        spyOn(component.currentGuideChangedSubscription, 'unsubscribe');
+        // tslint:disable-next-line: no-string-literal no-any
+        const subscriptionSpy = spyOn<any>(component['currentGuideChangedSubscription'], 'unsubscribe');
         component.ngOnDestroy();
-        expect(component.currentGuideChangedSubscription.unsubscribe).toHaveBeenCalled();
+        expect(subscriptionSpy).toHaveBeenCalled();
     });
 
     it('#selectPreviousGuide should forward the call to guideService', () => {

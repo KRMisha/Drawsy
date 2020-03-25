@@ -1,9 +1,9 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
+import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -82,7 +82,7 @@ export class SvgUtilityService {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const paddingString = element.getAttribute('padding') || undefined;
+        const paddingString = element.getAttribute('data-padding') || undefined;
         const paddingValue = paddingString === undefined ? 0 : +paddingString;
 
         return {

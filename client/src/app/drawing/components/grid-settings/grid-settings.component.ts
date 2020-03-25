@@ -1,21 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
+import Regexes from '@app/shared/constants/regexes';
 import { Subscription } from 'rxjs';
-
-const integerRegexPattern = '^[0-9]*$';
-const precisionRegexPattern = '^[0-9.]*$';
 
 @Component({
     selector: 'app-grid-settings',
     templateUrl: './grid-settings.component.html',
     styleUrls: ['./grid-settings.component.scss'],
 })
-export class GridSettingsComponent implements OnInit {
+export class GridSettingsComponent implements OnInit, OnDestroy {
     readonly sliderRange = 100;
-
-    sizeSubscription: Subscription;
-    opacitySubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -24,7 +19,7 @@ export class GridSettingsComponent implements OnInit {
                 Validators.required,
                 Validators.min(this.gridService.minimumSize),
                 Validators.max(this.gridService.maximumSize),
-                Validators.pattern(integerRegexPattern),
+                Validators.pattern(Regexes.integerRegex),
             ])
         ),
     });
@@ -36,10 +31,13 @@ export class GridSettingsComponent implements OnInit {
                 Validators.required,
                 Validators.min(this.gridService.minimumOpacity),
                 Validators.max(this.gridService.maximumOpacity),
-                Validators.pattern(precisionRegexPattern),
+                Validators.pattern(Regexes.decimalRegex),
             ])
         ),
     });
+
+    private sizeSubscription: Subscription;
+    private opacitySubscription: Subscription;
 
     constructor(private gridService: GridService) {}
 
@@ -58,6 +56,11 @@ export class GridSettingsComponent implements OnInit {
                 this.gridService.opacity = this.opacityGroup.controls.opacity.value;
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.sizeSubscription.unsubscribe();
+        this.opacitySubscription.unsubscribe();
     }
 
     get isGridDisplayEnabled(): boolean {

@@ -6,7 +6,7 @@ import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import DescValidation from '@common/validation/desc-validation';
+import MetadataValidation from '@common/validation/metadata-validation';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,13 +21,15 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    titleFormControlChangedSubscription: Subscription;
+    currentFileType: FileType = FileType.Svg;
 
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
-        Validators.pattern(DescValidation.descRegex),
-        Validators.maxLength(DescValidation.maxTitleLength),
+        Validators.pattern(MetadataValidation.contentRegex),
+        Validators.maxLength(MetadataValidation.maxTitleLength),
     ]);
+
+    private titleFormControlChangedSubscription: Subscription;
 
     constructor(
         private drawingSerializerService: DrawingSerializerService,

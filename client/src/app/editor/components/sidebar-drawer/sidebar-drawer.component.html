@@ -1,181 +1,228 @@
 <div class="container">
-    <h1 class="mat-h1">{{ toolName }}</h1>
+    <mat-toolbar color="primary" class="title-item">{{ toolName }}</mat-toolbar>
 
-    <h2 class="mat-h2 color-title">Couleur</h2>
-    <app-sidebar-color-picker></app-sidebar-color-picker>
-    <mat-divider></mat-divider>
+    <div class="settings-container">
+        <h3 class="color-title-item">Couleur</h3>
+        <app-sidebar-color-picker></app-sidebar-color-picker>
+        <mat-divider></mat-divider>
 
-    <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
-        <h2 class="mat-h2">Taille</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="lineWidthFormControl"
-                [matTooltip]="getLineWidthErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>px</span>
-        </mat-form-field>
-        <mat-slider min="1" max="500" [value]="lineWidthFormControl.value" (input)="lineWidthFormControl.setValue($event.value)">
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.BrushTexture)">
-        <h2 class="mat-h2">Type de texture</h2>
-        <mat-form-field class="dropdown">
-            <mat-label>Sélection</mat-label>
-            <mat-select
-                [value]="getSetting(ToolSetting.BrushTexture)"
-                (selectionChange)="setSetting(ToolSetting.BrushTexture, $event.value)"
+        <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
+            <h3 class="setting-name-item">Largeur du trait</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(lineWidthFormControl)"
+                [matTooltipDisabled]="lineWidthFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
             >
-                <mat-option [value]="BrushTexture.Graffiti">Âme fragile</mat-option>
-                <mat-option [value]="BrushTexture.Blur">Vent d'automne</mat-option>
-                <mat-option [value]="BrushTexture.Shadow">Ombre du matin</mat-option>
-                <mat-option [value]="BrushTexture.Matte">Chlorophylle</mat-option>
-                <mat-option [value]="BrushTexture.Fabric">Innocence juvénile</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
-        <h2 class="mat-h2">Taille jonction</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="junctionDiameterFormControl"
-                [matTooltip]="getJunctionDiameterErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>px</span>
-        </mat-form-field>
-        <mat-slide-toggle
-            [ngModel]="asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
-            (ngModelChange)="
-                setSetting(ToolSetting.JunctionSettings, {
-                    isEnabled: $event,
-                    diameter: asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).diameter
-                })
-            "
-            class="toggle"
-        ></mat-slide-toggle>
-        <mat-slider
-            min="1"
-            max="500"
-            [value]="junctionDiameterFormControl.value"
-            (input)="junctionDiameterFormControl.setValue($event.value)"
-            [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
-        >
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.SprayDiameter)" class="size-container">
-        <h2 class="mat-h2">Diamètre du jet</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="sprayDiameterFormControl"
-                [matTooltip]="getSprayDiameterErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>px</span>
-        </mat-form-field>
-        <mat-slider min="10" max="100" (input)="sprayDiameterFormControl.setValue($event.value)" [value]="sprayDiameterFormControl.value">
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-    <div *ngIf="hasSetting(ToolSetting.SprayRate)" class="size-container">
-        <h2 class="mat-h2">Vitesse du jet</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="sprayRateFormControl"
-                [matTooltip]="getSprayRateErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>jets/s</span>
-        </mat-form-field>
-        <mat-slider min="10" max="100" (input)="sprayRateFormControl.setValue($event.value)" [value]="sprayRateFormControl.value">
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.ShapeType)">
-        <h2 class="mat-h2">Type de tracé</h2>
-        <div class="toggle-buttons-container">
-            <mat-button-toggle-group [value]="getSetting(ToolSetting.ShapeType)" (change)="setSetting(ToolSetting.ShapeType, $event.value)">
-                <mat-button-toggle [value]="ShapeType.FillWithBorder">Complet</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.FillOnly">Plein</mat-button-toggle>
-                <mat-button-toggle [value]="ShapeType.BorderOnly">Contour</mat-button-toggle>
-            </mat-button-toggle-group>
+                <input matInput [formControl]="lineWidthFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumLineWidth"
+                [max]="maximumLineWidth"
+                [value]="lineWidthFormControl.value"
+                (input)="lineWidthFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
         </div>
-        <mat-divider class="divider"></mat-divider>
+
+        <div *ngIf="hasSetting(ToolSetting.BrushTexture)">
+            <h3 class="brush-texture-title-item">Type de texture</h3>
+            <mat-form-field class="dropdown-item">
+                <mat-label>Sélection</mat-label>
+                <mat-select
+                    [value]="getSetting(ToolSetting.BrushTexture)"
+                    (selectionChange)="setSetting(ToolSetting.BrushTexture, $event.value)"
+                >
+                    <mat-option [value]="BrushTexture.Graffiti">Âme fragile</mat-option>
+                    <mat-option [value]="BrushTexture.Blur">Vent d'automne</mat-option>
+                    <mat-option [value]="BrushTexture.Shadow">Ombre du matin</mat-option>
+                    <mat-option [value]="BrushTexture.Matte">Chlorophylle</mat-option>
+                    <mat-option [value]="BrushTexture.Fabric">Innocence juvénile</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
+            <h3 class="setting-name-item">Taille jonction</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(junctionDiameterFormControl)"
+                [matTooltipDisabled]="junctionDiameterFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="junctionDiameterFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slide-toggle
+                [ngModel]="asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
+                (ngModelChange)="
+                    setSetting(ToolSetting.JunctionSettings, {
+                        isEnabled: $event,
+                        diameter: asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).diameter
+                    })
+                "
+                class="toggle-item"
+            ></mat-slide-toggle>
+            <mat-slider
+                class="slider-item"
+                [disabled]="!asJunctionSettings(getSetting(ToolSetting.JunctionSettings)).isEnabled"
+                [min]="minimumJunctionDiameter"
+                [max]="maximumJunctionDiameter"
+                [value]="junctionDiameterFormControl.value"
+                (input)="junctionDiameterFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.SprayDiameter)" class="size-container">
+            <h3 class="setting-name-item">Diamètre du jet</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(sprayDiameterFormControl)"
+                [matTooltipDisabled]="junctionDiameterFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="sprayDiameterFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumSprayDiameter"
+                [max]="maximumSprayDiameter"
+                [value]="sprayDiameterFormControl.value"
+                (input)="sprayDiameterFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+        <div *ngIf="hasSetting(ToolSetting.SprayRate)" class="size-container">
+            <h3 class="setting-name-item">Vitesse du jet</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(sprayRateFormControl)"
+                [matTooltipDisabled]="sprayRateFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="sprayRateFormControl" />
+                <span matSuffix>jets/s</span>
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumSprayRate"
+                [max]="maximumSprayRate"
+                [value]="sprayRateFormControl.value"
+                (input)="sprayRateFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.ShapeType)">
+            <div class="shape-type-container">
+                <h3 class="shape-type-title-item">Tracé</h3>
+                <mat-button-toggle-group
+                    [value]="getSetting(ToolSetting.ShapeType)"
+                    (change)="setSetting(ToolSetting.ShapeType, $event.value)"
+                >
+                    <mat-button-toggle
+                        [class.theme-selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillWithBorder"
+                        [value]="ShapeType.FillWithBorder"
+                    >
+                        <mat-icon svgIcon="fill-with-border"></mat-icon>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        [class.theme-selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.FillOnly"
+                        [value]="ShapeType.FillOnly"
+                    >
+                        <mat-icon svgIcon="fill-only"></mat-icon>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        [class.theme-selected-button]="getSetting(ToolSetting.ShapeType) === ShapeType.BorderOnly"
+                        [value]="ShapeType.BorderOnly"
+                    >
+                        <mat-icon svgIcon="border-only"></mat-icon>
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
+            <h3 class="setting-name-item">Taille de bordure</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(shapeBorderWidthFormControl)"
+                [matTooltipDisabled]="shapeBorderWidthFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="shapeBorderWidthFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumShapeBorderWidth"
+                [max]="maximumShapeBorderWidth"
+                [value]="shapeBorderWidthFormControl.value"
+                (input)="shapeBorderWidthFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
+            <h3 class="setting-name-item">Nombre de faces</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(polygonSideCountFormControl)"
+                [matTooltipDisabled]="polygonSideCountFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="polygonSideCountFormControl" />
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumPolygonSideCount"
+                [max]="maximumPolygonSideCount"
+                [value]="polygonSideCountFormControl.value"
+                (input)="polygonSideCountFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
+            <h3 class="setting-name-item">Taille de l'efface</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(eraserSizeFormControl)"
+                [matTooltipDisabled]="eraserSizeFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="eraserSizeFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slider
+                class="slider-item"
+                [min]="minimumEraserSize"
+                [max]="maximumEraserSize"
+                [value]="eraserSizeFormControl.value"
+                (input)="eraserSizeFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
     </div>
 
-    <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
-        <h2 class="mat-h2">Taille de bordure</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="shapeBorderWidthFormControl"
-                [matTooltip]="getShapeBorderWidthErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>px</span>
-        </mat-form-field>
-        <mat-slider
-            min="1"
-            max="100"
-            [value]="shapeBorderWidthFormControl.value"
-            (input)="shapeBorderWidthFormControl.setValue($event.value)"
-        >
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
-        <h2 class="mat-h2">Nombre de faces</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="polygonSideCountFormControl"
-                [matTooltip]="getPolygonSideCountErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-        </mat-form-field>
-        <mat-slider
-            min="3"
-            max="12"
-            [value]="polygonSideCountFormControl.value"
-            (input)="polygonSideCountFormControl.setValue($event.value)"
-        >
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
-        <h2 class="mat-h2">Taille de l'efface</h2>
-        <mat-form-field class="form-field">
-            <input
-                matInput
-                [formControl]="eraserSizeFormControl"
-                [matTooltip]="getEraserSizeErrorMessage()"
-                matTooltipClass="error-tooltip"
-            />
-            <span matSuffix>px</span>
-        </mat-form-field>
-        <mat-slider min="3" max="50" [value]="eraserSizeFormControl.value" (input)="eraserSizeFormControl.setValue($event.value)">
-        </mat-slider>
-        <mat-divider class="divider"></mat-divider>
-    </div>
-
-    <div class="undo-redo">
-        <button mat-icon-button class="undo-button" matTooltip="Annuler" [disabled]="!isUndoAvailable" (click)="undoClicked.emit()">
+    <div class="undo-redo-container">
+        <button mat-icon-button matTooltip="Annuler" [disabled]="!isUndoAvailable" (click)="undoCommand()">
             <mat-icon class="command-icon">undo</mat-icon>
         </button>
-        <button mat-icon-button class="redo-button" matTooltip="Refaire" [disabled]="!isRedoAvailable" (click)="redoClicked.emit()">
+        <button mat-icon-button matTooltip="Refaire" [disabled]="!isRedoAvailable" (click)="redoCommand()">
             <mat-icon class="command-icon">redo</mat-icon>
         </button>
     </div>

@@ -2,9 +2,9 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { SvgFileContainer } from '@app/classes/svg-file-container';
 import { GalleryService } from '@app/modals/services/gallery.service';
-import DescValidation from '@common/validation/desc-validation';
+import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
+import MetadataValidation from '@common/validation/metadata-validation';
 
 @Component({
     selector: 'app-gallery',
@@ -17,7 +17,10 @@ export class GalleryComponent implements OnInit {
     searchLabels: string[] = [];
 
     galleryGroup = new FormGroup({
-        labels: new FormControl('', [Validators.pattern(DescValidation.descRegex), Validators.maxLength(DescValidation.maxLabelLength)]),
+        labels: new FormControl('', [
+            Validators.pattern(MetadataValidation.contentRegex),
+            Validators.maxLength(MetadataValidation.maxLabelLength),
+        ]),
     });
 
     constructor(private galleryService: GalleryService) {}
@@ -71,7 +74,7 @@ export class GalleryComponent implements OnInit {
         return this.galleryGroup.controls.labels.hasError('pattern')
             ? '(A-Z, a-z, 0-9) uniquement'
             : this.galleryGroup.controls.labels.hasError('maxlength')
-            ? `Longueur maximale de ${DescValidation.maxLabelLength} caractères`
+            ? `Longueur maximale de ${MetadataValidation.maxLabelLength} caractères`
             : '';
     }
 

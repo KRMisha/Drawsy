@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { SvgClickEvent } from '@app/drawing/classes/svg-click-event';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
+import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
@@ -79,8 +79,8 @@ export class CurrentToolService implements OnDestroy {
         this.selectedTool.onLeave(event);
     }
 
-    setMouseDown(isMouseDown: boolean): void {
-        Tool.isMouseDown = isMouseDown;
+    setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
+        Tool.isLeftMouseButtonDown = isLeftMouseButtonDown;
     }
 
     setMouseInsideDrawing(isMouseInsideDrawing: boolean): void {

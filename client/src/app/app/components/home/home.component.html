@@ -1,0 +1,19 @@
+<div class="container">
+    <mat-toolbar class="header-item mat-elevation-z4">Bienvenue sur l'application PolyDessin, Will, Antoine 1 et Antoine 2!</mat-toolbar>
+    <mat-toolbar class="title-item mat-elevation-z4" color="primary">
+        PolyDessin
+    </mat-toolbar>
+    <div>
+        <mat-card class="buttons-item">
+            <button mat-raised-button class="button" (click)="openNewDrawingModal()">Créer un nouveau dessin</button>
+            <button mat-raised-button class="button" *ngIf="isDrawingStarted" routerLink="/editor">Continuer un dessin</button>
+            <button mat-raised-button class="button" (click)="openGalleryModal()">Galerie de dessins</button>
+            <button mat-raised-button class="button" (click)="openGuideModal()">Guide d'utilisation</button>
+        </mat-card>
+    </div>
+    <div class="footer-item">
+        <mat-divider></mat-divider>
+        <h4 class="team-name">Équipe 203</h4>
+        <p>Francis Pepin • Justin van den Hanenberg • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin</p>
+    </div>
+</div>
