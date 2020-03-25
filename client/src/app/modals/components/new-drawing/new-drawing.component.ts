@@ -58,7 +58,7 @@ export class NewDrawingComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
-        if (this.drawingFormGroup.invalid && this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
+        if (this.drawingFormGroup.valid && this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
             this.router.navigate(['/editor']);
         }
     }
