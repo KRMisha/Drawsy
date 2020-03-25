@@ -4,6 +4,6 @@ import { GuideContent } from '@app/guide/classes/guide-content';
 @Component({
     selector: 'app-guide-color',
     templateUrl: './guide-color.component.html',
-    styleUrls: ['../../common.scss', './guide-color.component.scss'],
+    styleUrls: ['../../shared.scss', './guide-color.component.scss'],
 })
 export class GuideColorComponent implements GuideContent {}
