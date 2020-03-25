@@ -47,10 +47,7 @@ $theme-colors: (
         border-right: $drawer-side-border;
     }
 
-    .theme-selected-button {
-        background-color: mat-color($primary);
-    }
-
+    .theme-selected-button,
     .mat-action-list .theme-selected-button:focus {
         background-color: mat-color($primary);
 
