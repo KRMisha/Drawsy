@@ -27,7 +27,7 @@ class ToolShapeMock extends ToolShape {
 }
 
 describe('ToolShape', () => {
-    const name: ToolName = ToolName.Brush;
+    const name: ToolName = ToolName.Paintbrush;
     const isShapeAlwaysRegular = true;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;

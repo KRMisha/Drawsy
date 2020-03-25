@@ -9,12 +9,14 @@ import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 
 export abstract class Tool {
     static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
     name: ToolName;
+    icon: string;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | ShapeType | BrushTexture>();
 
     protected renderer: Renderer2;
@@ -24,10 +26,12 @@ export abstract class Tool {
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected commandService: CommandService,
-        name: ToolName
+        name: ToolName,
+        icon: ToolIcon
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
         this.name = name;
+        this.icon = icon;
     }
 
     // Disable tslint for method stubs below because not all derived service classes

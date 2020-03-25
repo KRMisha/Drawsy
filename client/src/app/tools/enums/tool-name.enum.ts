@@ -1,6 +1,6 @@
 export enum ToolName {
     Pencil = 'Crayon',
-    Brush = 'Pinceau',
+    Paintbrush = 'Pinceau',
     Line = 'Ligne',
     Rectangle = 'Rectangle',
     Selection = 'Sélection',

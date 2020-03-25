@@ -7,6 +7,7 @@ import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
+import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -40,7 +41,7 @@ export class ToolLineService extends Tool {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Line);
+        super(rendererFactory, drawingService, colorService, commandService, ToolName.Line, ToolIcon.Line);
         this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
         this.toolSettings.set(ToolSetting.JunctionSettings, ToolDefaults.defaultJunctionSettings);
     }
