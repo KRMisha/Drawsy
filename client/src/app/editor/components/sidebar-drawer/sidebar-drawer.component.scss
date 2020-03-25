@@ -4,14 +4,21 @@
     height: 100%;
 }
 
-.title {
-    text-align: center;
+.title-item {
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
 }
 
 .settings-container {
     height: 100%;
     padding-left: 16px;
     padding-right: 16px;
+}
+
+.color-title-item {
+    margin-top: 1em;
+    margin-bottom: 0.25em;
 }
 
 .size-container {
@@ -22,12 +29,56 @@
         'divider divider';
 }
 
+.setting-name-item {
+    grid-area: setting-name;
+    align-self: end;
+    margin-bottom: 0;
+}
+
+.form-field-item {
+    grid-area: input-field;
+    justify-self: right;
+    text-align: right;
+    width: 70px;
+
+    ::ng-deep .mat-form-field-wrapper {
+        margin-bottom: -1.25em;
+    }
+}
+
+.slider-item {
+    grid-area: slider;
+    width: 100%;
+}
+
+.divider-item {
+    grid-area: divider;
+    width: 100%;
+}
+
+.brush-texture-title-item {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+}
+
+.dropdown-item {
+    margin-top: 10px;
+    width: 100%;
+}
+
 .junction-container {
     display: grid;
     grid-template-areas:
         'setting-name toggle input-field'
         'slider slider slider'
         'divider divider divider';
+}
+
+.toggle-item {
+    grid-area: toggle;
+    justify-self: center;
+    align-self: center;
+    margin-top: 12px;
 }
 
 .shape-type-container {
@@ -38,75 +89,20 @@
     margin-bottom: 16px;
 }
 
-.setting-name-item {
-    grid-area: setting-name;
-    align-self: end;
+.shape-type-title-item {
     margin-bottom: 0;
-}
-
-.color-title {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-}
-
-.brush-texture-title {
-    margin-top: 1em;
-    margin-bottom: 0;
-}
-
-.shape-type-title {
-    margin-bottom: 0;
-}
-
-.form-field {
-    grid-area: input-field;
-    text-align: right;
-    width: 70px;
-    justify-self: right;
-
-    ::ng-deep .mat-form-field-wrapper {
-        margin-bottom: -1.25em;
-    }
-}
-
-.mat-slider {
-    grid-area: slider;
-    width: 100%;
-}
-
-.toggle {
-    grid-area: toggle;
-    margin-top: 12px;
-    align-self: center;
-    justify-self: center;
-}
-
-.dropdown {
-    margin-top: 10px;
-    width: 100%;
-}
-
-.divider-item {
-    grid-area: divider;
-    width: 100%;
 }
 
 .undo-redo-container {
     justify-self: flex-end;
     display: flex;
     justify-content: space-evenly;
-}
-
-.undo-button {
-    margin-bottom: 10px;
-}
-
-.redo-button {
-    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .command-icon {
-    transform: scale(1.4);
+    opacity: 0.9;
+    transform: scale(1.2);
 }
 
 h1,

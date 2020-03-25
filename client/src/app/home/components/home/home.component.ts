@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ModalService } from '@app/modals/services/modal.service';
 
@@ -9,7 +8,7 @@ import { ModalService } from '@app/modals/services/modal.service';
     styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-    constructor(private drawingService: DrawingService, private modalService: ModalService, private router: Router) {}
+    constructor(private drawingService: DrawingService, private modalService: ModalService) {}
 
     openNewDrawingModal(): void {
         this.modalService.openNewDrawingModal();
@@ -21,10 +20,6 @@ export class HomeComponent {
 
     openGuideModal(): void {
         this.modalService.openGuideModal();
-    }
-
-    continueDrawing(): void {
-        this.router.navigate(['/editor']);
     }
 
     get isDrawingStarted(): boolean {

@@ -32,13 +32,6 @@ export class ToolSprayCanService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseDown && Tool.isMouseInsideDrawing && this.groupElement) {
-            window.clearInterval(this.interval);
-            this.createSpray();
-            this.createSprayInterval();
-        } else {
-            this.stopSpray();
-        }
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -81,7 +74,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private createSpray(): void {
-        const density = this.toolSettings.get(ToolSetting.SprayDiameter) as number;
+        const density = (this.toolSettings.get(ToolSetting.SprayDiameter) as number) / 2;
         for (let i = 0; i < density; i++) {
             this.createRandomPoint();
         }
