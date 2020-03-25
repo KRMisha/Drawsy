@@ -29,9 +29,7 @@ describe('AlphaSliderComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [AlphaSliderComponent],
-            providers: [
-                {provide: ColorPickerService, useValue: colorPickerServiceSpyObj},
-            ],
+            providers: [{ provide: ColorPickerService, useValue: colorPickerServiceSpyObj }],
         }).compileComponents();
     }));
 

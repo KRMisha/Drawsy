@@ -5,9 +5,7 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
 describe('ColorPickerServiceService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                {provide: ColorPickerService},
-            ],
+            providers: [{ provide: ColorPickerService }],
         });
     });
 

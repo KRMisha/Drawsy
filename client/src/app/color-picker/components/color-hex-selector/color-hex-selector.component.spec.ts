@@ -22,9 +22,7 @@ describe('ColorHexSelectorComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [ColorHexSelectorComponent],
-            providers: [
-                {provide: ColorPickerService, useValue: colorPickerSpyObj},
-            ],
+            providers: [{ provide: ColorPickerService, useValue: colorPickerSpyObj }],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));

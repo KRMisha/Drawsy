@@ -11,7 +11,7 @@ describe('AppComponent', () => {
         modalServiceSpyObject = jasmine.createSpyObj('ModalService', ['openNewDrawingModal', 'openGalleryModal']);
         TestBed.configureTestingModule({
             declarations: [AppComponent],
-            providers: [{ provide: ModalService, useValue: modalServiceSpyObject}],
+            providers: [{ provide: ModalService, useValue: modalServiceSpyObject }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         });
 

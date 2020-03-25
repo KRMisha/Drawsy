@@ -26,9 +26,9 @@ describe('ColorFieldComponent', () => {
     let valueChangedSubject: Subject<number>;
 
     beforeEach(async(() => {
-        hueChangedSubject =  new Subject<number>();
-        saturationChangedSubject =  new Subject<number>();
-        valueChangedSubject =  new Subject<number>();
+        hueChangedSubject = new Subject<number>();
+        saturationChangedSubject = new Subject<number>();
+        valueChangedSubject = new Subject<number>();
         colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', [], {
             hue: 10,
             saturation: 10,
@@ -44,9 +44,7 @@ describe('ColorFieldComponent', () => {
         });
         TestBed.configureTestingModule({
             declarations: [ColorFieldComponent],
-            providers: [
-                {provide: ColorPickerService, useValue: colorPickerServiceSpyObj},
-            ],
+            providers: [{ provide: ColorPickerService, useValue: colorPickerServiceSpyObj }],
         }).compileComponents();
     }));
 

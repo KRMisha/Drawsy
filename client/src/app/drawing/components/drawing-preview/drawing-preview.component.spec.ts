@@ -21,8 +21,8 @@ describe('DrawingPreviewComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DrawingPreviewComponent],
             providers: [
-                {provide: DrawingService, useValue: drawingServiceSpyObj},
-                {provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj},
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj },
             ],
         }).compileComponents();
     }));

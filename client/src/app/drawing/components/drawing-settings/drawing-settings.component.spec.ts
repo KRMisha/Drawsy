@@ -10,9 +10,7 @@ describe('DrawingSettingsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DrawingSettingsComponent],
-            providers: [
-                { provide: DrawingService, useValue: ({ backgroundColor: {} as Color } as unknown) as DrawingService },
-            ],
+            providers: [{ provide: DrawingService, useValue: ({ backgroundColor: {} as Color } as unknown) as DrawingService }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));

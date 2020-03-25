@@ -17,7 +17,7 @@ describe('DrawingComponent', () => {
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let gridServiceSpyObj: jasmine.SpyObj<GridService>;
     let colorSpyObj: jasmine.SpyObj<Color>;
-    const returnedDimensions: Vec2 = {x: 10, y: 10};
+    const returnedDimensions: Vec2 = { x: 10, y: 10 };
     beforeEach(async(() => {
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
         colorSpyObj.toRgbaString.and.returnValue('rgba(1, 1, 1, 1)');

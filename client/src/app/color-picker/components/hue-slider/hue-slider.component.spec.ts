@@ -19,9 +19,7 @@ describe('HueSliderComponent', () => {
         });
         TestBed.configureTestingModule({
             declarations: [HueSliderComponent],
-            providers: [
-                {provide: ColorPickerService, useValue: colorPickerServiceSpyObj},
-            ],
+            providers: [{ provide: ColorPickerService, useValue: colorPickerServiceSpyObj }],
         }).compileComponents();
     }));
 
