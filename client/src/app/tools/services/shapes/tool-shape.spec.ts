@@ -146,13 +146,12 @@ describe('ToolShape', () => {
         expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly shapeType',
-    () => {
+    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly shapeType', () => {
         const shape = {} as SVGElement;
-         // tslint:disable: no-string-literal
+        // tslint:disable: no-string-literal
         toolShape['shape'] = shape;
         toolShape['origin'] = { x: 0, y: 0 };
-         // tslint:enable: no-string-literal
+        // tslint:enable: no-string-literal
         // tslint:disable: no-any
         const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
         const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 50, y: 50 });
@@ -168,8 +167,7 @@ describe('ToolShape', () => {
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly shapeType',
-    () => {
+    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly shapeType', () => {
         const shape = {} as SVGElement;
         toolShape['shape'] = shape; // tslint:disable-line: no-string-literal
         // tslint:disable: no-any
