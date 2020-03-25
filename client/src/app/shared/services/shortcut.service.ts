@@ -54,83 +54,89 @@ export class ShortcutService {
 
     constructor(private modalService: ModalService) {}
 
-    // Switch statement represents a specialized lookup table to centralize and dispatch shortcut events
-    // tslint:disable-next-line: cyclomatic-complexity
     onKeyDown(event: KeyboardEvent): void {
         if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
             if (event.ctrlKey) {
-                switch (event.key) {
-                    case 'e':
-                        event.preventDefault();
-                        this.openExportDrawingShortcutSource.next();
-                        break;
-                    case 'g':
-                        event.preventDefault();
-                        this.openGalleryShortcutSource.next();
-                        break;
-                    case 'o':
-                        event.preventDefault();
-                        this.openNewDrawingShortcutSource.next();
-                        break;
-                    case 's':
-                        event.preventDefault();
-                        this.openSaveDrawingShortcutSource.next();
-                        break;
-                    case 'z':
-                        event.preventDefault();
-                        this.undoShortcutSource.next();
-                        break;
-                    case 'Z':
-                        event.preventDefault();
-                        this.redoShortcutSource.next();
-                        break;
-                }
+                this.handleCtrlShortcuts(event);
             } else {
-                switch (event.key) {
-                    case '1':
-                        this.selectToolRectangleShortcutSource.next();
-                        break;
-                    case '2':
-                        this.selectToolEllipseShortcutSource.next();
-                        break;
-                    case '3':
-                        this.selectToolPolygonShortcutSource.next();
-                        break;
-                    case 'a':
-                        this.selectToolSprayCanShortcutSource.next();
-                        break;
-                    case 'c':
-                        this.selectToolPencilShortcutSource.next();
-                        break;
-                    case 'e':
-                        this.selectToolEraserShortcutSource.next();
-                        break;
-                    case 'g':
-                        this.toggleGridSource.next();
-                        break;
-                    case 'i':
-                        this.selectToolEyedropperShortcutSource.next();
-                        break;
-                    case 'l':
-                        this.selectToolLineShortcutSource.next();
-                        break;
-                    case 'r':
-                        this.selectToolRecolorShortcutSource.next();
-                        break;
-                    case 's':
-                        this.selectToolSelectionShortcutSource.next();
-                        break;
-                    case 'w':
-                        this.selectToolPaintbrushShortcutSource.next();
-                        break;
-                    case '+':
-                        this.increaseGridSizeSource.next();
-                        break;
-                    case '-':
-                        this.decreaseGridSizeSource.next();
-                        break;
-                }
+                this.handleNonCtrlShortcuts(event);
             }
+        }
+    }
+
+    private handleCtrlShortcuts(event: KeyboardEvent): void {
+        switch (event.key) {
+            case 'e':
+                event.preventDefault();
+                this.openExportDrawingShortcutSource.next();
+                break;
+            case 'g':
+                event.preventDefault();
+                this.openGalleryShortcutSource.next();
+                break;
+            case 'o':
+                event.preventDefault();
+                this.openNewDrawingShortcutSource.next();
+                break;
+            case 's':
+                event.preventDefault();
+                this.openSaveDrawingShortcutSource.next();
+                break;
+            case 'z':
+                event.preventDefault();
+                this.undoShortcutSource.next();
+                break;
+            case 'Z':
+                event.preventDefault();
+                this.redoShortcutSource.next();
+                break;
+        }
+    }
+
+    private handleNonCtrlShortcuts(event: KeyboardEvent): void {
+        switch (event.key) {
+            case '1':
+                this.selectToolRectangleShortcutSource.next();
+                break;
+            case '2':
+                this.selectToolEllipseShortcutSource.next();
+                break;
+            case '3':
+                this.selectToolPolygonShortcutSource.next();
+                break;
+            case 'a':
+                this.selectToolSprayCanShortcutSource.next();
+                break;
+            case 'c':
+                this.selectToolPencilShortcutSource.next();
+                break;
+            case 'e':
+                this.selectToolEraserShortcutSource.next();
+                break;
+            case 'g':
+                this.toggleGridSource.next();
+                break;
+            case 'i':
+                this.selectToolEyedropperShortcutSource.next();
+                break;
+            case 'l':
+                this.selectToolLineShortcutSource.next();
+                break;
+            case 'r':
+                this.selectToolRecolorShortcutSource.next();
+                break;
+            case 's':
+                this.selectToolSelectionShortcutSource.next();
+                break;
+            case 'w':
+                this.selectToolPaintbrushShortcutSource.next();
+                break;
+            case '+':
+                this.increaseGridSizeSource.next();
+                break;
+            case '-':
+                this.decreaseGridSizeSource.next();
+                break;
         }
     }
 }
