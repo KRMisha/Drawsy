@@ -4,11 +4,11 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let elements: ElementAndItsNeighbor[];
+    const elementAndItsNeighbor = {} as ElementAndItsNeighbor;
+    const elements = [elementAndItsNeighbor, elementAndItsNeighbor, elementAndItsNeighbor];
     let command: RemoveElementsCommand;
 
     beforeEach(() => {
-        elements = [{} as ElementAndItsNeighbor, {} as ElementAndItsNeighbor] as ElementAndItsNeighbor[];
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
         command = new RemoveElementsCommand(drawingServiceSpyObj, elements);
     });
