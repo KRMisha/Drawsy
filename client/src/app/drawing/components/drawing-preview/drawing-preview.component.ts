@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -39,7 +38,7 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
         return this.drawingService.backgroundColor.toRgbaString();
     }
 
-    get drawingFilter(): DrawingFilter {
-        return this.drawingPreviewService.drawingFilter;
+    get drawingFilter(): string {
+        return `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
     }
 }

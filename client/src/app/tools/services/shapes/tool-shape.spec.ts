@@ -1,12 +1,10 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
-import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';

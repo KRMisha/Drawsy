@@ -1,4 +1,4 @@
-import Regexes from '@app/constants/regexes';
+import Regexes from '@app/shared/constants/regexes';
 
 export class Color {
     static readonly maxRgb = 255;

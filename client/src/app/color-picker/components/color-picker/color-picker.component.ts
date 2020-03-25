@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Color } from '@app/classes/color';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
 
 @Component({
     selector: 'app-color-picker',
@@ -9,16 +9,22 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
     providers: [ColorPickerService],
 })
 export class ColorPickerComponent {
+    @Input() colorPreviewTooltip = '';
     @Input()
     set colorModel(color: Color) {
         this.colorPickerService.setColor(color);
     }
     @Output() colorModelChange = new EventEmitter<Color>();
+    @Output() colorPreviewClicked = new EventEmitter<void>();
 
     constructor(private colorPickerService: ColorPickerService) {
         this.colorPickerService.colorChanged$.subscribe((color: Color) => {
             this.colorModelChange.emit(color);
         });
+    }
+
+    onColorPreviewClick(): void {
+        this.colorPreviewClicked.emit();
     }
 
     get color(): Color {

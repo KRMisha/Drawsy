@@ -20,13 +20,13 @@
         <div class="file-item">
             <h4 class="file-type">Type de fichier :</h4>
             <mat-button-toggle-group [value]="currentFileType" (change)="currentFileType = $event.value">
-                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
+                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
                     SVG
                 </mat-button-toggle>
-                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
+                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
                     PNG
                 </mat-button-toggle>
-                <mat-button-toggle [class.selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
+                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
                     JPEG
                 </mat-button-toggle>
             </mat-button-toggle-group>

@@ -28,7 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from '@app/app-routing.module';
 
-import { AppComponent } from '@app/app/app.component';
+import { AppComponent } from '@app/app/components/app/app.component';
+import { HomeComponent } from '@app/app/components/home/home.component';
 import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
 import { ColorHexSelectorComponent } from '@app/color-picker/components/color-hex-selector/color-hex-selector.component';
@@ -65,12 +66,11 @@ import { GuideTextComponent } from '@app/guide/components/guide-content/guide-to
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { HomeComponent } from '@app/home/components/home/home.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
-import { SafeHtmlPipe } from '@app/modals/pipes/safe-html.pipe';
+import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
 import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/theme-settings.component';
 
 @NgModule({

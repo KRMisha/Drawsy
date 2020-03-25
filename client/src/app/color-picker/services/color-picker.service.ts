@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color } from '@app/classes/color';
+import { Color } from '@app/shared/classes/color';
 import { Subject } from 'rxjs';
 
 @Injectable()

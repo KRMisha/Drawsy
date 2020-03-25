@@ -1,6 +1,6 @@
-<div class="current-colors">
+<div class="current-colors-container">
     <div
-        class="primary-color"
+        class="primary-color-item"
         matTooltip="Couleur primaire"
         matTooltipPosition="above"
         matRipple
@@ -9,13 +9,11 @@
         [class.mat-elevation-z2]="!isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
     ></div>
-    <div class="swap-colors-button">
-        <button mat-icon-button (click)="swapColors()">
-            <mat-icon>swap_horiz</mat-icon>
-        </button>
-    </div>
+    <button mat-icon-button (click)="swapColors()" matTooltip="Inverser les couleurs" matTooltipPosition="above">
+        <mat-icon>swap_horiz</mat-icon>
+    </button>
     <div
-        class="secondary-color"
+        class="secondary-color-item"
         matTooltip="Couleur secondaire"
         matTooltipPosition="above"
         matRipple
@@ -26,15 +24,20 @@
     ></div>
 </div>
 
-<div class="previous-colors" [class.margin-colors]="!isColorPickerDisplayEnabled">
+<div class="previous-colors" [class.previous-colors-margin]="!isColorPickerDisplayEnabled">
     <div
         class="circle mat-elevation-z2"
-        matRipple
         *ngFor="let color of previousColors"
+        matRipple
         [style.background-color]="color.toRgbString()"
         (click)="onColorClick($event, color)"
         (contextmenu)="onColorClick($event, color)"
     ></div>
 </div>
 
-<app-color-picker *ngIf="isColorPickerDisplayEnabled" [(colorModel)]="color"></app-color-picker>
+<app-color-picker
+    *ngIf="isColorPickerDisplayEnabled"
+    [(colorModel)]="color"
+    (colorPreviewClicked)="confirmColor()"
+    colorPreviewTooltip="Confirmer la couleur"
+></app-color-picker>

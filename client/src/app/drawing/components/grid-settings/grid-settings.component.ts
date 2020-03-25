@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import Regexes from '@app/constants/regexes';
 import { GridService } from '@app/drawing/services/grid.service';
+import Regexes from '@app/shared/constants/regexes';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,11 +9,8 @@ import { Subscription } from 'rxjs';
     templateUrl: './grid-settings.component.html',
     styleUrls: ['./grid-settings.component.scss'],
 })
-export class GridSettingsComponent implements OnInit {
+export class GridSettingsComponent implements OnInit, OnDestroy {
     readonly sliderRange = 100;
-
-    sizeSubscription: Subscription;
-    opacitySubscription: Subscription;
 
     sizeGroup = new FormGroup({
         size: new FormControl(
@@ -39,6 +36,9 @@ export class GridSettingsComponent implements OnInit {
         ),
     });
 
+    private sizeSubscription: Subscription;
+    private opacitySubscription: Subscription;
+
     constructor(private gridService: GridService) {}
 
     ngOnInit(): void {
@@ -56,6 +56,11 @@ export class GridSettingsComponent implements OnInit {
                 this.gridService.opacity = this.opacityGroup.controls.opacity.value;
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.sizeSubscription.unsubscribe();
+        this.opacitySubscription.unsubscribe();
     }
 
     get isGridDisplayEnabled(): boolean {

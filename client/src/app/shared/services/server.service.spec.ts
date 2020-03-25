@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { ThemeService } from '@app/theme/services/theme.service';
+import { ServerService } from '@app/shared/services/server.service';
 
-describe('ThemeService', () => {
+describe('ServerService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: ThemeService = TestBed.inject(ThemeService);
+        const service: ServerService = TestBed.inject(ServerService);
         expect(service).toBeTruthy();
     });
 });
