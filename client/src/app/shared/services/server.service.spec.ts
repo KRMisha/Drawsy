@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { snackBarDuration } from '@app/modals/constants/snack-bar-duration';
-import { ServerService } from '@app/services/server.service';
+import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
+import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileId } from '@common/communication/new-file-id';
 import { SavedFile } from '@common/communication/saved-file';

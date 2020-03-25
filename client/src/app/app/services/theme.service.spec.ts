@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ThemeService } from '@app/theme/services/theme.service';
+import { ThemeService } from '@app/app/services/theme.service';
 
 describe('ThemeService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
