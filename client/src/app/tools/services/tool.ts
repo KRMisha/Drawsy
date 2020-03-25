@@ -16,7 +16,7 @@ export abstract class Tool {
     static isMouseInsideDrawing = false;
 
     name: ToolName;
-    icon: string;
+    icon: ToolIcon;
     toolSettings = new Map<ToolSetting, number | JunctionSettings | ShapeType | BrushTexture>();
 
     protected renderer: Renderer2;
