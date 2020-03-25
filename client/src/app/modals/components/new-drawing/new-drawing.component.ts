@@ -5,7 +5,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 
-const sidebarWidth = 324;
+const sidebarWidth = 337;
 const maximumDimension = 10000;
 
 @Component({
