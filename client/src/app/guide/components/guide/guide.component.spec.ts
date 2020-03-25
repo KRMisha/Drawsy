@@ -40,20 +40,20 @@ describe('GuideComponent', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         const fixture = TestBed.createComponent(GuideComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.sidebar = guideSideBarSpyObj;
         component['guideService'] = guideServiceSpyObj; // tslint:disable-line: no-string-literal
         component['componentFactoryResolver'] = componentFactoryResolverSpyObj; // tslint:disable-line: no-string-literal
-    });
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#ngAfterViewInit should subscribe to the currentGuidechanged observable of guideService', () => {
+    it('#ngAfterViewInit should subscribe to the currentGuidechanged observable of guideService', async(() => {
         const loadGuideSpy = spyOn<any>(component, 'loadGuide').and.callThrough(); // tslint:disable-line: no-any
         component.ngAfterViewInit();
         const passedGuide = firstGuideNodeMock.guide!; // tslint:disable-line: no-non-null-assertion
@@ -69,7 +69,7 @@ describe('GuideComponent', () => {
 
         expect(component.guideContent.createComponent).toHaveBeenCalledWith(componentFactoryStub);
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
-    });
+    }));
 
     it('#ngOnDestroy should unsubscribe from currentGuideChangedSubscription', () => {
         // tslint:disable-next-line: no-string-literal no-any
