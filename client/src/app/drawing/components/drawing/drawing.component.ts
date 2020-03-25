@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { ShortcutService } from '@app/editor/services/shortcut.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -20,10 +20,12 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     private increaseGridSizeSubscription: Subscription;
     private decreaseGridSizeSubscription: Subscription;
 
-    constructor(private drawingService: DrawingService,
-                private currentToolService: CurrentToolService,
-                private gridService: GridService,
-                private shortcutService: ShortcutService) {}
+    constructor(
+        private drawingService: DrawingService,
+        private currentToolService: CurrentToolService,
+        private gridService: GridService,
+        private shortcutService: ShortcutService
+    ) {}
 
     ngOnInit(): void {
         this.toggleGridSubscription = this.shortcutService.toggleGrid$.subscribe(() => {

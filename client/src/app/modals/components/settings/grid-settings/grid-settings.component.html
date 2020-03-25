@@ -1,49 +1,30 @@
 <h3 class="title">Grille</h3>
 <form [formGroup]="formGroup" autocomplete="off">
     <div class="grid-settings-container">
-        
         <div class="grid-settings-size-container">
             <button mat-raised-button class="button-item" (click)="toggleGridDisplay()">
                 <mat-icon>{{ isGridDisplayEnabled ? 'grid_off' : 'grid_on' }}</mat-icon>
             </button>
-            
+
             <mat-form-field>
                 <mat-label>Taille des carrés</mat-label>
-                <input
-                    matInput
-                    class="size-input"
-                    formControlName="gridSize"
-                    matTooltipClass="error-tooltip"
-                />
+                <input matInput class="size-input" formControlName="gridSize" matTooltipClass="error-tooltip" />
                 <mat-error *ngIf="formGroup.controls.gridSize.invalid">{{ getErrorMessage(formGroup.controls.gridSize) }}</mat-error>
             </mat-form-field>
             <div>
-                <button
-                    mat-raised-button
-                    class="button-item"
-                    [disabled]="!canDecreaseGridSize()"
-                    (click)="decreaseGridSize()">
+                <button mat-raised-button class="button-item" [disabled]="!canDecreaseGridSize()" (click)="decreaseGridSize()">
                     <mat-icon>remove</mat-icon>
                 </button>
-                <button
-                    mat-raised-button
-                    class="button-item"
-                    [disabled]="!canIncreaseGridSize()"
-                    (click)="increaseGridSize()">
+                <button mat-raised-button class="button-item" [disabled]="!canIncreaseGridSize()" (click)="increaseGridSize()">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
         </div>
-        
+
         <div class="grid-settings-size-container">
             <mat-form-field>
                 <mat-label>Opacité de la grille</mat-label>
-                <input
-                    matInput
-                    class="opacity-input"
-                    formControlName="gridOpacity"
-                    matTooltipClass="error-tooltip"
-                />
+                <input matInput class="opacity-input" formControlName="gridOpacity" matTooltipClass="error-tooltip" />
                 <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">{{ getErrorMessage(formGroup.controls.gridOpacity) }}</mat-error>
             </mat-form-field>
             <mat-slider

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators  } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemeService } from '@app/app/services/theme.service';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -10,42 +10,30 @@ import Regexes from '@app/shared/constants/regexes';
 @Injectable()
 export class SettingsService {
     settingsFormGroup = new FormGroup({
-        drawingWidth: new FormControl(
-            this.drawingService.dimensions.x,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.integerRegex),
-                Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
-                Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ]
-        ),
-        drawingHeight: new FormControl(
-            this.drawingService.dimensions.y,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.integerRegex),
-                Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
-                Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ]
-        ),
-        gridSize: new FormControl(
-            this.gridService.size,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.integerRegex),
-                Validators.min(this.gridService.minimumSize),
-                Validators.max(this.gridService.maximumSize),
-            ]
-        ),
-        gridOpacity: new FormControl(
-            this.gridService.opacity,
-            [
-                Validators.required,
-                Validators.pattern(Regexes.decimalRegex),
-                Validators.min(this.gridService.minimumOpacity),
-                Validators.max(this.gridService.maximumOpacity),
-            ]
-        ),
+        drawingWidth: new FormControl(this.drawingService.dimensions.x, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
+        drawingHeight: new FormControl(this.drawingService.dimensions.y, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
+        gridSize: new FormControl(this.gridService.size, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(this.gridService.minimumSize),
+            Validators.max(this.gridService.maximumSize),
+        ]),
+        gridOpacity: new FormControl(this.gridService.opacity, [
+            Validators.required,
+            Validators.pattern(Regexes.decimalRegex),
+            Validators.min(this.gridService.minimumOpacity),
+            Validators.max(this.gridService.maximumOpacity),
+        ]),
     });
 
     private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);

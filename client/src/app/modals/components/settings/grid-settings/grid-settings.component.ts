@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
 import { SettingsService } from '@app/modals/services/settings.service';
-import { Subscription } from 'rxjs';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-grid-settings',

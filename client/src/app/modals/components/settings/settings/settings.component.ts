@@ -6,7 +6,7 @@ import { SettingsService } from '@app/modals/services/settings.service';
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
-    providers: [ SettingsService ],
+    providers: [SettingsService],
 })
 export class SettingsComponent {
     constructor(private settingsService: SettingsService) {}
