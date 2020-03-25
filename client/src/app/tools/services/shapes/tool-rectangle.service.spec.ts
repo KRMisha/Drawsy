@@ -1,15 +1,16 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
 
 describe('Tool-Rectangle', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let toolRectangle: ToolRectangleService;
+
     beforeEach(() => {
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
 

@@ -28,8 +28,8 @@ export class ToolPolygonService extends ToolShape {
     }
 
     protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
-        const sizeCount = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
-        const points = this.getPolygonPoints(shapeArea, scale, sizeCount);
+        const sideCount = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
+        const points = this.calculatePoints(shapeArea, scale, sideCount);
 
         let pointsString = '';
         for (const point of points) {
@@ -39,7 +39,7 @@ export class ToolPolygonService extends ToolShape {
         this.renderer.setAttribute(shape, 'points', pointsString);
     }
 
-    private getPolygonPoints(shapeArea: Rect, scale: Vec2, sideCount: number): Vec2[] {
+    private calculatePoints(shapeArea: Rect, scale: Vec2, sideCount: number): Vec2[] {
         const points: Vec2[] = [];
 
         let angle = -Math.PI / 2;
