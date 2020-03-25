@@ -1,11 +1,12 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import { Subscription } from 'rxjs';
 
 const sidebarWidth = 337;
 
@@ -14,7 +15,7 @@ const sidebarWidth = 337;
     templateUrl: './new-drawing.component.html',
     styleUrls: ['./new-drawing.component.scss'],
 })
-export class NewDrawingComponent implements OnInit {
+export class NewDrawingComponent implements OnInit, OnDestroy {
     wereDimensionsModified = false;
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
@@ -33,15 +34,18 @@ export class NewDrawingComponent implements OnInit {
         ]),
     });
 
+    private drawingDimensionChangedSubscription: Subscription;
+
     constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.drawingFormGroup.controls.width.valueChanges.subscribe(() => {
+        this.drawingDimensionChangedSubscription = this.drawingFormGroup.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
-        this.drawingFormGroup.controls.height.valueChanges.subscribe(() => {
-            this.wereDimensionsModified = true;
-        });
+    }
+
+    ngOnDestroy(): void {
+        this.drawingDimensionChangedSubscription.unsubscribe();
     }
 
     @HostListener('window:resize', ['$event'])
@@ -54,16 +58,12 @@ export class NewDrawingComponent implements OnInit {
 
     onSubmit(): void {
         const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
-        if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
+        if (this.drawingFormGroup.invalid && this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
             this.router.navigate(['/editor']);
         }
     }
 
-    getWidthErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.width, '0-9');
-    }
-
-    getHeightErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.height, '0-9');
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, '0-9');
     }
 }
