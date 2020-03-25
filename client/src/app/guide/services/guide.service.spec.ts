@@ -1,11 +1,13 @@
-import { TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { GuideContent } from '@app/guide/classes/guide-content';
 import { GuideNode } from '@app/guide/classes/guide-node';
 import { GuideService } from '@app/guide/services/guide.service';
 
+// tslint:disable: max-classes-per-file
+
 class GuideNodeMock implements GuideContent {}
-class FirstGuideNodeMock implements GuideContent {} // tslint:disable-line: max-classes-per-file
-class SecondGuideNodeMock implements GuideContent {} // tslint:disable-line: max-classes-per-file
+class FirstGuideNodeMock implements GuideContent {}
+class SecondGuideNodeMock implements GuideContent {}
 
 const firstGuideNodeMock: GuideNode = {
     name: 'FirstGuideNodeMock',
@@ -25,12 +27,12 @@ firstGuideNodeMock.nextGuideNode = secondGuideNodeMock;
 describe('GuideService', () => {
     let guideService: GuideService;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             providers: [{ provide: GuideService }],
         });
         guideService = TestBed.inject(GuideService);
-    });
+    }));
 
     it('should be created', () => {
         expect(guideService).toBeTruthy();
@@ -60,34 +62,34 @@ describe('GuideService', () => {
         expect(guideService.currentGuideNode).toEqual(secondGuideNodeMock);
     });
 
-    it('#getter should return current GuideNode', () => {
+    it('#get currentGuideNode should return current GuideNode', () => {
         const guideNodeMock: GuideNode = { name: 'GuideNodeMock', guide: GuideNodeMock, previousGuideNode: GuideNodeMock };
         guideService.currentGuideNode = guideNodeMock;
         expect(guideService.currentGuideNode).toEqual(guideNodeMock);
     });
 
-    it('#setter should emit changedGuide observable if the guide of the guideNode is not undefined', () => {
+    it('#set currentGuideNode should emit changedGuide observable if the guide of the guideNode is not undefined', async(() => {
         const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
         guideService.currentGuideChanged$.subscribe((guide: GuideNode) => {
             subscriberSpyObj.subscribeLogic(guide);
         });
-        // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
+        // Since currentGuideChanged$ is a BehaviorSubject, we need to discard the first guide received
         expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideService.currentGuideNode.guide);
         const guideNodeMock: GuideNode = { name: 'GuideNodeMock', guide: GuideNodeMock, previousGuideNode: GuideNodeMock };
         guideService.currentGuideNode = guideNodeMock;
         expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideNodeMock.guide);
         expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledTimes(2);
-    });
+    }));
 
-    it('#setter should not emit changedGuide observable if the guide of the guideNode is undefined', () => {
+    it('#set currentGuideNode should not emit changedGuide observable if the guide of the guideNode is undefined', async(() => {
         const subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
         guideService.currentGuideChanged$.subscribe((guide: GuideNode) => {
             subscriberSpyObj.subscribeLogic(guide);
         });
-        // Since currentGuideChanged$ is a BehaviourSubject, we need to discard first guide received
+        // Since currentGuideChanged$ is a BehaviorSubject, we need to discard the first guide received
         expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(guideService.currentGuideNode.guide);
         const guideNodeMock: GuideNode = { name: 'GuideNodeMock', guide: undefined, previousGuideNode: GuideNodeMock };
         guideService.currentGuideNode = guideNodeMock;
         expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledTimes(1);
-    });
+    }));
 });
