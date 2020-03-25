@@ -9,7 +9,7 @@ import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-file-line-count
-fdescribe('ServerService', () => {
+describe('ServerService', () => {
     let service: ServerService;
     let httpClientSpyObj: jasmine.SpyObj<HttpClient>;
     let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
