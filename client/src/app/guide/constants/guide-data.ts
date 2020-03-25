@@ -117,8 +117,14 @@ const guideToolsNode: GuideNode = {
         guideSelectionNode,
     ],
 };
-const guideDrawingOptionsNode = { name: 'Surface de dessin', children: [guideUndoRedoNode, guideGridNode, guideSnapToGridNode] };
-const guideFileOptionsNode = { name: 'Gestion des dessins', children: [guideExportDrawingNode, guideGalleryNode, guideSaveDrawingNode] };
+const guideDrawingOptionsNode = {
+    name: 'Surface de dessin',
+    children: [guideUndoRedoNode, guideGridNode, guideSnapToGridNode],
+};
+const guideDrawingManagementNode = {
+    name: 'Gestion des dessins',
+    children: [guideExportDrawingNode, guideGalleryNode, guideSaveDrawingNode],
+};
 
 // Top-level tree structure
-export const guideData: GuideNode[] = [guideWelcomeNode, guideToolsNode, guideDrawingOptionsNode, guideFileOptionsNode];
+export const guideData: GuideNode[] = [guideWelcomeNode, guideToolsNode, guideDrawingOptionsNode, guideDrawingManagementNode];
