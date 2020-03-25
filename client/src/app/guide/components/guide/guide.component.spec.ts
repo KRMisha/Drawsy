@@ -17,7 +17,7 @@ const firstGuideNodeMock: GuideNode = {
     nextGuideNode: undefined,
 };
 
-fdescribe('GuideComponent', () => {
+describe('GuideComponent', () => {
     let component: GuideComponent;
     let guideSideBarSpyObj: jasmine.SpyObj<GuideSidebarComponent>;
     const currentGuideChangedSubject = new Subject<Type<GuideContent>>();

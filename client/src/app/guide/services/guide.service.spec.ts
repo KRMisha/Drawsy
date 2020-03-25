@@ -22,7 +22,7 @@ const secondGuideNodeMock: GuideNode = {
 };
 firstGuideNodeMock.nextGuideNode = secondGuideNodeMock;
 
-fdescribe('GuideService', () => {
+describe('GuideService', () => {
     let guideService: GuideService;
 
     beforeEach(() => {

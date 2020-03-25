@@ -25,7 +25,7 @@ fourthGuideNodeMock.children = [firstGuideNodeMock];
 
 const guidesMock = [firstGuideNodeMock, secondGuideNodeMock, thirdGuideNodeMock];
 
-fdescribe('GuideSidebarComponent', () => {
+describe('GuideSidebarComponent', () => {
     let guideSidebarComponent: GuideSidebarComponent;
     let fixture: ComponentFixture<GuideSidebarComponent>;
     let guideServiceSpyObj: jasmine.SpyObj<GuideService>;
