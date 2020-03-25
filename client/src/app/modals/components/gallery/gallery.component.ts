@@ -31,23 +31,12 @@ export class GalleryComponent implements OnInit {
     }
 
     addLabel(event: MatChipInputEvent): void {
-        const input = event.input;
-        const value = event.value;
-        const control = this.galleryFormGroup.controls.labels;
-
-        if ((value || '').trim()) {
-            control.setErrors(null);
-            control.setValue(value);
-            if (control.valid) {
-                control.markAsDirty();
-                input.value = '';
-                this.searchLabels.push(value.trim());
-            }
+        if (this.galleryFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
+            return;
         }
 
-        if (input !== undefined) {
-            input.value = '';
-        }
+        this.searchLabels.push(event.value);
+        event.input.value = '';
     }
 
     removeLabel(label: string): void {
@@ -55,8 +44,6 @@ export class GalleryComponent implements OnInit {
         if (labelIndex >= 0) {
             this.searchLabels.splice(labelIndex, 1);
         }
-
-        this.galleryFormGroup.controls.labels.markAsDirty();
     }
 
     loadDrawing(drawing: SvgFileContainer): void {
@@ -72,7 +59,7 @@ export class GalleryComponent implements OnInit {
     }
 
     getLabelError(): string {
-        return ErrorMessageService.getErrorMessage(this.galleryFormGroup.controls.labels, '(A-Z, a-z, 0-9)');
+        return ErrorMessageService.getErrorMessage(this.galleryFormGroup.controls.labels, 'A-Z, a-z, 0-9');
     }
 
     get areDrawingsLoaded(): boolean {
