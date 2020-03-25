@@ -1,6 +1,6 @@
 <h1 mat-dialog-title class="title">Création de dessin</h1>
 <form [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()">
-    <mat-dialog-content class="content">
+    <mat-dialog-content>
         <mat-form-field class="form-field-item">
             <mat-label>Largeur</mat-label>
             <input matInput formControlName="width" />
@@ -11,7 +11,9 @@
             <input matInput formControlName="height" />
             <mat-error *ngIf="drawingFormGroup.controls.height.invalid">{{ getHeightErrorMessage() }}</mat-error>
         </mat-form-field>
-        <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
+        <div class="color-picker-item">
+            <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
+        </div>
     </mat-dialog-content>
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>

@@ -38,8 +38,15 @@ $theme-colors: (
             background-color: mat-color($background, background);
 
             mat-dialog-content {
-                max-height: 75vh;
+                max-height: 80vh;
             }
+
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     }
 

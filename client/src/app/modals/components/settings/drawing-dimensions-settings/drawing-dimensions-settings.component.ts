@@ -35,20 +35,8 @@ export class DrawingDimensionsSettingsComponent implements OnInit, OnDestroy {
         this.heightSubscription.unsubscribe();
     }
 
-    getWidthErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.widthForm, 'Nombre entier');
-    }
-
-    getHeightErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.heightForm, 'Nombre entier');
-    }
-
-    get widthForm(): AbstractControl {
-        return this.settingsService.settingsFormGroup.controls.drawingWidth;
-    }
-
-    get heightForm(): AbstractControl {
-        return this.settingsService.settingsFormGroup.controls.drawingHeight;
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, '0-9');
     }
 
     get formGroup(): FormGroup {

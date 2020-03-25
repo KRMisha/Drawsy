@@ -11,12 +11,18 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-settings.component.scss'],
 })
 export class GridSettingsComponent implements OnInit, OnDestroy {
+    private displayEnabledSubscription: Subscription;
     private sizeSubscription: Subscription;
     private opacitySubscription: Subscription;
 
     constructor(private settingsService: SettingsService, private gridService: GridService) {}
 
     ngOnInit(): void {
+        this.displayEnabledSubscription = this.formGroup.controls.gridDisplayEnabled.valueChanges.subscribe(() => {
+            if (this.formGroup.controls.gridDisplayEnabled.valid) {
+                this.gridService.isDisplayEnabled = this.formGroup.controls.gridDisplayEnabled.value;
+            }
+        });
         this.sizeSubscription = this.formGroup.controls.gridSize.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridSize.valid) {
                 this.gridService.size = this.formGroup.controls.gridSize.value;
@@ -31,38 +37,21 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.displayEnabledSubscription.unsubscribe();
         this.sizeSubscription.unsubscribe();
         this.opacitySubscription.unsubscribe();
     }
 
-    toggleGridDisplay(): void {
-        this.gridService.toggleDisplay();
-    }
-
-    increaseGridSize(): void {
-        this.gridService.increaseSize();
-        this.formGroup.controls.gridSize.setValue(this.gridService.size, { emitEvent: false });
-    }
-
-    decreaseGridSize(): void {
-        this.gridService.decreaseSize();
-        this.formGroup.controls.gridSize.setValue(this.gridService.size, { emitEvent: false });
-    }
-
-    canIncreaseGridSize(): boolean {
-        return this.gridService.size < this.gridService.maximumSize;
-    }
-
-    canDecreaseGridSize(): boolean {
-        return this.gridService.size > this.gridService.minimumSize;
-    }
-
-    getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl);
+    getErrorMessage(formControl: AbstractControl, humanFriendlyPattern?: string): string {
+        return ErrorMessageService.getErrorMessage(formControl, humanFriendlyPattern);
     }
 
     get isGridDisplayEnabled(): boolean {
         return this.gridService.isDisplayEnabled;
+    }
+
+    set gridDisplayEnabled(isGridDisplayEnabled: boolean) {
+        this.gridService.isDisplayEnabled = isGridDisplayEnabled;
     }
 
     get gridSize(): number {
@@ -71,6 +60,7 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
 
     set gridSize(gridSize: number) {
         this.gridService.size = gridSize;
+        this.formGroup.controls.gridSize.setValue(gridSize, { emitEvent: false });
     }
 
     get gridOpacity(): number {
@@ -80,6 +70,14 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
     set gridOpacity(gridOpacity: number) {
         this.gridService.opacity = gridOpacity;
         this.formGroup.controls.gridOpacity.setValue(gridOpacity, { emitEvent: false });
+    }
+
+    get minGridSize(): number {
+        return this.gridService.minimumSize;
+    }
+
+    get maxGridSize(): number {
+        return this.gridService.maximumSize;
     }
 
     get minGridOpacity(): number {

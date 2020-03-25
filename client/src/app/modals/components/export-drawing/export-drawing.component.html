@@ -4,7 +4,7 @@
         <mat-form-field class="title-item">
             <mat-label>Titre</mat-label>
             <input matInput [formControl]="titleFormControl" />
-            <mat-error *ngIf="titleFormControl.invalid">Titre invalide</mat-error>
+            <mat-error *ngIf="titleFormControl.invalid">{{ getErrorMessage(titleFormControl) }}</mat-error>
         </mat-form-field>
         <mat-form-field class="filter-item">
             <mat-label>Type de filtre</mat-label>

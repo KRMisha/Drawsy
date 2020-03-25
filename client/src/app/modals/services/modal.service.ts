@@ -34,7 +34,7 @@ export class ModalService {
     }
 
     openSettingsModal(): void {
-        const width = 425;
+        const width = 325;
         this.openDialog(SettingsComponent, width, false);
     }
 

@@ -235,7 +235,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl, 'Nombre entier');
+        return ErrorMessageService.getErrorMessage(formControl, '0-9');
     }
 
     get toolName(): string {

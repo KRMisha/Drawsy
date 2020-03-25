@@ -21,21 +21,21 @@ export class NewDrawingComponent implements OnInit {
     drawingFormGroup = new FormGroup({
         width: new FormControl(
             window.innerWidth - sidebarWidth,
-            Validators.compose([
+            [
                 Validators.required,
                 Validators.pattern(Regexes.integerRegex),
                 Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
                 Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ])
+            ]
         ),
         height: new FormControl(
             window.innerHeight,
-            Validators.compose([
+            [
                 Validators.required,
                 Validators.pattern(Regexes.integerRegex),
                 Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
                 Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
-            ])
+            ]
         ),
     });
 
@@ -66,10 +66,10 @@ export class NewDrawingComponent implements OnInit {
     }
 
     getWidthErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.width, 'Nombre entier');
+        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.width, '0-9');
     }
 
     getHeightErrorMessage(): string {
-        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.height, 'Nombre entier');
+        return ErrorMessageService.getErrorMessage(this.drawingFormGroup.controls.height, '0-9');
     }
 }

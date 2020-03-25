@@ -32,18 +32,18 @@ export class ErrorMessageService {
     }
 
     private static getMinimumValueErrorMessage(value: number): string {
-        return `Valeur minimale de ${value}`;
+        return `Minimum: ${value}`;
     }
 
     private static getMaximumValueErrorMessage(value: number): string {
-        return `Valeur maximale de ${value}`;
+        return `Maximum: ${value}`;
     }
 
     private static getMinimumLengthErrorMessage(length: number): string {
-        return `Longeur minimale de ${length} caractères`;
+        return `Minimum ${length} caractères`;
     }
 
     private static getMaximumLengthErrorMessage(length: number): string {
-        return `Longeur maximale de ${length} caractères`;
+        return `Maximum ${length} caractères`;
     }
 }

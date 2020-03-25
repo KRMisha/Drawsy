@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 
-const gridSizeVariation = 5;
-
 @Injectable({
     providedIn: 'root',
 })
 export class GridService {
+    readonly gridSizeVariation = 5;
     readonly minimumSize = 10;
-    readonly maximumSize = 1000;
+    readonly maximumSize = 250;
     readonly minimumOpacity = 0.1;
     readonly maximumOpacity = 1;
 
@@ -21,11 +20,13 @@ export class GridService {
     }
 
     increaseSize(): void {
-        this.size = Math.min(Math.floor((this.size + gridSizeVariation) / gridSizeVariation) * gridSizeVariation, this.maximumSize);
+        this.size = Math.min(Math.floor((this.size + this.gridSizeVariation) / this.gridSizeVariation) *
+                             this.gridSizeVariation, this.maximumSize);
     }
 
     decreaseSize(): void {
-        this.size = Math.max(Math.ceil((this.size - gridSizeVariation) / gridSizeVariation) * gridSizeVariation, this.minimumSize);
+        this.size = Math.max(Math.ceil((this.size - this.gridSizeVariation) / this.gridSizeVariation) *
+                             this.gridSizeVariation, this.minimumSize);
     }
 
     get size(): number {

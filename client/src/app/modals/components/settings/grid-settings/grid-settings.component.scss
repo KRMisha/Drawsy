@@ -3,23 +3,41 @@
     text-align: center;
 }
 
-.grid-settings-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.grid-setting-container {
+    display: grid;
+    grid-template-areas:
+        'setting-name setting-name input-field'
+        'slider slider slider'
 }
 
-.grid-settings-size-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
+.setting-name-item {
+    grid-area: setting-name;
+    align-self: end;
+    margin-bottom: 0;
 }
 
-.button-item {
-    width: 48px;
-    height: 48px;
-    min-width: unset;
-    padding: 0;
-    margin-right: 4px;
+.grid-display-container-margin {
+    margin-bottom: 12px;
+}
+
+.toggle-item {
+    grid-area: input-field;
+    justify-self: right;
+}
+
+.form-field-item {
+    grid-area: input-field;
+    justify-self: right;
+    width: 100px;
+    text-align: right;
+
+    ::ng-deep .mat-form-field-wrapper {
+        margin-top: -1.25em;
+        margin-bottom: -1.25em;
+    }
+}
+
+.slider-item {
+    grid-area: slider;
+    width: 100%;
 }

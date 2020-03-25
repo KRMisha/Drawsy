@@ -67,6 +67,8 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
         this.hexBlueChangedSubscription.unsubscribe();
     }
 
+    
+
     swapMode(event: MouseEvent): void {
         this.isCombinedHex = !this.isCombinedHex;
         event.preventDefault();

@@ -1,11 +1,12 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 import { Subscription } from 'rxjs';
 
@@ -55,6 +56,10 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
             this.drawingPreviewService.finalizePreview();
             this.drawingSerializerService.exportDrawing(this.drawingService.title, fileType);
         }
+    }
+
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, '0-9');
     }
 
     get title(): string {

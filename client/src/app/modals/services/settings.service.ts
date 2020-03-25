@@ -22,6 +22,7 @@ export class SettingsService {
             Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
             Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
         ]),
+        gridDisplayEnabled: new FormControl (this.gridService.isDisplayEnabled),
         gridSize: new FormControl(this.gridService.size, [
             Validators.required,
             Validators.pattern(Regexes.integerRegex),
@@ -64,6 +65,7 @@ export class SettingsService {
         this.settingsFormGroup.controls.drawingWidth.reset(this.initialDrawingDimensions.x, { emitEvent: false });
         this.settingsFormGroup.controls.drawingHeight.reset(this.initialDrawingDimensions.y, { emitEvent: false });
 
+        this.settingsFormGroup.controls.gridDisplayEnabled.reset(this.initialIsGridDisplayEnabled, { emitEvent: false });
         this.settingsFormGroup.controls.gridSize.reset(this.initialGridSize, { emitEvent: false });
         this.settingsFormGroup.controls.gridOpacity.reset(this.initialGridOpacity, { emitEvent: false });
     }

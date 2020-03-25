@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Paramètres</h2>
-<mat-dialog-content>
-    <form [formGroup]="formGroup" autocomplete="off">
+<h1 mat-dialog-title class="title">Paramètres</h1>
+<form [formGroup]="formGroup" autocomplete="off">
+    <mat-dialog-content>
         <app-background-color-settings></app-background-color-settings>
         <mat-divider></mat-divider>
         <app-drawing-dimensions-settings></app-drawing-dimensions-settings>
@@ -8,9 +8,9 @@
         <app-grid-settings></app-grid-settings>
         <mat-divider></mat-divider>
         <app-theme-settings></app-theme-settings>
-    </form>
-</mat-dialog-content>
-<mat-dialog-actions align="center">
-    <button mat-raised-button class="button" (click)="resetInitialSettings()">Réinitialiser</button>
-    <button mat-raised-button mat-dialog-close class="button">Confirmer</button>
-</mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button mat-raised-button class="button" type="reset" (click)="resetInitialSettings()">Réinitialiser</button>
+        <button mat-raised-button mat-dialog-close class="button" type="submit">Confirmer</button>
+    </mat-dialog-actions>
+</form>
