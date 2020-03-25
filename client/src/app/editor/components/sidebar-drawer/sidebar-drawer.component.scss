@@ -38,8 +38,8 @@
 .form-field-item {
     grid-area: input-field;
     justify-self: right;
-    text-align: right;
     width: 70px;
+    text-align: right;
 
     ::ng-deep .mat-form-field-wrapper {
         margin-bottom: -1.25em;
