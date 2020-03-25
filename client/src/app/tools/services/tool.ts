@@ -1,9 +1,9 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
@@ -11,7 +11,7 @@ import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 export abstract class Tool {
-    static isMouseDown = false;
+    static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
     name: ToolName;

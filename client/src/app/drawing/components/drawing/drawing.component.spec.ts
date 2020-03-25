@@ -1,9 +1,9 @@
 import { Renderer2 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Color } from '@app/classes/color';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: max-classes-per-file
@@ -99,23 +99,23 @@ describe('DrawingComponent', () => {
     });
 
     it('#onMouseDown should call CurrentToolService.setMouseDown with true if event button is a left click', () => {
-        component.onMouseDown({ button: ButtonId.Left } as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseDown).toHaveBeenCalledWith(true);
+        component.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(currentToolServiceSpyObj.setLeftMouseButtonDown).toHaveBeenCalledWith(true);
     });
 
     it('#onMouseDown should not call CurrentToolService.setMouseDown if event button is not a left click', () => {
-        component.onMouseDown({ button: ButtonId.Right } as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
+        component.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(currentToolServiceSpyObj.setLeftMouseButtonDown).not.toHaveBeenCalled();
     });
 
     it('#onMouseUp should call CurrentToolService.setMouseDown with false if event button is a left click', () => {
-        component.onMouseUp({ button: ButtonId.Left } as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseDown).toHaveBeenCalledWith(false);
+        component.onMouseUp({ button: MouseButton.Left } as MouseEvent);
+        expect(currentToolServiceSpyObj.setLeftMouseButtonDown).toHaveBeenCalledWith(false);
     });
 
     it('#onMouseUp should not call CurrentToolService.setMouseDown if event button is not a left click', () => {
-        component.onMouseUp({ button: ButtonId.Right } as MouseEvent);
-        expect(currentToolServiceSpyObj.setMouseDown).not.toHaveBeenCalled();
+        component.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+        expect(currentToolServiceSpyObj.setLeftMouseButtonDown).not.toHaveBeenCalled();
     });
 
     it('#onEnter should call CurrentToolService.setMouseInside with true', () => {

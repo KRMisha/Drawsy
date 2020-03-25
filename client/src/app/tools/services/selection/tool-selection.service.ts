@@ -1,13 +1,13 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Rect } from '@app/classes/rect';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -28,8 +28,8 @@ enum ControlPoints {
 })
 export class ToolSelectionService extends Tool {
     private userSelectionStartCoords: Vec2;
-    private isMouseDownInside: boolean;
-    private currentMouseButtonDown?: ButtonId = undefined;
+    private isMouseDownInsideDrawing: boolean;
+    private currentMouseButtonDown?: MouseButton = undefined;
     private hasUserJustClickedOnShape = false;
     private controlPointHeld = ControlPoints.None;
     private lastMousePosition: Vec2 = { x: 0, y: 0 };
@@ -81,7 +81,7 @@ export class ToolSelectionService extends Tool {
         if (this.controlPointHeld !== ControlPoints.None || this.toolSelectionStateService.isMovingSelectionWithArrows) {
             return;
         }
-        if (this.isMouseButtonDown && this.isMouseDownInside) {
+        if (this.isMouseButtonDown && this.isMouseDownInsideDrawing) {
             if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
                 const currentMousePos = this.getMousePosition(event);
                 this.toolSelectionMoverService.moveSelection(currentMousePos, this.lastMousePosition);
@@ -89,13 +89,13 @@ export class ToolSelectionService extends Tool {
             } else {
                 const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
                 this.updateVisibleRect(this.toolSelectionStateService.svgUserSelectionRect, userSelectionRect);
-                if (this.currentMouseButtonDown === ButtonId.Left) {
+                if (this.currentMouseButtonDown === MouseButton.Left) {
                     this.toolSelectionStateService.selectedElements = this.svgUtilityService.getElementsUnderArea(
                         this.drawingService.svgElements,
                         userSelectionRect
                     );
                     this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
-                } else if (this.currentMouseButtonDown === ButtonId.Right) {
+                } else if (this.currentMouseButtonDown === MouseButton.Right) {
                     const selectedElementsCopy = Object.assign([], this.toolSelectionStateService.selectedElements);
                     const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
                         this.drawingService.svgElements,
@@ -114,10 +114,10 @@ export class ToolSelectionService extends Tool {
             return;
         }
 
-        this.isMouseDownInside = Tool.isMouseInsideDrawing;
+        this.isMouseDownInsideDrawing = Tool.isMouseInsideDrawing;
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (Tool.isMouseInsideDrawing) {
-            if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === ButtonId.Left) {
+            if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === MouseButton.Left) {
                 this.toolSelectionStateService.isMovingSelectionWithMouse = true;
                 this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {
@@ -179,10 +179,10 @@ export class ToolSelectionService extends Tool {
         if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             return;
         }
-        if (event.button === ButtonId.Left && this.currentMouseButtonDown === event.button) {
+        if (event.button === MouseButton.Left && this.currentMouseButtonDown === event.button) {
             this.toolSelectionStateService.selectedElements = [element];
             this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
-        } else if (event.button === ButtonId.Right && this.currentMouseButtonDown === event.button) {
+        } else if (event.button === MouseButton.Right && this.currentMouseButtonDown === event.button) {
             this.inverseObjectsSelection([element], this.toolSelectionStateService.selectedElements);
             this.toolSelectionMoverService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
         }
@@ -215,11 +215,11 @@ export class ToolSelectionService extends Tool {
     private updateSelectionOnMouseUp(event: MouseEvent): void {
         this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
 
-        if (Tool.isMouseInsideDrawing && this.isMouseDownInside) {
+        if (Tool.isMouseInsideDrawing && this.isMouseDownInsideDrawing) {
             const userSelectionRect = GeometryService.getRectFromPoints(this.userSelectionStartCoords, this.getMousePosition(event));
             const isSimpleClick = this.isSimpleClick(event);
-            const isLeftButtonUp = event.button === ButtonId.Left && this.currentMouseButtonDown === event.button;
-            const isRightButtonUp = this.currentMouseButtonDown === ButtonId.Right && this.currentMouseButtonDown === event.button;
+            const isLeftButtonUp = event.button === MouseButton.Left && this.currentMouseButtonDown === event.button;
+            const isRightButtonUp = this.currentMouseButtonDown === MouseButton.Right && this.currentMouseButtonDown === event.button;
             const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(this.drawingService.svgElements, userSelectionRect);
             if (!isSimpleClick) {
                 if (isLeftButtonUp) {
