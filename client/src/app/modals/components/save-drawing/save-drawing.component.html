@@ -4,7 +4,7 @@
         <mat-form-field>
             <mat-label>Titre</mat-label>
             <input matInput formControlName="title" />
-            <mat-error *ngIf="saveDrawingFormGroup.controls.title.invalid">{{ getTitleError() }}</mat-error>
+            <mat-error *ngIf="saveDrawingFormGroup.controls.title.invalid">{{ getErrorMessage(saveDrawingFormGroup.controls.title) }}</mat-error>
         </mat-form-field>
 
         <mat-form-field class="chip-list">
@@ -21,7 +21,7 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="addLabel($event)"
                 />
-                <mat-error *ngIf="saveDrawingFormGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
+                <mat-error *ngIf="saveDrawingFormGroup.controls.labels.invalid">{{ getErrorMessage(saveDrawingFormGroup.controls.labels) }}</mat-error>
             </mat-chip-list>
         </mat-form-field>
 

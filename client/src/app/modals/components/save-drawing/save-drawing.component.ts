@@ -1,11 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
-import { Subscription } from 'rxjs';
 
 export interface Label {
     name: string;
@@ -15,7 +14,7 @@ export interface Label {
     templateUrl: './save-drawing.component.html',
     styleUrls: ['./save-drawing.component.scss'],
 })
-export class SaveDrawingComponent implements OnInit, OnDestroy {
+export class SaveDrawingComponent {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     saveDrawingFormGroup = new FormGroup({
@@ -30,21 +29,7 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         ]),
     });
 
-    private titleChangedSubscription: Subscription;
-
     constructor(private saveDrawingService: SaveDrawingService) {}
-
-    ngOnInit(): void {
-        this.titleChangedSubscription = this.saveDrawingFormGroup.controls.title.valueChanges.subscribe(() => {
-            if (this.saveDrawingFormGroup.controls.title.valid) {
-                this.saveDrawingService.title = this.saveDrawingFormGroup.controls.title.value;
-            }
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.titleChangedSubscription.unsubscribe();
-    }
 
     addLabel(event: MatChipInputEvent): void {
         if (this.saveDrawingFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
@@ -63,28 +48,21 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        this.saveDrawingService.saveDrawing();
+        if (this.saveDrawingFormGroup.valid) {
+            this.saveDrawingService.title = this.saveDrawingFormGroup.controls.title.value;
+            this.saveDrawingService.saveDrawing();
+        }
     }
 
-    getTitleError(): string {
-        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.title, 'A-Z, a-z, 0-9');
-    }
-
-    getLabelError(): string {
-        return ErrorMessageService.getErrorMessage(this.saveDrawingFormGroup.controls.labels, 'A-Z, a-z, 0-9');
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9')
     }
 
     get title(): string {
         return this.saveDrawingService.title;
     }
-    set title(title: string) {
-        this.saveDrawingService.title = title;
-    }
 
     get labels(): string[] {
         return this.saveDrawingService.labels;
-    }
-    set labels(labels: string[]) {
-        this.saveDrawingService.labels = labels;
     }
 }
