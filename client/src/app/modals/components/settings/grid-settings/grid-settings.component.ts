@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
 import { SettingsService } from '@app/modals/services/settings.service';

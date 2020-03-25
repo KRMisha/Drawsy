@@ -18,8 +18,6 @@ export interface Label {
 export class SaveDrawingComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    titleChangedSubscription: Subscription;
-
     saveDrawingFormGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
             Validators.required,
@@ -31,6 +29,8 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
             Validators.maxLength(MetadataValidation.maxLabelLength),
         ]),
     });
+
+    private titleChangedSubscription: Subscription;
 
     constructor(private saveDrawingService: SaveDrawingService) {}
 

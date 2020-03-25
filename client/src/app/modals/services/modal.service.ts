@@ -33,7 +33,7 @@ export class ModalService {
         this.openDialog(GalleryComponent, width, false);
     }
 
-    openDrawingSettingsModal(): void {
+    openSettingsModal(): void {
         const width = 425;
         this.openDialog(SettingsComponent, width, false);
     }
@@ -57,7 +57,7 @@ export class ModalService {
             width: `${width}px`,
             height: shouldFillHeight ? '100%' : 'auto',
             maxHeight: '95vh',
-            panelClass: 'dialog',
+            panelClass: 'theme-dialog',
         });
     }
 }

@@ -1,38 +1,38 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
+    height: 100%;
 }
 
-.hamburger {
-    margin-top: 8.07px;
-    margin-bottom: 8.07px;
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+}
 
-    .mat-icon {
-        transform: scale(1.1);
+.button-toolbar-item {
+    flex: 1 0 auto;
+    padding: 0;
+
+    button {
+        margin: 0 auto;
     }
 }
 
-.button-group-container {
+.button-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 8px;
 }
 
-.option-button {
-    height: 40px;
-    width: 40px;
-    min-width: unset;
-    padding: 0;
-    margin: 2px;
-    cursor: pointer;
+.button {
+    opacity: 0.9;
 }
 
-.tool-settings {
-    border-right: solid;
-    border-width: 1px;
+.tool-settings-container {
+    display: flex;
+    flex-direction: column;
     width: 280px;
+    height: 100%;
 }
 
 h1,
