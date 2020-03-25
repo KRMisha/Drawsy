@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ModalService } from '@app/modals/services/modal.service';
-import { ShortcutService } from '@app/services/shortcut.service';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
 
 describe('ShortcutService', () => {
     let service: ShortcutService;

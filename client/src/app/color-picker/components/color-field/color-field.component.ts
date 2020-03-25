@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { Subscription } from 'rxjs';
 
 enum ColorString {
@@ -25,7 +25,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     private context: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
 
-    private isMouseDown = false;
+    private isLeftMouseButtonDown = false;
     private sliderPosition: Vec2 = { x: 0, y: canvasHeight };
     private isMouseInside = false;
 
@@ -78,14 +78,14 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
-            this.isMouseDown = true;
+            this.isLeftMouseButtonDown = true;
         }
         this.updateColor(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.isMouseDown = false;
+        this.isLeftMouseButtonDown = false;
     }
 
     @HostListener('mouseenter')
@@ -99,7 +99,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     }
 
     private updateColor(event: MouseEvent): void {
-        if (!this.isMouseDown) {
+        if (!this.isLeftMouseButtonDown) {
             return;
         }
 

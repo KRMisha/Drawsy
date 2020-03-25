@@ -12,15 +12,12 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
     min-width: max(0.5vh, 0.5vw);
     min-height: max(0.5vh, 0.5vw);
-    max-width: min(2vh, 2vw);
-    max-height: min(2vh, 2vw);
-}
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    max-width: min(1.5vh, 1.5vw);
+    max-height: min(1.5vh, 1.5vw);
 }
 ::-webkit-scrollbar-thumb {
     background-color: rgb(193, 193, 193);

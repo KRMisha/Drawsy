@@ -23,13 +23,13 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
 
     currentFileType: FileType = FileType.Svg;
 
-    titleFormControlChangedSubscription: Subscription;
-
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
         Validators.pattern(MetadataValidation.contentRegex),
         Validators.maxLength(MetadataValidation.maxTitleLength),
     ]);
+
+    private titleFormControlChangedSubscription: Subscription;
 
     constructor(
         private drawingSerializerService: DrawingSerializerService,

@@ -1,11 +1,11 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Color } from '@app/classes/color';
-import { Vec2 } from '@app/classes/vec2';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { ButtonId } from '@app/editor/enums/button-id.enum';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
@@ -32,17 +32,10 @@ export class ToolSprayCanService extends Tool {
 
     onMouseMove(event: MouseEvent): void {
         this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseDown && Tool.isMouseInsideDrawing && this.groupElement) {
-            window.clearInterval(this.interval);
-            this.createSpray();
-            this.createSprayInterval();
-        } else {
-            this.stopSpray();
-        }
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInsideDrawing || event.button !== ButtonId.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
 
@@ -81,7 +74,7 @@ export class ToolSprayCanService extends Tool {
     }
 
     private createSpray(): void {
-        const density = this.toolSettings.get(ToolSetting.SprayDiameter) as number;
+        const density = (this.toolSettings.get(ToolSetting.SprayDiameter) as number) / 2;
         for (let i = 0; i < density; i++) {
             this.createRandomPoint();
         }

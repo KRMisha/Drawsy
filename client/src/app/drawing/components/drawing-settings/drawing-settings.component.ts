@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Color } from '@app/classes/color';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
 
 @Component({
     selector: 'app-drawing-settings',

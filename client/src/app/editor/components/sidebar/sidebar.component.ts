@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
-import { CommandService } from '@app/drawing/services/command.service';
-import { SidebarButton, sidebarButtons } from '@app/editor/classes/sidebar-button';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ActionButton } from '@app/editor/classes/action-button';
+import { ToolButton } from '@app/editor/classes/tool-button';
 import { ModalService } from '@app/modals/services/modal.service';
-import { ShortcutService } from '@app/services/shortcut.service';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -13,10 +14,31 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-    @ViewChild('appDrawer') drawer: MatDrawer;
+    readonly toolButtons: ToolButton[] = [
+        { name: ToolName.Pencil, icon: 'create', toolIndex: 0 },
+        { name: ToolName.Brush, icon: 'brush', toolIndex: 1 },
+        { name: ToolName.Line, icon: 'timeline', toolIndex: 2 },
+        { name: ToolName.SprayCan, icon: 'blur_on', toolIndex: 3 },
+        { name: ToolName.Rectangle, icon: 'crop_5_4', toolIndex: 4 },
+        { name: ToolName.Ellipse, icon: 'panorama_fish_eye', toolIndex: 5 },
+        { name: ToolName.Polygon, icon: 'star', toolIndex: 6 },
+        { name: ToolName.Eyedropper, icon: 'colorize', toolIndex: 7 },
+        { name: ToolName.Recolor, icon: 'format_paint', toolIndex: 8 },
+        { name: ToolName.Selection, icon: 'select_all', toolIndex: 9 },
+        { name: ToolName.Eraser, icon: 'delete_sweep', toolIndex: 10 },
+    ];
 
-    buttons: SidebarButton[] = sidebarButtons;
-    selectedButton: SidebarButton = this.buttons[0];
+    readonly actionButtons: ActionButton[] = [
+        { name: 'Nouveau dessin', icon: 'add', action: this.openNewDrawingModal.bind(this) },
+        { name: 'Exporter le dessin localement', icon: 'save_alt', action: this.openExportDrawingModal.bind(this) },
+        { name: 'Sauvegarder le dessin sur le serveur', icon: 'cloud_upload', action: this.openSaveDrawingModal.bind(this) },
+        { name: 'Galerie de dessins', icon: 'collections', action: this.openGalleryModal.bind(this) },
+        { name: 'Paramètres', icon: 'settings', action: this.openSettingsModal.bind(this) },
+        { name: 'Guide', icon: 'help_outline', action: this.openGuideModal.bind(this) },
+        { name: 'Accueil', icon: 'home', action: this.navigateToHome.bind(this) },
+    ];
+
+    selectedToolIndex = 0;
 
     private selectToolPencilShortcutSubscription: Subscription;
     private selectToolPaintbrushShortcutSubscription: Subscription;
@@ -31,18 +53,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private selectToolEraserShortcutSubscription: Subscription;
     private exportDrawingShortcutSubscription: Subscription;
     private saveDrawingShortcutSubscription: Subscription;
-    private undoShortcutSubscription: Subscription;
-    private redoShortcutSubscription: Subscription;
 
     constructor(
+        private router: Router,
         private currentToolService: CurrentToolService,
         private modalService: ModalService,
-        private commandService: CommandService,
         private shortcutService: ShortcutService
     ) {}
 
     ngOnInit(): void {
-        this.currentToolService.setSelectedTool(this.selectedButton.toolIndex);
+        this.currentToolService.setSelectedTool(this.selectedToolIndex);
 
         this.selectToolPencilShortcutSubscription = this.shortcutService.selectToolPencilShortcut$.subscribe(() => {
             this.setSelectedTool(0);
@@ -83,12 +103,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.saveDrawingShortcutSubscription = this.shortcutService.openSaveDrawingShortcut$.subscribe(() => {
             this.openSaveDrawingModal();
         });
-        this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
-            this.undo();
-        });
-        this.redoShortcutSubscription = this.shortcutService.redoShortcut$.subscribe(() => {
-            this.redo();
-        });
     }
 
     ngOnDestroy(): void {
@@ -105,16 +119,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolEraserShortcutSubscription.unsubscribe();
         this.exportDrawingShortcutSubscription.unsubscribe();
         this.saveDrawingShortcutSubscription.unsubscribe();
-        this.undoShortcutSubscription.unsubscribe();
-        this.redoShortcutSubscription.unsubscribe();
     }
 
     setSelectedTool(toolIndex: number): void {
-        if (toolIndex < 0 || toolIndex >= this.buttons.length) {
+        if (toolIndex < 0 || toolIndex >= this.toolButtons.length) {
             return;
         }
-        this.drawer.open();
-        this.selectedButton = this.buttons[toolIndex];
+        this.selectedToolIndex = toolIndex;
         this.currentToolService.setSelectedTool(toolIndex);
     }
 
@@ -134,21 +145,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.modalService.openGalleryModal();
     }
 
-    openDrawingSettingsModal(): void {
-        this.modalService.openDrawingSettingsModal();
+    openSettingsModal(): void {
+        this.modalService.openSettingsModal();
     }
 
     openGuideModal(): void {
         this.modalService.openGuideModal();
     }
 
-    undo(): void {
-        this.commandService.undo();
-        this.currentToolService.selectedTool.onToolDeselection();
-    }
-
-    redo(): void {
-        this.commandService.redo();
-        this.currentToolService.selectedTool.onToolDeselection();
+    navigateToHome(): void {
+        this.router.navigate(['/home']);
     }
 }
