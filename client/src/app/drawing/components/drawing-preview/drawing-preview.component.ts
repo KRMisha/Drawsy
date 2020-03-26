@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
     selector: 'app-drawing-preview',
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './drawing-preview.component.html',
     styleUrls: ['./drawing-preview.component.scss'],
 })
