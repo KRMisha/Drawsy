@@ -6,9 +6,9 @@ import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ToolData } from '@app/tools/classes/tool-data';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 import { Tool } from '@app/tools/services/tool';
@@ -22,11 +22,10 @@ class ToolShapeMock extends ToolShape {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        name: ToolName,
-        icon: ToolIcon,
+        toolInfo: ToolData,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, name, icon, isShapeAlwaysRegular);
+        super(rendererFactory, drawingService, colorService, commandService, toolInfo, isShapeAlwaysRegular);
     }
     getShapeString(): string {
         return '';
@@ -63,8 +62,7 @@ describe('ToolShape', () => {
             drawingServiceSpyObj,
             colorServiceSpyObj,
             commandServiceSpyObj,
-            ToolName.Pencil,
-            ToolIcon.Pencil,
+            ToolInfo.Pencil,
             false
         );
     });
