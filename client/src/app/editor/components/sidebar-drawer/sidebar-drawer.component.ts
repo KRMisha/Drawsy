@@ -210,12 +210,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     undoCommand(): void {
         this.commandService.undo();
-        this.currentToolService.selectedTool.onToolDeselection();
+        this.currentToolService.currentTool.onToolDeselection();
     }
 
     redoCommand(): void {
         this.commandService.redo();
-        this.currentToolService.selectedTool.onToolDeselection();
+        this.currentToolService.currentTool.onToolDeselection();
     }
 
     getErrorMessage(formControl: AbstractControl): string {
@@ -223,11 +223,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     get currentToolName(): string {
-        return this.currentToolService.selectedTool.name;
+        return this.currentToolService.currentTool.name;
     }
 
     get currentToolSettings(): ToolSettings {
-        return this.currentToolService.selectedTool.settings;
+        return this.currentToolService.currentTool.settings;
     }
 
     get isUndoAvailable(): boolean {
