@@ -51,8 +51,9 @@ export class SaveDrawingService {
                 this.snackBar.open('Dessin sauvegardé : ' + this.title, undefined, {
                     duration: snackBarDuration,
                 });
-            },
-            (error: HttpErrorResponse): void => {} // tslint:disable-line: no-empty
+            // No error handling needs to be done but the error must be caught
+            // tslint:disable-next-line: no-empty
+            }, (error: HttpErrorResponse): void => {}
             );
     }
 
@@ -79,7 +80,6 @@ export class SaveDrawingService {
     private alertCreateDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             if (error.status === HttpStatusCode.BadRequest) {
-                console.log('allo');
                 this.snackBar.open(badRequestErrorMessage, undefined, {
                     duration: snackBarDuration,
                 });

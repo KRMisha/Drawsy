@@ -10,6 +10,9 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileId } from '@common/communication/new-file-id';
 import { Subject } from 'rxjs';
 
+// tslint:disable: no-any
+// tslint:disable: no-string-literal
+
 fdescribe('SaveDrawingService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
@@ -21,9 +24,8 @@ fdescribe('SaveDrawingService', () => {
     let saveDrawingService: SaveDrawingService;
 
     const newFileId: NewFileId = { id: '123' };
-
+    const initialLabels: string[] = ['test'];
     beforeEach(async(() => {
-        const initialLabels: string[] = ['test'];
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             id: 'id',
             title: 'initialTitle',
@@ -68,32 +70,35 @@ fdescribe('SaveDrawingService', () => {
         expect(title).toEqual('initialTitle');
     });
 
-    // it('#setTitle should set the title accordingly', () => {
-    //     const title = 'testTitle';
-    //     saveDrawingService.title = title;
-    //     expect();
-    // });
+    it('#setTitle should set the title accordingly', () => {
+        const title = 'testTitle';
+        saveDrawingService.title = title;
+        expect(drawingServiceSpyObj.title).toHaveBeenCalledWith(title);
+    });
 
     it('#getLabels should return appropriate labels', () => {
         const labels = saveDrawingService.labels;
         expect(labels).toEqual(['test']);
     });
 
-    // it('#setLabels should set the labels accordingly', () => {
-
-    // });
+    fit('#setLabels should set the labels accordingly', () => {
+        const drawingServiceMock = {labels: initialLabels} as DrawingService;
+        saveDrawingService['drawingService'] = drawingServiceMock;
+        const newLabels = ['123'];
+        saveDrawingService.labels = newLabels;
+        expect(drawingServiceMock.labels).toEqual(newLabels);
+    });
 
     it('#saveDrawing should call #createDrawing when drawingService id is undefined', () => {
-        // tslint:disable: no-any
         const createDrawingSpy = spyOn<any>(saveDrawingService, 'createDrawing');
         const updateDrawingSpy = spyOn<any>(saveDrawingService, 'updateDrawing');
-        // tslint:enable: no-any
+
         const tmpDrawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             id: undefined,
             title: 'initialTitle',
             labels: '',
         });
-        saveDrawingService['drawingService'] = tmpDrawingServiceSpyObj; // tslint:disable-line: no-string-literal
+        saveDrawingService['drawingService'] = tmpDrawingServiceSpyObj;
         saveDrawingService.saveDrawing();
         expect(drawingPreviewServiceSpyObj.finalizePreview).toHaveBeenCalled();
         expect(updateDrawingSpy).not.toHaveBeenCalled();
@@ -101,10 +106,9 @@ fdescribe('SaveDrawingService', () => {
     });
 
     it('#saveDrawing should call #updateDrawing when drawingService id is not undefined', () => {
-        // tslint:disable: no-any
         const createDrawingSpy = spyOn<any>(saveDrawingService, 'createDrawing');
         const updateDrawingSpy = spyOn<any>(saveDrawingService, 'updateDrawing');
-        // tslint:enable: no-any
+
         saveDrawingService.saveDrawing();
         expect(drawingPreviewServiceSpyObj.finalizePreview).toHaveBeenCalled();
         expect(updateDrawingSpy).toHaveBeenCalled();
@@ -112,7 +116,7 @@ fdescribe('SaveDrawingService', () => {
     });
 
     it('#createDrawing should subscribe to the serverService\'s createDrawing with success', async(() => {
-        saveDrawingService['createDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         createDrawingSubject.next(newFileId);
         expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin sauvegardé : ' + saveDrawingService.title, undefined, {
@@ -123,7 +127,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     fit('#createDrawing should subscribe to the serverService\'s createDrawing with failure when failure is BadRequest', async(() => {
-        saveDrawingService['createDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
         createDrawingSubject.error(error);
@@ -133,7 +137,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     it('#createDrawing should subscribe to the serverService\'s createDrawing with failure when failure is not BadRequest', async(() => {
-        saveDrawingService['createDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
         createDrawingSubject.error(error);
@@ -141,7 +145,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     it('#updateDrawing should subscribe to the serverService\'s updateDrawing with success', async(() => {
-        saveDrawingService['updateDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith('id', 'outerHTML');
         updateDrawingSubject.next();
         expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin mis à jour : ' + saveDrawingService.title, undefined, {
@@ -150,7 +154,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is NotFound', async(() => {
-        saveDrawingService['updateDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith('id', 'outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.NotFound });
         updateDrawingSubject.error(error);
@@ -164,7 +168,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is BadRequest', async(() => {
-        saveDrawingService['updateDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith('id', 'outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
         updateDrawingSubject.error(error);
@@ -174,7 +178,7 @@ fdescribe('SaveDrawingService', () => {
     }));
 
     it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is not handled', async(() => {
-        saveDrawingService['updateDrawing'](); // tslint:disable-line: no-string-literal
+        saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith('id', 'outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
         updateDrawingSubject.error(error);
