@@ -40,13 +40,7 @@
         <button mat-raised-button mat-dialog-close class="button">
             Annuler
         </button>
-        <button
-            mat-raised-button
-            class="button"
-            [disabled]="titleFormControl.invalid"
-            (click)="exportDrawing()"
-            cdkFocusInitial
-        >
+        <button mat-raised-button class="button" [disabled]="titleFormControl.invalid" (click)="exportDrawing()" cdkFocusInitial>
             Exporter le dessin
         </button>
     </mat-dialog-actions>

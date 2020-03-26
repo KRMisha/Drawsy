@@ -35,8 +35,8 @@ export class ThemeService {
     }
 
     set isDarkTheme(isDarkTheme: boolean) {
-        this._isDarkTheme = isDarkTheme;
         const oldTheme = this.getTheme();
+        this._isDarkTheme = isDarkTheme;
         this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
     }
 }
