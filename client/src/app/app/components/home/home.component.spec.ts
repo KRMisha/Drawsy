@@ -4,7 +4,7 @@ import { HomeComponent } from '@app/app/components/home/home.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ModalService } from '@app/modals/services/modal.service';
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
     let component: HomeComponent;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
