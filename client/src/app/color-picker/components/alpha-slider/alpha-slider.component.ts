@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
-import { Subscription } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 
 const canvasWidth = 202;
 const canvasHeight = 20;
@@ -34,13 +34,14 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.canvas.height = canvasHeight;
         this.mouseXPosition = this.colorPickerService.alpha * canvasWidth;
 
-        this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
-            this.color = color;
+        this.colorChangedSubscription = merge(this.colorPickerService.hueChanged$,
+                                              this.colorPickerService.saturationChanged$,
+                                              this.colorPickerService.valueChanged$,
+                                              this.colorPickerService.alphaChanged$).subscribe(() => {
+            this.color = this.colorPickerService.getColor();
             this.mouseXPosition = this.color.alpha * canvasWidth;
             this.draw();
         });
-        this.color = this.colorPickerService.getColor();
-        this.draw();
     }
 
     ngOnDestroy(): void {

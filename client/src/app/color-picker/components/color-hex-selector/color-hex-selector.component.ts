@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
-import { Subscription } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 
 @Component({
     selector: 'app-color-hex-selector',
@@ -28,10 +28,11 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngOnInit(): void {
-        this.updateAll(this.colorPickerService.getColor().getHex());
-
-        this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
-            this.updateAll(color.getHex());
+        this.colorChangedSubscription = merge(this.colorPickerService.hueChanged$,
+                                              this.colorPickerService.saturationChanged$,
+                                              this.colorPickerService.valueChanged$,
+                                              this.colorPickerService.alphaChanged$).subscribe(() => {
+            this.updateAll(this.colorPickerService.getColor().getHex());
         });
 
         this.hexCombinedRgbChangedSubscription = this.hexSelectorFormGroup.controls.hexCombinedRgb.valueChanges.subscribe(() => {

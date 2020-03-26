@@ -31,7 +31,7 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     private isMouseInside = false;
     private sliderXPosition = 0;
 
-    private colorChangedSubscription: Subscription;
+    private hueChangedSubscription: Subscription;
 
     private hueColor = new Color();
 
@@ -46,16 +46,14 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         this.canvas.height = canvasHeight;
         this.sliderXPosition = (this.colorPickerService.hue / Color.maxHue) * this.canvas.width;
 
-        this.colorChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
+        this.hueChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
             this.sliderXPosition = this.calculateMouseXPositionFromHue(this.sliderXPosition, hue);
             this.draw();
         });
-
-        this.draw();
     }
 
     ngOnDestroy(): void {
-        this.colorChangedSubscription.unsubscribe();
+        this.hueChangedSubscription.unsubscribe();
     }
 
     @HostListener('document:mousemove', ['$event'])

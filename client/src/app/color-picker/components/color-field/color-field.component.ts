@@ -60,8 +60,6 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
             this.sliderPosition.y = canvasHeight * (1 - value);
             this.draw();
         });
-
-        this.draw();
     }
 
     ngOnDestroy(): void {
@@ -113,6 +111,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
         this.colorPickerService.saturation = this.sliderPosition.x / canvasWidth;
         this.colorPickerService.value = 1.0 - this.sliderPosition.y / canvasHeight;
+
         this.draw();
     }
 
@@ -136,6 +135,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
         const circle = new Path2D();
         const radius = 10;
+
         circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
         this.context.fillStyle = color.toRgbString();
         this.context.fill(circle);
