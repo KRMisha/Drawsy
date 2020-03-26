@@ -126,6 +126,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.junctionEnabledChangedSubscription = this.junctionEnabledFormControl.valueChanges.subscribe(() => {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.junctionSettings!.isEnabled = this.junctionEnabledFormControl.value;
+            this.junctionEnabledFormControl.value === true
+                ? this.junctionDiameterFormControl.enable()
+                : this.junctionDiameterFormControl.disable();
         });
         this.junctionDiameterChangedSubscription = this.junctionDiameterFormControl.valueChanges.subscribe(() => {
             if (this.junctionDiameterFormControl.valid) {
