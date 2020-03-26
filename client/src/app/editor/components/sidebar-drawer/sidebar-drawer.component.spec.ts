@@ -7,7 +7,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorService } from '@app/drawing/services/color.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-empty
