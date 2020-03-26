@@ -4,14 +4,18 @@ import { HomeComponent } from '@app/app/components/home/home.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ModalService } from '@app/modals/services/modal.service';
 
-describe('HomeComponent', () => {
+fdescribe('HomeComponent', () => {
     let component: HomeComponent;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
     beforeEach(async(() => {
-        modalServiceSpyObj = jasmine.createSpyObj('ModalService', ['openDialog']);
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [
+            'openNewDrawingModal',
+            'openGalleryModal',
+            'openGuideModal',
+        ]);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['isDrawingStarted']);
-
+        drawingServiceSpyObj.isDrawingStarted.and.returnValue(true);
         TestBed.configureTestingModule({
             declarations: [HomeComponent],
             providers: [
@@ -32,23 +36,24 @@ describe('HomeComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('#openNewDrawingModal should forward request to Modal service', () => {
-    //     component.openNewDrawingModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(NewDrawingComponent, { x: 425, y: 500 });
-    // });
+    it('#openNewDrawingModal should forward request to Modal service', () => {
+        component.openNewDrawingModal();
+        expect(modalServiceSpyObj.openNewDrawingModal).toHaveBeenCalled();
+    });
 
-    // it('#openGuideModal should forward request to Modal service', () => {
-    //     component.openGuideModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
-    // });
+    it('#openGalleryModal should forward request to Modal service', () => {
+        component.openGalleryModal();
+        expect(modalServiceSpyObj.openGalleryModal).toHaveBeenCalled();
+    });
 
-    // it('#openGalleryModal should forward request to Modal service', () => {
-    //     component.openGalleryModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GalleryComponent, { x: 1920, y: 900 });
-    // });
+    it('#openGuideModal should forward request to Modal service', () => {
+        component.openGuideModal();
+        expect(modalServiceSpyObj.openGuideModal).toHaveBeenCalled();
+    });
 
-    // it('#continueDrawing should route to /editor using angulars router', () => {
-    //     component.continueDrawing();
-    //     expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
-    // });
+    it('#get isDrawingStarted should forward request to drawingService', () => {
+        const returnValue = component.isDrawingStarted;
+        expect(drawingServiceSpyObj.isDrawingStarted).toHaveBeenCalled();
+        expect(returnValue).toBeTruthy();
+    });
 });
