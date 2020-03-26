@@ -5,7 +5,6 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
 
 // tslint:disable: no-any
@@ -57,7 +56,7 @@ describe('ToolPolygonService', () => {
         const scale: Vec2 = { x: 1, y: 1 };
 
         toolPolygon['shape'] = shape;
-        toolPolygon['toolSettings'] = toolSettings;
+        toolPolygon['settings'] = toolSettings;
         toolPolygon['updateShape'](shapeArea, scale, shape);
 
         const pointString = '1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 ';
@@ -81,7 +80,7 @@ describe('ToolPolygonService', () => {
         const scale: Vec2 = { x: 1, y: 1 };
 
         toolPolygon['shape'] = shape;
-        toolPolygon['toolSettings'] = toolSettings;
+        toolPolygon['settings'] = toolSettings;
         toolPolygon['updateShape'](shapeArea, scale, shape);
 
         expect(getPolygonPointsSpy).toHaveBeenCalled();

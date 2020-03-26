@@ -11,7 +11,6 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -42,7 +41,7 @@ export class ToolEraserService extends Tool {
         private svgUtilityService: SvgUtilityService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser, ToolIcon.Eraser);
-        this.toolSettings.set(ToolSetting.EraserSize, ToolDefaults.defaultLineWidth);
+        this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 
     afterDrawingInit(): void {
@@ -106,7 +105,7 @@ export class ToolEraserService extends Tool {
     }
 
     private updateEraserRect(mousePosition: Vec2): void {
-        this.eraserSize = this.toolSettings.get(ToolSetting.EraserSize) as number;
+        this.eraserSize = this.settings.eraserSize!; // tslint:disable-line: no-non-null-assertion
         this.eraserRect = this.getEraserRectFromMousePosition(mousePosition);
         this.updateVisibleRect(this.svgEraserElement, this.eraserRect);
     }
