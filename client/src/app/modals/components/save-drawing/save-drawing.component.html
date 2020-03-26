@@ -1,4 +1,4 @@
-<h1 mat-dialog-title class="title">Sauvegarder le dessin</h1>
+<h1 mat-dialog-title class="title">{{ isCreateDrawingAction()? 'Sauvegarder le dessin' : 'Mettre à jour le dessin' }}</h1>
 <form [formGroup]="saveDrawingFormGroup" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
         <mat-form-field>
