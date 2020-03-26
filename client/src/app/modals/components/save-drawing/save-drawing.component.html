@@ -1,6 +1,6 @@
 <h1 mat-dialog-title class="title">Sauvegarder le dessin</h1>
 <form [formGroup]="saveDrawingGroup" (ngSubmit)="onSubmit()">
-    <mat-dialog-content class="content">
+    <mat-dialog-content>
         <mat-form-field class="chip-list">
             <mat-chip-list #chipList aria-label="Label selection">
                 <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">

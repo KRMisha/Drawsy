@@ -1,18 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GuideSelectComponent } from '@app/guide/components/guide-content/guide-tools/guide-select/guide-select.component';
 
-describe('GuideSelectComponent', () => {
-    let component: GuideSelectComponent;
-    let fixture: ComponentFixture<GuideSelectComponent>;
+import { GuideUndoRedoComponent } from './guide-undo-redo.component';
+
+describe('GuideUndoRedoComponent', () => {
+    let component: GuideUndoRedoComponent;
+    let fixture: ComponentFixture<GuideUndoRedoComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [GuideSelectComponent],
+            declarations: [GuideUndoRedoComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(GuideSelectComponent);
+        fixture = TestBed.createComponent(GuideUndoRedoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

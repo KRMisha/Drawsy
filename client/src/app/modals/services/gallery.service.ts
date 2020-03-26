@@ -45,18 +45,25 @@ export class GalleryService {
         this.serverService
             .deleteDrawing(drawing.id)
             .pipe(catchError(this.alertDeleteDrawingError()))
-            .subscribe(() => {
-                this.snackBar.open('Dessin supprimé : ' + drawing.title, undefined, {
-                    duration: snackBarDuration,
-                });
+            .subscribe(
+                () => {
+                    this.snackBar.open('Dessin supprimé : ' + drawing.title, undefined, {
+                        duration: snackBarDuration,
+                    });
 
-                const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
-                if (drawingToRemoveIndex >= 0) {
-                    this._drawings.splice(drawingToRemoveIndex, 1);
+                    const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
+                    if (drawingToRemoveIndex >= 0) {
+                        this._drawings.splice(drawingToRemoveIndex, 1);
+                    }
+
+                    this.drawingService.id = undefined;
+                },
+                (error: HttpErrorResponse): void => {
+                    if (error.status === HttpStatusCode.NotFound) {
+                        this.getAllDrawings();
+                    }
                 }
-
-                this.drawingService.id = undefined;
-            });
+            );
     }
 
     getAllDrawings(): void {

@@ -1,36 +1,27 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSliderModule } from '@angular/material/slider';
 import { ColorPickerComponent } from '@app/color-picker/components/color-picker/color-picker.component';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { ColorService } from '@app/drawing/services/color.service';
 import { Color } from '@app/shared/classes/color';
-
-// tslint:disable: no-magic-numbers
+import { Subject } from 'rxjs';
 
 describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
     let fixture: ComponentFixture<ColorPickerComponent>;
-    let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
+    let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
+    let colorChangedSubject: Subject<Color>;
 
     beforeEach(async(() => {
-        const previousColorsMock: Color[] = [];
-        for (let i = 0; i < 10; i++) {
-            previousColorsMock.push(new Color());
-        }
-        // tslint:disable: no-empty
-        colorServiceSpyObj = jasmine.createSpyObj({
-            getPreviousColors: previousColorsMock,
-            setPrimaryColor: () => {},
-            setSecondaryColor: () => {},
+        colorChangedSubject = new Subject<Color>();
+        colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', ['getColor', 'setColor'], {
+            colorChanged$: colorChangedSubject,
         });
-        // tslint:enable: no-empty
 
         TestBed.configureTestingModule({
             declarations: [ColorPickerComponent],
-            imports: [MatSliderModule, ReactiveFormsModule, FormsModule],
-            providers: [{ provide: ColorService, useValue: colorServiceSpyObj }],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [{ provide: ColorService, useValue: colorPickerServiceSpyObj }],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -38,8 +29,6 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        // spyOn(component.previousColorSelected, 'emit').and.callThrough();
-        // spyOn(component.colorChanged, 'emit').and.callThrough();
     });
 
     it('should create', () => {
