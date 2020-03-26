@@ -20,17 +20,17 @@
     width: 25%;
 }
 
-.previous-colors {
+.previous-colors-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
 }
 
-.previous-colors-margin {
+.previous-colors-container-margin {
     margin-bottom: 20px;
 }
 
-.circle {
+.circle-item {
     width: 22px;
     height: 22px;
     border-radius: 11px;

@@ -1,27 +1,33 @@
 <h1 mat-dialog-title class="title">Sauvegarder le dessin</h1>
-<form [formGroup]="saveDrawingGroup" (ngSubmit)="onSubmit()">
+<form [formGroup]="saveDrawingFormGroup" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
+        <mat-form-field>
+            <mat-label>Titre</mat-label>
+            <input matInput formControlName="title" />
+            <mat-error *ngIf="saveDrawingFormGroup.controls.title.invalid">
+                {{ getErrorMessage(saveDrawingFormGroup.controls.title) }}
+            </mat-error>
+        </mat-form-field>
+
         <mat-form-field class="chip-list">
-            <mat-chip-list #chipList aria-label="Label selection">
+            <mat-chip-list #chipList aria-label="Sélection des étiquettes">
                 <mat-chip *ngFor="let label of labels" selectable="true" removable="true" (removed)="removeLabel(label)">
                     {{ label }}
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
-                    placeholder="Nouvelle étiquette (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
+                    formControlName="labels"
+                    placeholder="Nouvelle étiquette"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     matChipInputAddOnBlur="true"
                     (matChipInputTokenEnd)="addLabel($event)"
+                    autocomplete="off"
                 />
-                <mat-error *ngIf="saveDrawingGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
+                <mat-error *ngIf="saveDrawingFormGroup.controls.labels.invalid">
+                    {{ getErrorMessage(saveDrawingFormGroup.controls.labels) }}
+                </mat-error>
             </mat-chip-list>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-label>Titre</mat-label>
-            <input matInput formControlName="title" />
-            <mat-error *ngIf="saveDrawingGroup.controls.title.invalid">{{ getTitleError() }}</mat-error>
         </mat-form-field>
 
         <mat-card>
@@ -31,7 +37,7 @@
     </mat-dialog-content>
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
-        <button mat-raised-button mat-dialog-close type="submit" class="button" [disabled]="saveDrawingGroup.controls.title.invalid">
+        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="saveDrawingFormGroup.invalid">
             Sauvegarder le dessin
         </button>
     </mat-dialog-actions>

@@ -1,0 +1,15 @@
+<h1 mat-dialog-title class="title">Paramètres</h1>
+<form [formGroup]="formGroup">
+    <mat-dialog-content>
+        <app-drawing-settings></app-drawing-settings>
+        <mat-divider></mat-divider>
+        <app-grid-settings></app-grid-settings>
+        <mat-divider></mat-divider>
+        <app-theme-settings></app-theme-settings>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button class="button" type="reset" (click)="resetInitialSettings()">Réinitialiser</button>
+        <button mat-raised-button mat-dialog-close class="button" type="submit">Confirmer</button>
+    </mat-dialog-actions>
+</form>
