@@ -46,9 +46,12 @@ export class DrawingService {
                 this.renderer.appendChild(this.svgDrawingContent, element);
             }
         } else {
-            this.svgElements.splice(this.svgElements.indexOf(elementNextNeighbor), 0, element);
-            if (this.svgDrawingContent !== undefined) {
-                this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
+            const elementToRemoveIndex = this.svgElements.indexOf(elementNextNeighbor);
+            if (elementToRemoveIndex >= 0) {
+                this.svgElements.splice(elementToRemoveIndex, 0, element);
+                if (this.svgDrawingContent !== undefined) {
+                    this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
+                }
             }
         }
         this.transformationMap.set(element, new SvgTransformations());
@@ -61,7 +64,7 @@ export class DrawingService {
 
     removeElement(element: SVGElement): void {
         const elementToRemoveIndex = this.svgElements.indexOf(element);
-        if (elementToRemoveIndex > -1) {
+        if (elementToRemoveIndex >= 0) {
             this.svgElements.splice(elementToRemoveIndex, 1);
             this.transformationMap.delete(element);
             if (this.svgDrawingContent !== undefined) {
