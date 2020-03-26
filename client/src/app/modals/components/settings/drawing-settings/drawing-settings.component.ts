@@ -36,7 +36,7 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
     }
 
     getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl, '0-9');
+        return ErrorMessageService.getErrorMessage(formControl, 'Entiers');
     }
 
     get color(): Color {
