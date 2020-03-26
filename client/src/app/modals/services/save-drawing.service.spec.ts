@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 
-fdescribe('SaveDrawingService', () => {
+describe('SaveDrawingService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
     let drawingPreviewRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
@@ -40,6 +40,7 @@ fdescribe('SaveDrawingService', () => {
             'finalizePreview',
         ], {
             drawingPreviewRoot: drawingPreviewRootSpyObj,
+            title: initialTitle,
         });
         serverServiceSpyObj = jasmine.createSpyObj('ServerService', [
             'createDrawing',
@@ -92,39 +93,13 @@ fdescribe('SaveDrawingService', () => {
         expect(createDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#get Title should return appropriate title', () => {
-        const title = saveDrawingService.title;
-        expect(title).toEqual('initialTitle');
-    });
-
-    it('#set Title should set the title accordingly', () => {
-        const newTitle = 'testTitle';
-        const drawingServiceMock = { title: initialTitle } as DrawingService;
-        saveDrawingService['drawingService'] = drawingServiceMock;
-        saveDrawingService.title = newTitle;
-        expect(drawingServiceMock.title).toEqual(newTitle);
-    });
-
-    it('#get Labels should return appropriate labels', () => {
-        const labels = saveDrawingService.labels;
-        expect(labels).toEqual(['test']);
-    });
-
-    it('#set Labels should set the labels accordingly', () => {
-        const drawingServiceMock = {labels: initialLabels} as DrawingService;
-        saveDrawingService['drawingService'] = drawingServiceMock;
-        const newLabels = ['123'];
-        saveDrawingService.labels = newLabels;
-        expect(drawingServiceMock.labels).toEqual(newLabels);
-    });
-
     it('#createDrawing should update drawingService\'s current id and display success message when the request is successful', async(() => {
-        const drawingServiceMock = { id: initialId } as DrawingService;
+        const drawingServiceMock = { id: initialId, title: initialTitle } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         createDrawingSubject.next(newFileId);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin sauvegardé : ' + saveDrawingService.title, undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin sauvegardé : ' + drawingServiceMock.title, undefined, {
             duration: snackBarDuration,
         });
         expect(drawingServiceMock.id).toEqual(newFileId.id);
@@ -152,7 +127,7 @@ fdescribe('SaveDrawingService', () => {
         saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, 'outerHTML');
         updateDrawingSubject.next();
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin mis à jour : ' + saveDrawingService.title, undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin mis à jour : ' + drawingServiceSpyObj.title, undefined, {
             duration: snackBarDuration,
         });
     }));
