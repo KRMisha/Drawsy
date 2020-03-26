@@ -21,9 +21,7 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
 
     private colorChangedSubscription: Subscription;
     private hexCombinedRgbChangedSubscription: Subscription;
-    private hexRedChangedSubscription: Subscription;
-    private hexGreenChangedSubscription: Subscription;
-    private hexBlueChangedSubscription: Subscription;
+    private hexRgbComponentChangedSubscription: Subscription;
 
     constructor(private colorPickerService: ColorPickerService) {}
 
@@ -40,17 +38,9 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
             this.updateColorPicker();
         });
 
-        this.hexRedChangedSubscription = this.hexSelectorFormGroup.controls.hexRed.valueChanges.subscribe(() => {
-            this.updateHexCombinedRgb();
-            this.updateColorPicker();
-        });
-
-        this.hexGreenChangedSubscription = this.hexSelectorFormGroup.controls.hexGreen.valueChanges.subscribe(() => {
-            this.updateHexCombinedRgb();
-            this.updateColorPicker();
-        });
-
-        this.hexBlueChangedSubscription = this.hexSelectorFormGroup.controls.hexBlue.valueChanges.subscribe(() => {
+        this.hexRgbComponentChangedSubscription = merge(this.hexSelectorFormGroup.controls.hexRed.valueChanges,
+                                                        this.hexSelectorFormGroup.controls.hexGreen.valueChanges,
+                                                        this.hexSelectorFormGroup.controls.hexBlue.valueChanges).subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
         });
@@ -59,9 +49,7 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.colorChangedSubscription.unsubscribe();
         this.hexCombinedRgbChangedSubscription.unsubscribe();
-        this.hexRedChangedSubscription.unsubscribe();
-        this.hexGreenChangedSubscription.unsubscribe();
-        this.hexBlueChangedSubscription.unsubscribe();
+        this.hexRgbComponentChangedSubscription.unsubscribe();
     }
 
     swapMode(event: MouseEvent): void {
