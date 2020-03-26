@@ -38,7 +38,7 @@
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
         <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="saveDrawingFormGroup.invalid">
-            Sauvegarder le dessin
+            {{ isCreateDrawingAction()? 'Sauvegarder' : 'Mettre à jour' }}
         </button>
     </mat-dialog-actions>
 </form>
