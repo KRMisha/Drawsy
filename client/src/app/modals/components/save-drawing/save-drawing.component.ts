@@ -61,11 +61,11 @@ export class SaveDrawingComponent implements OnInit {
         return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
     }
 
-    isCreateDrawingAction(): boolean {
-        return this.drawingService.id === undefined;
-    }
-
     get title(): string {
         return this.drawingService.title;
+    }
+
+    get isCreateDrawingAction(): boolean {
+        return this.drawingService.id === undefined;
     }
 }
