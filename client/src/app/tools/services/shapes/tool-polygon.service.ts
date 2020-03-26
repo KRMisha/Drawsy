@@ -5,8 +5,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 
@@ -20,7 +19,7 @@ export class ToolPolygonService extends ToolShape {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Polygon, ToolIcon.Polygon, true);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Polygon, true);
         this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);
     }
 
