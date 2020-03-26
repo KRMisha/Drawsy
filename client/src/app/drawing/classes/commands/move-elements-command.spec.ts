@@ -5,13 +5,11 @@ import { Vec2 } from '@app/shared/classes/vec2';
 describe('MoveElementsCommand', () => {
     let command: MoveElementsCommand;
     let drawingService: jasmine.SpyObj<DrawingService>;
-    let elements: SVGElement[];
-    let moveOffset: Vec2;
+    const elements = ({} as unknown) as SVGElement[];
+    const moveOffset = { x: 1, y: 1 };
 
     beforeEach(() => {
-        elements = ({} as unknown) as SVGElement[];
         drawingService = jasmine.createSpyObj('DrawingService', ['moveElementList']);
-        moveOffset = { x: 1, y: 1 };
         command = new MoveElementsCommand(drawingService, elements, moveOffset);
     });
 

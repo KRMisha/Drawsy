@@ -1,60 +1,60 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ColorFieldComponent } from '@app/color-picker/components/color-field/color-field.component';
-import { Vec2 } from '@app/shared/classes/vec2';
-// import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
-// import { Observable } from 'rxjs';
-// import { Color } from '@app/classes/color';
+import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { Subject } from 'rxjs';
 
-// tslint:disable: no-magic-numbers
-// tslint:disable: no-string-literal
+// class CanvasMock {
+//     height = 10;
+//     width = 10;
 
-class CanvasMock {
-    height = 10;
-    width = 10;
+//     getContext(): CanvasRenderingContext2D {
+//         return {} as CanvasRenderingContext2D;
+//     }
 
-    getContext(): CanvasRenderingContext2D {
-        return {} as CanvasRenderingContext2D;
-    }
-
-    getBoundingClientRect(): Vec2 {
-        return { x: 4, y: 4 } as Vec2;
-    }
-}
-
-// tslint:disable-next-line: max-classes-per-file
-// class ColorPickerServiceMock {
-//     value = 10;
-//     saturation = 10;
-//     hue = 10;
-//     hueChanged$ = new Observable<number>();
-//     saturationChanged$ = new Observable<number>();
-//     valueChanged$ = new Observable<number>();
-//     getColor(): Color {
-//         return {red: 10, green: 10, blue: 10, alpha: 1} as Color
+//     getBoundingClientRect(): Vec2 {
+//         return { x: 4, y: 4 } as Vec2;
 //     }
 // }
 
 describe('ColorFieldComponent', () => {
     let component: ColorFieldComponent;
     let fixture: ComponentFixture<ColorFieldComponent>;
-    let canvasMock: CanvasMock;
+    let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
+    let canvasSpyObj: jasmine.SpyObj<HTMLCanvasElement>;
+    let hueChangedSubject: Subject<number>;
+    let saturationChangedSubject: Subject<number>;
+    let valueChangedSubject: Subject<number>;
+
     beforeEach(async(() => {
+        hueChangedSubject = new Subject<number>();
+        saturationChangedSubject = new Subject<number>();
+        valueChangedSubject = new Subject<number>();
+        colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', [], {
+            hue: 10,
+            saturation: 10,
+            value: 10,
+            hueChanged$: hueChangedSubject,
+            saturationChanged$: saturationChangedSubject,
+            valueChanged$: valueChangedSubject,
+        });
+
+        canvasSpyObj = jasmine.createSpyObj('Canvas', [], {
+            height: 10,
+            width: 10,
+        });
         TestBed.configureTestingModule({
             declarations: [ColorFieldComponent],
-            // providers: [
-            //     {provide: ColorPickerService, useValue: }
-            // ]
+            providers: [{ provide: ColorPickerService, useValue: colorPickerServiceSpyObj }],
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(ColorFieldComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
         component.onMouseEnter();
-        canvasMock = new CanvasMock();
-        spyOn(component.saturationValueCanvas, 'nativeElement').and.returnValue(canvasMock);
-    });
+        spyOn(component.saturationValueCanvas.nativeElement, 'getContext').and.returnValue(canvasSpyObj);
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
