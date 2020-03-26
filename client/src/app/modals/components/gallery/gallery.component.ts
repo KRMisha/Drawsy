@@ -60,8 +60,8 @@ export class GalleryComponent implements OnInit {
         return ErrorMessageService.getErrorMessage(this.labelsFormControl, 'A-Z, a-z, 0-9');
     }
 
-    get areDrawingsLoaded(): boolean {
-        return this.galleryService.areDrawingsLoaded;
+    get isLoadingComplete(): boolean {
+        return this.galleryService.isLoadingComplete;
     }
 
     get drawingsWithLabels(): SvgFileContainer[] {
