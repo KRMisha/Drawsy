@@ -32,12 +32,10 @@ export class ExportDrawingComponent {
         private drawingPreviewService: DrawingPreviewService
     ) {}
 
-    exportDrawing(): void {
-        if (this.titleFormControl.valid) {
-            this.drawingService.title = this.titleFormControl.value;
-            this.drawingPreviewService.finalizePreview();
-            this.drawingSerializerService.exportDrawing(this.drawingService.title, this.currentFileType);
-        }
+    onSubmit(): void {
+        this.drawingService.title = this.titleFormControl.value;
+        this.drawingPreviewService.finalizePreview();
+        this.drawingSerializerService.exportDrawing(this.drawingService.title, this.currentFileType);
     }
 
     getErrorMessage(): string {
