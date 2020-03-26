@@ -46,7 +46,7 @@ export class SaveDrawingComponent implements OnInit {
 
     removeLabel(label: string): void {
         const labelIndex = this.labels.indexOf(label);
-        if (labelIndex >= 0) {
+        if (labelIndex !== -1) {
             this.labels.splice(labelIndex, 1);
         }
     }
