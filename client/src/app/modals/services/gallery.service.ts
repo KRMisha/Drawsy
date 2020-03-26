@@ -52,7 +52,7 @@ export class GalleryService {
                     });
 
                     const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
-                    if (drawingToRemoveIndex >= 0) {
+                    if (drawingToRemoveIndex !== -1) {
                         this._drawings.splice(drawingToRemoveIndex, 1);
                     }
 

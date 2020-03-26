@@ -47,7 +47,7 @@ export class DrawingService {
             }
         } else {
             const elementToRemoveIndex = this.svgElements.indexOf(elementNextNeighbor);
-            if (elementToRemoveIndex >= 0) {
+            if (elementToRemoveIndex !== -1) {
                 this.svgElements.splice(elementToRemoveIndex, 0, element);
                 if (this.svgDrawingContent !== undefined) {
                     this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
@@ -64,7 +64,7 @@ export class DrawingService {
 
     removeElement(element: SVGElement): void {
         const elementToRemoveIndex = this.svgElements.indexOf(element);
-        if (elementToRemoveIndex >= 0) {
+        if (elementToRemoveIndex !== -1) {
             this.svgElements.splice(elementToRemoveIndex, 1);
             this.transformationMap.delete(element);
             if (this.svgDrawingContent !== undefined) {
