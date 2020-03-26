@@ -67,42 +67,15 @@ fdescribe('SaveDrawingService', () => {
         expect(saveDrawingService).toBeTruthy();
     });
 
-    it('#getTitle should return appropriate title', () => {
-        const title = saveDrawingService.title;
-        expect(title).toEqual('initialTitle');
-    });
-
-    it('#setTitle should set the title accordingly', () => {
-        const newTitle = 'testTitle';
-        const drawingServiceMock = { title: initialTitle } as DrawingService;
-        saveDrawingService['drawingService'] = drawingServiceMock;
-        saveDrawingService.title = newTitle;
-        expect(drawingServiceMock.title).toEqual(newTitle);
-    });
-
-    it('#getLabels should return appropriate labels', () => {
-        const labels = saveDrawingService.labels;
-        expect(labels).toEqual(['test']);
-    });
-
-    it('#setLabels should set the labels accordingly', () => {
-        const drawingServiceMock = {labels: initialLabels} as DrawingService;
-        saveDrawingService['drawingService'] = drawingServiceMock;
-        const newLabels = ['123'];
-        saveDrawingService.labels = newLabels;
-        expect(drawingServiceMock.labels).toEqual(newLabels);
-    });
-
     it('#saveDrawing should call #createDrawing when drawingService id is undefined', () => {
         const createDrawingSpy = spyOn<any>(saveDrawingService, 'createDrawing');
         const updateDrawingSpy = spyOn<any>(saveDrawingService, 'updateDrawing');
 
-        const tmpDrawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
+        saveDrawingService['drawingService'] = jasmine.createSpyObj('DrawingService', [], {
             id: undefined,
             title: 'initialTitle',
             labels: '',
         });
-        saveDrawingService['drawingService'] = tmpDrawingServiceSpyObj;
         saveDrawingService.saveDrawing();
         expect(drawingPreviewServiceSpyObj.finalizePreview).toHaveBeenCalled();
         expect(updateDrawingSpy).not.toHaveBeenCalled();
@@ -119,7 +92,33 @@ fdescribe('SaveDrawingService', () => {
         expect(createDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#createDrawing should subscribe to the serverService\'s createDrawing with success', async(() => {
+    it('#get Title should return appropriate title', () => {
+        const title = saveDrawingService.title;
+        expect(title).toEqual('initialTitle');
+    });
+
+    it('#set Title should set the title accordingly', () => {
+        const newTitle = 'testTitle';
+        const drawingServiceMock = { title: initialTitle } as DrawingService;
+        saveDrawingService['drawingService'] = drawingServiceMock;
+        saveDrawingService.title = newTitle;
+        expect(drawingServiceMock.title).toEqual(newTitle);
+    });
+
+    it('#get Labels should return appropriate labels', () => {
+        const labels = saveDrawingService.labels;
+        expect(labels).toEqual(['test']);
+    });
+
+    it('#set Labels should set the labels accordingly', () => {
+        const drawingServiceMock = {labels: initialLabels} as DrawingService;
+        saveDrawingService['drawingService'] = drawingServiceMock;
+        const newLabels = ['123'];
+        saveDrawingService.labels = newLabels;
+        expect(drawingServiceMock.labels).toEqual(newLabels);
+    });
+
+    it('#createDrawing should update drawingService\'s current id and display success message when the request is successful', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['createDrawing']();
@@ -131,7 +130,7 @@ fdescribe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(newFileId.id);
     }));
 
-    it('#createDrawing should subscribe to the serverService\'s createDrawing with failure when failure is BadRequest', async(() => {
+    it('#createDrawing should display error message when the request is a BadRequest error', async(() => {
         saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
@@ -141,7 +140,7 @@ fdescribe('SaveDrawingService', () => {
         });
     }));
 
-    it('#createDrawing should subscribe to the serverService\'s createDrawing with failure when failure is not BadRequest', async(() => {
+    it('#createDrawing should not display error message when the request error is different from BadRequest error', async(() => {
         saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
@@ -149,7 +148,7 @@ fdescribe('SaveDrawingService', () => {
         expect(snackBarSpyObj.open).not.toHaveBeenCalled();
     }));
 
-    it('#updateDrawing should subscribe to the serverService\'s updateDrawing with success', async(() => {
+    it('#updateDrawing should display success message when the request is successful', async(() => {
         saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, 'outerHTML');
         updateDrawingSubject.next();
@@ -158,11 +157,12 @@ fdescribe('SaveDrawingService', () => {
         });
     }));
 
-    it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is NotFound', async(() => {
+    it('#updateDrawing should display appropriate error message when the request error is NotFound', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, 'outerHTML');
+
         const error = new HttpErrorResponse({ status: HttpStatusCode.NotFound });
         updateDrawingSubject.error(error);
         const notFoundErrorMessage =
@@ -174,7 +174,7 @@ fdescribe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(undefined);
     }));
 
-    it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is BadRequest', async(() => {
+    it('#updateDrawing should display appropriate error message when the request error is BadRequest', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
@@ -187,7 +187,7 @@ fdescribe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(initialId);
     }));
 
-    it('#updateDrawing should subscribe to the serverService\'s updateDrawing with failure when failure is not handled', async(() => {
+    it('#updateDrawing should not display error message when the request error is not BadRequest or NotFound', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
