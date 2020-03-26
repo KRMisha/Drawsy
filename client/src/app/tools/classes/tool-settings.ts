@@ -14,8 +14,7 @@ enum ToolSetting {
     EraserSize = 'eraserSize',
 }
 
-type RestrictedToolSettingType<T extends ToolSetting>
-    = T extends ToolSetting.LineWidth
+type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.LineWidth
     ? number
     : T extends ToolSetting.BrushTexture
     ? BrushTexture
