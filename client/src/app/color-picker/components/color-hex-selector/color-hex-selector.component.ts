@@ -37,25 +37,21 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
         this.hexCombinedRgbChangedSubscription = this.hexSelectorFormGroup.controls.hexCombinedRgb.valueChanges.subscribe(() => {
             this.updateHexRgbComponents();
             this.updateColorPicker();
-            this.hexSelectorFormGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexRedChangedSubscription = this.hexSelectorFormGroup.controls.hexRed.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorFormGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexGreenChangedSubscription = this.hexSelectorFormGroup.controls.hexGreen.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorFormGroup.updateValueAndValidity({ emitEvent: false });
         });
 
         this.hexBlueChangedSubscription = this.hexSelectorFormGroup.controls.hexBlue.valueChanges.subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
-            this.hexSelectorFormGroup.updateValueAndValidity({ emitEvent: false });
         });
     }
 
@@ -69,8 +65,6 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
 
     swapMode(event: MouseEvent): void {
         this.isCombinedHex = !this.isCombinedHex;
-        event.preventDefault();
-        this.hexSelectorFormGroup.updateValueAndValidity();
     }
 
     private updateHexCombinedRgb(): void {
@@ -79,6 +73,7 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
             this.hexSelectorFormGroup.controls.hexGreen.value +
             this.hexSelectorFormGroup.controls.hexBlue.value;
         this.hexSelectorFormGroup.controls.hexCombinedRgb.setValue(hexCombinedRgbString, { emitEvent: false });
+        this.hexSelectorFormGroup.controls.hexCombinedRgb.markAsTouched();
     }
 
     private updateHexRgbComponents(): void {
@@ -86,8 +81,11 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
 
         // tslint:disable: no-magic-numbers
         this.hexSelectorFormGroup.controls.hexRed.setValue(hexCombinedRgbString.substring(0, 2), { emitEvent: false });
+        this.hexSelectorFormGroup.controls.hexRed.markAsTouched();
         this.hexSelectorFormGroup.controls.hexGreen.setValue(hexCombinedRgbString.substring(2, 4), { emitEvent: false });
+        this.hexSelectorFormGroup.controls.hexGreen.markAsTouched();
         this.hexSelectorFormGroup.controls.hexBlue.setValue(hexCombinedRgbString.substring(4, 6), { emitEvent: false });
+        this.hexSelectorFormGroup.controls.hexBlue.markAsTouched();
         // tslint:enable: no-magic-numbers
     }
 

@@ -1,21 +1,21 @@
 <form class="container" [formGroup]="hexSelectorFormGroup">
-    <mat-form-field *ngIf="isCombinedHex" class="form-field">
+    <mat-form-field *ngIf="isCombinedHex" class="combined-item">
         <mat-label>Hex # </mat-label>
         <input matInput formControlName="hexCombinedRgb" />
         <mat-error *ngIf="hexSelectorFormGroup.controls.hexCombinedRgb.invalid">Invalide</mat-error>
     </mat-form-field>
-    <div *ngIf="!isCombinedHex" class="all-components">
-        <mat-form-field class="single-component">
+    <div *ngIf="!isCombinedHex" class="rgb-container">
+        <mat-form-field class="rgb-item">
             <mat-label>Rouge</mat-label>
             <input matInput formControlName="hexRed" />
             <mat-error *ngIf="hexSelectorFormGroup.controls.hexRed.invalid">Invalide</mat-error>
         </mat-form-field>
-        <mat-form-field class="single-component">
+        <mat-form-field class="rgb-item">
             <mat-label>Vert</mat-label>
             <input matInput formControlName="hexGreen" />
             <mat-error *ngIf="hexSelectorFormGroup.controls.hexGreen.invalid">Invalide</mat-error>
         </mat-form-field>
-        <mat-form-field class="single-component">
+        <mat-form-field class="rgb-item">
             <mat-label>Bleu</mat-label>
             <input matInput formControlName="hexBlue" />
             <mat-error *ngIf="hexSelectorFormGroup.controls.hexBlue.invalid">Invalide</mat-error>
@@ -23,6 +23,7 @@
     </div>
     <button
         mat-icon-button
+        class="button"
         type="button"
         (click)="swapMode($event)"
         [matTooltip]="isCombinedHex ? 'Entrée RGB' : 'Entrée hexadécimale'"
