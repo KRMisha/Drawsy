@@ -1,6 +1,6 @@
 <h1 mat-dialog-title class="title">Sauvegarder le dessin</h1>
 <form [formGroup]="saveDrawingFormGroup" (ngSubmit)="onSubmit()">
-    <mat-dialog-content class="content">
+    <mat-dialog-content>
         <mat-form-field>
             <mat-label>Titre</mat-label>
             <input matInput formControlName="title" />
@@ -16,11 +16,11 @@
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
-                    placeholder="Nouvelle étiquette"
-                    matChipInputAddOnBlur="true"
                     formControlName="labels"
+                    placeholder="Nouvelle étiquette"
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    matChipInputAddOnBlur="true"
                     (matChipInputTokenEnd)="addLabel($event)"
                 />
                 <mat-error *ngIf="saveDrawingFormGroup.controls.labels.invalid">{{

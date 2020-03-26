@@ -1,21 +1,20 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component } from '@angular/core';
+import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 
-export interface Label {
-    name: string;
-}
 @Component({
     selector: 'app-save-drawing',
     templateUrl: './save-drawing.component.html',
     styleUrls: ['./save-drawing.component.scss'],
 })
-export class SaveDrawingComponent {
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+export class SaveDrawingComponent implements OnInit {
+    readonly separatorKeysCodes: number[] = [Comma, Enter];
+
+    labels: string[] = [];
 
     saveDrawingFormGroup = new FormGroup({
         title: new FormControl(this.saveDrawingService.title, [
@@ -31,12 +30,16 @@ export class SaveDrawingComponent {
 
     constructor(private saveDrawingService: SaveDrawingService) {}
 
+    ngOnInit(): void {
+        this.labels = [...this.saveDrawingService.labels];
+    }
+
     addLabel(event: MatChipInputEvent): void {
         if (this.saveDrawingFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
             return;
         }
 
-        this.labels.push(event.value);
+        this.labels.push(event.value.trim());
         event.input.value = '';
     }
 
@@ -48,21 +51,12 @@ export class SaveDrawingComponent {
     }
 
     onSubmit(): void {
-        if (this.saveDrawingFormGroup.valid) {
-            this.saveDrawingService.title = this.saveDrawingFormGroup.controls.title.value;
-            this.saveDrawingService.saveDrawing();
-        }
+        this.saveDrawingService.title = this.saveDrawingFormGroup.controls.title.value;
+        this.saveDrawingService.labels = this.labels;
+        this.saveDrawingService.saveDrawing();
     }
 
     getErrorMessage(formControl: AbstractControl): string {
         return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
-    }
-
-    get title(): string {
-        return this.saveDrawingService.title;
-    }
-
-    get labels(): string[] {
-        return this.saveDrawingService.labels;
     }
 }
