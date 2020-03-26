@@ -17,7 +17,7 @@ import { catchError, finalize } from 'rxjs/operators';
 })
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
-    private _areDrawingsLoaded = false; // tslint:disable-line: variable-name
+    private _isLoadingComplete = false; // tslint:disable-line: variable-name
 
     constructor(
         private serverService: ServerService,
@@ -67,20 +67,25 @@ export class GalleryService {
     }
 
     getAllDrawings(): void {
-        this._areDrawingsLoaded = false;
+        this._isLoadingComplete = false;
 
         this.serverService
             .getAllDrawings()
             .pipe(
                 finalize(() => {
-                    this._areDrawingsLoaded = true;
+                    this._isLoadingComplete = true;
                 })
             )
-            .subscribe((savedFiles: SavedFile[]) => {
-                this._drawings = savedFiles.map((savedFile: SavedFile) =>
-                    this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
-                );
-            });
+            .subscribe(
+                (savedFiles: SavedFile[]) => {
+                    this._drawings = savedFiles.map((savedFile: SavedFile) =>
+                        this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+                    );
+                },
+                (error: HttpErrorResponse): void => {
+                    this._drawings = [];
+                }
+            );
     }
 
     getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {
@@ -95,8 +100,8 @@ export class GalleryService {
         return this._drawings.length > 0;
     }
 
-    get areDrawingsLoaded(): boolean {
-        return this._areDrawingsLoaded;
+    get isLoadingComplete(): boolean {
+        return this._isLoadingComplete;
     }
 
     private alertDeleteDrawingError(): (error: HttpErrorResponse) => Observable<never> {

@@ -20,11 +20,11 @@
     </mat-form-field>
 </div>
 <mat-dialog-content>
-    <div *ngIf="!areDrawingsLoaded" class="spinner-container">
+    <div *ngIf="!isLoadingComplete" class="spinner-container">
         <mat-spinner></mat-spinner>
     </div>
 
-    <ng-container *ngIf="areDrawingsLoaded">
+    <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="hasDrawings()" class="gallery-container">
             <mat-card *ngFor="let drawing of drawingsWithLabels" class="card-item">
                 <mat-card-header class="card-title-container">
