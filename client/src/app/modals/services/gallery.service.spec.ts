@@ -1,3 +1,5 @@
+// tslint:disable: no-string-literal
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +14,7 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
 
-describe('GalleryService', () => {
+fdescribe('GalleryService', () => {
     let service: GalleryService;
     let serverServiceSpyObj: jasmine.SpyObj<ServerService>;
     let routerSpyObj: jasmine.SpyObj<Router>;
@@ -99,12 +101,12 @@ describe('GalleryService', () => {
 
             const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
             const drawings: SvgFileContainer[] = [svgFileContainerMock1, svgFileContainer];
-            service['_drawings'] = drawings; // tslint:disable-line: no-string-literal
+            service['_drawings'] = drawings;
             deleteDrawingSubject.next();
             expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin supprimé : ' + svgFileContainer.title, undefined, {
                 duration: snackBarDuration,
             });
-            expect(service['_drawings']).toEqual([svgFileContainerMock1]); // tslint:disable-line: no-string-literal
+            expect(service['_drawings']).toEqual([svgFileContainerMock1]);
         })
     );
 
@@ -118,12 +120,12 @@ describe('GalleryService', () => {
 
             const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
             const drawings: SvgFileContainer[] = [svgFileContainerMock1];
-            service['_drawings'] = drawings; // tslint:disable-line: no-string-literal
+            service['_drawings'] = drawings;
             deleteDrawingSubject.next();
             expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin supprimé : ' + svgFileContainer.title, undefined, {
                 duration: snackBarDuration,
             });
-            expect(service['_drawings']).toEqual([svgFileContainerMock1]); // tslint:disable-line: no-string-literal
+            expect(service['_drawings']).toEqual([svgFileContainerMock1]);
         })
     );
 
@@ -164,7 +166,6 @@ describe('GalleryService', () => {
         "#getAllDrawings should set _areDrawingsLoaded to false, call serverService's getAllDrawings," +
             'load drawings into _drawings and then set _areDrawingsLoaded to true',
         () => {
-            // tslint:disable: no-string-literal
             service['_areDrawingsLoaded'] = true;
             service['_drawings'] = [] as SvgFileContainer[];
             service.getAllDrawings();
@@ -174,20 +175,19 @@ describe('GalleryService', () => {
             const svgFileContainerMock = {} as SvgFileContainer;
             drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile.and.returnValue(svgFileContainerMock);
             getAllDrawingsSubject.next(savedFiles);
+            getAllDrawingsSubject.complete();
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile1);
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile2);
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile3);
             expect(service['_drawings']).toEqual([svgFileContainerMock, svgFileContainerMock, svgFileContainerMock]);
-            // need to check why finalize hasn't executed
-            // expect(service['_areDrawingsLoaded']).toBeTruthy();
-            // tslint:enable: no-string-literal
+            expect(service['_areDrawingsLoaded']).toBeTruthy();
         }
     );
 
     it('#getDrawingsWithLabels should return all drawings if there are no labels', () => {
         const svgFileContainerMock = {} as SvgFileContainer;
         const drawingsMock = [svgFileContainerMock, svgFileContainerMock, svgFileContainerMock, svgFileContainerMock];
-        service['_drawings'] = drawingsMock; // tslint:disable-line: no-string-literal
+        service['_drawings'] = drawingsMock;
         const returnValue = service.getDrawingsWithLabels([]);
         expect(returnValue).toEqual(drawingsMock);
     });
@@ -196,37 +196,32 @@ describe('GalleryService', () => {
         const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
         const svgFileContainerMock2: SvgFileContainer = { id: '2', labels: ['allo'], title: '2', drawingRoot: {} as SVGSVGElement };
         const svgFileContainerMock3: SvgFileContainer = { id: '3', labels: ['salut'], title: '3', drawingRoot: {} as SVGSVGElement };
-        // tslint:disable-next-line: no-string-literal
         service['_drawings'] = [svgFileContainerMock1, svgFileContainerMock2, svgFileContainerMock3];
         const returnValue = service.getDrawingsWithLabels(['salut']);
         expect(returnValue).toEqual([svgFileContainerMock3]);
     });
 
     it('#hasDrawings should return false if there are no drawings', () => {
-        service['_drawings'] = []; // tslint:disable-line: no-string-literal
+        service['_drawings'] = [];
         const returnValue = service.hasDrawings();
         expect(returnValue).toBeFalsy();
     });
 
     it('#hasDrawings should return true if there are drawings', () => {
-        service['_drawings'] = [{} as SvgFileContainer]; // tslint:disable-line: no-string-literal
+        service['_drawings'] = [{} as SvgFileContainer];
         const returnValue = service.hasDrawings();
         expect(returnValue).toBeTruthy();
     });
 
     it('#get areDrawingsLoaded should return true if there are drawings loaded', () => {
-        // tslint:disable: no-string-literal
         service['_areDrawingsLoaded'] = true;
         const returnValue = service['_areDrawingsLoaded'];
         expect(returnValue).toBeTruthy();
-        // tslint:enable: no-string-literal
     });
 
     it('#get areDrawingsLoaded should return false if there are no drawings loaded', () => {
-        // tslint:disable: no-string-literal
         service['_areDrawingsLoaded'] = false;
         const returnValue = service.areDrawingsLoaded;
         expect(returnValue).toBeFalsy();
-        // tslint:enable: no-string-literal
     });
 });
