@@ -14,7 +14,7 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
 
-fdescribe('GalleryService', () => {
+describe('GalleryService', () => {
     let service: GalleryService;
     let serverServiceSpyObj: jasmine.SpyObj<ServerService>;
     let routerSpyObj: jasmine.SpyObj<Router>;
