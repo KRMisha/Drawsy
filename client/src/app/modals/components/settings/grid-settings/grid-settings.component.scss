@@ -3,6 +3,16 @@
     text-align: center;
 }
 
+.grid-display-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.grid-display-title-item {
+    margin-bottom: 0;
+}
+
 .grid-setting-container {
     display: grid;
     grid-template-areas:
@@ -10,26 +20,17 @@
         'slider slider slider';
 }
 
-.setting-name-item {
+.setting-title-item {
     grid-area: setting-name;
     align-self: end;
     margin-bottom: 0;
 }
 
-.grid-display-container-margin {
-    margin-bottom: 12px;
-}
-
-.toggle-item {
-    grid-area: input-field;
-    justify-self: right;
-}
-
 .form-field-item {
     grid-area: input-field;
     justify-self: right;
-    width: 100px;
     text-align: right;
+    width: 100px;
 
     ::ng-deep .mat-form-field-wrapper {
         margin-top: -1.25em;

@@ -5,24 +5,17 @@
 
 .container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
-.circle {
+.color-title-item {
+    margin-bottom: 8px;
+    margin-right: 24px;
+}
+
+.circle-item {
     width: 22px;
     height: 22px;
     border-radius: 11px;
     cursor: pointer;
-    margin: 4px;
-}
-
-.toggle-title {
-    padding-top: 16px;
-    padding-right: 4px;
-    text-align: center;
-}
-
-.mat-slide-toggle {
-    align-self: center;
-    margin-left: 4px;
 }

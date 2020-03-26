@@ -22,6 +22,7 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     matChipInputAddOnBlur="true"
                     (matChipInputTokenEnd)="addLabel($event)"
+                    autocomplete="off"
                 />
                 <mat-error *ngIf="saveDrawingFormGroup.controls.labels.invalid">
                     {{ getErrorMessage(saveDrawingFormGroup.controls.labels) }}

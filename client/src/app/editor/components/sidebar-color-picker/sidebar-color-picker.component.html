@@ -24,9 +24,9 @@
     ></div>
 </div>
 
-<div class="previous-colors" [class.previous-colors-margin]="!isColorPickerDisplayEnabled">
+<div class="previous-colors-container" [class.previous-colors-container-margin]="!isColorPickerDisplayEnabled">
     <div
-        class="circle mat-elevation-z2"
+        class="circle-item mat-elevation-z2"
         *ngFor="let color of previousColors"
         matRipple
         [style.background-color]="color.toRgbString()"

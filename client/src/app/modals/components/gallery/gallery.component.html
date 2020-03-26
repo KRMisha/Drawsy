@@ -23,6 +23,7 @@
     <div *ngIf="!areDrawingsLoaded" class="spinner-container">
         <mat-spinner></mat-spinner>
     </div>
+
     <ng-container *ngIf="areDrawingsLoaded">
         <div *ngIf="hasDrawings()" class="gallery-container">
             <mat-card *ngFor="let drawing of drawingsWithLabels" class="card-item">
@@ -43,9 +44,11 @@
                 </mat-card-actions>
             </mat-card>
         </div>
+
         <h2 *ngIf="!hasDrawings()" class="title-item">
             La galerie ne contient aucun dessin.
         </h2>
+
         <h2 *ngIf="hasDrawings() && drawingsWithLabels.length === 0" class="title-item">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h2>

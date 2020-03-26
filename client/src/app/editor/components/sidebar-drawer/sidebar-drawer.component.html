@@ -7,7 +7,7 @@
         <mat-divider></mat-divider>
 
         <div *ngIf="hasSetting(ToolSetting.LineWidth)" class="size-container">
-            <h3 class="setting-name-item">Largeur du trait</h3>
+            <h3 class="setting-title-item">Largeur du trait</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(lineWidthFormControl)"
@@ -47,7 +47,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.JunctionSettings)" class="junction-container">
-            <h3 class="setting-name-item">Taille jonction</h3>
+            <h3 class="setting-title-item">Taille jonction</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(junctionDiameterFormControl)"
@@ -80,7 +80,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.SprayDiameter)" class="size-container">
-            <h3 class="setting-name-item">Diamètre du jet</h3>
+            <h3 class="setting-title-item">Diamètre du jet</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(sprayDiameterFormControl)"
@@ -102,7 +102,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.SprayRate)" class="size-container">
-            <h3 class="setting-name-item">Vitesse du jet</h3>
+            <h3 class="setting-title-item">Vitesse du jet</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(sprayRateFormControl)"
@@ -154,7 +154,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.ShapeBorderWidth)" class="size-container">
-            <h3 class="setting-name-item">Taille de bordure</h3>
+            <h3 class="setting-title-item">Taille de bordure</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(shapeBorderWidthFormControl)"
@@ -176,7 +176,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.PolygonSideCount)" class="size-container">
-            <h3 class="setting-name-item">Nombre de faces</h3>
+            <h3 class="setting-title-item">Nombre de faces</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(polygonSideCountFormControl)"
@@ -197,7 +197,7 @@
         </div>
 
         <div *ngIf="hasSetting(ToolSetting.EraserSize)" class="size-container">
-            <h3 class="setting-name-item">Taille de l'efface</h3>
+            <h3 class="setting-title-item">Taille de l'efface</h3>
             <mat-form-field
                 class="form-field-item"
                 [matTooltip]="getErrorMessage(eraserSizeFormControl)"

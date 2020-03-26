@@ -1,14 +1,15 @@
-<h3 class="title">Couleur du thème</h3>
+<h3 class="title">Thème</h3>
 <div class="container">
+    <h4 class="color-title-item">Couleur</h4>
     <div
         *ngFor="let themeColor of themeColors"
-        class="circle mat-elevation-z2"
+        class="circle-item mat-elevation-z2"
         matRipple
         [class]="themeColor + '-theme-color'"
         (click)="color = themeColor"
     ></div>
 </div>
 <div class="container">
-    <h4 class="toggle-title">Clair - Sombre</h4>
+    <h4>Clair - Sombre</h4>
     <mat-slide-toggle [(ngModel)]="isDarkTheme"></mat-slide-toggle>
 </div>

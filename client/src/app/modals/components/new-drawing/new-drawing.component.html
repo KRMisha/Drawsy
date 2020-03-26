@@ -15,6 +15,7 @@
             <app-color-picker [(colorModel)]="backgroundColor"></app-color-picker>
         </div>
     </mat-dialog-content>
+
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
         <button mat-raised-button mat-dialog-close type="submit" class="button" [disabled]="drawingFormGroup.invalid" cdkFocusInitial>

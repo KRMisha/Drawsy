@@ -1,12 +1,12 @@
 <h3 class="title">Grille</h3>
 <form [formGroup]="formGroup" autocomplete="off">
-    <div class="grid-setting-container grid-display-container-margin">
-        <h4 class="setting-name-item">Affichage de la grille</h4>
-        <mat-slide-toggle class="toggle-item" formControlName="gridDisplayEnabled"></mat-slide-toggle>
+    <div class="grid-display-container">
+        <h4 class="grid-display-title-item">Affichage de la grille</h4>
+        <mat-slide-toggle formControlName="gridDisplayEnabled"></mat-slide-toggle>
     </div>
 
     <div class="grid-setting-container">
-        <h4 class="setting-name-item">Taille des carrés</h4>
+        <h4 class="setting-title-item">Taille des carrés</h4>
         <mat-form-field class="form-field-item">
             <input matInput formControlName="gridSize" />
             <span matSuffix>px</span>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="grid-setting-container">
-        <h4 class="setting-name-item">Opacité</h4>
+        <h4 class="setting-title-item">Opacité</h4>
         <mat-form-field class="form-field-item">
             <input matInput formControlName="gridOpacity" />
             <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">
