@@ -1,5 +1,11 @@
 .title {
+    margin: 4px;
     text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
 }
 
 .form-field-item {
@@ -7,13 +13,4 @@
     padding-left: 8px;
     padding-right: 8px;
     text-align: center;
-}
-
-.color-picker-item {
-    margin-top: 4px;
-    margin-bottom: 0;
-}
-
-.button {
-    width: 120px;
 }

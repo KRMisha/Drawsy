@@ -1,34 +1,29 @@
 .container {
     display: flex;
     width: 100%;
-    justify-content: space-between;
 }
 
-.form-field {
-    margin: auto;
+.combined-item,
+.rgb-item {
+    text-align: center;
+}
+
+.combined-item {
     width: 100%;
 }
 
-.single-component {
-    width: 50px;
-}
-
-.all-components {
+.rgb-container {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
-.mat-icon-button {
+.rgb-item {
+    width: 50px;
+}
+
+.button {
     width: 42px;
     height: 42px;
     margin-left: 4px;
-}
-
-.form {
-    width: 100%;
-}
-
-.mat-form-field {
-    text-align: center;
 }

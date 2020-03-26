@@ -1,11 +1,12 @@
 <h1 mat-dialog-title class="title">Exporter le dessin</h1>
-<form>
+<form (ngSubmit)="onSubmit()">
     <mat-dialog-content class="container">
         <mat-form-field class="title-item">
             <mat-label>Titre</mat-label>
             <input matInput [formControl]="titleFormControl" />
-            <mat-error *ngIf="titleFormControl.invalid">Titre invalide</mat-error>
+            <mat-error *ngIf="titleFormControl.invalid">{{ getErrorMessage() }}</mat-error>
         </mat-form-field>
+
         <mat-form-field class="filter-item">
             <mat-label>Type de filtre</mat-label>
             <mat-select [(value)]="drawingFilter">
@@ -17,9 +18,10 @@
                 <mat-option [value]="DrawingFilter.Corrupt">Corrompu</mat-option>
             </mat-select>
         </mat-form-field>
+
         <div class="file-item">
             <h4 class="file-type">Type de fichier :</h4>
-            <mat-button-toggle-group [value]="currentFileType" (change)="currentFileType = $event.value">
+            <mat-button-toggle-group [(value)]="currentFileType">
                 <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
                     SVG
                 </mat-button-toggle>
@@ -31,22 +33,16 @@
                 </mat-button-toggle>
             </mat-button-toggle-group>
         </div>
+
         <mat-card class="preview-item">
             <mat-card-title>Aperçu</mat-card-title>
             <app-drawing-preview></app-drawing-preview>
         </mat-card>
     </mat-dialog-content>
+
     <mat-dialog-actions align="center">
-        <button mat-raised-button mat-dialog-close class="button">
-            Annuler
-        </button>
-        <button
-            mat-raised-button
-            class="button"
-            [disabled]="titleFormControl.invalid"
-            (click)="exportDrawing(currentFileType)"
-            cdkFocusInitial
-        >
+        <button mat-raised-button mat-dialog-close class="button">Annuler</button>
+        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="titleFormControl.invalid" cdkFocusInitial>
             Exporter le dessin
         </button>
     </mat-dialog-actions>

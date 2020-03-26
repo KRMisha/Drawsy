@@ -1,68 +1,47 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
-import { Subscription } from 'rxjs';
 
-export interface Label {
-    name: string;
-}
 @Component({
     selector: 'app-save-drawing',
     templateUrl: './save-drawing.component.html',
     styleUrls: ['./save-drawing.component.scss'],
 })
-export class SaveDrawingComponent implements OnInit, OnDestroy {
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+export class SaveDrawingComponent implements OnInit {
+    readonly separatorKeysCodes: number[] = [Comma, Enter];
 
-    saveDrawingGroup = new FormGroup({
-        title: new FormControl(this.saveDrawingService.title, [
+    labels: string[] = [];
+
+    saveDrawingFormGroup = new FormGroup({
+        title: new FormControl(this.drawingService.title, [
             Validators.required,
             Validators.pattern(MetadataValidation.contentRegex),
             Validators.maxLength(MetadataValidation.maxTitleLength),
         ]),
-        labels: new FormControl(this.saveDrawingService.labels, [
+        labels: new FormControl('', [
             Validators.pattern(MetadataValidation.contentRegex),
             Validators.maxLength(MetadataValidation.maxLabelLength),
         ]),
     });
 
-    private titleChangedSubscription: Subscription;
-
-    constructor(private saveDrawingService: SaveDrawingService) {}
+    constructor(private saveDrawingService: SaveDrawingService, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.titleChangedSubscription = this.saveDrawingGroup.controls.title.valueChanges.subscribe(() => {
-            if (this.saveDrawingGroup.controls.title.valid) {
-                this.saveDrawingService.title = this.saveDrawingGroup.controls.title.value;
-            }
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.titleChangedSubscription.unsubscribe();
+        this.labels = [...this.drawingService.labels];
     }
 
     addLabel(event: MatChipInputEvent): void {
-        const input = event.input;
-        const inputValue = event.value;
-        const control = this.saveDrawingGroup.controls.labels;
-
-        if ((inputValue || '').trim()) {
-            control.setErrors(null);
-            control.setValue(inputValue);
-            if (control.valid) {
-                control.markAsDirty();
-                input.value = '';
-                this.labels.push(inputValue);
-            }
+        if (this.saveDrawingFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
+            return;
         }
 
-        if (input !== undefined) {
-            input.value = '';
-        }
+        this.labels.push(event.value.trim());
+        event.input.value = '';
     }
 
     removeLabel(label: string): void {
@@ -70,43 +49,15 @@ export class SaveDrawingComponent implements OnInit, OnDestroy {
         if (labelIndex >= 0) {
             this.labels.splice(labelIndex, 1);
         }
-
-        this.saveDrawingGroup.controls.labels.markAsDirty();
     }
 
     onSubmit(): void {
+        this.drawingService.title = this.saveDrawingFormGroup.controls.title.value;
+        this.drawingService.labels = this.labels;
         this.saveDrawingService.saveDrawing();
     }
 
-    getTitleError(): string {
-        return this.saveDrawingGroup.controls.title.hasError('required')
-            ? 'Titre obligatoire'
-            : this.saveDrawingGroup.controls.title.hasError('pattern')
-            ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.title.hasError('maxlength')
-            ? `Longueur maximale de ${MetadataValidation.maxTitleLength} caractères`
-            : '';
-    }
-
-    getLabelError(): string {
-        return this.saveDrawingGroup.controls.labels.hasError('pattern')
-            ? '(A-Z, a-z, 0-9) uniquement'
-            : this.saveDrawingGroup.controls.labels.hasError('maxlength')
-            ? `Longueur maximale de ${MetadataValidation.maxLabelLength} caractères`
-            : '';
-    }
-
-    get title(): string {
-        return this.saveDrawingService.title;
-    }
-    set title(title: string) {
-        this.saveDrawingService.title = title;
-    }
-
-    get labels(): string[] {
-        return this.saveDrawingService.labels;
-    }
-    set labels(labels: string[]) {
-        this.saveDrawingService.labels = labels;
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
     }
 }

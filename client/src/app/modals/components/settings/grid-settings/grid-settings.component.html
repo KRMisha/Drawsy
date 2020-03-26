@@ -1,0 +1,47 @@
+<h3 class="title">Grille</h3>
+<form [formGroup]="formGroup" autocomplete="off">
+    <div class="grid-display-container">
+        <h4 class="grid-display-title-item">Affichage de la grille</h4>
+        <mat-slide-toggle formControlName="gridDisplayEnabled"></mat-slide-toggle>
+    </div>
+
+    <div class="grid-setting-container">
+        <h4 class="setting-title-item">Taille des carrés</h4>
+        <mat-form-field class="form-field-item">
+            <input matInput formControlName="gridSize" />
+            <span matSuffix>px</span>
+            <mat-error *ngIf="formGroup.controls.gridSize.invalid">{{ getErrorMessage(formGroup.controls.gridSize, '0-9') }}</mat-error>
+        </mat-form-field>
+        <mat-slider
+            class="slider-item"
+            [disabled]="!isGridDisplayEnabled"
+            [step]="gridSizeVariation"
+            [min]="minGridSize"
+            [max]="maxGridSize"
+            [value]="gridSize"
+            (input)="gridSize = $event.value"
+        >
+        </mat-slider>
+    </div>
+
+    <div class="grid-setting-container">
+        <h4 class="setting-title-item">Opacité</h4>
+        <mat-form-field class="form-field-item">
+            <input matInput formControlName="gridOpacity" />
+            <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">
+                {{ getErrorMessage(formGroup.controls.gridOpacity, 'Nombre') }}
+            </mat-error>
+            <span matSuffix></span>
+        </mat-form-field>
+        <mat-slider
+            class="slider-item"
+            step="0.01"
+            [disabled]="!isGridDisplayEnabled"
+            [min]="minGridOpacity"
+            [max]="maxGridOpacity"
+            [value]="gridOpacity"
+            (input)="gridOpacity = $event.value"
+        >
+        </mat-slider>
+    </div>
+</form>
