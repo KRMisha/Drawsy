@@ -63,7 +63,6 @@ describe('GalleryService', () => {
     }));
 
     it('should be created', () => {
-        service = TestBed.inject(GalleryService);
         expect(service).toBeTruthy();
     });
 
