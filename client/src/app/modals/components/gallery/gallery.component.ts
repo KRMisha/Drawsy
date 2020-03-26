@@ -1,6 +1,6 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { GalleryService } from '@app/modals/services/gallery.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
@@ -13,16 +13,14 @@ import MetadataValidation from '@common/validation/metadata-validation';
     styleUrls: ['./gallery.component.scss'],
 })
 export class GalleryComponent implements OnInit {
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+    readonly separatorKeysCodes: number[] = [Comma, Enter];
 
     searchLabels: string[] = [];
 
-    galleryFormGroup = new FormGroup({
-        labels: new FormControl('', [
-            Validators.pattern(MetadataValidation.contentRegex),
-            Validators.maxLength(MetadataValidation.maxLabelLength),
-        ]),
-    });
+    labelsFormControl = new FormControl('', [
+        Validators.pattern(MetadataValidation.contentRegex),
+        Validators.maxLength(MetadataValidation.maxLabelLength),
+    ]);
 
     constructor(private galleryService: GalleryService) {}
 
@@ -31,11 +29,11 @@ export class GalleryComponent implements OnInit {
     }
 
     addLabel(event: MatChipInputEvent): void {
-        if (this.galleryFormGroup.controls.labels.invalid || event.value === undefined || event.value.trim().length === 0) {
+        if (this.labelsFormControl.invalid || event.value === undefined || event.value.trim().length === 0) {
             return;
         }
 
-        this.searchLabels.push(event.value);
+        this.searchLabels.push(event.value.trim());
         event.input.value = '';
     }
 
@@ -58,8 +56,8 @@ export class GalleryComponent implements OnInit {
         return this.galleryService.hasDrawings();
     }
 
-    getLabelError(): string {
-        return ErrorMessageService.getErrorMessage(this.galleryFormGroup.controls.labels, 'A-Z, a-z, 0-9');
+    getErrorMessage(): string {
+        return ErrorMessageService.getErrorMessage(this.labelsFormControl, 'A-Z, a-z, 0-9');
     }
 
     get areDrawingsLoaded(): boolean {
