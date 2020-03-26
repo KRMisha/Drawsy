@@ -98,7 +98,6 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
         this.formGroup.controls.gridOpacity.setValue(gridOpacity, { emitEvent: false });
     }
 
-
     get formGroup(): FormGroup {
         return this.settingsService.settingsFormGroup;
     }

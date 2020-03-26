@@ -1,6 +1,5 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
@@ -18,8 +17,6 @@ export class ExportDrawingComponent {
     // Make enums available to template
     DrawingFilter = DrawingFilter;
     FileType = FileType;
-
-    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     currentFileType: FileType = FileType.Svg;
 
@@ -43,8 +40,8 @@ export class ExportDrawingComponent {
         }
     }
 
-    getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
+    getErrorMessage(): string {
+        return ErrorMessageService.getErrorMessage(this.titleFormControl, 'A-Z, a-z, 0-9');
     }
 
     get drawingFilter(): DrawingFilter {
