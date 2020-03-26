@@ -1,20 +1,43 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing',
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
-export class DrawingComponent implements AfterViewInit, OnDestroy {
+export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
 
-    constructor(private drawingService: DrawingService, private currentToolService: CurrentToolService, private gridService: GridService) {}
+    private toggleGridSubscription: Subscription;
+    private increaseGridSizeSubscription: Subscription;
+    private decreaseGridSizeSubscription: Subscription;
+
+    constructor(
+        private drawingService: DrawingService,
+        private currentToolService: CurrentToolService,
+        private gridService: GridService,
+        private shortcutService: ShortcutService
+    ) {}
+
+    ngOnInit(): void {
+        this.toggleGridSubscription = this.shortcutService.toggleGrid$.subscribe(() => {
+            this.gridService.toggleDisplay();
+        });
+        this.increaseGridSizeSubscription = this.shortcutService.increaseGridSize$.subscribe(() => {
+            this.gridService.increaseSize();
+        });
+        this.decreaseGridSizeSubscription = this.shortcutService.decreaseGridSize$.subscribe(() => {
+            this.gridService.decreaseSize();
+        });
+    }
 
     ngAfterViewInit(): void {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
@@ -26,6 +49,10 @@ export class DrawingComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.toggleGridSubscription.unsubscribe();
+        this.increaseGridSizeSubscription.unsubscribe();
+        this.decreaseGridSizeSubscription.unsubscribe();
+
         delete this.drawingService.drawingRoot;
         delete this.drawingService.svgDrawingContent;
         delete this.drawingService.svgUserInterfaceContent;

@@ -54,6 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     get theme(): string {
-        return this.themeService.getTheme();
+        return this.themeService.theme;
     }
 }

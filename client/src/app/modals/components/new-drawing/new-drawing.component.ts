@@ -1,86 +1,69 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import { Subscription } from 'rxjs';
 
 const sidebarWidth = 337;
-const maximumDimension = 10000;
 
 @Component({
     selector: 'app-new-drawing',
     templateUrl: './new-drawing.component.html',
     styleUrls: ['./new-drawing.component.scss'],
 })
-export class NewDrawingComponent implements OnInit {
+export class NewDrawingComponent implements OnInit, OnDestroy {
     wereDimensionsModified = false;
     backgroundColor = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    drawingGroup = new FormGroup({
-        width: new FormControl(
-            window.innerWidth - sidebarWidth,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumDimension),
-                Validators.pattern(Regexes.integerRegex),
-            ])
-        ),
-        height: new FormControl(
-            window.innerHeight,
-            Validators.compose([
-                Validators.required,
-                Validators.min(1),
-                Validators.max(maximumDimension),
-                Validators.pattern(Regexes.integerRegex),
-            ])
-        ),
+    drawingFormGroup = new FormGroup({
+        width: new FormControl(window.innerWidth - sidebarWidth, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
+        height: new FormControl(window.innerHeight, [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(DrawingDimensionsValidation.minimumDrawingDimension),
+            Validators.max(DrawingDimensionsValidation.maximumDrawingDimension),
+        ]),
     });
+
+    private drawingDimensionChangedSubscription: Subscription;
 
     constructor(private router: Router, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.drawingGroup.controls.width.valueChanges.subscribe(() => {
+        this.drawingDimensionChangedSubscription = this.drawingFormGroup.valueChanges.subscribe(() => {
             this.wereDimensionsModified = true;
         });
-        this.drawingGroup.controls.height.valueChanges.subscribe(() => {
-            this.wereDimensionsModified = true;
-        });
+    }
+
+    ngOnDestroy(): void {
+        this.drawingDimensionChangedSubscription.unsubscribe();
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event: Event): void {
         if (!this.wereDimensionsModified) {
-            this.drawingGroup.controls.width.setValue((event.target as Window).innerWidth - sidebarWidth, { emitEvent: false });
-            this.drawingGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
+            this.drawingFormGroup.controls.width.setValue((event.target as Window).innerWidth - sidebarWidth, { emitEvent: false });
+            this.drawingFormGroup.controls.height.setValue((event.target as Window).innerHeight, { emitEvent: false });
         }
     }
 
     onSubmit(): void {
-        const dimensions = { x: this.drawingGroup.controls.width.value, y: this.drawingGroup.controls.height.value };
-        if (this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
+        const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
+        if (this.drawingFormGroup.valid && this.drawingService.confirmNewDrawing(dimensions, this.backgroundColor)) {
             this.router.navigate(['/editor']);
         }
     }
 
-    getWidthErrorMessage(): string {
-        return this.getErrorMessage(this.drawingGroup.controls.width);
-    }
-
-    getHeightErrorMessage(): string {
-        return this.getErrorMessage(this.drawingGroup.controls.height);
-    }
-
-    private getErrorMessage(formControl: AbstractControl): string {
-        return formControl.hasError('required')
-            ? 'Entrez une valeur'
-            : formControl.hasError('min')
-            ? 'Valeur négative ou nulle invalide'
-            : formControl.hasError('max')
-            ? `Valeur maximale de ${maximumDimension} px`
-            : formControl.hasError('pattern')
-            ? 'Nombre entier invalide'
-            : '';
+    getErrorMessage(formControl: AbstractControl): string {
+        return ErrorMessageService.getErrorMessage(formControl, '0-9');
     }
 }

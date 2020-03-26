@@ -1,11 +1,11 @@
 import { Injectable, Type } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 
 @Injectable({
     providedIn: 'root',
@@ -34,8 +34,8 @@ export class ModalService {
     }
 
     openSettingsModal(): void {
-        const width = 425;
-        this.openDialog(DrawingSettingsComponent, width, false);
+        const width = 325;
+        this.openDialog(SettingsComponent, width, false);
     }
 
     openGuideModal(): void {
