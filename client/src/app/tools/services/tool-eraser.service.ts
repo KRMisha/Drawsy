@@ -132,11 +132,13 @@ export class ToolEraserService extends Tool {
             this.restoreElementUnderCursorAttributes();
             this.renderer.setAttribute(this.svgSelectedShapeRect, 'display', 'none');
             const elementIndex = this.drawingElementsCopy.indexOf(this.svgElementUnderCursor);
-            this.svgElementsDeletedDuringDrag.push({
-                element: this.svgElementUnderCursor,
-                neighbor: this.drawingElementsCopy[elementIndex + 1],
-            });
-            this.drawingService.removeElement(this.svgElementUnderCursor);
+            if (elementIndex !== -1) {
+                this.svgElementsDeletedDuringDrag.push({
+                    element: this.svgElementUnderCursor,
+                    neighbor: this.drawingElementsCopy[elementIndex + 1],
+                });
+                this.drawingService.removeElement(this.svgElementUnderCursor);
+            }
             this.svgElementUnderCursor = undefined;
         }
     }
