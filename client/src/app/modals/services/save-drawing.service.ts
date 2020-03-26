@@ -31,6 +31,7 @@ export class SaveDrawingService {
     get title(): string {
         return this.drawingService.title;
     }
+
     set title(title: string) {
         this.drawingService.title = title;
     }
@@ -38,6 +39,7 @@ export class SaveDrawingService {
     get labels(): string[] {
         return this.drawingService.labels;
     }
+
     set labels(labels: string[]) {
         this.drawingService.labels = labels;
     }

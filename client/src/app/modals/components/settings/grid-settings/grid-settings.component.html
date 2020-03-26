@@ -14,8 +14,8 @@
         </mat-form-field>
         <mat-slider
             class="slider-item"
-            step="5"
             [disabled]="!isGridDisplayEnabled"
+            [step]="gridSizeVariation"
             [min]="minGridSize"
             [max]="maxGridSize"
             [value]="gridSize"

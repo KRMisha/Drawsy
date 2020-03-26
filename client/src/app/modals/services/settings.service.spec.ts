@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { SettingsService } from '@app/modals/services/settings.service';
 
-import { SettingsService } from './settings-service.service';
-
-describe('SettingsServiceService', () => {
+describe('SettingsService', () => {
     let service: SettingsService;
 
     beforeEach(() => {

@@ -37,9 +37,9 @@ export class SettingsService {
         ]),
     });
 
-    private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);
-
     private initialDrawingDimensions = { x: this.drawingService.dimensions.x, y: this.drawingService.dimensions.y };
+
+    private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);
 
     private initialIsGridDisplayEnabled = this.gridService.isDisplayEnabled;
     private initialGridSize = this.gridService.size;
@@ -48,25 +48,23 @@ export class SettingsService {
     private initialThemeColor = this.themeService.color;
     private initialIsDarkTheme = this.themeService.isDarkTheme;
 
-    constructor(private gridService: GridService, private drawingService: DrawingService, private themeService: ThemeService) {}
+    constructor(private drawingService: DrawingService, private gridService: GridService, private themeService: ThemeService) {}
 
     resetInitialSettings(): void {
-        this.drawingService.backgroundColor = this.initialBackgroundColor;
-
         this.drawingService.dimensions = this.initialDrawingDimensions;
-
-        this.gridService.isDisplayEnabled = this.initialIsGridDisplayEnabled;
-        this.gridService.size = this.initialGridSize;
-        this.gridService.opacity = this.initialGridOpacity;
-
-        this.themeService.color = this.initialThemeColor;
-        this.themeService.isDarkTheme = this.initialIsDarkTheme;
-
         this.settingsFormGroup.controls.drawingWidth.reset(this.initialDrawingDimensions.x, { emitEvent: false });
         this.settingsFormGroup.controls.drawingHeight.reset(this.initialDrawingDimensions.y, { emitEvent: false });
 
+        this.drawingService.backgroundColor = this.initialBackgroundColor;
+
+        this.gridService.isDisplayEnabled = this.initialIsGridDisplayEnabled;
         this.settingsFormGroup.controls.gridDisplayEnabled.reset(this.initialIsGridDisplayEnabled, { emitEvent: false });
+        this.gridService.size = this.initialGridSize;
         this.settingsFormGroup.controls.gridSize.reset(this.initialGridSize, { emitEvent: false });
+        this.gridService.opacity = this.initialGridOpacity;
         this.settingsFormGroup.controls.gridOpacity.reset(this.initialGridOpacity, { emitEvent: false });
+
+        this.themeService.color = this.initialThemeColor;
+        this.themeService.isDarkTheme = this.initialIsDarkTheme;
     }
 }

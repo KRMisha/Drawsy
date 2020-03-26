@@ -5,21 +5,21 @@ import { AbstractControl } from '@angular/forms';
     providedIn: 'root',
 })
 export class ErrorMessageService {
-    static getErrorMessage(control: AbstractControl, humanFriendlyPattern?: string): string {
-        return control.hasError('required')
+    static getErrorMessage(formControl: AbstractControl, humanFriendlyPattern?: string): string {
+        return formControl.hasError('required')
             ? ErrorMessageService.getRequiredErrorMessage()
-            : control.hasError('pattern')
+            : formControl.hasError('pattern')
             ? ErrorMessageService.getPatternErrorMessage(
-                  humanFriendlyPattern === undefined ? control.getError('pattern').requiredPattern : humanFriendlyPattern
+                  humanFriendlyPattern === undefined ? formControl.getError('pattern').requiredPattern : humanFriendlyPattern
               )
-            : control.hasError('min')
-            ? ErrorMessageService.getMinimumValueErrorMessage(control.getError('min').min)
-            : control.hasError('max')
-            ? ErrorMessageService.getMaximumValueErrorMessage(control.getError('max').max)
-            : control.hasError('minlength')
-            ? ErrorMessageService.getMinimumLengthErrorMessage(control.getError('minlength').requiredLength)
-            : control.hasError('maxlength')
-            ? ErrorMessageService.getMaximumLengthErrorMessage(control.getError('maxlength').requiredLength)
+            : formControl.hasError('min')
+            ? ErrorMessageService.getMinimumValueErrorMessage(formControl.getError('min').min)
+            : formControl.hasError('max')
+            ? ErrorMessageService.getMaximumValueErrorMessage(formControl.getError('max').max)
+            : formControl.hasError('minlength')
+            ? ErrorMessageService.getMinimumLengthErrorMessage(formControl.getError('minlength').requiredLength)
+            : formControl.hasError('maxlength')
+            ? ErrorMessageService.getMaximumLengthErrorMessage(formControl.getError('maxlength').requiredLength)
             : '';
     }
 

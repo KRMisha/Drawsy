@@ -28,7 +28,6 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
                 this.gridService.size = this.formGroup.controls.gridSize.value;
             }
         });
-
         this.opacitySubscription = this.formGroup.controls.gridOpacity.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridOpacity.valid) {
                 this.gridService.opacity = this.formGroup.controls.gridOpacity.value;
@@ -44,6 +43,26 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
 
     getErrorMessage(formControl: AbstractControl, humanFriendlyPattern?: string): string {
         return ErrorMessageService.getErrorMessage(formControl, humanFriendlyPattern);
+    }
+
+    get gridSizeVariation(): number {
+        return this.gridService.gridSizeVariation;
+    }
+
+    get minGridSize(): number {
+        return this.gridService.minimumSize;
+    }
+
+    get maxGridSize(): number {
+        return this.gridService.maximumSize;
+    }
+
+    get minGridOpacity(): number {
+        return this.gridService.minimumOpacity;
+    }
+
+    get maxGridOpacity(): number {
+        return this.gridService.maximumOpacity;
     }
 
     get isGridDisplayEnabled(): boolean {
@@ -79,21 +98,6 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
         this.formGroup.controls.gridOpacity.setValue(gridOpacity, { emitEvent: false });
     }
 
-    get minGridSize(): number {
-        return this.gridService.minimumSize;
-    }
-
-    get maxGridSize(): number {
-        return this.gridService.maximumSize;
-    }
-
-    get minGridOpacity(): number {
-        return this.gridService.minimumOpacity;
-    }
-
-    get maxGridOpacity(): number {
-        return this.gridService.maximumOpacity;
-    }
 
     get formGroup(): FormGroup {
         return this.settingsService.settingsFormGroup;

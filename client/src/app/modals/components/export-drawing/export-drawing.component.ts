@@ -44,7 +44,7 @@ export class ExportDrawingComponent {
     }
 
     getErrorMessage(formControl: AbstractControl): string {
-        return ErrorMessageService.getErrorMessage(formControl);
+        return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
     }
 
     get drawingFilter(): DrawingFilter {

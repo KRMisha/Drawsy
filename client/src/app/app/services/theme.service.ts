@@ -21,7 +21,7 @@ export class ThemeService {
     }
 
     get color(): string {
-        return this._color;``
+        return this._color;
     }
 
     set color(color: string) {

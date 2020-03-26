@@ -23,7 +23,6 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
                 this.drawingService.dimensions.x = this.formGroup.controls.drawingWidth.value;
             }
         });
-
         this.heightSubscription = this.formGroup.controls.drawingHeight.valueChanges.subscribe(() => {
             if (this.formGroup.controls.drawingHeight.valid) {
                 this.drawingService.dimensions.y = this.formGroup.controls.drawingHeight.value;
