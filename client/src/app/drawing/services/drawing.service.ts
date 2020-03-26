@@ -73,7 +73,7 @@ export class DrawingService {
         }
 
         const mouseUpUnlistenFunction = this.mouseUpUnlistenFunctionMap.get(element);
-        if (mouseUpUnlistenFunction) {
+        if (mouseUpUnlistenFunction !== undefined) {
             mouseUpUnlistenFunction();
         }
         this.mouseUpUnlistenFunctionMap.delete(element);

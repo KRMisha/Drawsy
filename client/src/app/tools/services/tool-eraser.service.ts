@@ -138,8 +138,8 @@ export class ToolEraserService extends Tool {
                     element: this.svgElementUnderCursor,
                     neighbor: this.drawingElementsCopy[elementIndex + 1],
                 });
+                this.drawingService.removeElement(this.svgElementUnderCursor);
             }
-            this.drawingService.removeElement(this.svgElementUnderCursor);
             this.svgElementUnderCursor = undefined;
         }
     }
