@@ -1,20 +1,22 @@
 import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { GalleryService } from '@app/modals/services/gallery.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [Comma, Enter];
 
+    drawingsWithLabels: SvgFileContainer[];
     searchLabels: string[] = [];
 
     labelsFormControl = new FormControl('', [
@@ -22,10 +24,19 @@ export class GalleryComponent implements OnInit {
         Validators.maxLength(MetadataValidation.maxLabelLength),
     ]);
 
+    private loadingCompletedSubscription: Subscription;
+
     constructor(private galleryService: GalleryService) {}
 
     ngOnInit(): void {
+        this.loadingCompletedSubscription = this.galleryService.loadingCompleted$.subscribe(() => {
+            this.drawingsWithLabels = this.galleryService.getDrawingsWithLabels(this.searchLabels);
+        });
         this.galleryService.getAllDrawings();
+    }
+
+    ngOnDestroy(): void {
+        this.loadingCompletedSubscription.unsubscribe();
     }
 
     addLabel(event: MatChipInputEvent): void {
@@ -34,6 +45,7 @@ export class GalleryComponent implements OnInit {
         }
 
         this.searchLabels.push(event.value.trim());
+        this.drawingsWithLabels = this.galleryService.getDrawingsWithLabels(this.searchLabels);
         event.input.value = '';
     }
 
@@ -41,6 +53,7 @@ export class GalleryComponent implements OnInit {
         const labelIndex = this.searchLabels.indexOf(label, 0);
         if (labelIndex !== -1) {
             this.searchLabels.splice(labelIndex, 1);
+            this.drawingsWithLabels = this.galleryService.getDrawingsWithLabels(this.searchLabels);
         }
     }
 
@@ -62,9 +75,5 @@ export class GalleryComponent implements OnInit {
 
     get isLoadingComplete(): boolean {
         return this.galleryService.isLoadingComplete;
-    }
-
-    get drawingsWithLabels(): SvgFileContainer[] {
-        return this.galleryService.getDrawingsWithLabels(this.searchLabels);
     }
 }
