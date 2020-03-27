@@ -3,6 +3,7 @@ import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommandService } from '@app/drawing/services/command.service';
+import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -10,8 +11,22 @@ import { ToolSettings } from '@app/tools/classes/tool-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
+
+const minimumLineWidth = 1;
+const maximumLineWidth = 500;
+const minimumSprayDiameter = 20;
+const maximumSprayDiameter = 350;
+const minimumSprayRate = 10;
+const maximumSprayRate = 100;
+const minimumShapeBorderWidth = 1;
+const maximumShapeBorderWidth = 100;
+const minimumPolygonSideCount = 3;
+const maximumPolygonSideCount = 12;
+const minimumEraserSize = 3;
+const maximumEraserSize = 25;
 
 @Component({
     selector: 'app-sidebar-drawer',
@@ -23,26 +38,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     BrushTexture = BrushTexture;
     ShapeType = ShapeType;
 
-    readonly minimumLineWidth = 1;
-    readonly maximumLineWidth = 500;
     readonly minimumJunctionDiameter = 5;
     readonly maximumJunctionDiameter = 500;
-    readonly minimumSprayDiameter = 20;
-    readonly maximumSprayDiameter = 350;
-    readonly minimumSprayRate = 10;
-    readonly maximumSprayRate = 100;
-    readonly minimumShapeBorderWidth = 1;
-    readonly maximumShapeBorderWidth = 100;
-    readonly minimumPolygonSideCount = 3;
-    readonly maximumPolygonSideCount = 12;
-    readonly minimumEraserSize = 3;
-    readonly maximumEraserSize = 25;
 
     lineWidthFormControl = new FormControl(ToolDefaults.defaultLineWidth, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumLineWidth),
-        Validators.max(this.maximumLineWidth),
+        Validators.min(minimumLineWidth),
+        Validators.max(maximumLineWidth),
     ]);
 
     junctionEnabledFormControl = new FormControl(ToolDefaults.defaultJunctionSettings.isEnabled);
@@ -60,37 +63,88 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     sprayDiameterFormControl = new FormControl(ToolDefaults.defaultSprayDiameter, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumSprayDiameter),
-        Validators.max(this.maximumSprayDiameter),
+        Validators.min(minimumSprayDiameter),
+        Validators.max(maximumSprayDiameter),
     ]);
 
     sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumSprayRate),
-        Validators.max(this.maximumSprayRate),
+        Validators.min(minimumSprayRate),
+        Validators.max(maximumSprayRate),
     ]);
 
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumPolygonSideCount),
-        Validators.max(this.maximumPolygonSideCount),
+        Validators.min(minimumPolygonSideCount),
+        Validators.max(maximumPolygonSideCount),
     ]);
 
     shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumShapeBorderWidth),
-        Validators.max(this.maximumShapeBorderWidth),
+        Validators.min(minimumShapeBorderWidth),
+        Validators.max(maximumShapeBorderWidth),
     ]);
 
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(this.minimumEraserSize),
-        Validators.max(this.maximumEraserSize),
+        Validators.min(minimumEraserSize),
+        Validators.max(maximumEraserSize),
     ]);
+
+    readonly sizeFormControls: SizeFormControlContainer[] = [
+        {
+            formControl: this.lineWidthFormControl,
+            toolSetting: ToolSetting.LineWidth,
+            title: 'Largeur du trait',
+            suffix: 'px',
+            minimum: minimumLineWidth,
+            maximum: maximumLineWidth,
+        },
+        {
+            formControl: this.sprayDiameterFormControl,
+            toolSetting: ToolSetting.SprayDiameter,
+            title: 'Diamètre du jet',
+            suffix: 'px',
+            minimum: minimumSprayDiameter,
+            maximum: maximumSprayDiameter,
+        },
+        {
+            formControl: this.sprayRateFormControl,
+            toolSetting: ToolSetting.SprayRate,
+            title: 'Vitesse du jet',
+            suffix: 'jets/s',
+            minimum: minimumSprayRate,
+            maximum: maximumSprayRate,
+        },
+        {
+            formControl: this.shapeBorderWidthFormControl,
+            toolSetting: ToolSetting.ShapeBorderWidth,
+            title: 'Largeur de la bordure',
+            suffix: 'px',
+            minimum: minimumShapeBorderWidth,
+            maximum: maximumShapeBorderWidth,
+        },
+        {
+            formControl: this.polygonSideCountFormControl,
+            toolSetting: ToolSetting.PolygonSideCount,
+            title: 'Nombre de faces',
+            suffix: '',
+            minimum: minimumPolygonSideCount,
+            maximum: maximumPolygonSideCount,
+        },
+        {
+            formControl: this.eraserSizeFormControl,
+            toolSetting: ToolSetting.EraserSize,
+            title: "Taille de l'efface",
+            suffix: 'px',
+            minimum: minimumEraserSize,
+            maximum: maximumEraserSize,
+        },
+    ];
 
     private lineWidthChangedSubscription: Subscription;
     private junctionEnabledChangedSubscription: Subscription;
@@ -126,9 +180,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.junctionEnabledChangedSubscription = this.junctionEnabledFormControl.valueChanges.subscribe(() => {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.junctionSettings!.isEnabled = this.junctionEnabledFormControl.value;
-            this.junctionEnabledFormControl.value === true
-                ? this.junctionDiameterFormControl.enable()
-                : this.junctionDiameterFormControl.disable();
+            this.junctionEnabledFormControl.value ? this.junctionDiameterFormControl.enable() : this.junctionDiameterFormControl.disable();
         });
         this.junctionDiameterChangedSubscription = this.junctionDiameterFormControl.valueChanges.subscribe(() => {
             if (this.junctionDiameterFormControl.valid) {
@@ -186,28 +238,28 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     resetCurrentControls(): void {
         if (this.currentToolSettings.lineWidth !== undefined) {
-            this.lineWidthFormControl.reset(this.currentToolSettings.lineWidth, { emitEvent: false });
+            this.lineWidthFormControl.reset(this.currentToolSettings.lineWidth);
         }
         if (this.currentToolSettings.junctionSettings !== undefined) {
-            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled, { emitEvent: false });
+            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled);
         }
         if (this.currentToolSettings.junctionSettings !== undefined) {
-            this.junctionDiameterFormControl.reset(this.currentToolSettings.junctionSettings.diameter, { emitEvent: false });
+            this.junctionDiameterFormControl.reset(this.currentToolSettings.junctionSettings.diameter);
         }
         if (this.currentToolSettings.sprayDiameter !== undefined) {
-            this.sprayDiameterFormControl.reset(this.currentToolSettings.sprayDiameter, { emitEvent: false });
+            this.sprayDiameterFormControl.reset(this.currentToolSettings.sprayDiameter);
         }
         if (this.currentToolSettings.sprayRate !== undefined) {
-            this.sprayRateFormControl.reset(this.currentToolSettings.sprayRate, { emitEvent: false });
+            this.sprayRateFormControl.reset(this.currentToolSettings.sprayRate);
         }
         if (this.currentToolSettings.shapeBorderWidth !== undefined) {
-            this.shapeBorderWidthFormControl.reset(this.currentToolSettings.shapeBorderWidth, { emitEvent: false });
+            this.shapeBorderWidthFormControl.reset(this.currentToolSettings.shapeBorderWidth);
         }
         if (this.currentToolSettings.polygonSideCount !== undefined) {
-            this.polygonSideCountFormControl.reset(this.currentToolSettings.polygonSideCount, { emitEvent: false });
+            this.polygonSideCountFormControl.reset(this.currentToolSettings.polygonSideCount);
         }
         if (this.currentToolSettings.eraserSize !== undefined) {
-            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize, { emitEvent: false });
+            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
     }
 
@@ -223,6 +275,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     getErrorMessage(formControl: AbstractControl): string {
         return ErrorMessageService.getErrorMessage(formControl, 'Entiers');
+    }
+
+    getProperty<T, K extends keyof T>(object: T, propertyName: K): T[K] {
+        return object[propertyName];
     }
 
     get currentToolName(): string {
