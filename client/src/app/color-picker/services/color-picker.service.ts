@@ -4,12 +4,12 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ColorPickerService {
-    private previousColor: Color;
+    private cachedColor = new Color();
 
-    private hueChangedSource = new BehaviorSubject<number>(0);
-    private saturationChangedSource = new BehaviorSubject<number>(0);
-    private valueChangedSource = new BehaviorSubject<number>(0);
-    private alphaChangedSource = new BehaviorSubject<number>(1);
+    private hueChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[0]);
+    private saturationChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[1]);
+    private valueChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[2]);
+    private alphaChangedSource = new BehaviorSubject<number>(this.cachedColor.alpha);
 
     // tslint:disable: member-ordering
     hueChanged$ = this.hueChangedSource.asObservable();
@@ -18,13 +18,37 @@ export class ColorPickerService {
     alphaChanged$ = this.alphaChangedSource.asObservable();
     // tslint:enable: member-ordering
 
+    getColor(): Color {
+        return this.cachedColor;
+    }
+
+    setColor(color: Color): void {
+        if (this.cachedColor !== undefined && color.equals(this.cachedColor)) {
+            return;
+        }
+
+        this.cachedColor = color;
+
+        const [hue, saturation, value] = color.getHsv();
+        this.hueChangedSource.next(hue);
+        this.saturationChangedSource.next(saturation);
+        this.valueChangedSource.next(value);
+        this.alphaChangedSource.next(color.alpha);
+    }
+
+    getHex(): string {
+        return this.getColor().getHex();
+    }
+
     get hue(): number {
         return this.hueChangedSource.value;
     }
 
     set hue(hue: number) {
+        this.cachedColor = Color.fromHsv(hue, this.saturationChangedSource.value, this.valueChangedSource.value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
         this.hueChangedSource.next(hue);
-        this.previousColor = this.getColor();
     }
 
     get saturation(): number {
@@ -32,8 +56,10 @@ export class ColorPickerService {
     }
 
     set saturation(saturation: number) {
+        this.cachedColor = Color.fromHsv(this.hueChangedSource.value, saturation, this.valueChangedSource.value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
         this.saturationChangedSource.next(saturation);
-        this.previousColor = this.getColor();
     }
 
     get value(): number {
@@ -41,8 +67,10 @@ export class ColorPickerService {
     }
 
     set value(value: number) {
+        this.cachedColor = Color.fromHsv(this.valueChangedSource.value, this.saturationChangedSource.value, value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
         this.valueChangedSource.next(value);
-        this.previousColor = this.getColor();
     }
 
     get alpha(): number {
@@ -50,29 +78,8 @@ export class ColorPickerService {
     }
 
     set alpha(alpha: number) {
+        this.cachedColor.alpha = alpha;
+
         this.alphaChangedSource.next(alpha);
-        this.previousColor = this.getColor();
-    }
-
-    getColor(): Color {
-        const color = Color.fromHsv(this.hue, this.saturation, this.value);
-        color.alpha = this.alpha;
-        return color;
-    }
-
-    setColor(color: Color): void {
-        if (this.previousColor !== undefined && color.equals(this.previousColor)) {
-            return;
-        }
-
-        const hsv = color.getHsv();
-        this.hueChangedSource.next(hsv[0]);
-        this.saturationChangedSource.next(hsv[1]);
-        this.valueChangedSource.next(hsv[2]);
-        this.alphaChangedSource.next(color.alpha);
-    }
-
-    getHex(): string {
-        return this.getColor().getHex();
     }
 }

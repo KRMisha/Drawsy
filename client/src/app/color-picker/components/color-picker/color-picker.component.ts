@@ -10,11 +10,11 @@ import { merge, Subscription } from 'rxjs';
     providers: [ColorPickerService],
 })
 export class ColorPickerComponent implements OnInit, OnDestroy {
-    @Input() colorPreviewTooltip = '';
     @Input()
     set colorModel(color: Color) {
         this.colorPickerService.setColor(color);
     }
+    @Input() colorPreviewTooltip = '';
     @Output() colorModelChange = new EventEmitter<Color>();
     @Output() colorPreviewClicked = new EventEmitter<void>();
 

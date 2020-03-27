@@ -56,7 +56,7 @@ export class SidebarColorPickerComponent {
         if (event.button === MouseButton.Left || event.button === MouseButton.Right) {
             event.button === MouseButton.Left ? this.colorService.primaryColor = color : this.colorService.secondaryColor = color;
         }
-        this.color = color.clone();
+        this.color = color;
         this.isColorPickerDisplayEnabled = false;
     }
 
