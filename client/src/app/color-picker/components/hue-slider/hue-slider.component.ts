@@ -3,14 +3,14 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
 import { Color } from '@app/shared/classes/color';
 import { Subscription } from 'rxjs';
 
-enum ColorGradient {
-    Red = 'rgb(255, 0, 0)',
-    Yellow = 'rgb(255, 255, 0)',
-    Green = 'rgb(0, 255, 0)',
-    Cyan = 'rgb(0, 255, 255)',
-    Blue = 'rgb(0, 0, 255)',
-    Pink = 'rgb(255, 0, 255)',
-}
+const colorGradient = [
+    'rgb(255, 0, 0)',
+    'rgb(255, 255, 0)',
+    'rgb(0, 255, 0)',
+    'rgb(0, 255, 255)',
+    'rgb(0, 0, 255)',
+    'rgb(255, 0, 255)',
+];
 
 const canvasWidth = 202;
 const canvasHeight = 20;
@@ -100,15 +100,11 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         this.context.clearRect(0, 0, width, height);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
-        // tslint:disable: no-magic-numbers
-        horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
-        horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
-        horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
-        horizontalGradient.addColorStop(3 / 6, ColorGradient.Cyan);
-        horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
-        horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
-        horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
-        // tslint:enable: no-magic-numbers
+        for (let i = 0; i < colorGradient.length; i++) {
+            horizontalGradient.addColorStop(i / colorGradient.length, colorGradient[i]);
+        }
+        horizontalGradient.addColorStop(1, colorGradient[0]);
+
         this.context.fillStyle = horizontalGradient;
         const padding = 0;
         this.context.fillRect(0, padding, width, height - 2 * padding);
