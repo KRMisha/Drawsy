@@ -3,7 +3,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
 import { ThemeService } from '@app/app/services/theme.service';
 
-fdescribe('ThemeService', () => {
+describe('ThemeService', () => {
     let overlayContainerSpyObj: jasmine.SpyObj<OverlayContainer>;
     let classListSpyObj: jasmine.SpyObj<DOMTokenList>;
     let containerElementSpyObj: jasmine.SpyObj<HTMLElement>;
@@ -17,9 +17,7 @@ fdescribe('ThemeService', () => {
         overlayContainerSpyObj = jasmine.createSpyObj('OverlayContainer', ['getContainerElement']);
         overlayContainerSpyObj.getContainerElement.and.returnValue(containerElementSpyObj);
         TestBed.configureTestingModule({
-            providers: [
-                { provide: OverlayContainer, useValue: overlayContainerSpyObj },
-            ],
+            providers: [{ provide: OverlayContainer, useValue: overlayContainerSpyObj }],
         }).compileComponents();
         service = TestBed.inject(ThemeService);
     });
