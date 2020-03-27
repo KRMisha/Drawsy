@@ -1,6 +1,4 @@
-.title,
-.content,
-.form-field-item {
+.title {
     text-align: center;
 }
 
@@ -8,6 +6,12 @@
     width: 120px;
     padding-left: 8px;
     padding-right: 8px;
+    text-align: center;
+}
+
+.color-picker-item {
+    margin-top: 4px;
+    margin-bottom: 0;
 }
 
 .button {

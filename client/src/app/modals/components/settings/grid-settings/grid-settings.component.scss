@@ -1,0 +1,44 @@
+.title {
+    margin: 4px;
+    text-align: center;
+}
+
+.grid-display-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.grid-display-title-item {
+    margin-bottom: 0;
+}
+
+.grid-setting-container {
+    display: grid;
+    grid-template-areas:
+        'setting-name setting-name input-field'
+        'slider slider slider';
+}
+
+.setting-title-item {
+    grid-area: setting-name;
+    align-self: end;
+    margin-bottom: 0;
+}
+
+.form-field-item {
+    grid-area: input-field;
+    justify-self: right;
+    text-align: right;
+    width: 100px;
+
+    ::ng-deep .mat-form-field-wrapper {
+        margin-top: -1.25em;
+        margin-bottom: -1.25em;
+    }
+}
+
+.slider-item {
+    grid-area: slider;
+    width: 100%;
+}

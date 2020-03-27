@@ -12,23 +12,31 @@ export class ThemeService {
         overlayContainer.getContainerElement().classList.add('blue-dark-theme');
     }
 
-    getTheme(): string {
+    toggleDarkTheme(): void {
+        this.isDarkTheme = !this.isDarkTheme;
+    }
+
+    get theme(): string {
         return `${this._color}-${this.isDarkTheme ? 'dark' : 'light'}-theme`;
     }
 
-    toggleDarkTheme(): void {
-        const oldTheme = this.getTheme();
-        this._isDarkTheme = !this._isDarkTheme;
-        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
+    get color(): string {
+        return this._color;
     }
 
     set color(color: string) {
-        const oldTheme = this.getTheme();
+        const oldTheme = this.theme;
         this._color = color;
-        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.getTheme());
+        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.theme);
     }
 
     get isDarkTheme(): boolean {
         return this._isDarkTheme;
+    }
+
+    set isDarkTheme(isDarkTheme: boolean) {
+        const oldTheme = this.theme;
+        this._isDarkTheme = isDarkTheme;
+        this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.theme);
     }
 }

@@ -72,7 +72,7 @@ describe('SidebarComponent', () => {
     //     expect(component.setSelectedTool).not.toHaveBeenCalled();
     // });
 
-    // it('#onKeyDown should not change selectedTool if modal is shown or shortcuts are disabled', () => {
+    // it('#onKeyDown should not change currentTool if modal is shown or shortcuts are disabled', () => {
     //     spyOn(component, 'setSelectedTool');
 
     //     component['areShortcutsEnabled'] = true;

@@ -3,10 +3,6 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
-import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
-import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
@@ -15,7 +11,7 @@ import { Subscription } from 'rxjs';
     providedIn: 'root',
 })
 export class CurrentToolService implements OnDestroy {
-    private _selectedTool: Tool; // tslint:disable-line: variable-name
+    private _currentTool: Tool; // tslint:disable-line: variable-name
 
     private primaryColorChangedSubscription: Subscription;
     private secondaryColorChangedSubscription: Subscription;
@@ -23,15 +19,15 @@ export class CurrentToolService implements OnDestroy {
 
     constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
-            this.selectedTool.onPrimaryColorChange(color);
+            this.currentTool.onPrimaryColorChange(color);
         });
 
         this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
-            this.selectedTool.onSecondaryColorChange(color);
+            this.currentTool.onSecondaryColorChange(color);
         });
 
         this.elementClickedSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
-            this.selectedTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
+            this.currentTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
         });
     }
 
@@ -48,35 +44,35 @@ export class CurrentToolService implements OnDestroy {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.selectedTool.onMouseMove(event);
+        this.currentTool.onMouseMove(event);
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.selectedTool.onMouseDown(event);
+        this.currentTool.onMouseDown(event);
     }
 
     onMouseUp(event: MouseEvent): void {
-        this.selectedTool.onMouseUp(event);
+        this.currentTool.onMouseUp(event);
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
-        this.selectedTool.onMouseDoubleClick(event);
+        this.currentTool.onMouseDoubleClick(event);
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        this.selectedTool.onKeyDown(event);
+        this.currentTool.onKeyDown(event);
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        this.selectedTool.onKeyUp(event);
+        this.currentTool.onKeyUp(event);
     }
 
     onEnter(event: MouseEvent): void {
-        this.selectedTool.onEnter(event);
+        this.currentTool.onEnter(event);
     }
 
     onLeave(event: MouseEvent): void {
-        this.selectedTool.onLeave(event);
+        this.currentTool.onLeave(event);
     }
 
     setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
@@ -87,28 +83,15 @@ export class CurrentToolService implements OnDestroy {
         Tool.isMouseInsideDrawing = isMouseInsideDrawing;
     }
 
-    get selectedTool(): Tool {
-        return this._selectedTool;
+    get currentTool(): Tool {
+        return this._currentTool;
     }
 
-    set selectedTool(tool: Tool) {
-        if (this.selectedTool !== undefined) {
-            this.selectedTool.onToolDeselection();
+    set currentTool(tool: Tool) {
+        if (this.currentTool !== undefined) {
+            this.currentTool.onToolDeselection();
         }
 
-        this._selectedTool = tool;
-    }
-
-    getSetting(setting: ToolSetting): number | BrushTexture | JunctionSettings | ShapeType {
-        const value = this._selectedTool.toolSettings.get(setting);
-        return value as number | BrushTexture | JunctionSettings | ShapeType;
-    }
-
-    setSetting(setting: ToolSetting, value: number | JunctionSettings | ShapeType | BrushTexture): void {
-        this._selectedTool.toolSettings.set(setting, value);
-    }
-
-    hasSetting(setting: ToolSetting): boolean {
-        return this._selectedTool.toolSettings.has(setting);
+        this._currentTool = tool;
     }
 }

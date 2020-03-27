@@ -4,8 +4,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class ToolRectangleService extends ToolShape {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Rectangle, ToolIcon.Rectangle, false);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Rectangle, false);
     }
 
     protected getShapeString(): string {
