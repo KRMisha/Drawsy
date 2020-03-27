@@ -4,7 +4,6 @@ import { ThemeService } from '@app/app/services/theme.service';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 
 @Injectable()
