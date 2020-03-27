@@ -18,6 +18,7 @@ import { catchError, finalize } from 'rxjs/operators';
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
     private _isLoadingComplete = false; // tslint:disable-line: variable-name
+
     private loadingCompletedSource = new Subject<void>();
 
     loadingCompleted$ = this.loadingCompletedSource.asObservable(); // tslint:disable-line: member-ordering

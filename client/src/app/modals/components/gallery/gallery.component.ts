@@ -16,8 +16,8 @@ import { Subscription } from 'rxjs';
 export class GalleryComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [Comma, Enter];
 
-    drawingsWithLabels: SvgFileContainer[];
     searchLabels: string[] = [];
+    drawingsWithLabels: SvgFileContainer[];
 
     labelsFormControl = new FormControl('', [
         Validators.pattern(MetadataValidation.contentRegex),
