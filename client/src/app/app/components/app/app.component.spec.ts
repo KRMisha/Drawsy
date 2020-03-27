@@ -9,7 +9,7 @@ import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { Subject } from 'rxjs';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
     let component: AppComponent;
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
     let shortcutServiceSpyObject: jasmine.SpyObj<ShortcutService>;

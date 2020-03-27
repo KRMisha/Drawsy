@@ -15,8 +15,8 @@ import { Subject } from 'rxjs';
 
 describe('SaveDrawingService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
     let drawingPreviewRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
+    let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
     let serverServiceSpyObj: jasmine.SpyObj<ServerService>;
     let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
     let createDrawingSubject: Subject<NewFileId>;
@@ -162,7 +162,7 @@ describe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(initialId);
     }));
 
-    it('#updateDrawing should not display error message when the request error is not BadRequest or NotFound', async(() => {
+    it('#updateDrawing should only set drawingService\'s id to undefined when the error is not BadRequest or Notfound', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
