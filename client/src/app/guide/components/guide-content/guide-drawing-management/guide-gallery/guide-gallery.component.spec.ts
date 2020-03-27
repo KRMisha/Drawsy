@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { GuideGalleryComponent } from './guide-gallery.component';
+import { GuideGalleryComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-gallery/guide-gallery.component';
 
 describe('GuideGalleryComponent', () => {
     let component: GuideGalleryComponent;

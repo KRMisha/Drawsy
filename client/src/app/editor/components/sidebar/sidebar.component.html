@@ -12,8 +12,8 @@
                     mat-list-item
                     *ngFor="let tool of tools"
                     class="button"
-                    [class.theme-selected-button]="tool === selectedTool"
-                    (click)="selectedTool = tool; sidebarDrawerComponent.resetCurrentControls()"
+                    [class.theme-selected-button]="tool === currentTool"
+                    (click)="currentTool = tool; sidebarDrawerComponent.resetCurrentControls()"
                     [matTooltip]="tool.name"
                     matTooltipPosition="right"
                 >
