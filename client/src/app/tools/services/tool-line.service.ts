@@ -153,7 +153,7 @@ export class ToolLineService extends Tool {
         }
     }
 
-    onToolDeselection(): void {
+    reset(): void {
         if (this.isCurrentlyDrawing) {
             this.stopDrawing();
         }

@@ -188,7 +188,7 @@ export class ToolSelectionService extends Tool {
         }
     }
 
-    onToolDeselection(): void {
+    reset(): void {
         this.renderer.setAttribute(this.toolSelectionStateService.svgUserSelectionRect, 'display', 'none');
         this.toolSelectionStateService.selectedElements = [];
         this.toolSelectionStateService.selectionRect = undefined;

@@ -96,7 +96,7 @@ export class ToolEraserService extends Tool {
         this.renderer.setAttribute(this.svgEraserElement, 'display', 'none');
     }
 
-    onToolDeselection(): void {
+    reset(): void {
         this.svgEraserElement.setAttribute('display', 'none');
         this.svgSelectedShapeRect.setAttribute('display', 'none');
         this.restoreElementUnderCursorAttributes();
