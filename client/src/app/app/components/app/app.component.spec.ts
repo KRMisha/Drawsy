@@ -9,7 +9,7 @@ import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { Subject } from 'rxjs';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
     let component: AppComponent;
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
     let shortcutServiceSpyObject: jasmine.SpyObj<ShortcutService>;
@@ -107,7 +107,7 @@ fdescribe('AppComponent', () => {
         const targetElement = document.createElement('anchor');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusIn(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLInputElement ", () => {
@@ -117,7 +117,7 @@ fdescribe('AppComponent', () => {
         const targetElement = document.createElement('input');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusOut(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLTextAreaElement", () => {
@@ -127,7 +127,7 @@ fdescribe('AppComponent', () => {
         const targetElement = document.createElement('textarea');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusOut(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     // tslint:disable-next-line: max-line-length
