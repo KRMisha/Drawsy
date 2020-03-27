@@ -162,13 +162,13 @@ describe('GalleryService', () => {
     });
 
     it(
-        "#getAllDrawings should set _areDrawingsLoaded to false, call serverService's getAllDrawings," +
-            'load drawings into _drawings and then set _areDrawingsLoaded to true',
+        "#getAllDrawings should set _isLoadingComplete to false, call serverService's getAllDrawings," +
+            'load drawings into _drawings and then set _isLoadingComplete to true',
         () => {
-            service['_areDrawingsLoaded'] = true;
+            service['_isLoadingComplete'] = true;
             service['_drawings'] = [] as SvgFileContainer[];
             service.getAllDrawings();
-            expect(service['_areDrawingsLoaded']).toBeFalsy();
+            expect(service['_isLoadingComplete']).toBeFalsy();
             expect(serverServiceSpyObj.getAllDrawings).toHaveBeenCalled();
 
             const svgFileContainerMock = {} as SvgFileContainer;
@@ -179,7 +179,7 @@ describe('GalleryService', () => {
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile2);
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile3);
             expect(service['_drawings']).toEqual([svgFileContainerMock, svgFileContainerMock, svgFileContainerMock]);
-            expect(service['_areDrawingsLoaded']).toBeTruthy();
+            expect(service['_isLoadingComplete']).toBeTruthy();
         }
     );
 
@@ -212,15 +212,15 @@ describe('GalleryService', () => {
         expect(returnValue).toBeTruthy();
     });
 
-    it('#get areDrawingsLoaded should return true if there are drawings loaded', () => {
-        service['_areDrawingsLoaded'] = true;
-        const returnValue = service['_areDrawingsLoaded'];
+    it('#get isLoadingComplete should return true if there are drawings loaded', () => {
+        service['_isLoadingComplete'] = true;
+        const returnValue = service['_isLoadingComplete'];
         expect(returnValue).toBeTruthy();
     });
 
-    it('#get areDrawingsLoaded should return false if there are no drawings loaded', () => {
-        service['_areDrawingsLoaded'] = false;
-        const returnValue = service.areDrawingsLoaded;
+    it('#get isLoadingComplete should return false if there are no drawings loaded', () => {
+        service['_isLoadingComplete'] = false;
+        const returnValue = service.isLoadingComplete;
         expect(returnValue).toBeFalsy();
     });
 });
