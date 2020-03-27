@@ -5,12 +5,16 @@
             <mat-form-field class="form-field-item">
                 <mat-label>Largeur</mat-label>
                 <input matInput formControlName="width" />
-                <mat-error *ngIf="drawingFormGroup.controls.width.invalid">{{ getErrorMessage(drawingFormGroup.controls.width) }}</mat-error>
+                <mat-error *ngIf="drawingFormGroup.controls.width.invalid">{{
+                    getErrorMessage(drawingFormGroup.controls.width)
+                }}</mat-error>
             </mat-form-field>
             <mat-form-field class="form-field-item">
                 <mat-label>Hauteur</mat-label>
                 <input matInput formControlName="height" />
-                <mat-error *ngIf="drawingFormGroup.controls.height.invalid">{{ getErrorMessage(drawingFormGroup.controls.height) }}</mat-error>
+                <mat-error *ngIf="drawingFormGroup.controls.height.invalid">{{
+                    getErrorMessage(drawingFormGroup.controls.height)
+                }}</mat-error>
             </mat-form-field>
         </div>
         <div class="color-picker-container">
