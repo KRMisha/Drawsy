@@ -9,8 +9,7 @@ import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -40,7 +39,7 @@ export class ToolEraserService extends Tool {
         commandService: CommandService,
         private svgUtilityService: SvgUtilityService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Eraser, ToolIcon.Eraser);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 

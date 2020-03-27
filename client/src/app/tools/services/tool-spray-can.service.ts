@@ -7,8 +7,7 @@ import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
@@ -25,7 +24,7 @@ export class ToolSprayCanService extends Tool {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.SprayCan, ToolIcon.SprayCan);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.SprayCan);
         this.settings.sprayDiameter = ToolDefaults.defaultSprayDiameter;
         this.settings.sprayRate = ToolDefaults.defaultSprayRate;
     }

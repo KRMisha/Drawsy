@@ -6,8 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
 const minimumPointsToEnableBackspace = 4;
@@ -39,7 +38,7 @@ export class ToolLineService extends Tool {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Line, ToolIcon.Line);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Line);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
         this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
     }

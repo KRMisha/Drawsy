@@ -8,10 +8,9 @@ import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ToolData } from '@app/tools/classes/tool-data';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
@@ -26,11 +25,10 @@ export abstract class ToolShape extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         commandService: CommandService,
-        name: ToolName,
-        icon: ToolIcon,
+        toolInfo: ToolData,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, name, icon);
+        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
         this.settings.shapeType = ToolDefaults.defaultShapeType;
         this.settings.shapeBorderWidth = ToolDefaults.defaultShapeBorderWidth;

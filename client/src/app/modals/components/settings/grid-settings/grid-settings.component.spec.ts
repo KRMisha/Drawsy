@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { GridSettingsComponent } from '@app/drawing/components/grid-settings/grid-settings.component';
+import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 
 describe('GridSettingsComponent', () => {
     let component: GridSettingsComponent;
