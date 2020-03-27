@@ -67,7 +67,7 @@ export class ColorPickerService {
     }
 
     set value(value: number) {
-        this.cachedColor = Color.fromHsv(this.valueChangedSource.value, this.saturationChangedSource.value, value);
+        this.cachedColor = Color.fromHsv(this.hueChangedSource.value, this.saturationChangedSource.value, value);
         this.cachedColor.alpha = this.alphaChangedSource.value;
 
         this.valueChangedSource.next(value);
