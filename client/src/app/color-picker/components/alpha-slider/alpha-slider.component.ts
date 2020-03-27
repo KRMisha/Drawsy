@@ -21,7 +21,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
 
     private isLeftMouseButtonDown = false;
     private isMouseInside = false;
-    private mouseXPosition = 0;
+    private sliderPosition = 0;
 
     private colorChangedSubscription: Subscription;
 
@@ -32,14 +32,16 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.canvas = this.alphaCanvas.nativeElement;
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
-        this.mouseXPosition = this.colorPickerService.alpha * canvasWidth;
+        this.sliderPosition = this.colorPickerService.alpha * canvasWidth;
 
-        this.colorChangedSubscription = merge(this.colorPickerService.hueChanged$,
-                                              this.colorPickerService.saturationChanged$,
-                                              this.colorPickerService.valueChanged$,
-                                              this.colorPickerService.alphaChanged$).subscribe(() => {
+        this.colorChangedSubscription = merge(
+            this.colorPickerService.hueChanged$,
+            this.colorPickerService.saturationChanged$,
+            this.colorPickerService.valueChanged$,
+            this.colorPickerService.alphaChanged$
+        ).subscribe(() => {
             this.color = this.colorPickerService.getColor();
-            this.mouseXPosition = this.color.alpha * canvasWidth;
+            this.sliderPosition = this.color.alpha * canvasWidth;
             this.draw();
         });
     }
@@ -50,7 +52,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.update(event);
+        this.updateAlpha(event);
     }
 
     @HostListener('document:mousedown', ['$event'])
@@ -58,7 +60,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         if (this.isMouseInside) {
             this.isLeftMouseButtonDown = true;
         }
-        this.update(event);
+        this.updateAlpha(event);
     }
 
     @HostListener('document:mouseup')
@@ -76,15 +78,14 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = false;
     }
 
-    private update(event: MouseEvent): void {
+    private updateAlpha(event: MouseEvent): void {
         if (!this.isLeftMouseButtonDown) {
             return;
         }
 
-        this.mouseXPosition = Math.min(canvasWidth, Math.max(0, event.clientX - this.alphaCanvas.nativeElement.getBoundingClientRect().x));
-        const alpha = this.mouseXPosition / this.canvas.width;
+        const mouseXPosition = event.clientX - this.alphaCanvas.nativeElement.getBoundingClientRect().x;
+        const alpha = Math.min(canvasWidth, Math.max(0, mouseXPosition)) / this.canvas.width;
         this.colorPickerService.alpha = alpha;
-        this.draw();
     }
 
     private draw(): void {
@@ -96,7 +97,7 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         const circle = new Path2D();
-        circle.arc(this.mouseXPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
+        circle.arc(this.sliderPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
         this.context.fill(circle);
         this.context.lineWidth = 2;
         this.context.strokeStyle = 'white';

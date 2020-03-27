@@ -23,10 +23,12 @@ export class ColorPickerComponent implements OnInit, OnDestroy {
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngOnInit(): void {
-        this.colorChangedSubscription = merge(this.colorPickerService.hueChanged$,
-                    this.colorPickerService.saturationChanged$,
-                    this.colorPickerService.valueChanged$,
-                    this.colorPickerService.alphaChanged$).subscribe(() => {
+        this.colorChangedSubscription = merge(
+            this.colorPickerService.hueChanged$,
+            this.colorPickerService.saturationChanged$,
+            this.colorPickerService.valueChanged$,
+            this.colorPickerService.alphaChanged$
+        ).subscribe(() => {
             this.colorModelChange.emit(this.colorPickerService.getColor());
         });
     }

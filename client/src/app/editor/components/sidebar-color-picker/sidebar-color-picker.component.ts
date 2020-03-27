@@ -73,12 +73,12 @@ export class SidebarColorPickerComponent {
         this.isColorPickerDisplayEnabled = false;
     }
 
-    get primaryColor(): string {
-        return this.colorService.getPrimaryColor().toRgbString();
+    get primaryColor(): Color {
+        return this.colorService.getPrimaryColor();
     }
 
-    get secondaryColor(): string {
-        return this.colorService.getSecondaryColor().toRgbString();
+    get secondaryColor(): Color {
+        return this.colorService.getSecondaryColor();
     }
 
     get previousColors(): Color[] {

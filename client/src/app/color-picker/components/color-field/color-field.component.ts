@@ -33,8 +33,6 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     private saturationChangedSubscription: Subscription;
     private valueChangedSubscription: Subscription;
 
-    // private isSliderPositionClipedToBottom = false;
-
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
@@ -49,10 +47,6 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
             this.draw();
         });
         this.saturationChangedSubscription = this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
-            // const color = this.colorPickerService.getColor();
-            // const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
-            // if (!this.isSliderPositionClipedToBottom || !isBlack) {
-            // }
             this.sliderPosition.x = saturation * canvasWidth;
             this.draw();
         });
@@ -70,15 +64,17 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.updateColor(event);
+        if (this.isLeftMouseButtonDown) {
+            this.updateColor(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isLeftMouseButtonDown = true;
+            this.updateColor(event);
         }
-        this.updateColor(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
@@ -97,27 +93,16 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     }
 
     private updateColor(event: MouseEvent): void {
-        if (!this.isLeftMouseButtonDown) {
-            return;
-        }
-
         const mouseXPosition = event.clientX - this.saturationValueCanvas.nativeElement.getBoundingClientRect().x;
-        this.sliderPosition.x = Math.min(canvasWidth, Math.max(0, mouseXPosition));
-
         const mouseYPosition = event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y;
-        this.sliderPosition.y = Math.min(canvasHeight, Math.max(0, mouseYPosition));
 
-        // this.isSliderPositionClipedToBottom = mouseYPosition >= canvasHeight;
-
-        this.colorPickerService.saturation = this.sliderPosition.x / canvasWidth;
-        this.colorPickerService.value = 1.0 - this.sliderPosition.y / canvasHeight;
-
-        this.draw();
+        this.colorPickerService.saturation = Math.min(canvasWidth, Math.max(0, mouseXPosition)) / canvasWidth;
+        this.colorPickerService.value = 1.0 - Math.min(canvasHeight, Math.max(0, mouseYPosition)) / canvasHeight;
     }
 
     private draw(): void {
-        const color = Color.fromHsv(this.colorPickerService.hue, 1, 1);
-        this.context.fillStyle = color.toRgbString();
+        const hueColor = Color.fromHsv(this.colorPickerService.hue, 1, 1);
+        this.context.fillStyle = hueColor.toRgbString();
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
@@ -132,13 +117,14 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         this.context.fillStyle = verticalGradient;
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        color.setHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
         const circle = new Path2D();
         const radius = 10;
 
         circle.arc(this.sliderPosition.x, this.sliderPosition.y, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = color.toRgbString();
+        const selectedColor = Color.fromHsv(this.colorPickerService.hue, this.colorPickerService.saturation, this.colorPickerService.value);
+        this.context.fillStyle = selectedColor.toRgbString();
         this.context.fill(circle);
+
         this.context.lineWidth = 2;
         this.context.strokeStyle = ColorString.OpaqueWhite;
         this.context.stroke(circle);

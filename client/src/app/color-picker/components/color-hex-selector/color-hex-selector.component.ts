@@ -26,10 +26,12 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngOnInit(): void {
-        this.colorChangedSubscription = merge(this.colorPickerService.hueChanged$,
-                                              this.colorPickerService.saturationChanged$,
-                                              this.colorPickerService.valueChanged$,
-                                              this.colorPickerService.alphaChanged$).subscribe(() => {
+        this.colorChangedSubscription = merge(
+            this.colorPickerService.hueChanged$,
+            this.colorPickerService.saturationChanged$,
+            this.colorPickerService.valueChanged$,
+            this.colorPickerService.alphaChanged$
+        ).subscribe(() => {
             this.updateAll(this.colorPickerService.getColor().getHex());
         });
 
@@ -38,9 +40,11 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
             this.updateColorPicker();
         });
 
-        this.hexRgbComponentChangedSubscription = merge(this.hexSelectorFormGroup.controls.hexRed.valueChanges,
-                                                        this.hexSelectorFormGroup.controls.hexGreen.valueChanges,
-                                                        this.hexSelectorFormGroup.controls.hexBlue.valueChanges).subscribe(() => {
+        this.hexRgbComponentChangedSubscription = merge(
+            this.hexSelectorFormGroup.controls.hexRed.valueChanges,
+            this.hexSelectorFormGroup.controls.hexGreen.valueChanges,
+            this.hexSelectorFormGroup.controls.hexBlue.valueChanges
+        ).subscribe(() => {
             this.updateHexCombinedRgb();
             this.updateColorPicker();
         });
