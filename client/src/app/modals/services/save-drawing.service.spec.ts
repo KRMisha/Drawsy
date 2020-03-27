@@ -36,19 +36,12 @@ describe('SaveDrawingService', () => {
         drawingPreviewRootSpyObj = jasmine.createSpyObj('SVGSVGElement', [], {
             outerHTML: 'outerHTML',
         });
-        drawingPreviewServiceSpyObj = jasmine.createSpyObj('DrawingPreviewService', [
-            'finalizePreview',
-        ], {
+        drawingPreviewServiceSpyObj = jasmine.createSpyObj('DrawingPreviewService', ['finalizePreview'], {
             drawingPreviewRoot: drawingPreviewRootSpyObj,
             title: initialTitle,
         });
-        serverServiceSpyObj = jasmine.createSpyObj('ServerService', [
-            'createDrawing',
-            'updateDrawing',
-        ]);
-        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', [
-            'open',
-        ]);
+        serverServiceSpyObj = jasmine.createSpyObj('ServerService', ['createDrawing', 'updateDrawing']);
+        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
         createDrawingSubject = new Subject<NewFileId>();
         serverServiceSpyObj.createDrawing.and.returnValue(createDrawingSubject);
         updateDrawingSubject = new Subject<void>();
@@ -93,7 +86,7 @@ describe('SaveDrawingService', () => {
         expect(createDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#createDrawing should update drawingService\'s id and display success message when the request is successful', async(() => {
+    it("#createDrawing should update drawingService's id and display success message when the request is successful", async(() => {
         const drawingServiceMock = { id: initialId, title: initialTitle } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['createDrawing']();
@@ -132,23 +125,26 @@ describe('SaveDrawingService', () => {
         });
     }));
 
-    it('#updateDrawing should display appropriate error message and set drawingService\'s id to ' +
-        'undefined when the request error is NotFound', async(() => {
-        const drawingServiceMock = { id: initialId } as DrawingService;
-        saveDrawingService['drawingService'] = drawingServiceMock;
-        saveDrawingService['updateDrawing']();
-        expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, 'outerHTML');
+    it(
+        "#updateDrawing should display appropriate error message and set drawingService's id to " +
+            'undefined when the request error is NotFound',
+        async(() => {
+            const drawingServiceMock = { id: initialId } as DrawingService;
+            saveDrawingService['drawingService'] = drawingServiceMock;
+            saveDrawingService['updateDrawing']();
+            expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, 'outerHTML');
 
-        const error = new HttpErrorResponse({ status: HttpStatusCode.NotFound });
-        updateDrawingSubject.error(error);
-        const notFoundErrorMessage =
-                    "Erreur : le dessin à mettre à jour n'a pas pu être trouvé.\n" +
-                    'Réessayez pour le sauvegarder en tant que nouveau dessin.';
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith(notFoundErrorMessage, undefined, {
-            duration: snackBarDuration,
-        });
-        expect(drawingServiceMock.id).toEqual(undefined);
-    }));
+            const error = new HttpErrorResponse({ status: HttpStatusCode.NotFound });
+            updateDrawingSubject.error(error);
+            const notFoundErrorMessage =
+                "Erreur : le dessin à mettre à jour n'a pas pu être trouvé.\n" +
+                'Réessayez pour le sauvegarder en tant que nouveau dessin.';
+            expect(snackBarSpyObj.open).toHaveBeenCalledWith(notFoundErrorMessage, undefined, {
+                duration: snackBarDuration,
+            });
+            expect(drawingServiceMock.id).toEqual(undefined);
+        })
+    );
 
     it('#updateDrawing should display appropriate error message when the request error is BadRequest', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;

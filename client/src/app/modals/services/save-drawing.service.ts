@@ -32,14 +32,16 @@ export class SaveDrawingService {
         this.serverService
             .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
             .pipe(catchError(this.alertCreateDrawingError()))
-            .subscribe((newFileId: NewFileId): void => {
-                this.drawingService.id = newFileId.id;
-                this.snackBar.open('Dessin sauvegardé : ' + this.drawingService.title, undefined, {
-                    duration: snackBarDuration,
-                });
-            // No error handling needs to be done but the error must be caught
-            // tslint:disable-next-line: no-empty
-            }, (error: HttpErrorResponse): void => {}
+            .subscribe(
+                (newFileId: NewFileId): void => {
+                    this.drawingService.id = newFileId.id;
+                    this.snackBar.open('Dessin sauvegardé : ' + this.drawingService.title, undefined, {
+                        duration: snackBarDuration,
+                    });
+                },
+                // No error handling needs to be done but the error must be caught
+                // tslint:disable-next-line: no-empty
+                (error: HttpErrorResponse): void => {}
             );
     }
 
