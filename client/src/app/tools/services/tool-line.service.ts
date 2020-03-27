@@ -5,10 +5,8 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 const minimumPointsToEnableBackspace = 4;
@@ -41,8 +39,8 @@ export class ToolLineService extends Tool {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Line);
-        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
-        this.toolSettings.set(ToolSetting.JunctionSettings, ToolDefaults.defaultJunctionSettings);
+        this.settings.lineWidth = ToolDefaults.defaultLineWidth;
+        this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -162,19 +160,18 @@ export class ToolLineService extends Tool {
     }
 
     private startDrawingShape(): void {
+        // tslint:disable: no-non-null-assertion
         this.isCurrentlyDrawing = true;
 
-        ({ isEnabled: this.isJunctionEnabled, diameter: this.junctionDiameter } = this.toolSettings.get(
-            ToolSetting.JunctionSettings
-        ) as JunctionSettings);
+        ({ isEnabled: this.isJunctionEnabled, diameter: this.junctionDiameter } = this.settings.junctionSettings!);
 
         const junctionDiameterActualValue = this.isJunctionEnabled ? this.junctionDiameter : 0;
-        const padding = Math.max(0, (this.toolSettings.get(ToolSetting.LineWidth) as number) / 2 - junctionDiameterActualValue);
+        const padding = Math.max(0, this.settings.lineWidth! / 2 - junctionDiameterActualValue);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
         this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
+        this.renderer.setAttribute(this.groupElement, 'stroke-width', this.settings.lineWidth!.toString());
         this.renderer.setAttribute(this.groupElement, 'data-padding', padding.toString());
 
         this.drawingService.addElement(this.groupElement);
@@ -185,6 +182,7 @@ export class ToolLineService extends Tool {
         this.previewLine = this.renderer.createElement('line', 'svg');
         this.drawingService.addUiElement(this.previewLine);
         this.updatePreviewLine();
+        // tslint:enable: no-non-null-assertion
     }
 
     private removeLastPointFromLine(): void {

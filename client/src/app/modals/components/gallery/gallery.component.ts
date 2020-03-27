@@ -39,7 +39,7 @@ export class GalleryComponent implements OnInit {
 
     removeLabel(label: string): void {
         const labelIndex = this.searchLabels.indexOf(label, 0);
-        if (labelIndex >= 0) {
+        if (labelIndex !== -1) {
             this.searchLabels.splice(labelIndex, 1);
         }
     }
@@ -60,8 +60,8 @@ export class GalleryComponent implements OnInit {
         return ErrorMessageService.getErrorMessage(this.labelsFormControl, 'A-Z, a-z, 0-9');
     }
 
-    get areDrawingsLoaded(): boolean {
-        return this.galleryService.areDrawingsLoaded;
+    get isLoadingComplete(): boolean {
+        return this.galleryService.isLoadingComplete;
     }
 
     get drawingsWithLabels(): SvgFileContainer[] {

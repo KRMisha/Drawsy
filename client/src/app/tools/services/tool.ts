@@ -4,11 +4,8 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { ToolData } from '@app/tools/classes/tool-data';
-import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
-import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
+import { ToolSettings } from '@app/tools/classes/tool-settings';
 
 export abstract class Tool {
     static isLeftMouseButtonDown = false;
@@ -16,7 +13,7 @@ export abstract class Tool {
 
     name: string;
     icon: string;
-    toolSettings = new Map<ToolSetting, number | JunctionSettings | ShapeType | BrushTexture>();
+    settings: ToolSettings = {};
 
     protected renderer: Renderer2;
 

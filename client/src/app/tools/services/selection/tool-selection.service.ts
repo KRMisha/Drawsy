@@ -249,7 +249,7 @@ export class ToolSelectionService extends Tool {
     private inverseObjectsSelection(svgElements: SVGElement[], array: SVGElement[]): void {
         for (const svgElement of svgElements) {
             const elementToRemoveIndex = array.indexOf(svgElement, 0);
-            if (elementToRemoveIndex > -1) {
+            if (elementToRemoveIndex !== -1) {
                 array.splice(elementToRemoveIndex, 1);
             } else {
                 array.push(svgElement);

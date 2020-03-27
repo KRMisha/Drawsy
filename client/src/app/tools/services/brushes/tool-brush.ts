@@ -7,7 +7,6 @@ import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolBrush extends Tool {
@@ -21,7 +20,7 @@ export abstract class ToolBrush extends Tool {
         toolInfo: ToolData
     ) {
         super(rendererFactory, drawingService, colorService, commandService, toolInfo);
-        this.toolSettings.set(ToolSetting.LineWidth, ToolDefaults.defaultLineWidth);
+        this.settings.lineWidth = ToolDefaults.defaultLineWidth;
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -71,8 +70,10 @@ export abstract class ToolBrush extends Tool {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(path, 'data-padding', ((this.toolSettings.get(ToolSetting.LineWidth) as number) / 2).toString());
-        this.renderer.setAttribute(path, 'stroke-width', (this.toolSettings.get(ToolSetting.LineWidth) as number).toString());
+        // tslint:disable: no-non-null-assertion
+        this.renderer.setAttribute(path, 'data-padding', `${this.settings.lineWidth! / 2}`);
+        this.renderer.setAttribute(path, 'stroke-width', this.settings.lineWidth!.toString());
+        // tslint:enable: no-non-null-assertion
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         return path;

@@ -11,7 +11,6 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
@@ -31,8 +30,8 @@ export abstract class ToolShape extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, commandService, toolInfo);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
-        this.toolSettings.set(ToolSetting.ShapeType, ToolDefaults.defaultShapeType);
-        this.toolSettings.set(ToolSetting.ShapeBorderWidth, ToolDefaults.defaultShapeBorderWidth);
+        this.settings.shapeType = ToolDefaults.defaultShapeType;
+        this.settings.shapeBorderWidth = ToolDefaults.defaultShapeBorderWidth;
     }
 
     onPrimaryColorChange(color: Color): void {
@@ -97,23 +96,22 @@ export abstract class ToolShape extends Tool {
     protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
 
     private createNewShape(): SVGElement {
+        // tslint:disable: no-non-null-assertion
         const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
-        this.renderer.setAttribute(shape, 'stroke-width', (this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number).toString());
+        this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
 
-        const fillValue =
-            this.toolSettings.get(ToolSetting.ShapeType) === ShapeType.BorderOnly
-                ? 'none'
-                : this.colorService.getPrimaryColor().toRgbaString();
+        const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.getPrimaryColor().toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
 
-        if (this.toolSettings.get(ToolSetting.ShapeType) !== ShapeType.FillOnly) {
+        if (this.settings.shapeType! !== ShapeType.FillOnly) {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
         }
 
-        this.renderer.setAttribute(shape, 'data-padding', `${(this.toolSettings.get(ToolSetting.ShapeBorderWidth) as number) / 2}`);
+        this.renderer.setAttribute(shape, 'data-padding', `${this.settings.shapeBorderWidth! / 2}`);
 
         return shape;
+        // tslint:enable: no-non-null-assertion
     }
 
     private updateShapeArea(): void {

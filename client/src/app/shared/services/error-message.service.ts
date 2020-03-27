@@ -1,9 +1,5 @@
-import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
-@Injectable({
-    providedIn: 'root',
-})
 export class ErrorMessageService {
     static getErrorMessage(formControl: AbstractControl, humanFriendlyPattern?: string): string {
         return formControl.hasError('required')

@@ -4,7 +4,6 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
 
 @Injectable({
@@ -18,12 +17,13 @@ export class ToolPaintbrushService extends ToolBrush {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Paintbrush);
-        this.toolSettings.set(ToolSetting.BrushTexture, ToolDefaults.defaultBrushTexture);
+        this.settings.brushTexture = ToolDefaults.defaultBrushTexture;
     }
 
     protected createNewPath(): SVGPathElement {
         const path = super.createNewPath();
-        this.renderer.setAttribute(path, 'filter', `url(#brushTexture${this.toolSettings.get(ToolSetting.BrushTexture)})`);
+        // tslint:disable-next-line: no-non-null-assertion
+        this.renderer.setAttribute(path, 'filter', `url(#brushTexture${this.settings.brushTexture!})`);
         return path;
     }
 }
