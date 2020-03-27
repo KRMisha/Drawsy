@@ -4,9 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { ThemeService } from '@app/app/services/theme.service';
 
 describe('ThemeService', () => {
-    let overlayContainerSpyObj: jasmine.SpyObj<OverlayContainer>;
     let classListSpyObj: jasmine.SpyObj<DOMTokenList>;
     let containerElementSpyObj: jasmine.SpyObj<HTMLElement>;
+    let overlayContainerSpyObj: jasmine.SpyObj<OverlayContainer>;
     let service: ThemeService;
 
     beforeEach(() => {
