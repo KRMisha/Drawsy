@@ -14,7 +14,6 @@ const colorGradient = [
 
 const canvasWidth = 202;
 const canvasHeight = 20;
-const radius = 8;
 
 @Component({
     selector: 'app-hue-slider',
@@ -25,7 +24,6 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appHuePicker') hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
-    private canvas: HTMLCanvasElement;
 
     private isLeftMouseButtonDown = false;
     private isMouseInside = false;
@@ -33,16 +31,14 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     private hueChangedSubscription: Subscription;
 
-    private hueColor = new Color();
-
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
-        this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.canvas = this.hueCanvas.nativeElement;
-        this.canvas.width = canvasWidth;
-        this.canvas.height = canvasHeight;
-        this.sliderPosition = (this.colorPickerService.hue / Color.maxHue) * this.canvas.width;
+        const canvas = this.hueCanvas.nativeElement;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
         this.hueChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
             this.sliderPosition = (hue / Color.maxHue) * canvasWidth;
@@ -56,15 +52,17 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.updateHue(event);
+        if (this.isLeftMouseButtonDown) {
+            this.updateHue(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isLeftMouseButtonDown = true;
+            this.updateHue(event);
         }
-        this.updateHue(event);
     }
 
     @HostListener('document:mouseup')
@@ -83,39 +81,30 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     }
 
     private updateHue(event: MouseEvent): void {
-        if (!this.isLeftMouseButtonDown) {
-            return;
-        }
-
         const mouseXPosition = event.clientX - this.hueCanvas.nativeElement.getBoundingClientRect().x;
-
-        const hue = (Math.min(canvasWidth, Math.max(0, mouseXPosition)) / this.canvas.width) * Color.maxHue;
+        const hue = (Math.min(canvasWidth, Math.max(0, mouseXPosition)) / canvasWidth) * Color.maxHue;
         this.colorPickerService.hue = hue;
     }
 
     private draw(): void {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
-
-        this.context.clearRect(0, 0, width, height);
-
-        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
         for (let i = 0; i < colorGradient.length; i++) {
             horizontalGradient.addColorStop(i / colorGradient.length, colorGradient[i]);
         }
         horizontalGradient.addColorStop(1, colorGradient[0]);
-
         this.context.fillStyle = horizontalGradient;
-        const padding = 0;
-        this.context.fillRect(0, padding, width, height - 2 * padding);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        this.hueColor = Color.fromHsv(this.colorPickerService.hue, 1.0, 1.0);
-
+        const radius = 8;
         const circle = new Path2D();
-        circle.arc(this.sliderPosition, height / 2, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = this.hueColor.toRgbString();
+        circle.arc(this.sliderPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
+
+        const hueColor = Color.fromHsv(this.colorPickerService.hue, 1.0, 1.0);
+        this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
-        this.context.lineWidth = 2;
+
+        const lineWidth = 2;
+        this.context.lineWidth = lineWidth;
         this.context.strokeStyle = 'white';
         this.context.stroke(circle);
     }
