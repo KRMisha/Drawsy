@@ -45,8 +45,7 @@ describe('ToolPolygonService', () => {
 
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the maximum number of sides", () => {
         const shape = {} as SVGElement;
-        const toolSettings = new Map<ToolSetting, number>();
-        toolSettings.set(ToolSetting.PolygonSideCount, 12);
+        toolPolygon.settings.polygonSideCount = 12;
 
         const point: Vec2 = { x: 1, y: 1 };
         const pointArray: Vec2[] = [point, point, point, point, point, point, point, point, point, point, point, point];
@@ -56,7 +55,6 @@ describe('ToolPolygonService', () => {
         const scale: Vec2 = { x: 1, y: 1 };
 
         toolPolygon['shape'] = shape;
-        toolPolygon['settings'] = toolSettings;
         toolPolygon['updateShape'](shapeArea, scale, shape);
 
         const pointString = '1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 1, 1 ';
@@ -67,8 +65,7 @@ describe('ToolPolygonService', () => {
 
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the minimum number of sides", () => {
         const shape = {} as SVGElement;
-        const toolSettings = new Map<ToolSetting, number>();
-        toolSettings.set(ToolSetting.PolygonSideCount, 3);
+        toolPolygon.settings.polygonSideCount = 3;
 
         const point: Vec2 = { x: 1, y: 1 };
         const pointArray: Vec2[] = [point, point, point];
@@ -80,7 +77,6 @@ describe('ToolPolygonService', () => {
         const scale: Vec2 = { x: 1, y: 1 };
 
         toolPolygon['shape'] = shape;
-        toolPolygon['settings'] = toolSettings;
         toolPolygon['updateShape'](shapeArea, scale, shape);
 
         expect(getPolygonPointsSpy).toHaveBeenCalled();
