@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
-import { DrawingPreviewComponent } from './drawing-preview.component';
 
 describe('DrawingPreviewComponent', () => {
     let component: DrawingPreviewComponent;

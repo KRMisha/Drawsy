@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { GuideClipboardComponent } from './guide-clipboard.component';
+import { GuideClipboardComponent } from '@app/guide/components/guide-content/guide-tools/guide-clipboard/guide-clipboard.component';
 
 describe('GuideClipboardComponent', () => {
     let component: GuideClipboardComponent;
