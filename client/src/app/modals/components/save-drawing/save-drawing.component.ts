@@ -46,7 +46,7 @@ export class SaveDrawingComponent implements OnInit {
 
     removeLabel(label: string): void {
         const labelIndex = this.labels.indexOf(label);
-        if (labelIndex >= 0) {
+        if (labelIndex !== -1) {
             this.labels.splice(labelIndex, 1);
         }
     }
@@ -59,5 +59,13 @@ export class SaveDrawingComponent implements OnInit {
 
     getErrorMessage(formControl: AbstractControl): string {
         return ErrorMessageService.getErrorMessage(formControl, 'A-Z, a-z, 0-9');
+    }
+
+    get title(): string {
+        return this.drawingService.title;
+    }
+
+    get isCreateDrawingAction(): boolean {
+        return this.drawingService.id === undefined;
     }
 }

@@ -39,7 +39,7 @@ export class GalleryComponent implements OnInit {
 
     removeLabel(label: string): void {
         const labelIndex = this.searchLabels.indexOf(label, 0);
-        if (labelIndex >= 0) {
+        if (labelIndex !== -1) {
             this.searchLabels.splice(labelIndex, 1);
         }
     }
