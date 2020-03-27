@@ -107,7 +107,7 @@ describe('AppComponent', () => {
         const targetElement = document.createElement('anchor');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusIn(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLInputElement ", () => {
@@ -117,7 +117,7 @@ describe('AppComponent', () => {
         const targetElement = document.createElement('input');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusOut(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLTextAreaElement", () => {
@@ -127,7 +127,7 @@ describe('AppComponent', () => {
         const targetElement = document.createElement('textarea');
         const event = ({ target: targetElement } as unknown) as FocusEvent;
         component.onFocusOut(event);
-        expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
+        expect(shortcutServiceMock.areShortcutsEnabled).toEqual(true);
     });
 
     // tslint:disable-next-line: max-line-length
