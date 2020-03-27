@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
-import { Subscription, merge } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-color-picker',

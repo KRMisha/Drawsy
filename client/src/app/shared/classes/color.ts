@@ -4,8 +4,6 @@ export class Color {
     static readonly maxRgb = 255;
     static readonly maxHue = 360;
 
-    private lastHue = 0;
-
     private _red = 0; // tslint:disable-line: variable-name
     get red(): number {
         return this._red;
@@ -44,7 +42,6 @@ export class Color {
         newColor.green = color.green;
         newColor.blue = color.blue;
         newColor.alpha = color.alpha;
-        newColor.lastHue = color.lastHue;
         return newColor;
     }
 
@@ -64,7 +61,7 @@ export class Color {
 
     static fromHsv(hue: number, saturation: number, value: number): Color {
         const newColor = new Color();
-        newColor.setHsv(hue, value, saturation);
+        newColor.setHsv(hue, saturation, value);
         return newColor;
     }
 
@@ -104,6 +101,10 @@ export class Color {
         );
     }
 
+    equals(color: Color): boolean {
+        return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha;
+    }
+
     setHsv(hue: number, saturation: number, value: number): void {
         // All constants are taken from this algorithm:
         // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
@@ -139,8 +140,6 @@ export class Color {
             this.setNormalizedColor(chroma + m, m, x + m);
         }
         // tslint:enable: no-magic-numbers
-
-        this.lastHue = hue;
     }
 
     setHex(hex: string): boolean {
@@ -173,7 +172,7 @@ export class Color {
 
         let hue: number;
         if (deltaC === 0) {
-            hue = this.lastHue;
+            hue = 0;
         } else if (cMax === redPrime) {
             hue = angleValue * (((greenPrime - bluePrime) / deltaC) % 6);
         } else if (cMax === greenPrime) {

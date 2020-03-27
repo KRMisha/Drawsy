@@ -33,7 +33,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
     private saturationChangedSubscription: Subscription;
     private valueChangedSubscription: Subscription;
 
-    private isSliderPositionClipedToBottom = false;
+    // private isSliderPositionClipedToBottom = false;
 
     constructor(private colorPickerService: ColorPickerService) {}
 
@@ -49,11 +49,11 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
             this.draw();
         });
         this.saturationChangedSubscription = this.colorPickerService.saturationChanged$.subscribe((saturation: number) => {
-            const color = this.colorPickerService.getColor();
-            const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
-            if (!this.isSliderPositionClipedToBottom || !isBlack) {
-                this.sliderPosition.x = saturation * canvasWidth;
-            }
+            // const color = this.colorPickerService.getColor();
+            // const isBlack = color.red === 0 && color.green === 0 && color.blue === 0;
+            // if (!this.isSliderPositionClipedToBottom || !isBlack) {
+            // }
+            this.sliderPosition.x = saturation * canvasWidth;
             this.draw();
         });
         this.valueChangedSubscription = this.colorPickerService.valueChanged$.subscribe((value: number) => {
@@ -107,7 +107,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
         const mouseYPosition = event.clientY - this.saturationValueCanvas.nativeElement.getBoundingClientRect().y;
         this.sliderPosition.y = Math.min(canvasHeight, Math.max(0, mouseYPosition));
 
-        this.isSliderPositionClipedToBottom = mouseYPosition >= canvasHeight;
+        // this.isSliderPositionClipedToBottom = mouseYPosition >= canvasHeight;
 
         this.colorPickerService.saturation = this.sliderPosition.x / canvasWidth;
         this.colorPickerService.value = 1.0 - this.sliderPosition.y / canvasHeight;

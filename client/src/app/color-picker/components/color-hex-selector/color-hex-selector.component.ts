@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
-import { Subscription, merge } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-color-hex-selector',

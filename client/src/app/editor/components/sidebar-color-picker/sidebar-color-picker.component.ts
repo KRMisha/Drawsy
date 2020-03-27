@@ -57,10 +57,7 @@ export class SidebarColorPickerComponent {
     }
 
     getSelectedColor(): Color {
-        if (this.isPrimaryColorSelected) {
-            return this.colorService.getPrimaryColor();
-        }
-        return this.colorService.getSecondaryColor();
+        return this.isPrimaryColorSelected ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
     }
 
     onColorClick(event: MouseEvent, color: Color): void {

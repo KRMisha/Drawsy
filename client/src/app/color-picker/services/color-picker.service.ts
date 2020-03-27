@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ColorPickerService {
-    private color = new Color();
+    private previousColor: Color;
 
     private hueChangedSource = new BehaviorSubject<number>(0);
     private saturationChangedSource = new BehaviorSubject<number>(0);
@@ -24,6 +24,7 @@ export class ColorPickerService {
 
     set hue(hue: number) {
         this.hueChangedSource.next(hue);
+        this.previousColor = this.getColor();
     }
 
     get saturation(): number {
@@ -32,6 +33,7 @@ export class ColorPickerService {
 
     set saturation(saturation: number) {
         this.saturationChangedSource.next(saturation);
+        this.previousColor = this.getColor();
     }
 
     get value(): number {
@@ -40,6 +42,7 @@ export class ColorPickerService {
 
     set value(value: number) {
         this.valueChangedSource.next(value);
+        this.previousColor = this.getColor();
     }
 
     get alpha(): number {
@@ -48,21 +51,22 @@ export class ColorPickerService {
 
     set alpha(alpha: number) {
         this.alphaChangedSource.next(alpha);
+        this.previousColor = this.getColor();
     }
 
     getColor(): Color {
-        this.color.setHsv(this.hue, this.saturation, this.value);
-        this.color.alpha = this.alpha;
-        return this.color;
+        const color = Color.fromHsv(this.hue, this.saturation, this.value);
+        color.alpha = this.alpha;
+        return color;
     }
 
     setColor(color: Color): void {
-        this.color = Color.fromColor(color);
-
-        const hsv = this.color.getHsv();
-        if (color.red !== color.green || color.green !== color.blue || color.blue !== color.red) {
-            this.hueChangedSource.next(hsv[0]);
+        if (this.previousColor !== undefined && color.equals(this.previousColor)) {
+            return;
         }
+
+        const hsv = color.getHsv();
+        this.hueChangedSource.next(hsv[0]);
         this.saturationChangedSource.next(hsv[1]);
         this.valueChangedSource.next(hsv[2]);
         this.alphaChangedSource.next(color.alpha);
