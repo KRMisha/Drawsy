@@ -22,9 +22,7 @@ fdescribe('AppComponent', () => {
         modalServiceSpyObject = jasmine.createSpyObj('ModalService', ['openNewDrawingModal', 'openGalleryModal']);
         openNewDrawingShortcutSubject = new Subject<void>();
         openGalleryShortcutSubject = new Subject<void>();
-        shortcutServiceSpyObject = jasmine.createSpyObj('ShortcutService', [
-            'onKeyDown',
-        ], {
+        shortcutServiceSpyObject = jasmine.createSpyObj('ShortcutService', ['onKeyDown'], {
             openNewDrawingShortcut$: openNewDrawingShortcutSubject,
             openGalleryShortcut$: openGalleryShortcutSubject,
         });
@@ -49,15 +47,15 @@ fdescribe('AppComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#ngOnInit should subscribe to shortcutService\'s openNewDrawingShortcut and openGalleryShortcut', async(() => {
+    it("#ngOnInit should subscribe to shortcutService's openNewDrawingShortcut and openGalleryShortcut", async(() => {
         component.ngOnInit();
         openGalleryShortcutSubject.next();
-        expect(modalServiceSpyObject.openGalleryModal).toHaveBeenCalled();
         openNewDrawingShortcutSubject.next();
+        expect(modalServiceSpyObject.openGalleryModal).toHaveBeenCalled();
         expect(modalServiceSpyObject.openNewDrawingModal).toHaveBeenCalled();
     }));
 
-    it('#ngOnDestroy should call unsubscribe on the subscriptions', async(() => {
+    it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
         component.ngOnInit();
         // tslint:disable: no-any
         const newDrawingShortcutSubscriptionSpy = spyOn<any>(component['newDrawingShortcutSubscription'], 'unsubscribe');
@@ -68,7 +66,7 @@ fdescribe('AppComponent', () => {
         expect(galleryShortcutSubscriptionSpy).toHaveBeenCalled();
     }));
 
-    it('#onRightClick should prevent the default event', () => {
+    it('#onRightClick should prevent the default behaviour', () => {
         const event = new MouseEvent('');
         spyOn(event, 'preventDefault').and.callThrough();
         component.onRightClick(event);
@@ -81,7 +79,7 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceSpyObject.onKeyDown).toHaveBeenCalledWith(event);
     });
 
-    it('#onFocusIn should set shorcutService\'s areShortcutsEnabled to false if the event\'s target is a HTMLInputElement ', () => {
+    it("#onFocusIn should disable shortcuts if the event's target is an instance of HTMLInputElement ", () => {
         const shortcutServiceMock = { areShortcutsEnabled: true } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -91,7 +89,7 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeFalsy();
     });
 
-    it('#onFocusIn should set shorcutService\'s areShortcutsEnabled to false if the event\'s target is a HTMLTextAreaElement', () => {
+    it("#onFocusIn should disable shortcuts if the event's target is an instance of HTMLTextAreaElement", () => {
         const shortcutServiceMock = { areShortcutsEnabled: true } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -101,8 +99,8 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeFalsy();
     });
 
-    it('#onFocusIn should not set shorcutService\'s areShortcutsEnabled to false if the event\'s target' +
-     'is not a HTMLTextAreaElement or a HTMLInputElement', () => {
+    // tslint:disable-next-line: max-line-length
+    it("#onFocusIn should not disable shortcuts if the event's target is not an instance of HTMLTextAreaElement or HTMLInputElement", () => {
         const shortcutServiceMock = { areShortcutsEnabled: true } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -112,7 +110,7 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
     });
 
-    it('#onFocusOut should set shorcutService\'s areShortcutsEnabled to true if the event\'s target is a HTMLInputElement ', () => {
+    it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLInputElement ", () => {
         const shortcutServiceMock = { areShortcutsEnabled: false } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -122,7 +120,7 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
     });
 
-    it('#onFocusOut should set shorcutService\'s areShortcutsEnabled to true if the event\'s target is a HTMLTextAreaElement', () => {
+    it("#onFocusOut should enable shortcuts if the event's target is an instance of HTMLTextAreaElement", () => {
         const shortcutServiceMock = { areShortcutsEnabled: false } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -132,8 +130,8 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeTruthy();
     });
 
-    it('#onFocusOut should not set shorcutService\'s areShortcutsEnabled to true if the event\'s target' +
-     'is not a HTMLTextAreaElement or a HTMLInputElement', () => {
+    // tslint:disable-next-line: max-line-length
+    it("#onFocusOut should not enable shortcuts if the event's target is not an instance of HTMLTextAreaElement or HTMLInputElement", () => {
         const shortcutServiceMock = { areShortcutsEnabled: false } as ShortcutService;
         component['shortcutService'] = shortcutServiceMock;
 
@@ -143,7 +141,7 @@ fdescribe('AppComponent', () => {
         expect(shortcutServiceMock.areShortcutsEnabled).toBeFalsy();
     });
 
-    it('#get Theme should return themeService\'s theme', () => {
+    it("#get Theme should return themeService's theme", () => {
         const returnValue = component.theme;
         expect(returnValue).toEqual(themeServiceSpyObject.theme);
     });

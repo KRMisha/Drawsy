@@ -9,11 +9,7 @@ describe('HomeComponent', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
     beforeEach(async(() => {
-        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [
-            'openNewDrawingModal',
-            'openGalleryModal',
-            'openGuideModal',
-        ]);
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', ['openNewDrawingModal', 'openGalleryModal', 'openGuideModal']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['isDrawingStarted']);
         drawingServiceSpyObj.isDrawingStarted.and.returnValue(true);
         TestBed.configureTestingModule({
