@@ -151,7 +151,7 @@ describe('ToolShape', () => {
         const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
 
         Tool.isMouseInsideDrawing = true;
-        toolShape.settings.set(ToolSetting.ShapeType, ShapeType.BorderOnly);
+        toolShape.settings.shapeType = ShapeType.BorderOnly;
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
@@ -170,7 +170,7 @@ describe('ToolShape', () => {
         const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
 
         Tool.isMouseInsideDrawing = true;
-        toolShape.settings.set(ToolSetting.ShapeType, ShapeType.FillOnly);
+        toolShape.settings.shapeType = ShapeType.FillOnly;
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
