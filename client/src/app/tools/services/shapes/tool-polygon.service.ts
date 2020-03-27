@@ -7,7 +7,6 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 
 @Injectable({
@@ -21,7 +20,7 @@ export class ToolPolygonService extends ToolShape {
         commandService: CommandService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolName.Polygon, ToolIcon.Polygon, true);
-        this.toolSettings.set(ToolSetting.PolygonSideCount, ToolDefaults.defaultPolygonSideCount);
+        this.settings.polygonSideCount = ToolDefaults.defaultPolygonSideCount;
     }
 
     protected getShapeString(): string {
@@ -29,7 +28,7 @@ export class ToolPolygonService extends ToolShape {
     }
 
     protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
-        const sideCount = this.toolSettings.get(ToolSetting.PolygonSideCount) as number;
+        const sideCount = this.settings.polygonSideCount!; // tslint:disable-line: no-non-null-assertion
         const points = this.calculatePoints(shapeArea, scale, sideCount);
 
         let pointsString = '';

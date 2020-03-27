@@ -9,7 +9,6 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
 import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { ToolShape } from '@app/tools/services/shapes/tool-shape';
 import { Tool } from '@app/tools/services/tool';
 
@@ -154,7 +153,7 @@ describe('ToolShape', () => {
         const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
 
         Tool.isMouseInsideDrawing = true;
-        toolShape.toolSettings.set(ToolSetting.ShapeType, ShapeType.BorderOnly);
+        toolShape.settings.set(ToolSetting.ShapeType, ShapeType.BorderOnly);
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
@@ -173,7 +172,7 @@ describe('ToolShape', () => {
         const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
 
         Tool.isMouseInsideDrawing = true;
-        toolShape.toolSettings.set(ToolSetting.ShapeType, ShapeType.FillOnly);
+        toolShape.settings.set(ToolSetting.ShapeType, ShapeType.FillOnly);
         toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
