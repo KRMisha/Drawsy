@@ -8,8 +8,7 @@ import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Tool } from '@app/tools/services/tool';
@@ -45,7 +44,7 @@ export class ToolSelectionService extends Tool {
         private toolSelectionStateService: ToolSelectionStateService,
         private svgUtilityService: SvgUtilityService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.Selection, ToolIcon.Selection);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Selection);
     }
 
     afterDrawingInit(): void {
@@ -250,7 +249,7 @@ export class ToolSelectionService extends Tool {
     private inverseObjectsSelection(svgElements: SVGElement[], array: SVGElement[]): void {
         for (const svgElement of svgElements) {
             const elementToRemoveIndex = array.indexOf(svgElement, 0);
-            if (elementToRemoveIndex > -1) {
+            if (elementToRemoveIndex !== -1) {
                 array.splice(elementToRemoveIndex, 1);
             } else {
                 array.push(svgElement);

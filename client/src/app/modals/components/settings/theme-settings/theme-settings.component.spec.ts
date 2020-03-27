@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ThemeSettingsComponent } from '@app/theme/components/theme-settings/theme-settings.component';
+import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 
 describe('ThemeSettingsComponent', () => {
     let component: ThemeSettingsComponent;
