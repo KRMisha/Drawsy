@@ -10,6 +10,6 @@
 
     <mat-dialog-actions align="center">
         <button mat-raised-button class="button" type="reset" (click)="resetInitialSettings()">Réinitialiser</button>
-        <button mat-raised-button mat-dialog-close class="button" type="submit">Confirmer</button>
+        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="formGroup.invalid">Confirmer</button>
     </mat-dialog-actions>
 </form>
