@@ -3,6 +3,7 @@ import Regexes from '@app/shared/constants/regexes';
 export class Color {
     static readonly maxRgb = 255;
     static readonly maxHue = 360;
+    static readonly maxAlpha = 1;
 
     // tslint:disable: variable-name
     private _red = 0;
@@ -206,7 +207,7 @@ export class Color {
     }
 
     set alpha(alpha: number) {
-        this._alpha = this.clampValue(alpha, 0, 1);
+        this._alpha = this.clampValue(alpha, 0, Color.maxAlpha);
     }
 
     private componentToHex(component: number): string {
