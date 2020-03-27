@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DrawingSettingsComponent } from './drawing-dimensions-settings.component';
+import { DrawingSettingsComponent } from '@app/modals/components/settings/drawing-settings/drawing-settings.component';
 
 describe('DrawingDimensionsSettingsComponent', () => {
     let component: DrawingSettingsComponent;

@@ -10,7 +10,7 @@
         <mat-form-field class="form-field-item">
             <input matInput formControlName="gridSize" />
             <span matSuffix>px</span>
-            <mat-error *ngIf="formGroup.controls.gridSize.invalid">{{ getErrorMessage(formGroup.controls.gridSize, '0-9') }}</mat-error>
+            <mat-error *ngIf="formGroup.controls.gridSize.invalid">{{ getErrorMessage(formGroup.controls.gridSize, 'Entiers') }}</mat-error>
         </mat-form-field>
         <mat-slider
             class="slider-item"
@@ -29,7 +29,7 @@
         <mat-form-field class="form-field-item">
             <input matInput formControlName="gridOpacity" />
             <mat-error *ngIf="formGroup.controls.gridOpacity.invalid">
-                {{ getErrorMessage(formGroup.controls.gridOpacity, 'Nombre') }}
+                {{ getErrorMessage(formGroup.controls.gridOpacity, 'Nombres') }}
             </mat-error>
             <span matSuffix></span>
         </mat-form-field>
