@@ -47,20 +47,12 @@ export class SidebarColorPickerComponent {
         this.color = this.colorService.secondaryColor;
     }
 
-    updateColor(color: Color): void {
-        this.color = color;
-    }
-
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
         this.color = this.isPrimaryColorSelected ? this.colorService.primaryColor : this.colorService.secondaryColor;
     }
 
-    getSelectedColor(): Color {
-        return this.isPrimaryColorSelected ? this.colorService.primaryColor : this.colorService.secondaryColor;
-    }
-
-    onColorClick(event: MouseEvent, color: Color): void {
+    onPreviousColorClick(event: MouseEvent, color: Color): void {
         if (event.button === MouseButton.Left || event.button === MouseButton.Right) {
             event.button === MouseButton.Left ? this.colorService.primaryColor = color : this.colorService.secondaryColor = color;
         }

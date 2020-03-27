@@ -31,8 +31,8 @@
         [matTooltip]="'#' + color.getHex()"
         matRipple
         [style.background-color]="color.toRgbString()"
-        (click)="onColorClick($event, color)"
-        (contextmenu)="onColorClick($event, color)"
+        (click)="onPreviousColorClick($event, color)"
+        (contextmenu)="onPreviousColorClick($event, color)"
     ></div>
 </div>
 
