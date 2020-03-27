@@ -93,7 +93,7 @@ describe('SaveDrawingService', () => {
         expect(createDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#createDrawing should update drawingService\'s current id and display success message when the request is successful', async(() => {
+    it('#createDrawing should update drawingService\'s id and display success message when the request is successful', async(() => {
         const drawingServiceMock = { id: initialId, title: initialTitle } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['createDrawing']();
@@ -105,7 +105,7 @@ describe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(newFileId.id);
     }));
 
-    it('#createDrawing should display error message when the request is a BadRequest error', async(() => {
+    it('#createDrawing should display error message when the request is status BadRequest', async(() => {
         saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
@@ -115,7 +115,7 @@ describe('SaveDrawingService', () => {
         });
     }));
 
-    it('#createDrawing should not display error message when the request error is different from BadRequest error', async(() => {
+    it('#createDrawing should not display error message when the request error status is different from BadRequest', async(() => {
         saveDrawingService['createDrawing']();
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith('outerHTML');
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
@@ -132,7 +132,8 @@ describe('SaveDrawingService', () => {
         });
     }));
 
-    it('#updateDrawing should display appropriate error message when the request error is NotFound', async(() => {
+    it('#updateDrawing should display appropriate error message and set drawingService\'s id to ' +
+        'undefined when the request error is NotFound', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
@@ -162,7 +163,7 @@ describe('SaveDrawingService', () => {
         expect(drawingServiceMock.id).toEqual(initialId);
     }));
 
-    it('#updateDrawing should only set drawingService\'s id to undefined when the error is not BadRequest or Notfound', async(() => {
+    it('#updateDrawing should only display an error message when the error status is different from BadRequest or Notfound', async(() => {
         const drawingServiceMock = { id: initialId } as DrawingService;
         saveDrawingService['drawingService'] = drawingServiceMock;
         saveDrawingService['updateDrawing']();
@@ -170,5 +171,6 @@ describe('SaveDrawingService', () => {
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadGateway });
         updateDrawingSubject.error(error);
         expect(drawingServiceMock.id).toEqual(initialId);
+        expect(snackBarSpyObj.open).not.toHaveBeenCalled();
     }));
 });
