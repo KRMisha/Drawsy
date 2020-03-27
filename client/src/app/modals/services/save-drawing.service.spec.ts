@@ -46,13 +46,13 @@ describe('SaveDrawingService', () => {
             'createDrawing',
             'updateDrawing',
         ]);
+        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', [
+            'open',
+        ]);
         createDrawingSubject = new Subject<NewFileId>();
         serverServiceSpyObj.createDrawing.and.returnValue(createDrawingSubject);
         updateDrawingSubject = new Subject<void>();
         serverServiceSpyObj.updateDrawing.and.returnValue(updateDrawingSubject);
-        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', [
-            'open',
-        ]);
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
