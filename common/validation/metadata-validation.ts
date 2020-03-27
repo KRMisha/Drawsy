@@ -1,5 +1,5 @@
 export default {
-    contentRegex: /^[\w ]+$/,
+    contentRegex: /^[A-Za-zÀ-ÖØ-öø-ÿ'" ]+$/,
     maxTitleLength: 25,
     maxLabelLength: 15,
 };
