@@ -39,7 +39,7 @@ export class SettingsService {
 
     private initialDrawingDimensions = { x: this.drawingService.dimensions.x, y: this.drawingService.dimensions.y };
 
-    private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);
+    private initialBackgroundColor = this.drawingService.backgroundColor.clone();
 
     private initialIsGridDisplayEnabled = this.gridService.isDisplayEnabled;
     private initialGridSize = this.gridService.size;

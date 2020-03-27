@@ -42,13 +42,13 @@ export class ColorService {
     }
 
     setPrimaryColor(color: Color): void {
-        this.primaryColor = Color.fromColor(color);
+        this.primaryColor = color.clone();
         this.addColor(this.primaryColor);
         this.primaryColorChangedSource.next(this.primaryColor);
     }
 
     setSecondaryColor(color: Color): void {
-        this.secondaryColor = Color.fromColor(color);
+        this.secondaryColor = color.clone();
         this.addColor(this.secondaryColor);
         this.secondaryColorChangedSource.next(this.secondaryColor);
     }

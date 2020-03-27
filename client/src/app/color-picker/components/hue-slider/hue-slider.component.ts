@@ -109,7 +109,7 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         const padding = 0;
         this.context.fillRect(0, padding, width, height - 2 * padding);
 
-        this.hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
+        this.hueColor = Color.fromHsv(this.colorPickerService.hue, 1.0, 1.0);
 
         const circle = new Path2D();
         circle.arc(this.sliderPosition, height / 2, radius, 0, 2 * Math.PI);

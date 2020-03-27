@@ -144,7 +144,7 @@ export class ToolLineService extends Tool {
         }
         this.renderer.setAttribute(this.groupElement, 'stroke', color.toRgbaString());
 
-        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        const previewColor = this.colorService.getPrimaryColor().clone();
         previewColor.alpha /= 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
 
@@ -265,7 +265,7 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLine(): void {
-        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        const previewColor = this.colorService.getPrimaryColor().clone();
         previewColor.alpha /= 2;
 
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());

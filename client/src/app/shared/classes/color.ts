@@ -4,46 +4,12 @@ export class Color {
     static readonly maxRgb = 255;
     static readonly maxHue = 360;
 
-    private _red = 0; // tslint:disable-line: variable-name
-    get red(): number {
-        return this._red;
-    }
-    set red(red: number) {
-        this._red = this.clampValue(red, 0, Color.maxRgb);
-    }
-
-    private _green = 0; // tslint:disable-line: variable-name
-    get green(): number {
-        return this._green;
-    }
-    set green(green: number) {
-        this._green = this.clampValue(green, 0, Color.maxRgb);
-    }
-
-    private _blue = 0; // tslint:disable-line: variable-name
-    get blue(): number {
-        return this._blue;
-    }
-    set blue(blue: number) {
-        this._blue = this.clampValue(blue, 0, Color.maxRgb);
-    }
-
-    private _alpha = 1; // tslint:disable-line: variable-name
-    get alpha(): number {
-        return this._alpha;
-    }
-    set alpha(alpha: number) {
-        this._alpha = this.clampValue(alpha, 0, 1);
-    }
-
-    static fromColor(color: Color): Color {
-        const newColor = new Color();
-        newColor.red = color.red;
-        newColor.green = color.green;
-        newColor.blue = color.blue;
-        newColor.alpha = color.alpha;
-        return newColor;
-    }
+    // tslint:disable: variable-name
+    private _red = 0;
+    private _green = 0;
+    private _blue = 0;
+    private _alpha = 1;
+    // tslint:enable: variable-name
 
     static fromRgb(red: number, green: number, blue: number): Color {
         const newColor = new Color();
@@ -60,14 +26,61 @@ export class Color {
     }
 
     static fromHsv(hue: number, saturation: number, value: number): Color {
-        const newColor = new Color();
-        newColor.setHsv(hue, saturation, value);
+        // All constants are taken from this algorithm:
+        // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
+        // tslint:disable: no-magic-numbers
+
+        const minHue = 0;
+        const minSaturation = 0;
+        const maxSaturation = 1;
+        const minValue = 0;
+        const maxValue = 1;
+
+        hue = Math.min(Math.max(minHue, hue), Color.maxHue);
+        saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
+        value = Math.min(Math.max(minValue, value), maxValue);
+
+        const sectionSize = 60;
+        hue /= sectionSize;
+
+        const chroma = value * saturation;
+        const x = chroma * (1 - Math.abs((hue % 2) - 1));
+        const m = value - chroma;
+
+        let newColor: Color;
+        if (hue <= 1) {
+            newColor = Color.fromRgb(chroma + m, x + m, m);
+        } else if (hue <= 2) {
+            newColor = Color.fromRgb(x + m, chroma + m, m);
+        } else if (hue <= 3) {
+            newColor = Color.fromRgb(m, chroma + m, x + m);
+        } else if (hue <= 4) {
+            newColor = Color.fromRgb(m, x + m, chroma + m);
+        } else if (hue <= 5) {
+            newColor = Color.fromRgb(x + m, m, chroma + m);
+        } else {
+            newColor = Color.fromRgb(chroma + m, m, x + m);
+        }
+        newColor.red *= Color.maxRgb;
+        newColor.green *= Color.maxRgb;
+        newColor.blue *= Color.maxRgb;
+
         return newColor;
+        // tslint:enable: no-magic-numbers
     }
 
     static fromHex(hex: string): Color {
         const newColor = new Color();
-        newColor.setHex(hex);
+
+        if (Regexes.sixHexRegex.test(hex)) {
+            const radix = 16;
+            // tslint:disable: no-magic-numbers
+            newColor.red = parseInt(hex.substring(0, 2), radix);
+            newColor.green = parseInt(hex.substring(2, 4), radix);
+            newColor.blue = parseInt(hex.substring(4, 6), radix);
+            // tslint:enable: no-magic-numbers
+        }
+
         return newColor;
     }
 
@@ -101,58 +114,17 @@ export class Color {
         );
     }
 
+    clone(): Color {
+        const newColor = new Color();
+        newColor.red = this.red;
+        newColor.green = this.green;
+        newColor.blue = this.blue;
+        newColor.alpha = this.alpha;
+        return newColor;
+    }
+
     equals(color: Color): boolean {
         return this.red === color.red && this.green === color.green && this.blue === color.blue && this.alpha === color.alpha;
-    }
-
-    setHsv(hue: number, saturation: number, value: number): void {
-        // All constants are taken from this algorithm:
-        // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
-        // tslint:disable: no-magic-numbers
-
-        const minHue = 0;
-        const minSaturation = 0;
-        const maxSaturation = 1;
-        const minValue = 0;
-        const maxValue = 1;
-        const sectionSize = 60;
-
-        hue = Math.min(Math.max(minHue, hue), Color.maxHue);
-        saturation = Math.min(Math.max(minSaturation, saturation), maxSaturation);
-        value = Math.min(Math.max(minValue, value), maxValue);
-
-        hue /= sectionSize;
-        const chroma = value * saturation;
-        const x = chroma * (1 - Math.abs((hue % 2) - 1));
-        const m = value - chroma;
-
-        if (hue <= 1) {
-            this.setNormalizedColor(chroma + m, x + m, m);
-        } else if (hue <= 2) {
-            this.setNormalizedColor(x + m, chroma + m, m);
-        } else if (hue <= 3) {
-            this.setNormalizedColor(m, chroma + m, x + m);
-        } else if (hue <= 4) {
-            this.setNormalizedColor(m, x + m, chroma + m);
-        } else if (hue <= 5) {
-            this.setNormalizedColor(x + m, m, chroma + m);
-        } else {
-            this.setNormalizedColor(chroma + m, m, x + m);
-        }
-        // tslint:enable: no-magic-numbers
-    }
-
-    setHex(hex: string): boolean {
-        if (Regexes.sixHexRegex.test(hex)) {
-            // tslint:disable: no-magic-numbers
-            const radix = 16;
-            this.red = parseInt(hex.substring(0, 2), radix);
-            this.green = parseInt(hex.substring(2, 4), radix);
-            this.blue = parseInt(hex.substring(4, 6), radix);
-            // tslint:enable: no-magic-numbers
-            return true;
-        }
-        return false;
     }
 
     getHsv(): [number, number, number] {
@@ -197,24 +169,50 @@ export class Color {
         return '' + this.componentToHex(this.red) + this.componentToHex(this.green) + this.componentToHex(this.blue);
     }
 
+    toRgbString(): string {
+        return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+    }
+
     toRgbaString(): string {
         return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
 
-    toRgbString(): string {
-        return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+    get red(): number {
+        return this._red;
+    }
+
+    set red(red: number) {
+        this._red = this.clampValue(red, 0, Color.maxRgb);
+    }
+
+    get green(): number {
+        return this._green;
+    }
+
+    set green(green: number) {
+        this._green = this.clampValue(green, 0, Color.maxRgb);
+    }
+
+    get blue(): number {
+        return this._blue;
+    }
+
+    set blue(blue: number) {
+        this._blue = this.clampValue(blue, 0, Color.maxRgb);
+    }
+
+    get alpha(): number {
+        return this._alpha;
+    }
+
+    set alpha(alpha: number) {
+        this._alpha = this.clampValue(alpha, 0, 1);
     }
 
     private componentToHex(component: number): string {
         const hexBase = 16;
         const hex = Math.round(component).toString(hexBase);
         return hex.length === 1 ? '0' + hex : hex;
-    }
-
-    private setNormalizedColor(red: number, green: number, blue: number): void {
-        this.red = red * Color.maxRgb;
-        this.green = green * Color.maxRgb;
-        this.blue = blue * Color.maxRgb;
     }
 
     private clampValue(value: number, min: number, max: number): number {
