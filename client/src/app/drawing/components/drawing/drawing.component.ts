@@ -45,7 +45,6 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
         this.drawingService.reappendStoredElements();
-        this.currentToolService.afterDrawingInit();
     }
 
     ngOnDestroy(): void {

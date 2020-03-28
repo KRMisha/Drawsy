@@ -1,16 +1,35 @@
 import { Injectable } from '@angular/core';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Rect } from '@app/shared/classes/rect';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSelectionStateService {
-    selectedElements: SVGElement[] = [];
-    svgSelectedShapesRect: SVGRectElement;
-    svgUserSelectionRect: SVGRectElement;
-    svgControlPoints: SVGElement[] = [];
-    selectionRect?: Rect = undefined;
-
     isMovingSelectionWithArrows = false;
     isMovingSelectionWithMouse = false;
+
+    private selectedElementsChangedSource = new Subject<SVGElement[]>();
+    private _selectedElements: SVGElement[] = []; // tslint:disable-line: variable-name
+
+    private _selectionRect?: Rect; // tslint:disable-line: variable-name
+
+    selectedElementsChanged$ = this.selectedElementsChangedSource.asObservable(); // tslint:disable-line: member-ordering
+
+    constructor(private svgUtilityService: SvgUtilityService) {}
+
+    get selectedElements(): SVGElement[] {
+        return this._selectedElements;
+    }
+
+    set selectedElements(selectedElements: SVGElement[]) {
+        this._selectionRect = this.svgUtilityService.getElementListBounds(selectedElements);
+        this._selectedElements = selectedElements;
+        this.selectedElementsChangedSource.next(selectedElements);
+    }
+
+    get selectionRect(): Rect | undefined {
+        return this._selectionRect;
+    }
 }

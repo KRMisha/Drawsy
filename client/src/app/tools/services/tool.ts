@@ -31,7 +31,6 @@ export abstract class Tool {
     // Disable tslint for method stubs below because not all derived service classes
     // may need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    afterDrawingInit(): void {}
     onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
@@ -43,7 +42,9 @@ export abstract class Tool {
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGElement): void {}
-    reset(): void {}
+    update(mousePosition: Vec2): void {}
+    onToolSelection(mousePosition: Vec2): void {}
+    onToolDeselection(): void {}
     // tslint:enable: no-empty
 
     protected getMousePosition(event: MouseEvent): Vec2 {

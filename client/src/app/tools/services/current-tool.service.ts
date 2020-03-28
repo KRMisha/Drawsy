@@ -3,8 +3,8 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { Tool } from '@app/tools/services/tool';
-import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -17,7 +17,9 @@ export class CurrentToolService implements OnDestroy {
     private secondaryColorChangedSubscription: Subscription;
     private elementClickedSubscription: Subscription;
 
-    constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
+    private mousePosition: Vec2;
+
+    constructor(private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });
@@ -37,17 +39,13 @@ export class CurrentToolService implements OnDestroy {
         this.elementClickedSubscription.unsubscribe();
     }
 
-    afterDrawingInit(): void {
-        for (const tool of this.toolHolderService.tools) {
-            tool.afterDrawingInit();
-        }
-    }
-
     onMouseMove(event: MouseEvent): void {
+        this.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseMove(event);
     }
 
     onMouseDown(event: MouseEvent): void {
+        this.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDown(event);
     }
 
@@ -83,15 +81,28 @@ export class CurrentToolService implements OnDestroy {
         Tool.isMouseInsideDrawing = isMouseInsideDrawing;
     }
 
+    updateSelectedTool(): void {
+        this.currentTool.update(this.mousePosition);
+    }
+
     get currentTool(): Tool {
         return this._currentTool;
     }
 
     set currentTool(tool: Tool) {
         if (this.currentTool !== undefined) {
-            this.currentTool.reset();
+            this.currentTool.onToolDeselection();
         }
 
         this._currentTool = tool;
+        this._currentTool.onToolSelection(this.mousePosition);
+    }
+
+    private getMousePosition(event: MouseEvent): Vec2 {
+        const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
+        return {
+            x: event.clientX - rootBounds.x,
+            y: event.clientY - rootBounds.y,
+        } as Vec2;
     }
 }
