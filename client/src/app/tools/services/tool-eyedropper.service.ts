@@ -49,7 +49,7 @@ export class ToolEyedropperService extends Tool {
     }
 
     private async setColor(event: MouseEvent): Promise<void> {
-        const color = await this.getPixelColor(this.getMousePosition(event));
+        const color = await this.getPixelColor(Tool.mousePosition);
         if (event.button === MouseButton.Left) {
             this.colorService.primaryColor = color;
         } else if (event.button === MouseButton.Right) {

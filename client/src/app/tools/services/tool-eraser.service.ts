@@ -7,7 +7,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
-import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
@@ -47,21 +46,18 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        const mousePosition = this.getMousePosition(event);
         const msDelayBetweenCalls = 32;
-        this.updateEraserRect(mousePosition);
+        this.updateEraserRect();
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
-                this.update(mousePosition);
+                this.update();
             }, msDelayBetweenCalls);
         }
     }
 
     onMouseDown(event: MouseEvent): void {
-        const mousePosition = this.getMousePosition(event);
         this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
-        this.update(mousePosition);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -78,7 +74,7 @@ export class ToolEraserService extends Tool {
         }
     }
 
-    update(mousePosition: Vec2): void {
+    update(): void {
         this.timerId = undefined;
         const elementToConsider = this.svgUtilityService.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
 
@@ -108,7 +104,7 @@ export class ToolEraserService extends Tool {
         }
     }
 
-    onToolSelection(mousePosition: Vec2): void {
+    onToolSelection(): void {
         this.drawingService.addUiElement(this.svgEraserElement);
     }
 
@@ -118,11 +114,11 @@ export class ToolEraserService extends Tool {
         this.svgElementUnderCursor = undefined;
     }
 
-    private updateEraserRect(mousePosition: Vec2): void {
+    private updateEraserRect(): void {
         this.eraserSize = this.settings.eraserSize!; // tslint:disable-line: no-non-null-assertion
         this.eraserRect = {
-            x: mousePosition.x - this.eraserSize / 2,
-            y: mousePosition.y - this.eraserSize / 2,
+            x: Tool.mousePosition.x - this.eraserSize / 2,
+            y: Tool.mousePosition.y - this.eraserSize / 2,
             width: this.eraserSize,
             height: this.eraserSize,
         };

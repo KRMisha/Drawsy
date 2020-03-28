@@ -17,8 +17,6 @@ export class CurrentToolService implements OnDestroy {
     private secondaryColorChangedSubscription: Subscription;
     private elementClickedSubscription: Subscription;
 
-    private mousePosition: Vec2;
-
     constructor(private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
@@ -40,12 +38,12 @@ export class CurrentToolService implements OnDestroy {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseMove(event);
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDown(event);
     }
 
@@ -82,7 +80,7 @@ export class CurrentToolService implements OnDestroy {
     }
 
     updateSelectedTool(): void {
-        this.currentTool.update(this.mousePosition);
+        this.currentTool.update();
     }
 
     get currentTool(): Tool {
@@ -95,7 +93,7 @@ export class CurrentToolService implements OnDestroy {
         }
 
         this._currentTool = tool;
-        this._currentTool.onToolSelection(this.mousePosition);
+        this._currentTool.onToolSelection();
     }
 
     private getMousePosition(event: MouseEvent): Vec2 {

@@ -17,7 +17,6 @@ export abstract class ToolShape extends Tool {
     private shape?: SVGGraphicsElement;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
-    private mousePosition: Vec2 = { x: 0, y: 0 };
     private isShapeAlwaysRegular: boolean;
 
     constructor(
@@ -47,17 +46,15 @@ export abstract class ToolShape extends Tool {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
         if (Tool.isLeftMouseButtonDown) {
             this.updateShapeArea();
         }
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
         if (Tool.isMouseInsideDrawing) {
             this.shape = this.createNewShape();
-            this.origin = this.getMousePosition(event);
+            this.origin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
         }
@@ -66,8 +63,8 @@ export abstract class ToolShape extends Tool {
     onMouseUp(event: MouseEvent): void {
         if (event.button === MouseButton.Left && this.shape !== undefined) {
             const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
-            const isValidRegular = isShapeRegular && (this.origin.x !== this.mousePosition.x || this.origin.y !== this.mousePosition.y);
-            const isValidNonRegular = !isShapeRegular && this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y;
+            const isValidRegular = isShapeRegular && (this.origin.x !== Tool.mousePosition.x || this.origin.y !== Tool.mousePosition.y);
+            const isValidNonRegular = !isShapeRegular && this.origin.x !== Tool.mousePosition.x && this.origin.y !== Tool.mousePosition.y;
             if (isValidRegular || isValidNonRegular) {
                 this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
             } else {
@@ -119,14 +116,14 @@ export abstract class ToolShape extends Tool {
             return;
         }
 
-        const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
-        const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
+        const isCurrentMouseRightOfOrigin = Tool.mousePosition.x >= this.origin.x;
+        const isCurrentMouseBelowOrigin = Tool.mousePosition.y >= this.origin.y;
 
-        const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
+        const mousePositionCopy = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
             const dimensions: Vec2 = {
-                x: Math.abs(this.mousePosition.x - this.origin.x),
-                y: Math.abs(this.mousePosition.y - this.origin.y),
+                x: Math.abs(Tool.mousePosition.x - this.origin.x),
+                y: Math.abs(Tool.mousePosition.y - this.origin.y),
             };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
             mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);

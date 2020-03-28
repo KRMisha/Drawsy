@@ -28,13 +28,15 @@ export class ToolSelectionUiService implements OnDestroy {
         private rendererFactory: RendererFactory2,
         private toolSelectionStateService: ToolSelectionStateService
     ) {
-        this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe((elements: SVGGraphicsElement[]) => {
-            if (elements.length === 0) {
-                this.hideSvgSelectedShapesRect();
-            } else {
-                this.updateSvgSelectedShapesRect(elements);
+        this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
+            (elements: SVGGraphicsElement[]) => {
+                if (elements.length === 0) {
+                    this.hideSvgSelectedShapesRect();
+                } else {
+                    this.updateSvgSelectedShapesRect(elements);
+                }
             }
-        });
+        );
 
         this.renderer = this.rendererFactory.createRenderer(null, null);
 

@@ -15,7 +15,6 @@ import { Tool } from '@app/tools/services/tool';
 })
 export class ToolSprayCanService extends Tool {
     private group?: SVGGElement;
-    private mousePosition: Vec2;
     private intervalId: number;
 
     constructor(
@@ -29,16 +28,11 @@ export class ToolSprayCanService extends Tool {
         this.settings.sprayRate = ToolDefaults.defaultSprayRate;
     }
 
-    onMouseMove(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
-    }
-
     onMouseDown(event: MouseEvent): void {
         if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
 
-        this.mousePosition = this.getMousePosition(event);
         this.startSpraying();
     }
 
@@ -85,8 +79,8 @@ export class ToolSprayCanService extends Tool {
 
     private createCircle(randomOffset: Vec2): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(circle, 'cx', `${this.mousePosition.x + randomOffset.x}`);
-        this.renderer.setAttribute(circle, 'cy', `${this.mousePosition.y + randomOffset.y}`);
+        this.renderer.setAttribute(circle, 'cx', `${Tool.mousePosition.x + randomOffset.x}`);
+        this.renderer.setAttribute(circle, 'cy', `${Tool.mousePosition.y + randomOffset.y}`);
         const pointRadius = 1;
         this.renderer.setAttribute(circle, 'r', pointRadius.toString());
         return circle;

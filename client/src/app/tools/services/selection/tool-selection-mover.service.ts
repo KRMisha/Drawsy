@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
+import { TransformElementsCommand } from '@app/drawing/classes/commands/transform-elements-command';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -88,7 +88,7 @@ export class ToolSelectionMoverService {
 
     addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.commandService.addCommand(new MoveElementsCommand(selectedElementsCopy));
+        this.commandService.addCommand(new TransformElementsCommand(selectedElementsCopy));
         this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
