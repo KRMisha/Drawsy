@@ -10,7 +10,7 @@ import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
 const minimumPointsToEnableBackspace = 4;
-const geometryDimension = 2;
+const pointsPerCoordinates = 2;
 const lineClosingPixelTolerance = 3;
 
 @Injectable({
@@ -113,7 +113,7 @@ export class ToolLineService extends Tool {
         if (this.junctionPoints.length > 0) {
             this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
         }
-        this.points.length -= geometryDimension;
+        this.points.length -= pointsPerCoordinates;
 
         if (!this.isShiftDown) {
             const firstXIndex = 0;
@@ -214,9 +214,9 @@ export class ToolLineService extends Tool {
 
     private removeLastPointFromLine(): void {
         if (this.points.length >= minimumPointsToEnableBackspace) {
-            this.points.length = this.points.length - geometryDimension;
+            this.points.length = this.points.length - pointsPerCoordinates;
             this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-            this.lastPoint.x = this.points[this.points.length - geometryDimension];
+            this.lastPoint.x = this.points[this.points.length - pointsPerCoordinates];
             this.lastPoint.y = this.points[this.points.length - 1];
             this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
@@ -236,9 +236,11 @@ export class ToolLineService extends Tool {
 
     private stopDrawing(): void {
         this.isCurrentlyDrawing = false;
-        this.points.length = 0;
         this.drawingService.removeUiElement(this.previewLine);
-        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
+        if (this.points.length > pointsPerCoordinates) {
+            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
+        }
+        this.points.length = 0;
     }
 
     private createNewPolyline(): SVGPolylineElement {
