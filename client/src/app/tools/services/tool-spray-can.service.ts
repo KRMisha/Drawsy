@@ -7,18 +7,16 @@ import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
+import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSprayCanService extends Tool {
-    private groupElement?: SVGGElement;
+    private group?: SVGGElement;
     private mousePosition: Vec2;
-    private interval: number;
+    private intervalId: number;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -26,9 +24,9 @@ export class ToolSprayCanService extends Tool {
         colorService: ColorService,
         commandService: CommandService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolName.SprayCan, ToolIcon.SprayCan);
-        this.toolSettings.set(ToolSetting.SprayDiameter, ToolDefaults.defaultSprayDiameter);
-        this.toolSettings.set(ToolSetting.SprayRate, ToolDefaults.defaultSprayRate);
+        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.SprayCan);
+        this.settings.sprayDiameter = ToolDefaults.defaultSprayDiameter;
+        this.settings.sprayRate = ToolDefaults.defaultSprayRate;
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -40,42 +38,39 @@ export class ToolSprayCanService extends Tool {
             return;
         }
 
-        this.groupElement = this.renderer.createElement('g', 'svg');
-        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke', 'none');
-
         this.mousePosition = this.getMousePosition(event);
-        this.drawingService.addElement(this.groupElement as SVGElement);
-        this.createSprayInterval();
+        this.startSpraying();
     }
 
     onMouseUp(event: MouseEvent): void {
-        this.stopSpray();
+        this.stopSpraying();
+    }
+
+    onLeave(event: MouseEvent): void {
+        this.stopSpraying();
     }
 
     onPrimaryColorChange(color: Color): void {
-        this.renderer.setAttribute(this.groupElement, 'fill', color.toRgbaString());
+        this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
     }
 
-    private stopSpray(): void {
-        if (this.groupElement === undefined) {
-            return;
-        }
-        window.clearInterval(this.interval);
-        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
-        this.groupElement = undefined;
+    onToolDeselection(): void {
+        this.stopSpraying();
     }
 
-    private createCircle(randomOffset: Vec2): SVGCircleElement {
-        const newCircle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
-        this.renderer.setAttribute(newCircle, 'cx', (this.mousePosition.x + randomOffset.x).toString());
-        this.renderer.setAttribute(newCircle, 'cy', (this.mousePosition.y + randomOffset.y).toString());
-        this.renderer.setAttribute(newCircle, 'r', '1');
-        return newCircle;
+    private startSpraying(): void {
+        this.group = this.renderer.createElement('g', 'svg');
+        this.renderer.setAttribute(this.group, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.drawingService.addElement(this.group as SVGElement);
+
+        const oneSecondInMilliseconds = 1000;
+        this.intervalId = window.setInterval(() => {
+            this.createSpray();
+        }, oneSecondInMilliseconds / this.settings.sprayRate!); // tslint:disable-line: no-non-null-assertion
     }
 
     private createSpray(): void {
-        const density = (this.toolSettings.get(ToolSetting.SprayDiameter) as number) / 2;
+        const density = this.settings.sprayDiameter! / 2; // tslint:disable-line: no-non-null-assertion
         for (let i = 0; i < density; i++) {
             this.createRandomPoint();
         }
@@ -83,16 +78,27 @@ export class ToolSprayCanService extends Tool {
 
     private createRandomPoint(): void {
         const angle = Math.random() * 2 * Math.PI;
-
-        const radius = (Math.random() * (this.toolSettings.get(ToolSetting.SprayDiameter) as number)) / 2;
+        const radius = Math.random() * (this.settings.sprayDiameter! / 2); // tslint:disable-line: no-non-null-assertion
         const position: Vec2 = { x: Math.floor(radius * Math.cos(angle)), y: Math.floor(radius * Math.sin(angle)) };
-        this.renderer.appendChild(this.groupElement, this.createCircle(position));
+        this.renderer.appendChild(this.group, this.createCircle(position));
     }
 
-    private createSprayInterval(): void {
-        const oneSecondInMilliseconds = 1000;
-        this.interval = window.setInterval(() => {
-            this.createSpray();
-        }, oneSecondInMilliseconds / (this.toolSettings.get(ToolSetting.SprayRate) as number));
+    private createCircle(randomOffset: Vec2): SVGCircleElement {
+        const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
+        this.renderer.setAttribute(circle, 'cx', `${this.mousePosition.x + randomOffset.x}`);
+        this.renderer.setAttribute(circle, 'cy', `${this.mousePosition.y + randomOffset.y}`);
+        const pointRadius = 1;
+        this.renderer.setAttribute(circle, 'r', pointRadius.toString());
+        return circle;
+    }
+
+    private stopSpraying(): void {
+        if (this.group === undefined) {
+            return;
+        }
+
+        window.clearInterval(this.intervalId);
+        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.group));
+        this.group = undefined;
     }
 }

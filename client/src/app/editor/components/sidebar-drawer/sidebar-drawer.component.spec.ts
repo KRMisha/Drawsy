@@ -7,7 +7,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorService } from '@app/drawing/services/color.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 
 // tslint:disable: no-empty
@@ -63,26 +62,26 @@ describe('SidebarDrawerComponent', () => {
     //     expect(component['currentToolService'].getToolName).toHaveBeenCalled();
     // });
 
-    it('#getSetting() should call getSetting from currentToolService with the chosen ToolSetting', () => {
-        spyOn(component, 'getSetting').and.callThrough();
-        component.getSetting(ToolSetting.LineWidth);
-        expect(component.getSetting).toHaveBeenCalled();
-        expect(component['currentToolService'].getSetting).toHaveBeenCalledWith(ToolSetting.LineWidth);
-    });
+    // it('#getSetting() should call getSetting from currentToolService with the chosen ToolSetting', () => {
+    //     spyOn(component, 'getSetting').and.callThrough();
+    //     component.getSetting(ToolSetting.LineWidth);
+    //     expect(component.getSetting).toHaveBeenCalled();
+    //     expect(component['currentToolService'].getSetting).toHaveBeenCalledWith(ToolSetting.LineWidth);
+    // });
 
-    it('#setSetting() should call getSetting from currentToolService with the chosen ToolSetting and value', () => {
-        spyOn(component, 'setSetting').and.callThrough();
-        component.setSetting(ToolSetting.LineWidth, 3);
-        expect(component.setSetting).toHaveBeenCalled();
-        expect(component['currentToolService'].setSetting).toHaveBeenCalledWith(ToolSetting.LineWidth, 3);
-    });
+    // it('#setSetting() should call getSetting from currentToolService with the chosen ToolSetting and value', () => {
+    //     spyOn(component, 'setSetting').and.callThrough();
+    //     component.setSetting(ToolSetting.LineWidth, 3);
+    //     expect(component.setSetting).toHaveBeenCalled();
+    //     expect(component['currentToolService'].setSetting).toHaveBeenCalledWith(ToolSetting.LineWidth, 3);
+    // });
 
-    it('#hasSetting() should call hasSetting from currentToolService with the chosen ToolSetting', () => {
-        spyOn(component, 'hasSetting').and.callThrough();
-        component.hasSetting(ToolSetting.LineWidth);
-        expect(component.hasSetting).toHaveBeenCalled();
-        expect(component['currentToolService'].hasSetting).toHaveBeenCalledWith(ToolSetting.LineWidth);
-    });
+    // it('#hasSetting() should call hasSetting from currentToolService with the chosen ToolSetting', () => {
+    //     spyOn(component, 'hasSetting').and.callThrough();
+    //     component.hasSetting(ToolSetting.LineWidth);
+    //     expect(component.hasSetting).toHaveBeenCalled();
+    //     expect(component['currentToolService'].hasSetting).toHaveBeenCalledWith(ToolSetting.LineWidth);
+    // });
 
     // it('#getPrimaryColor() should call getPrimaryColor from currentToolService', () => {
     //     spyOn(component, 'getPrimaryColor').and.callThrough();

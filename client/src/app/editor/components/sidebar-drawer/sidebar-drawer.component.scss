@@ -29,7 +29,7 @@
         'divider divider';
 }
 
-.setting-name-item {
+.setting-title-item {
     grid-area: setting-name;
     align-self: end;
     margin-bottom: 0;
@@ -38,8 +38,8 @@
 .form-field-item {
     grid-area: input-field;
     justify-self: right;
-    width: 70px;
     text-align: right;
+    width: 70px;
 
     ::ng-deep .mat-form-field-wrapper {
         margin-bottom: -1.25em;
@@ -105,10 +105,7 @@
     transform: scale(1.2);
 }
 
-h1,
-h2,
-div,
-p {
+* {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;

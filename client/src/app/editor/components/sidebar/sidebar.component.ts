@@ -47,40 +47,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.selectedTool = this.toolHolderService.tools[0];
+        this.currentTool = this.toolHolderService.tools[0];
 
         this.selectToolPencilShortcutSubscription = this.shortcutService.selectToolPencilShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolPencilService;
+            this.currentToolService.currentTool = this.toolHolderService.toolPencilService;
         });
         this.selectToolPaintbrushShortcutSubscription = this.shortcutService.selectToolPaintbrushShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolPaintbrushService;
+            this.currentToolService.currentTool = this.toolHolderService.toolPaintbrushService;
         });
         this.selectToolLineShortcutSubscription = this.shortcutService.selectToolLineShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolLineService;
+            this.currentToolService.currentTool = this.toolHolderService.toolLineService;
         });
         this.selectToolSprayCanShortcutSubscription = this.shortcutService.selectToolSprayCanShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolSprayCanService;
+            this.currentToolService.currentTool = this.toolHolderService.toolSprayCanService;
         });
         this.selectToolRectangleShortcutSubscription = this.shortcutService.selectToolRectangleShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolRectangleService;
+            this.currentToolService.currentTool = this.toolHolderService.toolRectangleService;
         });
         this.selectToolEllipseShortcutSubscription = this.shortcutService.selectToolEllipseShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolEllipseService;
+            this.currentToolService.currentTool = this.toolHolderService.toolEllipseService;
         });
         this.selectToolPolygonShortcutSubscription = this.shortcutService.selectToolPolygonShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolPolygonService;
+            this.currentToolService.currentTool = this.toolHolderService.toolPolygonService;
         });
         this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolEyedropperService;
+            this.currentToolService.currentTool = this.toolHolderService.toolEyedropperService;
         });
         this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecolorShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolRecolorService;
+            this.currentToolService.currentTool = this.toolHolderService.toolRecolorService;
         });
         this.selectToolSelectionShortcutSubscription = this.shortcutService.selectToolSelectionShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolSelectionService;
+            this.currentToolService.currentTool = this.toolHolderService.toolSelectionService;
         });
         this.selectToolEraserShortcutSubscription = this.shortcutService.selectToolEraserShortcut$.subscribe(() => {
-            this.currentToolService.selectedTool = this.toolHolderService.toolEraserService;
+            this.currentToolService.currentTool = this.toolHolderService.toolEraserService;
         });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
             this.openExportDrawingModal();
@@ -138,11 +138,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
         return this.toolHolderService.tools;
     }
 
-    get selectedTool(): Tool {
-        return this.currentToolService.selectedTool;
+    get currentTool(): Tool {
+        return this.currentToolService.currentTool;
     }
 
-    set selectedTool(tool: Tool) {
-        this.currentToolService.selectedTool = tool;
+    set currentTool(tool: Tool) {
+        this.currentToolService.currentTool = tool;
     }
 }

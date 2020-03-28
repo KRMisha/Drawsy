@@ -4,20 +4,16 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
-import { ShapeType } from '@app/tools/enums/shape-type.enum';
-import { ToolIcon } from '@app/tools/enums/tool-icon.enum';
-import { ToolName } from '@app/tools/enums/tool-name.enum';
-import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
+import { ToolData } from '@app/tools/classes/tool-data';
+import { ToolSettings } from '@app/tools/classes/tool-settings';
 
 export abstract class Tool {
     static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
-    name: ToolName;
-    icon: ToolIcon;
-    toolSettings = new Map<ToolSetting, number | JunctionSettings | ShapeType | BrushTexture>();
+    name: string;
+    icon: string;
+    settings: ToolSettings = {};
 
     protected renderer: Renderer2;
 
@@ -26,12 +22,10 @@ export abstract class Tool {
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected commandService: CommandService,
-        name: ToolName,
-        icon: ToolIcon
+        toolInfo: ToolData
     ) {
         this.renderer = this.rendererFactory.createRenderer(null, null);
-        this.name = name;
-        this.icon = icon;
+        ({ name: this.name, icon: this.icon } = toolInfo);
     }
 
     // Disable tslint for method stubs below because not all derived service classes

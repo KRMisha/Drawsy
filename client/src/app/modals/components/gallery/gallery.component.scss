@@ -15,6 +15,7 @@
     display: flex;
     justify-content: center;
     align-content: center;
+    overflow: hidden;
 }
 
 .gallery-container {
@@ -27,6 +28,7 @@
 .card-item {
     margin: 10px;
 }
+
 .card-title-container {
     justify-content: center;
 }
@@ -53,6 +55,5 @@
 }
 
 .button {
-    width: 20%;
-    min-width: max-content;
+    width: 150px;
 }

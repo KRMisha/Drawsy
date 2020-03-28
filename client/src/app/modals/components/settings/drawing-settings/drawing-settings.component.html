@@ -1,0 +1,16 @@
+<h3 class="title">Surface de dessin</h3>
+<form [formGroup]="formGroup" class="size-container" autocomplete="off">
+    <mat-form-field class="form-field-item">
+        <mat-label>Largeur</mat-label>
+        <input matInput formControlName="drawingWidth" />
+        <mat-error *ngIf="formGroup.controls.drawingWidth.invalid">{{ getErrorMessage(formGroup.controls.drawingWidth) }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-field-item">
+        <mat-label>Hauteur</mat-label>
+        <input matInput formControlName="drawingHeight" />
+        <mat-error *ngIf="formGroup.controls.drawingHeight.invalid">{{ getErrorMessage(formGroup.controls.drawingHeight) }}</mat-error>
+    </mat-form-field>
+</form>
+<div class="color-picker-container">
+    <app-color-picker [(colorModel)]="color"></app-color-picker>
+</div>

@@ -1,28 +1,30 @@
 <div mat-dialog-title class="title-container">
     <h1 class="title-item">Galerie de dessins</h1>
     <mat-form-field class="chip-list-item">
-        <mat-chip-list #chipList aria-label="Label selection">
+        <mat-chip-list #chipList aria-label="Sélection des étiquettes">
             <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
                 {{ label }}
                 <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input
-                placeholder="Rercherche par étiquettes (Chiffres 0-9, lettres a-z et A-Z et 15 caractères maximum)"
+                [formControl]="labelsFormControl"
+                placeholder="Rercherche par étiquettes"
                 [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 matChipInputAddOnBlur="true"
                 (matChipInputTokenEnd)="addLabel($event)"
                 autocomplete="off"
             />
-            <mat-error *ngIf="galleryGroup.controls.labels.invalid">{{ getLabelError() }}</mat-error>
+            <mat-error *ngIf="labelsFormControl.invalid">{{ getErrorMessage() }}</mat-error>
         </mat-chip-list>
     </mat-form-field>
 </div>
 <mat-dialog-content>
-    <div *ngIf="!areDrawingsLoaded" class="spinner-container">
+    <div *ngIf="!isLoadingComplete" class="spinner-container">
         <mat-spinner></mat-spinner>
     </div>
-    <ng-container *ngIf="areDrawingsLoaded">
+
+    <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="hasDrawings()" class="gallery-container">
             <mat-card *ngFor="let drawing of drawingsWithLabels" class="card-item">
                 <mat-card-header class="card-title-container">
@@ -42,9 +44,11 @@
                 </mat-card-actions>
             </mat-card>
         </div>
+
         <h2 *ngIf="!hasDrawings()" class="title-item">
             La galerie ne contient aucun dessin.
         </h2>
+
         <h2 *ngIf="hasDrawings() && drawingsWithLabels.length === 0" class="title-item">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h2>

@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { Color } from '@app/shared/classes/color';
 
-describe('DrawingSettingsComponent', () => {
-    let component: DrawingSettingsComponent;
-    let fixture: ComponentFixture<DrawingSettingsComponent>;
+describe('SettingsComponent', () => {
+    let component: SettingsComponent;
+    let fixture: ComponentFixture<SettingsComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawingSettingsComponent],
+            declarations: [SettingsComponent],
             providers: [{ provide: DrawingService, useValue: ({ backgroundColor: {} as Color } as unknown) as DrawingService }],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DrawingSettingsComponent);
+        fixture = TestBed.createComponent(SettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

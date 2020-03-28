@@ -28,30 +28,21 @@ export class SaveDrawingService {
         this.drawingService.id === undefined ? this.createDrawing() : this.updateDrawing();
     }
 
-    get title(): string {
-        return this.drawingService.title;
-    }
-    set title(title: string) {
-        this.drawingService.title = title;
-    }
-
-    get labels(): string[] {
-        return this.drawingService.labels;
-    }
-    set labels(labels: string[]) {
-        this.drawingService.labels = labels;
-    }
-
     private createDrawing(): void {
         this.serverService
             .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
             .pipe(catchError(this.alertCreateDrawingError()))
-            .subscribe((newFileId: NewFileId): void => {
-                this.drawingService.id = newFileId.id;
-                this.snackBar.open('Dessin sauvegardé : ' + this.title, undefined, {
-                    duration: snackBarDuration,
-                });
-            });
+            .subscribe(
+                (newFileId: NewFileId): void => {
+                    this.drawingService.id = newFileId.id;
+                    this.snackBar.open('Dessin sauvegardé : ' + this.drawingService.title, undefined, {
+                        duration: snackBarDuration,
+                    });
+                },
+                // No error handling needs to be done but the error must be caught
+                // tslint:disable-next-line: no-empty
+                (error: HttpErrorResponse): void => {}
+            );
     }
 
     private updateDrawing(): void {
@@ -62,7 +53,7 @@ export class SaveDrawingService {
             .pipe(catchError(this.alertUpdateDrawingError()))
             .subscribe(
                 (): void => {
-                    this.snackBar.open('Dessin mis à jour : ' + this.title, undefined, {
+                    this.snackBar.open('Dessin mis à jour : ' + this.drawingService.title, undefined, {
                         duration: snackBarDuration,
                     });
                 },

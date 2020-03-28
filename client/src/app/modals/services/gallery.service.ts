@@ -9,7 +9,7 @@ import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable({
@@ -17,7 +17,11 @@ import { catchError, finalize } from 'rxjs/operators';
 })
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
-    private _areDrawingsLoaded = false; // tslint:disable-line: variable-name
+    private _isLoadingComplete = false; // tslint:disable-line: variable-name
+
+    private loadingCompletedSource = new Subject<void>();
+
+    loadingCompleted$ = this.loadingCompletedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(
         private serverService: ServerService,
@@ -52,7 +56,7 @@ export class GalleryService {
                     });
 
                     const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
-                    if (drawingToRemoveIndex >= 0) {
+                    if (drawingToRemoveIndex !== -1) {
                         this._drawings.splice(drawingToRemoveIndex, 1);
                     }
 
@@ -67,20 +71,26 @@ export class GalleryService {
     }
 
     getAllDrawings(): void {
-        this._areDrawingsLoaded = false;
+        this._isLoadingComplete = false;
 
         this.serverService
             .getAllDrawings()
             .pipe(
                 finalize(() => {
-                    this._areDrawingsLoaded = true;
+                    this._isLoadingComplete = true;
+                    this.loadingCompletedSource.next();
                 })
             )
-            .subscribe((savedFiles: SavedFile[]) => {
-                this._drawings = savedFiles.map((savedFile: SavedFile) =>
-                    this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
-                );
-            });
+            .subscribe(
+                (savedFiles: SavedFile[]) => {
+                    this._drawings = savedFiles.map((savedFile: SavedFile) =>
+                        this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+                    );
+                },
+                (error: HttpErrorResponse): void => {
+                    this._drawings = [];
+                }
+            );
     }
 
     getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {
@@ -95,8 +105,8 @@ export class GalleryService {
         return this._drawings.length > 0;
     }
 
-    get areDrawingsLoaded(): boolean {
-        return this._areDrawingsLoaded;
+    get isLoadingComplete(): boolean {
+        return this._isLoadingComplete;
     }
 
     private alertDeleteDrawingError(): (error: HttpErrorResponse) => Observable<never> {
