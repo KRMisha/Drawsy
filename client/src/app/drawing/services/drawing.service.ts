@@ -26,10 +26,10 @@ export class DrawingService {
 
     private renderer: Renderer2;
 
-    private transformationMap = new Map<SVGElement, SvgTransformations>();
-    private mouseUpUnlistenFunctionMap = new Map<SVGElement, () => void>();
+    private transformationMap = new Map<SVGGraphicsElement, SvgTransformations>();
+    private mouseUpUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
 
-    private _svgElements: SVGElement[] = []; // tslint:disable-line: variable-name
+    private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickedSource = new Subject<SvgClickEvent>();
 
@@ -39,7 +39,7 @@ export class DrawingService {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    addElement(element: SVGElement, elementNextNeighbor?: SVGElement): void {
+    addElement(element: SVGGraphicsElement, elementNextNeighbor?: SVGGraphicsElement): void {
         if (elementNextNeighbor === undefined) {
             this.svgElements.push(element);
             if (this.svgDrawingContent !== undefined) {
@@ -62,7 +62,7 @@ export class DrawingService {
         this.mouseUpUnlistenFunctionMap.set(element, mouseUpUnlistenFunction);
     }
 
-    removeElement(element: SVGElement): void {
+    removeElement(element: SVGGraphicsElement): void {
         const elementToRemoveIndex = this.svgElements.indexOf(element);
         if (elementToRemoveIndex !== -1) {
             this.svgElements.splice(elementToRemoveIndex, 1);
@@ -79,13 +79,13 @@ export class DrawingService {
         this.mouseUpUnlistenFunctionMap.delete(element);
     }
 
-    addUiElement(element: SVGElement): void {
+    addUiElement(element: SVGGraphicsElement): void {
         if (this.svgDrawingContent !== undefined) {
             this.renderer.appendChild(this.svgUserInterfaceContent, element);
         }
     }
 
-    removeUiElement(element: SVGElement): void {
+    removeUiElement(element: SVGGraphicsElement): void {
         if (this.svgDrawingContent !== undefined) {
             this.renderer.removeChild(this.svgUserInterfaceContent, element);
         }
@@ -127,7 +127,7 @@ export class DrawingService {
         return true;
     }
 
-    moveElementList(elements: SVGElement[], moveOffset: Vec2): void {
+    moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
         for (const element of elements) {
             const transformations = this.transformationMap.get(element);
             if (!transformations) {
@@ -139,7 +139,7 @@ export class DrawingService {
         }
     }
 
-    get svgElements(): SVGElement[] {
+    get svgElements(): SVGGraphicsElement[] {
         return this._svgElements;
     }
 }

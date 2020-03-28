@@ -44,7 +44,7 @@ describe('ToolPolygonService', () => {
     });
 
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the maximum number of sides", () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolPolygon.settings.polygonSideCount = 12;
 
         const point: Vec2 = { x: 1, y: 1 };
@@ -64,7 +64,7 @@ describe('ToolPolygonService', () => {
     });
 
     it("#updateShape should call renderer's setAttribute with the appropriate parameters for the minimum number of sides", () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolPolygon.settings.polygonSideCount = 3;
 
         const point: Vec2 = { x: 1, y: 1 };
