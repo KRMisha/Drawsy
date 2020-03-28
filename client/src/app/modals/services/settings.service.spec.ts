@@ -10,14 +10,15 @@ import { Vec2 } from '@app/shared/classes/vec2';
 
 // tslint:disable: no-string-literal
 
-fdescribe('SettingsService', () => {
+describe('SettingsService', () => {
     let service: SettingsService;
     let settingsFormGroup: FormGroup;
+    let initialBackgroundColorSpyObj: jasmine.SpyObj<Color>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let gridServiceSpyObj: jasmine.SpyObj<GridService>;
     let themeServiceSpyObj: jasmine.SpyObj<ThemeService>;
+
     const initialDrawingDimensions: Vec2 = { x: 10, y: 10 };
-    const initialBackgroundColor = {} as Color;
     const initialThemeColor = 'initialColor';
     const initialGridSize = 20;
     const initialGridOpacity = 1;
@@ -27,9 +28,10 @@ fdescribe('SettingsService', () => {
     const maximumGridOpacity = 1;
 
     beforeEach(() => {
+        initialBackgroundColorSpyObj = jasmine.createSpyObj('Color', ['clone']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             dimensions: initialDrawingDimensions,
-            backgroundColor: initialBackgroundColor,
+            backgroundColor: initialBackgroundColorSpyObj,
         });
         gridServiceSpyObj = jasmine.createSpyObj('GridService', [], {
             isDisplayEnabled: true,
@@ -64,16 +66,18 @@ fdescribe('SettingsService', () => {
     it("#resetInitialSettings should reset drawingsService's dimensions to its initial value", () => {
         const drawingServiceMock = ({ dimensions: { x: 0, y: 0 }, backgroundColor: {} as Color } as unknown) as DrawingService;
         service['drawingService'] = drawingServiceMock;
-        service['initialBackgroundColor'] = initialBackgroundColor;
+        service['initialBackgroundColor'] = initialBackgroundColorSpyObj;
         service.resetInitialSettings();
+
         expect(drawingServiceMock.dimensions).toEqual(initialDrawingDimensions);
-        expect(drawingServiceMock.backgroundColor).toBe(initialBackgroundColor);
+        expect(drawingServiceMock.backgroundColor).toBe(initialBackgroundColorSpyObj);
     });
 
     it("#resetInitialSettings should reset gridService's attributes to their initial values", () => {
         const gridServiceMock = ({ isDisplayEnabled: false, size: 10, opacity: 0 } as unknown) as GridService;
         service['gridService'] = gridServiceMock;
         service.resetInitialSettings();
+
         expect(gridServiceMock.isDisplayEnabled).toEqual(true);
         expect(gridServiceMock.size).toEqual(initialGridSize);
         expect(gridServiceMock.opacity).toEqual(initialGridOpacity);
@@ -83,6 +87,7 @@ fdescribe('SettingsService', () => {
         const themeServiceMock = ({ color: 'Changed', isDarkTheme: false } as unknown) as ThemeService;
         service['themeService'] = themeServiceMock;
         service.resetInitialSettings();
+
         expect(themeServiceMock.color).toEqual(initialThemeColor);
         expect(themeServiceMock.isDarkTheme).toEqual(true);
     });
