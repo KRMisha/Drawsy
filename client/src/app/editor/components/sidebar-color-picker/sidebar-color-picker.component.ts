@@ -54,14 +54,14 @@ export class SidebarColorPickerComponent {
 
     onPreviousColorClick(event: MouseEvent, color: Color): void {
         if (event.button === MouseButton.Left || event.button === MouseButton.Right) {
-            event.button === MouseButton.Left ? this.colorService.primaryColor = color : this.colorService.secondaryColor = color;
+            event.button === MouseButton.Left ? (this.colorService.primaryColor = color) : (this.colorService.secondaryColor = color);
         }
         this.color = color;
         this.isColorPickerDisplayEnabled = false;
     }
 
     confirmColor(): void {
-        this.isPrimaryColorSelected ? this.colorService.primaryColor = this.color : this.colorService.secondaryColor = this.color;
+        this.isPrimaryColorSelected ? (this.colorService.primaryColor = this.color) : (this.colorService.secondaryColor = this.color);
         this.isColorPickerDisplayEnabled = false;
     }
 
