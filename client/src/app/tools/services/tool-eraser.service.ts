@@ -20,12 +20,12 @@ export class ToolEraserService extends Tool {
     private svgEraserElement: SVGRectElement;
     private svgSelectedShapeRect: SVGRectElement;
 
-    private svgElementUnderCursor?: SVGElement = undefined;
+    private svgElementUnderCursor?: SVGGraphicsElement = undefined;
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 
     private isLeftMouseButtonDownInsideDrawing = false;
-    private drawingElementsCopy: SVGElement[] = [];
+    private drawingElementsCopy: SVGGraphicsElement[] = [];
     private svgElementsDeletedDuringDrag: ElementAndItsNeighbor[] = [];
 
     private eraserRect: Rect;
@@ -76,7 +76,7 @@ export class ToolEraserService extends Tool {
 
     onMouseUp(event: MouseEvent): void {
         if (this.svgElementsDeletedDuringDrag.length > 0) {
-            const elementIndices = new Map<SVGElement, number>();
+            const elementIndices = new Map<SVGGraphicsElement, number>();
             for (let i = 0; i < this.drawingElementsCopy.length; i++) {
                 elementIndices.set(this.drawingElementsCopy[i], i);
             }
@@ -157,7 +157,7 @@ export class ToolEraserService extends Tool {
         this.renderer.setAttribute(element, 'display', 'block');
     }
 
-    private addRedBorderToElement(element: SVGElement): void {
+    private addRedBorderToElement(element: SVGGraphicsElement): void {
         const elementStrokeWidth = element.getAttribute('stroke-width');
         const elementStrokeColor = element.getAttribute('stroke');
 
@@ -194,7 +194,7 @@ export class ToolEraserService extends Tool {
         }
     }
 
-    private displayRedRectAroundElement(element: SVGElement): void {
+    private displayRedRectAroundElement(element: SVGGraphicsElement): void {
         const rect = this.svgUtilityService.getElementBounds(element);
         this.updateVisibleRect(this.svgSelectedShapeRect, rect);
         this.renderer.setAttribute(this.svgElementUnderCursor, 'display', 'block');

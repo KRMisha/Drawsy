@@ -4,10 +4,10 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 describe('AppendElementCommand', () => {
     let command: AppendElementCommand;
     let drawingService: jasmine.SpyObj<DrawingService>;
-    let element: SVGElement;
+    let element: SVGGraphicsElement;
 
     beforeEach(() => {
-        element = ({} as unknown) as SVGElement;
+        element = ({} as unknown) as SVGGraphicsElement;
         drawingService = jasmine.createSpyObj('DrawingService', ['removeElement', 'addElement']);
         command = new AppendElementCommand(drawingService, element);
     });

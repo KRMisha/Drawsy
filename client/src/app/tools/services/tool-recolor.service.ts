@@ -20,7 +20,7 @@ export class ToolRecolorService extends Tool {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Recolor);
     }
 
-    onElementClick(event: MouseEvent, element: SVGElement): void {
+    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
         if (event.button !== MouseButton.Left && event.button !== MouseButton.Right) {
             return;
         }
@@ -59,7 +59,7 @@ export class ToolRecolorService extends Tool {
         this.commandService.addCommand(new RecolorCommand(element, attributesBefore, attributesAfter));
     }
 
-    private getAttributesMap(element: SVGElement): Map<string, string | undefined> {
+    private getAttributesMap(element: SVGGraphicsElement): Map<string, string | undefined> {
         const map = new Map<string, string | undefined>();
         map.set('fill', element.getAttribute('fill') || undefined);
         map.set('stroke', element.getAttribute('stroke') || undefined);

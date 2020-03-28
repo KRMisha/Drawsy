@@ -50,7 +50,7 @@ export class DrawingSerializerService {
 
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {
-            this.drawingService.addElement(element.cloneNode(true) as SVGElement);
+            this.drawingService.addElement(element.cloneNode(true) as SVGGraphicsElement);
         }
 
         return true;
