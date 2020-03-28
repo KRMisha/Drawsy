@@ -10,8 +10,8 @@ export class ToolSelectionStateService {
     isMovingSelectionWithArrows = false;
     isMovingSelectionWithMouse = false;
 
-    private selectedElementsChangedSource = new Subject<SVGElement[]>();
-    private _selectedElements: SVGElement[] = []; // tslint:disable-line: variable-name
+    private selectedElementsChangedSource = new Subject<SVGGraphicsElement[]>();
+    private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
     private _selectionRect?: Rect; // tslint:disable-line: variable-name
 
@@ -23,11 +23,11 @@ export class ToolSelectionStateService {
         this._selectionRect = this.svgUtilityService.getElementListBounds(this.selectedElements);
     }
 
-    get selectedElements(): SVGElement[] {
+    get selectedElements(): SVGGraphicsElement[] {
         return this._selectedElements;
     }
 
-    set selectedElements(selectedElements: SVGElement[]) {
+    set selectedElements(selectedElements: SVGGraphicsElement[]) {
         this._selectedElements = selectedElements;
         this.updateSelectionRect();
         this.selectedElementsChangedSource.next(selectedElements);

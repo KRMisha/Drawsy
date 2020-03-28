@@ -133,7 +133,7 @@ export class ToolSelectionService extends Tool {
         this.toolSelectionMoverService.onKeyUp(event);
     }
 
-    onElementClick(event: MouseEvent, element: SVGElement): void {
+    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
         this.hasUserJustClickedOnShape = true;
         if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             return;
@@ -195,7 +195,7 @@ export class ToolSelectionService extends Tool {
         }
     }
 
-    private inverseObjectsSelection(svgElementsToInverse: SVGElement[], selection: SVGElement[]): void {
+    private inverseObjectsSelection(svgElementsToInverse: SVGGraphicsElement[], selection: SVGGraphicsElement[]): void {
         for (const svgElement of svgElementsToInverse) {
             const elementToRemoveIndex = selection.indexOf(svgElement, 0);
             if (elementToRemoveIndex !== -1) {

@@ -1,9 +1,16 @@
-#ignoring .vscode folder but we keep some files for debuging
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs
 /.vscode/chrome
 /.vs/
 
-package-lock.json
-.DS_Store
+# Angular 9.1 ngcc bug
+__ngcc_entry_points__.json
 
-# Code Coverage Folder
+# Code coverage folders
 coverage/
+
+# Omit accidental package-lock.json on root
+package-lock.json

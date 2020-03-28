@@ -14,7 +14,7 @@ const controlPointSideSize = 10;
 export class ToolSelectionUiService implements OnDestroy {
     svgSelectedShapesRect: SVGRectElement;
     svgUserSelectionRect: SVGRectElement;
-    svgControlPoints: SVGElement[] = [];
+    svgControlPoints: SVGGraphicsElement[] = [];
 
     private renderer: Renderer2;
 
@@ -28,7 +28,7 @@ export class ToolSelectionUiService implements OnDestroy {
         private rendererFactory: RendererFactory2,
         private toolSelectionStateService: ToolSelectionStateService
     ) {
-        this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe((elements: SVGElement[]) => {
+        this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe((elements: SVGGraphicsElement[]) => {
             if (elements.length === 0) {
                 this.hideSvgSelectedShapesRect();
             } else {
@@ -61,7 +61,7 @@ export class ToolSelectionUiService implements OnDestroy {
         this.selectedElementsChanged.unsubscribe();
     }
 
-    updateSvgSelectedShapesRect(selectedElement: SVGElement[]): void {
+    updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
         const elementsBounds = this.svgUtilityService.getElementListBounds(selectedElement);
         if (elementsBounds !== undefined) {
             this.svgUtilityService.updateSvgRectFromRect(this.svgSelectedShapesRect, elementsBounds);

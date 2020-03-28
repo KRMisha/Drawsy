@@ -1,103 +1,85 @@
 import { Injectable } from '@angular/core';
 import { Color } from '@app/shared/classes/color';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ColorPickerService {
-    color = new Color();
+    private cachedColor = new Color();
 
-    private hueChangedSource = new Subject<number>();
-    private saturationChangedSource = new Subject<number>();
-    private valueChangedSource = new Subject<number>();
-    private alphaChangedSource = new Subject<number>();
-    private colorChangedSource = new Subject<Color>();
+    private hueChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[0]);
+    private saturationChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[1]);
+    private valueChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[2]);
+    private alphaChangedSource = new BehaviorSubject<number>(this.cachedColor.alpha);
 
     // tslint:disable: member-ordering
     hueChanged$ = this.hueChangedSource.asObservable();
     saturationChanged$ = this.saturationChangedSource.asObservable();
     valueChanged$ = this.valueChangedSource.asObservable();
     alphaChanged$ = this.alphaChangedSource.asObservable();
-    colorChanged$ = this.colorChangedSource.asObservable();
     // tslint:enable: member-ordering
 
-    // tslint:disable: variable-name
-    private _hue = 0;
-    private _saturation = 0;
-    private _value = 0;
-    private _alpha = 1;
-    // tslint:enable: variable-name
-
-    get hue(): number {
-        return this._hue;
-    }
-
-    set hue(hue: number) {
-        this._hue = hue;
-        this.emitColorChanged();
-        this.hueChangedSource.next(hue);
-    }
-
-    get saturation(): number {
-        return this._saturation;
-    }
-
-    set saturation(saturation: number) {
-        this._saturation = saturation;
-        this.emitColorChanged();
-        this.saturationChangedSource.next(saturation);
-    }
-
-    get value(): number {
-        return this._value;
-    }
-
-    set value(value: number) {
-        this._value = value;
-        this.emitColorChanged();
-        this.valueChangedSource.next(value);
-    }
-
-    get alpha(): number {
-        return this._alpha;
-    }
-
-    set alpha(alpha: number) {
-        this._alpha = alpha;
-        this.emitColorChanged();
-        this.alphaChangedSource.next(alpha);
-    }
-
     getColor(): Color {
-        this.color.setHsv(this.hue, this.saturation, this.value);
-        this.color.alpha = this.alpha;
-        return this.color;
+        return this.cachedColor;
     }
 
     setColor(color: Color): void {
-        this.color = Color.fromColor(color);
-        this.colorChangedSource.next(color);
-
-        const hsv = this.color.getHsv();
-        if (color.red !== color.green || color.green !== color.blue || color.blue !== color.red) {
-            this._hue = hsv[0];
+        if (this.cachedColor !== undefined && color.equals(this.cachedColor)) {
+            return;
         }
-        this._saturation = hsv[1];
-        this._value = hsv[2];
-        this._alpha = color.alpha;
 
-        this.hueChangedSource.next(this.hue);
-        this.saturationChangedSource.next(this.saturation);
-        this.valueChangedSource.next(this.value);
-        this.alphaChangedSource.next(this.alpha);
+        this.cachedColor = color;
+
+        const [hue, saturation, value] = color.getHsv();
+        this.hueChangedSource.next(hue);
+        this.saturationChangedSource.next(saturation);
+        this.valueChangedSource.next(value);
+        this.alphaChangedSource.next(color.alpha);
     }
 
     getHex(): string {
         return this.getColor().getHex();
     }
 
-    private emitColorChanged(): void {
-        this.color.setHsv(this.hue, this.saturation, this.value);
-        this.color.alpha = this.alpha;
-        this.colorChangedSource.next(Color.fromColor(this.color));
+    get hue(): number {
+        return this.hueChangedSource.value;
+    }
+
+    set hue(hue: number) {
+        this.cachedColor = Color.fromHsv(hue, this.saturationChangedSource.value, this.valueChangedSource.value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
+        this.hueChangedSource.next(hue);
+    }
+
+    get saturation(): number {
+        return this.saturationChangedSource.value;
+    }
+
+    set saturation(saturation: number) {
+        this.cachedColor = Color.fromHsv(this.hueChangedSource.value, saturation, this.valueChangedSource.value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
+        this.saturationChangedSource.next(saturation);
+    }
+
+    get value(): number {
+        return this.valueChangedSource.value;
+    }
+
+    set value(value: number) {
+        this.cachedColor = Color.fromHsv(this.hueChangedSource.value, this.saturationChangedSource.value, value);
+        this.cachedColor.alpha = this.alphaChangedSource.value;
+
+        this.valueChangedSource.next(value);
+    }
+
+    get alpha(): number {
+        return this.alphaChangedSource.value;
+    }
+
+    set alpha(alpha: number) {
+        this.cachedColor.alpha = alpha;
+
+        this.alphaChangedSource.next(alpha);
     }
 }

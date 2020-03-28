@@ -38,53 +38,42 @@ export class SidebarColorPickerComponent {
     selectPrimaryColor(): void {
         this.isPrimaryColorSelected = true;
         this.isColorPickerDisplayEnabled = true;
-        this.color = this.colorService.getPrimaryColor();
+        this.color = this.colorService.primaryColor;
     }
 
     selectSecondaryColor(): void {
         this.isPrimaryColorSelected = false;
         this.isColorPickerDisplayEnabled = true;
-        this.color = this.colorService.getSecondaryColor();
-    }
-
-    updateColor(color: Color): void {
-        this.color = color;
+        this.color = this.colorService.secondaryColor;
     }
 
     swapColors(): void {
         this.colorService.swapPrimaryAndSecondaryColors();
-        this.color = this.isPrimaryColorSelected ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
+        this.color = this.isPrimaryColorSelected ? this.colorService.primaryColor : this.colorService.secondaryColor;
     }
 
-    getSelectedColor(): Color {
-        if (this.isPrimaryColorSelected) {
-            return this.colorService.getPrimaryColor();
-        }
-        return this.colorService.getSecondaryColor();
-    }
-
-    onColorClick(event: MouseEvent, color: Color): void {
+    onPreviousColorClick(event: MouseEvent, color: Color): void {
         if (event.button === MouseButton.Left || event.button === MouseButton.Right) {
-            event.button === MouseButton.Left ? this.colorService.setPrimaryColor(color) : this.colorService.setSecondaryColor(color);
+            event.button === MouseButton.Left ? (this.colorService.primaryColor = color) : (this.colorService.secondaryColor = color);
         }
-        this.color = Color.fromColor(color);
+        this.color = color;
         this.isColorPickerDisplayEnabled = false;
     }
 
     confirmColor(): void {
-        this.isPrimaryColorSelected ? this.colorService.setPrimaryColor(this.color) : this.colorService.setSecondaryColor(this.color);
+        this.isPrimaryColorSelected ? (this.colorService.primaryColor = this.color) : (this.colorService.secondaryColor = this.color);
         this.isColorPickerDisplayEnabled = false;
     }
 
-    get primaryColor(): string {
-        return this.colorService.getPrimaryColor().toRgbString();
+    get primaryColor(): Color {
+        return this.colorService.primaryColor;
     }
 
-    get secondaryColor(): string {
-        return this.colorService.getSecondaryColor().toRgbString();
+    get secondaryColor(): Color {
+        return this.colorService.secondaryColor;
     }
 
     get previousColors(): Color[] {
-        return this.colorService.getPreviousColors();
+        return this.colorService.previousColors;
     }
 }
