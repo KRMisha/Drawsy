@@ -2,7 +2,7 @@ import { Command } from '@app/drawing/classes/commands/command';
 
 export class RecolorCommand implements Command {
     constructor(
-        private element: SVGElement,
+        private element: SVGGraphicsElement,
         private attributesBefore: Map<string, string | undefined>,
         private attributesAfter: Map<string, string | undefined>
     ) {}

@@ -14,7 +14,7 @@ import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
-    private shape?: SVGElement;
+    private shape?: SVGGraphicsElement;
     private isShiftDown = false;
     private origin: Vec2 = { x: 0, y: 0 };
     private mousePosition: Vec2 = { x: 0, y: 0 };
@@ -93,19 +93,19 @@ export abstract class ToolShape extends Tool {
 
     protected abstract getShapeString(): string;
 
-    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void;
+    protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void;
 
-    private createNewShape(): SVGElement {
+    private createNewShape(): SVGGraphicsElement {
         // tslint:disable: no-non-null-assertion
-        const shape: SVGElement = this.renderer.createElement(this.getShapeString(), 'svg');
+        const shape: SVGGraphicsElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
         this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
 
-        const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.getPrimaryColor().toRgbaString();
+        const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.primaryColor.toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
 
         if (this.settings.shapeType! !== ShapeType.FillOnly) {
-            this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+            this.renderer.setAttribute(shape, 'stroke', this.colorService.secondaryColor.toRgbaString());
         }
 
         this.renderer.setAttribute(shape, 'data-padding', `${this.settings.shapeBorderWidth! / 2}`);
@@ -135,6 +135,6 @@ export abstract class ToolShape extends Tool {
 
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
-        this.updateShape(shapeArea, scale, this.shape as SVGElement);
+        this.updateShape(shapeArea, scale, this.shape as SVGGraphicsElement);
     }
 }

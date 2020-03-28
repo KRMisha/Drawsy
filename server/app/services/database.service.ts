@@ -7,7 +7,7 @@ import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 
-const connectionUrl = 'mongodb+srv://htmales:lLOKpwsJzmaoSitj@log2990-toreo.mongodb.net/test?retryWrites=true&w=majority';
+const connectionUrl = 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD + '@' + process.env.DB_HOST;
 const databaseName = 'database';
 const collectionName = 'drawings';
 
