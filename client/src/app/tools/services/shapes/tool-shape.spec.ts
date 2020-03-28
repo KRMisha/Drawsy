@@ -29,7 +29,7 @@ class ToolShapeMock extends ToolShape {
     getShapeString(): string {
         return '';
     }
-    updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
+    updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void {
         return;
     }
 }
@@ -53,9 +53,10 @@ describe('ToolShape', () => {
 
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
         colorSpyObj.toRgbaString.and.returnValue('rgba(0, 0, 0, 1)');
-        colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['getPrimaryColor', 'getSecondaryColor']);
-        colorServiceSpyObj.getPrimaryColor.and.returnValue(colorSpyObj);
-        colorServiceSpyObj.getSecondaryColor.and.returnValue(colorSpyObj);
+        colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
+            primaryColor: colorSpyObj,
+            secondaryColor: colorSpyObj,
+        });
         toolShape = new ToolShapeMock(
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
@@ -71,7 +72,7 @@ describe('ToolShape', () => {
     });
 
     it('#onPrimaryColorChange should call color.toRgbaString and renderer.setAttribute with the proper arguments', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape.onPrimaryColorChange(colorSpyObj);
         expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
@@ -85,7 +86,7 @@ describe('ToolShape', () => {
     });
 
     it('#onSecondaryColorChange should call renderer.setAtcolor.toRgbaString and renderer.setAttribute with the proper arguments', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape.onSecondaryColorChange(colorSpyObj);
         expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
@@ -99,7 +100,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition left and below origin', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
         toolShape['origin'] = { x: -50, y: -50 };
@@ -115,7 +116,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition right and above origin', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
         toolShape['origin'] = { x: 50, y: 50 } as Vec2;
@@ -142,7 +143,7 @@ describe('ToolShape', () => {
 
     // tslint:disable-next-line: max-line-length
     it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly ShapeType', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape['origin'] = { x: 0, y: 0 };
 
@@ -162,7 +163,7 @@ describe('ToolShape', () => {
 
     // tslint:disable-next-line: max-line-length
     it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly ShapeType', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
 
         const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
@@ -171,7 +172,8 @@ describe('ToolShape', () => {
 
         Tool.isMouseInsideDrawing = true;
         toolShape.settings.shapeType = ShapeType.FillOnly;
-        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
+        toolShape.onMouseDown(mouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
         expect(getMousePositionSpy).toHaveBeenCalled();
@@ -187,7 +189,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseUp should call commandService.addCommand if shape is a valid regular shape (mouse.x is different from origin.x)', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
@@ -199,7 +201,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseUp should call commandService.addCommand if shape is a valid regular shape (mouse.y is different from origin.y)', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
@@ -211,7 +213,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseUp should call commandService.addCommand if shape is a valid non regular shape', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = false;
@@ -223,7 +225,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseUp should call drawingService.removeElement if shape is a non valid shape', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['mousePosition'] = { x: 0, y: 0 };
@@ -255,7 +257,7 @@ describe('ToolShape', () => {
     });
 
     it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as true', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
@@ -269,7 +271,7 @@ describe('ToolShape', () => {
     });
 
     it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as false', () => {
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
 
         toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;

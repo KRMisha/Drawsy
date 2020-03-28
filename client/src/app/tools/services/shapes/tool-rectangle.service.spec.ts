@@ -45,7 +45,7 @@ describe('Tool-Rectangle', () => {
     it('#updateShape should make the appropriate calls to renderer.setAttribute', () => {
         const shapeArea: Rect = { x: 10, y: 10, width: 100, height: 100 };
         const scale: Vec2 = { x: 1, y: 1 };
-        const shape = {} as SVGElement;
+        const shape = {} as SVGGraphicsElement;
         toolRectangle['updateShape'](shapeArea, scale, shape); // tslint:disable-line: no-string-literal
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'x', shapeArea.x.toString());
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'y', shapeArea.x.toString());
