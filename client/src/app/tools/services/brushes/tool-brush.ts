@@ -26,7 +26,8 @@ export abstract class ToolBrush extends Tool {
     onMouseMove(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
             const mousePosition = this.getMousePosition(event);
-            const pathString = (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
+            const pathString =
+                (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
         }
     }
