@@ -59,9 +59,9 @@ describe('ExportDrawingComponent', () => {
     });
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
-        spyOn(ErrorMessageService, 'getErrorMessage');
+        const errorMessageSpy = spyOn(ErrorMessageService, 'getErrorMessage');
         component.getErrorMessage();
-        expect(ErrorMessageService.getErrorMessage).toHaveBeenCalledWith(component.titleFormControl, 'A-Z, a-z, 0-9');
+        expect(errorMessageSpy).toHaveBeenCalledWith(component.titleFormControl, 'A-Z, a-z, 0-9');
     });
 
     it('#get DrawingFilter should return appropriate Filter', () => {
