@@ -8,7 +8,7 @@ import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-d
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ModalService } from '@app/modals/services/modal.service';
 
-fdescribe('ModalService', () => {
+describe('ModalService', () => {
     let expectedSecondParameter = {
         width: '',
         height: 'auto',
