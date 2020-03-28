@@ -6,11 +6,11 @@ export class TransformElementsCommand implements Command {
 
     undo(): void {
         for (const element of this.elements) {
-            const transformIndex = element.transform.baseVal.numberOfItems - 1;
+            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
             if (this.svgTransform === undefined) {
-                this.svgTransform = element.transform.baseVal.getItem(transformIndex);
+                this.svgTransform = element.transform.baseVal.getItem(lastTransformIndex);
             }
-            element.transform.baseVal.removeItem(transformIndex);
+            element.transform.baseVal.removeItem(lastTransformIndex);
         }
     }
 

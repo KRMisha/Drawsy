@@ -42,9 +42,9 @@ export class ToolSelectionMoverService {
 
     moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
         for (const element of elements) {
-            const transformIndex = element.transform.baseVal.numberOfItems - 1;
-            const newMatrix = element.transform.baseVal.getItem(transformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(transformIndex).setMatrix(newMatrix);
+            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
+            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
         }
     }
 
