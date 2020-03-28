@@ -9,9 +9,7 @@ import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
-const minimumPointsToEnableBackspace = 4;
 const pointsPerCoordinates = 2;
-const lineClosingPixelTolerance = 3;
 
 @Injectable({
     providedIn: 'root',
@@ -121,10 +119,12 @@ export class ToolLineService extends Tool {
             const lastXIndex = this.points.length - 2;
             const lastYIndex = this.points.length - 1;
 
-            const deltaX = Math.abs(this.points[firstXIndex] - this.points[lastXIndex]);
-            const deltaY = Math.abs(this.points[firstYIndex] - this.points[lastYIndex]);
-
-            if (deltaX <= lineClosingPixelTolerance && deltaY <= lineClosingPixelTolerance) {
+            const lineClosingPixelTolerance = 3;
+            const deltaPosition: Vec2 = {
+                x: Math.abs(this.points[firstXIndex] - this.points[lastXIndex]),
+                y: Math.abs(this.points[firstYIndex] - this.points[lastYIndex]),
+            };
+            if (deltaPosition.x <= lineClosingPixelTolerance && deltaPosition.y <= lineClosingPixelTolerance) {
                 if (this.junctionPoints.length > 0) {
                     this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
                 }
@@ -213,6 +213,7 @@ export class ToolLineService extends Tool {
     }
 
     private removeLastPointFromLine(): void {
+        const minimumPointsToEnableBackspace = 4;
         if (this.points.length >= minimumPointsToEnableBackspace) {
             this.points.length = this.points.length - pointsPerCoordinates;
             this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
