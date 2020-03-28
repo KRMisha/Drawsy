@@ -1,4 +1,4 @@
-import {  NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,8 +8,8 @@ import { Color } from '@app/shared/classes/color';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { Subject } from 'rxjs';
 
-// tslint:disable: no-magic-numbers
 // tslint:disable: no-any
+// tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
 describe('NewDrawingComponent', () => {
@@ -17,11 +17,11 @@ describe('NewDrawingComponent', () => {
     let fixture: ComponentFixture<NewDrawingComponent>;
     let routerSpyObj: jasmine.SpyObj<Router>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let valueChangesSubject: Subject<any>;
     let widthSpyObj: jasmine.SpyObj<FormControl>;
     let heightSpyObj: jasmine.SpyObj<FormControl>;
     let validFormGroupSpyObj: jasmine.SpyObj<FormGroup>;
     let invalidFormGroupSpyObj: jasmine.SpyObj<FormGroup>;
+    let valueChangesSubject: Subject<any>;
 
     const sidebarWidth = 337;
 
@@ -105,10 +105,7 @@ describe('NewDrawingComponent', () => {
         const color = {} as Color;
         component.backgroundColor = color;
         component.onSubmit();
-        expect(drawingServiceSpyObj.confirmNewDrawing).toHaveBeenCalledWith(
-            { x: 18, y: 18 },
-            color
-        );
+        expect(drawingServiceSpyObj.confirmNewDrawing).toHaveBeenCalledWith({ x: 18, y: 18 }, color);
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
     });
 
