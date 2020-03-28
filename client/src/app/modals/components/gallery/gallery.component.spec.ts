@@ -9,11 +9,11 @@ import { ErrorMessageService } from '@app/shared/services/error-message.service'
 import { Subject } from 'rxjs';
 
 describe('GalleryComponent', () => {
-    let loadingCompleteSubject: Subject<void>;
-    let galleryServiceSpyObj: jasmine.SpyObj<GalleryService>;
-    let labelsFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let component: GalleryComponent;
     let fixture: ComponentFixture<GalleryComponent>;
+    let galleryServiceSpyObj: jasmine.SpyObj<GalleryService>;
+    let labelsFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let loadingCompleteSubject: Subject<void>;
 
     const initialLoadingComplete = false;
 
@@ -38,11 +38,11 @@ describe('GalleryComponent', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(GalleryComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
@@ -63,10 +63,9 @@ describe('GalleryComponent', () => {
     }));
 
     it('#addLabel should early return if the label form is invalid', () => {
-        const invalidFormSpyObj = jasmine.createSpyObj('FormControl', [], {
+        component.labelsFormControl = jasmine.createSpyObj('FormControl', [], {
             invalid: true,
         });
-        component.labelsFormControl = invalidFormSpyObj;
         const pushSpy = spyOn(component.searchLabels, 'push');
         const event = { value: '123' } as MatChipInputEvent;
         component.addLabel(event);
