@@ -20,7 +20,7 @@
 
 .gallery-container {
     display: grid;
-    grid-auto-columns: 1fr;
+    grid-template-columns: 33% 33% 33%;
     justify-content: space-between;
     max-height: 68vh;
 }
@@ -35,8 +35,13 @@
 
 .drawing-container {
     display: flex;
-    width: 100%;
-    height: 350px;
+    justify-content: center;
+
+    // ::ng-deep svg {
+    //     display: block;
+    //     width: auto;
+    //     height: 100%;
+    // }
 }
 
 .drawing-labels-item {

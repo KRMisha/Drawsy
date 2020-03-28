@@ -37,7 +37,7 @@ export class DrawingSerializerService {
 
         // Imported format will always have rect with fill because the format is controlled
         // tslint:disable-next-line: no-non-null-assertion
-        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill')!;
+        const backgroundRectFillString = svgFileContainer.drawingRoot.contentDocument.getElementsByTagName('rect')[0].getAttribute('fill')!;
         const backgroundColor = Color.fromRgbaString(backgroundRectFillString);
 
         if (!this.drawingService.confirmNewDrawing(dimensions, backgroundColor)) {
@@ -48,7 +48,7 @@ export class DrawingSerializerService {
         this.drawingService.title = svgFileContainer.title;
         this.drawingService.labels = svgFileContainer.labels;
 
-        const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
+        const svgDrawingContent = svgFileContainer.drawingRoot.contentDocument.getElementsByTagName('g')[0];
         for (const element of Array.from(svgDrawingContent.children)) {
             this.drawingService.addElement(element.cloneNode(true) as SVGElement);
         }

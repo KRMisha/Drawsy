@@ -42,7 +42,9 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
         return this.drawingService.backgroundColor.toRgbaString();
     }
 
-    get drawingFilter(): string {
-        return `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
+    get drawingFilter(): string | null{
+        return this.drawingPreviewService.drawingFilter === DrawingFilter.None
+            ? null
+            : `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
     }
 }

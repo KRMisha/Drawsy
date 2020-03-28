@@ -30,9 +30,7 @@
                 <mat-card-header class="card-title-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
-                <div mat-card-image>
-                    <div class="drawing-container" [innerHTML]="drawing.drawingRoot.outerHTML | safeHtml"></div>
-                </div>
+                <div class="drawing-container" [innerHTML]="drawing.drawingRoot | safeHtml"></div>
                 <mat-card-content class="drawing-labels-item">
                     <mat-chip-list>
                         <mat-chip *ngFor="let label of drawing.labels">{{ label }}</mat-chip>
