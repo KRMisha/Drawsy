@@ -16,7 +16,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 
-describe('NewDrawingComponent', () => {
+fdescribe('NewDrawingComponent', () => {
     let component: NewDrawingComponent;
     let fixture: ComponentFixture<NewDrawingComponent>;
     let routerSpyObj: jasmine.SpyObj<Router>;
@@ -135,12 +135,10 @@ describe('NewDrawingComponent', () => {
         expect(ErrorMessageService.getErrorMessage).toHaveBeenCalledWith(widthSpyObj, 'Entiers');
     });
 
-    // it('drawingFormGroup should contain the window size at the start', () => {
-    //     const newWindow = { innerHeight: 1200, innerWidth: 1200} as Window;
-    //     component.drawingFormGroup.reset();
-    //     expect(component.drawingFormGroup.controls.width.value).toEqual(1200 - sidebarWidth);
-    //     expect(component.drawingFormGroup.controls.height.value).toEqual(1200);
-    // });
+    it('drawingFormGroup should contain the window size at the start', () => {
+        expect(component.drawingFormGroup.controls.width.value).toEqual(window.innerWidth - sidebarWidth);
+        expect(component.drawingFormGroup.controls.height.value).toEqual(window.innerHeight);
+    });
 
     it('drawingFormGroup should be invalid if the width is empty', () => {
         component.drawingFormGroup.controls.width.setValue('');
