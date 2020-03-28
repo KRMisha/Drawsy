@@ -6,20 +6,23 @@ import { DrawingSettingsComponent } from '@app/modals/components/settings/drawin
 import { SettingsService } from '@app/modals/services/settings.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
 // tslint:disable: no-string-literal
 
-fdescribe('DrawingDimensionsSettingsComponent', () => {
+describe('DrawingDimensionsSettingsComponent', () => {
     let component: DrawingSettingsComponent;
     let fixture: ComponentFixture<DrawingSettingsComponent>;
     let settingServiceSpyObj: jasmine.SpyObj<SettingsService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let formGroupStub: FormGroup;
+
     const initialWidth = 10;
     const initialHeight = 10;
     const backgroundColorStub = {} as Color;
     const drawingServiceDimensions: Vec2 = {x: 10, y: 10};
     const minimumValue = 5;
+
     beforeEach(async(() => {
         formGroupStub = new FormGroup({
             drawingWidth: new FormControl(initialWidth, [
@@ -100,5 +103,24 @@ fdescribe('DrawingDimensionsSettingsComponent', () => {
 
         expect(widthSubscriptionSpy).toHaveBeenCalled();
         expect(heightSubscriptionSpy).toHaveBeenCalled();
+    });
+
+    it('#getErrorMessage should forward the call to ErrorMessageService', () => {
+        const errorMessageServiceSpy = spyOn(ErrorMessageService, 'getErrorMessage');
+        formGroupStub = {} as FormGroup;
+
+        component.getErrorMessage(formGroupStub);
+
+        expect(errorMessageServiceSpy).toHaveBeenCalledWith(formGroupStub, 'Entiers');
+    });
+
+    it('set color should set the drawingService\'s backgroundColor', () => {
+        const drawingServiceStub = {backgroundColor: backgroundColorStub} as DrawingService;
+        component['drawingService'] = drawingServiceStub;
+
+        const newBackgroundColor = {} as Color;
+        component.color = newBackgroundColor;
+
+        expect(drawingServiceStub.backgroundColor).toBe(newBackgroundColor);
     });
 });
