@@ -31,7 +31,7 @@ export class ToolRecolorService extends Tool {
         switch (elementType) {
             case 'path': {
                 if (event.button === MouseButton.Left) {
-                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.primaryColor.toRgbaString());
                 }
                 break;
             }
@@ -39,7 +39,7 @@ export class ToolRecolorService extends Tool {
             case 'polygon':
             case 'ellipse':
                 const isLeftClick = event.button === MouseButton.Left;
-                const colorToApply = isLeftClick ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
+                const colorToApply = isLeftClick ? this.colorService.primaryColor : this.colorService.secondaryColor;
                 const attributeToChange = isLeftClick ? 'fill' : 'stroke';
                 const attributeValue = element.getAttribute(attributeToChange);
 
@@ -49,8 +49,8 @@ export class ToolRecolorService extends Tool {
                 break;
             default: {
                 if (event.button === MouseButton.Left) {
-                    this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'fill', this.colorService.primaryColor.toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.primaryColor.toRgbaString());
                 }
             }
         }

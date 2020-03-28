@@ -3,18 +3,8 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
 import { Color } from '@app/shared/classes/color';
 import { Subscription } from 'rxjs';
 
-enum ColorGradient {
-    Red = 'rgb(255, 0, 0)',
-    Yellow = 'rgb(255, 255, 0)',
-    Green = 'rgb(0, 255, 0)',
-    Cyan = 'rgb(0, 255, 255)',
-    Blue = 'rgb(0, 0, 255)',
-    Pink = 'rgb(255, 0, 255)',
-}
-
-const canvasWidth = 202;
+const canvasWidth = 200;
 const canvasHeight = 20;
-const radius = 8;
 
 @Component({
     selector: 'app-hue-slider',
@@ -25,50 +15,45 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appHuePicker') hueCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
-    private canvas: HTMLCanvasElement;
 
     private isLeftMouseButtonDown = false;
     private isMouseInside = false;
-    private sliderXPosition = 0;
+    private sliderPosition = 0;
 
-    private colorChangedSubscription: Subscription;
-
-    private hueColor = new Color();
-
-    private isSliderPositionClipedRight = false;
+    private hueChangedSubscription: Subscription;
 
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
-        this.context = this.hueCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.canvas = this.hueCanvas.nativeElement;
-        this.canvas.width = canvasWidth;
-        this.canvas.height = canvasHeight;
-        this.sliderXPosition = (this.colorPickerService.hue / Color.maxHue) * this.canvas.width;
+        const canvas = this.hueCanvas.nativeElement;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
-        this.colorChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
-            this.sliderXPosition = this.calculateMouseXPositionFromHue(this.sliderXPosition, hue);
+        this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        this.hueChangedSubscription = this.colorPickerService.hueChanged$.subscribe((hue: number) => {
+            this.sliderPosition = (hue / Color.maxHue) * canvasWidth;
             this.draw();
         });
-
-        this.draw();
     }
 
     ngOnDestroy(): void {
-        this.colorChangedSubscription.unsubscribe();
+        this.hueChangedSubscription.unsubscribe();
     }
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.update(event);
+        if (this.isLeftMouseButtonDown) {
+            this.updateHue(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isLeftMouseButtonDown = true;
+            this.updateHue(event);
         }
-        this.update(event);
     }
 
     @HostListener('document:mouseup')
@@ -86,57 +71,41 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = false;
     }
 
-    private update(event: MouseEvent): void {
-        if (!this.isLeftMouseButtonDown) {
-            return;
-        }
-
+    private updateHue(event: MouseEvent): void {
         const mouseXPosition = event.clientX - this.hueCanvas.nativeElement.getBoundingClientRect().x;
-        this.sliderXPosition = Math.min(canvasWidth, Math.max(0, mouseXPosition));
-
-        this.isSliderPositionClipedRight = mouseXPosition >= canvasWidth;
-
-        const hue = (this.sliderXPosition / this.canvas.width) * Color.maxHue;
+        const hue = (Math.min(canvasWidth, Math.max(0, mouseXPosition)) / canvasWidth) * Color.maxHue;
         this.colorPickerService.hue = hue;
-        this.draw();
     }
 
     private draw(): void {
-        const width = this.canvas.width;
-        const height = this.canvas.height;
+        const colorGradient = [
+            'rgb(255, 0, 0)',
+            'rgb(255, 255, 0)',
+            'rgb(0, 255, 0)',
+            'rgb(0, 255, 255)',
+            'rgb(0, 0, 255)',
+            'rgb(255, 0, 255)',
+        ];
 
-        this.context.clearRect(0, 0, width, height);
-
-        const horizontalGradient = this.context.createLinearGradient(0, 0, width, 0);
-        // tslint:disable: no-magic-numbers
-        horizontalGradient.addColorStop(0 / 6, ColorGradient.Red);
-        horizontalGradient.addColorStop(1 / 6, ColorGradient.Yellow);
-        horizontalGradient.addColorStop(2 / 6, ColorGradient.Green);
-        horizontalGradient.addColorStop(3 / 6, ColorGradient.Cyan);
-        horizontalGradient.addColorStop(4 / 6, ColorGradient.Blue);
-        horizontalGradient.addColorStop(5 / 6, ColorGradient.Pink);
-        horizontalGradient.addColorStop(6 / 6, ColorGradient.Red);
-        // tslint:enable: no-magic-numbers
+        const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
+        for (let i = 0; i < colorGradient.length; i++) {
+            horizontalGradient.addColorStop(i / colorGradient.length, colorGradient[i]);
+        }
+        horizontalGradient.addColorStop(1, colorGradient[0]);
         this.context.fillStyle = horizontalGradient;
-        const padding = 0;
-        this.context.fillRect(0, padding, width, height - 2 * padding);
+        this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        this.hueColor.setHsv(this.colorPickerService.hue, 1.0, 1.0);
-
+        const radius = 8;
         const circle = new Path2D();
-        circle.arc(this.sliderXPosition, height / 2, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = this.hueColor.toRgbString();
+        circle.arc(this.sliderPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
+
+        const hueColor = Color.fromHsv(this.colorPickerService.hue, 1.0, 1.0);
+        this.context.fillStyle = hueColor.toRgbString();
         this.context.fill(circle);
-        this.context.lineWidth = 2;
+
+        const lineWidth = 2;
+        this.context.lineWidth = lineWidth;
         this.context.strokeStyle = 'white';
         this.context.stroke(circle);
-    }
-
-    private calculateMouseXPositionFromHue(currentMouseX: number, hue: number): number {
-        if (this.isSliderPositionClipedRight) {
-            hue = Color.maxHue;
-        }
-        const mouseXPosition = (hue / Color.maxHue) * canvasWidth;
-        return mouseXPosition;
     }
 }

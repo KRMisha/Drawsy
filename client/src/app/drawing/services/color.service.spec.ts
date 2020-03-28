@@ -23,9 +23,9 @@ describe('ColorService', () => {
         const color3 = new Color();
         color3.blue = color2.blue;
         color3.alpha = 0.5;
-        service.setPrimaryColor(color1);
-        service.setSecondaryColor(color2);
-        service.setPrimaryColor(color3);
+        service.primaryColor = color1;
+        service.secondaryColor = color2;
+        service.secondaryColor = color3;
         expect(service.getPreviousColors()[0]).toEqual(color2);
         expect(service.getPreviousColors()[1]).toEqual(color1);
         expect(service.getPreviousColors()[2]).toEqual(new Color());
@@ -36,10 +36,10 @@ describe('ColorService', () => {
         color1.red = 10;
         const color2 = new Color();
         color2.red = 100;
-        service.setPrimaryColor(color1);
-        service.setSecondaryColor(color2);
+        service.primaryColor = color1;
+        service.secondaryColor = color2;
         service.swapPrimaryAndSecondaryColors();
-        expect(service.getPrimaryColor()).toEqual(color2);
-        expect(service.getSecondaryColor()).toEqual(color1);
+        expect(service.primaryColor).toEqual(color2);
+        expect(service.secondaryColor).toEqual(color1);
     });
 });

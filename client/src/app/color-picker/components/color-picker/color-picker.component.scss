@@ -1,14 +1,14 @@
 .container {
-    justify-content: center;
     display: grid;
     grid-template-areas:
         'color color'
         'hue preview'
         'alpha preview'
         'hex hex';
+    justify-content: center;
 }
 
-.color-picker-item {
+.color-field-item {
     grid-area: color;
 }
 
@@ -20,24 +20,24 @@
     grid-area: alpha;
 }
 
-.hex-selector-item {
-    grid-area: hex;
-}
-
-.color-preview-checker {
+.color-preview-checker-pattern {
     grid-area: preview;
     justify-self: right;
-    width: 44px;
-    height: 44px;
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
     background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
-    background-size: 22px 22px;
-    background-position: 0 0, 0 11px, 11px -11px, -11px 0;
-    border-radius: 4px;
+    background-size: 22.5px 22.5px;
+    background-position: 0 0, 0 11.25px, 11.25px -11.25px, -11.25px 0;
 }
 
 .color-preview {
     width: 100%;
     height: 100%;
     border-radius: 4px;
+}
+
+.hex-selector-item {
+    grid-area: hex;
 }

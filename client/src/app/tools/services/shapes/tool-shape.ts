@@ -101,11 +101,11 @@ export abstract class ToolShape extends Tool {
 
         this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
 
-        const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.getPrimaryColor().toRgbaString();
+        const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.primaryColor.toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
 
         if (this.settings.shapeType! !== ShapeType.FillOnly) {
-            this.renderer.setAttribute(shape, 'stroke', this.colorService.getSecondaryColor().toRgbaString());
+            this.renderer.setAttribute(shape, 'stroke', this.colorService.secondaryColor.toRgbaString());
         }
 
         this.renderer.setAttribute(shape, 'data-padding', `${this.settings.shapeBorderWidth! / 2}`);

@@ -1,10 +1,10 @@
 <div class="current-colors-container">
     <div
         class="primary-color-item"
-        matTooltip="Couleur primaire"
+        [matTooltip]="'Couleur primaire - #' + primaryColor.getHex()"
         matTooltipPosition="above"
         matRipple
-        [style.background-color]="primaryColor"
+        [style.background-color]="primaryColor.toRgbString()"
         [class.mat-elevation-z12]="isPrimaryColorSelected && isColorPickerDisplayEnabled"
         [class.mat-elevation-z2]="!isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectPrimaryColor()"
@@ -14,10 +14,10 @@
     </button>
     <div
         class="secondary-color-item"
-        matTooltip="Couleur secondaire"
+        [matTooltip]="'Couleur secondaire - #' + secondaryColor.getHex()"
         matTooltipPosition="above"
         matRipple
-        [style.background-color]="secondaryColor"
+        [style.background-color]="secondaryColor.toRgbString()"
         [class.mat-elevation-z12]="!isPrimaryColorSelected && isColorPickerDisplayEnabled"
         [class.mat-elevation-z2]="isPrimaryColorSelected || !isColorPickerDisplayEnabled"
         (click)="selectSecondaryColor()"
@@ -28,10 +28,11 @@
     <div
         class="circle-item mat-elevation-z2"
         *ngFor="let color of previousColors"
+        [matTooltip]="'#' + color.getHex()"
         matRipple
         [style.background-color]="color.toRgbString()"
-        (click)="onColorClick($event, color)"
-        (contextmenu)="onColorClick($event, color)"
+        (click)="onPreviousColorClick($event, color)"
+        (contextmenu)="onPreviousColorClick($event, color)"
     ></div>
 </div>
 

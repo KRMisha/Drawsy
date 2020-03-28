@@ -1,11 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
-import { Color } from '@app/shared/classes/color';
-import { Subscription } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 
-const canvasWidth = 202;
+const canvasWidth = 200;
 const canvasHeight = 20;
-const radius = 8;
 
 @Component({
     selector: 'app-alpha-slider',
@@ -16,31 +14,31 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appAlphaPicker') alphaCanvas: ElementRef;
 
     private context: CanvasRenderingContext2D;
-    private canvas: HTMLCanvasElement;
-    private color = new Color();
 
     private isLeftMouseButtonDown = false;
     private isMouseInside = false;
-    private mouseXPosition = 0;
+    private sliderPosition = 0;
 
     private colorChangedSubscription: Subscription;
 
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngAfterViewInit(): void {
-        this.context = this.alphaCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-        this.canvas = this.alphaCanvas.nativeElement;
-        this.canvas.width = canvasWidth;
-        this.canvas.height = canvasHeight;
-        this.mouseXPosition = this.colorPickerService.alpha * canvasWidth;
+        const canvas = this.alphaCanvas.nativeElement;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
-        this.colorChangedSubscription = this.colorPickerService.colorChanged$.subscribe((color: Color) => {
-            this.color = color;
-            this.mouseXPosition = this.color.alpha * canvasWidth;
+        this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+        this.colorChangedSubscription = merge(
+            this.colorPickerService.hueChanged$,
+            this.colorPickerService.saturationChanged$,
+            this.colorPickerService.valueChanged$,
+            this.colorPickerService.alphaChanged$
+        ).subscribe(() => {
+            this.sliderPosition = this.colorPickerService.alpha * canvasWidth;
             this.draw();
         });
-        this.color = this.colorPickerService.getColor();
-        this.draw();
     }
 
     ngOnDestroy(): void {
@@ -49,15 +47,17 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.update(event);
+        if (this.isLeftMouseButtonDown) {
+            this.updateAlpha(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
         if (this.isMouseInside) {
             this.isLeftMouseButtonDown = true;
+            this.updateAlpha(event);
         }
-        this.update(event);
     }
 
     @HostListener('document:mouseup')
@@ -75,29 +75,29 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
         this.isMouseInside = false;
     }
 
-    private update(event: MouseEvent): void {
-        if (!this.isLeftMouseButtonDown) {
-            return;
-        }
-
-        this.mouseXPosition = Math.min(canvasWidth, Math.max(0, event.clientX - this.alphaCanvas.nativeElement.getBoundingClientRect().x));
-        const alpha = this.mouseXPosition / this.canvas.width;
+    private updateAlpha(event: MouseEvent): void {
+        const mouseXPosition = event.clientX - this.alphaCanvas.nativeElement.getBoundingClientRect().x;
+        const alpha = Math.min(canvasWidth, Math.max(0, mouseXPosition)) / canvasWidth;
         this.colorPickerService.alpha = alpha;
-        this.draw();
     }
 
     private draw(): void {
         this.context.clearRect(0, 0, canvasWidth, canvasHeight);
+
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
-        horizontalGradient.addColorStop(0, `rgba(${this.color.red}, ${this.color.green}, ${this.color.blue}, 0)`);
-        horizontalGradient.addColorStop(1, this.color.toRgbString());
+        const color = this.colorPickerService.getColor().clone();
+        color.alpha = 0;
+        horizontalGradient.addColorStop(0, color.toRgbaString());
+        horizontalGradient.addColorStop(1, color.toRgbString());
         this.context.fillStyle = horizontalGradient;
         this.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
+        const radius = 8;
         const circle = new Path2D();
-        circle.arc(this.mouseXPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
-        this.context.fill(circle);
-        this.context.lineWidth = 2;
+        circle.arc(this.sliderPosition, canvasHeight / 2, radius, 0, 2 * Math.PI);
+
+        const lineWidth = 2;
+        this.context.lineWidth = lineWidth;
         this.context.strokeStyle = 'white';
         this.context.stroke(circle);
     }

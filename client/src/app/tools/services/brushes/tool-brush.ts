@@ -69,7 +69,7 @@ export abstract class ToolBrush extends Tool {
     protected createNewPath(): SVGPathElement {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
         // tslint:disable: no-non-null-assertion
         this.renderer.setAttribute(path, 'data-padding', `${this.settings.lineWidth! / 2}`);
         this.renderer.setAttribute(path, 'stroke-width', this.settings.lineWidth!.toString());
