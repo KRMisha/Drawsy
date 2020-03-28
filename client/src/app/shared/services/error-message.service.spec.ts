@@ -16,12 +16,6 @@ fdescribe('ErrorMessageService', () => {
             providers: [{ provide: ErrorMessageService }],
         });
         service = TestBed.inject(ErrorMessageService);
-        formControl = new FormControl(initialValue, [
-            Validators.required,
-            Validators.pattern(Regexes.integerRegex),
-            Validators.min(minimumValue),
-            Validators.max(maximumValue),
-        ]);
     });
 
     it('should be created', () => {
@@ -29,13 +23,23 @@ fdescribe('ErrorMessageService', () => {
     });
 
     it('#getErrorMessage should return required error message when the value is empty', () => {
+        formControl = new FormControl(initialValue, [Validators.required]);
         formControl.setValue('');
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
         const expectedMessage = 'Champ obligatoire';
         expect(returnedMessage).toEqual(expectedMessage);
     });
 
+    it("#getErrorMessage should return the pattern when the value doesn't match the pattern", () => {
+        formControl = new FormControl(initialValue, [Validators.pattern(Regexes.integerRegex)]);
+        formControl.setValue('asdf');
+        const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
+        const expectedMessage = Regexes.integerRegex.toString() + ' uniquement';
+        expect(returnedMessage).toEqual(expectedMessage);
+    });
+
     it("#getErrorMessage should return human-friendly error message when the value doesn't match the pattern", () => {
+        formControl = new FormControl(initialValue, [Validators.pattern(Regexes.integerRegex)]);
         formControl.setValue('asdf');
         const humanFriendlyMessage = 'This is a human-friendly message';
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl, humanFriendlyMessage);
@@ -44,6 +48,7 @@ fdescribe('ErrorMessageService', () => {
     });
 
     it('#getErrorMessage should return minimum error message when the value is under the minimum', () => {
+        formControl = new FormControl(initialValue, [Validators.min(minimumValue)]);
         formControl.setValue(minimumValue - 1);
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
         const expectedMessage = `Minimum: ${minimumValue}`;
@@ -51,6 +56,7 @@ fdescribe('ErrorMessageService', () => {
     });
 
     it('#getErrorMessage should return maximum error message when the value is under the maximum', () => {
+        formControl = new FormControl(initialValue, [Validators.max(maximumValue)]);
         formControl.setValue(maximumValue + 1);
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
         const expectedMessage = `Maximum: ${maximumValue}`;
@@ -58,15 +64,8 @@ fdescribe('ErrorMessageService', () => {
     });
 
     it('#getErrorMessage should return minimum length error message when the value shorter than the minimum length', () => {
-        formControl = new FormControl(initialValue, [
-            Validators.required,
-            Validators.pattern(Regexes.integerRegex),
-            Validators.min(minimumValue),
-            Validators.max(maximumValue),
-            Validators.minLength(minimumLength),
-            Validators.maxLength(maximumLength),
-        ]);
-        const valueUnderLengthLimit = 1;
+        formControl = new FormControl(initialValue, [Validators.minLength(minimumLength)]);
+        const valueUnderLengthLimit = '1';
         formControl.setValue(valueUnderLengthLimit);
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
         const expectedMessage = `Minimum ${minimumLength} caractères`;
@@ -74,18 +73,20 @@ fdescribe('ErrorMessageService', () => {
     });
 
     it('#getErrorMessage should return maximum length error message when the value shorter than the maximum length', () => {
-        formControl = new FormControl(initialValue, [
-            Validators.required,
-            Validators.pattern(Regexes.integerRegex),
-            Validators.min(minimumValue),
-            Validators.max(maximumValue),
-            Validators.minLength(minimumLength),
-            Validators.maxLength(maximumLength),
-        ]);
-        const valueOverLengthLimit = 123456;
+        formControl = new FormControl(initialValue, [Validators.maxLength(maximumLength)]);
+        const valueOverLengthLimit = '123456';
         formControl.setValue(valueOverLengthLimit);
         const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
         const expectedMessage = `Maximum ${maximumLength} caractères`;
+        expect(returnedMessage).toEqual(expectedMessage);
+    });
+
+    it('#getErrorMessage should return empty string if no constraints', () => {
+        formControl = new FormControl(initialValue, []);
+        const value = '123456';
+        formControl.setValue(value);
+        const returnedMessage = ErrorMessageService.getErrorMessage(formControl);
+        const expectedMessage = '';
         expect(returnedMessage).toEqual(expectedMessage);
     });
 });
