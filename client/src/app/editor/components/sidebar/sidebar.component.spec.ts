@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
@@ -129,7 +129,7 @@ describe('SidebarComponent', () => {
                 { provide: ModalService, useValue: modalServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -143,7 +143,7 @@ describe('SidebarComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("#ngOnInit should subscribe to all of shortcutService's tool shortcuts as well as the openExportDrawing and openSaveDrawing shortcuts", () => {
+    it("#ngOnInit should subscribe to all of shortcutService's tool shortcuts", async(() => {
         const currentToolServiceMock = { currentTool: initialTool } as CurrentToolService;
         component['currentToolService'] = currentToolServiceMock;
         component.ngOnInit();
@@ -169,17 +169,19 @@ describe('SidebarComponent', () => {
         expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolSelectionService);
         selectToolEraserShortcutSubject.next();
         expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEraserService);
+    }));
 
+    it('#ngOnInit should subscribe to the openExportDrawing and openSaveDrawing shortcuts', async(() => {
+        component.ngOnInit();
         spyOn(component, 'openExportDrawingModal');
         spyOn(component, 'openSaveDrawingModal');
         openExportDrawingShortcutSubject.next();
-        expect(component.openExportDrawingModal).toHaveBeenCalled();
         openSaveDrawingShortcutSubject.next();
+        expect(component.openExportDrawingModal).toHaveBeenCalled();
         expect(component.openSaveDrawingModal).toHaveBeenCalled();
-    });
+    }));
 
-    it('#ngOnDestroy should unsubscribe from all of its subscriptions', () => {
-        component.ngOnInit();
+    it('#ngOnDestroy should unsubscribe from all of the tool subscriptions', async(() => {
         const pencilSubscription = spyOn(component['selectToolPencilShortcutSubscription'], 'unsubscribe');
         const paintbrushSubscription = spyOn(component['selectToolPaintbrushShortcutSubscription'], 'unsubscribe');
         const lineSubscription = spyOn(component['selectToolLineShortcutSubscription'], 'unsubscribe');
@@ -191,8 +193,6 @@ describe('SidebarComponent', () => {
         const recolorSubscription = spyOn(component['selectToolRecolorShortcutSubscription'], 'unsubscribe');
         const selectionSubscription = spyOn(component['selectToolSelectionShortcutSubscription'], 'unsubscribe');
         const eraserSubscription = spyOn(component['selectToolEraserShortcutSubscription'], 'unsubscribe');
-        const exportDrawingSubscription = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
-        const saveDrawingSubscription = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
         expect(pencilSubscription).toHaveBeenCalled();
@@ -206,9 +206,15 @@ describe('SidebarComponent', () => {
         expect(recolorSubscription).toHaveBeenCalled();
         expect(selectionSubscription).toHaveBeenCalled();
         expect(eraserSubscription).toHaveBeenCalled();
+    }));
+
+    it('#ngOnDestroy should unsubscribe from the openSaveDrawing and the openExportDrawing shortcut subscriptions', async(() => {
+        const exportDrawingSubscription = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
+        const saveDrawingSubscription = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
+        component.ngOnDestroy();
         expect(exportDrawingSubscription).toHaveBeenCalled();
         expect(saveDrawingSubscription).toHaveBeenCalled();
-    });
+    }));
 
     it('#openNewDrawingModal should forward the call to modalService', () => {
         component.openNewDrawingModal();
