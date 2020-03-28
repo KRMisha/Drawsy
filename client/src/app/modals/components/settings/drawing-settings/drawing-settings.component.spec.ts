@@ -71,7 +71,7 @@ describe('DrawingDimensionsSettingsComponent', () => {
         expect(heightValueChangeSpy).toHaveBeenCalled();
     });
 
-    it('should change the drawingService\'s dimensions on width or valid change', async(() => {
+    it('should change the drawingService\'s dimensions on width or height valid change', async(() => {
         const drawingServiceStub = {dimensions: drawingServiceDimensions} as DrawingService;
         component['drawingService'] = drawingServiceStub;
 
@@ -83,7 +83,7 @@ describe('DrawingDimensionsSettingsComponent', () => {
         expect(drawingServiceStub.dimensions.y).toEqual(validValue);
     }));
 
-    it('should not change the drawingService\'s dimensions on width or invalid change', async(() => {
+    it('should not change the drawingService\'s dimensions on width or height invalid change', async(() => {
         const drawingServiceStub = {dimensions: drawingServiceDimensions} as DrawingService;
         component['drawingService'] = drawingServiceStub;
 
