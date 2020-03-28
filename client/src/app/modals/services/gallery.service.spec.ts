@@ -37,8 +37,8 @@ describe('GalleryService', () => {
     beforeEach(async(() => {
         serverServiceSpyObj = jasmine.createSpyObj('ServerService', ['deleteDrawing', 'getAllDrawings']);
         deleteDrawingSubject = new Subject<void>();
-        serverServiceSpyObj.deleteDrawing.and.returnValue(deleteDrawingSubject);
         getAllDrawingsSubject = new Subject<SavedFile[]>();
+        serverServiceSpyObj.deleteDrawing.and.returnValue(deleteDrawingSubject);
         serverServiceSpyObj.getAllDrawings.and.returnValue(getAllDrawingsSubject);
 
         routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
@@ -168,7 +168,7 @@ describe('GalleryService', () => {
             service['_isLoadingComplete'] = true;
             service['_drawings'] = [] as SvgFileContainer[];
             service.getAllDrawings();
-            expect(service['_isLoadingComplete']).toBeFalsy();
+            expect(service['_isLoadingComplete']).toEqual(false);
             expect(serverServiceSpyObj.getAllDrawings).toHaveBeenCalled();
 
             const svgFileContainerMock = {} as SvgFileContainer;
@@ -203,7 +203,7 @@ describe('GalleryService', () => {
     it('#hasDrawings should return false if there are no drawings', () => {
         service['_drawings'] = [];
         const returnValue = service.hasDrawings();
-        expect(returnValue).toBeFalsy();
+        expect(returnValue).toEqual(false);
     });
 
     it('#hasDrawings should return true if there are drawings', () => {
@@ -221,6 +221,6 @@ describe('GalleryService', () => {
     it('#get isLoadingComplete should return false if there are no drawings loaded', () => {
         service['_isLoadingComplete'] = false;
         const returnValue = service.isLoadingComplete;
-        expect(returnValue).toBeFalsy();
+        expect(returnValue).toEqual(false);
     });
 });
