@@ -7,6 +7,8 @@ import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-d
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
+// tslint:disable: no-string-literal
+
 describe('SaveDrawingComponent', () => {
     let saveDrawingServiceSpyObj: jasmine.SpyObj<SaveDrawingService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -19,6 +21,7 @@ describe('SaveDrawingComponent', () => {
     const initialLabels = ['abc', 'def', 'hij'];
     const initialTitle = 'bonjour';
     const initialId = '1';
+
     beforeEach(async(() => {
         saveDrawingServiceSpyObj = jasmine.createSpyObj('SaveDrawingService', ['saveDrawing']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
@@ -104,7 +107,7 @@ describe('SaveDrawingComponent', () => {
         const event = ({ value: 'th1sist-otrigg3rmi-sha', input: { value: '' } as HTMLInputElement } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
         component.addLabel(event);
-        expect(pushSpy);
+        expect(pushSpy).toHaveBeenCalled();
     });
 
     it("#removeLabel should not remove label if it's not in the labels", () => {
@@ -124,7 +127,7 @@ describe('SaveDrawingComponent', () => {
     it('#onSubmit should forward the call to the saveDrawingService after updating the title and labels', () => {
         component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const drawingServiceMock = ({ title: undefined, labels: undefined } as unknown) as DrawingService;
-        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
+        component['drawingService'] = drawingServiceMock;
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(initialTitle);
         expect(drawingServiceMock.labels).toEqual(initialLabels);
@@ -144,14 +147,14 @@ describe('SaveDrawingComponent', () => {
 
     it('#get isCreateDrawingAction should return false when there is a defined id', () => {
         const drawingServiceMock = { id: '123' } as DrawingService;
-        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
+        component['drawingService'] = drawingServiceMock;
         const returnValue = component.isCreateDrawingAction;
         expect(returnValue).toEqual(false);
     });
 
     it('#get isCreateDrawingAction should return true when the id is undefined', () => {
         const drawingServiceMock = { id: undefined } as DrawingService;
-        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
+        component['drawingService'] = drawingServiceMock;
         const returnValue = component.isCreateDrawingAction;
         expect(returnValue).toEqual(true);
     });
