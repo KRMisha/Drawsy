@@ -20,7 +20,7 @@ export class ToolRecolorService extends Tool {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Recolor);
     }
 
-    onElementClick(event: MouseEvent, element: SVGElement): void {
+    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
         if (event.button !== MouseButton.Left && event.button !== MouseButton.Right) {
             return;
         }
@@ -31,7 +31,7 @@ export class ToolRecolorService extends Tool {
         switch (elementType) {
             case 'path': {
                 if (event.button === MouseButton.Left) {
-                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.primaryColor.toRgbaString());
                 }
                 break;
             }
@@ -39,7 +39,7 @@ export class ToolRecolorService extends Tool {
             case 'polygon':
             case 'ellipse':
                 const isLeftClick = event.button === MouseButton.Left;
-                const colorToApply = isLeftClick ? this.colorService.getPrimaryColor() : this.colorService.getSecondaryColor();
+                const colorToApply = isLeftClick ? this.colorService.primaryColor : this.colorService.secondaryColor;
                 const attributeToChange = isLeftClick ? 'fill' : 'stroke';
                 const attributeValue = element.getAttribute(attributeToChange);
 
@@ -49,8 +49,8 @@ export class ToolRecolorService extends Tool {
                 break;
             default: {
                 if (event.button === MouseButton.Left) {
-                    this.renderer.setAttribute(element, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-                    this.renderer.setAttribute(element, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+                    this.renderer.setAttribute(element, 'fill', this.colorService.primaryColor.toRgbaString());
+                    this.renderer.setAttribute(element, 'stroke', this.colorService.primaryColor.toRgbaString());
                 }
             }
         }
@@ -59,7 +59,7 @@ export class ToolRecolorService extends Tool {
         this.commandService.addCommand(new RecolorCommand(element, attributesBefore, attributesAfter));
     }
 
-    private getAttributesMap(element: SVGElement): Map<string, string | undefined> {
+    private getAttributesMap(element: SVGGraphicsElement): Map<string, string | undefined> {
         const map = new Map<string, string | undefined>();
         map.set('fill', element.getAttribute('fill') || undefined);
         map.set('stroke', element.getAttribute('stroke') || undefined);

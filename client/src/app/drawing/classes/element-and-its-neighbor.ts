@@ -1,4 +1,4 @@
 export interface ElementAndItsNeighbor {
-    element: SVGElement;
-    neighbor?: SVGElement;
+    element: SVGGraphicsElement;
+    neighbor?: SVGGraphicsElement;
 }

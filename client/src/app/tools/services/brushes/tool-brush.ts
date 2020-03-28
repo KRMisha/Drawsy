@@ -26,7 +26,8 @@ export abstract class ToolBrush extends Tool {
     onMouseMove(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
             const mousePosition = this.getMousePosition(event);
-            const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
+            const pathString =
+                (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(mousePosition.x, mousePosition.y);
             this.renderer.setAttribute(this.path, 'd', pathString);
         }
     }
@@ -53,7 +54,7 @@ export abstract class ToolBrush extends Tool {
 
     onLeave(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown) {
-            const pathString = (this.path as SVGElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
+            const pathString = (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
             this.renderer.setAttribute(this.path, 'd', pathString);
             this.stopDrawing();
         }
@@ -69,7 +70,7 @@ export abstract class ToolBrush extends Tool {
     protected createNewPath(): SVGPathElement {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
         this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
         // tslint:disable: no-non-null-assertion
         this.renderer.setAttribute(path, 'data-padding', `${this.settings.lineWidth! / 2}`);
         this.renderer.setAttribute(path, 'stroke-width', this.settings.lineWidth!.toString());

@@ -83,7 +83,7 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
-    updateSvgSelectedShapesRect(selectedElement: SVGElement[]): void {
+    updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
         const elementsBounds = this.svgUtilityService.getElementListBounds(selectedElement);
         if (elementsBounds !== undefined) {
             this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionStateService.svgSelectedShapesRect, elementsBounds);

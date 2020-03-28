@@ -1,4 +1,4 @@
 export interface SvgClickEvent {
     mouseEvent: MouseEvent;
-    element: SVGElement;
+    element: SVGGraphicsElement;
 }

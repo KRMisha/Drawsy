@@ -24,7 +24,7 @@ export class ToolEllipseService extends ToolShape {
         return 'ellipse';
     }
 
-    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
+    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void {
         this.renderer.setAttribute(shape, 'cx', `${shapeArea.x + shapeArea.width / 2}`);
         this.renderer.setAttribute(shape, 'cy', `${shapeArea.y + shapeArea.height / 2}`);
         this.renderer.setAttribute(shape, 'rx', `${shapeArea.width / 2}`);
