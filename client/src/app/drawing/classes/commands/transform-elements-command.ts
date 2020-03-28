@@ -1,6 +1,6 @@
 import { Command } from '@app/drawing/classes/commands/command';
 
-export class MoveElementsCommand implements Command {
+export class TransformElementsCommand implements Command {
     private svgTransform: SVGTransform;
     constructor(private elements: SVGGraphicsElement[]) {}
 
