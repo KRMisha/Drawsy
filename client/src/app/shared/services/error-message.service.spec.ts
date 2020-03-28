@@ -6,11 +6,13 @@ import { ErrorMessageService } from '@app/shared/services/error-message.service'
 fdescribe('ErrorMessageService', () => {
     let service: ErrorMessageService;
     let formControl: FormControl;
+
     const initialValue = 10;
     const minimumValue = 1;
     const maximumValue = 100;
     const minimumLength = 2;
     const maximumLength = 5;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [{ provide: ErrorMessageService }],
