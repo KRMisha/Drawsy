@@ -12,5 +12,5 @@ __ngcc_entry_points__.json
 # Code coverage folders
 coverage/
 
-# Omit accidental package-lock on root
+# Omit accidental package-lock.json on root
 package-lock.json
