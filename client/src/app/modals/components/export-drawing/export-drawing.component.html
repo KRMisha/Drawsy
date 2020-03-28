@@ -1,43 +1,45 @@
 <h1 mat-dialog-title class="title">Exporter le dessin</h1>
 <form (ngSubmit)="onSubmit()">
-    <mat-dialog-content class="container">
-        <mat-form-field class="title-item">
-            <mat-label>Titre</mat-label>
-            <input matInput [formControl]="titleFormControl" />
-            <mat-error *ngIf="titleFormControl.invalid">{{ getErrorMessage() }}</mat-error>
-        </mat-form-field>
+    <mat-dialog-content>
+        <div class="container">
+            <mat-form-field class="title-item">
+                <mat-label>Titre</mat-label>
+                <input matInput [formControl]="titleFormControl" />
+                <mat-error *ngIf="titleFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+            </mat-form-field>
 
-        <mat-form-field class="filter-item">
-            <mat-label>Type de filtre</mat-label>
-            <mat-select [(value)]="drawingFilter">
-                <mat-option [value]="DrawingFilter.None">Aucun filtre</mat-option>
-                <mat-option [value]="DrawingFilter.BlackAndWhite">Noir et blanc</mat-option>
-                <mat-option [value]="DrawingFilter.Sepia">Sepia</mat-option>
-                <mat-option [value]="DrawingFilter.Pixel">Pixel</mat-option>
-                <mat-option [value]="DrawingFilter.Eighties">1980</mat-option>
-                <mat-option [value]="DrawingFilter.Corrupt">Corrompu</mat-option>
-            </mat-select>
-        </mat-form-field>
+            <mat-form-field class="filter-item">
+                <mat-label>Type de filtre</mat-label>
+                <mat-select [(value)]="drawingFilter">
+                    <mat-option [value]="DrawingFilter.None">Aucun filtre</mat-option>
+                    <mat-option [value]="DrawingFilter.BlackAndWhite">Noir et blanc</mat-option>
+                    <mat-option [value]="DrawingFilter.Sepia">Sepia</mat-option>
+                    <mat-option [value]="DrawingFilter.Pixel">Pixel</mat-option>
+                    <mat-option [value]="DrawingFilter.Eighties">1980</mat-option>
+                    <mat-option [value]="DrawingFilter.Corrupt">Corrompu</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-        <div class="file-item">
-            <h4 class="file-type">Type de fichier :</h4>
-            <mat-button-toggle-group [(ngModel)]="currentFileType" [ngModelOptions]="{ standalone: true }">
-                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
-                    SVG
-                </mat-button-toggle>
-                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
-                    PNG
-                </mat-button-toggle>
-                <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
-                    JPEG
-                </mat-button-toggle>
-            </mat-button-toggle-group>
+            <div class="file-item">
+                <h4 class="file-type">Type de fichier&nbsp;:</h4>
+                <mat-button-toggle-group [(ngModel)]="currentFileType" [ngModelOptions]="{ standalone: true }">
+                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
+                        SVG
+                    </mat-button-toggle>
+                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
+                        PNG
+                    </mat-button-toggle>
+                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
+                        JPEG
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+
+            <mat-card class="preview-item">
+                <mat-card-title>Aperçu</mat-card-title>
+                <app-drawing-preview></app-drawing-preview>
+            </mat-card>
         </div>
-
-        <mat-card class="preview-item">
-            <mat-card-title>Aperçu</mat-card-title>
-            <app-drawing-preview></app-drawing-preview>
-        </mat-card>
     </mat-dialog-content>
 
     <mat-dialog-actions align="center">
