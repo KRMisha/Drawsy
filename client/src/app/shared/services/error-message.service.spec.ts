@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
-fdescribe('ErrorMessageService', () => {
+describe('ErrorMessageService', () => {
     let service: ErrorMessageService;
     let formControl: FormControl;
 
