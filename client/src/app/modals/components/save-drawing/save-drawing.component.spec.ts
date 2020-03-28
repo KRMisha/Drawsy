@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -6,7 +7,7 @@ import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-d
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
-fdescribe('SaveDrawingComponent', () => {
+describe('SaveDrawingComponent', () => {
     let saveDrawingServiceSpyObj: jasmine.SpyObj<SaveDrawingService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let titleControlSpyObj: jasmine.SpyObj<FormControl>;
@@ -42,6 +43,11 @@ fdescribe('SaveDrawingComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [SaveDrawingComponent],
+            providers: [
+                { provide: SaveDrawingService, useValue: saveDrawingServiceSpyObj },
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -61,6 +67,7 @@ fdescribe('SaveDrawingComponent', () => {
     });
 
     it('#addLabel should early return if the labels of the form are invalid', () => {
+        component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const invalidLabelsControlSpyObj = jasmine.createSpyObj('FormControl', ['push'], {
             invalid: true,
         });
@@ -77,21 +84,24 @@ fdescribe('SaveDrawingComponent', () => {
     });
 
     it('#addLabel should early return if the submitted label is undefined', () => {
+        component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const event = ({ value: undefined } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
         component.addLabel(event);
-        expect(pushSpy);
+        expect(pushSpy).not.toHaveBeenCalled();
     });
 
     it('#addLabel should early return if the submitted label is of length 0', () => {
+        component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const event = ({ value: '' } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
         component.addLabel(event);
-        expect(pushSpy);
+        expect(pushSpy).not.toHaveBeenCalled();
     });
 
     it('#addLabel should push label into labels if the label form is valid and the value is not undefined and of positive length', () => {
-        const event = ({ value: 'th1sist-otrigg3rmi-sha' } as unknown) as MatChipInputEvent;
+        component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
+        const event = ({ value: 'th1sist-otrigg3rmi-sha', input: { value: '' } as HTMLInputElement } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
         component.addLabel(event);
         expect(pushSpy);
@@ -112,7 +122,9 @@ fdescribe('SaveDrawingComponent', () => {
     });
 
     it('#onSubmit should forward the call to the saveDrawingService after updating the title and labels', () => {
+        component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const drawingServiceMock = ({ title: undefined, labels: undefined } as unknown) as DrawingService;
+        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(initialTitle);
         expect(drawingServiceMock.labels).toEqual(initialLabels);
@@ -130,17 +142,53 @@ fdescribe('SaveDrawingComponent', () => {
         expect(returnValue).toEqual(drawingServiceSpyObj.title);
     });
 
-    it('#get isCreateDrawingAction should return true when there is a defined id', () => {
+    it('#get isCreateDrawingAction should return false when there is a defined id', () => {
         const drawingServiceMock = { id: '123' } as DrawingService;
+        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
+        const returnValue = component.isCreateDrawingAction;
+        expect(returnValue).toEqual(false);
+    });
+
+    it('#get isCreateDrawingAction should return true when the id is undefined', () => {
+        const drawingServiceMock = { id: undefined } as DrawingService;
         component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
         const returnValue = component.isCreateDrawingAction;
         expect(returnValue).toEqual(true);
     });
 
-    it('#get isCreateDrawingAction should return false when the id is undefined', () => {
-        const drawingServiceMock = { id: undefined } as DrawingService;
-        component['drawingService'] = drawingServiceMock; // tslint:disable-line: no-string-literal
-        const returnValue = component.isCreateDrawingAction;
-        expect(returnValue).toEqual(false);
+    it('title form should be invalid when the title is empty', () => {
+        const control = component.saveDrawingFormGroup.controls.title;
+        control.setValue('');
+        expect(control.valid).toEqual(false);
+    });
+
+    it('labels form should be invalid when the label does not match the pattern', () => {
+        const control = component.saveDrawingFormGroup.controls.labels;
+        control.setValue('@#$allo123');
+        expect(control.valid).toEqual(false);
+    });
+
+    it('title form should be invalid when the title is too long (25 chars)', () => {
+        const control = component.saveDrawingFormGroup.controls.title;
+        control.setValue('123456789012345678901234567');
+        expect(control.valid).toEqual(false);
+    });
+
+    it('labels form should be invalid when the label is too long (15 chars)', () => {
+        const control = component.saveDrawingFormGroup.controls.labels;
+        control.setValue('12345678901234567');
+        expect(control.valid).toEqual(false);
+    });
+
+    it('title form should be valid when the title respects the validators', () => {
+        const control = component.saveDrawingFormGroup.controls.title;
+        control.setValue('bonjour');
+        expect(control.valid).toEqual(true);
+    });
+
+    it('labels form should be valid when the label respects the validators', () => {
+        const control = component.saveDrawingFormGroup.controls.labels;
+        control.setValue('bonjour');
+        expect(control.valid).toEqual(true);
     });
 });
