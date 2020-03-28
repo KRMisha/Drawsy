@@ -21,27 +21,27 @@ describe('DrawingService', () => {
     });
 
     it('#addElement should append child to renderer', () => {
-        const element = {} as SVGElement;
+        const element = {} as SVGGraphicsElement;
         service.addElement(element);
         expect(rendererSpyObj.appendChild).toHaveBeenCalledWith(service.svgDrawingContent, element);
     });
 
     it('#removeElement should append child to renderer', () => {
-        const element = {} as SVGElement;
+        const element = {} as SVGGraphicsElement;
         service.addElement(element);
         service.removeElement(element);
         expect(rendererSpyObj.removeChild).toHaveBeenCalledWith(service.svgDrawingContent, element);
     });
 
     it('#removeElement should do nothing if element does not exist in array', () => {
-        const element = {} as SVGElement;
+        const element = {} as SVGGraphicsElement;
         service.removeElement(element);
         expect(rendererSpyObj.removeChild).not.toHaveBeenCalled();
     });
 
     it('#clearStoredElements should remove all items from renderer', () => {
         for (let i = 0; i < 10; i++) {
-            service.addElement({} as SVGElement);
+            service.addElement({} as SVGGraphicsElement);
         }
         service.clearStoredElements();
         expect(rendererSpyObj.removeChild).toHaveBeenCalledTimes(10);
@@ -60,7 +60,7 @@ describe('DrawingService', () => {
 
     it('#reappendStoredElements should reappend stored element', () => {
         for (let i = 0; i < 10; i++) {
-            service.addElement({} as SVGElement);
+            service.addElement({} as SVGGraphicsElement);
         }
         expect(rendererSpyObj.appendChild).toHaveBeenCalledTimes(10);
         service.reappendStoredElements();

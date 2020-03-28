@@ -26,7 +26,7 @@ export class ToolPolygonService extends ToolShape {
         return 'polygon';
     }
 
-    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
+    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void {
         const sideCount = this.settings.polygonSideCount!; // tslint:disable-line: no-non-null-assertion
         const points = this.calculatePoints(shapeArea, scale, sideCount);
 
