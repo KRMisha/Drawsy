@@ -1,18 +1,7 @@
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
-
-enum ToolSetting {
-    LineWidth = 'lineWidth',
-    BrushTexture = 'brushTexture',
-    JunctionSettings = 'junctionSettings',
-    SprayDiameter = 'sprayDiameter',
-    SprayRate = 'sprayRate',
-    ShapeType = 'shapeType',
-    ShapeBorderWidth = 'shapeBorderWidth',
-    PolygonSideCount = 'polygonSideCount',
-    EraserSize = 'eraserSize',
-}
+import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.LineWidth
     ? number

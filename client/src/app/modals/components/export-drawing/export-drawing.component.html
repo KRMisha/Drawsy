@@ -21,7 +21,7 @@
 
         <div class="file-item">
             <h4 class="file-type">Type de fichier :</h4>
-            <mat-button-toggle-group [(value)]="currentFileType">
+            <mat-button-toggle-group [(ngModel)]="currentFileType" [ngModelOptions]="{ standalone: true }">
                 <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
                     SVG
                 </mat-button-toggle>

@@ -50,6 +50,6 @@ describe('HomeComponent', () => {
     it('#get isDrawingStarted should forward request to drawingService', () => {
         const returnValue = component.isDrawingStarted;
         expect(drawingServiceSpyObj.isDrawingStarted).toHaveBeenCalled();
-        expect(returnValue).toBeTruthy();
+        expect(returnValue).toEqual(true);
     });
 });

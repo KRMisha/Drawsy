@@ -3,9 +3,9 @@
     text-align: center;
 }
 
-.container {
+.size-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .form-field-item {
@@ -13,4 +13,8 @@
     padding-left: 8px;
     padding-right: 8px;
     text-align: center;
+}
+
+.color-picker-container {
+    margin: 4px auto 0 auto;
 }

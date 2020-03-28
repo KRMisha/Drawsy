@@ -55,6 +55,7 @@ $theme-colors: (
     }
 
     .theme-selected-button,
+    .mat-action-list .theme-selected-button:hover,
     .mat-action-list .theme-selected-button:focus {
         background-color: mat-color($primary);
 

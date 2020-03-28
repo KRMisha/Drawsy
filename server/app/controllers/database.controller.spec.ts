@@ -43,10 +43,7 @@ describe('DatabaseController', () => {
         const error = new HttpException(HttpStatusCode.ImATeapot, 'Message');
         databaseService.createFile.rejects(error);
 
-        const response = await supertest(app)
-            .post('/api/create')
-            .send(newFileContent)
-            .expect(HttpStatusCode.ImATeapot);
+        const response = await supertest(app).post('/api/create').send(newFileContent).expect(HttpStatusCode.ImATeapot);
         expect(databaseService.createFile).to.have.been.calledWith(newFileContent.content);
         expect(response.body.message).to.equal(error.message);
     });
@@ -54,10 +51,7 @@ describe('DatabaseController', () => {
     it('#post /api/create should return the newly created file ID when the service succeeds', async () => {
         databaseService.createFile.resolves(fileId);
 
-        const response = await supertest(app)
-            .post('/api/create')
-            .send(newFileContent)
-            .expect(HttpStatusCode.Created);
+        const response = await supertest(app).post('/api/create').send(newFileContent).expect(HttpStatusCode.Created);
         expect(databaseService.createFile).to.have.been.calledWith(newFileContent.content);
         expect(response.body.id).to.equal(fileId);
     });
@@ -104,9 +98,7 @@ describe('DatabaseController', () => {
         const error = new HttpException(HttpStatusCode.ImATeapot, 'Message');
         databaseService.getFiles.rejects(error);
 
-        const response = await supertest(app)
-            .get('/api/get-all')
-            .expect(HttpStatusCode.ImATeapot);
+        const response = await supertest(app).get('/api/get-all').expect(HttpStatusCode.ImATeapot);
         expect(databaseService.getFiles).to.have.been.called;
         expect(response.body.message).to.equal(error.message);
     });
@@ -124,9 +116,7 @@ describe('DatabaseController', () => {
 
         databaseService.getFiles.resolves(expectedFiles);
 
-        const response = await supertest(app)
-            .get('/api/get-all')
-            .expect(HttpStatusCode.Ok);
+        const response = await supertest(app).get('/api/get-all').expect(HttpStatusCode.Ok);
         expect(databaseService.getFiles).to.have.been.called;
         expect(response.body).to.deep.equal(expectedFiles);
     });

@@ -31,7 +31,7 @@ describe('ThemeService', () => {
         service.toggleDarkTheme();
         expect(service['_isDarkTheme']).toBeFalsy();
         service.toggleDarkTheme();
-        expect(service['_isDarkTheme']).toBeTruthy();
+        expect(service['_isDarkTheme']).toEqual(true);
     });
 
     it('#get Theme should return a string with the color and "dark" when isDarkTheme is true', () => {
@@ -72,7 +72,7 @@ describe('ThemeService', () => {
         service['_isDarkTheme'] = false;
         service['_color'] = 'pink';
         service.isDarkTheme = true;
-        expect(service['_isDarkTheme']).toBeTruthy();
+        expect(service['_isDarkTheme']).toEqual(true);
         expect(classListSpyObj.replace).toHaveBeenCalledWith('pink-light-theme', 'pink-dark-theme');
     });
 });
