@@ -8,7 +8,7 @@ import { ErrorMessageService } from '@app/shared/services/error-message.service'
 
 // tslint:disable: no-string-literal
 
-fdescribe('GridSettingsComponent', () => {
+describe('GridSettingsComponent', () => {
     let component: GridSettingsComponent;
     let fixture: ComponentFixture<GridSettingsComponent>;
     let settingServiceSpyObj: jasmine.SpyObj<SettingsService>;
@@ -26,15 +26,9 @@ fdescribe('GridSettingsComponent', () => {
 
     beforeEach(async(() => {
         formGroupStub = new FormGroup({
-            gridSize: new FormControl(initialGridSize, [
-                Validators.required,
-            ]),
-            gridOpacity: new FormControl(initialGridOpacity, [
-                Validators.required,
-            ]),
-            gridDisplayEnabled: new FormControl(true, [
-                Validators.required,
-            ]),
+            gridSize: new FormControl(initialGridSize, [Validators.required]),
+            gridOpacity: new FormControl(initialGridOpacity, [Validators.required]),
+            gridDisplayEnabled: new FormControl(true, [Validators.required]),
         });
         settingServiceSpyObj = jasmine.createSpyObj('SettingsService', [], {
             settingsFormGroup: formGroupStub,
@@ -81,8 +75,8 @@ fdescribe('GridSettingsComponent', () => {
         expect(gridOpacity).toHaveBeenCalled();
     });
 
-    it('should change the gridService\'s gridDisplay, gridSize and gridOpacity on valid change', async(() => {
-        const gridServiceStub = {isDisplayEnabled: true, size: 0, opacity: 0} as unknown as GridService;
+    it("should change the gridService's gridDisplay, gridSize and gridOpacity on valid change", async(() => {
+        const gridServiceStub = ({ isDisplayEnabled: true, size: 0, opacity: 0 } as unknown) as GridService;
         component['gridService'] = gridServiceStub;
 
         const validValue = 10;
@@ -95,8 +89,8 @@ fdescribe('GridSettingsComponent', () => {
         expect(gridServiceStub.opacity).toEqual(validValue);
     }));
 
-    it('should not change the gridService\'s gridDisplay, gridSize and gridOpacity on invalid change', async(() => {
-        const gridServiceStub = {isDisplayEnabled: true, size: initialGridSize, opacity: initialGridOpacity} as unknown as GridService;
+    it("should not change the gridService's gridDisplay, gridSize and gridOpacity on invalid change", async(() => {
+        const gridServiceStub = ({ isDisplayEnabled: true, size: initialGridSize, opacity: initialGridOpacity } as unknown) as GridService;
         component['gridService'] = gridServiceStub;
 
         const inValidValue = '';
@@ -149,8 +143,8 @@ fdescribe('GridSettingsComponent', () => {
         expect(gridOpacitySpy).toHaveBeenCalled();
     });
 
-    it('set gridSize should update the gridService\'s gridSize and set the formGroup\'s value', () => {
-        const gridServiceStub = {size: initialGridSize} as unknown as GridService;
+    it("set gridSize should update the gridService's gridSize and set the formGroup's value", () => {
+        const gridServiceStub = ({ size: initialGridSize } as unknown) as GridService;
         const setValueSpy = spyOn(formGroupStub.controls.gridSize, 'setValue');
         component['gridService'] = gridServiceStub;
 
@@ -161,8 +155,8 @@ fdescribe('GridSettingsComponent', () => {
         expect(setValueSpy).toHaveBeenCalledWith(newValue, { emitEvent: false });
     });
 
-    it('set gridOpacity should update the gridService\'s gridOpacity and set the formGroup\'s value', () => {
-        const gridServiceStub = {opacity: initialGridOpacity} as unknown as GridService;
+    it("set gridOpacity should update the gridService's gridOpacity and set the formGroup's value", () => {
+        const gridServiceStub = ({ opacity: initialGridOpacity } as unknown) as GridService;
         const setValueSpy = spyOn(formGroupStub.controls.gridOpacity, 'setValue');
         component['gridService'] = gridServiceStub;
 

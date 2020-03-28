@@ -20,19 +20,13 @@ describe('DrawingDimensionsSettingsComponent', () => {
     const initialWidth = 10;
     const initialHeight = 10;
     const backgroundColorStub = {} as Color;
-    const drawingServiceDimensions: Vec2 = {x: 10, y: 10};
+    const drawingServiceDimensions: Vec2 = { x: 10, y: 10 };
     const minimumValue = 5;
 
     beforeEach(async(() => {
         formGroupStub = new FormGroup({
-            drawingWidth: new FormControl(initialWidth, [
-                Validators.required,
-                Validators.min(minimumValue),
-            ]),
-            drawingHeight: new FormControl(initialHeight, [
-                Validators.required,
-                Validators.min(minimumValue),
-            ]),
+            drawingWidth: new FormControl(initialWidth, [Validators.required, Validators.min(minimumValue)]),
+            drawingHeight: new FormControl(initialHeight, [Validators.required, Validators.min(minimumValue)]),
         });
         settingServiceSpyObj = jasmine.createSpyObj('SettingsService', [], {
             settingsFormGroup: formGroupStub,
@@ -71,8 +65,8 @@ describe('DrawingDimensionsSettingsComponent', () => {
         expect(heightValueChangeSpy).toHaveBeenCalled();
     });
 
-    it('should change the drawingService\'s dimensions on width or height valid change', async(() => {
-        const drawingServiceStub = {dimensions: drawingServiceDimensions} as DrawingService;
+    it("should change the drawingService's dimensions on width or height valid change", async(() => {
+        const drawingServiceStub = { dimensions: drawingServiceDimensions } as DrawingService;
         component['drawingService'] = drawingServiceStub;
 
         const validValue = 20;
@@ -83,8 +77,8 @@ describe('DrawingDimensionsSettingsComponent', () => {
         expect(drawingServiceStub.dimensions.y).toEqual(validValue);
     }));
 
-    it('should not change the drawingService\'s dimensions on width or height invalid change', async(() => {
-        const drawingServiceStub = {dimensions: drawingServiceDimensions} as DrawingService;
+    it("should not change the drawingService's dimensions on width or height invalid change", async(() => {
+        const drawingServiceStub = { dimensions: drawingServiceDimensions } as DrawingService;
         component['drawingService'] = drawingServiceStub;
 
         const invalidValue = minimumValue - 1;
@@ -114,8 +108,8 @@ describe('DrawingDimensionsSettingsComponent', () => {
         expect(errorMessageServiceSpy).toHaveBeenCalledWith(formGroupStub, 'Entiers');
     });
 
-    it('set color should set the drawingService\'s backgroundColor', () => {
-        const drawingServiceStub = {backgroundColor: backgroundColorStub} as DrawingService;
+    it("set color should set the drawingService's backgroundColor", () => {
+        const drawingServiceStub = { backgroundColor: backgroundColorStub } as DrawingService;
         component['drawingService'] = drawingServiceStub;
 
         const newBackgroundColor = {} as Color;
