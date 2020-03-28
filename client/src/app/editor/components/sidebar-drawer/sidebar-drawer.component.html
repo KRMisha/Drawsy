@@ -30,6 +30,21 @@
             </div>
         </ng-container>
 
+        <div *ngIf="currentToolSettings.brushTexture !== undefined">
+            <h3 class="brush-texture-title-item">Type de texture</h3>
+            <mat-form-field class="dropdown-item">
+                <mat-label>Sélection</mat-label>
+                <mat-select [(value)]="currentToolSettings.brushTexture">
+                    <mat-option [value]="BrushTexture.Graffiti">Âme fragile</mat-option>
+                    <mat-option [value]="BrushTexture.Blur">Vent d'automne</mat-option>
+                    <mat-option [value]="BrushTexture.Shadow">Ombre du matin</mat-option>
+                    <mat-option [value]="BrushTexture.Matte">Chlorophylle</mat-option>
+                    <mat-option [value]="BrushTexture.Fabric">Innocence juvénile</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
         <div *ngIf="currentToolSettings.junctionSettings !== undefined" class="junction-container">
             <h3 class="setting-title-item">Taille jonction</h3>
             <mat-form-field
