@@ -1,23 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { DrawingSettingsComponent } from '@app/drawing/components/drawing-settings/drawing-settings.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ModalService } from '@app/modals/services/modal.service';
 
 fdescribe('ModalService', () => {
-    let service: ModalService;
-    let matDialogSpyObj: jasmine.SpyObj<MatDialog>;
-    let openDialogSpy: jasmine.Spy;
     let expectedSecondParameter = {
         width: '',
         height: 'auto',
         maxHeight: '95vh',
         panelClass: 'theme-dialog',
     };
+    let matDialogSpyObj: jasmine.SpyObj<MatDialog>;
+    let service: ModalService;
+    let openDialogSpy: jasmine.Spy;
 
     beforeEach(() => {
         expectedSecondParameter = {
@@ -32,8 +32,8 @@ fdescribe('ModalService', () => {
         TestBed.configureTestingModule({
             providers: [{ provide: MatDialog, useValue: matDialogSpyObj }],
         });
-        service = TestBed.inject(ModalService);
 
+        service = TestBed.inject(ModalService);
         openDialogSpy = spyOn<any>(service, 'openDialog').and.callThrough(); // tslint:disable-line: no-any
     });
 
@@ -88,10 +88,10 @@ fdescribe('ModalService', () => {
 
     it('#openSettingsModal should open a modal of the appropriate width containing openSettingsModal', () => {
         service.openSettingsModal();
-        const width = 425;
-        expect(openDialogSpy).toHaveBeenCalledWith(DrawingSettingsComponent, width, false);
+        const width = 325;
+        expect(openDialogSpy).toHaveBeenCalledWith(SettingsComponent, width, false);
         expectedSecondParameter.width = `${width}px`;
-        expect(matDialogSpyObj.open).toHaveBeenCalledWith(DrawingSettingsComponent, expectedSecondParameter);
+        expect(matDialogSpyObj.open).toHaveBeenCalledWith(SettingsComponent, expectedSecondParameter);
     });
 
     it('#openGuideModal should open a modal of the appropriate width containing GuideComponent', () => {
