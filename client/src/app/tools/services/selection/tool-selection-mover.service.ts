@@ -35,9 +35,17 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset.x += deltaMousePos.x;
         this.totalSelectionMoveOffset.y += deltaMousePos.y;
 
-        this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
+        this.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
         this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
         this.toolSelectionStateService.updateSelectionRect();
+    }
+
+    moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
+        for (const element of elements) {
+            const transformIndex = element.transform.baseVal.numberOfItems - 1;
+            const newMatrix = element.transform.baseVal.getItem(transformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(transformIndex).setMatrix(newMatrix);
+        }
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -49,6 +57,7 @@ export class ToolSelectionMoverService {
             !this.toolSelectionStateService.isMovingSelectionWithArrows &&
             (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld)
         ) {
+            this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
             this.toolSelectionStateService.isMovingSelectionWithArrows = true;
             this.moveSelectionInArrowDirection();
             const timeoutDurationMs = 500;
@@ -79,7 +88,7 @@ export class ToolSelectionMoverService {
 
     addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalSelectionMoveOffset));
+        this.commandService.addCommand(new MoveElementsCommand(selectedElementsCopy));
         this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
@@ -112,7 +121,7 @@ export class ToolSelectionMoverService {
 
         this.totalSelectionMoveOffset.x += moveDirection.x;
         this.totalSelectionMoveOffset.y += moveDirection.y;
-        this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
+        this.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
         this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
     }
 }

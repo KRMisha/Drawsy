@@ -1,5 +1,4 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { CommandService } from '@app/drawing/services/command.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
@@ -26,7 +25,6 @@ export class DrawingService {
 
     private renderer: Renderer2;
 
-    private transformationMap = new Map<SVGGraphicsElement, SvgTransformations>();
     private mouseUpUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
 
     private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
@@ -54,7 +52,6 @@ export class DrawingService {
                 }
             }
         }
-        this.transformationMap.set(element, new SvgTransformations());
 
         const mouseUpUnlistenFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
             this.elementClickedSource.next({ element, mouseEvent: event });
@@ -66,7 +63,6 @@ export class DrawingService {
         const elementToRemoveIndex = this.svgElements.indexOf(element);
         if (elementToRemoveIndex !== -1) {
             this.svgElements.splice(elementToRemoveIndex, 1);
-            this.transformationMap.delete(element);
             if (this.svgDrawingContent !== undefined) {
                 this.renderer.removeChild(this.svgDrawingContent, element);
             }
@@ -127,15 +123,9 @@ export class DrawingService {
         return true;
     }
 
-    moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
+    appendNewMatrixToElements(elements: SVGGraphicsElement[]): void {
         for (const element of elements) {
-            const transformations = this.transformationMap.get(element);
-            if (!transformations) {
-                continue;
-            }
-            transformations.translation.x += moveOffset.x;
-            transformations.translation.y += moveOffset.y;
-            this.renderer.setAttribute(element, 'transform', transformations.toString());
+            element.transform.baseVal.appendItem(this.drawingRoot.createSVGTransform());
         }
     }
 

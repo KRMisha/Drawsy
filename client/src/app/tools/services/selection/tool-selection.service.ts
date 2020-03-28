@@ -75,6 +75,7 @@ export class ToolSelectionService extends Tool {
         this.userSelectionStartCoords = this.getMousePosition(event);
         if (Tool.isMouseInsideDrawing) {
             if (this.isMouseInsideSelection(this.getMousePosition(event)) && event.button === MouseButton.Left) {
+                this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
                 this.toolSelectionStateService.isMovingSelectionWithMouse = true;
                 this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {

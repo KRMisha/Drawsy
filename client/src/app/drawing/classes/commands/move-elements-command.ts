@@ -1,16 +1,22 @@
 import { Command } from '@app/drawing/classes/commands/command';
-import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Vec2 } from '@app/shared/classes/vec2';
 
 export class MoveElementsCommand implements Command {
-    constructor(private drawingService: DrawingService, private elements: SVGGraphicsElement[], private moveOffset: Vec2) {}
+    private svgTransform: SVGTransform;
+    constructor(private elements: SVGGraphicsElement[]) {}
 
     undo(): void {
-        const inverseMoveOffset: Vec2 = { x: -this.moveOffset.x, y: -this.moveOffset.y };
-        this.drawingService.moveElementList(this.elements, inverseMoveOffset);
+        for (const element of this.elements) {
+            const transformIndex = element.transform.baseVal.numberOfItems - 1;
+            if (this.svgTransform === undefined) {
+                this.svgTransform = element.transform.baseVal.getItem(transformIndex);
+            }
+            element.transform.baseVal.removeItem(transformIndex);
+        }
     }
 
     redo(): void {
-        this.drawingService.moveElementList(this.elements, this.moveOffset);
+        for (const element of this.elements) {
+            element.transform.baseVal.appendItem(this.svgTransform);
+        }
     }
 }
