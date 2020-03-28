@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChil
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { merge, Subscription } from 'rxjs';
 
-const canvasWidth = 202;
+const canvasWidth = 200;
 const canvasHeight = 20;
 
 @Component({

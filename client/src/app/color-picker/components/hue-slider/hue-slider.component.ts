@@ -3,16 +3,7 @@ import { ColorPickerService } from '@app/color-picker/services/color-picker.serv
 import { Color } from '@app/shared/classes/color';
 import { Subscription } from 'rxjs';
 
-const colorGradient = [
-    'rgb(255, 0, 0)',
-    'rgb(255, 255, 0)',
-    'rgb(0, 255, 0)',
-    'rgb(0, 255, 255)',
-    'rgb(0, 0, 255)',
-    'rgb(255, 0, 255)',
-];
-
-const canvasWidth = 202;
+const canvasWidth = 200;
 const canvasHeight = 20;
 
 @Component({
@@ -87,6 +78,15 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
     }
 
     private draw(): void {
+        const colorGradient = [
+            'rgb(255, 0, 0)',
+            'rgb(255, 255, 0)',
+            'rgb(0, 255, 0)',
+            'rgb(0, 255, 255)',
+            'rgb(0, 0, 255)',
+            'rgb(255, 0, 255)',
+        ];
+
         const horizontalGradient = this.context.createLinearGradient(0, 0, canvasWidth, 0);
         for (let i = 0; i < colorGradient.length; i++) {
             horizontalGradient.addColorStop(i / colorGradient.length, colorGradient[i]);
