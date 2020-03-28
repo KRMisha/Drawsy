@@ -132,7 +132,12 @@ export class ToolSelectionService extends Tool {
     }
 
     update(mousePosition: Vec2): void {
-        this.toolSelectionStateService.selectedElements = [];
+        for (let i = this.toolSelectionStateService.selectedElements.length - 1; i >= 0; i--) {
+            if (this.drawingService.svgElements.indexOf(this.toolSelectionStateService.selectedElements[i]) === -1) {
+                this.toolSelectionStateService.selectedElements.splice(i, 1);
+            }
+        }
+        this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
     }
 
     onToolDeselection(): void {

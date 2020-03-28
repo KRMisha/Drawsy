@@ -80,6 +80,7 @@ export class ToolSelectionUiService implements OnDestroy {
         } else {
             this.hideSvgSelectedShapesRect();
         }
+        this.toolSelectionStateService.updateSelectionRect();
     }
 
     showSvgSelectedShapesRect(): void {

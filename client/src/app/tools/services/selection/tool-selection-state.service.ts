@@ -19,13 +19,17 @@ export class ToolSelectionStateService {
 
     constructor(private svgUtilityService: SvgUtilityService) {}
 
+    updateSelectionRect(): void {
+        this._selectionRect = this.svgUtilityService.getElementListBounds(this.selectedElements);
+    }
+
     get selectedElements(): SVGElement[] {
         return this._selectedElements;
     }
 
     set selectedElements(selectedElements: SVGElement[]) {
-        this._selectionRect = this.svgUtilityService.getElementListBounds(selectedElements);
         this._selectedElements = selectedElements;
+        this.updateSelectionRect();
         this.selectedElementsChangedSource.next(selectedElements);
     }
 

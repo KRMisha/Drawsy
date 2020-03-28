@@ -37,6 +37,7 @@ export class ToolSelectionMoverService {
 
         this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
         this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionStateService.updateSelectionRect();
     }
 
     onKeyDown(event: KeyboardEvent): void {
