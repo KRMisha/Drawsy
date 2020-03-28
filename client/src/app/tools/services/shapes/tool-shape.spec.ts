@@ -53,9 +53,10 @@ describe('ToolShape', () => {
 
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
         colorSpyObj.toRgbaString.and.returnValue('rgba(0, 0, 0, 1)');
-        colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['getPrimaryColor', 'getSecondaryColor']);
-        colorServiceSpyObj.getPrimaryColor.and.returnValue(colorSpyObj);
-        colorServiceSpyObj.getSecondaryColor.and.returnValue(colorSpyObj);
+        colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
+            primaryColor: colorSpyObj,
+            secondaryColor: colorSpyObj,
+        });
         toolShape = new ToolShapeMock(
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
@@ -171,7 +172,8 @@ describe('ToolShape', () => {
 
         Tool.isMouseInsideDrawing = true;
         toolShape.settings.shapeType = ShapeType.FillOnly;
-        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
+        const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
+        toolShape.onMouseDown(mouseEvent);
 
         expect(createNewShapeSpy).toHaveBeenCalled();
         expect(getMousePositionSpy).toHaveBeenCalled();
