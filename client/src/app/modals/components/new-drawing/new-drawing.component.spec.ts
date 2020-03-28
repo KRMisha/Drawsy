@@ -1,8 +1,6 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {  NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
@@ -10,13 +8,11 @@ import { Color } from '@app/shared/classes/color';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { Subject } from 'rxjs';
 
-// tslint:disable: max-classes-per-file
 // tslint:disable: no-magic-numbers
-// tslint:disable: no-empty
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 
-fdescribe('NewDrawingComponent', () => {
+describe('NewDrawingComponent', () => {
     let component: NewDrawingComponent;
     let fixture: ComponentFixture<NewDrawingComponent>;
     let routerSpyObj: jasmine.SpyObj<Router>;
@@ -54,12 +50,11 @@ fdescribe('NewDrawingComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [NewDrawingComponent],
-            imports: [FormsModule, MatCardModule, MatIconModule, ReactiveFormsModule],
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: Router, useValue: routerSpyObj },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -82,7 +77,6 @@ fdescribe('NewDrawingComponent', () => {
     });
 
     it('#ngOnDestroy should unsubscribe from its subscription', () => {
-        component.ngOnInit();
         const dimensionChangedSubscription = spyOn(component['drawingDimensionChangedSubscription'], 'unsubscribe');
         component.ngOnDestroy();
         expect(dimensionChangedSubscription).toHaveBeenCalled();
@@ -101,17 +95,19 @@ fdescribe('NewDrawingComponent', () => {
         component.wereDimensionsModified = false;
         const event = ({ target: { innerWidth: 12, innerHeight: 12 } as Window } as unknown) as Event;
         component.onResize(event);
-        expect(widthSpyObj.setValue).toHaveBeenCalledWith(12 - sidebarWidth, { emitEvent: false });
-        expect(heightSpyObj.setValue).toHaveBeenCalledWith(12, { emitEvent: false });
+        expect(widthSpyObj.setValue).toHaveBeenCalledWith((event.target as Window).innerWidth - sidebarWidth, { emitEvent: false });
+        expect(heightSpyObj.setValue).toHaveBeenCalledWith((event.target as Window).innerHeight, { emitEvent: false });
     });
 
     it('#onSubmit should forward navigate call to the router if the drawing form is valid and drawingService.confirmNewDrawing returns succesfully', () => {
         component.drawingFormGroup = validFormGroupSpyObj;
         drawingServiceSpyObj.confirmNewDrawing.and.returnValue(true);
+        const color = {} as Color;
+        component.backgroundColor = color;
         component.onSubmit();
         expect(drawingServiceSpyObj.confirmNewDrawing).toHaveBeenCalledWith(
             { x: 18, y: 18 },
-            Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb)
+            color
         );
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
     });
@@ -130,9 +126,9 @@ fdescribe('NewDrawingComponent', () => {
     });
 
     it('#getErrorMessage should forward the call to the ErrorMessageService', () => {
-        spyOn(ErrorMessageService, 'getErrorMessage');
+        const errorMessageSpy = spyOn(ErrorMessageService, 'getErrorMessage');
         component.getErrorMessage(widthSpyObj);
-        expect(ErrorMessageService.getErrorMessage).toHaveBeenCalledWith(widthSpyObj, 'Entiers');
+        expect(errorMessageSpy).toHaveBeenCalledWith(widthSpyObj, 'Entiers');
     });
 
     it('drawingFormGroup should contain the window size at the start', () => {
