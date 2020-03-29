@@ -3,7 +3,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 
 export class MoveElementsCommand implements Command {
-    constructor(private drawingService: DrawingService, private elements: SVGElement[], private moveOffset: Vec2) {}
+    constructor(private drawingService: DrawingService, private elements: SVGGraphicsElement[], private moveOffset: Vec2) {}
 
     undo(): void {
         const inverseMoveOffset: Vec2 = { x: -this.moveOffset.x, y: -this.moveOffset.y };
