@@ -1,11 +1,11 @@
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
-import { ElementAndItsNeighbor } from '@app/drawing/classes/element-and-its-neighbor';
+import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    const elementAndItsNeighbor = {} as ElementAndItsNeighbor;
-    const elements = [elementAndItsNeighbor, elementAndItsNeighbor, elementAndItsNeighbor];
+    const elementSiblingPair = {} as ElementSiblingPair;
+    const elements = [elementSiblingPair, elementSiblingPair, elementSiblingPair];
     let command: RemoveElementsCommand;
 
     beforeEach(() => {
@@ -21,7 +21,7 @@ describe('RemoveElementCommand', () => {
         command.undo();
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(elements.length);
         for (const element of elements) {
-            expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(element.element, element.neighbor);
+            expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(element.element, element.sibling);
         }
     });
 

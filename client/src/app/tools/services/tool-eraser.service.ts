@@ -1,6 +1,6 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
-import { ElementAndItsNeighbor } from '@app/drawing/classes/element-and-its-neighbor';
+import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -24,7 +24,7 @@ export class ToolEraserService extends Tool {
 
     private isLeftMouseButtonDownInsideDrawing = false;
     private drawingElementsCopy: SVGGraphicsElement[] = [];
-    private svgElementsDeletedDuringDrag: ElementAndItsNeighbor[] = [];
+    private svgElementsDeletedDuringDrag: ElementSiblingPair[] = [];
 
     private eraserRect: Rect;
 
@@ -70,7 +70,7 @@ export class ToolEraserService extends Tool {
         for (let i = 0; i < this.drawingElementsCopy.length; i++) {
             elementIndices.set(this.drawingElementsCopy[i], i);
         }
-        this.svgElementsDeletedDuringDrag.sort((element1: ElementAndItsNeighbor, element2: ElementAndItsNeighbor) => {
+        this.svgElementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
             return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
         });
         this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
@@ -99,7 +99,7 @@ export class ToolEraserService extends Tool {
             if (elementIndex !== -1) {
                 this.svgElementsDeletedDuringDrag.push({
                     element: this.svgElementUnderCursor,
-                    neighbor: this.drawingElementsCopy[elementIndex + 1],
+                    sibling: this.drawingElementsCopy[elementIndex + 1],
                 });
                 this.drawingService.removeElement(this.svgElementUnderCursor);
             }
