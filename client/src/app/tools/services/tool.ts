@@ -18,13 +18,13 @@ export abstract class Tool {
     protected renderer: Renderer2;
 
     constructor(
-        private rendererFactory: RendererFactory2,
+        rendererFactory: RendererFactory2,
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected commandService: CommandService,
         toolInfo: ToolData
     ) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+        this.renderer = rendererFactory.createRenderer(null, null);
         ({ name: this.name, icon: this.icon } = toolInfo);
     }
 

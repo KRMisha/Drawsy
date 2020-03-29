@@ -16,14 +16,11 @@ export class DrawingPreviewService {
 
     private renderer: Renderer2;
 
-    constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+    constructor(rendererFactory: RendererFactory2, private drawingService: DrawingService) {
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     initializePreview(): void {
-        const viewBoxString = `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
-        this.renderer.setAttribute(this.drawingPreviewRoot, 'viewBox', viewBoxString);
-
         for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {
             this.renderer.appendChild(this.svgDefs, filter.cloneNode(true));
         }

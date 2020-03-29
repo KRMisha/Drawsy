@@ -1,12 +1,8 @@
-<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" [attr.viewBox]="viewBox">
     <title #appTitle></title>
     <desc #appDesc></desc>
 
     <defs #appDefs>
-        <filter id="drawingFilter0" filterUnits="userSpaceOnUse">
-            <feComposite in="SourceGraphic" in2="SourceGraphic" operator="in" result="composite" />
-        </filter>
-
         <filter id="drawingFilter1" filterUnits="userSpaceOnUse">
             <feColorMatrix
                 type="matrix"

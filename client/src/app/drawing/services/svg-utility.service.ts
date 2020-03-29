@@ -11,8 +11,8 @@ import { Vec2 } from '@app/shared/classes/vec2';
 export class SvgUtilityService {
     private renderer: Renderer2;
 
-    constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+    constructor(rendererFactory: RendererFactory2, private drawingService: DrawingService) {
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     getElementsUnderPoint(elements: SVGGraphicsElement[], point: Vec2): SVGGraphicsElement[] {
