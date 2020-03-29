@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 
 // tslint:disable: no-string-literal
 
-fdescribe('GalleryService', () => {
+describe('GalleryService', () => {
     let service: GalleryService;
     let serverServiceSpyObj: jasmine.SpyObj<ServerService>;
     let routerSpyObj: jasmine.SpyObj<Router>;
@@ -166,7 +166,7 @@ fdescribe('GalleryService', () => {
 
     it(
         "#getAllDrawings should set _isLoadingComplete to false, call serverService's getAllDrawings," +
-        'load drawings into _drawings and then set _isLoadingComplete to true',
+            'load drawings into _drawings and then set _isLoadingComplete to true',
         () => {
             service['_isLoadingComplete'] = true;
             service['_drawings'] = [] as SvgFileContainer[];
@@ -185,42 +185,22 @@ fdescribe('GalleryService', () => {
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile3);
             expect(service['_drawings']).toEqual([svgFileContainerMock, svgFileContainerMock, svgFileContainerMock]);
             expect(service['_isLoadingComplete']).toEqual(true);
-        });
+        }
+    );
 
     it('#getAllDrawings should set its array of drawings to empty when the request returns an error', async(() => {
-            service.getAllDrawings();
-            const error = { status: HttpStatusCode.BadRequest } as HttpErrorResponse;
-            getAllDrawingsSubject.error(error);
-            expect(service['_drawings']).toEqual([]);
+        service.getAllDrawings();
+        const error = { status: HttpStatusCode.BadRequest } as HttpErrorResponse;
+        getAllDrawingsSubject.error(error);
+        expect(service['_drawings']).toEqual([]);
     }));
 
-    it('#getDrawingsWithLabels should return all drawings if there are no labels', () => {
-        const svgFileContainerMock = {} as SvgFileContainer;
-        const drawingsMock = [svgFileContainerMock, svgFileContainerMock, svgFileContainerMock, svgFileContainerMock];
-        service['_drawings'] = drawingsMock;
-        const returnValue = service.getDrawingsWithLabels([]);
-        expect(returnValue).toEqual(drawingsMock);
-    });
-
-    it('#getDrawingsWithLabels should return appropriate drawings when given a label', () => {
-        const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
-        const svgFileContainerMock2: SvgFileContainer = { id: '2', labels: ['allo'], title: '2', drawingRoot: {} as SVGSVGElement };
-        const svgFileContainerMock3: SvgFileContainer = { id: '3', labels: ['salut'], title: '3', drawingRoot: {} as SVGSVGElement };
-        service['_drawings'] = [svgFileContainerMock1, svgFileContainerMock2, svgFileContainerMock3];
-        const returnValue = service.getDrawingsWithLabels(['salut']);
-        expect(returnValue).toEqual([svgFileContainerMock3]);
-    });
-
-    it('#hasDrawings should return false if there are no drawings', () => {
-        service['_drawings'] = [];
-        const returnValue = service.hasDrawings();
-        expect(returnValue).toEqual(false);
-    });
-
-    it('#hasDrawings should return true if there are drawings', () => {
-        service['_drawings'] = [{} as SvgFileContainer];
-        const returnValue = service.hasDrawings();
-        expect(returnValue).toEqual(true);
+    it('#get drawings should return drawings', () => {
+        const drawingStub = {} as SvgFileContainer;
+        const drawingsStub = [drawingStub, drawingStub];
+        service['_drawings'] = drawingsStub;
+        const returnValue = service.drawings;
+        expect(returnValue).toEqual(drawingsStub);
     });
 
     it('#get isLoadingComplete should return true if there are drawings loaded', () => {
