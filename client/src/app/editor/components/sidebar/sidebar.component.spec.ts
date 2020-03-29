@@ -1,8 +1,24 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { ModalService } from '@app/modals/services/modal.service';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
+import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
+import { ToolEllipseService } from '@app/tools/services/shapes/tool-ellipse.service';
+import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
+import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
+import { Tool } from '@app/tools/services/tool';
+import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
+import { ToolEyedropperService } from '@app/tools/services/tool-eyedropper.service';
+import { ToolHolderService } from '@app/tools/services/tool-holder.service';
+import { ToolLineService } from '@app/tools/services/tool-line.service';
+import { ToolRecolorService } from '@app/tools/services/tool-recolor.service';
+import { ToolSprayCanService } from '@app/tools/services/tool-spray-can.service';
+import { Subject } from 'rxjs';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers
@@ -11,21 +27,109 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
     let fixture: ComponentFixture<SidebarComponent>;
+    let routerSpyObj: jasmine.SpyObj<Router>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
+    let toolHolderServiceSpyObj: jasmine.SpyObj<ToolHolderService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
+    let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
+
+    const initialTool = ({} as unknown) as Tool;
+    const toolPencilServiceStub = {} as ToolPencilService;
+    const toolPaintbrushServiceStub = {} as ToolPaintbrushService;
+    const toolLineServiceStub = {} as ToolLineService;
+    const toolSprayCanServiceStub = {} as ToolSprayCanService;
+    const toolRectangleServiceStub = {} as ToolRectangleService;
+    const toolEllipseServiceStub = {} as ToolEllipseService;
+    const toolPolygonServiceStub = {} as ToolPolygonService;
+    const toolEyedropperServiceStub = {} as ToolEyedropperService;
+    const toolRecolorServiceStub = {} as ToolRecolorService;
+    const toolSelectionServiceStub = {} as ToolSelectionService;
+    const toolEraserServiceStub = {} as ToolEraserService;
+    const initialTools = [toolPaintbrushServiceStub, toolEllipseServiceStub];
+
+    let selectToolPencilShortcutSubject: Subject<void>;
+    let selectToolPaintbrushShortcutSubject: Subject<void>;
+    let selectToolLineShortcutSubject: Subject<void>;
+    let selectToolSprayCanShortcutSubject: Subject<void>;
+    let selectToolRectangleShortcutSubject: Subject<void>;
+    let selectToolEllipseShortcutSubject: Subject<void>;
+    let selectToolPolygonShortcutSubject: Subject<void>;
+    let selectToolEyedropperShortcutSubject: Subject<void>;
+    let selectToolRecolorShortcutSubject: Subject<void>;
+    let selectToolSelectionShortcutSubject: Subject<void>;
+    let selectToolEraserShortcutSubject: Subject<void>;
+    let openExportDrawingShortcutSubject: Subject<void>;
+    let openSaveDrawingShortcutSubject: Subject<void>;
 
     beforeEach(async(() => {
-        currentToolServiceSpyObj = jasmine.createSpyObj({
-            setSelectedTool: () => {},
+        routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
+
+        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [], {
+            currentTool: initialTool,
         });
-        modalServiceSpyObj = jasmine.createSpyObj('ModalService', ['openDialog'], ['isModalPresent']);
+
+        toolHolderServiceSpyObj = jasmine.createSpyObj('ToolHolderService', [], {
+            toolPencilService: toolPencilServiceStub,
+            toolPaintBrushService: toolPaintbrushServiceStub,
+            toolLineService: toolLineServiceStub,
+            toolSprayCanService: toolSprayCanServiceStub,
+            toolRectangleService: toolRectangleServiceStub,
+            toolEllipseService: toolEllipseServiceStub,
+            toolPolygonService: toolPolygonServiceStub,
+            toolEyedropperService: toolEyedropperServiceStub,
+            toolRecolorService: toolRecolorServiceStub,
+            toolSelectionService: toolSelectionServiceStub,
+            toolEraserService: toolEraserServiceStub,
+            tools: initialTools,
+        });
+
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [
+            'openNewDrawingModal',
+            'openExportDrawingModal',
+            'openSaveDrawingModal',
+            'openGalleryModal',
+            'openSettingsModal',
+            'openGuideModal',
+        ]);
+
+        selectToolPencilShortcutSubject = new Subject<void>();
+        selectToolPaintbrushShortcutSubject = new Subject<void>();
+        selectToolLineShortcutSubject = new Subject<void>();
+        selectToolSprayCanShortcutSubject = new Subject<void>();
+        selectToolRectangleShortcutSubject = new Subject<void>();
+        selectToolEllipseShortcutSubject = new Subject<void>();
+        selectToolPolygonShortcutSubject = new Subject<void>();
+        selectToolEyedropperShortcutSubject = new Subject<void>();
+        selectToolRecolorShortcutSubject = new Subject<void>();
+        selectToolSelectionShortcutSubject = new Subject<void>();
+        selectToolEraserShortcutSubject = new Subject<void>();
+        openExportDrawingShortcutSubject = new Subject<void>();
+        openSaveDrawingShortcutSubject = new Subject<void>();
+        shortcutServiceSpyObj = jasmine.createSpyObj('ShortcutService', [], {
+            selectToolPencilShortcut$: selectToolPencilShortcutSubject,
+            selectToolPaintbrushShortcut$: selectToolPaintbrushShortcutSubject,
+            selectToolLineShortcut$: selectToolLineShortcutSubject,
+            selectToolSprayCanShortcut$: selectToolSprayCanShortcutSubject,
+            selectToolRectangleShortcut$: selectToolRectangleShortcutSubject,
+            selectToolEllipseShortcut$: selectToolEllipseShortcutSubject,
+            selectToolPolygonShortcut$: selectToolPolygonShortcutSubject,
+            selectToolEyedropperShortcut$: selectToolEyedropperShortcutSubject,
+            selectToolRecolorShortcut$: selectToolRecolorShortcutSubject,
+            selectToolSelectionShortcut$: selectToolSelectionShortcutSubject,
+            selectToolEraserShortcut$: selectToolEraserShortcutSubject,
+            openExportDrawingShortcut$: openExportDrawingShortcutSubject,
+            openSaveDrawingShortcut$: openSaveDrawingShortcutSubject,
+        });
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             providers: [
+                { provide: Router, useValue: routerSpyObj },
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
+                { provide: ToolHolderService, useValue: toolHolderServiceSpyObj },
                 { provide: ModalService, useValue: modalServiceSpyObj },
+                { provide: ShortcutService, useValue: shortcutServiceSpyObj },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -39,126 +143,129 @@ describe('SidebarComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('#ngOnInit should set the selected tool of injected tool selector service', () => {
-    //     component.ngOnInit();
+    it("#ngOnInit should subscribe to all of shortcutService's tool shortcuts", async(() => {
+        const currentToolServiceMock = { currentTool: initialTool } as CurrentToolService;
+        component['currentToolService'] = currentToolServiceMock;
+        component.ngOnInit();
+        selectToolPencilShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolPencilService);
+        selectToolPaintbrushShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolPaintbrushService);
+        selectToolLineShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolLineService);
+        selectToolSprayCanShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolSprayCanService);
+        selectToolRectangleShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolRectangleService);
+        selectToolEllipseShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEllipseService);
+        selectToolPolygonShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolPolygonService);
+        selectToolEyedropperShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEyedropperService);
+        selectToolRecolorShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolRecolorService);
+        selectToolSelectionShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolSelectionService);
+        selectToolEraserShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEraserService);
+    }));
 
-    //     expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalled();
-    // });
+    it('#ngOnInit should subscribe to the openExportDrawing and openSaveDrawing shortcuts', async(() => {
+        component.ngOnInit();
+        spyOn(component, 'openExportDrawingModal');
+        spyOn(component, 'openSaveDrawingModal');
+        openExportDrawingShortcutSubject.next();
+        openSaveDrawingShortcutSubject.next();
 
-    // it('#onKeyDown should set the selected tool in the tool selector if there are no modals shown and shortcuts are enabled', () => {
-    //     component['areShortcutsEnabled'] = true;
+        expect(component.openExportDrawingModal).toHaveBeenCalled();
+        expect(component.openSaveDrawingModal).toHaveBeenCalled();
+    }));
 
-    //     spyOn(component, 'setSelectedTool');
+    it('#ngOnDestroy should unsubscribe from all of the tool subscriptions', async(() => {
+        const pencilSubscriptionSpy = spyOn(component['selectToolPencilShortcutSubscription'], 'unsubscribe');
+        const paintbrushSubscriptionSpy = spyOn(component['selectToolPaintbrushShortcutSubscription'], 'unsubscribe');
+        const lineSubscriptionSpy = spyOn(component['selectToolLineShortcutSubscription'], 'unsubscribe');
+        const spraycanSubscriptionSpy = spyOn(component['selectToolSprayCanShortcutSubscription'], 'unsubscribe');
+        const rectangleSubscriptionSpy = spyOn(component['selectToolRectangleShortcutSubscription'], 'unsubscribe');
+        const ellipseSubscriptionSpy = spyOn(component['selectToolEllipseShortcutSubscription'], 'unsubscribe');
+        const polygonSubscriptionSpy = spyOn(component['selectToolPolygonShortcutSubscription'], 'unsubscribe');
+        const eyedropperSubscriptionSpy = spyOn(component['selectToolEyedropperShortcutSubscription'], 'unsubscribe');
+        const recolorSubscriptionSpy = spyOn(component['selectToolRecolorShortcutSubscription'], 'unsubscribe');
+        const selectionSubscriptionSpy = spyOn(component['selectToolSelectionShortcutSubscription'], 'unsubscribe');
+        const eraserSubscriptionSpy = spyOn(component['selectToolEraserShortcutSubscription'], 'unsubscribe');
 
-    //     component.onKeyDown({ key: '1' } as KeyboardEvent);
-    //     expect(component.setSelectedTool).toHaveBeenCalledWith(3);
+        component.ngOnDestroy();
+        expect(pencilSubscriptionSpy).toHaveBeenCalled();
+        expect(paintbrushSubscriptionSpy).toHaveBeenCalled();
+        expect(lineSubscriptionSpy).toHaveBeenCalled();
+        expect(spraycanSubscriptionSpy).toHaveBeenCalled();
+        expect(rectangleSubscriptionSpy).toHaveBeenCalled();
+        expect(ellipseSubscriptionSpy).toHaveBeenCalled();
+        expect(polygonSubscriptionSpy).toHaveBeenCalled();
+        expect(eyedropperSubscriptionSpy).toHaveBeenCalled();
+        expect(recolorSubscriptionSpy).toHaveBeenCalled();
+        expect(selectionSubscriptionSpy).toHaveBeenCalled();
+        expect(eraserSubscriptionSpy).toHaveBeenCalled();
+    }));
 
-    //     component.onKeyDown({ key: 'c' } as KeyboardEvent);
-    //     expect(component.setSelectedTool).toHaveBeenCalledWith(0);
+    it('#ngOnDestroy should unsubscribe from the openSaveDrawing and the openExportDrawing shortcut subscriptions', async(() => {
+        const exportDrawingSubscriptionSpy = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
+        const saveDrawingSubscriptionSpy = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
 
-    //     component.onKeyDown({ key: 'l' } as KeyboardEvent);
-    //     expect(component.setSelectedTool).toHaveBeenCalledWith(2);
+        component.ngOnDestroy();
+        expect(exportDrawingSubscriptionSpy).toHaveBeenCalled();
+        expect(saveDrawingSubscriptionSpy).toHaveBeenCalled();
+    }));
 
-    //     component.onKeyDown({ key: 'w' } as KeyboardEvent);
-    //     expect(component.setSelectedTool).toHaveBeenCalledWith(1);
-    // });
+    it('#openNewDrawingModal should forward the call to modalService', () => {
+        component.openNewDrawingModal();
+        expect(modalServiceSpyObj.openNewDrawingModal).toHaveBeenCalled();
+    });
 
-    // it('#onKeyDown should not change the selected tool in the tool selector if the shortcut is not linked to a tool', () => {
-    //     component['areShortcutsEnabled'] = true;
+    it('#openExportDrawingModal should forward the call to modalService', () => {
+        component.openExportDrawingModal();
+        expect(modalServiceSpyObj.openExportDrawingModal).toHaveBeenCalled();
+    });
 
-    //     spyOn(component, 'setSelectedTool');
+    it('#openSaveDrawingModal should forward the call to modalService', () => {
+        component.openSaveDrawingModal();
+        expect(modalServiceSpyObj.openSaveDrawingModal).toHaveBeenCalled();
+    });
 
-    //     component.onKeyDown({ key: '3' } as KeyboardEvent);
-    //     expect(component.setSelectedTool).not.toHaveBeenCalled();
-    // });
+    it('#openGalleryModal should forward the call to modalService', () => {
+        component.openGalleryModal();
+        expect(modalServiceSpyObj.openGalleryModal).toHaveBeenCalled();
+    });
 
-    // it('#onKeyDown should not change currentTool if modal is shown or shortcuts are disabled', () => {
-    //     spyOn(component, 'setSelectedTool');
+    it('#openSettingsModal should forward the call to modalService', () => {
+        component.openSettingsModal();
+        expect(modalServiceSpyObj.openSettingsModal).toHaveBeenCalled();
+    });
 
-    //     component['areShortcutsEnabled'] = true;
-    //     component.onKeyDown({ key: 'w' } as KeyboardEvent);
+    it('#openGuideModal should forward the call to modalService', () => {
+        component.openGuideModal();
+        expect(modalServiceSpyObj.openGuideModal).toHaveBeenCalled();
+    });
 
-    //     component['areShortcutsEnabled'] = false;
-    //     component.onKeyDown({ key: 'w' } as KeyboardEvent);
+    it('#navigateToHome should forward the call to the router', () => {
+        component.navigateToHome();
+        expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/home']);
+    });
 
-    //     component['areShortcutsEnabled'] = false;
-    //     component.onKeyDown({ key: 'w' } as KeyboardEvent);
+    it("#get tools should return the toolHolderService's tool array", () => {
+        const returnValue = component.tools;
+        expect(returnValue).toEqual(initialTools);
+    });
 
-    //     expect(component.setSelectedTool).not.toHaveBeenCalled();
-    // });
+    it("#get currentTool should return the currentToolService's current tool", () => {
+        const returnValue = component.currentTool;
+        expect(returnValue).toEqual(initialTool);
+    });
 
-    // it('#onFocusIn should disable shortcuts if eventTarget is a HTMLInputElement', () => {
-    //     component['areShortcutsEnabled'] = true;
-    //     component.onFocusIn(({ target: document.createElement('input') } as unknown) as FocusEvent);
-    //     expect(component['areShortcutsEnabled']).toEqual(false);
-    // });
-
-    // it('#onFocusIn should not change shortcuts availability if eventTarget is not a HTMLInputElement', () => {
-    //     component['areShortcutsEnabled'] = true;
-    //     component.onFocusIn(({ target: {} as boolean } as unknown) as FocusEvent);
-    //     expect(component['areShortcutsEnabled']).toEqual(true);
-    // });
-
-    // it('#onFocusOut should enable shortcuts if eventTarget is a HTMLInputElement', () => {
-    //     component['areShortcutsEnabled'] = false;
-    //     component.onFocusOut(({ target: document.createElement('input') } as unknown) as FocusEvent);
-    //     expect(component['areShortcutsEnabled']).toEqual(true);
-    // });
-
-    // it('#onFocusOut should not change shortcuts availability if eventTarget is not a HTMLInputElement', () => {
-    //     component['areShortcutsEnabled'] = false;
-    //     component.onFocusOut(({ target: {} as boolean } as unknown) as FocusEvent);
-    //     expect(component['areShortcutsEnabled']).toEqual(false);
-    // });
-    // it("#setSelectedTool should not update its selected button and the tool selector's tool if index is out of range", () => {
-    //     spyOn(component.drawer, 'open');
-    //     component.buttons = [{} as SidebarButton, {} as SidebarButton] as SidebarButton[];
-
-    //     component.setSelectedTool(-1);
-    //     component.setSelectedTool(4);
-    //     expect(component.drawer.open).not.toHaveBeenCalled();
-    //     // Expect to have been called once because it will have been called in the ngOnInit
-    //     expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalledTimes(1);
-    // });
-
-    // it("#setSelectedTool should update its selected button and the tool selector's tool if index is in range", () => {
-    //     spyOn(component.drawer, 'open');
-    //     component.buttons = [{} as SidebarButton, {} as SidebarButton] as SidebarButton[];
-
-    //     component.setSelectedTool(1);
-    //     expect(component.drawer.open).toHaveBeenCalled();
-    //     expect(currentToolServiceSpyObj.setSelectedTool).toHaveBeenCalled();
-    // });
-
-    // it('#openSettingsModal should forward the request to modal service', () => {
-    //     component.openSettingsModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(DrawingSettingsComponent, { x: 425, y: 675 });
-    // });
-
-    // it('#openExportModal should forward the request to modal service', () => {
-    //     component.openGuideModal();
-
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(ExportDrawingComponent, { x: 1000, y: 1000 });
-    // });
-
-    // it('#openSaveModal should forward the request to modal service', () => {
-    //     component.openNewDrawingModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(SaveDrawingComponent, { x: 1000, y: 1000 });
-    // });
-
-    // it('#openNewDrawingModal should forward the request to modal service', () => {
-    //     component.openSettingsModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(NewDrawingComponent, { x: 425, y: 500 });
-    // });
-
-    // it('#openGuideModal should forward the request to modal service', () => {
-    //     component.openGuideModal();
-
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GuideComponent, { x: 1920, y: 1080 });
-    // });
-
-    // it('#openGalleryModal should forward the request to modal service', () => {
-    //     component.openNewDrawingModal();
-    //     expect(modalServiceSpyObj.openDialog).toHaveBeenCalledWith(GalleryComponent, { x: 1920, y: 900 });
-    // });
+    it('#setCurrentTool should change the current tool of currentToolService', () => {
+        const currentToolServiceMock = { currentTool: initialTool };
+        component.currentTool = toolEyedropperServiceStub;
+        expect(currentToolServiceMock.currentTool).toEqual(toolEyedropperServiceStub);
+    });
 });
