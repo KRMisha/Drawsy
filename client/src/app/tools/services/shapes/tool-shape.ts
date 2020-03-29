@@ -45,7 +45,7 @@ export abstract class ToolShape extends Tool {
         }
     }
 
-    onMouseMove(event: MouseEvent): void {
+    onMouseMove(): void {
         if (Tool.isLeftMouseButtonDown) {
             this.updateShapeArea();
         }

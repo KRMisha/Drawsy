@@ -23,7 +23,7 @@ export abstract class ToolBrush extends Tool {
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
     }
 
-    onMouseMove(event: MouseEvent): void {
+    onMouseMove(): void {
         if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
             const pathString =
                 (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(Tool.mousePosition.x, Tool.mousePosition.y);

@@ -8,6 +8,7 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 const pointsPerCoordinates = 2;
 
@@ -18,9 +19,11 @@ export class ToolLineService extends Tool {
     private groupElement: SVGGElement;
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
-    private isCurrentlyDrawing = false;
+
     private nextPoint: Vec2;
     private lastPoint: Vec2;
+
+    private isCurrentlyDrawing = false;
     private isShiftDown = false;
 
     private points: number[] = [];
@@ -70,13 +73,18 @@ export class ToolLineService extends Tool {
         return nextPoint;
     }
 
-    onMouseMove(event: MouseEvent): void {
+    onMouseMove(): void {
         this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
 
     onMouseDown(event: MouseEvent): void {
         if (!Tool.isMouseInsideDrawing) {
+            this.stopDrawing();
+            return;
+        }
+
+        if (event.button !== MouseButton.Left) {
             return;
         }
 
@@ -240,6 +248,8 @@ export class ToolLineService extends Tool {
         this.drawingService.removeUiElement(this.previewLine);
         if (this.points.length > pointsPerCoordinates) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
+        } else {
+            this.drawingService.removeElement(this.groupElement);
         }
         this.points.length = 0;
     }

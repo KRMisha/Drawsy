@@ -36,7 +36,7 @@ export class ToolSelectionService extends Tool {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Selection);
     }
 
-    onMouseMove(event: MouseEvent): void {
+    onMouseMove(): void {
         if (!this.isMouseButtonDown || !this.isMouseDownInsideDrawing) {
             return;
         }

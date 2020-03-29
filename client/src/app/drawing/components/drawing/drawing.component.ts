@@ -96,13 +96,11 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
         this.currentToolService.setMouseInsideDrawing(true);
-        this.currentToolService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
         this.currentToolService.setMouseInsideDrawing(false);
-        this.currentToolService.onLeave(event);
     }
 
     get width(): number {

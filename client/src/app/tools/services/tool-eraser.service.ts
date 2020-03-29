@@ -45,7 +45,7 @@ export class ToolEraserService extends Tool {
         this.svgEraserElement.setAttribute('stroke-width', '1');
     }
 
-    onMouseMove(event: MouseEvent): void {
+    onMouseMove(): void {
         const msDelayBetweenCalls = 32;
         this.updateEraserRect();
         if (this.timerId === undefined) {

@@ -40,14 +40,6 @@ export class ToolSelectionMoverService {
         this.toolSelectionStateService.updateSelectionRect();
     }
 
-    moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
-        for (const element of elements) {
-            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
-            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
-        }
-    }
-
     onKeyDown(event: KeyboardEvent): void {
         if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             return;
@@ -106,6 +98,14 @@ export class ToolSelectionMoverService {
             case 'ArrowRight':
                 this.isArrowRightHeld = state;
                 break;
+        }
+    }
+
+    private moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
+        for (const element of elements) {
+            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
+            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
         }
     }
 

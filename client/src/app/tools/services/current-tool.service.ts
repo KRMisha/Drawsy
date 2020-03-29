@@ -39,7 +39,7 @@ export class CurrentToolService implements OnDestroy {
 
     onMouseMove(event: MouseEvent): void {
         Tool.mousePosition = this.getMousePosition(event);
-        this.currentTool.onMouseMove(event);
+        this.currentTool.onMouseMove();
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -61,14 +61,6 @@ export class CurrentToolService implements OnDestroy {
 
     onKeyUp(event: KeyboardEvent): void {
         this.currentTool.onKeyUp(event);
-    }
-
-    onEnter(event: MouseEvent): void {
-        this.currentTool.onEnter(event);
-    }
-
-    onLeave(event: MouseEvent): void {
-        this.currentTool.onLeave(event);
     }
 
     setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
