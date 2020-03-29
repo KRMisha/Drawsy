@@ -102,4 +102,14 @@ describe('ModalService', () => {
         expectedSecondParameter.height = '100%';
         expect(matDialogSpyObj.open).toHaveBeenCalledWith(GuideComponent, expectedSecondParameter);
     });
+
+    it('#get idModalOpen should return true if there is a modal begin displayed', () => {
+        // tslint:disable-next-line: no-string-literal
+        service['dialog'] = { openDialogs: { length: 1 } } as MatDialog;
+        expect(service.isModalPresent).toEqual(true);
+    });
+
+    it('#get idModalOpen should return false if there are no modals begin displayed', () => {
+        expect(service.isModalPresent).toEqual(false);
+    });
 });
