@@ -4,8 +4,10 @@ import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
 describe('GalleryPreviewPipe', () => {
     let domSanitizerSpyObj: jasmine.SpyObj<DomSanitizer>;
     let pipe: GalleryPreviewPipe;
-
+    let svgElementSpyObj: jasmine.SpyObj<SVGSVGElement>;
+    const outerHtmlContent = 'This is not a joke';
     beforeEach(() => {
+        svgElementSpyObj = jasmine.createSpyObj('SVGSVGElement', ['setAttribute'], { outerHTML: outerHtmlContent });
         domSanitizerSpyObj = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustHtml']);
         pipe = new GalleryPreviewPipe(domSanitizerSpyObj);
     });
@@ -14,9 +16,9 @@ describe('GalleryPreviewPipe', () => {
         expect(pipe).toBeTruthy();
     });
 
-    it('GalleryPreviewPipe should use DomSanitizer to bypassSecurityTrust because the string will be from a trusted source', () => {
-        const passedValue = 'TestString';
-        pipe.transform(passedValue);
-        expect(domSanitizerSpyObj.bypassSecurityTrustHtml).toHaveBeenCalledWith(passedValue);
+    it('should bypassHtml security and return safe svg outerHTML', () => {
+        pipe.transform(svgElementSpyObj);
+        expect(domSanitizerSpyObj.bypassSecurityTrustHtml).toHaveBeenCalledWith(outerHtmlContent);
+        expect(svgElementSpyObj.setAttribute).toHaveBeenCalledWith('preserveAspectRatio', 'xMidYMid slice');
     });
 });
