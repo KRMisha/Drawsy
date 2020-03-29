@@ -27,10 +27,12 @@
 }
 
 .card-item {
+    display: flex;
+    flex-direction: column;
     margin: 4px;
 }
 
-.card-title-container {
+.card-header-container {
     justify-content: center;
 }
 
@@ -48,13 +50,21 @@
     }
 }
 
-.drawing-labels-item {
-    min-height: 40px;
-    margin-top: 20px;
+.drawing-footer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 16px;
 }
 
 .card-actions-container {
-    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.remove-top-margin {
+    margin-top: -16px;
 }
 
 .card-actions-item {
