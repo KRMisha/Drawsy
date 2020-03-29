@@ -16,6 +16,8 @@ describe('ColorPickerServiceService', () => {
     const initialSaturation = 0;
     const initialValue = 78.4;
     const initialAlpha = 1;
+
+    const colorHexValue = 'c8c8c8';
     beforeEach(() => {
         colorSpyObj = jasmine.createSpyObj('Color', ['getHsv', 'getHex', 'equals'], {
             red: 200,
@@ -26,7 +28,7 @@ describe('ColorPickerServiceService', () => {
             saturation: initialSaturation,
             value: initialValue,
         });
-        colorSpyObj.getHex.and.returnValue('c8c8c8');
+        colorSpyObj.getHex.and.returnValue(colorHexValue);
         colorSpyObj.getHsv.and.returnValue([0, 0, 78.4]);
         subscriberSpyObj = jasmine.createSpyObj('Subscriber', ['subscribeLogic']);
         TestBed.configureTestingModule({
@@ -60,31 +62,23 @@ describe('ColorPickerServiceService', () => {
     }));
 
     it('#setColor should emit to the subscribers if the color is different from cachedColor', async(() => {
-        service.hueChanged$.subscribe((hue: number) => {
-            subscriberSpyObj.subscribeLogic(hue);
-        });
-        service.saturationChanged$.subscribe((saturation: number) => {
-            subscriberSpyObj.subscribeLogic(saturation);
-        });
-        service.valueChanged$.subscribe((value: number) => {
-            subscriberSpyObj.subscribeLogic(value);
-        });
-        service.alphaChanged$.subscribe((alpha: number) => {
-            subscriberSpyObj.subscribeLogic(alpha);
-        });
+        const hueSpy = spyOn(service['hueChangedSource'], 'next');
+        const saturationSpy = spyOn(service['saturationChangedSource'], 'next');
+        const valueSpy = spyOn(service['valueChangedSource'], 'next');
+        const alphaSpy = spyOn(service['alphaChangedSource'], 'next');
 
         colorSpyObj.equals.and.returnValue(false);
         service.setColor(colorSpyObj);
-        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(initialHue);
-        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(initialSaturation);
-        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(initialValue);
-        expect(subscriberSpyObj.subscribeLogic).toHaveBeenCalledWith(initialAlpha);
+        expect(hueSpy).toHaveBeenCalledWith(initialHue);
+        expect(saturationSpy).toHaveBeenCalledWith(initialSaturation);
+        expect(valueSpy).toHaveBeenCalledWith(initialValue);
+        expect(alphaSpy).toHaveBeenCalledWith(initialAlpha);
     }));
 
     it("#getHex should return the cachedColor's hex string", () => {
         service['cachedColor'] = colorSpyObj;
         const returnValue = service.getHex();
-        expect(returnValue).toEqual('c8c8c8');
+        expect(returnValue).toEqual(colorHexValue);
     });
 
     it("#get hue should return the hueChangedSource's value", () => {
