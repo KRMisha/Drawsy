@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 
 const canvasWidth = 200;
 
-fdescribe('HueSliderComponent', () => {
+describe('HueSliderComponent', () => {
     let component: HueSliderComponent;
     let fixture: ComponentFixture<HueSliderComponent>;
     let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
