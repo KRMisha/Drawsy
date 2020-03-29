@@ -25,8 +25,8 @@
     </div>
 
     <ng-container *ngIf="isLoadingComplete">
-        <div *ngIf="hasDrawings()" class="gallery-container">
-            <mat-card *ngFor="let drawing of drawingsWithLabels" class="card-item">
+        <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
+            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels" class="card-item">
                 <mat-card-header class="card-header-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
@@ -45,11 +45,11 @@
             </mat-card>
         </div>
 
-        <h2 *ngIf="!hasDrawings()" class="title-item">
+        <h2 *ngIf="drawings | isEmpty" class="title-item">
             La galerie ne contient aucun dessin.
         </h2>
 
-        <h2 *ngIf="hasDrawings() && drawingsWithLabels.length === 0" class="title-item">
+        <h2 *ngIf="!(drawings | isEmpty) && (drawings | drawingsWithLabels: searchLabels | isEmpty)" class="title-item">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h2>
     </ng-container>

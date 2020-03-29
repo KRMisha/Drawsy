@@ -80,7 +80,9 @@ import { DrawingSettingsComponent } from '@app/modals/components/settings/drawin
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
-import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
+import { DrawingsWithLabelsPipe } from '@app/modals/pipes/drawings-with-labels.pipe';
+import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
+import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
 
 @NgModule({
     declarations: [
@@ -90,14 +92,17 @@ import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
         ColorHexSelectorComponent,
         ColorPickerComponent,
         DrawingComponent,
-        DrawingSettingsComponent,
         DrawingPreviewComponent,
+        DrawingSettingsComponent,
+        DrawingsWithLabelsPipe,
         EditorComponent,
         ExportDrawingComponent,
         GalleryComponent,
+        GalleryPreviewPipe,
         GridSettingsComponent,
         GuideCalligraphyComponent,
         GuideCalligraphyComponent,
+        GuideClipboardComponent,
         GuideColorComponent,
         GuideColorPickerComponent,
         GuideComponent,
@@ -105,6 +110,7 @@ import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
         GuideEraserComponent,
         GuideExportDrawingComponent,
         GuideFillComponent,
+        GuideGalleryComponent,
         GuideGridComponent,
         GuideLineComponent,
         GuidePaintbrushComponent,
@@ -119,20 +125,18 @@ import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
         GuideSprayCanComponent,
         GuideStampComponent,
         GuideTextComponent,
+        GuideUndoRedoComponent,
         GuideWelcomeComponent,
         HomeComponent,
         HueSliderComponent,
+        IsEmptyPipe,
         NewDrawingComponent,
-        GalleryPreviewPipe,
         SaveDrawingComponent,
         SettingsComponent,
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
         ThemeSettingsComponent,
-        GuideGalleryComponent,
-        GuideUndoRedoComponent,
-        GuideClipboardComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -1,5 +1,5 @@
 import { DomSanitizer } from '@angular/platform-browser';
-import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
+import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
 
 describe('GalleryPreviewPipe', () => {
     let domSanitizerSpyObj: jasmine.SpyObj<DomSanitizer>;
