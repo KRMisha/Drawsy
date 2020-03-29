@@ -33,7 +33,7 @@ describe('SaveDrawingComponent', () => {
         titleControlSpyObj = jasmine.createSpyObj('FormControl', [], {
             value: initialTitle,
         });
-        labelsControlSpyObj = jasmine.createSpyObj('FormControl', ['indexOf', 'splice'], {
+        labelsControlSpyObj = jasmine.createSpyObj('FormControl', [], {
             value: initialLabels,
             invalid: false,
         });
@@ -69,7 +69,7 @@ describe('SaveDrawingComponent', () => {
         expect(component.labels).toEqual(initialLabels);
     });
 
-    it('#addLabel should early return if the labels of the form are invalid', () => {
+    it('#addLabel should return early if the labels of the form are invalid', () => {
         component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const invalidLabelsControlSpyObj = jasmine.createSpyObj('FormControl', ['push'], {
             invalid: true,
@@ -86,7 +86,7 @@ describe('SaveDrawingComponent', () => {
         expect(pushSpy).not.toHaveBeenCalled();
     });
 
-    it('#addLabel should early return if the submitted label is undefined', () => {
+    it('#addLabel should return early if the submitted label is undefined', () => {
         component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const event = ({ value: undefined } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
@@ -94,7 +94,7 @@ describe('SaveDrawingComponent', () => {
         expect(pushSpy).not.toHaveBeenCalled();
     });
 
-    it('#addLabel should early return if the submitted label is of length 0', () => {
+    it('#addLabel should return early if the submitted label is of length 0', () => {
         component.saveDrawingFormGroup = saveDrawingFormGroupSpyObj;
         const event = ({ value: '' } as unknown) as MatChipInputEvent;
         const pushSpy = spyOn(component.labels, 'push');
@@ -140,7 +140,7 @@ describe('SaveDrawingComponent', () => {
         expect(errorMessageSpy).toHaveBeenCalledWith(titleControlSpyObj, 'A-Z, a-z, 0-9');
     });
 
-    it('#get title should return appropriate title', () => {
+    it('#get title should return the drawingService\'s title', () => {
         const returnValue = component.title;
         expect(returnValue).toEqual(drawingServiceSpyObj.title);
     });
