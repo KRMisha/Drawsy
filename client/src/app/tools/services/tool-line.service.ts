@@ -5,10 +5,10 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
-import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 const pointsPerCoordinates = 2;
 
@@ -88,9 +88,6 @@ export class ToolLineService extends Tool {
             return;
         }
 
-        this.updateNextPointPosition();
-        this.lastPoint = this.nextPoint;
-
         if (!this.isCurrentlyDrawing) {
             this.startDrawingShape();
         }
@@ -111,6 +108,7 @@ export class ToolLineService extends Tool {
             this.renderer.appendChild(this.groupElement, circle);
         }
 
+        this.lastPoint = this.nextPoint;
         this.updateNextPointPosition();
         this.updatePreviewLinePosition();
     }
@@ -189,9 +187,7 @@ export class ToolLineService extends Tool {
     }
 
     onToolDeselection(): void {
-        if (this.isCurrentlyDrawing) {
-            this.stopDrawing();
-        }
+        this.stopDrawing();
     }
 
     private startDrawingShape(): void {
@@ -216,34 +212,22 @@ export class ToolLineService extends Tool {
 
         this.previewLine = this.renderer.createElement('line', 'svg');
         this.drawingService.addUiElement(this.previewLine);
-        this.updatePreviewLine();
+
+        const previewColor = this.colorService.primaryColor.clone();
+        previewColor.alpha /= 2;
+
+        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
+        this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
+        this.renderer.setAttribute(this.previewLine, 'stroke-width', this.groupElement.getAttribute('stroke-width') as string);
+        this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);
+        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', this.polyline.getAttribute('stroke-linejoin') as string);
         // tslint:enable: no-non-null-assertion
     }
 
-    private removeLastPointFromLine(): void {
-        const minimumPointsToEnableBackspace = 4;
-        if (this.points.length >= minimumPointsToEnableBackspace) {
-            this.points.length = this.points.length - pointsPerCoordinates;
-            this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-            this.lastPoint.x = this.points[this.points.length - pointsPerCoordinates];
-            this.lastPoint.y = this.points[this.points.length - 1];
-            this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
-            this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
-
-            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
-        }
-    }
-
-    private updateNextPointPosition(): void {
-        this.nextPoint = ToolLineService.calculateNextPointPosition(
-            this.lastPoint,
-            Tool.mousePosition,
-            this.isShiftDown,
-            this.isCurrentlyDrawing
-        );
-    }
-
     private stopDrawing(): void {
+        if (!this.isCurrentlyDrawing) {
+            return;
+        }
         this.isCurrentlyDrawing = false;
         this.drawingService.removeUiElement(this.previewLine);
         if (this.points.length > pointsPerCoordinates) {
@@ -252,6 +236,21 @@ export class ToolLineService extends Tool {
             this.drawingService.removeElement(this.groupElement);
         }
         this.points.length = 0;
+    }
+
+    private removeLastPointFromLine(): void {
+        const minimumPointsToEnableBackspace = 2 * pointsPerCoordinates;
+        if (this.points.length >= minimumPointsToEnableBackspace) {
+            this.points.length -= pointsPerCoordinates;
+            this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
+
+            this.lastPoint.x = this.points[this.points.length - pointsPerCoordinates];
+            this.lastPoint.y = this.points[this.points.length - 1];
+            this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
+            this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
+
+            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
+        }
     }
 
     private createNewPolyline(): SVGPolylineElement {
@@ -272,21 +271,19 @@ export class ToolLineService extends Tool {
         return circle;
     }
 
+    private updateNextPointPosition(): void {
+        this.nextPoint = ToolLineService.calculateNextPointPosition(
+            this.lastPoint,
+            Tool.mousePosition,
+            this.isShiftDown,
+            this.isCurrentlyDrawing
+        );
+    }
+
     private updatePreviewLinePosition(): void {
         if (this.isCurrentlyDrawing) {
             this.renderer.setAttribute(this.previewLine, 'x2', this.nextPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y2', this.nextPoint.y.toString());
         }
-    }
-
-    private updatePreviewLine(): void {
-        const previewColor = this.colorService.primaryColor.clone();
-        previewColor.alpha /= 2;
-
-        this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
-        this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-width', this.groupElement.getAttribute('stroke-width') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', this.polyline.getAttribute('stroke-linejoin') as string);
     }
 }

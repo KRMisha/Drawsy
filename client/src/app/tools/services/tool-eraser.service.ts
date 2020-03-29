@@ -40,17 +40,18 @@ export class ToolEraserService extends Tool {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
         this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.svgEraserElement.setAttribute('fill', 'white');
-        this.svgEraserElement.setAttribute('stroke', 'black');
+        this.svgEraserElement.setAttribute('fill', '#fafafa');
+        this.svgEraserElement.setAttribute('stroke', '#424242');
         this.svgEraserElement.setAttribute('stroke-width', '1');
     }
 
     onMouseMove(): void {
-        const msDelayBetweenCalls = 32;
+        const msDelayBetweenCalls = 16;
         this.updateEraserRect();
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
                 this.update();
+                this.timerId = undefined;
             }, msDelayBetweenCalls);
         }
     }
@@ -58,20 +59,22 @@ export class ToolEraserService extends Tool {
     onMouseDown(event: MouseEvent): void {
         this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
+        this.update();
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.svgElementsDeletedDuringDrag.length > 0) {
-            const elementIndices = new Map<SVGGraphicsElement, number>();
-            for (let i = 0; i < this.drawingElementsCopy.length; i++) {
-                elementIndices.set(this.drawingElementsCopy[i], i);
-            }
-            this.svgElementsDeletedDuringDrag.sort((element1: ElementAndItsNeighbor, element2: ElementAndItsNeighbor) => {
-                return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
-            });
-            this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
-            this.svgElementsDeletedDuringDrag = [];
+        if (this.svgElementsDeletedDuringDrag.length === 0) {
+            return;
         }
+        const elementIndices = new Map<SVGGraphicsElement, number>();
+        for (let i = 0; i < this.drawingElementsCopy.length; i++) {
+            elementIndices.set(this.drawingElementsCopy[i], i);
+        }
+        this.svgElementsDeletedDuringDrag.sort((element1: ElementAndItsNeighbor, element2: ElementAndItsNeighbor) => {
+            return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
+        });
+        this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
+        this.svgElementsDeletedDuringDrag = [];
     }
 
     update(): void {
