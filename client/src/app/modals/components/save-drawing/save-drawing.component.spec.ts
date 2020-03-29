@@ -140,7 +140,7 @@ describe('SaveDrawingComponent', () => {
         expect(errorMessageSpy).toHaveBeenCalledWith(titleControlSpyObj, 'A-Z, a-z, 0-9');
     });
 
-    it('#get title should return the drawingService\'s title', () => {
+    it("#get title should return the drawingService's title", () => {
         const returnValue = component.title;
         expect(returnValue).toEqual(drawingServiceSpyObj.title);
     });
