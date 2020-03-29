@@ -25,6 +25,7 @@ describe('SettingsComponent', () => {
         fixture = TestBed.createComponent(SettingsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component['settingsService'] = settingsServiceSpyObj; // tslint:disable-line: no-string-literal
     });
 
     it('should create', () => {
