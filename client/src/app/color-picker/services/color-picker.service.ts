@@ -23,10 +23,9 @@ export class ColorPickerService {
     }
 
     setColor(color: Color): void {
-        if (this.cachedColor !== undefined && color.equals(this.cachedColor)) {
+        if (color.equals(this.cachedColor)) {
             return;
         }
-
         this.cachedColor = color;
 
         const [hue, saturation, value] = color.getHsv();
