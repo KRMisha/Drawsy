@@ -56,6 +56,7 @@ export class ModalService {
         this.dialog.open(component, {
             width: `${width}px`,
             height: shouldFillHeight ? '100%' : 'auto',
+            maxWidth: '90vw',
             maxHeight: '95vh',
             panelClass: 'theme-dialog',
         });

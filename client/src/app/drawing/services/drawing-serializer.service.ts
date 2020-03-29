@@ -15,12 +15,12 @@ export class DrawingSerializerService {
     private renderer: Renderer2;
 
     constructor(
+        rendererFactory: RendererFactory2,
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService,
-        private svgUtilityService: SvgUtilityService,
-        private rendererFactory: RendererFactory2
+        private svgUtilityService: SvgUtilityService
     ) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     makeSvgFileContainerFromSavedFile(savedFile: SavedFile): SvgFileContainer {
