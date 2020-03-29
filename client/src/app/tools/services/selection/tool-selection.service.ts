@@ -135,7 +135,7 @@ export class ToolSelectionService extends Tool {
     }
 
     onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
-        if (this.toolSelectionStateService.isMovingSelectionWithArrows) {
+        if (this.toolSelectionStateService.isMovingSelectionWithArrows || this.toolSelectionStateService.isMovingSelectionWithMouse) {
             return;
         }
 

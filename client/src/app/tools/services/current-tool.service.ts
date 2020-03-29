@@ -103,6 +103,10 @@ export class CurrentToolService implements OnDestroy {
 
     private getMousePosition(event: MouseEvent): Vec2 {
         const ctm = this.drawingService.drawingRoot.getScreenCTM();
+        if (ctm === null) {
+            return { x: 0, y: 0 } as Vec2;
+        }
+
         return {
             x: (event.clientX - ctm.e) / ctm.a,
             y: (event.clientY - ctm.f) / ctm.d,
