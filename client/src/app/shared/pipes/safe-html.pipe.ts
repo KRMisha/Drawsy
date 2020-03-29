@@ -8,10 +8,10 @@ export class SafeHtmlPipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {}
 
     transform(svgRoot: SVGSVGElement): SafeHtml {
-        svgRoot.setAttribute('height', '350px');
-        svgRoot.removeAttribute('width');
-        svgRoot.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgRoot.style.display = 'block';
+        // svgRoot.setAttribute('height', '350px');
+        // svgRoot.removeAttribute('width');
+        svgRoot.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+        // svgRoot.style.display = 'block';
 
         return this.sanitizer.bypassSecurityTrustHtml(svgRoot.outerHTML);
     }

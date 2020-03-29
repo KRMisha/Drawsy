@@ -1,12 +1,8 @@
-<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+<svg #appDrawingRoot xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" [attr.viewBox]="viewBox">
     <title #appTitle></title>
     <desc #appDesc></desc>
 
     <defs #appDefs>
-        <clipPath id="myClip123" clipPathUnits="objectBoundingBox">
-            <rect width="100%" height="100%" />
-        </clipPath>
-
         <filter id="drawingFilter1" filterUnits="userSpaceOnUse">
             <feColorMatrix
                 type="matrix"
@@ -67,5 +63,5 @@
 
     <rect width="100%" height="100%" [attr.fill]="backgroundColor" [attr.filter]="drawingFilter" />
 
-    <g #appDrawingContent clip-path="url(#myClip123)" [attr.filter]="drawingFilter"></g>
+    <g #appDrawingContent [attr.filter]="drawingFilter"></g>
 </svg>

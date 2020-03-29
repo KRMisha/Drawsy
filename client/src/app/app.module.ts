@@ -81,6 +81,7 @@ import { GridSettingsComponent } from '@app/modals/components/settings/grid-sett
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -140,6 +141,7 @@ import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
         BrowserAnimationsModule,
         BrowserAnimationsModule,
         BrowserModule,
+        CommonModule,
         FormsModule,
         HttpClientModule,
         MatButtonModule,

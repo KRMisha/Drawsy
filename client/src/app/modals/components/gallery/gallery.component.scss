@@ -34,14 +34,19 @@
 }
 
 .drawing-container {
-    display: flex;
-    justify-content: center;
+    // position: relative;
 
-    // ::ng-deep svg {
-    //     display: block;
-    //     width: auto;
-    //     height: 100%;
-    // }
+    height: 350px;
+    width: 100%;
+
+    ::ng-deep svg {
+        background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+
+        // position: absolute;
+    }
 }
 
 .drawing-labels-item {
