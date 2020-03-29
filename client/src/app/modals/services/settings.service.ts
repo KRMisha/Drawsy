@@ -4,7 +4,6 @@ import { ThemeService } from '@app/app/services/theme.service';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { Color } from '@app/shared/classes/color';
 import Regexes from '@app/shared/constants/regexes';
 
 @Injectable()
@@ -39,7 +38,7 @@ export class SettingsService {
 
     private initialDrawingDimensions = { x: this.drawingService.dimensions.x, y: this.drawingService.dimensions.y };
 
-    private initialBackgroundColor = Color.fromColor(this.drawingService.backgroundColor);
+    private initialBackgroundColor = this.drawingService.backgroundColor.clone();
 
     private initialIsGridDisplayEnabled = this.gridService.isDisplayEnabled;
     private initialGridSize = this.gridService.size;

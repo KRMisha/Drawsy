@@ -15,26 +15,26 @@ export class SvgUtilityService {
         this.renderer = this.rendererFactory.createRenderer(null, null);
     }
 
-    getElementsUnderPoint(elements: SVGElement[], point: Vec2): SVGElement[] {
+    getElementsUnderPoint(elements: SVGGraphicsElement[], point: Vec2): SVGGraphicsElement[] {
         return this.getElementsUnderArea(elements, { x: point.x, y: point.y, width: 0, height: 0 });
     }
 
-    getElementsUnderArea(elements: SVGElement[], area: Rect): SVGElement[] {
-        return elements.filter((element: SVGElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
+    getElementsUnderArea(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement[] {
+        return elements.filter((element: SVGGraphicsElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
     // tslint:disable-next-line: cyclomatic-complexity
-    getElementUnderAreaPixelPerfect(elements: SVGElement[], area: Rect): SVGElement | undefined {
+    getElementUnderAreaPixelPerfect(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement | undefined {
         const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const elementIndices = new Map<SVGElement, number>();
+        const elementIndices = new Map<SVGGraphicsElement, number>();
         for (let i = 0; i < this.drawingService.svgElements.length; i++) {
             elementIndices.set(this.drawingService.svgElements[i], i);
         }
 
-        const availableElementsSet = new Set<SVGElement>(elements);
+        const availableElementsSet = new Set<SVGGraphicsElement>(elements);
 
-        let topMostElement: SVGElement | undefined;
+        let topMostElement: SVGGraphicsElement | undefined;
         let topMostElementIndex = 0;
 
         for (let i = 0; i < area.width; i++) {
@@ -43,11 +43,11 @@ export class SvgUtilityService {
                 const y = drawingRect.y + area.y + j;
 
                 // Function does not exist in Renderer2
-                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGElement;
+                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGGraphicsElement;
 
-                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGElement) {
-                    const parentElement = (elementUnderPoint.parentElement || undefined) as SVGElement;
-                    if (parentElement !== undefined && availableElementsSet.has(parentElement as SVGElement)) {
+                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGGraphicsElement) {
+                    const parentElement = (elementUnderPoint.parentElement || undefined) as SVGGraphicsElement;
+                    if (parentElement !== undefined && availableElementsSet.has(parentElement as SVGGraphicsElement)) {
                         elementUnderPoint = parentElement;
                     }
                 }
@@ -78,7 +78,7 @@ export class SvgUtilityService {
         this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
     }
 
-    getElementBounds(element: SVGElement): Rect {
+    getElementBounds(element: SVGGraphicsElement): Rect {
         const svgElementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
@@ -93,7 +93,7 @@ export class SvgUtilityService {
         } as Rect;
     }
 
-    getElementListBounds(elements: SVGElement[]): Rect | undefined {
+    getElementListBounds(elements: SVGGraphicsElement[]): Rect | undefined {
         if (elements.length === 0) {
             return undefined;
         }

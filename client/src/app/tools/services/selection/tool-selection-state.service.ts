@@ -5,10 +5,10 @@ import { Rect } from '@app/shared/classes/rect';
     providedIn: 'root',
 })
 export class ToolSelectionStateService {
-    selectedElements: SVGElement[] = [];
+    selectedElements: SVGGraphicsElement[] = [];
     svgSelectedShapesRect: SVGRectElement;
     svgUserSelectionRect: SVGRectElement;
-    svgControlPoints: SVGElement[] = [];
+    svgControlPoints: SVGGraphicsElement[] = [];
     selectionRect?: Rect = undefined;
 
     isMovingSelectionWithArrows = false;
