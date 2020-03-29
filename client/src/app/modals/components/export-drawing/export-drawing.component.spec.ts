@@ -1,7 +1,5 @@
-// tslint:disable: no-string-literal
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
@@ -10,12 +8,15 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
+ // tslint:disable: no-string-literal
+
 describe('ExportDrawingComponent', () => {
+    let component: ExportDrawingComponent;
+    let fixture: ComponentFixture<ExportDrawingComponent>;
     let drawingSerializerServiceSpyObj: jasmine.SpyObj<DrawingSerializerService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
-    let component: ExportDrawingComponent;
-    let fixture: ComponentFixture<ExportDrawingComponent>;
+
     const initialTitle = 'initialTitle';
     const initialDrawingFilter: DrawingFilter = DrawingFilter.None;
 
@@ -27,13 +28,12 @@ describe('ExportDrawingComponent', () => {
         });
         TestBed.configureTestingModule({
             declarations: [ExportDrawingComponent],
-            imports: [ReactiveFormsModule, FormsModule],
             providers: [
                 { provide: DrawingSerializerService, useValue: drawingSerializerServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj },
             ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
@@ -71,7 +71,7 @@ describe('ExportDrawingComponent', () => {
 
     it("#set DrawingFilter should change drawingPreviewService's drawingFilter", () => {
         const drawingPreviewServiceMock = { drawingFilter: initialDrawingFilter } as DrawingPreviewService;
-        component['drawingPreviewService'] = drawingPreviewServiceMock; // tslint:disable-line: no-string-literal
+        component['drawingPreviewService'] = drawingPreviewServiceMock;
         component.drawingFilter = DrawingFilter.BlackAndWhite;
         expect(drawingPreviewServiceMock.drawingFilter).toEqual(DrawingFilter.BlackAndWhite);
     });
