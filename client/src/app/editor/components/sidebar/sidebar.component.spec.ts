@@ -183,39 +183,39 @@ describe('SidebarComponent', () => {
     }));
 
     it('#ngOnDestroy should unsubscribe from all of the tool subscriptions', async(() => {
-        const pencilSubscription = spyOn(component['selectToolPencilShortcutSubscription'], 'unsubscribe');
-        const paintbrushSubscription = spyOn(component['selectToolPaintbrushShortcutSubscription'], 'unsubscribe');
-        const lineSubscription = spyOn(component['selectToolLineShortcutSubscription'], 'unsubscribe');
-        const spraycanSubscription = spyOn(component['selectToolSprayCanShortcutSubscription'], 'unsubscribe');
-        const rectangleSubscription = spyOn(component['selectToolRectangleShortcutSubscription'], 'unsubscribe');
-        const ellipseSubscription = spyOn(component['selectToolEllipseShortcutSubscription'], 'unsubscribe');
-        const polygonSubscription = spyOn(component['selectToolPolygonShortcutSubscription'], 'unsubscribe');
-        const eyedropperSubscription = spyOn(component['selectToolEyedropperShortcutSubscription'], 'unsubscribe');
-        const recolorSubscription = spyOn(component['selectToolRecolorShortcutSubscription'], 'unsubscribe');
-        const selectionSubscription = spyOn(component['selectToolSelectionShortcutSubscription'], 'unsubscribe');
-        const eraserSubscription = spyOn(component['selectToolEraserShortcutSubscription'], 'unsubscribe');
+        const pencilSubscriptionSpy = spyOn(component['selectToolPencilShortcutSubscription'], 'unsubscribe');
+        const paintbrushSubscriptionSpy = spyOn(component['selectToolPaintbrushShortcutSubscription'], 'unsubscribe');
+        const lineSubscriptionSpy = spyOn(component['selectToolLineShortcutSubscription'], 'unsubscribe');
+        const spraycanSubscriptionSpy = spyOn(component['selectToolSprayCanShortcutSubscription'], 'unsubscribe');
+        const rectangleSubscriptionSpy = spyOn(component['selectToolRectangleShortcutSubscription'], 'unsubscribe');
+        const ellipseSubscriptionSpy = spyOn(component['selectToolEllipseShortcutSubscription'], 'unsubscribe');
+        const polygonSubscriptionSpy = spyOn(component['selectToolPolygonShortcutSubscription'], 'unsubscribe');
+        const eyedropperSubscriptionSpy = spyOn(component['selectToolEyedropperShortcutSubscription'], 'unsubscribe');
+        const recolorSubscriptionSpy = spyOn(component['selectToolRecolorShortcutSubscription'], 'unsubscribe');
+        const selectionSubscriptionSpy = spyOn(component['selectToolSelectionShortcutSubscription'], 'unsubscribe');
+        const eraserSubscriptionSpy = spyOn(component['selectToolEraserShortcutSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
-        expect(pencilSubscription).toHaveBeenCalled();
-        expect(paintbrushSubscription).toHaveBeenCalled();
-        expect(lineSubscription).toHaveBeenCalled();
-        expect(spraycanSubscription).toHaveBeenCalled();
-        expect(rectangleSubscription).toHaveBeenCalled();
-        expect(ellipseSubscription).toHaveBeenCalled();
-        expect(polygonSubscription).toHaveBeenCalled();
-        expect(eyedropperSubscription).toHaveBeenCalled();
-        expect(recolorSubscription).toHaveBeenCalled();
-        expect(selectionSubscription).toHaveBeenCalled();
-        expect(eraserSubscription).toHaveBeenCalled();
+        expect(pencilSubscriptionSpy).toHaveBeenCalled();
+        expect(paintbrushSubscriptionSpy).toHaveBeenCalled();
+        expect(lineSubscriptionSpy).toHaveBeenCalled();
+        expect(spraycanSubscriptionSpy).toHaveBeenCalled();
+        expect(rectangleSubscriptionSpy).toHaveBeenCalled();
+        expect(ellipseSubscriptionSpy).toHaveBeenCalled();
+        expect(polygonSubscriptionSpy).toHaveBeenCalled();
+        expect(eyedropperSubscriptionSpy).toHaveBeenCalled();
+        expect(recolorSubscriptionSpy).toHaveBeenCalled();
+        expect(selectionSubscriptionSpy).toHaveBeenCalled();
+        expect(eraserSubscriptionSpy).toHaveBeenCalled();
     }));
 
     it('#ngOnDestroy should unsubscribe from the openSaveDrawing and the openExportDrawing shortcut subscriptions', async(() => {
-        const exportDrawingSubscription = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
-        const saveDrawingSubscription = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
+        const exportDrawingSubscriptionSpy = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
+        const saveDrawingSubscriptionSpy = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
-        expect(exportDrawingSubscription).toHaveBeenCalled();
-        expect(saveDrawingSubscription).toHaveBeenCalled();
+        expect(exportDrawingSubscriptionSpy).toHaveBeenCalled();
+        expect(saveDrawingSubscriptionSpy).toHaveBeenCalled();
     }));
 
     it('#openNewDrawingModal should forward the call to modalService', () => {
@@ -253,17 +253,17 @@ describe('SidebarComponent', () => {
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/home']);
     });
 
-    it('#get tools should return appropriate tool array', () => {
+    it("#get tools should return the toolHolderService's tool array", () => {
         const returnValue = component.tools;
         expect(returnValue).toEqual(initialTools);
     });
 
-    it('#get currentTool should return appropriate tool', () => {
+    it("#get currentTool should return the currentToolService's current tool", () => {
         const returnValue = component.currentTool;
         expect(returnValue).toEqual(initialTool);
     });
 
-    it('#setCurrentTool should change the current of currentToolService', () => {
+    it('#setCurrentTool should change the current tool of currentToolService', () => {
         const currentToolServiceMock = { currentTool: initialTool };
         component.currentTool = toolEyedropperServiceStub;
         expect(currentToolServiceMock.currentTool).toEqual(toolEyedropperServiceStub);
