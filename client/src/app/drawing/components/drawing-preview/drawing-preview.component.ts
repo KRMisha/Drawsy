@@ -5,7 +5,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
     selector: 'app-drawing-preview',
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.ShadowDom,
     templateUrl: './drawing-preview.component.html',
     styleUrls: ['./drawing-preview.component.scss'],
 })
@@ -38,11 +38,17 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
         delete this.drawingPreviewService.svgDrawingContent;
     }
 
+    get viewBox(): string {
+        return `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
+    }
+
     get backgroundColor(): string {
         return this.drawingService.backgroundColor.toRgbaString();
     }
 
-    get drawingFilter(): string {
-        return `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
+    get drawingFilter(): string | null {
+        return this.drawingPreviewService.drawingFilter === DrawingFilter.None
+            ? null
+            : `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
     }
 }

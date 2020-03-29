@@ -35,8 +35,8 @@ export class DrawingService {
 
     elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
 
-    constructor(private rendererFactory: RendererFactory2, private commandService: CommandService) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+    constructor(rendererFactory: RendererFactory2, private commandService: CommandService) {
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     addElement(element: SVGGraphicsElement, elementNextNeighbor?: SVGGraphicsElement): void {

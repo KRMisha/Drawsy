@@ -9,7 +9,7 @@ import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable({
@@ -18,10 +18,6 @@ import { catchError, finalize } from 'rxjs/operators';
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
     private _isLoadingComplete = false; // tslint:disable-line: variable-name
-
-    private loadingCompletedSource = new Subject<void>();
-
-    loadingCompleted$ = this.loadingCompletedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(
         private serverService: ServerService,
@@ -78,7 +74,6 @@ export class GalleryService {
             .pipe(
                 finalize(() => {
                     this._isLoadingComplete = true;
-                    this.loadingCompletedSource.next();
                 })
             )
             .subscribe(
@@ -93,16 +88,8 @@ export class GalleryService {
             );
     }
 
-    getDrawingsWithLabels(labels: string[]): SvgFileContainer[] {
-        if (labels.length === 0) {
-            return this._drawings;
-        }
-
-        return this._drawings.filter((drawing: SvgFileContainer) => drawing.labels.some((label: string) => labels.includes(label)));
-    }
-
-    hasDrawings(): boolean {
-        return this._drawings.length > 0;
+    get drawings(): SvgFileContainer[] {
+        return this._drawings;
     }
 
     get isLoadingComplete(): boolean {
