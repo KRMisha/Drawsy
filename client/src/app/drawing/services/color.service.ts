@@ -22,10 +22,11 @@ const defaultColors = [
     providedIn: 'root',
 })
 export class ColorService {
-    private primaryColor = defaultPrimaryColor;
-    private secondaryColor = defaultSecondaryColor;
-
-    private previousColors: Color[] = defaultColors;
+    // tslint:disable: variable-name
+    private _primaryColor = defaultPrimaryColor;
+    private _secondaryColor = defaultSecondaryColor;
+    private _previousColors: Color[] = defaultColors;
+    // tslint:enable: variable-name
 
     private primaryColorChangedSource = new Subject<Color>();
     private secondaryColorChangedSource = new Subject<Color>();
@@ -34,46 +35,46 @@ export class ColorService {
     secondaryColorChanged$ = this.secondaryColorChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
     swapPrimaryAndSecondaryColors(): void {
-        const temp = this.primaryColor;
-        this.primaryColor = this.secondaryColor;
-        this.secondaryColor = temp;
-        this.primaryColorChangedSource.next(this.primaryColor);
-        this.secondaryColorChangedSource.next(this.secondaryColor);
+        const temp = this._primaryColor;
+        this._primaryColor = this._secondaryColor;
+        this._secondaryColor = temp;
+        this.primaryColorChangedSource.next(this._primaryColor);
+        this.secondaryColorChangedSource.next(this._secondaryColor);
     }
 
-    setPrimaryColor(color: Color): void {
-        this.primaryColor = Color.fromColor(color);
-        this.addColor(this.primaryColor);
-        this.primaryColorChangedSource.next(this.primaryColor);
+    get primaryColor(): Color {
+        return this._primaryColor;
     }
 
-    setSecondaryColor(color: Color): void {
-        this.secondaryColor = Color.fromColor(color);
-        this.addColor(this.secondaryColor);
-        this.secondaryColorChangedSource.next(this.secondaryColor);
+    set primaryColor(color: Color) {
+        this._primaryColor = color.clone();
+        this.addColor(this._primaryColor);
+        this.primaryColorChangedSource.next(this._primaryColor);
     }
 
-    getPreviousColors(): Color[] {
-        return this.previousColors;
+    get secondaryColor(): Color {
+        return this._secondaryColor;
     }
 
-    getPrimaryColor(): Color {
-        return this.primaryColor;
+    set secondaryColor(color: Color) {
+        this._secondaryColor = color.clone();
+        this.addColor(this._secondaryColor);
+        this.secondaryColorChangedSource.next(this._secondaryColor);
     }
 
-    getSecondaryColor(): Color {
-        return this.secondaryColor;
+    get previousColors(): Color[] {
+        return this._previousColors;
     }
 
     private addColor(color: Color): void {
         const isColorPresent = (element: Color) => color.getHex() === element.getHex();
-        const index = this.previousColors.findIndex(isColorPresent);
+        const colorIndex = this._previousColors.findIndex(isColorPresent);
 
-        if (index === -1) {
-            this.previousColors.pop();
-            this.previousColors.unshift(color);
+        if (colorIndex === -1) {
+            this._previousColors.pop();
+            this._previousColors.unshift(color);
         } else {
-            this.previousColors[index] = color;
+            this._previousColors[colorIndex] = color;
         }
     }
 }

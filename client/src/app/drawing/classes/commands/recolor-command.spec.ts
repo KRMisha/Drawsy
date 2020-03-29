@@ -1,13 +1,13 @@
 import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 
 describe('RecolorCommand', () => {
-    let svgElementSpyObj: jasmine.SpyObj<SVGElement>;
+    let svgElementSpyObj: jasmine.SpyObj<SVGGraphicsElement>;
     let attributesBefore: Map<string, string | undefined>;
     let attributesAfter: Map<string, string | undefined>;
     let command: RecolorCommand;
 
     beforeEach(() => {
-        svgElementSpyObj = jasmine.createSpyObj('SVGElement', ['setAttribute', 'removeAttribute']);
+        svgElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['setAttribute', 'removeAttribute']);
         attributesBefore = new Map<string, string | undefined>();
         attributesBefore.set('color', 'white');
         attributesBefore.set('transparency', undefined);
