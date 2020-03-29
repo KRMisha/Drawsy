@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
+import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
@@ -24,7 +25,8 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         private drawingService: DrawingService,
         private currentToolService: CurrentToolService,
         private gridService: GridService,
-        private shortcutService: ShortcutService
+        private shortcutService: ShortcutService,
+        private modalService: ModalService
     ) {}
 
     ngOnInit(): void {
@@ -58,42 +60,58 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.currentToolService.onMouseMove(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseMove(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        this.currentToolService.onMouseDown(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseDown(event);
+        }
     }
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.currentToolService.onMouseUp(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseUp(event);
+        }
     }
 
     @HostListener('dblclick', ['$event'])
     onMouseDoubleClick(event: MouseEvent): void {
-        this.currentToolService.onMouseDoubleClick(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseDoubleClick(event);
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        this.currentToolService.onKeyDown(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onKeyDown(event);
+        }
     }
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
-        this.currentToolService.onKeyUp(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onKeyUp(event);
+        }
     }
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        this.currentToolService.onEnter(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onEnter(event);
+        }
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
-        this.currentToolService.onLeave(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onLeave(event);
+        }
     }
 
     get width(): number {

@@ -16,7 +16,7 @@ export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
 
-    constructor(private drawingService: DrawingService, private drawingPreviewService: DrawingPreviewService) {
+    constructor(private drawingPreviewService: DrawingPreviewService, private drawingService: DrawingService) {
         this.drawingPreviewService.drawingFilter = DrawingFilter.None;
     }
 
