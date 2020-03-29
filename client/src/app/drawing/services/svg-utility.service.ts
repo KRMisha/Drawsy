@@ -3,7 +3,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
-import { Vec2 } from '@app/shared/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
