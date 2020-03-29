@@ -265,12 +265,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     undoCommand(): void {
         this.commandService.undo();
-        this.currentToolService.updateSelectedTool();
+        this.currentToolService.update();
     }
 
     redoCommand(): void {
         this.commandService.redo();
-        this.currentToolService.updateSelectedTool();
+        this.currentToolService.update();
     }
 
     getErrorMessage(formControl: AbstractControl): string {

@@ -4,6 +4,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
 
@@ -43,15 +44,25 @@ export class CurrentToolService implements OnDestroy {
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            Tool.isLeftMouseButtonDown = true;
+        }
+
         Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDown(event);
     }
 
     onMouseUp(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            Tool.isLeftMouseButtonDown = false;
+        }
+
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseUp(event);
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDoubleClick(event);
     }
 
@@ -63,15 +74,17 @@ export class CurrentToolService implements OnDestroy {
         this.currentTool.onKeyUp(event);
     }
 
-    setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
-        Tool.isLeftMouseButtonDown = isLeftMouseButtonDown;
+    onEnter(event: MouseEvent): void {
+        Tool.isMouseInsideDrawing = true;
+        this.currentTool.onEnter(event);
     }
 
-    setMouseInsideDrawing(isMouseInsideDrawing: boolean): void {
-        Tool.isMouseInsideDrawing = isMouseInsideDrawing;
+    onLeave(event: MouseEvent): void {
+        Tool.isMouseInsideDrawing = false;
+        this.currentTool.onLeave(event);
     }
 
-    updateSelectedTool(): void {
+    update(): void {
         this.currentTool.update();
     }
 
@@ -89,10 +102,10 @@ export class CurrentToolService implements OnDestroy {
     }
 
     private getMousePosition(event: MouseEvent): Vec2 {
-        const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
+        const ctm = this.drawingService.drawingRoot.getScreenCTM();
         return {
-            x: event.clientX - rootBounds.x,
-            y: event.clientY - rootBounds.y,
+            x: (event.clientX - ctm.e) / ctm.a,
+            y: (event.clientY - ctm.f) / ctm.d,
         } as Vec2;
     }
 }

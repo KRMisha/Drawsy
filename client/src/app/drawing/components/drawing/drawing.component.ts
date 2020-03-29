@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
@@ -65,17 +64,11 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (event.button === MouseButton.Left) {
-            this.currentToolService.setLeftMouseButtonDown(true);
-        }
         this.currentToolService.onMouseDown(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        if (event.button === MouseButton.Left) {
-            this.currentToolService.setLeftMouseButtonDown(false);
-        }
         this.currentToolService.onMouseUp(event);
     }
 
@@ -96,12 +89,12 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        this.currentToolService.setMouseInsideDrawing(true);
+        this.currentToolService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
-        this.currentToolService.setMouseInsideDrawing(false);
+        this.currentToolService.onLeave(event);
     }
 
     get width(): number {
