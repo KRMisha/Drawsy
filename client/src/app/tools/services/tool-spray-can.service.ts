@@ -29,15 +29,15 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
-            return;
+        if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
+            this.startSpraying();
         }
-
-        this.startSpraying();
     }
 
     onMouseUp(event: MouseEvent): void {
-        this.stopSpraying();
+        if (event.button === MouseButton.Left) {
+            this.stopSpraying();
+        }
     }
 
     onLeave(event: MouseEvent): void {
@@ -45,7 +45,9 @@ export class ToolSprayCanService extends Tool {
     }
 
     onPrimaryColorChange(color: Color): void {
-        this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
+        if (this.group !== undefined) {
+            this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
+        }
     }
 
     onToolDeselection(): void {
