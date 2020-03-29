@@ -177,6 +177,7 @@ describe('SidebarComponent', () => {
         spyOn(component, 'openSaveDrawingModal');
         openExportDrawingShortcutSubject.next();
         openSaveDrawingShortcutSubject.next();
+
         expect(component.openExportDrawingModal).toHaveBeenCalled();
         expect(component.openSaveDrawingModal).toHaveBeenCalled();
     }));
@@ -211,6 +212,7 @@ describe('SidebarComponent', () => {
     it('#ngOnDestroy should unsubscribe from the openSaveDrawing and the openExportDrawing shortcut subscriptions', async(() => {
         const exportDrawingSubscription = spyOn(component['exportDrawingShortcutSubscription'], 'unsubscribe');
         const saveDrawingSubscription = spyOn(component['saveDrawingShortcutSubscription'], 'unsubscribe');
+
         component.ngOnDestroy();
         expect(exportDrawingSubscription).toHaveBeenCalled();
         expect(saveDrawingSubscription).toHaveBeenCalled();
