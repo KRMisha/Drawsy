@@ -8,7 +8,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 
- // tslint:disable: no-string-literal
+// tslint:disable: no-string-literal
 
 describe('ExportDrawingComponent', () => {
     let component: ExportDrawingComponent;
