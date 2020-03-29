@@ -26,7 +26,6 @@ export class ColorPickerService {
         if (color.equals(this.cachedColor)) {
             return;
         }
-
         this.cachedColor = color;
 
         const [hue, saturation, value] = color.getHsv();
