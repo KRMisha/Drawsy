@@ -12,6 +12,7 @@ describe('ModalService', () => {
     let expectedSecondParameter = {
         width: '',
         height: 'auto',
+        maxWidth: '90vw',
         maxHeight: '95vh',
         panelClass: 'theme-dialog',
     };
@@ -23,6 +24,7 @@ describe('ModalService', () => {
         expectedSecondParameter = {
             width: '',
             height: 'auto',
+            maxWidth: '90vw',
             maxHeight: '95vh',
             panelClass: 'theme-dialog',
         };
