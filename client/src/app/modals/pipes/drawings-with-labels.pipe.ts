@@ -8,7 +8,7 @@ import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 export class DrawingsWithLabelsPipe implements PipeTransform {
     transform(drawings: SvgFileContainer[], labels: string[]): SvgFileContainer[] {
         if (labels.length === 0) {
-            return drawings;
+            return [...drawings].reverse();
         }
 
         return drawings.filter((drawing: SvgFileContainer) => drawing.labels.some((label: string) => labels.includes(label))).reverse();
