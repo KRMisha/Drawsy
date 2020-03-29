@@ -12,21 +12,22 @@ import { Subject } from 'rxjs';
 
 describe('ColorHexSelectorComponent', () => {
     let component: ColorHexSelectorComponent;
-    let hexCombinedRbgChangedSubject: Subject<any>;
-    let hexRedChangedSubject: Subject<any>;
-    let hexGreenChangedSubject: Subject<any>;
-    let hexBlueChangedSubject: Subject<any>;
     let hexCombinedRgbFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let hexRedFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let hexGreenFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let hexBlueFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let hexSelectorFormGroupSpyObj: jasmine.SpyObj<FormGroup>;
+    let colorPickerSpyObj: jasmine.SpyObj<ColorPickerService>;
+    let colorSpyObj: jasmine.SpyObj<Color>;
+
+    let hexCombinedRbgChangedSubject: Subject<any>;
+    let hexRedChangedSubject: Subject<any>;
+    let hexGreenChangedSubject: Subject<any>;
+    let hexBlueChangedSubject: Subject<any>;
     let hueChangedSubject: Subject<number>;
     let saturationChangedSubject: Subject<number>;
     let valueChangedSubject: Subject<number>;
     let alphaChangedSubject: Subject<number>;
-    let colorPickerSpyObj: jasmine.SpyObj<ColorPickerService>;
-    let colorSpyObj: jasmine.SpyObj<Color>;
 
     beforeEach(async(() => {
         hexCombinedRbgChangedSubject = new Subject<any>();
