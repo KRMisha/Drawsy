@@ -1,5 +1,3 @@
-// tslint:disable: no-string-literal
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,15 +12,18 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
 
-describe('GalleryService', () => {
+// tslint:disable: no-string-literal
+
+fdescribe('GalleryService', () => {
     let service: GalleryService;
     let serverServiceSpyObj: jasmine.SpyObj<ServerService>;
     let routerSpyObj: jasmine.SpyObj<Router>;
     let drawingSerializerServiceSpyObj: jasmine.SpyObj<DrawingSerializerService>;
     let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
-    let drawingService: jasmine.SpyObj<DrawingService>;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let deleteDrawingSubject: Subject<void>;
     let getAllDrawingsSubject: Subject<SavedFile[]>;
+
     const svgFileContainer: SvgFileContainer = {
         id: '123',
         title: 'Test Title',
@@ -47,7 +48,7 @@ describe('GalleryService', () => {
             'makeSvgFileContainerFromSavedFile',
         ]);
         snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
-        drawingService = jasmine.createSpyObj('DrawingService', [], { id: 12 });
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], { id: 12 });
 
         TestBed.configureTestingModule({
             providers: [
@@ -55,7 +56,7 @@ describe('GalleryService', () => {
                 { provide: Router, useValue: routerSpyObj },
                 { provide: DrawingSerializerService, useValue: drawingSerializerServiceSpyObj },
                 { provide: MatSnackBar, useValue: snackBarSpyObj },
-                { provide: DrawingService, useValue: drawingService },
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
             ],
         });
 
@@ -92,16 +93,17 @@ describe('GalleryService', () => {
 
     it(
         '#deleteDrawing should use the open method of snackBar to display a message if the request was successfull' +
-            'and delete the drawing from _drawings when there is more than one drawing',
+            'and delete the drawing from _drawings',
         async(() => {
             spyOn(window, 'confirm').and.returnValue(true);
             service.deleteDrawing(svgFileContainer);
-            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
 
             const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
             const drawings: SvgFileContainer[] = [svgFileContainerMock1, svgFileContainer];
             service['_drawings'] = drawings;
+
             deleteDrawingSubject.next();
+            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
             expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin supprimé : ' + svgFileContainer.title, undefined, {
                 duration: snackBarDuration,
             });
@@ -115,12 +117,13 @@ describe('GalleryService', () => {
         async(() => {
             spyOn(window, 'confirm').and.returnValue(true);
             service.deleteDrawing(svgFileContainer);
-            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
 
             const svgFileContainerMock1: SvgFileContainer = { id: '1', labels: ['bonjour'], title: '1', drawingRoot: {} as SVGSVGElement };
             const drawings: SvgFileContainer[] = [svgFileContainerMock1];
             service['_drawings'] = drawings;
+
             deleteDrawingSubject.next();
+            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
             expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin supprimé : ' + svgFileContainer.title, undefined, {
                 duration: snackBarDuration,
             });
@@ -134,14 +137,14 @@ describe('GalleryService', () => {
         () => {
             spyOn(window, 'confirm').and.returnValue(true);
             spyOn(service, 'getAllDrawings');
-
             service.deleteDrawing(svgFileContainer);
-            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
 
             const error = { status: HttpStatusCode.NotFound } as HttpErrorResponse;
+            const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
+
             deleteDrawingSubject.error(error);
             expect(service.getAllDrawings).toHaveBeenCalled();
-            const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
+            expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
             expect(snackBarSpyObj.open).toHaveBeenCalledWith(errorMessage, undefined, {
                 duration: snackBarDuration,
             });
@@ -151,37 +154,45 @@ describe('GalleryService', () => {
     it('#deleteDrawing should not call #getAllDrawings and not display a message if the error status is different of NotFound', () => {
         spyOn(window, 'confirm').and.returnValue(true);
         spyOn(service, 'getAllDrawings');
-
         service.deleteDrawing(svgFileContainer);
-        expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
 
         const error = { status: HttpStatusCode.BadRequest } as HttpErrorResponse;
+
         deleteDrawingSubject.error(error);
+        expect(serverServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(svgFileContainer.id);
         expect(service.getAllDrawings).not.toHaveBeenCalled();
         expect(snackBarSpyObj.open).not.toHaveBeenCalled();
     });
 
     it(
         "#getAllDrawings should set _isLoadingComplete to false, call serverService's getAllDrawings," +
-            'load drawings into _drawings and then set _isLoadingComplete to true',
+        'load drawings into _drawings and then set _isLoadingComplete to true',
         () => {
             service['_isLoadingComplete'] = true;
             service['_drawings'] = [] as SvgFileContainer[];
             service.getAllDrawings();
-            expect(service['_isLoadingComplete']).toEqual(false);
-            expect(serverServiceSpyObj.getAllDrawings).toHaveBeenCalled();
 
             const svgFileContainerMock = {} as SvgFileContainer;
             drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile.and.returnValue(svgFileContainerMock);
+
             getAllDrawingsSubject.next(savedFiles);
+            expect(service['_isLoadingComplete']).toEqual(false);
+            expect(serverServiceSpyObj.getAllDrawings).toHaveBeenCalled();
+
             getAllDrawingsSubject.complete();
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile1);
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile2);
             expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile3);
             expect(service['_drawings']).toEqual([svgFileContainerMock, svgFileContainerMock, svgFileContainerMock]);
             expect(service['_isLoadingComplete']).toEqual(true);
-        }
-    );
+        });
+
+    it('#getAllDrawings should set its array of drawings to empty when the request returns an error', async(() => {
+            service.getAllDrawings();
+            const error = { status: HttpStatusCode.BadRequest } as HttpErrorResponse;
+            getAllDrawingsSubject.error(error);
+            expect(service['_drawings']).toEqual([]);
+    }));
 
     it('#getDrawingsWithLabels should return all drawings if there are no labels', () => {
         const svgFileContainerMock = {} as SvgFileContainer;
