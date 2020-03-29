@@ -108,17 +108,17 @@ describe('SettingsService', () => {
         expect(gridOpacitySpy).toHaveBeenCalledWith(initialGridOpacity);
     });
 
-    it('drawingWidth should be valid if it is within the minimum/maximum and only contains intergers', () => {
+    it('drawingWidth should be valid if it is within the minimum/maximum and only contains integers', () => {
         settingsFormGroup.controls.drawingWidth.setValue(DrawingDimensionsValidation.minimumDrawingDimension);
         expect(settingsFormGroup.valid).toEqual(true);
     });
 
-    it('drawingWidth should be invalid if it contains anything else be intergers', () => {
+    it('drawingWidth should be invalid if it contains anything else be integers', () => {
         settingsFormGroup.controls.drawingWidth.setValue('a');
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('drawingWidth should be invalid if it is under the minimum dimension', () => {
+    it('drawingWidth should be invalid if it is less than the minimum dimension', () => {
         settingsFormGroup.controls.drawingWidth.setValue(DrawingDimensionsValidation.minimumDrawingDimension - 1);
         expect(settingsFormGroup.valid).toEqual(false);
     });
@@ -128,37 +128,37 @@ describe('SettingsService', () => {
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('drawingHeight should be valid if it is within the minimum/maximum and only contains intergers', () => {
+    it('drawingHeight should be valid if it is within the minimum/maximum and only contains integers', () => {
         settingsFormGroup.controls.drawingHeight.setValue(DrawingDimensionsValidation.minimumDrawingDimension);
         expect(settingsFormGroup.valid).toEqual(true);
     });
 
-    it('drawingHeight should be invalid if it contains anything else be intergers', () => {
+    it('drawingHeight should be invalid if it contains anything else be integers', () => {
         settingsFormGroup.controls.drawingHeight.setValue('a');
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('drawingHeight should be invalid if it is under the minimum dimension', () => {
+    it('drawingHeight should be invalid if it is less than the minimum dimension', () => {
         settingsFormGroup.controls.drawingHeight.setValue(DrawingDimensionsValidation.minimumDrawingDimension - 1);
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('drawingHeight should be invalid if it is above the maximum dimension', () => {
+    it('drawingHeight should be invalid if it is greater than the maximum dimension', () => {
         settingsFormGroup.controls.drawingHeight.setValue(DrawingDimensionsValidation.maximumDrawingDimension + 1);
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('gridSize should be valid if it is within the minimum/maximum and only contains intergers', () => {
+    it('gridSize should be valid if it is within the minimum/maximum and only contains integers', () => {
         settingsFormGroup.controls.gridSize.setValue(minimumGridSize);
         expect(settingsFormGroup.valid).toEqual(true);
     });
 
-    it('gridSize should be invalid if it contains anything else be intergers', () => {
+    it('gridSize should be invalid if it contains anything else be integers', () => {
         settingsFormGroup.controls.gridSize.setValue('a');
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('gridSize should be invalid if it is under the minimum dimension', () => {
+    it('gridSize should be invalid if it is less than the minimum dimension', () => {
         settingsFormGroup.controls.gridSize.setValue(minimumGridSize - 1);
         expect(settingsFormGroup.valid).toEqual(false);
     });
@@ -168,17 +168,17 @@ describe('SettingsService', () => {
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('gridOpacity should be valid if it is within the minimum/maximum and only contains intergers', () => {
+    it('gridOpacity should be valid if it is within the minimum/maximum and only contains integers', () => {
         settingsFormGroup.controls.gridOpacity.setValue(minimumGridOpacity);
         expect(settingsFormGroup.valid).toEqual(true);
     });
 
-    it('gridOpacity should be invalid if it contains anything else be intergers', () => {
+    it('gridOpacity should be invalid if it contains anything else be integers', () => {
         settingsFormGroup.controls.gridOpacity.setValue('a');
         expect(settingsFormGroup.valid).toEqual(false);
     });
 
-    it('gridOpacity should be invalid if it is under the minimum dimension', () => {
+    it('gridOpacity should be invalid if it is less than the minimum dimension', () => {
         settingsFormGroup.controls.gridOpacity.setValue(minimumGridOpacity - 1);
         expect(settingsFormGroup.valid).toEqual(false);
     });
