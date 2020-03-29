@@ -80,8 +80,7 @@ import { DrawingSettingsComponent } from '@app/modals/components/settings/drawin
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
-import { SafeHtmlPipe } from '@app/shared/pipes/safe-html.pipe';
-import { CommonModule } from '@angular/common';
+import { GalleryPreviewPipe } from '@app/shared/pipes/gallery-preview.pipe';
 
 @NgModule({
     declarations: [
@@ -124,7 +123,7 @@ import { CommonModule } from '@angular/common';
         HomeComponent,
         HueSliderComponent,
         NewDrawingComponent,
-        SafeHtmlPipe,
+        GalleryPreviewPipe,
         SaveDrawingComponent,
         SettingsComponent,
         SidebarColorPickerComponent,
@@ -141,7 +140,6 @@ import { CommonModule } from '@angular/common';
         BrowserAnimationsModule,
         BrowserAnimationsModule,
         BrowserModule,
-        CommonModule,
         FormsModule,
         HttpClientModule,
         MatButtonModule,
