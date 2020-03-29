@@ -4,6 +4,7 @@
 
 .title-item {
     text-align: center;
+    margin-bottom: 0;
 }
 
 .chip-list-item {
@@ -20,32 +21,50 @@
 
 .gallery-container {
     display: grid;
-    grid-auto-columns: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-content: space-between;
     max-height: 68vh;
 }
 
 .card-item {
-    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 4px;
 }
 
-.card-title-container {
+.card-header-container {
     justify-content: center;
 }
 
 .drawing-container {
-    display: flex;
-    width: 100%;
-    height: 350px;
+    height: 300px;
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    margin-right: -16px;
+
+    ::ng-deep svg {
+        background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+    }
 }
 
-.drawing-labels-item {
-    min-height: 40px;
-    margin-top: 20px;
+.drawing-footer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 16px;
 }
 
 .card-actions-container {
-    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.remove-top-margin {
+    margin-top: -16px;
 }
 
 .card-actions-item {
