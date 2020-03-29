@@ -29,7 +29,7 @@ describe('ThemeService', () => {
     it('#toggleDarkTheme should invert isDarkTheme', () => {
         service['_isDarkTheme'] = true;
         service.toggleDarkTheme();
-        expect(service['_isDarkTheme']).toBeFalsy();
+        expect(service['_isDarkTheme']).toEqual(false);
         service.toggleDarkTheme();
         expect(service['_isDarkTheme']).toEqual(true);
     });
@@ -65,7 +65,7 @@ describe('ThemeService', () => {
     it('#get isDarkTheme should return appropriate boolean value', () => {
         service['_isDarkTheme'] = false;
         const returnValue = service.isDarkTheme;
-        expect(returnValue).toBeFalsy();
+        expect(returnValue).toEqual(false);
     });
 
     it('#set isDarkTheme should change isDarkTheme and the theme of the overlayContainer', () => {
