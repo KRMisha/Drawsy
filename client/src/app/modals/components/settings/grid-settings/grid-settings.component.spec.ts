@@ -1,19 +1,27 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { GridService } from '@app/drawing/services/grid.service';
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsService } from '@app/modals/services/settings.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import { Subject } from 'rxjs';
 
 // tslint:disable: no-string-literal
 
 describe('GridSettingsComponent', () => {
     let component: GridSettingsComponent;
     let fixture: ComponentFixture<GridSettingsComponent>;
-    let settingServiceSpyObj: jasmine.SpyObj<SettingsService>;
     let gridServiceSpyObj: jasmine.SpyObj<GridService>;
-    let formGroupStub: FormGroup;
+    let displayEnabledFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let sizeFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let opacityFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let formGroupSpyObj: jasmine.SpyObj<FormGroup>;
+    let settingServiceSpyObj: jasmine.SpyObj<SettingsService>;
+
+    let gridDisplayChangedSubject: Subject<void>;
+    let gridSizeChangedSubject: Subject<void>;
+    let gridOpacityChangedSubject: Subject<void>;
 
     const initialGridSize = 10;
     const gridMinimumSize = 0;
@@ -25,15 +33,6 @@ describe('GridSettingsComponent', () => {
     const isGridDisplayEnabled = true;
 
     beforeEach(async(() => {
-        formGroupStub = new FormGroup({
-            gridSize: new FormControl(initialGridSize, [Validators.required]),
-            gridOpacity: new FormControl(initialGridOpacity, [Validators.required]),
-            gridDisplayEnabled: new FormControl(true, [Validators.required]),
-        });
-        settingServiceSpyObj = jasmine.createSpyObj('SettingsService', [], {
-            settingsFormGroup: formGroupStub,
-        });
-
         gridServiceSpyObj = jasmine.createSpyObj('GridService', [], {
             size: initialGridSize,
             minimumSize: gridMinimumSize,
@@ -43,6 +42,35 @@ describe('GridSettingsComponent', () => {
             minimumOpacity: gridMinimumOpacity,
             maximumOpacity: gridMaximumOpacity,
             isDisplayEnabled: isGridDisplayEnabled,
+        });
+
+        gridDisplayChangedSubject = new Subject<void>();
+        displayEnabledFormControlSpyObj = jasmine.createSpyObj('FormControl', [], {
+            valueChanges: gridDisplayChangedSubject,
+            valid: true,
+            value: isGridDisplayEnabled,
+        });
+        gridSizeChangedSubject = new Subject<void>();
+        sizeFormControlSpyObj = jasmine.createSpyObj('FormControl', ['enable', 'disable', 'setValue'], {
+            valueChanges: gridSizeChangedSubject,
+            valid: true,
+            value: initialGridSize,
+        });
+        gridOpacityChangedSubject = new Subject<void>();
+        opacityFormControlSpyObj = jasmine.createSpyObj('FormControl', ['enable', 'disable', 'setValue'], {
+            valueChanges: gridOpacityChangedSubject,
+            valid: true,
+            value: initialGridOpacity,
+        });
+        formGroupSpyObj = jasmine.createSpyObj('FormGroup', [], {
+            controls: {
+                gridDisplayEnabled: displayEnabledFormControlSpyObj,
+                gridSize: sizeFormControlSpyObj,
+                gridOpacity: opacityFormControlSpyObj,
+            },
+        });
+        settingServiceSpyObj = jasmine.createSpyObj('SettingsService', [], {
+            settingsFormGroup: formGroupSpyObj,
         });
         TestBed.configureTestingModule({
             declarations: [GridSettingsComponent],
@@ -65,9 +93,9 @@ describe('GridSettingsComponent', () => {
     });
 
     it('#ngOnInit should subscribe to changes on gridDisplay, gridSize and gridOpacity changes', () => {
-        const gridDisplayEnabledSpy = spyOn(formGroupStub.controls.gridDisplayEnabled.valueChanges, 'subscribe').and.callThrough();
-        const gridSizeSpy = spyOn(formGroupStub.controls.gridSize.valueChanges, 'subscribe').and.callThrough();
-        const gridOpacity = spyOn(formGroupStub.controls.gridOpacity.valueChanges, 'subscribe').and.callThrough();
+        const gridDisplayEnabledSpy = spyOn(gridDisplayChangedSubject, 'subscribe').and.callThrough();
+        const gridSizeSpy = spyOn(gridSizeChangedSubject, 'subscribe').and.callThrough();
+        const gridOpacity = spyOn(gridOpacityChangedSubject, 'subscribe').and.callThrough();
         component.ngOnInit();
 
         expect(gridDisplayEnabledSpy).toHaveBeenCalled();
@@ -76,31 +104,57 @@ describe('GridSettingsComponent', () => {
     });
 
     it("should change the gridService's gridDisplay, gridSize and gridOpacity on valid change", async(() => {
-        const gridServiceStub = ({ isDisplayEnabled: true, size: 0, opacity: 0 } as unknown) as GridService;
+        const gridServiceStub = ({ isDisplayEnabled: false, size: 0, opacity: 0 } as unknown) as GridService;
         component['gridService'] = gridServiceStub;
 
-        const validValue = 10;
-        formGroupStub.controls.gridDisplayEnabled.setValue(false);
-        formGroupStub.controls.gridSize.setValue(validValue);
-        formGroupStub.controls.gridOpacity.setValue(validValue);
-
-        expect(gridServiceStub.isDisplayEnabled).toEqual(false);
-        expect(gridServiceStub.size).toEqual(validValue);
-        expect(gridServiceStub.opacity).toEqual(validValue);
+        gridDisplayChangedSubject.next();
+        gridSizeChangedSubject.next();
+        gridOpacityChangedSubject.next();
+        expect(gridServiceStub.isDisplayEnabled).toEqual(isGridDisplayEnabled);
+        expect(gridServiceStub.size).toEqual(initialGridSize);
+        expect(gridServiceStub.opacity).toEqual(initialGridOpacity);
     }));
 
     it("should not change the gridService's gridDisplay, gridSize and gridOpacity on invalid change", async(() => {
-        const gridServiceStub = ({ isDisplayEnabled: true, size: initialGridSize, opacity: initialGridOpacity } as unknown) as GridService;
+        const expectedValue = 0;
+        const gridServiceStub = ({ isDisplayEnabled: true, size: expectedValue, opacity: expectedValue } as unknown) as GridService;
         component['gridService'] = gridServiceStub;
 
-        const inValidValue = '';
-        formGroupStub.controls.gridDisplayEnabled.setValue(inValidValue);
-        formGroupStub.controls.gridSize.setValue(inValidValue);
-        formGroupStub.controls.gridOpacity.setValue(inValidValue);
+        const unexpectedValue = 20;
+        const invalidGridDisplaySpyObj = jasmine.createSpyObj('FormControl', [], {
+            valid: false,
+            value: unexpectedValue,
+            valueChanges: gridDisplayChangedSubject,
+        });
+        const invalidGridSizeSpyObj = jasmine.createSpyObj('FormControl', [], {
+            valid: false,
+            value: unexpectedValue,
+            valueChanges: gridSizeChangedSubject,
+        });
+        const invalidGridOpacitySpyObj = jasmine.createSpyObj('FormControl', [], {
+            valid: false,
+            value: unexpectedValue,
+            valueChanges: gridOpacityChangedSubject,
+        });
+        const invalidFormGroupSpyObj = jasmine.createSpyObj('FormGroup', [], {
+            controls: {
+                gridDisplayEnabled: invalidGridDisplaySpyObj,
+                gridSize: invalidGridSizeSpyObj,
+                gridOpacity: invalidGridOpacitySpyObj,
+            },
+        });
 
+        component['settingsService'] = jasmine.createSpyObj('SettingsService', [], {
+            settingsFormGroup: invalidFormGroupSpyObj,
+        });
+
+        component.ngOnInit();
+        gridDisplayChangedSubject.next();
+        gridSizeChangedSubject.next();
+        gridOpacityChangedSubject.next();
         expect(gridServiceStub.isDisplayEnabled).toEqual(true);
-        expect(gridServiceStub.size).toEqual(initialGridSize);
-        expect(gridServiceStub.opacity).toEqual(initialGridOpacity);
+        expect(gridServiceStub.size).toEqual(expectedValue);
+        expect(gridServiceStub.opacity).toEqual(expectedValue);
     }));
 
     it('#ngOnDestroy should unsubscribe from gridDisplay, gridSize and gridOpacity change subscriptions', () => {
@@ -119,51 +173,49 @@ describe('GridSettingsComponent', () => {
         const errorMessageServiceSpy = spyOn(ErrorMessageService, 'getErrorMessage');
         const humanFriendlyPattern = 'This is a test';
 
-        component.getErrorMessage(formGroupStub, humanFriendlyPattern);
-        expect(errorMessageServiceSpy).toHaveBeenCalledWith(formGroupStub, humanFriendlyPattern);
-    });
-
-    it('set isGridDisplayEnabled should disabled the gridSize and gridOpacity if it is set to false', () => {
-        const gridSizeSpy = spyOn(formGroupStub.controls.gridSize, 'disable');
-        const gridOpacitySpy = spyOn(formGroupStub.controls.gridOpacity, 'disable');
-
-        component.isGridDisplayEnabled = false;
-
-        expect(gridSizeSpy).toHaveBeenCalled();
-        expect(gridOpacitySpy).toHaveBeenCalled();
+        component.getErrorMessage(sizeFormControlSpyObj, humanFriendlyPattern);
+        expect(errorMessageServiceSpy).toHaveBeenCalledWith(sizeFormControlSpyObj, humanFriendlyPattern);
     });
 
     it('set isGridDisplayEnabled should enable the gridSize and gridOpacity if it is set to true', () => {
-        const gridSizeSpy = spyOn(formGroupStub.controls.gridSize, 'enable');
-        const gridOpacitySpy = spyOn(formGroupStub.controls.gridOpacity, 'enable');
-
+        const gridServiceMock = { isDisplayEnabled: false } as GridService;
+        component['gridService'] = gridServiceMock;
         component.isGridDisplayEnabled = true;
 
-        expect(gridSizeSpy).toHaveBeenCalled();
-        expect(gridOpacitySpy).toHaveBeenCalled();
+        expect(gridServiceMock.isDisplayEnabled).toEqual(true);
+        expect(sizeFormControlSpyObj.enable).toHaveBeenCalled();
+        expect(opacityFormControlSpyObj.enable).toHaveBeenCalled();
+    });
+
+    it('set isGridDisplayEnabled should disable the gridSize and gridOpacity if it is set to false', () => {
+        const gridServiceMock = { isDisplayEnabled: true } as GridService;
+        component['gridService'] = gridServiceMock;
+        component.isGridDisplayEnabled = false;
+
+        expect(gridServiceMock.isDisplayEnabled).toEqual(false);
+        expect(sizeFormControlSpyObj.disable).toHaveBeenCalled();
+        expect(opacityFormControlSpyObj.disable).toHaveBeenCalled();
     });
 
     it("set gridSize should update the gridService's gridSize and set the formGroup's value", () => {
         const gridServiceStub = ({ size: initialGridSize } as unknown) as GridService;
-        const setValueSpy = spyOn(formGroupStub.controls.gridSize, 'setValue');
         component['gridService'] = gridServiceStub;
 
         const newValue = 10;
         component.gridSize = newValue;
 
         expect(gridServiceStub.size).toEqual(newValue);
-        expect(setValueSpy).toHaveBeenCalledWith(newValue, { emitEvent: false });
+        expect(sizeFormControlSpyObj.setValue).toHaveBeenCalledWith(newValue, { emitEvent: false });
     });
 
     it("set gridOpacity should update the gridService's gridOpacity and set the formGroup's value", () => {
         const gridServiceStub = ({ opacity: initialGridOpacity } as unknown) as GridService;
-        const setValueSpy = spyOn(formGroupStub.controls.gridOpacity, 'setValue');
         component['gridService'] = gridServiceStub;
 
         const newValue = 10;
         component.gridOpacity = newValue;
 
         expect(gridServiceStub.opacity).toEqual(newValue);
-        expect(setValueSpy).toHaveBeenCalledWith(newValue, { emitEvent: false });
+        expect(opacityFormControlSpyObj.setValue).toHaveBeenCalledWith(newValue, { emitEvent: false });
     });
 });
