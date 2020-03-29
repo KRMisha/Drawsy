@@ -15,11 +15,12 @@
     display: flex;
     justify-content: center;
     align-content: center;
+    overflow: hidden;
 }
 
 .gallery-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-auto-columns: 1fr;
     justify-content: space-between;
     max-height: 68vh;
 }
@@ -54,6 +55,5 @@
 }
 
 .button {
-    width: 20%;
-    min-width: max-content;
+    width: 150px;
 }

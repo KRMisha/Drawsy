@@ -7,6 +7,7 @@
     grid-template-areas:
         'title filter file'
         'preview preview preview';
+    grid-auto-columns: 1fr;
     align-content: center;
 }
 
@@ -17,12 +18,12 @@
 
 .filter-item {
     grid-area: filter;
-    padding-right: 16px;
 }
 
 .file-item {
     grid-area: file;
     display: flex;
+    justify-self: right;
     margin-bottom: 16px;
 }
 
@@ -37,7 +38,6 @@
 }
 
 .button {
-    width: 20%;
-    min-width: max-content;
+    width: 150px;
     margin-right: 4px;
 }

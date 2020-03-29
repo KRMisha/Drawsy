@@ -24,7 +24,7 @@ export class ToolRectangleService extends ToolShape {
         return 'rect';
     }
 
-    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGElement): void {
+    protected updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void {
         this.renderer.setAttribute(shape, 'x', shapeArea.x.toString());
         this.renderer.setAttribute(shape, 'y', shapeArea.y.toString());
         this.renderer.setAttribute(shape, 'width', shapeArea.width.toString());

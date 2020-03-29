@@ -9,7 +9,7 @@ import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
 @Injectable({
@@ -18,6 +18,10 @@ import { catchError, finalize } from 'rxjs/operators';
 export class GalleryService {
     private _drawings: SvgFileContainer[] = []; // tslint:disable-line: variable-name
     private _isLoadingComplete = false; // tslint:disable-line: variable-name
+
+    private loadingCompletedSource = new Subject<void>();
+
+    loadingCompleted$ = this.loadingCompletedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(
         private serverService: ServerService,
@@ -74,6 +78,7 @@ export class GalleryService {
             .pipe(
                 finalize(() => {
                     this._isLoadingComplete = true;
+                    this.loadingCompletedSource.next();
                 })
             )
             .subscribe(

@@ -19,7 +19,7 @@ describe('ToolPaintbrushService', () => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['createElement']);
         const drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement']);
         const colorServiceSpyObj = jasmine.createSpyObj('ColorService', {
-            getPrimaryColor: () => new ColorMock(),
+            primaryColor: () => new ColorMock(),
         });
 
         TestBed.configureTestingModule({

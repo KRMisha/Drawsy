@@ -144,7 +144,7 @@ export class ToolLineService extends Tool {
         }
         this.renderer.setAttribute(this.groupElement, 'stroke', color.toRgbaString());
 
-        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        const previewColor = this.colorService.primaryColor.clone();
         previewColor.alpha /= 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
 
@@ -169,8 +169,8 @@ export class ToolLineService extends Tool {
         const padding = Math.max(0, this.settings.lineWidth! / 2 - junctionDiameterActualValue);
 
         this.groupElement = this.renderer.createElement('g', 'svg');
-        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.getPrimaryColor().toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.primaryColor.toRgbaString());
+        this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.primaryColor.toRgbaString());
         this.renderer.setAttribute(this.groupElement, 'stroke-width', this.settings.lineWidth!.toString());
         this.renderer.setAttribute(this.groupElement, 'data-padding', padding.toString());
 
@@ -251,7 +251,7 @@ export class ToolLineService extends Tool {
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', `${this.junctionDiameter / 2}`);
-        this.renderer.setAttribute(circle, 'fill', this.colorService.getPrimaryColor().toRgbaString());
+        this.renderer.setAttribute(circle, 'fill', this.colorService.primaryColor.toRgbaString());
         this.renderer.setAttribute(circle, 'stroke', 'none');
         this.junctionPoints.push(circle);
         return circle;
@@ -265,7 +265,7 @@ export class ToolLineService extends Tool {
     }
 
     private updatePreviewLine(): void {
-        const previewColor = Color.fromColor(this.colorService.getPrimaryColor());
+        const previewColor = this.colorService.primaryColor.clone();
         previewColor.alpha /= 2;
 
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
