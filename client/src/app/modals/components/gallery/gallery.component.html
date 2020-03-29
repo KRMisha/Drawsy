@@ -25,31 +25,31 @@
     </div>
 
     <ng-container *ngIf="isLoadingComplete">
-        <div *ngIf="hasDrawings()" class="gallery-container">
-            <mat-card *ngFor="let drawing of drawingsWithLabels" class="card-item">
-                <mat-card-header class="card-title-container">
+        <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
+            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels" class="card-item">
+                <mat-card-header class="card-header-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
-                <div mat-card-image>
-                    <div class="drawing-container" [innerHTML]="drawing.drawingRoot.outerHTML | safeHtml"></div>
+                <div class="drawing-container" [innerHTML]="drawing.drawingRoot | galleryPreview"></div>
+                <div class="drawing-footer-container">
+                    <mat-card-content>
+                        <mat-chip-list>
+                            <mat-chip *ngFor="let label of drawing.labels">{{ label }}</mat-chip>
+                        </mat-chip-list>
+                    </mat-card-content>
+                    <mat-card-actions align="center" class="card-actions-container" [class.remove-top-margin]="drawing.labels.length === 0">
+                        <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">Effacer</button>
+                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing)">Charger</button>
+                    </mat-card-actions>
                 </div>
-                <mat-card-content class="drawing-labels-item">
-                    <mat-chip-list>
-                        <mat-chip *ngFor="let label of drawing.labels">{{ label }}</mat-chip>
-                    </mat-chip-list>
-                </mat-card-content>
-                <mat-card-actions align="center" class="card-actions-container">
-                    <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">Effacer</button>
-                    <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing)">Charger</button>
-                </mat-card-actions>
             </mat-card>
         </div>
 
-        <h2 *ngIf="!hasDrawings()" class="title-item">
+        <h2 *ngIf="drawings | isEmpty" class="title-item">
             La galerie ne contient aucun dessin.
         </h2>
 
-        <h2 *ngIf="hasDrawings() && drawingsWithLabels.length === 0" class="title-item">
+        <h2 *ngIf="!(drawings | isEmpty) && (drawings | drawingsWithLabels: searchLabels | isEmpty)" class="title-item">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
         </h2>
     </ng-container>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing',
+    encapsulation: ViewEncapsulation.ShadowDom,
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
