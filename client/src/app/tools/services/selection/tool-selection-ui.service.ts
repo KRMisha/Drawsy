@@ -23,9 +23,9 @@ export class ToolSelectionUiService implements OnDestroy {
     private selectedElementsChanged: Subscription;
 
     constructor(
+        rendererFactory: RendererFactory2,
         private svgUtilityService: SvgUtilityService,
         private drawingService: DrawingService,
-        private rendererFactory: RendererFactory2,
         private toolSelectionStateService: ToolSelectionStateService
     ) {
         this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
@@ -38,7 +38,7 @@ export class ToolSelectionUiService implements OnDestroy {
             }
         );
 
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+        this.renderer = rendererFactory.createRenderer(null, null);
 
         this.svgSelectedShapesRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '2');
