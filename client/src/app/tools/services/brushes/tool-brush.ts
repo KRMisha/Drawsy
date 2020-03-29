@@ -25,17 +25,14 @@ export abstract class ToolBrush extends Tool {
 
     onMouseMove(): void {
         if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
-            const pathString =
-                (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(Tool.mousePosition.x, Tool.mousePosition.y);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.updatePath();
         }
     }
 
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
-            this.path = this.createNewPath();
-            const pathString = this.getPathStartString(Tool.mousePosition.x, Tool.mousePosition.y);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.path = this.createPath();
+            this.updatePath();
             this.drawingService.addElement(this.path);
         }
     }
@@ -46,27 +43,22 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
-    onEnter(event: MouseEvent): void {
-        this.stopDrawing();
-    }
-
     onLeave(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown) {
-            const pathString = (this.path as SVGGraphicsElement).getAttribute('d') + this.getPathLineString(event.offsetX, event.offsetY);
-            this.renderer.setAttribute(this.path, 'd', pathString);
+            this.updatePath();
             this.stopDrawing();
         }
     }
 
     onPrimaryColorChange(color: Color): void {
-        if (!Tool.isMouseInsideDrawing || !Tool.isLeftMouseButtonDown) {
-            return;
+        if (this.path !== undefined) {
+            this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
         }
-        this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());
     }
 
-    protected createNewPath(): SVGPathElement {
+    protected createPath(): SVGPathElement {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
+
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
         // tslint:disable: no-non-null-assertion
@@ -75,22 +67,26 @@ export abstract class ToolBrush extends Tool {
         // tslint:enable: no-non-null-assertion
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
+        this.renderer.setAttribute(path, 'd', `M${Tool.mousePosition.x} ${Tool.mousePosition.y}`);
+
         return path;
     }
 
-    private getPathStartString(x: number, y: number): string {
-        return `M${x}  ${y} L${x} ${y}`;
-    }
+    private updatePath(): void {
+        if (this.path === undefined) {
+            return;
+        }
 
-    private getPathLineString(x: number, y: number): string {
-        return `L${x} ${y}`;
+        const pathString = this.path.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+        this.renderer.setAttribute(this.path, 'd', pathString);
     }
 
     private stopDrawing(): void {
-        Tool.isLeftMouseButtonDown = false;
-        if (this.path !== undefined) {
-            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
-            this.path = undefined;
+        if (this.path === undefined) {
+            return;
         }
+
+        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
+        this.path = undefined;
     }
 }
