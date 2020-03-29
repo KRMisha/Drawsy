@@ -15,10 +15,6 @@ export class SvgUtilityService {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    getElementsUnderPoint(elements: SVGGraphicsElement[], point: Vec2): SVGGraphicsElement[] {
-        return this.getElementsUnderArea(elements, { x: point.x, y: point.y, width: 0, height: 0 });
-    }
-
     getElementsUnderArea(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement[] {
         return elements.filter((element: SVGGraphicsElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }

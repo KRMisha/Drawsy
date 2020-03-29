@@ -89,8 +89,8 @@ export class DrawingService {
     }
 
     clearStoredElements(): void {
-        while (this._svgElements.length > 0) {
-            this.removeElement(this._svgElements[0]);
+        for (let i = this._svgElements.length - 1; i >= 0; i--) {
+            this.removeElement(this._svgElements[i]);
         }
     }
 
