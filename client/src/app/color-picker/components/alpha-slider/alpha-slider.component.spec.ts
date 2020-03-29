@@ -13,11 +13,12 @@ describe('AlphaSliderComponent', () => {
     let component: AlphaSliderComponent;
     let fixture: ComponentFixture<AlphaSliderComponent>;
     let colorSpyObj: jasmine.SpyObj<Color>;
+    let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
+
     let hueSubject: Subject<number>;
     let saturationSubject: Subject<number>;
     let valueSubject: Subject<number>;
     let alphaSubject: Subject<number>;
-    let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
 
     beforeEach(async(() => {
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbString', 'toRgbaString', 'clone'], {
