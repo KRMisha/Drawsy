@@ -16,8 +16,8 @@ export class DrawingPreviewService {
 
     private renderer: Renderer2;
 
-    constructor(private rendererFactory: RendererFactory2, private drawingService: DrawingService) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
+    constructor(rendererFactory: RendererFactory2, private drawingService: DrawingService) {
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     initializePreview(): void {
