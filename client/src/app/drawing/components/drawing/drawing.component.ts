@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing',
-    encapsulation: ViewEncapsulation.ShadowDom,
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
