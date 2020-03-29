@@ -6,25 +6,24 @@ import { GalleryComponent } from '@app/modals/components/gallery/gallery.compone
 import { GalleryService } from '@app/modals/services/gallery.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
-import { Subject } from 'rxjs';
 
 describe('GalleryComponent', () => {
     let component: GalleryComponent;
     let fixture: ComponentFixture<GalleryComponent>;
     let galleryServiceSpyObj: jasmine.SpyObj<GalleryService>;
     let labelsFormControlSpyObj: jasmine.SpyObj<FormControl>;
-    let loadingCompleteSubject: Subject<void>;
 
     const initialLoadingComplete = false;
+    const drawingStub = {} as SvgFileContainer;
+    const initialDrawings = [drawingStub, drawingStub];
 
     beforeEach(async(() => {
-        loadingCompleteSubject = new Subject<void>();
         galleryServiceSpyObj = jasmine.createSpyObj(
             'GalleryService',
             ['getDrawingsWithLabels', 'getAllDrawings', 'loadDrawing', 'deleteDrawing', 'hasDrawings'],
             {
+                drawings: initialDrawings,
                 isLoadingComplete: initialLoadingComplete,
-                loadingCompleted$: loadingCompleteSubject,
             }
         );
         labelsFormControlSpyObj = jasmine.createSpyObj('FormControl', [], {
@@ -48,18 +47,9 @@ describe('GalleryComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("#ngOnInit should subscribe to galleryService's loadingComplete and call galleryService's getAllDrawings", async(() => {
+    it("#ngOnInit call galleryService's getAllDrawings", async(() => {
         component.ngOnInit();
         expect(galleryServiceSpyObj.getAllDrawings).toHaveBeenCalled();
-
-        loadingCompleteSubject.next();
-        expect(galleryServiceSpyObj.getDrawingsWithLabels).toHaveBeenCalled();
-    }));
-
-    it('#ngOnDestroy should unsubscribe from the loadingComplete subscription', async(() => {
-        const unsubscribeSpy = spyOn(component['loadingCompletedSubscription'], 'unsubscribe'); // tslint:disable-line: no-string-literal
-        component.ngOnDestroy();
-        expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
     it('#addLabel should early return if the label form is invalid', () => {
@@ -88,15 +78,12 @@ describe('GalleryComponent', () => {
         expect(pushSpy).not.toHaveBeenCalled();
     });
 
-    it('#addLabel should push the label into searchLabels and call getDrawingsWithLabels', () => {
+    it('#addLabel should add the label to the searchLabel if it is a valid label', () => {
         component.labelsFormControl = labelsFormControlSpyObj;
-        const labels = ['456', '789'];
-        component.searchLabels = labels;
-        const pushSpy = spyOn(component.searchLabels, 'push').and.callThrough();
-        const event = { value: '123', input: { value: '' } as HTMLInputElement } as MatChipInputEvent;
+        const pushSpy = spyOn(component.searchLabels, 'push');
+        const event = ({ value: 'Valid', input: { value: 'Valid' } } as unknown) as MatChipInputEvent;
         component.addLabel(event);
-        expect(pushSpy).toHaveBeenCalledWith(event.value);
-        expect(galleryServiceSpyObj.getDrawingsWithLabels).toHaveBeenCalled();
+        expect(pushSpy).toHaveBeenCalled();
     });
 
     it('#removeLabel should not splice the labels array if the label is not in it', () => {
@@ -107,12 +94,12 @@ describe('GalleryComponent', () => {
         expect(spliceSpy).not.toHaveBeenCalled();
     });
 
-    it('#removeLabel should remove the label from the labels array', () => {
-        const labels = ['123', '456', '789'];
+    it('#removeLabel should splice the labels array if the label is in it', () => {
+        const labels = ['123'];
         component.searchLabels = labels;
-        component.removeLabel('456');
-        expect(component.searchLabels).toEqual(['123', '789']);
-        expect(galleryServiceSpyObj.getDrawingsWithLabels).toHaveBeenCalled();
+        const spliceSpy = spyOn(component.searchLabels, 'splice');
+        component.removeLabel('123');
+        expect(spliceSpy).toHaveBeenCalled();
     });
 
     it('#loadDrawing should forward call to galleryService', () => {
@@ -127,20 +114,15 @@ describe('GalleryComponent', () => {
         expect(galleryServiceSpyObj.deleteDrawing).toHaveBeenCalledWith(drawing);
     });
 
-    it('#hasDrawings should forward the call to galleryService', () => {
-        component.hasDrawings();
-        expect(galleryServiceSpyObj.hasDrawings).toHaveBeenCalled();
-    });
-
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
         const errorMessageSpy = spyOn(ErrorMessageService, 'getErrorMessage');
         component.getErrorMessage();
         expect(errorMessageSpy).toHaveBeenCalledWith(component.labelsFormControl, 'A-Z, a-z, 0-9');
     });
 
-    it('#get isLoadingComplete should return appropriate isLoadingComplete', () => {
-        const returnValue = component.isLoadingComplete;
-        expect(returnValue).toEqual(galleryServiceSpyObj.isLoadingComplete);
+    it("#get drawings should return galleryService's drawings", () => {
+        const returnValue = component.drawings;
+        expect(returnValue).toEqual(initialDrawings);
     });
 
     it('labelForm should be invalid if the label does not match the pattern', () => {
