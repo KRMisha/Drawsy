@@ -6,7 +6,7 @@ import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolRecolorService } from '@app/tools/services/tool-recolor.service';
 
-fdescribe('ToolRecolorService', () => {
+describe('ToolRecolorService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let primaryColorSpyObj: jasmine.SpyObj<Color>;
     let secondaryColorSpyObj: jasmine.SpyObj<Color>;
