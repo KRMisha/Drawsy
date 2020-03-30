@@ -77,6 +77,10 @@ export class ToolEraserService extends Tool {
         this.svgElementsDeletedDuringDrag = [];
     }
 
+    onEnter(event: MouseEvent): void {
+        this.updateEraserRect();
+    }
+
     update(): void {
         this.timerId = undefined;
         const elementToConsider = this.svgUtilityService.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
@@ -109,6 +113,7 @@ export class ToolEraserService extends Tool {
 
     onToolSelection(): void {
         this.drawingService.addUiElement(this.svgEraserElement);
+        this.updateEraserRect();
     }
 
     onToolDeselection(): void {

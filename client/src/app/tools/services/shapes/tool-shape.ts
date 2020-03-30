@@ -86,12 +86,12 @@ export abstract class ToolShape extends Tool {
         const shape: SVGGraphicsElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
         // tslint:disable: no-non-null-assertion
-        this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
         const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.primaryColor.toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
         if (this.settings.shapeType! !== ShapeType.FillOnly) {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.secondaryColor.toRgbaString());
         }
+        this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
         this.renderer.setAttribute(shape, 'data-padding', `${this.settings.shapeBorderWidth! / 2}`);
         // tslint:enable: no-non-null-assertion
 

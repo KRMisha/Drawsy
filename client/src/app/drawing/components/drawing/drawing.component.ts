@@ -102,16 +102,12 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        if (!this.modalService.isModalPresent) {
-            this.currentToolService.onEnter(event);
-        }
+        this.currentToolService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
-        if (!this.modalService.isModalPresent) {
-            this.currentToolService.onLeave(event);
-        }
+        this.currentToolService.onLeave(event);
     }
 
     get width(): number {

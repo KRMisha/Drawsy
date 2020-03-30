@@ -62,8 +62,8 @@ export abstract class ToolBrush extends Tool {
         this.renderer.setAttribute(path, 'fill', 'none');
         this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
         // tslint:disable: no-non-null-assertion
-        this.renderer.setAttribute(path, 'data-padding', `${this.settings.lineWidth! / 2}`);
         this.renderer.setAttribute(path, 'stroke-width', this.settings.lineWidth!.toString());
+        this.renderer.setAttribute(path, 'data-padding', `${this.settings.lineWidth! / 2}`);
         // tslint:enable: no-non-null-assertion
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');

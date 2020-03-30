@@ -22,11 +22,9 @@ export class CurrentToolService implements OnDestroy {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });
-
         this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onSecondaryColorChange(color);
         });
-
         this.elementClickedSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
             this.currentTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
         });
@@ -76,11 +74,13 @@ export class CurrentToolService implements OnDestroy {
 
     onEnter(event: MouseEvent): void {
         Tool.isMouseInsideDrawing = true;
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onEnter(event);
     }
 
     onLeave(event: MouseEvent): void {
         Tool.isMouseInsideDrawing = false;
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onLeave(event);
     }
 
