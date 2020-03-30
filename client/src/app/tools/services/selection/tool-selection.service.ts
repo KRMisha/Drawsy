@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
