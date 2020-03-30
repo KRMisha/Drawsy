@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2, OnDestroy } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -6,22 +6,26 @@ import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Tool } from '@app/tools/services/tool';
+import { Subscription } from 'rxjs';
 import { ToolSelectionUiService } from './tool-selection-ui.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ToolSelectionService extends Tool {
+export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private isMouseDownInsideDrawing: boolean;
     private currentMouseButtonDown?: MouseButton = undefined;
     private previousMousePosition: Vec2 = { x: 0, y: 0 };
 
     private hasUserJustClickedOnShape = false;
+
+    private selectAllShortcutSubscription: Subscription;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -31,9 +35,14 @@ export class ToolSelectionService extends Tool {
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionUiService: ToolSelectionUiService,
-        private svgUtilityService: SvgUtilityService
+        private svgUtilityService: SvgUtilityService,
+        private shortcutService: ShortcutService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Selection);
+    }
+
+    ngOnDestroy(): void {
+        this.selectAllShortcutSubscription.unsubscribe();
     }
 
     onMouseMove(): void {
@@ -46,7 +55,6 @@ export class ToolSelectionService extends Tool {
         } else {
             const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
             this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
-
             if (this.currentMouseButtonDown === MouseButton.Left) {
                 this.toolSelectionStateService.selectedElements = this.svgUtilityService.getElementsUnderArea(
                     this.drawingService.svgElements,
@@ -98,6 +106,7 @@ export class ToolSelectionService extends Tool {
         }
 
         this.drawingService.removeUiElement(this.toolSelectionUiService.svgUserSelectionRect);
+        this.toolSelectionStateService.isMovingSelectionWithMouse = false;
 
         if (!this.toolSelectionStateService.isMovingSelectionWithMouse || this.isSingleClick(event)) {
             this.updateSelectionOnMouseUp(event);
@@ -105,7 +114,6 @@ export class ToolSelectionService extends Tool {
 
         if (this.toolSelectionStateService.isMovingSelectionWithMouse && !this.isSingleClick(event)) {
             this.toolSelectionMoverService.addMoveCommand();
-            this.toolSelectionStateService.isMovingSelectionWithMouse = false;
         }
 
         if (event.button === this.currentMouseButtonDown) {
@@ -117,10 +125,6 @@ export class ToolSelectionService extends Tool {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (event.ctrlKey && event.key === 'a') {
-            this.toolSelectionStateService.selectedElements = [...this.drawingService.svgElements];
-            return;
-        }
         this.toolSelectionMoverService.onKeyDown(event);
     }
 
@@ -151,7 +155,14 @@ export class ToolSelectionService extends Tool {
         this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
     }
 
+    onToolSelection(): void {
+        this.selectAllShortcutSubscription = this.shortcutService.selectAllShortcut$.subscribe(() => {
+            this.toolSelectionStateService.selectedElements = [...this.drawingService.svgElements];
+        });
+    }
+
     onToolDeselection(): void {
+        this.selectAllShortcutSubscription.unsubscribe();
         this.toolSelectionStateService.selectedElements = [];
     }
 
