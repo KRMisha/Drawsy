@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MoveElementsCommand } from '@app/drawing/classes/commands/move-elements-command';
+import { TransformElementsCommand } from '@app/drawing/classes/commands/transform-elements-command';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-
-const controlPointSideSize = 10;
+import { ToolSelectionUiService } from './tool-selection-ui.service';
 
 @Injectable({
     providedIn: 'root',
@@ -24,8 +22,8 @@ export class ToolSelectionMoverService {
 
     constructor(
         private drawingService: DrawingService,
-        private svgUtilityService: SvgUtilityService,
         private toolSelectionStateService: ToolSelectionStateService,
+        private toolSelectionUiService: ToolSelectionUiService,
         private commandService: CommandService
     ) {}
 
@@ -37,7 +35,9 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset.x += deltaMousePos.x;
         this.totalSelectionMoveOffset.y += deltaMousePos.y;
 
-        this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
+        this.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
+        this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionStateService.updateSelectionRect();
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -49,6 +49,7 @@ export class ToolSelectionMoverService {
             !this.toolSelectionStateService.isMovingSelectionWithArrows &&
             (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld)
         ) {
+            this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
             this.toolSelectionStateService.isMovingSelectionWithArrows = true;
             this.moveSelectionInArrowDirection();
             const timeoutDurationMs = 500;
@@ -79,46 +80,8 @@ export class ToolSelectionMoverService {
 
     addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.commandService.addCommand(new MoveElementsCommand(this.drawingService, selectedElementsCopy, this.totalSelectionMoveOffset));
+        this.commandService.addCommand(new TransformElementsCommand(selectedElementsCopy));
         this.totalSelectionMoveOffset = { x: 0, y: 0 };
-    }
-
-    updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
-        const elementsBounds = this.svgUtilityService.getElementListBounds(selectedElement);
-        if (elementsBounds !== undefined) {
-            this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionStateService.svgSelectedShapesRect, elementsBounds);
-            this.toolSelectionStateService.svgSelectedShapesRect.setAttribute('display', 'block');
-
-            this.toolSelectionStateService.selectionRect = elementsBounds;
-            const positions = [
-                { x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
-            ];
-            for (let i = 0; i < positions.length; i++) {
-                this.toolSelectionStateService.svgControlPoints[i].setAttribute(
-                    'x',
-                    (positions[i].x - controlPointSideSize / 2).toString()
-                );
-                this.toolSelectionStateService.svgControlPoints[i].setAttribute(
-                    'y',
-                    (positions[i].y - controlPointSideSize / 2).toString()
-                );
-                this.toolSelectionStateService.svgControlPoints[i].setAttribute('display', 'block');
-            }
-            this.toolSelectionStateService.selectionRect = elementsBounds;
-        } else {
-            this.hideSvgSelectedShapesRect();
-            this.toolSelectionStateService.selectionRect = undefined;
-        }
-    }
-
-    hideSvgSelectedShapesRect(): void {
-        this.toolSelectionStateService.svgSelectedShapesRect.setAttribute('display', 'none');
-        for (const controlPoint of this.toolSelectionStateService.svgControlPoints) {
-            controlPoint.setAttribute('display', 'none');
-        }
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
@@ -138,6 +101,14 @@ export class ToolSelectionMoverService {
         }
     }
 
+    private moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
+        for (const element of elements) {
+            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
+            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
+        }
+    }
+
     private moveSelectionInArrowDirection(): void {
         const moveDirection: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
@@ -150,7 +121,7 @@ export class ToolSelectionMoverService {
 
         this.totalSelectionMoveOffset.x += moveDirection.x;
         this.totalSelectionMoveOffset.y += moveDirection.y;
-        this.drawingService.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
-        this.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
+        this.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
+        this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
     }
 }

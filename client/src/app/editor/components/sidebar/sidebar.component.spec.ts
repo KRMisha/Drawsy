@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -32,6 +33,7 @@ describe('SidebarComponent', () => {
     let toolHolderServiceSpyObj: jasmine.SpyObj<ToolHolderService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
+    let sidebarDrawerSpyObj: jasmine.SpyObj<SidebarDrawerComponent>;
 
     const initialTool = ({} as unknown) as Tool;
     const toolPencilServiceStub = {} as ToolPencilService;
@@ -120,6 +122,9 @@ describe('SidebarComponent', () => {
             openExportDrawingShortcut$: openExportDrawingShortcutSubject,
             openSaveDrawingShortcut$: openSaveDrawingShortcutSubject,
         });
+
+        sidebarDrawerSpyObj = jasmine.createSpyObj('SidebarDrawer', ['resetCurrentControls']);
+
         TestBed.configureTestingModule({
             declarations: [SidebarComponent],
             providers: [
@@ -137,6 +142,7 @@ describe('SidebarComponent', () => {
         fixture = TestBed.createComponent(SidebarComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component['sidebarDrawer'] = sidebarDrawerSpyObj;
     });
 
     it('should create', () => {
@@ -263,9 +269,10 @@ describe('SidebarComponent', () => {
         expect(returnValue).toEqual(initialTool);
     });
 
-    it('#setCurrentTool should change the current tool of currentToolService', () => {
+    it("#set CurrentTool should change the current tool of currentToolService and reset the sidebarDrawer's controls", () => {
         const currentToolServiceMock = { currentTool: initialTool };
         component.currentTool = toolEyedropperServiceStub;
         expect(currentToolServiceMock.currentTool).toEqual(toolEyedropperServiceStub);
+        expect(sidebarDrawerSpyObj.resetCurrentControls).toHaveBeenCalled();
     });
 });
