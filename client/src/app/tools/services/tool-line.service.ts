@@ -132,9 +132,9 @@ export class ToolLineService extends Tool {
                 y: Math.abs(this.points[firstYIndex] - this.points[lastYIndex]),
             };
             if (deltaPosition.x <= lineClosingPixelTolerance && deltaPosition.y <= lineClosingPixelTolerance) {
-                const removedLastJunctionPoint =  this.junctionPoints.pop();
-                if (removedJunctionPoint !== undefined) {
-                    this.renderer.removeChild(this.groupElement, removedJunctionPoint);
+                const removedLastJunctionPoint = this.junctionPoints.pop();
+                if (removedLastJunctionPoint !== undefined) {
+                    this.renderer.removeChild(this.groupElement, removedLastJunctionPoint);
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
