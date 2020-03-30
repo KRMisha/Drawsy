@@ -269,7 +269,7 @@ describe('SidebarComponent', () => {
         expect(returnValue).toEqual(initialTool);
     });
 
-    it('#set CurrentTool should change the current tool of currentToolService and reset the sidebarDrawer\'s controls', () => {
+    it("#set CurrentTool should change the current tool of currentToolService and reset the sidebarDrawer's controls", () => {
         const currentToolServiceMock = { currentTool: initialTool };
         component.currentTool = toolEyedropperServiceStub;
         expect(currentToolServiceMock.currentTool).toEqual(toolEyedropperServiceStub);

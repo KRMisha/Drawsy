@@ -6,8 +6,8 @@ describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     const elementStub = {} as SVGGraphicsElement;
     const siblingStub = {} as SVGGraphicsElement;
-    const elementWithSibling: ElementSiblingPair = {element: elementStub, sibling: siblingStub};
-    const elementWithoutSibling: ElementSiblingPair = {element: elementStub, sibling: undefined};
+    const elementWithSibling: ElementSiblingPair = { element: elementStub, sibling: siblingStub };
+    const elementWithoutSibling: ElementSiblingPair = { element: elementStub, sibling: undefined };
     const elements = [elementWithSibling, elementWithoutSibling, elementWithSibling];
     let command: RemoveElementsCommand;
 
