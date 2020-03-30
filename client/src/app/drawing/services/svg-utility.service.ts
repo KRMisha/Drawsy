@@ -3,7 +3,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
-import { Vec2 } from '@app/shared/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -15,15 +14,10 @@ export class SvgUtilityService {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    getElementsUnderPoint(elements: SVGGraphicsElement[], point: Vec2): SVGGraphicsElement[] {
-        return this.getElementsUnderArea(elements, { x: point.x, y: point.y, width: 0, height: 0 });
-    }
-
     getElementsUnderArea(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement[] {
         return elements.filter((element: SVGGraphicsElement) => GeometryService.areRectsIntersecting(area, this.getElementBounds(element)));
     }
 
-    // tslint:disable-next-line: cyclomatic-complexity
     getElementUnderAreaPixelPerfect(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement | undefined {
         const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
@@ -115,8 +109,8 @@ export class SvgUtilityService {
     createDashedRectBorder(color: Color): SVGRectElement {
         const svgRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(svgRect, 'fill', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.2)`);
-        this.renderer.setAttribute(svgRect, 'stroke-dasharray', '1, 7');
-        this.renderer.setAttribute(svgRect, 'stroke-width', '4');
+        this.renderer.setAttribute(svgRect, 'stroke-dasharray', '5, 3');
+        this.renderer.setAttribute(svgRect, 'stroke-width', '2');
         this.renderer.setAttribute(svgRect, 'stroke-linecap', 'round');
         this.renderer.setAttribute(svgRect, 'stroke', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.8)`);
         return svgRect;

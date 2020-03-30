@@ -1,15 +1,18 @@
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
-import { ElementAndItsNeighbor } from '@app/drawing/classes/element-and-its-neighbor';
+import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('RemoveElementCommand', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    const elementAndItsNeighbor = {} as ElementAndItsNeighbor;
-    const elements = [elementAndItsNeighbor, elementAndItsNeighbor, elementAndItsNeighbor];
+    const elementStub = {} as SVGGraphicsElement;
+    const siblingStub = {} as SVGGraphicsElement;
+    const elementWithSibling: ElementSiblingPair = {element: elementStub, sibling: siblingStub};
+    const elementWithoutSibling: ElementSiblingPair = {element: elementStub, sibling: undefined};
+    const elements = [elementWithSibling, elementWithoutSibling, elementWithSibling];
     let command: RemoveElementsCommand;
 
     beforeEach(() => {
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'addElementBefore', 'removeElement']);
         command = new RemoveElementsCommand(drawingServiceSpyObj, elements);
     });
 
@@ -17,19 +20,14 @@ describe('RemoveElementCommand', () => {
         expect(command).toBeTruthy();
     });
 
-    it('#undo should call addElement of drawingService with good parameters', () => {
+    it('#undo should add element before if it has a sibling and only add the element otherwise', () => {
         command.undo();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(elements.length);
-        for (const element of elements) {
-            expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(element.element, element.neighbor);
-        }
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledTimes(1);
+        expect(drawingServiceSpyObj.addElementBefore).toHaveBeenCalledTimes(2);
     });
 
-    it('#redo should call removeElement of drawingService with good parameters', () => {
+    it('#redo should remove the element from the drawing', () => {
         command.redo();
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledTimes(elements.length);
-        for (const element of elements) {
-            expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(element.element);
-        }
     });
 });
