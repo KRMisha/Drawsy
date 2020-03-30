@@ -100,12 +100,12 @@ describe('ShortcutService', () => {
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
     }));
 
-    it("#onKeyDown should emit undoShortcut$ when selected shortcut is 'ctrl + z'", async(() => {
-        service.undoShortcut$.subscribe(() => {
+    it("#onKeyDown should emit selectAllShortcut$ when selected shortcut is 'ctrl + s'", async(() => {
+        service.selectAllShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
         const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
-            key: 'z',
+            key: 'a',
             ctrlKey: true,
         });
         service.onKeyDown(keyboardEventSpyObj);
@@ -114,13 +114,29 @@ describe('ShortcutService', () => {
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
     }));
 
-    it("#onKeyDown should emit redoShortcut$ when selected shortcut is 'ctrl + Z'", async(() => {
+    it("#onKeyDown should emit undoShortcut$ when selected shortcut is 'ctrl + z'", async(() => {
+        service.undoShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNeedingCtrlPressed();
+        });
+        const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
+            key: 'z',
+            ctrlKey: true,
+            shiftKey: false,
+        });
+        service.onKeyDown(keyboardEventSpyObj);
+        expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
+    }));
+
+    it("#onKeyDown should emit redoShortcut$ when selected shortcut is 'ctrl + shift + Z'", async(() => {
         service.redoShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
         const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
-            key: 'Z',
+            key: 'z',
             ctrlKey: true,
+            shiftKey: true,
         });
         service.onKeyDown(keyboardEventSpyObj);
         expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
