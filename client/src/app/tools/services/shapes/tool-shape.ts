@@ -128,8 +128,10 @@ export abstract class ToolShape extends Tool {
         }
 
         const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
-        const isValidRegular = isShapeRegular && (this.shapeOrigin.x !== Tool.mousePosition.x || this.shapeOrigin.y !== Tool.mousePosition.y);
-        const isValidNonRegular = !isShapeRegular && this.shapeOrigin.x !== Tool.mousePosition.x && this.shapeOrigin.y !== Tool.mousePosition.y;
+        const isValidRegular =
+            isShapeRegular && (this.shapeOrigin.x !== Tool.mousePosition.x || this.shapeOrigin.y !== Tool.mousePosition.y);
+        const isValidNonRegular =
+            !isShapeRegular && this.shapeOrigin.x !== Tool.mousePosition.x && this.shapeOrigin.y !== Tool.mousePosition.y;
         if (isValidRegular || isValidNonRegular) {
             this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
         } else {
