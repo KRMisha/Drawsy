@@ -15,10 +15,9 @@ import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolShape extends Tool {
     private shape?: SVGGraphicsElement;
-    private isShiftDown = false;
-    private origin: Vec2 = { x: 0, y: 0 };
-    private mousePosition: Vec2 = { x: 0, y: 0 };
     private isShapeAlwaysRegular: boolean;
+    private origin: Vec2 = { x: 0, y: 0 };
+    private isShiftDown = false;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -34,46 +33,22 @@ export abstract class ToolShape extends Tool {
         this.settings.shapeBorderWidth = ToolDefaults.defaultShapeBorderWidth;
     }
 
-    onPrimaryColorChange(color: Color): void {
-        if (this.shape !== undefined) {
-            this.renderer.setAttribute(this.shape, 'fill', color.toRgbaString());
-        }
-    }
-
-    onSecondaryColorChange(color: Color): void {
-        if (this.shape !== undefined) {
-            this.renderer.setAttribute(this.shape, 'stroke', color.toRgbaString());
-        }
-    }
-
-    onMouseMove(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
-        if (Tool.isLeftMouseButtonDown) {
-            this.updateShapeArea();
-        }
+    onMouseMove(): void {
+        this.updateShapeArea();
     }
 
     onMouseDown(event: MouseEvent): void {
-        this.mousePosition = this.getMousePosition(event);
-        if (Tool.isMouseInsideDrawing) {
-            this.shape = this.createNewShape();
-            this.origin = this.getMousePosition(event);
+        if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
+            this.shape = this.createShape();
+            this.origin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
         }
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button === MouseButton.Left && this.shape !== undefined) {
-            const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
-            const isValidRegular = isShapeRegular && (this.origin.x !== this.mousePosition.x || this.origin.y !== this.mousePosition.y);
-            const isValidNonRegular = !isShapeRegular && this.origin.x !== this.mousePosition.x && this.origin.y !== this.mousePosition.y;
-            if (isValidRegular || isValidNonRegular) {
-                this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
-            } else {
-                this.drawingService.removeElement(this.shape);
-            }
-            this.shape = undefined;
+        if (event.button === MouseButton.Left) {
+            this.stopDrawing();
         }
     }
 
@@ -91,27 +66,36 @@ export abstract class ToolShape extends Tool {
         }
     }
 
+    onPrimaryColorChange(color: Color): void {
+        if (this.shape !== undefined) {
+            this.renderer.setAttribute(this.shape, 'fill', color.toRgbaString());
+        }
+    }
+
+    onSecondaryColorChange(color: Color): void {
+        if (this.shape !== undefined) {
+            this.renderer.setAttribute(this.shape, 'stroke', color.toRgbaString());
+        }
+    }
+
     protected abstract getShapeString(): string;
 
     protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void;
 
-    private createNewShape(): SVGGraphicsElement {
-        // tslint:disable: no-non-null-assertion
+    private createShape(): SVGGraphicsElement {
         const shape: SVGGraphicsElement = this.renderer.createElement(this.getShapeString(), 'svg');
 
-        this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
-
+        // tslint:disable: no-non-null-assertion
         const fillValue = this.settings.shapeType! === ShapeType.BorderOnly ? 'none' : this.colorService.primaryColor.toRgbaString();
         this.renderer.setAttribute(shape, 'fill', fillValue);
-
         if (this.settings.shapeType! !== ShapeType.FillOnly) {
             this.renderer.setAttribute(shape, 'stroke', this.colorService.secondaryColor.toRgbaString());
         }
-
+        this.renderer.setAttribute(shape, 'stroke-width', this.settings.shapeBorderWidth!.toString());
         this.renderer.setAttribute(shape, 'data-padding', `${this.settings.shapeBorderWidth! / 2}`);
+        // tslint:enable: no-non-null-assertion
 
         return shape;
-        // tslint:enable: no-non-null-assertion
     }
 
     private updateShapeArea(): void {
@@ -119,14 +103,14 @@ export abstract class ToolShape extends Tool {
             return;
         }
 
-        const isCurrentMouseRightOfOrigin = this.mousePosition.x >= this.origin.x;
-        const isCurrentMouseBelowOrigin = this.mousePosition.y >= this.origin.y;
+        const isCurrentMouseRightOfOrigin = Tool.mousePosition.x >= this.origin.x;
+        const isCurrentMouseBelowOrigin = Tool.mousePosition.y >= this.origin.y;
 
-        const mousePositionCopy = { x: this.mousePosition.x, y: this.mousePosition.y };
+        const mousePositionCopy = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
             const dimensions: Vec2 = {
-                x: Math.abs(this.mousePosition.x - this.origin.x),
-                y: Math.abs(this.mousePosition.y - this.origin.y),
+                x: Math.abs(Tool.mousePosition.x - this.origin.x),
+                y: Math.abs(Tool.mousePosition.y - this.origin.y),
             };
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
             mousePositionCopy.x = this.origin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
@@ -136,5 +120,21 @@ export abstract class ToolShape extends Tool {
         const shapeArea = GeometryService.getRectFromPoints(this.origin, mousePositionCopy);
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
         this.updateShape(shapeArea, scale, this.shape as SVGGraphicsElement);
+    }
+
+    private stopDrawing(): void {
+        if (this.shape === undefined) {
+            return;
+        }
+
+        const isShapeRegular = this.isShiftDown || this.isShapeAlwaysRegular;
+        const isValidRegular = isShapeRegular && (this.origin.x !== Tool.mousePosition.x || this.origin.y !== Tool.mousePosition.y);
+        const isValidNonRegular = !isShapeRegular && this.origin.x !== Tool.mousePosition.x && this.origin.y !== Tool.mousePosition.y;
+        if (isValidRegular || isValidNonRegular) {
+            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+        } else {
+            this.drawingService.removeElement(this.shape);
+        }
+        this.shape = undefined;
     }
 }

@@ -3,8 +3,9 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Tool } from '@app/tools/services/tool';
-import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -17,15 +18,13 @@ export class CurrentToolService implements OnDestroy {
     private secondaryColorChangedSubscription: Subscription;
     private elementClickedSubscription: Subscription;
 
-    constructor(private toolHolderService: ToolHolderService, private colorService: ColorService, private drawingService: DrawingService) {
+    constructor(private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });
-
         this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onSecondaryColorChange(color);
         });
-
         this.elementClickedSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
             this.currentTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
         });
@@ -37,25 +36,31 @@ export class CurrentToolService implements OnDestroy {
         this.elementClickedSubscription.unsubscribe();
     }
 
-    afterDrawingInit(): void {
-        for (const tool of this.toolHolderService.tools) {
-            tool.afterDrawingInit();
-        }
-    }
-
     onMouseMove(event: MouseEvent): void {
-        this.currentTool.onMouseMove(event);
+        Tool.mousePosition = this.getMousePosition(event);
+        this.currentTool.onMouseMove();
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            Tool.isLeftMouseButtonDown = true;
+        }
+
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDown(event);
     }
 
     onMouseUp(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            Tool.isLeftMouseButtonDown = false;
+        }
+
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseUp(event);
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDoubleClick(event);
     }
 
@@ -68,19 +73,19 @@ export class CurrentToolService implements OnDestroy {
     }
 
     onEnter(event: MouseEvent): void {
+        Tool.isMouseInsideDrawing = true;
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onEnter(event);
     }
 
     onLeave(event: MouseEvent): void {
+        Tool.isMouseInsideDrawing = false;
+        Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onLeave(event);
     }
 
-    setLeftMouseButtonDown(isLeftMouseButtonDown: boolean): void {
-        Tool.isLeftMouseButtonDown = isLeftMouseButtonDown;
-    }
-
-    setMouseInsideDrawing(isMouseInsideDrawing: boolean): void {
-        Tool.isMouseInsideDrawing = isMouseInsideDrawing;
+    update(): void {
+        this.currentTool.update();
     }
 
     get currentTool(): Tool {
@@ -93,5 +98,18 @@ export class CurrentToolService implements OnDestroy {
         }
 
         this._currentTool = tool;
+        this._currentTool.onToolSelection();
+    }
+
+    private getMousePosition(event: MouseEvent): Vec2 {
+        const ctm = this.drawingService.drawingRoot.getScreenCTM();
+        if (ctm === null) {
+            return { x: 0, y: 0 } as Vec2;
+        }
+
+        return {
+            x: (event.clientX - ctm.e) / ctm.a,
+            y: (event.clientY - ctm.f) / ctm.d,
+        } as Vec2;
     }
 }

@@ -3,25 +3,27 @@ import { Command } from '@app/drawing/classes/commands/command';
 export class RecolorCommand implements Command {
     constructor(
         private element: SVGGraphicsElement,
-        private attributesBefore: Map<string, string | undefined>,
-        private attributesAfter: Map<string, string | undefined>
+        private strokeBefore?: string,
+        private fillBefore?: string,
+        private strokeAfter?: string,
+        private fillAfter?: string
     ) {}
 
     undo(): void {
-        this.applyAttributeMap(this.attributesBefore);
+        if (this.strokeBefore !== undefined) {
+            this.element.setAttribute('stroke', this.strokeBefore);
+        }
+        if (this.fillBefore !== undefined) {
+            this.element.setAttribute('fill', this.fillBefore);
+        }
     }
 
     redo(): void {
-        this.applyAttributeMap(this.attributesAfter);
-    }
-
-    private applyAttributeMap(map: Map<string, string | undefined>): void {
-        map.forEach((value: string | undefined, key: string) => {
-            if (value) {
-                this.element.setAttribute(key, value);
-            } else {
-                this.element.removeAttribute(key);
-            }
-        });
+        if (this.strokeAfter !== undefined) {
+            this.element.setAttribute('stroke', this.strokeAfter);
+        }
+        if (this.fillAfter !== undefined) {
+            this.element.setAttribute('fill', this.fillAfter);
+        }
     }
 }

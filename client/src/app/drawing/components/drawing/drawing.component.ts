@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
-import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-drawing',
-    encapsulation: ViewEncapsulation.ShadowDom,
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './drawing.component.html',
     styleUrls: ['./drawing.component.scss'],
 })
@@ -25,7 +25,8 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         private drawingService: DrawingService,
         private currentToolService: CurrentToolService,
         private gridService: GridService,
-        private shortcutService: ShortcutService
+        private shortcutService: ShortcutService,
+        private modalService: ModalService
     ) {}
 
     ngOnInit(): void {
@@ -44,9 +45,7 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         this.drawingService.drawingRoot = this.drawingRoot.nativeElement;
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
-        this.svgUserInterfaceContent.nativeElement.setAttribute('pointer-events', 'none');
         this.drawingService.reappendStoredElements();
-        this.currentToolService.afterDrawingInit();
     }
 
     ngOnDestroy(): void {
@@ -61,49 +60,53 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.currentToolService.onMouseMove(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseMove(event);
+        }
     }
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (event.button === MouseButton.Left) {
-            this.currentToolService.setLeftMouseButtonDown(true);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseDown(event);
         }
-        this.currentToolService.onMouseDown(event);
     }
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        if (event.button === MouseButton.Left) {
-            this.currentToolService.setLeftMouseButtonDown(false);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseUp(event);
         }
-        this.currentToolService.onMouseUp(event);
     }
 
     @HostListener('dblclick', ['$event'])
     onMouseDoubleClick(event: MouseEvent): void {
-        this.currentToolService.onMouseDoubleClick(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onMouseDoubleClick(event);
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        this.currentToolService.onKeyDown(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onKeyDown(event);
+        }
     }
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent): void {
-        this.currentToolService.onKeyUp(event);
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onKeyUp(event);
+        }
     }
 
     @HostListener('mouseenter', ['$event'])
     onEnter(event: MouseEvent): void {
-        this.currentToolService.setMouseInsideDrawing(true);
         this.currentToolService.onEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onLeave(event: MouseEvent): void {
-        this.currentToolService.setMouseInsideDrawing(false);
         this.currentToolService.onLeave(event);
     }
 

@@ -20,8 +20,8 @@ export class ToolPaintbrushService extends ToolBrush {
         this.settings.brushTexture = ToolDefaults.defaultBrushTexture;
     }
 
-    protected createNewPath(): SVGPathElement {
-        const path = super.createNewPath();
+    protected createPath(): SVGPathElement {
+        const path = super.createPath();
         // tslint:disable-next-line: no-non-null-assertion
         this.renderer.setAttribute(path, 'filter', `url(#brushTexture${this.settings.brushTexture!})`);
         return path;

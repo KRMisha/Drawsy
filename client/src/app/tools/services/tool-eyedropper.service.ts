@@ -24,36 +24,31 @@ export class ToolEyedropperService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (Tool.isMouseInsideDrawing) {
-            this.setColor(event);
+        if (Tool.isMouseInsideDrawing && (event.button === MouseButton.Left || event.button === MouseButton.Right)) {
+            this.updateColorServiceColor(event.button);
         }
     }
 
-    private async getPixelColor(pixel: Vec2): Promise<Color> {
-        const greenIndexOffset = 1;
-        const blueIndexOffset = 2;
-        const alphaIndexOffset = 3;
-        const valuesPerColorCount = 4;
-        pixel.x = Math.round(pixel.x);
-        pixel.y = Math.round(pixel.y);
+    private async updateColorServiceColor(mouseButton: MouseButton): Promise<void> {
+        const colorUnderCursor = await this.getPixelColor({ x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) });
+        mouseButton === MouseButton.Left
+            ? (this.colorService.primaryColor = colorUnderCursor)
+            : (this.colorService.secondaryColor = colorUnderCursor);
+    }
 
+    private async getPixelColor(pixelPosition: Vec2): Promise<Color> {
         const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
-        const colorIndex = pixel.y * (canvas.width * valuesPerColorCount) + pixel.x * valuesPerColorCount;
-        const red = data[colorIndex];
-        const green = data[colorIndex + greenIndexOffset];
-        const blue = data[colorIndex + blueIndexOffset];
-        const alpha = data[colorIndex + alphaIndexOffset];
-        return Color.fromRgba(red, green, blue, alpha);
-    }
 
-    private async setColor(event: MouseEvent): Promise<void> {
-        const color = await this.getPixelColor(this.getMousePosition(event));
-        if (event.button === MouseButton.Left) {
-            this.colorService.primaryColor = color;
-        } else if (event.button === MouseButton.Right) {
-            this.colorService.secondaryColor = color;
+        const colorValuesCount = 4;
+        const colorIndex = pixelPosition.y * (canvas.width * colorValuesCount) + pixelPosition.x * colorValuesCount;
+
+        const rgbaComponents: number[] = [];
+        for (let i = 0; i < colorValuesCount; i++) {
+            rgbaComponents.push(data[colorIndex + i]);
         }
+        const [red, green, blue, alpha] = rgbaComponents;
+        return Color.fromRgba(red, green, blue, alpha);
     }
 }
