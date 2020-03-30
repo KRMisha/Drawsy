@@ -134,21 +134,21 @@ export class ToolEraserService extends Tool {
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
-        const elementStrokeWidth = element.getAttribute('stroke-width');
-        const elementStrokeColor = element.getAttribute('stroke');
+        const elementStrokeWidth = element.getAttribute('stroke-width') || undefined;
+        const elementStrokeColor = element.getAttribute('stroke') || undefined;
 
-        this.elementUnderCursorStrokeColor = elementStrokeColor ? elementStrokeColor : 'none';
-        this.elementUnderCursorStrokeWidth = elementStrokeWidth ? elementStrokeWidth : 'none';
+        this.elementUnderCursorStrokeColor = elementStrokeColor === undefined ? 'none' : elementStrokeColor;
+        this.elementUnderCursorStrokeWidth = elementStrokeWidth === undefined ? 'none' : elementStrokeWidth;
 
         let borderColor = 'rgb(255, 0, 0)';
         if (this.elementUnderCursorStrokeColor !== 'none') {
-            const elementColor = Color.fromRgbString(this.elementUnderCursorStrokeColor);
+            const elementColor = Color.fromRgbaString(this.elementUnderCursorStrokeColor);
             const distanceFromRed = Math.sqrt(
                 Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2)
             );
-            const maxDistanceFromRed = 50;
+            const maxDistanceFromRed = 100;
             if (distanceFromRed <= maxDistanceFromRed) {
-                borderColor = 'rgb(150, 0, 0)';
+                borderColor = 'rgb(117, 30, 33)';
             }
         }
 
