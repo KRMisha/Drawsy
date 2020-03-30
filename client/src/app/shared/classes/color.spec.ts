@@ -238,5 +238,4 @@ describe('Color', () => {
         expect(color.blue).toEqual(0);
         expect(color.alpha).toEqual(0);
     });
-
 });
