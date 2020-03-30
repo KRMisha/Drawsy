@@ -13,7 +13,7 @@
                     *ngFor="let tool of tools"
                     class="button"
                     [class.theme-selected-button]="tool === currentTool"
-                    (click)="currentTool = tool; sidebarDrawerComponent.resetCurrentControls()"
+                    (click)="currentTool = tool"
                     [matTooltip]="tool.name"
                     matTooltipPosition="right"
                 >
@@ -36,6 +36,6 @@
     </mat-drawer-content>
 
     <mat-drawer #drawer mode="side" position="end" opened class="tool-settings-container">
-        <app-sidebar-drawer #sidebarDrawerComponent></app-sidebar-drawer>
+        <app-sidebar-drawer #appSidebarDrawer></app-sidebar-drawer>
     </mat-drawer>
 </mat-drawer-container>
