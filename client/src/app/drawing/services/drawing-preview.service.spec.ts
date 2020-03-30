@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from './drawing.service';
 
-fdescribe('DrawingPreviewService', () => {
+describe('DrawingPreviewService', () => {
     let service: DrawingPreviewService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let svgElementSpyObj: jasmine.SpyObj<SVGGraphicsElement>;
@@ -52,7 +52,7 @@ fdescribe('DrawingPreviewService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#initializePreview should clone every filter and svgElements of the drawingService\'s root', () => {
+    it("#initializePreview should clone every filter and svgElements of the drawingService's root", () => {
         service.initializePreview();
         expect(filterSpyObj.cloneNode).toHaveBeenCalledTimes(svgFilterSpyObjArray.length);
         expect(svgElementSpyObj.cloneNode).toHaveBeenCalledTimes(svgSpyObjElementArray.length);
