@@ -3,8 +3,7 @@ import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 
 describe('ToolHolderService', () => {
     beforeEach(() => {
-        TestBed.configureTestingModule({
-        });
+        TestBed.configureTestingModule({});
     });
 
     it('should be created', () => {
