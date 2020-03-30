@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionButton } from '@app/editor/classes/action-button';
+import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -14,6 +15,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+    @ViewChild('appSidebarDrawer') sidebarDrawer: SidebarDrawerComponent;
+
     readonly actionButtons: ActionButton[] = [
         { name: 'Nouveau dessin', icon: 'add', action: this.openNewDrawingModal.bind(this) },
         { name: 'Exporter le dessin localement', icon: 'save_alt', action: this.openExportDrawingModal.bind(this) },
@@ -47,40 +50,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.currentTool = this.toolHolderService.tools[0];
+        this.currentToolService.currentTool = this.toolHolderService.tools[0];
 
         this.selectToolPencilShortcutSubscription = this.shortcutService.selectToolPencilShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolPencilService;
+            this.currentTool = this.toolHolderService.toolPencilService;
         });
         this.selectToolPaintbrushShortcutSubscription = this.shortcutService.selectToolPaintbrushShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolPaintbrushService;
+            this.currentTool = this.toolHolderService.toolPaintbrushService;
         });
         this.selectToolLineShortcutSubscription = this.shortcutService.selectToolLineShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolLineService;
+            this.currentTool = this.toolHolderService.toolLineService;
         });
         this.selectToolSprayCanShortcutSubscription = this.shortcutService.selectToolSprayCanShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolSprayCanService;
+            this.currentTool = this.toolHolderService.toolSprayCanService;
         });
         this.selectToolRectangleShortcutSubscription = this.shortcutService.selectToolRectangleShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolRectangleService;
+            this.currentTool = this.toolHolderService.toolRectangleService;
         });
         this.selectToolEllipseShortcutSubscription = this.shortcutService.selectToolEllipseShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolEllipseService;
+            this.currentTool = this.toolHolderService.toolEllipseService;
         });
         this.selectToolPolygonShortcutSubscription = this.shortcutService.selectToolPolygonShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolPolygonService;
+            this.currentTool = this.toolHolderService.toolPolygonService;
         });
         this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolEyedropperService;
+            this.currentTool = this.toolHolderService.toolEyedropperService;
         });
         this.selectToolRecolorShortcutSubscription = this.shortcutService.selectToolRecolorShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolRecolorService;
+            this.currentTool = this.toolHolderService.toolRecolorService;
         });
         this.selectToolSelectionShortcutSubscription = this.shortcutService.selectToolSelectionShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolSelectionService;
+            this.currentTool = this.toolHolderService.toolSelectionService;
         });
         this.selectToolEraserShortcutSubscription = this.shortcutService.selectToolEraserShortcut$.subscribe(() => {
-            this.currentToolService.currentTool = this.toolHolderService.toolEraserService;
+            this.currentTool = this.toolHolderService.toolEraserService;
         });
         this.exportDrawingShortcutSubscription = this.shortcutService.openExportDrawingShortcut$.subscribe(() => {
             this.openExportDrawingModal();
@@ -144,5 +147,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     set currentTool(tool: Tool) {
         this.currentToolService.currentTool = tool;
+        this.sidebarDrawer.resetCurrentControls();
     }
 }
