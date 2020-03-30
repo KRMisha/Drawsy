@@ -40,7 +40,7 @@ describe('GridService', () => {
             'gridSizeVariation and the result is in bounds',
         () => {
             const initialSize = gridSizeVariation * 3 + 1;
-            const expectedSize = gridSizeVariation * 3;
+            const expectedSize = gridSizeVariation * 4;
             service['_size'] = initialSize;
             service.increaseSize();
             expect(service['_size']).toEqual(expectedSize);
