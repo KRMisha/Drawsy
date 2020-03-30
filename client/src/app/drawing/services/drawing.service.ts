@@ -1,5 +1,4 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { SvgTransformations } from '@app/drawing/classes/svg-transformations';
 import { CommandService } from '@app/drawing/services/command.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
@@ -26,85 +25,83 @@ export class DrawingService {
 
     private renderer: Renderer2;
 
-    private transformationMap = new Map<SVGGraphicsElement, SvgTransformations>();
-    private mouseUpUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
-
     private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
+    private elementClickUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
     private elementClickedSource = new Subject<SvgClickEvent>();
-
     elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(rendererFactory: RendererFactory2, private commandService: CommandService) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    addElement(element: SVGGraphicsElement, elementNextNeighbor?: SVGGraphicsElement): void {
-        if (elementNextNeighbor === undefined) {
-            this.svgElements.push(element);
-            if (this.svgDrawingContent !== undefined) {
-                this.renderer.appendChild(this.svgDrawingContent, element);
-            }
-        } else {
-            const elementToRemoveIndex = this.svgElements.indexOf(elementNextNeighbor);
-            if (elementToRemoveIndex !== -1) {
-                this.svgElements.splice(elementToRemoveIndex, 0, element);
-                if (this.svgDrawingContent !== undefined) {
-                    this.renderer.insertBefore(this.svgDrawingContent, element, elementNextNeighbor);
-                }
-            }
+    addElement(element: SVGGraphicsElement): void {
+        this._svgElements.push(element);
+        if (this.svgDrawingContent !== undefined) {
+            this.renderer.appendChild(this.svgDrawingContent, element);
         }
-        this.transformationMap.set(element, new SvgTransformations());
+        this.addElementClickListener(element);
+    }
 
-        const mouseUpUnlistenFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next({ element, mouseEvent: event });
-        });
-        this.mouseUpUnlistenFunctionMap.set(element, mouseUpUnlistenFunction);
+    addElementBefore(element: SVGGraphicsElement, elementAfter: SVGGraphicsElement): void {
+        const insertionIndex = this._svgElements.indexOf(elementAfter);
+        if (insertionIndex !== -1) {
+            this._svgElements.splice(insertionIndex, 0, element);
+            if (this.svgDrawingContent !== undefined) {
+                this.renderer.insertBefore(this.svgDrawingContent, element, elementAfter);
+            }
+            this.addElementClickListener(element);
+        }
     }
 
     removeElement(element: SVGGraphicsElement): void {
-        const elementToRemoveIndex = this.svgElements.indexOf(element);
+        const elementToRemoveIndex = this._svgElements.indexOf(element);
         if (elementToRemoveIndex !== -1) {
-            this.svgElements.splice(elementToRemoveIndex, 1);
-            this.transformationMap.delete(element);
+            this._svgElements.splice(elementToRemoveIndex, 1);
             if (this.svgDrawingContent !== undefined) {
                 this.renderer.removeChild(this.svgDrawingContent, element);
             }
         }
 
-        const mouseUpUnlistenFunction = this.mouseUpUnlistenFunctionMap.get(element);
-        if (mouseUpUnlistenFunction !== undefined) {
-            mouseUpUnlistenFunction();
+        const unlistenFunction = this.elementClickUnlistenFunctionMap.get(element);
+        if (unlistenFunction !== undefined) {
+            unlistenFunction();
         }
-        this.mouseUpUnlistenFunctionMap.delete(element);
+        this.elementClickUnlistenFunctionMap.delete(element);
     }
 
     addUiElement(element: SVGGraphicsElement): void {
-        if (this.svgDrawingContent !== undefined) {
+        if (this.svgUserInterfaceContent !== undefined) {
             this.renderer.appendChild(this.svgUserInterfaceContent, element);
         }
     }
 
     removeUiElement(element: SVGGraphicsElement): void {
-        if (this.svgDrawingContent !== undefined) {
+        if (this.svgUserInterfaceContent !== undefined) {
             this.renderer.removeChild(this.svgUserInterfaceContent, element);
         }
     }
 
     reappendStoredElements(): void {
-        for (const element of this.svgElements) {
+        for (const element of this._svgElements) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
     }
 
     clearStoredElements(): void {
-        while (this.svgElements.length > 0) {
-            this.removeElement(this.svgElements[0]);
+        for (let i = this._svgElements.length - 1; i >= 0; i--) {
+            this.removeElement(this._svgElements[i]);
+        }
+    }
+
+    appendNewMatrixToElements(elements: SVGGraphicsElement[]): void {
+        for (const element of elements) {
+            element.transform.baseVal.appendItem(this.drawingRoot.createSVGTransform());
         }
     }
 
     isDrawingStarted(): boolean {
-        return this.svgElements.length > 0;
+        return this._svgElements.length > 0;
     }
 
     confirmNewDrawing(dimensions: Vec2, backgroundColor: Color): boolean {
@@ -127,19 +124,14 @@ export class DrawingService {
         return true;
     }
 
-    moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
-        for (const element of elements) {
-            const transformations = this.transformationMap.get(element);
-            if (!transformations) {
-                continue;
-            }
-            transformations.translation.x += moveOffset.x;
-            transformations.translation.y += moveOffset.y;
-            this.renderer.setAttribute(element, 'transform', transformations.toString());
-        }
-    }
-
     get svgElements(): SVGGraphicsElement[] {
         return this._svgElements;
+    }
+
+    private addElementClickListener(element: SVGGraphicsElement): void {
+        const unlistenFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
+            this.elementClickedSource.next({ mouseEvent: event, element } as SvgClickEvent);
+        });
+        this.elementClickUnlistenFunctionMap.set(element, unlistenFunction);
     }
 }

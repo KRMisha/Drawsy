@@ -8,6 +8,8 @@ import { ToolData } from '@app/tools/classes/tool-data';
 import { ToolSettings } from '@app/tools/classes/tool-settings';
 
 export abstract class Tool {
+    static mousePosition: Vec2 = { x: 0, y: 0 };
+
     static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
@@ -31,8 +33,7 @@ export abstract class Tool {
     // Disable tslint for method stubs below because not all derived service classes
     // may need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    afterDrawingInit(): void {}
-    onMouseMove(event: MouseEvent): void {}
+    onMouseMove(): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
     onMouseDoubleClick(event: MouseEvent): void {}
@@ -43,14 +44,8 @@ export abstract class Tool {
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {}
+    update(): void {}
+    onToolSelection(): void {}
     onToolDeselection(): void {}
     // tslint:enable: no-empty
-
-    protected getMousePosition(event: MouseEvent): Vec2 {
-        const rootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
-        return {
-            x: event.clientX - rootBounds.x,
-            y: event.clientY - rootBounds.y,
-        } as Vec2;
-    }
 }

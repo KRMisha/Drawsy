@@ -9,16 +9,16 @@ export class CommandService {
     private redoCommands: Command[] = [];
 
     undo(): void {
-        if (this.undoCommands.length > 0) {
-            const command = this.undoCommands.pop() as Command;
+        const command = this.undoCommands.pop();
+        if (command !== undefined) {
             command.undo();
             this.redoCommands.push(command);
         }
     }
 
     redo(): void {
-        if (this.redoCommands.length > 0) {
-            const command = this.redoCommands.pop() as Command;
+        const command = this.redoCommands.pop();
+        if (command !== undefined) {
             command.redo();
             this.undoCommands.push(command);
         }

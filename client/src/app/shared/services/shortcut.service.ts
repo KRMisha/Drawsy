@@ -23,6 +23,7 @@ export class ShortcutService {
     private openExportDrawingShortcutSource = new Subject<void>();
     private openSaveDrawingShortcutSource = new Subject<void>();
     private openGalleryShortcutSource = new Subject<void>();
+    private selectAllShortcutSource = new Subject<void>();
     private undoShortcutSource = new Subject<void>();
     private redoShortcutSource = new Subject<void>();
     private toggleGridSource = new Subject<void>();
@@ -45,6 +46,7 @@ export class ShortcutService {
     openExportDrawingShortcut$ = this.openExportDrawingShortcutSource.asObservable();
     openSaveDrawingShortcut$ = this.openSaveDrawingShortcutSource.asObservable();
     openGalleryShortcut$ = this.openGalleryShortcutSource.asObservable();
+    selectAllShortcut$ = this.selectAllShortcutSource.asObservable();
     undoShortcut$ = this.undoShortcutSource.asObservable();
     redoShortcut$ = this.redoShortcutSource.asObservable();
     toggleGrid$ = this.toggleGridSource.asObservable();
@@ -66,29 +68,35 @@ export class ShortcutService {
 
     private handleCtrlShortcuts(event: KeyboardEvent): void {
         switch (event.key) {
+            case 'a':
+            case 'A':
+                event.preventDefault();
+                this.selectAllShortcutSource.next();
+                break;
             case 'e':
+            case 'E':
                 event.preventDefault();
                 this.openExportDrawingShortcutSource.next();
                 break;
             case 'g':
+            case 'G':
                 event.preventDefault();
                 this.openGalleryShortcutSource.next();
                 break;
             case 'o':
+            case 'O':
                 event.preventDefault();
                 this.openNewDrawingShortcutSource.next();
                 break;
             case 's':
+            case 'S':
                 event.preventDefault();
                 this.openSaveDrawingShortcutSource.next();
                 break;
             case 'z':
-                event.preventDefault();
-                this.undoShortcutSource.next();
-                break;
             case 'Z':
                 event.preventDefault();
-                this.redoShortcutSource.next();
+                event.shiftKey ? this.redoShortcutSource.next() : this.undoShortcutSource.next();
                 break;
         }
     }
@@ -105,30 +113,39 @@ export class ShortcutService {
                 this.selectToolPolygonShortcutSource.next();
                 break;
             case 'a':
+            case 'A':
                 this.selectToolSprayCanShortcutSource.next();
                 break;
             case 'c':
+            case 'C':
                 this.selectToolPencilShortcutSource.next();
                 break;
             case 'e':
+            case 'E':
                 this.selectToolEraserShortcutSource.next();
                 break;
             case 'g':
+            case 'G':
                 this.toggleGridSource.next();
                 break;
             case 'i':
+            case 'I':
                 this.selectToolEyedropperShortcutSource.next();
                 break;
             case 'l':
+            case 'L':
                 this.selectToolLineShortcutSource.next();
                 break;
             case 'r':
+            case 'R':
                 this.selectToolRecolorShortcutSource.next();
                 break;
             case 's':
+            case 'S':
                 this.selectToolSelectionShortcutSource.next();
                 break;
             case 'w':
+            case 'W':
                 this.selectToolPaintbrushShortcutSource.next();
                 break;
             case '+':

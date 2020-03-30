@@ -41,6 +41,9 @@ describe('ToolShape', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let colorSpyObj: jasmine.SpyObj<Color>;
     let toolShape: ToolShapeMock;
+    let updateShapeAreaSpy: jasmine.Spy;
+
+    const rgbaStringValue = 'rgba(0, 0, 0, 1)';
 
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
@@ -52,7 +55,7 @@ describe('ToolShape', () => {
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
-        colorSpyObj.toRgbaString.and.returnValue('rgba(0, 0, 0, 1)');
+        colorSpyObj.toRgbaString.and.returnValue(rgbaStringValue);
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
             primaryColor: colorSpyObj,
             secondaryColor: colorSpyObj,
@@ -65,18 +68,91 @@ describe('ToolShape', () => {
             ToolInfo.Pencil,
             false
         );
+        updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
     });
 
     it('should create an instance', () => {
         expect(toolShape).toBeTruthy();
     });
 
-    it('#onPrimaryColorChange should call color.toRgbaString and renderer.setAttribute with the proper arguments', () => {
+    it('#onMouseMove should call #updateShapeArea', () => {
+        toolShape.onMouseMove();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+    });
+
+    it("#onMouseDown should call #updateShapeArea and drawingService's addElement on left click inside drawing surface", () => {
+        Tool.isMouseInsideDrawing = true;
+        const createShapeSpy = spyOn<any>(toolShape, 'createShape').and.callThrough();
+        toolShape.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+        expect(createShapeSpy).toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+    });
+
+    it("#onMouseDown should not call #updateShapeArea and drawingService's addElement on right click", () => {
+        Tool.isMouseInsideDrawing = true;
+        const createShapeSpy = spyOn<any>(toolShape, 'createShape').and.callThrough();
+        toolShape.onMouseDown({ button: MouseButton.Right } as MouseEvent);
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+        expect(createShapeSpy).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    });
+
+    it("#onMouseDown should not call #updateShapeArea and drawingService's addElement if mouse is not inside the drawing surface", () => {
+        Tool.isMouseInsideDrawing = false;
+        const createShapeSpy = spyOn<any>(toolShape, 'createShape').and.callThrough();
+        toolShape.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+        expect(createShapeSpy).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    });
+
+    it('#onMouseUp should call #stopDrawing on left click', () => {
+        const stopDrawingSpy = spyOn<any>(toolShape, 'stopDrawing').and.callThrough();
+        toolShape.onMouseUp({ button: MouseButton.Left } as MouseEvent);
+        expect(stopDrawingSpy).toHaveBeenCalled();
+    });
+
+    it('#onMouseUp should not call #stopDrawing on right click', () => {
+        const stopDrawingSpy = spyOn<any>(toolShape, 'stopDrawing').and.callThrough();
+        toolShape.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+        expect(stopDrawingSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onKeyDown should call #updateShapeArea and set isShiftDown to true on shift click', () => {
+        toolShape['isShiftDown'] = false;
+        toolShape.onKeyDown({ key: 'Shift' } as KeyboardEvent);
+        expect(toolShape['isShiftDown']).toEqual(true);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown should not call #updateShapeArea and set isShiftDown to true if shift is not pressed', () => {
+        toolShape['isShiftDown'] = false;
+        toolShape.onKeyDown({ key: 'notShift' } as KeyboardEvent);
+        expect(toolShape['isShiftDown']).toEqual(false);
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onKeyUp should call #updateShapeArea and set isShiftDown to false if shift is pressed', () => {
+        toolShape['isShiftDown'] = true;
+        toolShape.onKeyUp({ key: 'Shift' } as KeyboardEvent);
+        expect(toolShape['isShiftDown']).toEqual(false);
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+    });
+
+    it('#onKeyUp should not call #updateShapeArea and set isShiftDown to true if shift not is pressed', () => {
+        toolShape['isShiftDown'] = true;
+        toolShape.onKeyUp({ key: 'notShift' } as KeyboardEvent);
+        expect(toolShape['isShiftDown']).toEqual(true);
+        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+    });
+
+    it("#onPrimaryColorChange should set the shape's fill color with the parameter's color if the shape is not undefined", () => {
         const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape.onPrimaryColorChange(colorSpyObj);
         expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'fill', 'rgba(0, 0, 0, 1)');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'fill', rgbaStringValue);
     });
 
     it('#onPrimaryColorChange should not call renderer.setAttribute if shape is undefined', () => {
@@ -85,12 +161,12 @@ describe('ToolShape', () => {
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
-    it('#onSecondaryColorChange should call renderer.setAtcolor.toRgbaString and renderer.setAttribute with the proper arguments', () => {
+    it("#onSecondaryColorChange should set the shape's stroke color with the parameter's color if the shape is not undefined", () => {
         const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
         toolShape.onSecondaryColorChange(colorSpyObj);
         expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'stroke', 'rgba(0, 0, 0, 1)');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shape, 'stroke', rgbaStringValue);
     });
 
     it('#onSecondaryColorChange should not call renderer.setAttribute if shape is undefined', () => {
@@ -99,194 +175,99 @@ describe('ToolShape', () => {
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
-    it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition left and below origin', () => {
-        const shape = {} as SVGGraphicsElement;
-        toolShape['shape'] = shape;
-        toolShape['isShiftDown'] = true;
-        toolShape['origin'] = { x: -50, y: -50 };
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 });
-
-        Tool.isLeftMouseButtonDown = true;
-        const mouseEvent = { offsetX: 5, offsetY: 5 } as MouseEvent;
-        toolShape.onMouseMove(mouseEvent);
-        expect(getMousePositionSpy).toHaveBeenCalledWith(mouseEvent);
-        expect(updateShapeAreaSpy).toHaveBeenCalled();
-    });
-
-    it('#onMouseMove should call #getMousePosition and #updateShapeArea with mousePosition right and above origin', () => {
-        const shape = {} as SVGGraphicsElement;
-        toolShape['shape'] = shape;
-        toolShape['isShiftDown'] = true;
-        toolShape['origin'] = { x: 50, y: 50 } as Vec2;
-
-        const updateShapeAreanSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: -10, y: -10 });
-
-        Tool.isLeftMouseButtonDown = true;
-        const mouseEvent = { offsetX: 5, offsetY: 5 } as MouseEvent;
-        toolShape.onMouseMove(mouseEvent);
-        expect(updateShapeAreanSpy).toHaveBeenCalled();
-        expect(getMousePositionSpy).toHaveBeenCalledWith(mouseEvent);
-    });
-
-    it('#onMouseMove should not call #updateShapeArea if the mouse is not down', () => {
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 });
-
-        Tool.isLeftMouseButtonDown = false;
-        const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
-        toolShape.onMouseMove(mouseEvent);
-        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
-    });
-
-    // tslint:disable-next-line: max-line-length
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the BorderOnly ShapeType', () => {
-        const shape = {} as SVGGraphicsElement;
-        toolShape['shape'] = shape;
-        toolShape['origin'] = { x: 0, y: 0 };
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 50, y: 50 });
-        const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
-
-        Tool.isMouseInsideDrawing = true;
+    it('#createShape should not fill the shape if it is BorderOnly', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        renderer2SpyObj.createElement.and.returnValue(shapeMock);
         toolShape.settings.shapeType = ShapeType.BorderOnly;
-        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-
-        expect(createNewShapeSpy).toHaveBeenCalled();
-        expect(getMousePositionSpy).toHaveBeenCalled();
-        expect(updateShapeAreaSpy).toHaveBeenCalled();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+        toolShape['createShape']();
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shapeMock, 'fill', 'none');
     });
 
-    // tslint:disable-next-line: max-line-length
-    it('#onMouseDown should call private functions and drawingService.addElement with the proper arguments with the fillOnly ShapeType', () => {
-        const shape = {} as SVGGraphicsElement;
-        toolShape['shape'] = shape;
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        const getMousePositionSpy = spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 });
-        const createNewShapeSpy = spyOn<any>(toolShape, 'createNewShape').and.callThrough();
-
-        Tool.isMouseInsideDrawing = true;
+    it("#createShape should set the shape's stroke-width and data-padding if the shapeType is fillOnly", () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        renderer2SpyObj.createElement.and.returnValue(shapeMock);
         toolShape.settings.shapeType = ShapeType.FillOnly;
-        const mouseEvent = { offsetX: 20, offsetY: 20 } as MouseEvent;
-        toolShape.onMouseDown(mouseEvent);
+        const shapeBorderWidth = 10;
+        toolShape.settings.shapeBorderWidth = shapeBorderWidth;
+        toolShape['createShape']();
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shapeMock, 'stroke-width', shapeBorderWidth.toString());
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(shapeMock, 'data-padding', `${shapeBorderWidth / 2}`);
+    });
 
-        expect(createNewShapeSpy).toHaveBeenCalled();
-        expect(getMousePositionSpy).toHaveBeenCalled();
+    it('#updateShapeArea should not call updateShape if isLeftMouseButtonDown is false and the shape', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = false;
+        const updateShapeSpy = spyOn(toolShape, 'updateShape');
+        toolShape['updateShapeArea']();
+        expect(updateShapeSpy).not.toHaveBeenCalled();
+    });
+
+    it('#updateShapeArea should call updateShapeArea if isLeftMouseButtonDown is true and the shape', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = true;
+        toolShape['updateShapeArea']();
         expect(updateShapeAreaSpy).toHaveBeenCalled();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should not make calls if the mouse isnt inside the drawing', () => {
-        spyOn<any>(toolShape, 'getMousePosition').and.returnValue({ x: 0, y: 0 });
-        Tool.isMouseInsideDrawing = false;
-        toolShape.onMouseDown({ offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    it('#updateShapeArea should make shape regular when shape is always regular', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = true;
+        toolShape['isShapeAlwaysRegular'] = true;
+        toolShape['updateShapeArea']();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
-    it('#onMouseUp should call commandService.addCommand if shape is a valid regular shape (mouse.x is different from origin.x)', () => {
-        const shape = {} as SVGGraphicsElement;
-
-        toolShape['shape'] = shape;
+    it('#updateShapeArea should make shape regular when shift key is pressed', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = true;
         toolShape['isShiftDown'] = true;
-        toolShape['mousePosition'] = { x: 1, y: 0 };
-        toolShape['origin'] = { x: 0, y: 0 };
-
-        toolShape.onMouseUp({ button: MouseButton.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
+        toolShape['updateShapeArea']();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
-    it('#onMouseUp should call commandService.addCommand if shape is a valid regular shape (mouse.y is different from origin.y)', () => {
-        const shape = {} as SVGGraphicsElement;
-
-        toolShape['shape'] = shape;
+    it('#updateShapeArea should use negative sideSize when the mouse is at the bottom-right of the origin calculation', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        Tool.mousePosition = { x: -1, y: -1 };
+        toolShape['shapeOrigin'] = { x: 0, y: 0 };
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = true;
         toolShape['isShiftDown'] = true;
-        toolShape['mousePosition'] = { x: 0, y: 1 };
-        toolShape['origin'] = { x: 0, y: 0 };
-
-        toolShape.onMouseUp({ button: MouseButton.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
+        toolShape['updateShapeArea']();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
-    it('#onMouseUp should call commandService.addCommand if shape is a valid non regular shape', () => {
-        const shape = {} as SVGGraphicsElement;
+    it('#stopDrawing should set shape to undefined if it was not before the call', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        Tool.mousePosition = { x: -1, y: -1 };
+        toolShape['shapeOrigin'] = { x: 0, y: 0 };
+        toolShape['shape'] = shapeMock;
+        toolShape['stopDrawing']();
+        expect(toolShape['shape']).not.toBeTruthy();
+    });
 
-        toolShape['shape'] = shape;
+    it('#stopDrawing should not remove the element if it is not a valid regular or non-regular shape', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        Tool.mousePosition = { x: 0, y: 0 };
+        toolShape['shapeOrigin'] = { x: 0, y: 0 };
+        toolShape['shape'] = shapeMock;
+        toolShape['isShapeAlwaysRegular'] = false;
         toolShape['isShiftDown'] = false;
-        toolShape['mousePosition'] = { x: 1, y: 1 };
-        toolShape['origin'] = { x: 0, y: 0 };
-
-        toolShape.onMouseUp({ button: MouseButton.Left, offsetX: 20, offsetY: 20 } as MouseEvent);
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
-    });
-
-    it('#onMouseUp should call drawingService.removeElement if shape is a non valid shape', () => {
-        const shape = {} as SVGGraphicsElement;
-
-        toolShape['shape'] = shape;
-        toolShape['mousePosition'] = { x: 0, y: 0 };
-        toolShape['origin'] = { x: 0, y: 0 };
-
-        toolShape.onMouseUp({ button: MouseButton.Left, offsetX: 0, offsetY: 0 } as MouseEvent);
+        toolShape['stopDrawing']();
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalled();
     });
 
-    it('#onMouseUp should not make any calls if the left mouse button isnt down', () => {
-        toolShape.onMouseUp({ button: MouseButton.Right, offsetX: 0, offsetY: 0 } as MouseEvent);
-        expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
-    });
-
-    it('#onKeyDown should call #updateShapeArea and set isShiftDown to true', () => {
-        toolShape['isShiftDown'] = false;
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        toolShape.onKeyDown({ key: 'Shift' } as KeyboardEvent);
-
-        expect(toolShape['isShiftDown']).toEqual(true);
-        expect(updateShapeAreaSpy).toHaveBeenCalled();
-    });
-
-    it('#onKeyDown should not make any calls if the shift key isnt pressed', () => {
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        toolShape.onKeyDown({ key: 'Enter' } as KeyboardEvent);
-        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
-    });
-
-    it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as true', () => {
-        const shape = {} as SVGGraphicsElement;
-
-        toolShape['shape'] = shape;
-        toolShape['isShiftDown'] = true;
+    it('#stopDrawing should not remove the element if it is not a valid regular or non-regular shape', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        Tool.mousePosition = { x: 0, y: 0 };
+        toolShape['shapeOrigin'] = { x: 0, y: 0 };
+        toolShape['shape'] = shapeMock;
         toolShape['isShapeAlwaysRegular'] = true;
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        toolShape.onKeyUp({ key: 'Shift' } as KeyboardEvent);
-
-        expect(toolShape['isShiftDown']).toEqual(false);
-        expect(updateShapeAreaSpy).toHaveBeenCalled();
-    });
-
-    it('#onKeyUp should call #updateShapeArea and set isShiftDown to false with isShapeAlwaysRegular as false', () => {
-        const shape = {} as SVGGraphicsElement;
-
-        toolShape['shape'] = shape;
         toolShape['isShiftDown'] = true;
-        toolShape['isShapeAlwaysRegular'] = false;
-
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        toolShape.onKeyUp({ key: 'Shift' } as KeyboardEvent);
-
-        expect(toolShape['isShiftDown']).toEqual(false);
-        expect(updateShapeAreaSpy).toHaveBeenCalled();
-    });
-
-    it('#onKeyUp should not make any calls if the shift key isnt pressed', () => {
-        const updateShapeAreaSpy = spyOn<any>(toolShape, 'updateShapeArea').and.callThrough();
-        toolShape.onKeyUp({ key: 'Enter' } as KeyboardEvent);
-        expect(updateShapeAreaSpy).not.toHaveBeenCalled();
+        toolShape['stopDrawing']();
+        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalled();
     });
 });
