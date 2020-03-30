@@ -114,8 +114,9 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
-        if (this.junctionPoints.length > 0) {
-            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
+        const removedJunctionPoint = this.junctionPoints.pop();
+        if (removedJunctionPoint !== undefined) {
+            this.renderer.removeChild(this.groupElement, removedJunctionPoint);
         }
         this.points.length -= pointsPerCoordinates;
 
@@ -131,8 +132,9 @@ export class ToolLineService extends Tool {
                 y: Math.abs(this.points[firstYIndex] - this.points[lastYIndex]),
             };
             if (deltaPosition.x <= lineClosingPixelTolerance && deltaPosition.y <= lineClosingPixelTolerance) {
-                if (this.junctionPoints.length > 0) {
-                    this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
+                const removedLastJunctionPoint =  this.junctionPoints.pop();
+                if (removedJunctionPoint !== undefined) {
+                    this.renderer.removeChild(this.groupElement, removedJunctionPoint);
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
@@ -245,7 +247,10 @@ export class ToolLineService extends Tool {
             this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());
 
-            this.renderer.removeChild(this.groupElement, this.junctionPoints.pop() as SVGCircleElement);
+            const removedJunctionPoint = this.junctionPoints.pop();
+            if (removedJunctionPoint !== undefined) {
+                this.renderer.removeChild(this.groupElement, removedJunctionPoint);
+            }
         }
     }
 
