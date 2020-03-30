@@ -103,7 +103,7 @@ export class ToolSelectionService extends Tool {
             this.updateSelectionOnMouseUp(event);
         }
 
-        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
+        if (this.toolSelectionStateService.isMovingSelectionWithMouse && !this.isSingleClick(event)) {
             this.toolSelectionMoverService.addMoveCommand();
             this.toolSelectionStateService.isMovingSelectionWithMouse = false;
         }

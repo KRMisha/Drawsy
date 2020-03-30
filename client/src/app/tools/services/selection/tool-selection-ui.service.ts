@@ -75,8 +75,8 @@ export class ToolSelectionUiService implements OnDestroy {
                 { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
             ];
             for (let i = 0; i < positions.length; i++) {
-                this.svgControlPoints[i].setAttribute('x', (positions[i].x - controlPointSideSize / 2).toString());
-                this.svgControlPoints[i].setAttribute('y', (positions[i].y - controlPointSideSize / 2).toString());
+                this.renderer.setAttribute(this.svgControlPoints[i], 'x', `${positions[i].x - controlPointSideSize / 2}`);
+                this.renderer.setAttribute(this.svgControlPoints[i], 'y', `${positions[i].y - controlPointSideSize / 2}`);
             }
             this.showSvgSelectedShapesRect();
         } else {

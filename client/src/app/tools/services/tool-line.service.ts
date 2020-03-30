@@ -180,10 +180,6 @@ export class ToolLineService extends Tool {
         const previewColor = this.colorService.primaryColor.clone();
         previewColor.alpha /= 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
-
-        for (const junction of this.junctionPoints) {
-            this.renderer.setAttribute(junction, 'fill', color.toRgbaString());
-        }
     }
 
     onToolDeselection(): void {
@@ -265,7 +261,6 @@ export class ToolLineService extends Tool {
     private createNewJunction(): SVGCircleElement {
         const circle: SVGCircleElement = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(circle, 'r', `${this.junctionDiameter / 2}`);
-        this.renderer.setAttribute(circle, 'fill', this.colorService.primaryColor.toRgbaString());
         this.renderer.setAttribute(circle, 'stroke', 'none');
         this.junctionPoints.push(circle);
         return circle;
