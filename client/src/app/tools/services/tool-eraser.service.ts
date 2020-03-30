@@ -39,10 +39,6 @@ export class ToolEraserService extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
-        this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.svgEraserElement.setAttribute('fill', '#fafafa');
-        this.svgEraserElement.setAttribute('stroke', '#424242');
-        this.svgEraserElement.setAttribute('stroke-width', '1');
     }
 
     onMouseMove(): void {
@@ -112,6 +108,10 @@ export class ToolEraserService extends Tool {
     }
 
     onToolSelection(): void {
+        this.svgEraserElement = this.renderer.createElement('rect', 'svg');
+        this.svgEraserElement.setAttribute('fill', '#fafafa');
+        this.svgEraserElement.setAttribute('stroke', '#424242');
+        this.svgEraserElement.setAttribute('stroke-width', '1');
         this.drawingService.addUiElement(this.svgEraserElement);
         this.updateEraserRect();
     }

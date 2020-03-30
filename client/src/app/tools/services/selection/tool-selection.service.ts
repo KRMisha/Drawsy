@@ -99,7 +99,7 @@ export class ToolSelectionService extends Tool {
 
         this.drawingService.removeUiElement(this.toolSelectionUiService.svgUserSelectionRect);
 
-        if (!this.toolSelectionStateService.isMovingSelectionWithMouse || this.isSimpleClick(event)) {
+        if (!this.toolSelectionStateService.isMovingSelectionWithMouse || this.isSingleClick(event)) {
             this.updateSelectionOnMouseUp(event);
         }
 
@@ -167,7 +167,7 @@ export class ToolSelectionService extends Tool {
         return false;
     }
 
-    private isSimpleClick(event: MouseEvent): boolean {
+    private isSingleClick(event: MouseEvent): boolean {
         const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
         return userSelectionRect.width === 0 && userSelectionRect.height === 0;
     }
@@ -176,7 +176,7 @@ export class ToolSelectionService extends Tool {
         if (Tool.isMouseInsideDrawing && this.isMouseDownInsideDrawing) {
             const isLeftButtonUp = event.button === MouseButton.Left && this.currentMouseButtonDown === event.button;
             const isRightButtonUp = this.currentMouseButtonDown === MouseButton.Right && this.currentMouseButtonDown === event.button;
-            if (!this.isSimpleClick(event)) {
+            if (!this.isSingleClick(event)) {
                 const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
                 const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
                     this.drawingService.svgElements,
