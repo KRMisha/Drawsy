@@ -11,7 +11,7 @@ const canvasHeight = 20;
     styleUrls: ['./alpha-slider.component.scss'],
 })
 export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('appAlphaPicker') alphaCanvas: ElementRef;
+    @ViewChild('appAlphaPicker') alphaCanvas: ElementRef<HTMLCanvasElement>;
 
     private context: CanvasRenderingContext2D;
 
