@@ -57,84 +57,84 @@ fdescribe('ToolRecolorService', () => {
     });
 
     it('#onElementClick should do nothing if fill attribute does not exist and left clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'rect'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'rect' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue(null);
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
 
     it('#onElementClick should recolor stroke color of rect with secondary color when right clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'rect'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'rect' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Right } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'stroke', secondaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor fill color of rect with primary color when left clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'rect'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'rect' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'fill', primaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor stroke color of polygon with secondary color when right clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'polygon'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'polygon' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Right } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'stroke', secondaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor fill color of polygon with primary color when left clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'polygon'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'polygon' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'fill', primaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor stroke color of ellipse with secondary color when right clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'ellipse'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'ellipse' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Right } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'stroke', secondaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor fill color of ellipse with primary color when left clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'ellipse'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'ellipse' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'fill', primaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor fill color of g element with primary color when left clicking and fill is defined', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'g'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'fill', primaryRgbaStringValue);
     });
 
     it('#onElementClick should not recolor fill color of g element with primary color when left clicking and fill not defined', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'g'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue(null);
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'fill', primaryRgbaStringValue);
     });
 
     it('#onElementClick should recolor stroke color of g element with primary color when left clicking and fill is defined', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'g'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue('69');
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'stroke', primaryRgbaStringValue);
     });
 
     it('#onElementClick should not recolor stroke color of g element with primary color when left clicking and fill not defined', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'g'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
         svgGraphicsElementSpyObj.getAttribute.and.returnValue(null);
         service.onElementClick({ button: MouseButton.Left } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalledWith(svgGraphicsElementSpyObj, 'stroke', primaryRgbaStringValue);
     });
 
     it('#onElementClick should not recolor anything of g element when right clicking', () => {
-        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], {nodeName: 'g'});
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
         service.onElementClick({ button: MouseButton.Right } as MouseEvent, svgGraphicsElementSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
