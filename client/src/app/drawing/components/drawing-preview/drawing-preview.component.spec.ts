@@ -8,7 +8,7 @@ import { Vec2 } from '@app/shared/classes/vec2';
 
 // tslint:disable: no-string-literal
 
-fdescribe('DrawingPreviewComponent', () => {
+describe('DrawingPreviewComponent', () => {
     let component: DrawingPreviewComponent;
     let fixture: ComponentFixture<DrawingPreviewComponent>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
