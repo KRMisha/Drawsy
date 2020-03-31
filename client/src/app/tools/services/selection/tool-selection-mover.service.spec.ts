@@ -9,7 +9,7 @@ import { ToolSelectionUiService } from './tool-selection-ui.service';
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 
-fdescribe('ToolSelectionMoverService', () => {
+describe('ToolSelectionMoverService', () => {
     const moveOffset = 3;
     let service: ToolSelectionMoverService;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
