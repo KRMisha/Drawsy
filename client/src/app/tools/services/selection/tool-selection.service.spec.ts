@@ -448,5 +448,5 @@ describe('ToolSelectionService', () => {
 
         expect(selection).toEqual([element1]);
     });
-// tslint:disable-next-line: max-file-line-count
+    // tslint:disable-next-line: max-file-line-count
 });
