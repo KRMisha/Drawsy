@@ -60,7 +60,7 @@ export abstract class Tool {
 //
 // Chapter 1: The beginning
 // In the beginning was JavaScript. A modest scripting language at best, it evolved into a gigantic steaming pile of excellence,
-// riddled with one too many lovely features such as aggressive type conversions, hoisting, and lack of robust a type system.
+// riddled with one too many lovely features such as aggressive type conversions, hoisting, and lack of a robust type system.
 // To the aspiring web designer, these would never pose a serious problem. But forward a decade into the future, developers were left
 // with a need to implement many safeguards with static analysis tools to give them the least bit of confidence in the security of the
 // programs they wrote for the web.
@@ -70,7 +70,7 @@ export abstract class Tool {
 // safety. Its arrival was welcomed by developers who had been burned by JavaScript's expertly designed features, and many of TypeScript's
 // features were built with developer control in mind. With TypeScript 2.0's arrival came the non-null assertion operator as a
 // native language feature. The non-null assertion operator has allowed developers to explicitly indicate to the compiler's type checker
-// and future code readers) that a certain variable, flagged as potentially undefined, in in reality to be trusted to never be undefined
+// and future code readers) that a certain variable, flagged as potentially undefined, is in reality to be trusted to never be undefined
 // through logical mechanisms the developer has implemented. Fast-forward to this day, it has replaced the need for some otherwise
 // unnecessary type guards when the logic assures a variable will always be undefined, thus increasing testability, lowering cognitive load,
 // and improving code reusability. The non-null assertion operator has also made obsolete the old-fashioned way of casting a potentially
