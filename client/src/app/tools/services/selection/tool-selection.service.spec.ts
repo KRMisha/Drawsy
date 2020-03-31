@@ -16,7 +16,7 @@ import { ToolSelectionUiService } from './tool-selection-ui.service';
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 
-fdescribe('ToolSelectionService', () => {
+describe('ToolSelectionService', () => {
     let service: ToolSelectionService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
