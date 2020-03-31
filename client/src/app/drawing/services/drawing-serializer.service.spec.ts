@@ -29,11 +29,11 @@ describe('DrawingSerializerService', () => {
     const drawingPreviewRootStub = {} as SVGSVGElement;
 
     beforeEach(() => {
-        anchorMock = {
+        anchorMock = ({
             click: () => {},
             download: '',
             href: '',
-        } as unknown as HTMLAnchorElement;
+        } as unknown) as HTMLAnchorElement;
         anchorClickSpy = spyOn(anchorMock, 'click');
 
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
@@ -112,52 +112,55 @@ describe('DrawingSerializerService', () => {
         expect(actualValue).toEqual(expectedValue);
     });
 
-    it('#makeSvgFileContainerFromSavedFile should create a new SvgFileContainer from ID and parsed content of the given SavedFile ' +
-       'with empty labels if the desc tag is empty', () => {
-        const svgElementSpyObj1 = jasmine.createSpyObj('SVGElement', [], {
-            innerHTML: 'Title',
-        });
-        const svgElementSpyObj2 = jasmine.createSpyObj('SVGElement', [], {
-            innerHTML: '',
-        });
+    it(
+        '#makeSvgFileContainerFromSavedFile should create a new SvgFileContainer from ID and parsed content of the given SavedFile ' +
+            'with empty labels if the desc tag is empty',
+        () => {
+            const svgElementSpyObj1 = jasmine.createSpyObj('SVGElement', [], {
+                innerHTML: 'Title',
+            });
+            const svgElementSpyObj2 = jasmine.createSpyObj('SVGElement', [], {
+                innerHTML: '',
+            });
 
-        const parsedDrawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getElementsByTagName']);
-        parsedDrawingRootSpyObj.getElementsByTagName.and.callFake((tag: string) => {
-            if (tag === 'title') {
-                return [svgElementSpyObj1];
-            } else {
-                return [svgElementSpyObj2];
-            }
-        });
+            const parsedDrawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getElementsByTagName']);
+            parsedDrawingRootSpyObj.getElementsByTagName.and.callFake((tag: string) => {
+                if (tag === 'title') {
+                    return [svgElementSpyObj1];
+                } else {
+                    return [svgElementSpyObj2];
+                }
+            });
 
-        const documentSpyObj = jasmine.createSpyObj('Document', ['getElementsByTagName']);
-        documentSpyObj.getElementsByTagName.and.returnValue([parsedDrawingRootSpyObj]);
+            const documentSpyObj = jasmine.createSpyObj('Document', ['getElementsByTagName']);
+            documentSpyObj.getElementsByTagName.and.returnValue([parsedDrawingRootSpyObj]);
 
-        const domParserSpyObj = jasmine.createSpyObj('DOMParser', ['parseFromString']);
-        domParserSpyObj.parseFromString.and.returnValue(documentSpyObj);
+            const domParserSpyObj = jasmine.createSpyObj('DOMParser', ['parseFromString']);
+            domParserSpyObj.parseFromString.and.returnValue(documentSpyObj);
 
-        spyOn(window, 'DOMParser').and.returnValue(domParserSpyObj);
+            spyOn(window, 'DOMParser').and.returnValue(domParserSpyObj);
 
-        const savedFileValue: SavedFile = { id: 'ID', content: 'content' };
-        const expectedValue: SvgFileContainer = {
-            id: 'ID',
-            title: 'Title',
-            labels: [],
-            drawingRoot: parsedDrawingRootSpyObj,
-        };
+            const savedFileValue: SavedFile = { id: 'ID', content: 'content' };
+            const expectedValue: SvgFileContainer = {
+                id: 'ID',
+                title: 'Title',
+                labels: [],
+                drawingRoot: parsedDrawingRootSpyObj,
+            };
 
-        const actualValue = service.makeSvgFileContainerFromSavedFile(savedFileValue);
-        expect(actualValue).toEqual(expectedValue);
-    });
+            const actualValue = service.makeSvgFileContainerFromSavedFile(savedFileValue);
+            expect(actualValue).toEqual(expectedValue);
+        }
+    );
 
     it('#loadDrawing should load the drawing in the drawing service and return true if the confirmation is accepted', () => {
-        const drawingServiceMock = {
+        const drawingServiceMock = ({
             confirmNewDrawing: () => {},
             addElement: () => {},
             id: '',
             title: '',
             labels: [],
-        } as unknown as DrawingService;
+        } as unknown) as DrawingService;
         const confirmNewDrawingSpy = spyOn(drawingServiceMock, 'confirmNewDrawing').and.returnValue(true);
         const addElementSpy = spyOn(drawingServiceMock, 'addElement');
         service['drawingService'] = drawingServiceMock;
@@ -210,13 +213,13 @@ describe('DrawingSerializerService', () => {
     });
 
     it('#loadDrawing should not load the drawing in the drawing service and should return false if the confirmation is declined', () => {
-        const drawingServiceMock = {
+        const drawingServiceMock = ({
             confirmNewDrawing: () => {},
             addElement: () => {},
             id: '',
             title: '',
             labels: [],
-        } as unknown as DrawingService;
+        } as unknown) as DrawingService;
         const confirmNewDrawingSpy = spyOn(drawingServiceMock, 'confirmNewDrawing').and.returnValue(false);
         const addElementSpy = spyOn(drawingServiceMock, 'addElement');
         service['drawingService'] = drawingServiceMock;
@@ -267,7 +270,7 @@ describe('DrawingSerializerService', () => {
 
         const filenameValue = 'filename';
 
-        service.exportDrawing(filenameValue, FileType.Svg)
+        service.exportDrawing(filenameValue, FileType.Svg);
         expect(xmlSerializerSpyObj.serializeToString).toHaveBeenCalledWith(drawingPreviewRootStub);
         expect(blobSpy).toHaveBeenCalledWith([contentMock], { type: 'image/svg+xml' });
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
