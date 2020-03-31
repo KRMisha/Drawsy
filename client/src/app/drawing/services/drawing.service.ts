@@ -28,7 +28,10 @@ export class DrawingService {
     private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
     private elementClickUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
+
     private elementClickedSource = new Subject<SvgClickEvent>();
+
+    // Disable member ordering lint error for public observables initialized after private subjects
     elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(rendererFactory: RendererFactory2, private commandService: CommandService) {

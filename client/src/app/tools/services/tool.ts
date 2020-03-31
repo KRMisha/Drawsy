@@ -30,8 +30,8 @@ export abstract class Tool {
         ({ name: this.name, icon: this.icon } = toolInfo);
     }
 
-    // Disable tslint for method stubs below because not all derived service classes
-    // may need to override the functionality and would needlessly define no-ops otherwise
+    // Disable lint error for method stubs below because not all derived service classes
+    // need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
     onMouseMove(): void {}
     onMouseDown(event: MouseEvent): void {}
