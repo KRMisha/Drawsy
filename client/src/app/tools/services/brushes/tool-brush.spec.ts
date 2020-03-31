@@ -27,7 +27,7 @@ class ToolBrushMock extends ToolBrush {
     }
 }
 
-fdescribe('ToolBrush', () => {
+describe('ToolBrush', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
