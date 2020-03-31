@@ -14,13 +14,11 @@ describe('CommandService', () => {
 
     beforeEach(() => {
         service = TestBed.inject(CommandService);
-        service['undoCommands'] = [];
-        service['redoCommands'] = [];
         commandSpyObj = jasmine.createSpyObj('Command', ['undo', 'redo']);
+        undoCommandsPopSpy = spyOn(service['undoCommands'], 'pop').and.callThrough();
+        redoCommandsPopSpy = spyOn(service['redoCommands'], 'pop').and.callThrough();
         undoCommandsPushSpy = spyOn(service['undoCommands'], 'push');
-        undoCommandsPopSpy = spyOn(service['undoCommands'], 'pop').and.returnValue(commandSpyObj);
         redoCommandsPushSpy = spyOn(service['redoCommands'], 'push');
-        redoCommandsPopSpy = spyOn(service['redoCommands'], 'pop').and.returnValue(commandSpyObj);
     });
 
     it('should be created', () => {
@@ -28,37 +26,31 @@ describe('CommandService', () => {
     });
 
     it('#undo should do nothing if undoCommands is empty', () => {
+        service['undoCommands'] = [];
         service.undo();
 
         expect(undoCommandsPopSpy).not.toHaveBeenCalled();
+        expect(redoCommandsPopSpy).not.toHaveBeenCalled();
+        expect(undoCommandsPushSpy).not.toHaveBeenCalled();
         expect(redoCommandsPushSpy).not.toHaveBeenCalled();
     });
 
     it('#undo should undo the last command and put it in redoCommands if undoCommands is not empty', () => {
         service['undoCommands'] = [commandSpyObj];
-        undoCommandsPopSpy = spyOn(service['undoCommands'], 'pop').and.returnValue(commandSpyObj);
-
         service.undo();
-
-        expect(undoCommandsPopSpy).toHaveBeenCalled();
         expect(commandSpyObj.undo).toHaveBeenCalled();
-        expect(redoCommandsPushSpy).toHaveBeenCalledWith(commandSpyObj);
+        expect(redoCommandsPushSpy).toHaveBeenCalled();
     });
 
     it('#redo should do nothing if redoCommands is empty', () => {
         service.redo();
-
         expect(undoCommandsPushSpy).not.toHaveBeenCalled();
-        expect(redoCommandsPopSpy).not.toHaveBeenCalled();
+        expect(commandSpyObj.undo).not.toHaveBeenCalled();
     });
 
     it('#redo should redo the last command and put it in undoCommands if redoCommands is not empty', () => {
-        service['redoCommands'] = [commandSpyObj, commandSpyObj];
-        redoCommandsPopSpy = spyOn(service['redoCommands'], 'pop').and.returnValue(commandSpyObj);
-
+        service['redoCommands'] = [commandSpyObj];
         service.redo();
-
-        expect(redoCommandsPopSpy).toHaveBeenCalled();
         expect(commandSpyObj.redo).toHaveBeenCalled();
         expect(undoCommandsPushSpy).toHaveBeenCalledWith(commandSpyObj);
     });
