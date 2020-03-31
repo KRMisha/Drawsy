@@ -41,30 +41,35 @@ export class ToolSelectionMoverService {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
+        this.setArrowStateFromEvent(event, true);
+        const canAppendMatrix =
+            !this.toolSelectionStateService.isMovingSelectionWithArrows &&
+            !this.toolSelectionStateService.isMovingSelectionWithMouse &&
+            (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld);
+        if (!canAppendMatrix) {
             return;
         }
-        this.setArrowStateFromEvent(event, true);
-        if (
-            !this.toolSelectionStateService.isMovingSelectionWithArrows &&
-            (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld)
-        ) {
-            this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-            this.toolSelectionStateService.isMovingSelectionWithArrows = true;
-            this.moveSelectionInArrowDirection();
-            const timeoutDurationMs = 500;
-            this.movingTimeout = window.setTimeout(() => {
-                const movingIntervalMs = 100;
-                this.movingIntervalId = window.setInterval(() => {
-                    this.moveSelectionInArrowDirection();
-                }, movingIntervalMs);
-            }, timeoutDurationMs);
-        }
+        this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionStateService.isMovingSelectionWithArrows = true;
+        this.moveSelectionInArrowDirection();
+        const timeoutDurationMs = 500;
+        this.movingTimeout = window.setTimeout(() => {
+            const movingIntervalMs = 100;
+            this.movingIntervalId = window.setInterval(() => {
+                this.moveSelectionInArrowDirection();
+            }, movingIntervalMs);
+        }, timeoutDurationMs);
     }
 
     onKeyUp(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, false);
-        if (!this.isArrowDownHeld && !this.isArrowUpHeld && !this.isArrowLeftHeld && !this.isArrowRightHeld) {
+        const canAddMoveCommand =
+            !this.isArrowDownHeld &&
+            !this.isArrowUpHeld &&
+            !this.isArrowLeftHeld &&
+            !this.isArrowRightHeld &&
+            !this.toolSelectionStateService.isMovingSelectionWithMouse;
+        if (canAddMoveCommand) {
             if (this.totalSelectionMoveOffset.x !== 0 || this.totalSelectionMoveOffset.y !== 0) {
                 this.addMoveCommand();
             }

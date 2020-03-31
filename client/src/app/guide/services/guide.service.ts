@@ -12,6 +12,7 @@ export class GuideService {
     // tslint:disable-next-line: no-non-null-assertion
     private currentGuideChangedSource = new BehaviorSubject<Type<GuideContent>>(this._currentGuideNode.guide!);
 
+    // Disable member ordering lint error for public observables initialized after private subjects
     currentGuideChanged$ = this.currentGuideChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
     selectPreviousGuide(): void {

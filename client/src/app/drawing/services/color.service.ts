@@ -31,8 +31,11 @@ export class ColorService {
     private primaryColorChangedSource = new Subject<Color>();
     private secondaryColorChangedSource = new Subject<Color>();
 
-    primaryColorChanged$ = this.primaryColorChangedSource.asObservable(); // tslint:disable-line: member-ordering
-    secondaryColorChanged$ = this.secondaryColorChangedSource.asObservable(); // tslint:disable-line: member-ordering
+    // Disable member ordering lint error for public observables initialized after private subjects
+    // tslint:disable: member-ordering
+    primaryColorChanged$ = this.primaryColorChangedSource.asObservable();
+    secondaryColorChanged$ = this.secondaryColorChangedSource.asObservable();
+    // tslint:enable: member-ordering
 
     swapPrimaryAndSecondaryColors(): void {
         const temp = this._primaryColor;
