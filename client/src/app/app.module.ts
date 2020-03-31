@@ -1,4 +1,3 @@
-// tslint:disable: max-line-length
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +42,7 @@ import { SidebarColorPickerComponent } from '@app/editor/components/sidebar-colo
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 
+// Disable max line length lint error due to detailed nesting
 // tslint:disable: max-line-length
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-export-drawing/guide-export-drawing.component';
 import { GuideGalleryComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-gallery/guide-gallery.component';

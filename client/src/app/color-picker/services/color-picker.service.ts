@@ -11,6 +11,7 @@ export class ColorPickerService {
     private valueChangedSource = new BehaviorSubject<number>(this.cachedColor.getHsv()[2]);
     private alphaChangedSource = new BehaviorSubject<number>(this.cachedColor.alpha);
 
+    // Disable member ordering lint error for public observables initialized after private subjects
     // tslint:disable: member-ordering
     hueChanged$ = this.hueChangedSource.asObservable();
     saturationChanged$ = this.saturationChangedSource.asObservable();

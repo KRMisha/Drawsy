@@ -45,6 +45,7 @@ export class ToolSelectionUiService implements OnDestroy {
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke', '#000000');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'none');
 
+        // Disable magic numbers false positive lint error for values in static named constructor
         const borderColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
         this.svgUserSelectionRect = this.svgUtilityService.createDashedRectBorder(borderColor);
 
