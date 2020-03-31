@@ -16,7 +16,7 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 // tslint:disable: max-line-length
 // tslint:disable: no-any
 
-fdescribe('ToolLineService', () => {
+describe('ToolLineService', () => {
     let service: ToolLineService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
