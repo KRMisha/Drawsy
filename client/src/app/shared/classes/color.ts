@@ -27,8 +27,7 @@ export class Color {
     }
 
     static fromHsv(hue: number, saturation: number, value: number): Color {
-        // All constants are taken from this algorithm:
-        // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
+        // All constants are taken from this algorithm: https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
         // tslint:disable: no-magic-numbers
 
         const minHue = 0;
@@ -75,6 +74,7 @@ export class Color {
 
         if (Regexes.sixHexRegex.test(hex)) {
             const radix = 16;
+            // Disable magic numbers lint error for indexes used to split the combined hex into three components
             // tslint:disable: no-magic-numbers
             newColor.red = parseInt(hex.substring(0, 2), radix);
             newColor.green = parseInt(hex.substring(2, 4), radix);
@@ -129,8 +129,7 @@ export class Color {
     }
 
     getHsv(): [number, number, number] {
-        // All constants are taken from this algorithm:
-        // https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
+        // All constants are taken from this algorithm: https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
         // tslint:disable: no-magic-numbers
 
         const redPrime = this.red / Color.maxRgb;

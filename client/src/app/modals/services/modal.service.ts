@@ -47,8 +47,7 @@ export class ModalService {
         return this.dialog.openDialogs.length > 0;
     }
 
-    // tslint:disable-next-line: no-any
-    private openDialog(component: Type<any>, width: number, shouldFillHeight: boolean): void {
+    private openDialog<T>(component: Type<T>, width: number, shouldFillHeight: boolean): void {
         if (this.isModalPresent) {
             return;
         }

@@ -1,3 +1,4 @@
+// Disable max line length lint error due to detailed nesting
 // tslint:disable: max-line-length
 import { GuideNode } from '@app/guide/classes/guide-node';
 import { GuideExportDrawingComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-export-drawing/guide-export-drawing.component';
