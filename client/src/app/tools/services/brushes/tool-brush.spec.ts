@@ -64,7 +64,6 @@ describe('ToolBrush', () => {
             commandServiceSpyObj,
             ToolInfo.Pencil
         );
-        // toolBrushPathGetAttributeSpy = spyOn<any>(toolBrush['path'], 'getAttribute').and.callThrough();
         updatePathSpy = spyOn<any>(toolBrush, 'updatePath').and.callThrough();
     });
 
