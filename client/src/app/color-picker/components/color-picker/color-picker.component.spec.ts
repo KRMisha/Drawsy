@@ -6,16 +6,27 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { Color } from '@app/shared/classes/color';
 import { Subject } from 'rxjs';
 
+// tslint:disable: no-string-literal
+
 describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
     let fixture: ComponentFixture<ColorPickerComponent>;
+    let hueChangedSubject: Subject<number>;
+    let saturationChangedSubject: Subject<number>;
+    let valueChangedSubject: Subject<number>;
+    let alphaChangedSubject: Subject<number>;
     let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
-    let colorChangedSubject: Subject<Color>;
 
     beforeEach(async(() => {
-        colorChangedSubject = new Subject<Color>();
+        hueChangedSubject = new Subject<number>();
+        saturationChangedSubject = new Subject<number>();
+        valueChangedSubject = new Subject<number>();
+        alphaChangedSubject = new Subject<number>();
         colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', ['getColor', 'setColor'], {
-            colorChanged$: colorChangedSubject,
+            hueChanged$: hueChangedSubject,
+            saturationChanged$: saturationChangedSubject,
+            valueChanged$: valueChangedSubject,
+            alphaChanged$: alphaChangedSubject,
         });
 
         TestBed.configureTestingModule({
@@ -29,68 +40,76 @@ describe('ColorPickerComponent', () => {
         fixture = TestBed.createComponent(ColorPickerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component['colorPickerService'] = colorPickerServiceSpyObj;
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
-    // it('#set paletteColor should emit color change', () => {
-    //     component.paletteColor = new Color();
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+    it("#set ColorModel should call colorPickerService's setColor", () => {
+        const color = {} as Color;
+        component.colorModel = color;
+        expect(colorPickerServiceSpyObj.setColor).toHaveBeenCalledWith(color);
+    });
 
-    // it("#set defaultColor should only change be able to modify the palettte's color once", () => {
-    //     component.defaultColor = new Color();
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    //     component.defaultColor = new Color();
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+    it("#ngOnInit should subscribe to colorPickerService's hueChanged, saturationChanged, valueChanged and alphaChanged", async(() => {
+        const hueChangedSpy = spyOn(hueChangedSubject, 'subscribe').and.callThrough();
+        const saturationChangedSpy = spyOn(saturationChangedSubject, 'subscribe').and.callThrough();
+        const valueChangedSpy = spyOn(valueChangedSubject, 'subscribe').and.callThrough();
+        const alphaChangedSpy = spyOn(alphaChangedSubject, 'subscribe').and.callThrough();
 
-    // it('#setHue should emit color change', () => {
-    //     component.setHue(123);
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+        component.ngOnInit();
 
-    // it('#setAplha should emit color change', () => {
-    //     component.setAlpha(0);
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+        expect(hueChangedSpy).toHaveBeenCalled();
+        expect(saturationChangedSpy).toHaveBeenCalled();
+        expect(valueChangedSpy).toHaveBeenCalled();
+        expect(alphaChangedSpy).toHaveBeenCalled();
+    }));
 
-    // it('#setSaturationAndValue should emit color change', () => {
-    //     component.setSaturationAndValue([12, 12]);
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+    it('hueChanged subscription should make colorModelChange emit', async(() => {
+        const emitSpy = spyOn(component['colorModelChange'], 'emit');
+        component.ngOnInit();
+        hueChangedSubject.next();
+        expect(emitSpy).toHaveBeenCalled();
+    }));
 
-    // it('#updateColorFromHex should emit color change', () => {
-    //     component.updateColorFromHex(new Color());
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+    it('saturationChanged subscription should make colorModelChange emit', async(() => {
+        const emitSpy = spyOn(component['colorModelChange'], 'emit');
+        component.ngOnInit();
+        saturationChangedSubject.next();
+        expect(emitSpy).toHaveBeenCalled();
+    }));
 
-    // it('#getPreviousColors should call #getPreviousColors of colorService', () => {
-    //     component.getPreviousColors();
-    //     expect(colorServiceSpyObj.getPreviousColors).toHaveBeenCalled();
-    // });
+    it('valueChanged subscription should make colorModelChange emit', async(() => {
+        const emitSpy = spyOn(component['colorModelChange'], 'emit');
+        component.ngOnInit();
+        valueChangedSubject.next();
+        expect(emitSpy).toHaveBeenCalled();
+    }));
 
-    // it("#oldColorClick should set colorService's primary color when using a left click", () => {
-    //     component.oldColorClick({ button: 0 } as MouseEvent, new Color());
-    //     expect(colorServiceSpyObj.setPrimaryColor).toHaveBeenCalledTimes(1);
-    // });
+    it('alphaChanged subscription should make colorModelChange emit', async(() => {
+        const emitSpy = spyOn(component['colorModelChange'], 'emit');
+        component.ngOnInit();
+        alphaChangedSubject.next();
+        expect(emitSpy).toHaveBeenCalled();
+    }));
 
-    // it("#oldColorClick should set colorService's primary color when using a right click", () => {
-    //     component.oldColorClick({ button: 2 } as MouseEvent, new Color());
-    //     expect(colorServiceSpyObj.setSecondaryColor).toHaveBeenCalledTimes(1);
-    // });
+    it('#ngOnDestroy should unsubscribe from colorChangedSubscription', async(() => {
+        const colorChangedSubscriptionSpy = spyOn(component['colorChangedSubscription'], 'unsubscribe');
+        component.ngOnDestroy();
+        expect(colorChangedSubscriptionSpy).toHaveBeenCalled();
+    }));
 
-    // it('#oldColorClick should emit colorChanged and previousColorSelected', () => {
-    //     component.oldColorClick({ button: 0 } as MouseEvent, new Color());
-    //     expect(component.previousColorSelected.emit).toHaveBeenCalledTimes(1);
-    //     expect(component.colorChanged.emit).toHaveBeenCalledTimes(1);
-    // });
+    it('#onColorPreviewClick should make colorPreviewClicked emit', () => {
+        const emitSpy = spyOn(component['colorPreviewClicked'], 'emit');
+        component.onColorPreviewClick();
+        expect(emitSpy).toHaveBeenCalled();
+    });
 
-    // it('#oldColorClick should do nothing if mouse button is not left or right click', () => {
-    //     component.oldColorClick({ button: 69 } as MouseEvent, new Color());
-    //     expect(component.previousColorSelected.emit).not.toHaveBeenCalled();
-    //     expect(component.colorChanged.emit).not.toHaveBeenCalled();
-    // });
+    it('#get color should forward call to colorPickerService', () => {
+        // tslint:disable-next-line: no-unused-expression
+        component.color;
+        expect(colorPickerServiceSpyObj.getColor).toHaveBeenCalled();
+    });
 });
