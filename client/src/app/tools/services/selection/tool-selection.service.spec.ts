@@ -12,6 +12,7 @@ import { ToolSelectionMoverService } from './tool-selection-mover.service';
 import { ToolSelectionStateService } from './tool-selection-state.service';
 import { ToolSelectionUiService } from './tool-selection-ui.service';
 
+// tslint:disable: max-file-line-count
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
@@ -448,5 +449,4 @@ describe('ToolSelectionService', () => {
 
         expect(selection).toEqual([element1]);
     });
-    // tslint:disable-next-line: max-file-line-count
 });

@@ -30,6 +30,7 @@ export class ShortcutService {
     private increaseGridSizeSource = new Subject<void>();
     private decreaseGridSizeSource = new Subject<void>();
 
+    // Disable member ordering lint error for public observables initialized after private subjects
     // tslint:disable: member-ordering
     selectToolPencilShortcut$ = this.selectToolPencilShortcutSource.asObservable();
     selectToolPaintbrushShortcut$ = this.selectToolPaintbrushShortcutSource.asObservable();

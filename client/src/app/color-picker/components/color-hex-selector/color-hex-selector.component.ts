@@ -72,6 +72,7 @@ export class ColorHexSelectorComponent implements OnInit, OnDestroy {
     private updateHexRgbComponents(): void {
         const hexCombinedRgbString = this.hexSelectorFormGroup.controls.hexCombinedRgb.value;
 
+        // Disable magic numbers lint error for indexes used to split the combined hex into three components
         // tslint:disable: no-magic-numbers
         this.hexSelectorFormGroup.controls.hexRed.setValue(hexCombinedRgbString.substring(0, 2), { emitEvent: false });
         this.hexSelectorFormGroup.controls.hexRed.markAsTouched();
