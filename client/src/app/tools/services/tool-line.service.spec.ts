@@ -5,9 +5,9 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
 import { Tool } from './tool';
-import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty
@@ -142,22 +142,22 @@ describe('ToolLineService', () => {
         const svgCircleElement = jasmine.createSpyObj('SVGCircleElement', [], {
             r: 0,
         });
-        service['junctionPoints'] = [ svgCircleElement, svgCircleElement ];
+        service['junctionPoints'] = [svgCircleElement, svgCircleElement];
         service['isShiftDown'] = true;
         service.onMouseDoubleClick({} as MouseEvent);
         expect(renderer2SpyObj.removeChild).toHaveBeenCalled();
     });
 
     it('#onMouseDoubleClick should merge first point and last point if they are close enough', () => {
-        const svgCircleElement1 = jasmine.createSpyObj('SVGCircleElement', [], { r: 0, });
-        const svgCircleElement2 = jasmine.createSpyObj('SVGCircleElement', [], { r: 0, });
-        service['junctionPoints'] = [ svgCircleElement1, svgCircleElement2 ];
+        const svgCircleElement1 = jasmine.createSpyObj('SVGCircleElement', [], { r: 0 });
+        const svgCircleElement2 = jasmine.createSpyObj('SVGCircleElement', [], { r: 0 });
+        service['junctionPoints'] = [svgCircleElement1, svgCircleElement2];
         service.onMouseDoubleClick({} as MouseEvent);
         expect(renderer2SpyObj.removeChild).toHaveBeenCalled();
     });
 
     it('#onMouseDoubleClick not should merge first point and last point if they are far enough', () => {
-        service['points'] = [ 0, 0, 20, 20, 30, 30];
+        service['points'] = [0, 0, 20, 20, 30, 30];
         service.onMouseDoubleClick({} as MouseEvent);
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
@@ -227,35 +227,34 @@ describe('ToolLineService', () => {
         expect(renderer2SpyObj.createElement).toHaveBeenCalled();
     });
 
-
     it('#stopDrawing should remove element if line is one point or less', () => {
         service['isCurrentlyDrawing'] = true;
-        service['points'] = [ 69, 420 ];
+        service['points'] = [69, 420];
         service['stopDrawing']();
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalled();
     });
 
     it('#removeLastPointFromLine should remove a point if there is more than one point', () => {
         service['isCurrentlyDrawing'] = true;
-        service['points'] = [ 69, 420, 666, 666 ];
+        service['points'] = [69, 420, 666, 666];
         service['removeLastPointFromLine']();
         expect(service['points'].length).toEqual(2);
     });
 
     it('#removeLastPointFromLine should not remove a point if there is not more than one point', () => {
         service['isCurrentlyDrawing'] = true;
-        service['points'] = [ 69, 420 ];
+        service['points'] = [69, 420];
         service['removeLastPointFromLine']();
         expect(service['points'].length).toEqual(2);
     });
 
     it('#removeLastPointFromLine should remove a point and a junction if there is more than one point', () => {
         service['isCurrentlyDrawing'] = true;
-        service['points'] = [ 69, 420, 666, 666 ];
+        service['points'] = [69, 420, 666, 666];
         const svgCircleElement = jasmine.createSpyObj('SVGCircleElement', [], {
             r: 0,
         });
-        service['junctionPoints'] = [ svgCircleElement, svgCircleElement ];
+        service['junctionPoints'] = [svgCircleElement, svgCircleElement];
         service['removeLastPointFromLine']();
         expect(service['points'].length).toEqual(2);
         expect(service['junctionPoints'].length).toEqual(1);
@@ -265,5 +264,5 @@ describe('ToolLineService', () => {
         const pushSpy = spyOn<any>(service['junctionPoints'], 'push');
         service['createNewJunction']();
         expect(pushSpy).toHaveBeenCalled();
-    })
+    });
 });
