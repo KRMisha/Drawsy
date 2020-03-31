@@ -92,7 +92,7 @@ describe('GalleryService', () => {
     });
 
     it(
-        '#deleteDrawing should use the open method of snackBar to display a message if the request was successfull' +
+        '#deleteDrawing should use the open method of snackBar to display a message if the request was successful' +
             'and delete the drawing from _drawings',
         async(() => {
             spyOn(window, 'confirm').and.returnValue(true);
@@ -112,7 +112,7 @@ describe('GalleryService', () => {
     );
 
     it(
-        '#deleteDrawing should use the open method of snackBar to display a message if the request was successfull' +
+        '#deleteDrawing should use the open method of snackBar to display a message if the request was successful' +
             'and should not remove the drawing from _drawings if it is not there',
         async(() => {
             spyOn(window, 'confirm').and.returnValue(true);
