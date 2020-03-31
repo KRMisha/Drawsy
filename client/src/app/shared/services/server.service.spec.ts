@@ -76,7 +76,7 @@ describe('ServerService', () => {
         expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
-    it('#updateDrawing should return no value when the request is successfull', async(() => {
+    it('#updateDrawing should return no value when the request is successful', async(() => {
         service.updateDrawing(existingFileId, fileContent).subscribe(() => {
             subscriberSpyObj.successChannel();
         });
@@ -100,7 +100,7 @@ describe('ServerService', () => {
         expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
-    it('#deleteDrawing should return no value when the request is successfull', async(() => {
+    it('#deleteDrawing should return no value when the request is successful', async(() => {
         service.deleteDrawing(existingFileId).subscribe(() => {
             subscriberSpyObj.successChannel();
         });
@@ -124,7 +124,7 @@ describe('ServerService', () => {
         expect(subscriberSpyObj.errorChannel).toHaveBeenCalledWith(returnedError);
     }));
 
-    it('#getAllDrawings should return array of SavedFiles when request is successfull', async(() => {
+    it('#getAllDrawings should return array of SavedFiles when request is successful', async(() => {
         const savedFile: SavedFile = { id: existingFileId, content: fileContent };
         const savedFileArray = [savedFile, savedFile, savedFile];
         service.getAllDrawings().subscribe((receivedSavedFiles: SavedFile[]) => {

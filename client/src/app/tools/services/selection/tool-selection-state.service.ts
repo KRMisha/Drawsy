@@ -10,11 +10,12 @@ export class ToolSelectionStateService {
     isMovingSelectionWithArrows = false;
     isMovingSelectionWithMouse = false;
 
-    private selectedElementsChangedSource = new Subject<SVGGraphicsElement[]>();
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
-
     private _selectionRect?: Rect; // tslint:disable-line: variable-name
 
+    private selectedElementsChangedSource = new Subject<SVGGraphicsElement[]>();
+
+    // Disable member ordering lint error for public observables initialized after private subjects
     selectedElementsChanged$ = this.selectedElementsChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(private svgUtilityService: SvgUtilityService) {}
