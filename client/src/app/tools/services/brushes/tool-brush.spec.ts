@@ -1,110 +1,212 @@
-// import { Renderer2 } from '@angular/core';
-// import { ColorService } from '@app/drawing/services/color.service';
-// import { DrawingService } from '@app/drawing/services/drawing.service';
-// import { ToolSetting } from '@app/tools/enums/tool-settings.enum';
-// import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
+import { Renderer2, RendererFactory2 } from '@angular/core';
+import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { ColorService } from '@app/drawing/services/color.service';
+import { CommandService } from '@app/drawing/services/command.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { ToolData } from '@app/tools/classes/tool-data';
+import ToolDefaults from '@app/tools/constants/tool-defaults';
+import ToolInfo from '@app/tools/constants/tool-info';
+import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
+import { Tool } from '@app/tools/services/tool';
 
-// tslint:disable: max-classes-per-file
-// tslint:disable: no-empty
-// tslint:disable: no-magic-numbers
+// tslint:disable: no-any
 // tslint:disable: no-string-literal
 
-// class MockToolBrush extends ToolBrush {
-//     constructor(drawingService: DrawingService, colorService: ColorService) {
-//         super(drawingService, colorService);
-//         this.toolSettings.set(ToolSetting.Size, 42);
-//     }
-// }
-
-// class MockColor {
-//     toRgbaString = () => 'rgba(69, 69, 69, 1)';
-// }
-
-// class MockSvgElement {
-//     getAttribute = () => '';
-// }
+class ToolBrushMock extends ToolBrush {
+    constructor(
+        rendererFactory: RendererFactory2,
+        drawingService: DrawingService,
+        colorService: ColorService,
+        commandService: CommandService,
+        toolInfo: ToolData
+    ) {
+        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        this.settings.lineWidth = ToolDefaults.defaultLineWidth;
+    }
+}
 
 describe('ToolBrush', () => {
-    // let toolBrush: MockToolBrush;
-    // let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
+    let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
+    let toolBrush: ToolBrushMock;
+    let colorSpyObj: jasmine.SpyObj<Color>;
+    let updatePathSpy: jasmine.Spy;
+
+    const rgbaStringValue = 'rgba(69, 69, 69, 1)';
 
     beforeEach(() => {
-        // drawingServiceSpyObj = jasmine.createSpyObj({
-        //     addElement: (element: MockSvgElement) => {},
-        // });
-        // const colorServiceSpyObj = jasmine.createSpyObj({
-        //     getPrimaryColor: new MockColor(),
-        // });
-        // toolBrush = new MockToolBrush(drawingServiceSpyObj, colorServiceSpyObj);
-        // toolBrush.renderer = {
-        //     setAttribute: (element: MockSvgElement, name: string, value: string) => {},
-        //     createElement: (name: string, namespace?: string) => new MockSvgElement(),
-        // } as Renderer2;
-        // spyOn(toolBrush.renderer, 'setAttribute').and.callThrough();
-        // spyOn(toolBrush.renderer, 'createElement').and.callThrough();
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
+
+        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['getAttribute', 'setAttribute', 'createElement']);
+        const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
+        rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
+
+        colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
+        colorSpyObj.toRgbaString.and.returnValue(rgbaStringValue);
+
+        colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
+        colorSpyObj.toRgbaString.and.returnValue(rgbaStringValue);
+        colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
+            primaryColor: colorSpyObj,
+            secondaryColor: colorSpyObj,
+        });
+
+        toolBrush = new ToolBrushMock(
+            rendererFactory2SpyObj,
+            drawingServiceSpyObj,
+            colorServiceSpyObj,
+            commandServiceSpyObj,
+            ToolInfo.Pencil
+        );
+        // toolBrushPathGetAttributeSpy = spyOn<any>(toolBrush['path'], 'getAttribute').and.callThrough();
+        updatePathSpy = spyOn<any>(toolBrush, 'updatePath').and.callThrough();
     });
 
-    // it('should be created', () => {
-    //     expect(toolBrush).toBeTruthy();
-    // });
+    it('should be created', () => {
+        expect(toolBrush).toBeTruthy();
+    });
 
-    // it('#onMouseMove should set a path if mouse is down and in bounds', () => {
-    //     toolBrush['path'] = (new MockSvgElement() as unknown) as SVGPathElement;
-    //     toolBrush.isMouseDown = true;
-    //     toolBrush.isMouseInside = true;
+    it('#onMouseMove should call #updatePath if isLeftMouseButtonDown and isMouseInsideDrawing from Tool are true', () => {
+        Tool.isLeftMouseButtonDown = true;
+        Tool.isMouseInsideDrawing = true;
 
-    //     toolBrush.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
+        toolBrush.onMouseMove();
 
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'd', 'L10 10 ');
-    // });
+        expect(updatePathSpy).toHaveBeenCalled();
+    });
 
-    // it('#onMouseMove should not set a path if mouse is not down or if it is not in bounds', () => {
-    //     toolBrush.isMouseDown = true;
-    //     toolBrush.isMouseInside = false;
-    //     toolBrush.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
+    it('#onMouseMove should not call #updatePath if isLeftMouseButtonDown or isMouseInsideDrawing from Tool is false', () => {
+        Tool.isLeftMouseButtonDown = false;
+        Tool.isMouseInsideDrawing = true;
 
-    //     toolBrush.isMouseDown = false;
-    //     toolBrush.isMouseInside = true;
-    //     toolBrush.onMouseMove({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
-    // });
+        toolBrush.onMouseMove();
 
-    // it('#onMouseDown should create a new path if mouse is in bounds', () => {
-    //     toolBrush.isMouseInside = true;
-    //     toolBrush.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(toolBrush.renderer.createElement).toHaveBeenCalledWith('path', 'svg');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'd', 'M10 10 L10 10 ');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'fill', 'none');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'stroke', 'rgba(69, 69, 69, 1)');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'stroke-width', '42');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'stroke-linecap', 'round');
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'stroke-linejoin', 'round');
-    //     expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(toolBrush['path']);
-    // });
+        expect(updatePathSpy).not.toHaveBeenCalled();
+    });
 
-    // it('#onMouseDown should not create a new path if mouse is out of bounds', () => {
-    //     toolBrush.isMouseInside = false;
-    //     toolBrush.onMouseDown({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(toolBrush.renderer.createElement).not.toHaveBeenCalled();
-    //     expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
-    // });
+    it("#onMouseDown should call #updatePath and drawingService's addElement on left click inside drawing surface", () => {
+        Tool.isMouseInsideDrawing = true;
+        const createPathSpy = spyOn<any>(toolBrush, 'createPath').and.callThrough();
+        toolBrush.onMouseDown({ button: MouseButton.Left } as MouseEvent);
 
-    // it('#onEnter should set isMouseInside to false', () => {
-    //     toolBrush.onEnter({ offsetX: 10, offsetY: 10 } as MouseEvent);
-    //     expect(toolBrush.isMouseInside).toEqual(false);
-    // });
+        expect(updatePathSpy).toHaveBeenCalled();
+        expect(createPathSpy).toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+    });
 
-    // it('#onLeave should set a path and isMouseDown to false if mouse click is held', () => {
-    //     toolBrush['path'] = (new MockSvgElement() as unknown) as SVGPathElement;
-    //     toolBrush.isMouseDown = true;
-    //     toolBrush.onLeave({ offsetX: 1337, offsetY: 1337 } as MouseEvent);
-    //     expect(toolBrush.renderer.setAttribute).toHaveBeenCalledWith(toolBrush['path'], 'd', 'L1337 1337 ');
-    // });
+    it("#onMouseDown should not call #updatePath and drawingService's addElement on right click", () => {
+        Tool.isMouseInsideDrawing = true;
+        const createPathSpy = spyOn<any>(toolBrush, 'createPath').and.callThrough();
+        toolBrush.onMouseDown({ button: MouseButton.Right } as MouseEvent);
 
-    // it('#onLeave should not set a path if mouse is not down', () => {
-    //     toolBrush.isMouseDown = false;
-    //     toolBrush.onLeave({ offsetX: 0, offsetY: 0 } as MouseEvent);
-    //     expect(toolBrush.renderer.setAttribute).not.toHaveBeenCalled();
-    // });
+        expect(updatePathSpy).not.toHaveBeenCalled();
+        expect(createPathSpy).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    });
+
+    it("#onMouseDown should not call #updatePath and drawingService's addElement if mouse is not inside the drawing surface", () => {
+        Tool.isMouseInsideDrawing = false;
+        const createPathSpy = spyOn<any>(toolBrush, 'createPath').and.callThrough();
+        toolBrush.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+
+        expect(updatePathSpy).not.toHaveBeenCalled();
+        expect(createPathSpy).not.toHaveBeenCalled();
+        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+    });
+
+    it('#onMouseUp should call #stopDrawing on left click', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
+        toolBrush.onMouseUp({ button: MouseButton.Left } as MouseEvent);
+
+        expect(stopDrawingSpy).toHaveBeenCalled();
+    });
+
+    it('#onMouseUp should not call #stopDrawing on right click', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
+        toolBrush.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+
+        expect(stopDrawingSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onLeave should call #updatePath and #stopDrawing if left click is held', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
+        Tool.isLeftMouseButtonDown = true;
+        toolBrush.onLeave({ button: MouseButton.Left } as MouseEvent);
+
+        expect(updatePathSpy).toHaveBeenCalled();
+        expect(stopDrawingSpy).toHaveBeenCalled();
+    });
+
+    it('#onLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
+        Tool.isLeftMouseButtonDown = false;
+        toolBrush.onLeave({ button: MouseButton.Right } as MouseEvent);
+
+        expect(updatePathSpy).not.toHaveBeenCalled();
+        expect(stopDrawingSpy).not.toHaveBeenCalled();
+    });
+
+    it("#onPrimaryColorChange should set the path's stroke color with the parameter's color if the path is not undefined", () => {
+        const brush = {} as SVGPathElement;
+        toolBrush['path'] = brush;
+        toolBrush.onPrimaryColorChange(colorSpyObj);
+
+        expect(colorSpyObj.toRgbaString).toHaveBeenCalled();
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(brush, 'stroke', rgbaStringValue);
+    });
+
+    it('#onPrimaryColorChange should not call renderer.setAttribute if path is undefined', () => {
+        toolBrush['path'] = undefined;
+        toolBrush.onPrimaryColorChange(colorSpyObj);
+
+        expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#updatePath should not do anything if the path is undefined', () => {
+        toolBrush['path'] = undefined;
+        toolBrush['updatePath']();
+        expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#updatePath should call set the path attribute if the path exists', () => {
+        let pathSpyObj: jasmine.SpyObj<SVGPathElement>;
+        pathSpyObj = jasmine.createSpyObj('SVGPathElement', ['getAttribute']);
+        pathSpyObj.getAttribute.and.returnValue('M0 0');
+        const mousePosition = 10;
+
+        toolBrush['path'] = pathSpyObj;
+
+        Tool.mousePosition.x = mousePosition;
+        Tool.mousePosition.y = mousePosition;
+
+        toolBrush['updatePath']();
+
+        expect(updatePathSpy).toHaveBeenCalledWith();
+        expect(pathSpyObj.getAttribute).toHaveBeenCalled();
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(pathSpyObj, 'd', 'M0 0 L10 10');
+    });
+
+    it('#stopDrawing should early return if the path is undefined', () => {
+        toolBrush['path'] = undefined;
+
+        toolBrush['stopDrawing']();
+
+        expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
+    });
+
+    it('#stopDrawing should add a command in commandService and set path to undefined if the path is not already undefined', () => {
+        const pathMock = {} as SVGPathElement;
+        toolBrush['path'] = pathMock;
+
+        toolBrush['stopDrawing']();
+
+        expect(commandServiceSpyObj.addCommand).toHaveBeenCalledWith(new AppendElementCommand(drawingServiceSpyObj, pathMock));
+        expect(toolBrush['path']).not.toBeTruthy();
+    });
 });
