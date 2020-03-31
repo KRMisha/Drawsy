@@ -154,10 +154,6 @@ export class Color {
             hue = angleValue * ((redPrime - greenPrime) / deltaC + 4);
         }
 
-        if (hue < 0) {
-            hue += Color.maxHue;
-        }
-
         const saturation: number = cMax === 0 ? 0 : deltaC / cMax;
 
         const value = cMax;
