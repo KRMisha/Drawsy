@@ -92,7 +92,6 @@ export class ToolSprayCanService extends Tool {
         if (this.group === undefined) {
             return;
         }
-
         window.clearInterval(this.intervalId);
         this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.group));
         this.group = undefined;
