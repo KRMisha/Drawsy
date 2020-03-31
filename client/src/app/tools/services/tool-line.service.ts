@@ -75,7 +75,6 @@ export class ToolLineService extends Tool {
 
     onMouseMove(): void {
         this.updateNextPointPosition();
-        this.updatePreviewLinePosition();
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -110,7 +109,6 @@ export class ToolLineService extends Tool {
 
         this.lastPoint = this.nextPoint;
         this.updateNextPointPosition();
-        this.updatePreviewLinePosition();
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
@@ -132,7 +130,7 @@ export class ToolLineService extends Tool {
                 y: Math.abs(this.points[firstYIndex] - this.points[lastYIndex]),
             };
             if (deltaPosition.x <= lineClosingPixelTolerance && deltaPosition.y <= lineClosingPixelTolerance) {
-                const removedLastJunctionPoint =  this.junctionPoints.pop();
+                const removedLastJunctionPoint = this.junctionPoints.pop();
                 if (removedLastJunctionPoint !== undefined) {
                     this.renderer.removeChild(this.groupElement, removedLastJunctionPoint);
                 }
@@ -157,7 +155,6 @@ export class ToolLineService extends Tool {
             case 'Shift':
                 this.isShiftDown = true;
                 this.updateNextPointPosition();
-                this.updatePreviewLinePosition();
                 break;
             case 'Backspace':
                 this.removeLastPointFromLine();
@@ -169,7 +166,6 @@ export class ToolLineService extends Tool {
         if (event.key === 'Shift') {
             this.isShiftDown = false;
             this.updateNextPointPosition();
-            this.updatePreviewLinePosition();
         }
     }
 
@@ -192,8 +188,6 @@ export class ToolLineService extends Tool {
         // tslint:disable: no-non-null-assertion
         this.isCurrentlyDrawing = true;
 
-        ({ isEnabled: this.isJunctionEnabled, diameter: this.junctionDiameter } = this.settings.junctionSettings!);
-
         const junctionDiameterActualValue = this.isJunctionEnabled ? this.junctionDiameter : 0;
         const padding = Math.max(0, this.settings.lineWidth! / 2 - junctionDiameterActualValue);
 
@@ -215,10 +209,10 @@ export class ToolLineService extends Tool {
         previewColor.alpha /= 2;
 
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
-        this.renderer.setAttribute(this.previewLine, 'fill', this.polyline.getAttribute('fill') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-width', this.groupElement.getAttribute('stroke-width') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-linecap', this.polyline.getAttribute('stroke-linecap') as string);
-        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', this.polyline.getAttribute('stroke-linejoin') as string);
+        this.renderer.setAttribute(this.previewLine, 'fill', 'none');
+        this.renderer.setAttribute(this.previewLine, 'stroke-width', this.settings.lineWidth!.toString());
+        this.renderer.setAttribute(this.previewLine, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(this.previewLine, 'stroke-linejoin', 'round');
         // tslint:enable: no-non-null-assertion
     }
 
@@ -278,6 +272,7 @@ export class ToolLineService extends Tool {
             this.isShiftDown,
             this.isCurrentlyDrawing
         );
+        this.updatePreviewLinePosition();
     }
 
     private updatePreviewLinePosition(): void {
