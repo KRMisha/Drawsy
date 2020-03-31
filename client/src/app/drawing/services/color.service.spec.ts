@@ -5,31 +5,17 @@ import { Color } from '@app/shared/classes/color';
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
-const defaultPrimaryColor = { red: 0, green: 0, blue: 0, alpha: 1 } as Color;
-const defaultSecondaryColor = { red: 127, green: 127, blue: 127, alpha: 1 } as Color;
-
-const defaultColors = [
-    defaultPrimaryColor,
-    defaultSecondaryColor,
-    { red: 246, green: 205, blue: 97, alpha: 1 } as Color,
-    { red: 61, green: 164, blue: 171, alpha: 1 } as Color,
-    { red: 255, green: 111, blue: 105, alpha: 1 } as Color,
-    { red: 3, green: 146, blue: 207, alpha: 1 } as Color,
-    { red: 123, green: 192, blue: 67, alpha: 1 } as Color,
-    { red: 253, green: 244, blue: 152, alpha: 1 } as Color,
-    { red: 243, green: 119, blue: 54, alpha: 1 } as Color,
-    { red: 238, green: 64, blue: 53, alpha: 1 } as Color,
-];
-
-fdescribe('ColorService', () => {
+describe('ColorService', () => {
     let service: ColorService;
     let colorSpyObj: jasmine.SpyObj<Color>;
+    let defaultColors: Color[];
 
     beforeEach(() => {
         service = TestBed.inject(ColorService);
         colorSpyObj = jasmine.createSpyObj('Color', ['clone', 'getHex']);
         colorSpyObj.clone.and.returnValue(colorSpyObj);
         colorSpyObj.getHex.and.returnValue('some color');
+        defaultColors = [colorSpyObj, colorSpyObj];
         service['_primaryColor'] = colorSpyObj;
         service['_secondaryColor'] = colorSpyObj;
         service['_previousColors'] = defaultColors;
@@ -92,13 +78,11 @@ fdescribe('ColorService', () => {
         expect(service.previousColors).toEqual(defaultColors);
     });
 
-    it('#addColor should ', () => {
-        const previousColorFindIndexSpy = spyOn(service['_previousColors'], 'findIndex').and.callThrough;
-
+    it("#addColor should use an arrow function to verify if the color already exists in the array's findIndex method", () => {
+        const findIndexSpy = spyOn(service['_previousColors'], 'findIndex').and.callThrough();
         service['addColor'](colorSpyObj);
-
+        expect(findIndexSpy).toHaveBeenCalled();
         expect(colorSpyObj.getHex).toHaveBeenCalled();
-        expect(previousColorFindIndexSpy).toHaveBeenCalled();
     });
 
     it('#addColor should add a new color to previousColors', () => {
