@@ -1,5 +1,5 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -9,16 +9,16 @@ import { CommandService } from './command.service';
 // tslint:disable: no-any
 // tslint:disable: max-line-length
 
-fdescribe('DrawingService', () => {
+describe('DrawingService', () => {
     let service: DrawingService;
-    let rendererSpyObj: jasmine.SpyObj<Renderer2>;
+    let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
 
     beforeEach(() => {
-        rendererSpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
+        renderer2SpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
-        rendererFactory2SpyObj.createRenderer.and.returnValue(rendererSpyObj);
+        rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
         commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['clearCommands']);
         TestBed.configureTestingModule({
             providers: [
@@ -42,7 +42,7 @@ fdescribe('DrawingService', () => {
         const testElement = {} as SVGGraphicsElement;
         service.addElement(testElement);
         expect(service['_svgElements'][2]).toBe(testElement);
-        expect(rendererSpyObj.appendChild).toHaveBeenCalled();
+        expect(renderer2SpyObj.appendChild).toHaveBeenCalled();
         expect(addElementClickListenerSpy).toHaveBeenCalledWith(testElement);
     });
 
@@ -54,7 +54,7 @@ fdescribe('DrawingService', () => {
         const testElement = {} as SVGGraphicsElement;
         service.addElement(testElement);
         expect(service['_svgElements'][2]).toBe(testElement);
-        expect(rendererSpyObj.appendChild).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.appendChild).not.toHaveBeenCalled();
         expect(addElementClickListenerSpy).toHaveBeenCalledWith(testElement);
     });
 
@@ -68,7 +68,7 @@ fdescribe('DrawingService', () => {
         const addElementClickListenerSpy = spyOn<any>(service, 'addElementClickListener').and.callThrough();
         service.addElementBefore(testElement, elementAfter);
         expect(addElementClickListenerSpy).toHaveBeenCalledWith(testElement);
-        expect(rendererSpyObj.insertBefore).toHaveBeenCalled();
+        expect(renderer2SpyObj.insertBefore).toHaveBeenCalled();
     });
 
     it("#addElementBefore should call #addElementClickListener, but should not call renderer's insertBefore if the elementAfter is found, but the svgDrawingContent is undefined", () => {
@@ -80,7 +80,7 @@ fdescribe('DrawingService', () => {
         const addElementClickListenerSpy = spyOn<any>(service, 'addElementClickListener').and.callThrough();
         service.addElementBefore(testElement, elementAfter);
         expect(addElementClickListenerSpy).toHaveBeenCalledWith(testElement);
-        expect(rendererSpyObj.insertBefore).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.insertBefore).not.toHaveBeenCalled();
     });
 
     it("#addElementsBefore should not call #addElementClickListener or renderer's insertBefore if the elementAfter is not found in _svgElements", () => {
@@ -92,7 +92,7 @@ fdescribe('DrawingService', () => {
         const addElementClickListenerSpy = spyOn<any>(service, 'addElementClickListener').and.callThrough();
         service.addElementBefore(testElement, elementAfter);
         expect(addElementClickListenerSpy).not.toHaveBeenCalled();
-        expect(rendererSpyObj.insertBefore).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.insertBefore).not.toHaveBeenCalled();
     });
 
     it("#removeElement should call renderer's removeChild if the element was found in _svgElements and svgDrawingContent is not undefined", () => {
@@ -102,7 +102,7 @@ fdescribe('DrawingService', () => {
         const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, testElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
-        expect(rendererSpyObj.removeChild).toHaveBeenCalledWith(svgGraphicElement, testElement);
+        expect(renderer2SpyObj.removeChild).toHaveBeenCalledWith(svgGraphicElement, testElement);
     });
 
     it("#removeElement should not call renderer's removeChild if the element was found, but the svgDrawingContent was undefined", () => {
@@ -111,7 +111,7 @@ fdescribe('DrawingService', () => {
         const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, testElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
-        expect(rendererSpyObj.removeChild).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
     it("#removeElement should not call renderer's removeChild if the element was not found", () => {
@@ -120,7 +120,7 @@ fdescribe('DrawingService', () => {
         const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
-        expect(rendererSpyObj.removeChild).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
     it('#removeElement should unlisten from the elementClickListen function if it is found', () => {
@@ -142,13 +142,13 @@ fdescribe('DrawingService', () => {
         service['svgUserInterfaceContent'] = svgUserInterfaceContentStub;
         const svgGraphicsElementStub = {} as SVGGraphicsElement;
         service.addUiElement(svgGraphicsElementStub);
-        expect(rendererSpyObj.appendChild).toHaveBeenCalledWith(svgUserInterfaceContentStub, svgGraphicsElementStub);
+        expect(renderer2SpyObj.appendChild).toHaveBeenCalledWith(svgUserInterfaceContentStub, svgGraphicsElementStub);
     });
 
     it("#addUiElement should not call renderer's appendChild if svgUserInterfaceContent is undefined", () => {
         const svgGraphicsElementStub = {} as SVGGraphicsElement;
         service.addUiElement(svgGraphicsElementStub);
-        expect(rendererSpyObj.appendChild).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.appendChild).not.toHaveBeenCalled();
     });
 
     it("#removeUiElement should call renderer's removeChild if svgUserInterfaceContent is not undefined", () => {
@@ -156,13 +156,13 @@ fdescribe('DrawingService', () => {
         service['svgUserInterfaceContent'] = svgUserInterfaceContentStub;
         const svgGraphicsElementStub = {} as SVGGraphicsElement;
         service.removeUiElement(svgGraphicsElementStub);
-        expect(rendererSpyObj.removeChild).toHaveBeenCalledWith(svgUserInterfaceContentStub, svgGraphicsElementStub);
+        expect(renderer2SpyObj.removeChild).toHaveBeenCalledWith(svgUserInterfaceContentStub, svgGraphicsElementStub);
     });
 
     it("#removeUiElement should not call renderer's removeChild if svgUserInterfaceContent is undefined", () => {
         const svgGraphicsElementStub = {} as SVGGraphicsElement;
         service.removeUiElement(svgGraphicsElementStub);
-        expect(rendererSpyObj.removeChild).not.toHaveBeenCalled();
+        expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
     it("#reappendStoredElements should call renderer's appendChild for each of the elements of _svgElements", () => {
@@ -176,7 +176,7 @@ fdescribe('DrawingService', () => {
         ];
         service['_svgElements'] = svgElementsMock;
         service.reappendStoredElements();
-        expect(rendererSpyObj.appendChild).toHaveBeenCalledTimes(svgElementsMock.length);
+        expect(renderer2SpyObj.appendChild).toHaveBeenCalledTimes(svgElementsMock.length);
     });
 
     it("#clearStoredElements should call renderer's removeChild for each of the elements of _svgElements", () => {
@@ -190,7 +190,7 @@ fdescribe('DrawingService', () => {
         ];
         service['_svgElements'] = svgElementsMock;
         service.clearStoredElements();
-        expect(rendererSpyObj.removeChild).toHaveBeenCalledTimes(svgElementsMock.length);
+        expect(renderer2SpyObj.removeChild).toHaveBeenCalledTimes(svgElementsMock.length);
     });
 
     it('#appendNewMatrixToElements should call ', () => {
@@ -254,14 +254,4 @@ fdescribe('DrawingService', () => {
         const actualValue = service.svgElements;
         expect(actualValue).toEqual(expectedValue);
     });
-
-    it("#addElementClickListener should create a listener for onmouseup on the element, which calls elementClickedSource's next", async(() => {
-        const nextSpy = spyOn(service['elementClickedSource'], 'next');
-        rendererSpyObj.listen.and.callThrough();
-        const svgGraphicElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['onmouseup']);
-        svgGraphicElementSpyObj.onmouseup.and.callThrough();
-        service['addElementClickListener'](svgGraphicElementSpyObj);
-        svgGraphicElementSpyObj.onmouseup({} as MouseEvent);
-        expect(nextSpy).toHaveBeenCalled();
-    }));
 });
