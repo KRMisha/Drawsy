@@ -63,31 +63,34 @@ fdescribe('SvgUtilityService', () => {
         expect(actualValue).toEqual(undefined);
     });
 
-    // it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
-    //     // const penis = new Renderer2();
-
-    //     const elementToSend = document.createElementNS('circle', 'svg');
-    //     expect(elementToSend).toBeInstanceOf(SVGGraphicsElement);
-    //     // const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
-
-    //     // spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
-    //     // spyOn(service, 'getElementBounds');
-    //     // const area: Rect = {width: 10, height: 10, x: 0, y: 0};
-    //     // const actualValue = service.getElementUnderAreaPixelPerfect([elementToSend], area);
-    //     // expect(actualValue).toEqual(elementToSend);
-    // });
-
     it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
-        const elementToSend = (document.createElementNS('circle', 'svg') as unknown) as SVGCircleElement;
+        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         service['drawingService'] = ({
             drawingRoot: drawingRootSpyObj,
             svgElements: [elementToSend],
         } as unknown) as DrawingService;
-        spyOn(document, 'elementFromPoint').and.returnValue(elementToSend);
+        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+
+        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
         spyOn(service, 'getElementBounds');
-        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const area: Rect = {width: 10, height: 10, x: 0, y: 0};
         const actualValue = service.getElementUnderAreaPixelPerfect([elementToSend], area);
         expect(actualValue).toEqual(elementToSend);
+    });
+
+    it('#getElementUnderAreaPixelPerfect should return undefined if no objects are in the drawing service', () => {
+        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        service['drawingService'] = ({
+            drawingRoot: drawingRootSpyObj,
+            svgElements: [elementToSend],
+        } as unknown) as DrawingService;
+        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+
+        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
+        spyOn(service, 'getElementBounds');
+        const area: Rect = {width: 10, height: 10, x: 0, y: 0};
+        const actualValue = service.getElementUnderAreaPixelPerfect([], area);
+        expect(actualValue).toBeUndefined();
     });
 
     it("#updateSvgRectFromRect should use renderer2 to set the svgRect's attributes", () => {
