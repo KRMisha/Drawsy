@@ -49,6 +49,6 @@ export class ToolEyedropperService extends Tool {
             rgbaComponents.push(data[colorIndex + i]);
         }
         const [red, green, blue, alpha] = rgbaComponents;
-        return Color.fromRgba(red, green, blue, alpha);
+        return Color.fromRgba(red, green, blue, alpha / Color.maxRgb);
     }
 }
