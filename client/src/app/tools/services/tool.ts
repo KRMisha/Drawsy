@@ -52,7 +52,7 @@ export abstract class Tool {
 
 // Note for grading:
 //
-// Introduction:
+// Introduction
 // Many tslint disables for non-null assertions can be found throughout the derived tools' code. While, to an untrained eye,
 // this could unfortunately be perceived as a design flaw, the reality is far different. So different, in fact, it warrants
 // an extended essay into the reasons motivating an experienced development team to abandon the oft ire-inducing aforementioned
@@ -86,5 +86,5 @@ export abstract class Tool {
 // language would be an aberration and an insult to their fundamental skills.
 //
 // Epilogue
-// We have not justified the use of non-null assertion operators in derived tools because of its impertinence given the way the code
+// We have not justified the use of non-null assertion operators in derived tools because of its irrelevance given the way the code
 // has been structured.

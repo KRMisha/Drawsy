@@ -184,10 +184,10 @@ describe('Color', () => {
         expectedHex = 'adadad';
         expect(color.getHex()).toEqual(expectedHex);
 
-        color.red = parseInt('fe', radix);
-        color.green = parseInt('fe', radix);
-        color.blue = parseInt('fe', radix);
-        expectedHex = 'fefefe';
+        color.red = parseInt('e', radix);
+        color.green = parseInt('e', radix);
+        color.blue = parseInt('e', radix);
+        expectedHex = '0e0e0e';
         expect(color.getHex()).toEqual(expectedHex);
     });
 
