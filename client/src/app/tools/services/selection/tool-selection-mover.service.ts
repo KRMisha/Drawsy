@@ -4,7 +4,7 @@ import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { ToolSelectionUiService } from './tool-selection-ui.service';
+import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 
 @Injectable({
     providedIn: 'root',

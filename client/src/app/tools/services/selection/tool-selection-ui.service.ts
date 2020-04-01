@@ -3,8 +3,8 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
-import { ToolSelectionStateService } from './tool-selection-state.service';
 
 const controlPointSideSize = 10;
 

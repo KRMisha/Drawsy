@@ -1,5 +1,5 @@
+import { DrawingsWithLabelsPipe } from '@app/modals/pipes/drawings-with-labels.pipe';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
-import { DrawingsWithLabelsPipe } from './drawings-with-labels.pipe';
 
 describe('DrawingsWithLabelsPipe', () => {
     let pipe: DrawingsWithLabelsPipe;

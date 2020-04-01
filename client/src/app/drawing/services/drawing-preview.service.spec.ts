@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
-import { DrawingService } from './drawing.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 
 describe('DrawingPreviewService', () => {
     let service: DrawingPreviewService;

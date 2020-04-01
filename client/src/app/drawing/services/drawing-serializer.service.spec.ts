@@ -1,14 +1,14 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FileType } from '@app/drawing/enums/file-type.enum';
+import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { SavedFile } from '@common/communication/saved-file';
-import { FileType } from '../enums/file-type.enum';
-import { DrawingPreviewService } from './drawing-preview.service';
-import { SvgUtilityService } from './svg-utility.service';
 
 // tslint:disable: no-empty
 // tslint:disable: no-magic-numbers
