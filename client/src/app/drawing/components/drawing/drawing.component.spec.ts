@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -37,9 +38,9 @@ describe('DrawingComponent', () => {
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
         colorSpyObj.toRgbaString.and.returnValue('rgba(1, 1, 1, 1)');
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['reappendStoredElements'], {
-            drawingRoot: {} as SVGSVGElement,
-            svgDrawingContent: {} as SVGGElement,
-            svgUserInterfaceContent: {} as SVGGElement,
+            drawingRoot: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
             dimensions: returnedDimensions,
             backgroundColor: colorSpyObj,
         });
@@ -85,6 +86,7 @@ describe('DrawingComponent', () => {
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
                 { provide: ModalService, useValue: modalServiceSpyObj },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
 
