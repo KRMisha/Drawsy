@@ -6,7 +6,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
-import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
 import { Tool } from '@app/tools/services/tool';
@@ -23,16 +22,15 @@ class ToolBrushMock extends ToolBrush {
         toolInfo: ToolData
     ) {
         super(rendererFactory, drawingService, colorService, commandService, toolInfo);
-        this.settings.lineWidth = ToolDefaults.defaultLineWidth;
     }
 }
 
 describe('ToolBrush', () => {
+    let toolBrush: ToolBrushMock;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
-    let toolBrush: ToolBrushMock;
     let colorSpyObj: jasmine.SpyObj<Color>;
     let updatePathSpy: jasmine.Spy;
 
