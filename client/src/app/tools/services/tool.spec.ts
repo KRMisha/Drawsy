@@ -20,7 +20,7 @@ class ToolMock extends Tool {
     }
 }
 
-fdescribe('Tool', () => {
+describe('Tool', () => {
     let tool: ToolMock;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
 
