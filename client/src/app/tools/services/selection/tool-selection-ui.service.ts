@@ -20,7 +20,7 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private isSelectionDisplayed = false;
 
-    private selectedElementsChanged: Subscription;
+    private selectedElementsChangedSubscription: Subscription;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -28,13 +28,9 @@ export class ToolSelectionUiService implements OnDestroy {
         private drawingService: DrawingService,
         private toolSelectionStateService: ToolSelectionStateService
     ) {
-        this.selectedElementsChanged = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
+        this.selectedElementsChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
             (elements: SVGGraphicsElement[]) => {
-                if (elements.length === 0) {
-                    this.hideSvgSelectedShapesRect();
-                } else {
-                    this.updateSvgSelectedShapesRect(elements);
-                }
+                this.updateSvgSelectedShapesRect(elements);
             }
         );
 
@@ -56,12 +52,11 @@ export class ToolSelectionUiService implements OnDestroy {
             this.renderer.setAttribute(this.svgControlPoints[i], 'height', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'fill', 'black');
             this.renderer.setAttribute(this.svgControlPoints[i], 'pointer-events', 'auto');
-            this.drawingService.addUiElement(this.svgControlPoints[i]);
         }
     }
 
     ngOnDestroy(): void {
-        this.selectedElementsChanged.unsubscribe();
+        this.selectedElementsChangedSubscription.unsubscribe();
     }
 
     updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
