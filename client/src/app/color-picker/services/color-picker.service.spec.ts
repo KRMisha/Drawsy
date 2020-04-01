@@ -1,5 +1,4 @@
 import { async, TestBed } from '@angular/core/testing';
-
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 

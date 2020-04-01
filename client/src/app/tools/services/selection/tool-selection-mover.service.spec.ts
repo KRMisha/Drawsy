@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
-import { ToolSelectionUiService } from './tool-selection-ui.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
+import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal

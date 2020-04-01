@@ -1,13 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-
 import { Renderer2, RendererFactory2 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
+import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Subject } from 'rxjs';
-import { ToolSelectionStateService } from './tool-selection-state.service';
-import { ToolSelectionUiService } from './tool-selection-ui.service';
 
 // tslint:disable: no-string-literal
 // tslint:disable: no-any

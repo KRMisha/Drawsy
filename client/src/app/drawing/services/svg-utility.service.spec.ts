@@ -165,7 +165,7 @@ describe('SvgUtilityService', () => {
     });
 
     it('#getCanvasFromSvgRoot should return a new canvas created from a source svg', async () => {
-        const drawingDimensions: Vec2 = { x: 32, y: 32};
+        const drawingDimensions: Vec2 = { x: 32, y: 32 };
 
         const outerHtmlMock = 'I love HTML!';
         const svgRootSpyObj = jasmine.createSpyObj('SVGSVGElement', [], {
@@ -183,10 +183,11 @@ describe('SvgUtilityService', () => {
         canvasSpyObj.getContext.and.returnValue(canvasContextSpyObj);
         renderer2SpyObj.createElement.and.returnValue(canvasSpyObj);
 
-        const base64svgMock = 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+CiAgICA8cmVjdCB4PSI' +
-                              'wIiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyNCIgLz4KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIi' +
-                              'AvPgogICAgPHJlY3QgeD0iMCIgeT0iMjIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIiAvPgogICAgPHJlY3QgeD0iMjIiIHk9IjAiIHdpZ' +
-                              'HRoPSIyIiBoZWlnaHQ9IjI0IiAvPgo8L3N2Zz4K';
+        const base64svgMock =
+            'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+CiAgICA8cmVjdCB4PSI' +
+            'wIiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyNCIgLz4KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIi' +
+            'AvPgogICAgPHJlY3QgeD0iMCIgeT0iMjIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIiAvPgogICAgPHJlY3QgeD0iMjIiIHk9IjAiIHdpZ' +
+            'HRoPSIyIiBoZWlnaHQ9IjI0IiAvPgo8L3N2Zz4K';
         const btoaSpy = spyOn(window, 'btoa').and.returnValue(base64svgMock);
 
         const canvas = await service.getCanvasFromSvgRoot(svgRootSpyObj);
