@@ -6,8 +6,8 @@ import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
-import { Tool } from './tool';
 
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
