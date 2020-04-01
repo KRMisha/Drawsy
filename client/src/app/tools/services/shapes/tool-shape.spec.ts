@@ -240,6 +240,17 @@ describe('ToolShape', () => {
         expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
+    it('#updateShapeArea should use positive sideSize when the mouse is at the top-left of the origin calculation', () => {
+        const shapeMock = {} as SVGGraphicsElement;
+        Tool.mousePosition = { x: 1, y: 1 };
+        toolShape['shapeOrigin'] = { x: 0, y: 0 };
+        toolShape['shape'] = shapeMock;
+        Tool.isLeftMouseButtonDown = true;
+        toolShape['isShiftDown'] = true;
+        toolShape['updateShapeArea']();
+        expect(updateShapeAreaSpy).toHaveBeenCalled();
+    });
+
     it('#stopDrawing should set shape to undefined if it was not before the call', () => {
         const shapeMock = {} as SVGGraphicsElement;
         Tool.mousePosition = { x: -1, y: -1 };
