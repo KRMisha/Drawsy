@@ -7,10 +7,10 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
-import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 @Injectable({
     providedIn: 'root',
