@@ -12,8 +12,8 @@ import { Vec2 } from '@app/shared/classes/vec2';
 describe('SvgUtilityService', () => {
     let service: SvgUtilityService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
-    let drawingServiceMock: DrawingService;
-
+    let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     const elementStub = {} as SVGGraphicsElement;
     let elementArrayStub: SVGGraphicsElement[];
 
@@ -21,19 +21,22 @@ describe('SvgUtilityService', () => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
 
-        drawingServiceMock = ({
-            drawingRoot: undefined,
+        drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
+
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
+            drawingRoot: drawingRootSpyObj,
             svgElements: [],
-        } as unknown) as DrawingService;
+        });
 
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
-                { provide: DrawingService, useValue: drawingServiceMock },
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
             ],
         });
         service = TestBed.inject(SvgUtilityService);
+        drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 69, y: 911, width: 420, height: 666 } as DOMRect);
         elementArrayStub = [elementStub, elementStub];
     });
 
@@ -53,18 +56,40 @@ describe('SvgUtilityService', () => {
         expect(getElementsBoundSpy).toHaveBeenCalled();
     });
 
-    // it('#getElementUnderAreaPixelPerfect should create a map from the elements array and assign a number to each', () => {
-    //     const area: Rect = {width: 0, height: 0, x: 0, y: 0};
-    //     const mapSpyObj = jasmine.createSpyObj('Map<SVGGraphicsElement, number>', ['set']);
-    //     const mapConstructorSpy = spyOn<any>(window.Map, 'Map').and.returnValue(mapSpyObj);
-    //     const drawingServiceStub = {svgElements: elementArrayStub};
-    //     service['drawingService'] = drawingServiceStub as unknown as DrawingService;
+    it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
+        spyOn(document, 'elementFromPoint').and.returnValue(null);
+        spyOn(service, 'getElementBounds');
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const actualValue = service.getElementUnderAreaPixelPerfect([{} as SVGGraphicsElement], area);
+        expect(actualValue).toEqual(undefined);
+    });
 
-    //     service.getElementUnderAreaPixelPerfect(elementArrayStub, area);
+    // it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
+    //     // const penis = new Renderer2();
 
-    //     expect(mapConstructorSpy).toHaveBeenCalled();
-    //     expect(mapSpyObj.set).toHaveBeenCalledTimes(elementArrayStub.length);
+    //     const elementToSend = document.createElementNS('circle', 'svg');
+    //     expect(elementToSend).toBeInstanceOf(SVGGraphicsElement);
+    //     // const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+
+    //     // spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
+    //     // spyOn(service, 'getElementBounds');
+    //     // const area: Rect = {width: 10, height: 10, x: 0, y: 0};
+    //     // const actualValue = service.getElementUnderAreaPixelPerfect([elementToSend], area);
+    //     // expect(actualValue).toEqual(elementToSend);
     // });
+
+    it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
+        const elementToSend = (document.createElementNS('circle', 'svg') as unknown) as SVGCircleElement;
+        service['drawingService'] = ({
+            drawingRoot: drawingRootSpyObj,
+            svgElements: [elementToSend],
+        } as unknown) as DrawingService;
+        spyOn(document, 'elementFromPoint').and.returnValue(elementToSend);
+        spyOn(service, 'getElementBounds');
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const actualValue = service.getElementUnderAreaPixelPerfect([elementToSend], area);
+        expect(actualValue).toEqual(elementToSend);
+    });
 
     it("#updateSvgRectFromRect should use renderer2 to set the svgRect's attributes", () => {
         const svgRectStub = {} as SVGRectElement;
@@ -81,7 +106,6 @@ describe('SvgUtilityService', () => {
     it("#getElementeBounds should set the element's as drawingRoot's boundingRect methods to bound the element", () => {
         const domRectStub = { x: 10, y: 10, width: 10, height: 10 } as DOMRect;
         const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getBoundingClientRect', 'getAttribute']);
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         elementSpyObj.getBoundingClientRect.and.returnValue(domRectStub);
         drawingRootSpyObj.getBoundingClientRect.and.returnValue(domRectStub);
         service['drawingService'] = ({ drawingRoot: drawingRootSpyObj } as unknown) as DrawingService;
@@ -94,7 +118,6 @@ describe('SvgUtilityService', () => {
     it("#getElementeBounds should set the element's data-padding attribute if it is not undefined", () => {
         const domRectStub = { x: 10, y: 10, width: 10, height: 10 } as DOMRect;
         const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getBoundingClientRect', 'getAttribute']);
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         elementSpyObj.getBoundingClientRect.and.returnValue(domRectStub);
         elementSpyObj.getAttribute.and.returnValue('12');
         drawingRootSpyObj.getBoundingClientRect.and.returnValue(domRectStub);
@@ -105,9 +128,17 @@ describe('SvgUtilityService', () => {
         expect(drawingRootSpyObj.getBoundingClientRect).toHaveBeenCalled();
     });
 
-    // it('#getElementListBound should loop through all the elements and find smallest bounding rect', () => {
+    it('#getElementListBound should loop through all the elements and find smallest bounding rect', () => {
+        const bounds: Rect = { x: 69, y: 420, width: 911, height: 666 };
+        spyOn(service, 'getElementBounds').and.returnValue(bounds);
+        const element = {} as SVGGraphicsElement;
+        const actualValue = service.getElementListBounds([element]);
+        expect(actualValue).toEqual(bounds);
+    });
 
-    // });
+    it('#getElementListBound should return undefined if element list is empty', () => {
+        expect(service.getElementListBounds([])).toBeUndefined();
+    });
 
     it('#createDashedRectBorder should create a svg rect element and set its color according to the one passed by parameter', () => {
         const colorValue = 10;
