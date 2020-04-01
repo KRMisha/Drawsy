@@ -6,8 +6,8 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { Tool } from '@app/tools/services/tool';
 import { ToolSprayCanService } from '@app/tools/services/tool-spray-can.service';
-import { Tool } from './tool';
 
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
