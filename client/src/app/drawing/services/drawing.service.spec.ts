@@ -1,5 +1,5 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { CommandService } from './command.service';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -242,4 +242,14 @@ fdescribe('DrawingService', () => {
         const actualValue = service.svgElements;
         expect(actualValue).toEqual(expectedValue);
     });
+
+    it('#addElementClickListener should create a listener for onmouseup on the element, which calls elementClickedSource\'s next', async(() => {
+        const nextSpy = spyOn(service['elementClickedSource'], 'next');
+        rendererSpyObj.listen.and.callThrough();
+        const svgGraphicElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['onmouseup']);
+        svgGraphicElementSpyObj.onmouseup.and.callThrough();
+        service['addElementClickListener'](svgGraphicElementSpyObj);
+        svgGraphicElementSpyObj.onmouseup({} as MouseEvent);
+        expect(nextSpy).toHaveBeenCalled();
+    }));
 });
