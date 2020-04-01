@@ -119,7 +119,7 @@ export abstract class ToolShape extends Tool {
 
         const shapeArea = GeometryService.getRectFromPoints(this.shapeOrigin, mousePositionCopy);
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
-        this.updateShape(shapeArea, scale, this.shape as SVGGraphicsElement);
+        this.updateShape(shapeArea, scale, this.shape);
     }
 
     private stopDrawing(): void {
