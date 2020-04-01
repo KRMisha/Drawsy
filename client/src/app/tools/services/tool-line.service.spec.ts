@@ -6,8 +6,8 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { Tool } from '@app/tools/services/tool';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
-import { Tool } from './tool';
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-empty

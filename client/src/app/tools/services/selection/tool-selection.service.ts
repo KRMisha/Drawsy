@@ -10,9 +10,9 @@ import { ShortcutService } from '@app/shared/services/shortcut.service';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
+import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
-import { ToolSelectionUiService } from './tool-selection-ui.service';
 
 @Injectable({
     providedIn: 'root',

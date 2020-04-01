@@ -1,4 +1,4 @@
-import { IsEmptyPipe } from './is-empty.pipe';
+import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
 
 describe('IsEmptyPipe', () => {
     let pipe: IsEmptyPipe;
