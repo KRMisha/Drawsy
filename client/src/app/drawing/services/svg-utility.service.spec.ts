@@ -1,14 +1,15 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
-import { DrawingService } from './drawing.service';
-import { GeometryService } from './geometry.service';
+import { Vec2 } from '@app/shared/classes/vec2';
 
 // tslint:disable: no-string-literal
 
-fdescribe('SvgUtilityService', () => {
+describe('SvgUtilityService', () => {
     let service: SvgUtilityService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceMock: DrawingService;
@@ -130,5 +131,41 @@ fdescribe('SvgUtilityService', () => {
             'stroke',
             `rgba(${colorValue}, ${colorValue}, ${colorValue}, 0.8)`
         );
+    });
+
+    it('#getCanvasFromSvgRoot should return a new canvas created from a source svg', async () => {
+        const drawingDimensions: Vec2 = { x: 32, y: 32};
+
+        const outerHtmlMock = 'I love HTML!';
+        const svgRootSpyObj = jasmine.createSpyObj('SVGSVGElement', [], {
+            viewBox: {
+                baseVal: {
+                    width: drawingDimensions.x,
+                    height: drawingDimensions.y,
+                },
+            },
+            outerHTML: outerHtmlMock,
+        });
+
+        const canvasContextSpyObj = jasmine.createSpyObj('CanvasRenderingContext2D', ['drawImage']);
+        const canvasSpyObj = jasmine.createSpyObj('HTMLCanvasElement', ['getContext']);
+        canvasSpyObj.getContext.and.returnValue(canvasContextSpyObj);
+        renderer2SpyObj.createElement.and.returnValue(canvasSpyObj);
+
+        const base64svgMock = 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+CiAgICA8cmVjdCB4PSI' +
+                              'wIiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyNCIgLz4KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIi' +
+                              'AvPgogICAgPHJlY3QgeD0iMCIgeT0iMjIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyIiAvPgogICAgPHJlY3QgeD0iMjIiIHk9IjAiIHdpZ' +
+                              'HRoPSIyIiBoZWlnaHQ9IjI0IiAvPgo8L3N2Zz4K';
+        const btoaSpy = spyOn(window, 'btoa').and.returnValue(base64svgMock);
+
+        const canvas = await service.getCanvasFromSvgRoot(svgRootSpyObj);
+
+        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('canvas');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(canvasSpyObj, 'width', drawingDimensions.x.toString());
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(canvasSpyObj, 'height', drawingDimensions.y.toString());
+        expect(canvasSpyObj.getContext).toHaveBeenCalledWith('2d');
+        expect(btoaSpy).toHaveBeenCalledWith(outerHtmlMock);
+        expect(canvasContextSpyObj.drawImage).toHaveBeenCalledWith(jasmine.any(Image), 0, 0);
+        expect(canvas).toBeTruthy();
     });
 });
