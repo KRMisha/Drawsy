@@ -10,6 +10,7 @@ import { Rect } from '@app/shared/classes/rect';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -53,13 +54,16 @@ export class ToolEraserService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        if (event.button !== MouseButton.Left) {
+            return;
+        }
         this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
         this.drawingElementsCopy = [...this.drawingService.svgElements];
         this.update();
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (this.svgElementsDeletedDuringDrag.length === 0) {
+        if (event.button !== MouseButton.Left || this.svgElementsDeletedDuringDrag.length === 0) {
             return;
         }
         const elementIndices = new Map<SVGGraphicsElement, number>();
@@ -69,6 +73,7 @@ export class ToolEraserService extends Tool {
         this.svgElementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
             return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
         });
+
         this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
         this.svgElementsDeletedDuringDrag = [];
     }
