@@ -74,7 +74,7 @@ describe('SvgUtilityService', () => {
 
         spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
         spyOn(service, 'getElementBounds');
-        const area: Rect = {width: 10, height: 10, x: 0, y: 0};
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
         const actualValue = service.getElementUnderAreaPixelPerfect([elementToSend], area);
         expect(actualValue).toEqual(elementToSend);
     });
@@ -89,7 +89,7 @@ describe('SvgUtilityService', () => {
 
         spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
         spyOn(service, 'getElementBounds');
-        const area: Rect = {width: 10, height: 10, x: 0, y: 0};
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
         const actualValue = service.getElementUnderAreaPixelPerfect([], area);
         expect(actualValue).toBeUndefined();
     });
