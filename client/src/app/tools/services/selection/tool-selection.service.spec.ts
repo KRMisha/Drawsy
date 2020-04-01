@@ -5,12 +5,12 @@ import { GeometryService } from '@app/drawing/services/geometry.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection//tool-selection-state.service';
+import { ToolSelectionUiService } from '@app/tools/services/selection//tool-selection-ui.service';
+import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
+import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
-import { Tool } from '../tool';
-import { ToolSelectionMoverService } from './tool-selection-mover.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
-import { ToolSelectionUiService } from './tool-selection-ui.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-empty

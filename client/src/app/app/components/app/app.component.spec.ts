@@ -1,6 +1,3 @@
-// tslint:disable: no-string-literal
-// tslint:disable: max-classes-per-file
-
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { AppComponent } from '@app/app/components/app/app.component';
@@ -8,6 +5,9 @@ import { ThemeService } from '@app/app/services/theme.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { Subject } from 'rxjs';
+
+// tslint:disable: max-classes-per-file
+// tslint:disable: no-string-literal
 
 describe('AppComponent', () => {
     let component: AppComponent;

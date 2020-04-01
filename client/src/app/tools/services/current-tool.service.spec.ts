@@ -1,135 +1,312 @@
-// import { Renderer2 } from '@angular/core';
-// import { async, TestBed } from '@angular/core/testing';
-// import { DrawingService } from '@app/drawing/services/drawing.service';
-// import { JunctionSettings } from '@app/tools/classes/junction-settings';
-// import { StrokeType, Texture, ToolSetting } from '@app/tools/enums/tool-settings.enum';
-// import { Tool } from '@app/tools/services/tool';
-// import { ToolHolderService } from '@app/tools/services/tool-holder.service';
-// import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { async, TestBed } from '@angular/core/testing';
+import { ColorService } from '@app/drawing/services/color.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Color } from '@app/shared/classes/color';
+import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Tool } from '@app/tools/services/tool';
+import { Subject } from 'rxjs';
 
+// tslint:disable: no-any
 // tslint:disable: no-magic-numbers
-
-// class MockTool extends Tool {
-//     onMouseUp: () => {};
-//     onMouseDown: () => {};
-//     onMouseMove: () => {};
-//     onMouseDoubleClick: () => {};
-//     onKeyDown: () => {};
-//     onKeyUp: () => {};
-//     onLeave: () => {};
-//     onEnter: () => {};
-//     name: string;
-//     isMouseDown = false;
-//     isMouseInside = false;
-//     renderer: Renderer2;
-//     toolSettings = new Map<ToolSetting, number | JunctionSettings | StrokeType | Texture>();
-// }
-
-// tslint:disable: max-classes-per-file
-// class MockToolHolderService {
-//     tools: Tool[] = [new MockTool({} as DrawingService), new MockTool({} as DrawingService), new MockTool({} as DrawingService)];
-// }
-// tslint:enable: max-classes-per-file
+// tslint:disable: no-string-literal
 
 describe('CurrentToolService', () => {
-    // let service: CurrentToolService;
-    // beforeEach(() => {
-    //     TestBed.configureTestingModule({
-    //         providers: [{ provide: ToolHolderService, useValue: new MockToolHolderService() }],
-    //     });
-    //     service = TestBed.inject(CurrentToolService);
-    //     service.selectedTool = new MockTool({} as DrawingService);
-    // });
-    // it('should be created', () => {
-    //     expect(service).toBeTruthy();
-    // });
-    // it('should forward events to the selected tool', async(() => {
-    //     spyOn(service.selectedTool, 'onMouseMove').and.callThrough();
-    //     service.onMouseMove({} as MouseEvent);
-    //     expect(service.selectedTool.onMouseMove).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onMouseDown').and.callThrough();
-    //     service.onMouseDown({} as MouseEvent);
-    //     expect(service.selectedTool.onMouseDown).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onMouseUp').and.callThrough();
-    //     service.onMouseUp({} as MouseEvent);
-    //     expect(service.selectedTool.onMouseUp).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onMouseDoubleClick').and.callThrough();
-    //     service.onMouseDoubleClick({} as MouseEvent);
-    //     expect(service.selectedTool.onMouseDoubleClick).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onKeyDown').and.callThrough();
-    //     service.onKeyDown({} as KeyboardEvent);
-    //     expect(service.selectedTool.onKeyDown).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onKeyUp').and.callThrough();
-    //     service.onKeyUp({} as KeyboardEvent);
-    //     expect(service.selectedTool.onKeyUp).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onEnter').and.callThrough();
-    //     service.onEnter({} as MouseEvent);
-    //     expect(service.selectedTool.onEnter).toHaveBeenCalled();
-    //     spyOn(service.selectedTool, 'onLeave').and.callThrough();
-    //     service.onLeave({} as MouseEvent);
-    //     expect(service.selectedTool.onLeave).toHaveBeenCalled();
-    // }));
-    // it('should set selected tool status boolean', async(() => {
-    //     spyOn(service, 'setMouseDown').and.callThrough();
-    //     service.setMouseDown(true);
-    //     expect(service.setMouseDown).toHaveBeenCalled();
-    //     expect(service.selectedTool.isMouseDown).toEqual(true);
-    //     spyOn(service, 'setMouseInside').and.callThrough();
-    //     service.setMouseInside(true);
-    //     expect(service.setMouseInside).toHaveBeenCalled();
-    //     expect(service.selectedTool.isMouseInside).toEqual(true);
-    // }));
-    // it("should set its internal renderer and all of the tool holder's tools renderers to the passed renderer", () => {
-    //     const toolHolderService = TestBed.inject(ToolHolderService);
-    //     spyOn(service, 'setRenderer').and.callThrough();
-    //     service.setRenderer({} as Renderer2);
-    //     expect(service.setRenderer).toHaveBeenCalled();
-    //     expect(service.renderer).toEqual({} as Renderer2);
-    //     expect(toolHolderService.tools[0].renderer).toEqual({} as Renderer2);
-    //     expect(toolHolderService.tools[1].renderer).toEqual({} as Renderer2);
-    //     expect(toolHolderService.tools[2].renderer).toEqual({} as Renderer2);
-    // });
-    // it('should set the internal selected tool', () => {
-    //     const toolHolderService = TestBed.inject(ToolHolderService);
-    //     spyOn(service, 'setSelectedTool').and.callThrough();
-    //     toolHolderService.tools[0] = {} as MockTool;
-    //     service.selectedTool = new MockTool({} as DrawingService);
-    //     service.setSelectedTool(0);
-    //     expect(service.setSelectedTool).toHaveBeenCalled();
-    //     expect(service.selectedTool).toEqual({} as MockTool);
-    // });
-    // it('should return selectedTool name', () => {
-    //     spyOn(service, 'getToolName').and.callThrough();
-    //     service.selectedTool.name = 'default';
-    //     expect(service.getToolName()).toEqual('default');
-    //     expect(service.getToolName).toHaveBeenCalled();
-    // });
-    // it('should return value mapped to the setting', () => {
-    //     spyOn(service, 'getSetting').and.callThrough();
-    //     service.selectedTool.toolSettings.set(ToolSetting.Size, 3);
-    //     expect(service.getSetting(ToolSetting.Size)).toEqual(3);
-    //     expect(service.getSetting).toHaveBeenCalled();
-    // });
-    // it('should set value mapped to the setting', () => {
-    //     spyOn(service, 'setSetting').and.callThrough();
-    //     service.selectedTool.toolSettings.set(ToolSetting.Size, 3);
-    //     service.setSetting(ToolSetting.Size, 4);
-    //     expect(service.selectedTool.toolSettings.get(ToolSetting.Size)).toEqual(4);
-    //     expect(service.setSetting).toHaveBeenCalled();
-    // });
-    // it('should only set value mapped to the setting if it exists and is valid', () => {
-    //     expect(service.hasSetting(ToolSetting.Size)).toEqual(false);
-    //     spyOn(service, 'setSetting').and.callThrough();
-    //     service.selectedTool.toolSettings.set(ToolSetting.HasJunction, [true, 3]);
-    //     service.setSetting(ToolSetting.HasJunction, [false, -1]);
-    //     expect(service.getSetting(ToolSetting.HasJunction)).toEqual([true, 3]);
-    //     expect(service.setSetting).toHaveBeenCalled();
-    // });
-    // it('should return setting exists in map', () => {
-    //     spyOn(service, 'hasSetting').and.callThrough();
-    //     service.selectedTool.toolSettings.set(ToolSetting.Size, 3);
-    //     expect(service.hasSetting(ToolSetting.Size)).toEqual(true);
-    //     expect(service.hasSetting(ToolSetting.HasJunction)).toEqual(false);
-    //     expect(service.hasSetting).toHaveBeenCalled();
-    // });
+    let service: CurrentToolService;
+    let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
+    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    let currentToolSpyObj: jasmine.SpyObj<Tool>;
+    let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
+
+    let primaryColorChangedSubject = new Subject<Color>();
+    let secondaryColorChangedSubject = new Subject<Color>();
+    let elementClickedSubject = new Subject<SvgClickEvent>();
+
+    beforeEach(() => {
+        primaryColorChangedSubject = new Subject<Color>();
+        secondaryColorChangedSubject = new Subject<Color>();
+        colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
+            primaryColorChanged$: primaryColorChangedSubject,
+            secondaryColorChanged$: secondaryColorChangedSubject,
+        });
+
+        drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getScreenCTM']);
+        elementClickedSubject = new Subject<SvgClickEvent>();
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement'], {
+            drawingRoot: drawingRootSpyObj,
+            elementClicked$: elementClickedSubject,
+        });
+
+        currentToolSpyObj = jasmine.createSpyObj('Tool', [
+            'onMouseMove',
+            'onMouseDown',
+            'onMouseUp',
+            'onMouseDoubleClick',
+            'onKeyDown',
+            'onKeyUp',
+            'onEnter',
+            'onLeave',
+            'onPrimaryColorChange',
+            'onSecondaryColorChange',
+            'onElementClick',
+            'update',
+            'onToolSelection',
+            'onToolDeselection',
+        ]);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: ColorService, useValue: colorServiceSpyObj },
+                { provide: DrawingService, useValue: drawingServiceSpyObj },
+            ],
+        });
+
+        Tool.isLeftMouseButtonDown = false;
+        Tool.isMouseInsideDrawing = false;
+
+        service = TestBed.inject(CurrentToolService);
+        service['_currentTool'] = currentToolSpyObj;
+    });
+
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
+
+    it("#constructor should subscribe to colorService's primary, secondary color changes and drawingService's elementClick", async(() => {
+        const colorStub = {} as Color;
+        const svgClickEventStub = {} as SvgClickEvent;
+
+        primaryColorChangedSubject.next(colorStub);
+        secondaryColorChangedSubject.next(colorStub);
+        elementClickedSubject.next(svgClickEventStub);
+
+        expect(currentToolSpyObj.onPrimaryColorChange).toHaveBeenCalledWith(colorStub);
+        expect(currentToolSpyObj.onSecondaryColorChange).toHaveBeenCalledWith(colorStub);
+        expect(currentToolSpyObj.onElementClick).toHaveBeenCalled();
+    }));
+
+    it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
+        const primaryColorChangedSubscriptionSpy = spyOn<any>(service['primaryColorChangedSubscription'], 'unsubscribe');
+        const secondaryColorChangedSubscriptionSpy = spyOn<any>(service['secondaryColorChangedSubscription'], 'unsubscribe');
+        const elementClickedSubscriptionSpy = spyOn<any>(service['elementClickedSubscription'], 'unsubscribe');
+
+        service.ngOnDestroy();
+
+        expect(primaryColorChangedSubscriptionSpy).toHaveBeenCalled();
+        expect(secondaryColorChangedSubscriptionSpy).toHaveBeenCalled();
+        expect(elementClickedSubscriptionSpy).toHaveBeenCalled();
+    }));
+
+    it('#onMouseMove should update the mouse position and call the currentTool onMouseMove', () => {
+        const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+        getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+        service.onMouseMove({} as MouseEvent);
+
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+        expect(currentToolSpyObj.onMouseMove).toHaveBeenCalled();
+    });
+
+    it(
+        '#onMouseDown should set isLeftMouseButtonDown to true if the event is a left click, update the mouse position and call' +
+            ' the currentTool onMouseDown',
+        () => {
+            const leftClick = { button: MouseButton.Left } as MouseEvent;
+            const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+            const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+            getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+            service.onMouseDown(leftClick);
+
+            expect(Tool.isLeftMouseButtonDown).toEqual(true);
+            expect(getMousePositionSpy).toHaveBeenCalled();
+            expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+            expect(currentToolSpyObj.onMouseDown).toHaveBeenCalledWith(leftClick);
+        }
+    );
+
+    it(
+        '#onMouseDown should not change isLeftMouseButtonDown if the event is not a left click, update the mouse position and call' +
+            ' the currentTool onMouseDown',
+        () => {
+            const rightClick = { button: MouseButton.Right } as MouseEvent;
+            const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+            const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+            getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+            service.onMouseDown(rightClick);
+
+            expect(Tool.isLeftMouseButtonDown).toEqual(false);
+            expect(getMousePositionSpy).toHaveBeenCalled();
+            expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+            expect(currentToolSpyObj.onMouseDown).toHaveBeenCalledWith(rightClick);
+        }
+    );
+
+    it(
+        '#onMouseUp should set isLeftMouseButtonDown to false if the event is a left click, update the mouse position and call' +
+            ' the currentTool onMouseUp',
+        () => {
+            Tool.isLeftMouseButtonDown = true;
+            const leftClick = { button: MouseButton.Left } as MouseEvent;
+            const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+            const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+            getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+            service.onMouseUp(leftClick);
+
+            expect(Tool.isLeftMouseButtonDown).toEqual(false);
+            expect(getMousePositionSpy).toHaveBeenCalled();
+            expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+            expect(currentToolSpyObj.onMouseUp).toHaveBeenCalledWith(leftClick);
+        }
+    );
+
+    it(
+        '#onMouseUp should not change isLeftMouseButtonDown if the event is not a left click, update the mouse position and call' +
+            ' the currentTool onMouseUp',
+        () => {
+            Tool.isLeftMouseButtonDown = true;
+            const rightClick = { button: MouseButton.Right } as MouseEvent;
+            const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+            const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+            getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+            service.onMouseUp(rightClick);
+
+            expect(Tool.isLeftMouseButtonDown).toEqual(true);
+            expect(getMousePositionSpy).toHaveBeenCalled();
+            expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+            expect(currentToolSpyObj.onMouseUp).toHaveBeenCalledWith(rightClick);
+        }
+    );
+
+    it('#onMouseDoubleClick should update the mouse position and call the currentTool onMouseDoubleClick', () => {
+        const mouseEvent = {} as MouseEvent;
+        const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+        getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+        service.onMouseDoubleClick(mouseEvent);
+
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+        expect(currentToolSpyObj.onMouseDoubleClick).toHaveBeenCalledWith(mouseEvent);
+    });
+
+    it('#onKeyDown should call the currentTool onKeyDown', () => {
+        const keyboardEvent = {} as KeyboardEvent;
+
+        service.onKeyDown(keyboardEvent);
+
+        expect(currentToolSpyObj.onKeyDown).toHaveBeenCalledWith(keyboardEvent);
+    });
+
+    it('#onKeyUp should call the currentTool onKeyDown', () => {
+        const keyboardEvent = {} as KeyboardEvent;
+
+        service.onKeyUp(keyboardEvent);
+
+        expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
+    });
+
+    it('#onEnter should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onEnter', () => {
+        const mouseEvent = {} as MouseEvent;
+        const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+        getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+        service.onEnter(mouseEvent);
+
+        expect(Tool.isMouseInsideDrawing).toEqual(true);
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+        expect(currentToolSpyObj.onEnter).toHaveBeenCalledWith(mouseEvent);
+    });
+
+    it('#onLeave should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onLeave', () => {
+        Tool.isMouseInsideDrawing = true;
+        const mouseEvent = {} as MouseEvent;
+        const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+        getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+
+        service.onLeave(mouseEvent);
+
+        expect(Tool.isMouseInsideDrawing).toEqual(false);
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+        expect(currentToolSpyObj.onLeave).toHaveBeenCalledWith(mouseEvent);
+    });
+
+    it('#update should update the current tool', () => {
+        service.update();
+        expect(currentToolSpyObj.update).toHaveBeenCalled();
+    });
+
+    it('#get currentTool should return the current tool', () => {
+        const toolStub = {} as Tool;
+        service['_currentTool'] = toolStub;
+        expect(service.currentTool).toEqual(toolStub);
+    });
+
+    it(
+        '#set currentTool should not call onToolDeselection from Tool if currentTool is undefined, set the current tool and call' +
+            ' onToolSelection from Tool',
+        () => {
+            delete service['_currentTool'];
+            service.currentTool = currentToolSpyObj;
+
+            expect(currentToolSpyObj.onToolDeselection).not.toHaveBeenCalled();
+            expect(service.currentTool).toEqual(currentToolSpyObj);
+            expect(currentToolSpyObj.onToolSelection).toHaveBeenCalled();
+        }
+    );
+
+    it(
+        '#set currentTool should call onToolDeselection from Tool if currentTool is defined, set the current tool and call' +
+            ' onToolSelection from Tool',
+        () => {
+            const initialCurrentToolSpyObj = jasmine.createSpyObj('Tool', ['onToolDeselection']);
+            service['_currentTool'] = initialCurrentToolSpyObj;
+            service.currentTool = currentToolSpyObj;
+
+            expect(initialCurrentToolSpyObj.onToolDeselection).toHaveBeenCalled();
+            expect(service.currentTool).toEqual(currentToolSpyObj);
+            expect(currentToolSpyObj.onToolSelection).toHaveBeenCalled();
+        }
+    );
+
+    it('#getMousePosition should return a Vec2 with x and y values at 0 if the drawing root CTM is null', () => {
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition').and.callThrough();
+        drawingRootSpyObj.getScreenCTM.and.returnValue(null);
+
+        const expectedResult = { x: 0, y: 0 } as Vec2;
+        const receivedResult = service['getMousePosition']({} as MouseEvent);
+
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(drawingRootSpyObj.getScreenCTM).toHaveBeenCalled();
+        expect(receivedResult).toEqual(expectedResult);
+    });
+
+    it('#getMousePosition should return a Vec2 with adjusted mousePosition values if the drawing root CTM is not null', () => {
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition').and.callThrough();
+        const mouseEvent = { clientX: 100, clientY: 100 } as MouseEvent;
+        const createdMatrix = { a: 10, d: 10, e: 10, f: 10 } as DOMMatrix;
+        drawingRootSpyObj.getScreenCTM.and.returnValue(createdMatrix);
+
+        const expectedResult = {
+            x: (mouseEvent.clientX - createdMatrix.e) / createdMatrix.a,
+            y: (mouseEvent.clientY - createdMatrix.f) / createdMatrix.d,
+        } as Vec2;
+        const receivedResult = service['getMousePosition'](mouseEvent);
+
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(drawingRootSpyObj.getScreenCTM).toHaveBeenCalled();
+        expect(receivedResult).toEqual(expectedResult);
+    });
 });

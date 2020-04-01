@@ -40,8 +40,8 @@ export class SvgUtilityService {
                 let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGGraphicsElement;
 
                 if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGGraphicsElement) {
-                    const parentElement = (elementUnderPoint.parentElement || undefined) as SVGGraphicsElement;
-                    if (parentElement !== undefined && availableElementsSet.has(parentElement as SVGGraphicsElement)) {
+                    const parentElement = elementUnderPoint.parentElement;
+                    if (availableElementsSet.has(parentElement)) {
                         elementUnderPoint = parentElement;
                     }
                 }
