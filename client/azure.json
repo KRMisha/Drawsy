@@ -1,0 +1,17 @@
+{
+    "hosting": [
+        {
+            "app": {
+                "project": "client",
+                "target": "build",
+                "configuration": "production",
+                "path": "dist/client"
+            },
+            "azureHosting": {
+                "subscription": "74805acf-7414-4c90-9c4e-95f3357f39e2",
+                "resourceGroupName": "LOG2990",
+                "account": "log2990client"
+            }
+        }
+    ]
+}
