@@ -3,6 +3,6 @@
     "version": "1.0.0",
     "scripts": {
         "start": "npm run serve --prefix server",
-        "postinstall": "npm install --prefix server"
+        "install": "npm install --prefix server"
     }
 }
