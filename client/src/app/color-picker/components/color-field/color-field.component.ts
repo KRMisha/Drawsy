@@ -2,6 +2,8 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChil
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { TouchService } from '@app/shared/services/touch.service';
 import { Subscription } from 'rxjs';
 
 enum ColorString {
@@ -69,7 +71,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside) {
+        if (this.isMouseInside && event.button === MouseButton.Left) {
             this.isLeftMouseButtonDown = true;
             this.updateColor(event);
         }
@@ -77,7 +79,26 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.isLeftMouseButtonDown = false;
+        if (event.button === MouseButton.Left) {
+            this.isLeftMouseButtonDown = false;
+        }
+    }
+
+    @HostListener('document:touchmove', ['$event'])
+    onTouchMove(event: TouchEvent): void {
+        this.onMouseMove(TouchService.mockMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onTouchStart(event: TouchEvent): void {
+        this.onMouseEnter();
+        this.onMouseDown(TouchService.mockMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    onTouchEnd(event: TouchEvent): void {
+        this.onMouseUp(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseLeave();
     }
 
     @HostListener('mouseenter')

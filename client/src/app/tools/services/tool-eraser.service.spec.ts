@@ -122,9 +122,9 @@ describe('ToolEraserService', () => {
         expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
-    it('#onEnter should call #updateEraserRect', () => {
+    it('#onMouseEnter should call #updateEraserRect', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
-        service.onEnter({} as MouseEvent);
+        service.onMouseEnter({} as MouseEvent);
         expect(updateEraserRectSpy).toHaveBeenCalled();
     });
 

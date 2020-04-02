@@ -43,3 +43,7 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+.mat-tooltip {
+    touch-action: auto;
+}

@@ -39,8 +39,8 @@ export abstract class Tool {
     onMouseDoubleClick(event: MouseEvent): void {}
     onKeyDown(event: KeyboardEvent): void {}
     onKeyUp(event: KeyboardEvent): void {}
-    onEnter(event: MouseEvent): void {}
-    onLeave(event: MouseEvent): void {}
+    onMouseEnter(event: MouseEvent): void {}
+    onMouseLeave(event: MouseEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {}

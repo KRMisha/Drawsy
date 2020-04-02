@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { TouchService } from '@app/shared/services/touch.service';
 import { merge, Subscription } from 'rxjs';
 
 const canvasWidth = 200;
@@ -54,15 +56,34 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside) {
+        if (this.isMouseInside && event.button === MouseButton.Left) {
             this.isLeftMouseButtonDown = true;
             this.updateAlpha(event);
         }
     }
 
-    @HostListener('document:mouseup')
-    onMouseUp(): void {
-        this.isLeftMouseButtonDown = false;
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            this.isLeftMouseButtonDown = false;
+        }
+    }
+
+    @HostListener('document:touchmove', ['$event'])
+    onTouchMove(event: TouchEvent): void {
+        this.onMouseMove(TouchService.mockMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onTouchStart(event: TouchEvent): void {
+        this.onMouseEnter();
+        this.onMouseDown(TouchService.mockMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    onTouchEnd(event: TouchEvent): void {
+        this.onMouseUp(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseLeave();
     }
 
     @HostListener('mouseenter')
