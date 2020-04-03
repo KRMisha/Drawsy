@@ -1,5 +1,5 @@
 import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
@@ -16,8 +16,6 @@ import MetadataValidation from '@common/validation/metadata-validation';
 export class SaveDrawingComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [Comma, Enter];
 
-    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
-
     labels: string[] = [];
 
     saveDrawingFormGroup = new FormGroup({
@@ -31,6 +29,8 @@ export class SaveDrawingComponent implements OnInit {
             Validators.maxLength(MetadataValidation.maxLabelLength),
         ]),
     });
+
+    @ViewChild('appDrawingPreview') private drawingPreview: DrawingPreviewComponent;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,

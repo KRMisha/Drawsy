@@ -12,7 +12,7 @@ const canvasHeight = 20;
     styleUrls: ['./hue-slider.component.scss'],
 })
 export class HueSliderComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('appHuePicker') hueCanvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('appHuePicker') private hueCanvas: ElementRef<HTMLCanvasElement>;
 
     private context: CanvasRenderingContext2D;
 
