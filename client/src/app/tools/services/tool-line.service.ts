@@ -188,6 +188,9 @@ export class ToolLineService extends Tool {
         // tslint:disable: no-non-null-assertion
         this.isCurrentlyDrawing = true;
 
+        this.isJunctionEnabled = this.settings.junctionSettings!.isEnabled;
+        this.junctionDiameter = this.settings.junctionSettings!.diameter;
+
         const junctionDiameterActualValue = this.isJunctionEnabled ? this.junctionDiameter : 0;
         const padding = Math.max(0, this.settings.lineWidth! / 2 - junctionDiameterActualValue);
 
