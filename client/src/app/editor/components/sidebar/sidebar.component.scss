@@ -44,6 +44,6 @@
     user-select: none;
 }
 
-.mat-tooltip {
-    touch-action: auto;
+[mattooltipposition] {
+    touch-action: auto !important;
 }
