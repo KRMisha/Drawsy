@@ -1,9 +1,9 @@
 import { RendererFactory2 } from '@angular/core';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -23,11 +23,11 @@ export abstract class ToolShape extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.isShapeAlwaysRegular = isShapeAlwaysRegular;
         this.settings.shapeType = ToolDefaults.defaultShapeType;
         this.settings.shapeBorderWidth = ToolDefaults.defaultShapeBorderWidth;
@@ -133,7 +133,7 @@ export abstract class ToolShape extends Tool {
         const isValidNonRegular =
             !isShapeRegular && this.shapeOrigin.x !== Tool.mousePosition.x && this.shapeOrigin.y !== Tool.mousePosition.y;
         if (isValidRegular || isValidNonRegular) {
-            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
         } else {
             this.drawingService.removeElement(this.shape);
         }

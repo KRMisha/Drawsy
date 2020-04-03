@@ -1,9 +1,9 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { CommandService } from './command.service';
 
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
@@ -13,17 +13,17 @@ describe('DrawingService', () => {
     let service: DrawingService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['clearCommands']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['clearCommands']);
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
         service = TestBed.inject(DrawingService);
@@ -229,22 +229,22 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(false);
     });
 
-    it("#confirmNewDrawing should return true, call #clearStoredElements and call commandService's clearCommands if there is not a drawing started", () => {
+    it("#confirmNewDrawing should return true, call #clearStoredElements and call historyService's clearCommands if there is not a drawing started", () => {
         spyOn(service, 'isDrawingStarted').and.returnValue(false);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
         const actualValue = service.confirmNewDrawing({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
-        expect(commandServiceSpyObj.clearCommands).toHaveBeenCalled();
+        expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
     });
 
-    it("#confirmNewDrawing should return true, call #clearStoredElements and call commandService's clearCommands if the user confirms the warning message", () => {
+    it("#confirmNewDrawing should return true, call #clearStoredElements and call historyService's clearCommands if the user confirms the warning message", () => {
         spyOn(window, 'confirm').and.returnValue(true);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
         const actualValue = service.confirmNewDrawing({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
-        expect(commandServiceSpyObj.clearCommands).toHaveBeenCalled();
+        expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
     });
 
     it('#get svgElements should return the cached elements', () => {

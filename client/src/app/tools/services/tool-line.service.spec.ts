@@ -1,8 +1,8 @@
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -22,7 +22,7 @@ describe('ToolLineService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let primaryColorSpyObj: jasmine.SpyObj<Color>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     const primaryRgbaStringValue = 'rgba(69, 69, 69, 1)';
 
@@ -41,13 +41,13 @@ describe('ToolLineService', () => {
             primaryColor: primaryColorSpyObj,
         });
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ColorService, useValue: colorServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
 

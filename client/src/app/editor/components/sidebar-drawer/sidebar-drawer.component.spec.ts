@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommandService } from '@app/drawing/services/command.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -33,7 +33,7 @@ describe('SidebarDrawerComponent', () => {
     let sanitizerSpyObj: jasmine.SpyObj<DomSanitizer>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let lineWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionEnabledFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
@@ -70,7 +70,7 @@ describe('SidebarDrawerComponent', () => {
             undoShortcut$: undoShortcutSubject,
             redoShortcut$: redoShortcutSubject,
         });
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['undo', 'redo', 'hasUndoCommands', 'hasRedoCommands']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['undo', 'redo', 'hasUndoCommands', 'hasRedoCommands']);
 
         lineWidthChangedSubject = new Subject<any>();
         junctionEnabledChangedSubject = new Subject<any>();
@@ -129,7 +129,7 @@ describe('SidebarDrawerComponent', () => {
                 { provide: DomSanitizer, useValue: sanitizerSpyObj },
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -575,15 +575,15 @@ describe('SidebarDrawerComponent', () => {
         expect(eraserSizeFormControlSpyObj.reset).not.toHaveBeenCalled();
     });
 
-    it('#undoCommand should forward the call to commandService and currentToolService', () => {
+    it('#undoCommand should forward the call to historyService and currentToolService', () => {
         component.undoCommand();
-        expect(commandServiceSpyObj.undo).toHaveBeenCalled();
+        expect(historyServiceSpyObj.undo).toHaveBeenCalled();
         expect(currentToolServiceSpyObj.update).toHaveBeenCalled();
     });
 
-    it('#redoCommand should forward the call to commandService and currentToolService', () => {
+    it('#redoCommand should forward the call to historyService and currentToolService', () => {
         component.redoCommand();
-        expect(commandServiceSpyObj.redo).toHaveBeenCalled();
+        expect(historyServiceSpyObj.redo).toHaveBeenCalled();
         expect(currentToolServiceSpyObj.update).toHaveBeenCalled();
     });
 

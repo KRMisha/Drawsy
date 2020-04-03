@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { ToolData } from '@app/tools/classes/tool-data';
 import { Tool } from '@app/tools/services/tool';
@@ -13,10 +13,10 @@ class ToolMock extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo);
     }
 }
 
@@ -32,9 +32,9 @@ describe('Tool', () => {
 
         const drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['']);
         const colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['']);
-        const commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['']);
+        const historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['']);
 
-        tool = new ToolMock(rendererFactory2SpyObj, drawingServiceSpyObj, colorServiceSpyObj, commandServiceSpyObj, toolInfo);
+        tool = new ToolMock(rendererFactory2SpyObj, drawingServiceSpyObj, colorServiceSpyObj, historyServiceSpyObj, toolInfo);
     });
 
     it('should be created', () => {

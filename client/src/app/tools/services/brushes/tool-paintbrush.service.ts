@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { ToolBrush } from '@app/tools/services/brushes/tool-brush';
@@ -14,9 +14,9 @@ export class ToolPaintbrushService extends ToolBrush {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Paintbrush);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Paintbrush);
         this.settings.brushTexture = ToolDefaults.defaultBrushTexture;
     }
 
