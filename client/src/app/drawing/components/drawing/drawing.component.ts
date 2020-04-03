@@ -82,19 +82,19 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     @HostListener('document:touchmove', ['$event'])
     onTouchMove(event: TouchEvent): void {
-        this.onMouseMove(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseMove(TouchService.getMouseEventFromTouchEvent(event));
     }
 
     @HostListener('touchstart', ['$event'])
     onTouchStart(event: TouchEvent): void {
-        const mouseEventMock = TouchService.mockMouseEventFromTouchEvent(event);
+        const mouseEventMock = TouchService.getMouseEventFromTouchEvent(event);
         this.onMouseEnter(mouseEventMock);
         this.onMouseDown(mouseEventMock);
     }
 
     @HostListener('document:touchend', ['$event'])
     onTouchEnd(event: TouchEvent): void {
-        const mouseEventMock = TouchService.mockMouseEventFromTouchEvent(event);
+        const mouseEventMock = TouchService.getMouseEventFromTouchEvent(event);
         this.onMouseUp(mouseEventMock);
         this.onMouseLeave(mouseEventMock);
     }

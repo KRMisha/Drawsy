@@ -67,18 +67,18 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:touchmove', ['$event'])
     onTouchMove(event: TouchEvent): void {
-        this.onMouseMove(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseMove(TouchService.getMouseEventFromTouchEvent(event));
     }
 
     @HostListener('touchstart', ['$event'])
     onTouchStart(event: TouchEvent): void {
         this.onMouseEnter();
-        this.onMouseDown(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseDown(TouchService.getMouseEventFromTouchEvent(event));
     }
 
     @HostListener('document:touchend', ['$event'])
     onTouchEnd(event: TouchEvent): void {
-        this.onMouseUp(TouchService.mockMouseEventFromTouchEvent(event));
+        this.onMouseUp(TouchService.getMouseEventFromTouchEvent(event));
         this.onMouseLeave();
     }
 

@@ -1,7 +1,7 @@
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 
 export class TouchService {
-    static mockMouseEventFromTouchEvent(event: TouchEvent): MouseEvent {
+    static getMouseEventFromTouchEvent(event: TouchEvent): MouseEvent {
         return {
             button: MouseButton.Left,
             clientX: event.changedTouches[0].clientX,
