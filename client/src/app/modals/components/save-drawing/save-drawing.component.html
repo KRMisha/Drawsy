@@ -1,7 +1,7 @@
 <h1 mat-dialog-title class="title">{{ isCreateDrawingAction ? 'Sauvegarder le dessin' : 'Mettre à jour le dessin' }}</h1>
 <form [formGroup]="saveDrawingFormGroup" (ngSubmit)="onSubmit()">
     <mat-dialog-content>
-        <mat-form-field>
+        <mat-form-field class="title-form-field">
             <mat-label>Titre</mat-label>
             <input matInput formControlName="title" />
             <mat-error *ngIf="saveDrawingFormGroup.controls.title.invalid">
