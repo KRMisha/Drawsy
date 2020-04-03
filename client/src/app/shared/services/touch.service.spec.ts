@@ -1,15 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { TouchService } from '@app/shared/services/touch.service';
 
-describe('TouchService', () => {
-    let service: TouchService;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(TouchService);
-    });
-
-    it('should be created', () => {
-        expect(service).toBeTruthy();
+fdescribe('TouchService', () => {
+    it('#getMouseEventFromTouchEvent should create a fake MouseEvent from a given TouchEvent', () => {
+        const touchEventMock = {
+            changedTouches: [{ clientX: 32, clientY: 64 } as Touch],
+        } as unknown as TouchEvent;
+        const expectedMouseEvent = {
+            button: MouseButton.Left,
+            clientX: 32,
+            clientY: 64,
+        } as MouseEvent;
+        const actualMouseEvent = TouchService.getMouseEventFromTouchEvent(touchEventMock);
+        expect(actualMouseEvent).toEqual(expectedMouseEvent);
     });
 });
