@@ -1,8 +1,0 @@
-{
-    "name": "log2990",
-    "version": "1.0.0",
-    "scripts": {
-        "start": "npm run serve --prefix server",
-        "install": "npm install --prefix server"
-    }
-}

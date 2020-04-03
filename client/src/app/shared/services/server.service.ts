@@ -9,8 +9,7 @@ import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-// const serverUrl = 'http://localhost:3000/api';
-const serverUrl = 'https://log2990-server.azurewebsites.net';
+const serverUrl = 'http://localhost:3000/api';
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
