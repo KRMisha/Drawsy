@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 @Component({
@@ -10,13 +9,13 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     styleUrls: ['./drawing-preview.component.scss'],
 })
 export class DrawingPreviewComponent implements AfterViewInit {
+    drawingFilter = DrawingFilter.None;
+
     @ViewChild('appDrawingRoot') drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
 
-    constructor(private renderer: Renderer2, private drawingPreviewService: DrawingPreviewService, private drawingService: DrawingService) {
-        this.drawingPreviewService.drawingFilter = DrawingFilter.None;
-    }
+    constructor(private renderer: Renderer2, private drawingService: DrawingService) {}
 
     ngAfterViewInit(): void {
         for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {
@@ -26,6 +25,10 @@ export class DrawingPreviewComponent implements AfterViewInit {
         for (const element of this.drawingService.svgElements) {
             this.renderer.appendChild(this.svgDrawingContent.nativeElement, element.cloneNode(true));
         }
+    }
+
+    getDrawingFilter(): string | null {
+        return this.drawingFilter === DrawingFilter.None ? null : `url(#drawingFilter${this.drawingFilter})`;
     }
 
     get viewBox(): string {
@@ -42,11 +45,5 @@ export class DrawingPreviewComponent implements AfterViewInit {
 
     get backgroundColor(): string {
         return this.drawingService.backgroundColor.toRgbaString();
-    }
-
-    get drawingFilter(): string | null {
-        return this.drawingPreviewService.drawingFilter === DrawingFilter.None
-            ? null
-            : `url(#drawingFilter${this.drawingPreviewService.drawingFilter})`;
     }
 }

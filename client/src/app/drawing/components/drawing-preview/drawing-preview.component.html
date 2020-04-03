@@ -61,7 +61,7 @@
         </filter>
     </defs>
 
-    <rect width="100%" height="100%" [attr.fill]="backgroundColor" [attr.filter]="drawingFilter" />
+    <rect width="100%" height="100%" [attr.fill]="backgroundColor" [attr.filter]="getDrawingFilter()" />
 
-    <g #appDrawingContent [attr.filter]="drawingFilter"></g>
+    <g #appDrawingContent [attr.filter]="getDrawingFilter()"></g>
 </svg>

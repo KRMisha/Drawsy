@@ -53,7 +53,7 @@ export class DrawingSerializerService {
     exportDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): void {
         fileType === FileType.Svg
             ? this.exportVectorDrawing(filename, drawingRoot)
-            : this.exportMatrixDrawing(filename, fileType, drawingRoot);
+            : this.exportRasterDrawing(filename, fileType, drawingRoot);
     }
 
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
@@ -79,7 +79,7 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    private async exportMatrixDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): Promise<void> {
+    private async exportRasterDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): Promise<void> {
         const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
         const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
 

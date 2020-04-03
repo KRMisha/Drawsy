@@ -1,11 +1,10 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
-import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { ExportDrawingService } from '@app/modals/services/export-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import MetadataValidation from '@common/validation/metadata-validation';
 
@@ -17,12 +16,7 @@ import MetadataValidation from '@common/validation/metadata-validation';
 export class ExportDrawingComponent {
     // Make enums available to template
     DrawingFilter = DrawingFilter;
-
-    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
-
     FileType = FileType;
-
-    currentFileType: FileType = FileType.Svg;
 
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
@@ -30,21 +24,18 @@ export class ExportDrawingComponent {
         Validators.maxLength(MetadataValidation.maxTitleLength),
     ]);
 
+    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
+
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private drawingSerializerService: DrawingSerializerService,
-        private drawingService: DrawingService,
-        private drawingPreviewService: DrawingPreviewService
+        private exportDrawingService: ExportDrawingService,
+        private drawingService: DrawingService
     ) {}
 
     onSubmit(): void {
         this.drawingService.title = this.titleFormControl.value;
         this.changeDetectorRef.detectChanges();
-        this.drawingSerializerService.exportDrawing(
-            this.drawingService.title,
-            this.currentFileType,
-            this.drawingPreview.drawingRoot.nativeElement
-        );
+        this.exportDrawingService.exportDrawing(this.drawingPreview.drawingRoot.nativeElement);
     }
 
     getErrorMessage(): string {
@@ -52,10 +43,18 @@ export class ExportDrawingComponent {
     }
 
     get drawingFilter(): DrawingFilter {
-        return this.drawingPreviewService.drawingFilter;
+        return this.drawingPreview === undefined ? DrawingFilter.None : this.drawingPreview.drawingFilter;
     }
 
     set drawingFilter(drawingFilter: DrawingFilter) {
-        this.drawingPreviewService.drawingFilter = drawingFilter;
+        this.drawingPreview.drawingFilter = drawingFilter;
+    }
+
+    get fileType(): FileType {
+        return this.exportDrawingService.fileType;
+    }
+
+    set fileType(fileType: FileType) {
+        this.exportDrawingService.fileType = fileType;
     }
 }
