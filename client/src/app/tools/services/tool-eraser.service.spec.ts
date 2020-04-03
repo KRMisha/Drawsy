@@ -83,7 +83,7 @@ describe('ToolEraserService', () => {
         jasmine.clock().uninstall();
     });
 
-    it('#onMouseDown should make a copy of the drawingService\'s svgElements and call #update', () => {
+    it("#onMouseDown should make a copy of the drawingService's svgElements and call #update", () => {
         const updateSpy = spyOn(service, 'update');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(service['drawingElementsCopy']).toEqual(svgElementsInitialArray);
@@ -164,7 +164,7 @@ describe('ToolEraserService', () => {
         expect(addRedBorderSpy).not.toHaveBeenCalled();
     });
 
-    it('#update should add the svgElementUnderCursor to the svgElementsDeletedDuringDrag and call drawingService\'s removeElement if the svgElementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the drawingElementsCopy', () => {
+    it("#update should add the svgElementUnderCursor to the svgElementsDeletedDuringDrag and call drawingService's removeElement if the svgElementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the drawingElementsCopy", () => {
         const pushSpy = spyOn(service['svgElementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
@@ -180,7 +180,7 @@ describe('ToolEraserService', () => {
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
 
-    it('#update should not add the svgElementUnderCursor to the svgElementsDeletedDuringDrag, should not call drawingService\'s removeElement and should set svgElementUnderCursor to undefined if the svgElementUnderCursor not in drawingElementsCopy', () => {
+    it("#update should not add the svgElementUnderCursor to the svgElementsDeletedDuringDrag, should not call drawingService's removeElement and should set svgElementUnderCursor to undefined if the svgElementUnderCursor not in drawingElementsCopy", () => {
         const pushSpy = spyOn(service['svgElementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
@@ -196,7 +196,7 @@ describe('ToolEraserService', () => {
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
 
-    it('#onToolSelection should create the eraser\'s rect, add it to the ui elements of drawingService and call #updateEraserRect', () => {
+    it("#onToolSelection should create the eraser's rect, add it to the ui elements of drawingService and call #updateEraserRect", () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
         const svgEraserElementStub = {} as SVGRectElement;
         renderer2SpyObj.createElement.and.returnValue(svgEraserElementStub);
@@ -211,7 +211,7 @@ describe('ToolEraserService', () => {
         expect(updateEraserRectSpy);
     });
 
-    it('onToolDeselection should call drawingService\'s removeUiElement, call #restoreElementUnderCursorAttributes and set svgElementUnderCursor to undefined', () => {
+    it("onToolDeselection should call drawingService's removeUiElement, call #restoreElementUnderCursorAttributes and set svgElementUnderCursor to undefined", () => {
         service['svgElementUnderCursor'] = {} as SVGGraphicsElement;
         const restoreSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
         service.onToolDeselection();
@@ -232,7 +232,7 @@ describe('ToolEraserService', () => {
         expect(service['updateSvgRectFromRect']).toHaveBeenCalled();
     });
 
-    it('#addRedBorderToElement should use default values to call renderer\'s setAttribute when the attributs of the element are none', () => {
+    it("#addRedBorderToElement should use default values to call renderer's setAttribute when the attributs of the element are none", () => {
         spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
         const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
         elementToSendSpy.getAttribute.and.returnValue('none');

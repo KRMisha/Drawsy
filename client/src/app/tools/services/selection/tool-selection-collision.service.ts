@@ -3,10 +3,9 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ToolSelectionCollisionService {
-
     constructor(private drawingService: DrawingService) {}
 
     areRectsIntersecting(rect1: Rect, rect2: Rect): boolean {

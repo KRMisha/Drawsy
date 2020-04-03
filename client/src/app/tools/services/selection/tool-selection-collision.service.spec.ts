@@ -21,9 +21,7 @@ describe('ToolSelectionCollisionService', () => {
             svgElements: [],
         });
         TestBed.configureTestingModule({
-            providers: [
-                { provide: DrawingService, useValue: drawingServiceSpyObj },
-            ],
+            providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
         });
         service = TestBed.inject(ToolSelectionCollisionService);
         elementArrayStub = [elementStub, elementStub];

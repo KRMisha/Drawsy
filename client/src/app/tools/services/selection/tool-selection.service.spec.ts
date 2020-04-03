@@ -24,7 +24,7 @@ describe('ToolSelectionService', () => {
     let toolSelectionMoverServiceSpyObj: jasmine.SpyObj<ToolSelectionMoverService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionUiServiceSpyObj: jasmine.SpyObj<ToolSelectionUiService>;
-    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>
+    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
 
     let selectAllSubject: Subject<void>;
@@ -56,11 +56,18 @@ describe('ToolSelectionService', () => {
             selectionRect: { x: 0, y: 0 },
         });
 
-        toolSelectionUiServiceSpyObj = jasmine.createSpyObj('ToolSelectionUiService', ['updateSvgSelectedShapesRect', 'updateSvgRectFromRect'], {
-            svgUserSelectionRect: { x: 0, y: 0 },
-        });
+        toolSelectionUiServiceSpyObj = jasmine.createSpyObj(
+            'ToolSelectionUiService',
+            ['updateSvgSelectedShapesRect', 'updateSvgRectFromRect'],
+            {
+                svgUserSelectionRect: { x: 0, y: 0 },
+            }
+        );
 
-        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementsUnderArea', 'areRectsIntersecting']);
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', [
+            'getElementsUnderArea',
+            'areRectsIntersecting',
+        ]);
         toolSelectionCollisionServiceSpyObj.getElementsUnderArea.and.returnValue([]);
 
         selectAllSubject = new Subject<void>();
