@@ -1,5 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { CommandService } from '@app/drawing/services/command.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -34,7 +34,7 @@ export class DrawingService {
     // Disable member ordering lint error for public observables initialized after private subjects
     elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
 
-    constructor(rendererFactory: RendererFactory2, private commandService: CommandService) {
+    constructor(rendererFactory: RendererFactory2, private historyService: HistoryService) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -123,7 +123,7 @@ export class DrawingService {
         this.labels = [];
 
         this.clearStoredElements();
-        this.commandService.clearCommands();
+        this.historyService.clearCommands();
         return true;
     }
 

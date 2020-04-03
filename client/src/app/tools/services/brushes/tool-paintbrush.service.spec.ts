@@ -1,8 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
 
@@ -35,7 +35,7 @@ describe('ToolPaintbrushService', () => {
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: jasmine.createSpyObj('DrawingService', ['addElement']) },
                 { provide: ColorService, useValue: colorServiceSpyObj },
-                { provide: CommandService, useValue: jasmine.createSpyObj('CommandService', ['undo', 'redo']) },
+                { provide: HistoryService, useValue: jasmine.createSpyObj('HistoryService', ['undo', 'redo']) },
             ],
         });
 

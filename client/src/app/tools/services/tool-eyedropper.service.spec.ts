@@ -1,8 +1,8 @@
 import { RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -54,7 +54,7 @@ describe('ToolEyedropperService', () => {
                 { provide: RendererFactory2, useValue: jasmine.createSpyObj('RendererFactory2', ['createRenderer']) },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ColorService, useValue: colorServiceMock },
-                { provide: CommandService, useValue: jasmine.createSpyObj('ColorService', ['']) },
+                { provide: HistoryService, useValue: jasmine.createSpyObj('ColorService', ['']) },
                 { provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj },
             ],
         });

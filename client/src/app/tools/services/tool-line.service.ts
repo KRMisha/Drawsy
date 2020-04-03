@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -36,9 +36,9 @@ export class ToolLineService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Line);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Line);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
         this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
     }
@@ -226,7 +226,7 @@ export class ToolLineService extends Tool {
         this.isCurrentlyDrawing = false;
         this.drawingService.removeUiElement(this.previewLine);
         if (this.points.length > pointsPerCoordinates) {
-            this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
+            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
         } else {
             this.drawingService.removeElement(this.groupElement);
         }
