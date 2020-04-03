@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { GeometryService } from '@app/drawing/services/geometry.service';
+import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection//tool-selection-state.service';
@@ -132,11 +132,11 @@ describe('ToolSelectionService', () => {
     it('#onMouseMove should update selection under user area if left mouse button is held and selection is not moving', () => {
         service['currentMouseButtonDown'] = MouseButton.Left;
         toolSelectionCollisionServiceSpyObj.getElementsUnderArea.and.returnValue([]);
-        spyOn(GeometryService, 'getRectFromPoints').and.returnValue({ x: 69, y: 69, width: 420, height: 420 });
+        spyOn(Rect, 'fromPoints').and.returnValue({ x: 69, y: 69, width: 420, height: 420 });
         service.onMouseMove();
         expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
         expect(toolSelectionCollisionServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
-        expect(GeometryService.getRectFromPoints).toHaveBeenCalledWith(service['selectionOrigin'], Tool.mousePosition);
+        expect(Rect.fromPoints).toHaveBeenCalledWith(service['selectionOrigin'], Tool.mousePosition);
     });
 
     it('#onMouseMove should invert selection under user area if right mouse button is held', () => {

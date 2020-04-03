@@ -3,7 +3,6 @@ import { AppendElementCommand } from '@app/drawing/classes/commands/append-eleme
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { GeometryService } from '@app/drawing/services/geometry.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -117,7 +116,7 @@ export abstract class ToolShape extends Tool {
             mousePositionCopy.y = this.shapeOrigin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
         }
 
-        const shapeArea = GeometryService.getRectFromPoints(this.shapeOrigin, mousePositionCopy);
+        const shapeArea = Rect.fromPoints(this.shapeOrigin, mousePositionCopy);
         const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
         this.updateShape(shapeArea, scale, this.shape);
     }

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { GeometryService } from '@app/drawing/services/geometry.service';
+import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -54,7 +54,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             this.toolSelectionMoverService.moveSelection(Tool.mousePosition, this.previousMousePosition);
         } else {
-            const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
+            const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
             this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
             if (this.currentMouseButtonDown === MouseButton.Left) {
                 this.toolSelectionStateService.selectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
@@ -88,7 +88,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {
                 this.drawingService.addUiElement(this.toolSelectionUiService.svgUserSelectionRect);
-                const rect = GeometryService.getRectFromPoints(this.selectionOrigin, this.selectionOrigin);
+                const rect = Rect.fromPoints(this.selectionOrigin, this.selectionOrigin);
                 this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, rect);
             }
         } else {
@@ -180,7 +180,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     private isSingleClick(): boolean {
-        const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
+        const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
         return userSelectionRect.width === 0 && userSelectionRect.height === 0;
     }
 
@@ -188,7 +188,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (Tool.isMouseInsideDrawing && this.isMouseDownInsideDrawing) {
             const isLeftButtonUp = event.button === MouseButton.Left && this.currentMouseButtonDown === event.button;
             if (!this.isSingleClick()) {
-                const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
+                const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
                 const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
