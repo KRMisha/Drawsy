@@ -1,13 +1,13 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 
 // tslint:disable: no-string-literal
 
-describe('SvgUtilityService', () => {
-    let service: SvgUtilityService;
+describe('RasterizationService', () => {
+    let service: RasterizationService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -30,7 +30,7 @@ describe('SvgUtilityService', () => {
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
             ],
         });
-        service = TestBed.inject(SvgUtilityService);
+        service = TestBed.inject(RasterizationService);
     });
 
     it('should be created', () => {

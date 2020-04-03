@@ -25,7 +25,6 @@ describe('ToolSelectionService', () => {
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionUiServiceSpyObj: jasmine.SpyObj<ToolSelectionUiService>;
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>
-    // let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
 
     let selectAllSubject: Subject<void>;

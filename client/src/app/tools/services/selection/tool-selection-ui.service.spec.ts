@@ -30,7 +30,7 @@ describe('ToolSelectionUiService', () => {
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
-        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('SvgUtilityService', [
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', [
             'getElementListBounds',
         ]);
 
