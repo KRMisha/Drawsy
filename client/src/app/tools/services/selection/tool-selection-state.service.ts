@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Subject } from 'rxjs';
+import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,10 +18,10 @@ export class ToolSelectionStateService {
     // Disable member ordering lint error for public observables initialized after private subjects
     selectedElementsChanged$ = this.selectedElementsChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
-    constructor(private svgUtilityService: SvgUtilityService) {}
+    constructor(private toolSelectionCollisionService: ToolSelectionCollisionService) {}
 
     updateSelectionRect(): void {
-        this._selectionRect = this.svgUtilityService.getElementListBounds(this.selectedElements);
+        this._selectionRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
     }
 
     get selectedElements(): SVGGraphicsElement[] {

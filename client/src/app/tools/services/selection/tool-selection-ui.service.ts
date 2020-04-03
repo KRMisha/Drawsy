@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
+import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
+import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 const controlPointSideSize = 10;
 
@@ -24,9 +25,9 @@ export class ToolSelectionUiService implements OnDestroy {
 
     constructor(
         rendererFactory: RendererFactory2,
-        private svgUtilityService: SvgUtilityService,
         private drawingService: DrawingService,
-        private toolSelectionStateService: ToolSelectionStateService
+        private toolSelectionStateService: ToolSelectionStateService,
+        private toolSelectionCollisionService: ToolSelectionCollisionService
     ) {
         this.selectedElementsChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
             (elements: SVGGraphicsElement[]) => {
@@ -39,11 +40,13 @@ export class ToolSelectionUiService implements OnDestroy {
         this.svgSelectedShapesRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '2');
         this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke', '#000000');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'none');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'rgba(0, 0, 0, 0)');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'pointer-events', 'auto');
+        this.renderer.setAttribute(this.svgSelectedShapesRect, 'cursor', 'move');
 
         // Disable magic numbers false positive lint error for values in static named constructor
         const borderColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
-        this.svgUserSelectionRect = this.svgUtilityService.createDashedRectBorder(borderColor);
+        this.svgUserSelectionRect = this.createDashedRectBorder(borderColor);
 
         const controlPointsCount = 4;
         for (let i = 0; i < controlPointsCount; i++) {
@@ -51,7 +54,6 @@ export class ToolSelectionUiService implements OnDestroy {
             this.renderer.setAttribute(this.svgControlPoints[i], 'width', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'height', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'fill', 'black');
-            this.renderer.setAttribute(this.svgControlPoints[i], 'pointer-events', 'auto');
         }
     }
 
@@ -59,10 +61,17 @@ export class ToolSelectionUiService implements OnDestroy {
         this.selectedElementsChangedSubscription.unsubscribe();
     }
 
+    updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
+        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
+        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
+        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
+        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
+    }
+
     updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
-        const elementsBounds = this.svgUtilityService.getElementListBounds(selectedElement);
+        const elementsBounds = this.toolSelectionCollisionService.getElementListBounds(selectedElement);
         if (elementsBounds !== undefined) {
-            this.svgUtilityService.updateSvgRectFromRect(this.svgSelectedShapesRect, elementsBounds);
+            this.updateSvgRectFromRect(this.svgSelectedShapesRect, elementsBounds);
 
             const positions = [
                 { x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
@@ -81,7 +90,7 @@ export class ToolSelectionUiService implements OnDestroy {
         this.toolSelectionStateService.updateSelectionRect();
     }
 
-    showSvgSelectedShapesRect(): void {
+    private showSvgSelectedShapesRect(): void {
         if (this.isSelectionDisplayed) {
             return;
         }
@@ -92,7 +101,7 @@ export class ToolSelectionUiService implements OnDestroy {
         }
     }
 
-    hideSvgSelectedShapesRect(): void {
+    private hideSvgSelectedShapesRect(): void {
         if (!this.isSelectionDisplayed) {
             return;
         }
@@ -101,5 +110,15 @@ export class ToolSelectionUiService implements OnDestroy {
         for (const controlPoint of this.svgControlPoints) {
             this.drawingService.removeUiElement(controlPoint);
         }
+    }
+
+    private createDashedRectBorder(color: Color): SVGRectElement {
+        const svgRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(svgRect, 'fill', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.2)`);
+        this.renderer.setAttribute(svgRect, 'stroke-dasharray', '5, 3');
+        this.renderer.setAttribute(svgRect, 'stroke-width', '2');
+        this.renderer.setAttribute(svgRect, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(svgRect, 'stroke', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.8)`);
+        return svgRect;
     }
 }

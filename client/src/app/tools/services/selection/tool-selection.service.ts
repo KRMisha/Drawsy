@@ -3,7 +3,6 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -13,6 +12,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
+import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 @Injectable({
     providedIn: 'root',
@@ -35,7 +35,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionUiService: ToolSelectionUiService,
-        private svgUtilityService: SvgUtilityService,
+        private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
     ) {
         super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Selection);
@@ -55,15 +55,15 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             this.toolSelectionMoverService.moveSelection(Tool.mousePosition, this.previousMousePosition);
         } else {
             const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
-            this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
+            this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
             if (this.currentMouseButtonDown === MouseButton.Left) {
-                this.toolSelectionStateService.selectedElements = this.svgUtilityService.getElementsUnderArea(
+                this.toolSelectionStateService.selectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );
             } else {
                 const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-                const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
+                const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );
@@ -89,7 +89,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             } else {
                 this.drawingService.addUiElement(this.toolSelectionUiService.svgUserSelectionRect);
                 const rect = GeometryService.getRectFromPoints(this.selectionOrigin, this.selectionOrigin);
-                this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, rect);
+                this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, rect);
             }
         } else {
             this.toolSelectionStateService.selectedElements = [];
@@ -169,7 +169,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     private isMouseInsideSelection(mousePosition: Vec2): boolean {
         if (this.toolSelectionStateService.selectionRect !== undefined) {
-            return GeometryService.areRectsIntersecting(this.toolSelectionStateService.selectionRect, {
+            return this.toolSelectionCollisionService.areRectsIntersecting(this.toolSelectionStateService.selectionRect, {
                 x: mousePosition.x,
                 y: mousePosition.y,
                 width: 0,
@@ -189,7 +189,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             const isLeftButtonUp = event.button === MouseButton.Left && this.currentMouseButtonDown === event.button;
             if (!this.isSingleClick()) {
                 const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
-                const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
+                const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );

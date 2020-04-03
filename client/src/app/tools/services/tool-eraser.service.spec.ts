@@ -19,9 +19,12 @@ import { Tool } from './tool';
 describe('ToolEraserService', () => {
     let service: ToolEraserService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
+    let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
     let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
+
+    let getElementUnderAreaPixelPerfectSpy: any;
 
     const sVGGraphicsElementStub = {} as SVGGraphicsElement;
     const svgElementsInitialArray = [sVGGraphicsElementStub, sVGGraphicsElementStub, sVGGraphicsElementStub];
@@ -30,7 +33,11 @@ describe('ToolEraserService', () => {
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
+        drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
+        drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 69, y: 911, width: 420, height: 666 } as DOMRect);
+
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['removeElement', 'addUiElement', 'removeUiElement'], {
+            drawingRoot: drawingRootSpyObj,
             svgElements: svgElementsInitialArray,
         });
 
@@ -46,6 +53,8 @@ describe('ToolEraserService', () => {
             ],
         });
         service = TestBed.inject(ToolEraserService);
+
+        getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
     });
 
     it('should be created', () => {
@@ -129,7 +138,7 @@ describe('ToolEraserService', () => {
     });
 
     it('#update should call #restoreElementUndorCursorAttributes and set svgElementUnderCursor to undefined if the elementToConsider is undefined', () => {
-        svgUtilityServiceSpyObj.getElementUnderAreaPixelPerfect.and.returnValue(undefined);
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(undefined);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
         service.update();
         expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
@@ -139,7 +148,7 @@ describe('ToolEraserService', () => {
     it('#update should call #restoreElementUndorCursorAttributes, change svgElementUnderCursor and call #addRedBorderToElement if the elementToConsider is not the svgElementUnderCursor', () => {
         const testElement = {} as SVGGraphicsElement;
         service['svgElementUnderCursor'] = {} as SVGGraphicsElement;
-        svgUtilityServiceSpyObj.getElementUnderAreaPixelPerfect.and.returnValue(testElement);
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
         service.update();
@@ -150,7 +159,7 @@ describe('ToolEraserService', () => {
 
     it('#update should not call #restoreElementUndorCursorAttributes, should not change svgElementUnderCursor and should not call #addRedBorderToElement if the elementToConsider is the svgElementUnderCursor', () => {
         const testElement = {} as SVGGraphicsElement;
-        svgUtilityServiceSpyObj.getElementUnderAreaPixelPerfect.and.returnValue(testElement);
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
         service['svgElementUnderCursor'] = testElement;
@@ -166,7 +175,7 @@ describe('ToolEraserService', () => {
         const drawingElementsCopy = [fillElement, fillElement, fillElement, testElement];
         Tool.isLeftMouseButtonDown = true;
         service['isLeftMouseButtonDownInsideDrawing'] = true;
-        svgUtilityServiceSpyObj.getElementUnderAreaPixelPerfect.and.returnValue(testElement);
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         service['svgElementUnderCursor'] = testElement;
         service['drawingElementsCopy'] = drawingElementsCopy;
         service.update();
@@ -182,7 +191,7 @@ describe('ToolEraserService', () => {
         const drawingElementsCopy = [fillElement, fillElement, fillElement];
         Tool.isLeftMouseButtonDown = true;
         service['isLeftMouseButtonDownInsideDrawing'] = true;
-        svgUtilityServiceSpyObj.getElementUnderAreaPixelPerfect.and.returnValue(testElement);
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         service['svgElementUnderCursor'] = testElement;
         service['drawingElementsCopy'] = drawingElementsCopy;
         service.update();
@@ -220,10 +229,11 @@ describe('ToolEraserService', () => {
         service['settings'].eraserSize = expectedValue;
         const unwantedEraserRect = {} as Rect;
         service['eraserRect'] = unwantedEraserRect;
+        spyOn<any>(service, 'updateSvgRectFromRect');
         service['updateEraserRect']();
         expect(service['eraserSize']).toEqual(expectedValue);
         expect(service['eraserRect']).not.toEqual(unwantedEraserRect);
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).toHaveBeenCalled();
+        expect(service['updateSvgRectFromRect']).toHaveBeenCalled();
     });
 
     it('#addRedBorderToElement should use default values to call renderer\'s setAttribute when the attributs of the element are "none"', () => {
@@ -263,5 +273,43 @@ describe('ToolEraserService', () => {
         service['addRedBorderToElement'](elementToSendSpy);
 
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(117, 30, 33)');
+    });
+
+    it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
+        spyOn(document, 'elementFromPoint').and.returnValue(null);
+        // spyOn(service, 'getElementBounds');
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const actualValue = service['getElementUnderAreaPixelPerfect']([{} as SVGGraphicsElement], area);
+        expect(actualValue).toEqual(undefined);
+    });
+
+    it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
+        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        service['drawingService'] = ({
+            drawingRoot: drawingRootSpyObj,
+            svgElements: [elementToSend],
+        } as unknown) as DrawingService;
+        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+
+        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
+        // spyOn(service, 'getElementBounds');
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const actualValue = service['getElementUnderAreaPixelPerfect']([elementToSend], area);
+        expect(actualValue).toEqual(elementToSend);
+    });
+
+    it('#getElementUnderAreaPixelPerfect should return undefined if no objects are in the drawing service', () => {
+        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        service['drawingService'] = ({
+            drawingRoot: drawingRootSpyObj,
+            svgElements: [elementToSend],
+        } as unknown) as DrawingService;
+        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+
+        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
+        // spyOn(service, 'getElementBounds');
+        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
+        const actualValue = service['getElementUnderAreaPixelPerfect']([], area);
+        expect(actualValue).toBeUndefined();
     });
 });

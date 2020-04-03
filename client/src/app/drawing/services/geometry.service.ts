@@ -13,10 +13,4 @@ export class GeometryService {
 
         return rect;
     }
-
-    static areRectsIntersecting(rect1: Rect, rect2: Rect): boolean {
-        const isHorizIntersecting = rect1.x + rect1.width >= rect2.x && rect1.x <= rect2.x + rect2.width;
-        const isVertIntersecting = rect1.y + rect1.height >= rect2.y && rect1.y <= rect2.y + rect2.height;
-        return isHorizIntersecting && isVertIntersecting;
-    }
 }

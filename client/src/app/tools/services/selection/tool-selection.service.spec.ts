@@ -2,7 +2,6 @@ import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GeometryService } from '@app/drawing/services/geometry.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection//tool-selection-state.service';
@@ -11,6 +10,7 @@ import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
+import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-empty
@@ -24,7 +24,8 @@ describe('ToolSelectionService', () => {
     let toolSelectionMoverServiceSpyObj: jasmine.SpyObj<ToolSelectionMoverService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionUiServiceSpyObj: jasmine.SpyObj<ToolSelectionUiService>;
-    let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
+    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>
+    // let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
 
     let selectAllSubject: Subject<void>;
@@ -56,13 +57,12 @@ describe('ToolSelectionService', () => {
             selectionRect: { x: 0, y: 0 },
         });
 
-        toolSelectionUiServiceSpyObj = jasmine.createSpyObj('ToolSelectionUiService', ['updateSvgSelectedShapesRect'], {
+        toolSelectionUiServiceSpyObj = jasmine.createSpyObj('ToolSelectionUiService', ['updateSvgSelectedShapesRect', 'updateSvgRectFromRect'], {
             svgUserSelectionRect: { x: 0, y: 0 },
         });
 
-        svgUtilityServiceSpyObj = jasmine.createSpyObj('SvgUtilityService', ['updateSvgRectFromRect', 'getElementsUnderArea']);
-
-        svgUtilityServiceSpyObj.getElementsUnderArea.and.returnValue([]);
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementsUnderArea', 'areRectsIntersecting']);
+        toolSelectionCollisionServiceSpyObj.getElementsUnderArea.and.returnValue([]);
 
         selectAllSubject = new Subject<void>();
 
@@ -77,7 +77,7 @@ describe('ToolSelectionService', () => {
                 { provide: ToolSelectionMoverService, useValue: toolSelectionMoverServiceSpyObj },
                 { provide: ToolSelectionStateService, useValue: toolSelectionStateServiceSpyObj },
                 { provide: ToolSelectionUiService, useValue: toolSelectionUiServiceSpyObj },
-                { provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj },
+                { provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
             ],
         });
@@ -112,7 +112,7 @@ describe('ToolSelectionService', () => {
         service['currentMouseButtonDown'] = undefined;
         service.onMouseMove();
         expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseMove should do nothing if mouse down happened outside drawing area', () => {
@@ -120,7 +120,7 @@ describe('ToolSelectionService', () => {
         service['isMouseDownInsideDrawing'] = false;
         service.onMouseMove();
         expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseMove should move selection if mouse is moving after being clicked inside selection', () => {
@@ -132,25 +132,25 @@ describe('ToolSelectionService', () => {
 
     it('#onMouseMove should update selection under user area if left mouse button is held and selection is not moving', () => {
         service['currentMouseButtonDown'] = MouseButton.Left;
-        svgUtilityServiceSpyObj.getElementsUnderArea.and.returnValue([]);
+        toolSelectionCollisionServiceSpyObj.getElementsUnderArea.and.returnValue([]);
         spyOn(GeometryService, 'getRectFromPoints').and.returnValue({ x: 69, y: 69, width: 420, height: 420 });
         service.onMouseMove();
         expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
+        expect(toolSelectionCollisionServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
         expect(GeometryService.getRectFromPoints).toHaveBeenCalledWith(service['selectionOrigin'], Tool.mousePosition);
     });
 
     it('#onMouseMove should invert selection under user area if right mouse button is held', () => {
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseMove();
-        expect(svgUtilityServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
+        expect(toolSelectionCollisionServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
         expect(invertObjectsSelectionSpy).toHaveBeenCalled();
     });
 
     it('#onMouseMove should invert selection under user area if right mouse button is held', () => {
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseMove();
-        expect(svgUtilityServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
+        expect(toolSelectionCollisionServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
         expect(invertObjectsSelectionSpy).toHaveBeenCalled();
     });
 
@@ -158,7 +158,7 @@ describe('ToolSelectionService', () => {
         service['currentMouseButtonDown'] = MouseButton.Middle;
         service.onMouseMove();
         expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should do nothing if user is moving selection with arrows', () => {
@@ -166,7 +166,7 @@ describe('ToolSelectionService', () => {
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(drawingServiceSpyObj.appendNewMatrixToElements).not.toHaveBeenCalled();
         expect(drawingServiceSpyObj.addUiElement).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should do nothing if a mouse button is alreadyDown', () => {
@@ -175,7 +175,7 @@ describe('ToolSelectionService', () => {
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(drawingServiceSpyObj.appendNewMatrixToElements).not.toHaveBeenCalled();
         expect(drawingServiceSpyObj.addUiElement).not.toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should append matrix to element and reset totalSelectionMoveOffset if mouse is inside selection and button is left click', () => {
@@ -191,7 +191,7 @@ describe('ToolSelectionService', () => {
         spyOn<any>(service, 'isMouseInsideSelection').and.returnValue(false);
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalled();
-        expect(svgUtilityServiceSpyObj.updateSvgRectFromRect).toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.updateSvgRectFromRect).toHaveBeenCalled();
     });
 
     it('#onMouseDown should reset selection if mouse is not inside drawing', () => {
@@ -378,6 +378,7 @@ describe('ToolSelectionService', () => {
     });
 
     it('#isMouseInsideSelection should return true if mouse is inside selection', () => {
+        toolSelectionCollisionServiceSpyObj.areRectsIntersecting.and.returnValue(true);
         toolSelectionStateServiceMock = ({ selectionRect: { x: 0, y: 0, width: 420, height: 69 } } as unknown) as ToolSelectionStateService;
         service['toolSelectionStateService'] = toolSelectionStateServiceMock;
         const isMouseInsideSelection = service['isMouseInsideSelection']({ x: 1, y: 1 });
@@ -385,6 +386,7 @@ describe('ToolSelectionService', () => {
     });
 
     it('#isMouseInsideSelection should return false if mouse is not inside selection', () => {
+        toolSelectionCollisionServiceSpyObj.areRectsIntersecting.and.returnValue(false);
         toolSelectionStateServiceMock = ({
             selectionRect: { x: 10, y: 10, width: 420, height: 69 },
         } as unknown) as ToolSelectionStateService;
