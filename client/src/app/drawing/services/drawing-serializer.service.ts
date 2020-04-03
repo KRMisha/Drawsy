@@ -1,6 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { FileType } from '@app/drawing/enums/file-type.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
@@ -14,12 +13,7 @@ import { SavedFile } from '@common/communication/saved-file';
 export class DrawingSerializerService {
     private renderer: Renderer2;
 
-    constructor(
-        rendererFactory: RendererFactory2,
-        private drawingService: DrawingService,
-        private drawingPreviewService: DrawingPreviewService,
-        private svgUtilityService: SvgUtilityService
-    ) {
+    constructor(rendererFactory: RendererFactory2, private drawingService: DrawingService, private svgUtilityService: SvgUtilityService) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -56,8 +50,10 @@ export class DrawingSerializerService {
         return true;
     }
 
-    exportDrawing(filename: string, fileType: FileType): void {
-        fileType === FileType.Svg ? this.exportVectorDrawing(filename) : this.exportMatrixDrawing(filename, fileType);
+    exportDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): void {
+        fileType === FileType.Svg
+            ? this.exportVectorDrawing(filename, drawingRoot)
+            : this.exportMatrixDrawing(filename, fileType, drawingRoot);
     }
 
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
@@ -70,11 +66,11 @@ export class DrawingSerializerService {
         return { id: '', title: parsedTitle, labels: parsedLabels, drawingRoot: parsedDrawingRoot } as SvgFileContainer;
     }
 
-    private exportVectorDrawing(filename: string): void {
+    private exportVectorDrawing(filename: string, drawingRoot: SVGSVGElement): void {
         const fileExtension = '.svg';
 
         const xmlSerializer = new XMLSerializer();
-        const content = xmlSerializer.serializeToString(this.drawingPreviewService.drawingPreviewRoot);
+        const content = xmlSerializer.serializeToString(drawingRoot);
         const blob = new Blob([content], { type: 'image/svg+xml' });
 
         const link = this.renderer.createElement('a');
@@ -83,11 +79,11 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    private async exportMatrixDrawing(filename: string, fileType: FileType): Promise<void> {
+    private async exportMatrixDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): Promise<void> {
         const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
         const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
 
-        const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(this.drawingPreviewService.drawingPreviewRoot);
+        const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(drawingRoot);
 
         const link = this.renderer.createElement('a');
         link.download = filename + fileExtension;

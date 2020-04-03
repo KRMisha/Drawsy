@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
@@ -16,6 +17,9 @@ import MetadataValidation from '@common/validation/metadata-validation';
 export class ExportDrawingComponent {
     // Make enums available to template
     DrawingFilter = DrawingFilter;
+
+    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
+
     FileType = FileType;
 
     currentFileType: FileType = FileType.Svg;
@@ -27,6 +31,7 @@ export class ExportDrawingComponent {
     ]);
 
     constructor(
+        private changeDetectorRef: ChangeDetectorRef,
         private drawingSerializerService: DrawingSerializerService,
         private drawingService: DrawingService,
         private drawingPreviewService: DrawingPreviewService
@@ -34,8 +39,12 @@ export class ExportDrawingComponent {
 
     onSubmit(): void {
         this.drawingService.title = this.titleFormControl.value;
-        this.drawingPreviewService.finalizePreview();
-        this.drawingSerializerService.exportDrawing(this.drawingService.title, this.currentFileType);
+        this.changeDetectorRef.detectChanges();
+        this.drawingSerializerService.exportDrawing(
+            this.drawingService.title,
+            this.currentFileType,
+            this.drawingPreview.drawingRoot.nativeElement
+        );
     }
 
     getErrorMessage(): string {

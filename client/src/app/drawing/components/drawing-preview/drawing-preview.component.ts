@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -9,37 +9,35 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     templateUrl: './drawing-preview.component.html',
     styleUrls: ['./drawing-preview.component.scss'],
 })
-export class DrawingPreviewComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
-    @ViewChild('appTitle') private svgTitle: ElementRef<SVGTitleElement>;
-    @ViewChild('appDesc') private svgDesc: ElementRef<SVGDescElement>;
+export class DrawingPreviewComponent implements AfterViewInit {
+    @ViewChild('appDrawingRoot') drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
 
-    constructor(private drawingPreviewService: DrawingPreviewService, private drawingService: DrawingService) {
+    constructor(private renderer: Renderer2, private drawingPreviewService: DrawingPreviewService, private drawingService: DrawingService) {
         this.drawingPreviewService.drawingFilter = DrawingFilter.None;
     }
 
     ngAfterViewInit(): void {
-        this.drawingPreviewService.drawingPreviewRoot = this.drawingRoot.nativeElement;
-        this.drawingPreviewService.svgTitle = this.svgTitle.nativeElement;
-        this.drawingPreviewService.svgDesc = this.svgDesc.nativeElement;
-        this.drawingPreviewService.svgDefs = this.svgDefs.nativeElement;
-        this.drawingPreviewService.svgDrawingContent = this.svgDrawingContent.nativeElement;
+        for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {
+            this.renderer.appendChild(this.svgDefs.nativeElement, filter.cloneNode(true));
+        }
 
-        this.drawingPreviewService.initializePreview();
-    }
-
-    ngOnDestroy(): void {
-        delete this.drawingPreviewService.drawingPreviewRoot;
-        delete this.drawingPreviewService.svgTitle;
-        delete this.drawingPreviewService.svgDesc;
-        delete this.drawingPreviewService.svgDefs;
-        delete this.drawingPreviewService.svgDrawingContent;
+        for (const element of this.drawingService.svgElements) {
+            this.renderer.appendChild(this.svgDrawingContent.nativeElement, element.cloneNode(true));
+        }
     }
 
     get viewBox(): string {
         return `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
+    }
+
+    get drawingTitle(): string {
+        return this.drawingService.title;
+    }
+
+    get drawingLabels(): string {
+        return this.drawingService.labels.join(',');
     }
 
     get backgroundColor(): string {

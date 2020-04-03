@@ -1,7 +1,8 @@
 import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
@@ -14,6 +15,8 @@ import MetadataValidation from '@common/validation/metadata-validation';
 })
 export class SaveDrawingComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [Comma, Enter];
+
+    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
 
     labels: string[] = [];
 
@@ -29,7 +32,11 @@ export class SaveDrawingComponent implements OnInit {
         ]),
     });
 
-    constructor(private saveDrawingService: SaveDrawingService, private drawingService: DrawingService) {}
+    constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        private saveDrawingService: SaveDrawingService,
+        private drawingService: DrawingService
+    ) {}
 
     ngOnInit(): void {
         this.labels = [...this.drawingService.labels];
@@ -54,7 +61,8 @@ export class SaveDrawingComponent implements OnInit {
     onSubmit(): void {
         this.drawingService.title = this.saveDrawingFormGroup.controls.title.value;
         this.drawingService.labels = this.labels;
-        this.saveDrawingService.saveDrawing();
+        this.changeDetectorRef.detectChanges();
+        this.saveDrawingService.saveDrawing(this.drawingPreview.drawingRoot.nativeElement);
     }
 
     getErrorMessage(formControl: AbstractControl): string {
