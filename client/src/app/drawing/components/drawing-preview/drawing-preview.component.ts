@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
@@ -9,7 +9,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     styleUrls: ['./drawing-preview.component.scss'],
 })
 export class DrawingPreviewComponent implements AfterViewInit {
-    drawingFilter = DrawingFilter.None;
+    @Input() drawingFilter = DrawingFilter.None;
 
     @ViewChild('appDrawingRoot') drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;

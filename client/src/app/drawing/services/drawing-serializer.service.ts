@@ -50,10 +50,10 @@ export class DrawingSerializerService {
         return true;
     }
 
-    exportDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): void {
+    exportDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): void {
         fileType === FileType.Svg
-            ? this.exportVectorDrawing(filename, drawingRoot)
-            : this.exportRasterDrawing(filename, fileType, drawingRoot);
+            ? this.exportVectorDrawing(drawingRoot, filename)
+            : this.exportRasterDrawing(drawingRoot, filename, fileType);
     }
 
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
@@ -66,7 +66,7 @@ export class DrawingSerializerService {
         return { id: '', title: parsedTitle, labels: parsedLabels, drawingRoot: parsedDrawingRoot } as SvgFileContainer;
     }
 
-    private exportVectorDrawing(filename: string, drawingRoot: SVGSVGElement): void {
+    private exportVectorDrawing(drawingRoot: SVGSVGElement, filename: string): void {
         const fileExtension = '.svg';
 
         const xmlSerializer = new XMLSerializer();
@@ -79,7 +79,7 @@ export class DrawingSerializerService {
         link.click();
     }
 
-    private async exportRasterDrawing(filename: string, fileType: FileType, drawingRoot: SVGSVGElement): Promise<void> {
+    private async exportRasterDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): Promise<void> {
         const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
         const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
 

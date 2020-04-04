@@ -7,11 +7,9 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
     providedIn: 'root',
 })
 export class ExportDrawingService {
-    fileType = FileType.Svg;
-
     constructor(private drawingSerializerService: DrawingSerializerService, private drawingService: DrawingService) {}
 
-    exportDrawing(drawingRoot: SVGSVGElement): void {
-        this.drawingSerializerService.exportDrawing(this.drawingService.title, this.fileType, drawingRoot);
+    exportDrawing(drawingRoot: SVGSVGElement, fileType: FileType): void {
+        this.drawingSerializerService.exportDrawing(drawingRoot, this.drawingService.title, fileType);
     }
 }

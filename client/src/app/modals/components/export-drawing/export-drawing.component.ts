@@ -18,6 +18,9 @@ export class ExportDrawingComponent {
     DrawingFilter = DrawingFilter;
     FileType = FileType;
 
+    drawingFilter = DrawingFilter.None;
+    fileType = FileType.Svg;
+
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
         Validators.pattern(MetadataValidation.contentRegex),
@@ -35,26 +38,10 @@ export class ExportDrawingComponent {
     onSubmit(): void {
         this.drawingService.title = this.titleFormControl.value;
         this.changeDetectorRef.detectChanges();
-        this.exportDrawingService.exportDrawing(this.drawingPreview.drawingRoot.nativeElement);
+        this.exportDrawingService.exportDrawing(this.drawingPreview.drawingRoot.nativeElement, this.fileType);
     }
 
     getErrorMessage(): string {
         return ErrorMessageService.getErrorMessage(this.titleFormControl, 'A-Z, a-z, 0-9');
-    }
-
-    get drawingFilter(): DrawingFilter {
-        return this.drawingPreview === undefined ? DrawingFilter.None : this.drawingPreview.drawingFilter;
-    }
-
-    set drawingFilter(drawingFilter: DrawingFilter) {
-        this.drawingPreview.drawingFilter = drawingFilter;
-    }
-
-    get fileType(): FileType {
-        return this.exportDrawingService.fileType;
-    }
-
-    set fileType(fileType: FileType) {
-        this.exportDrawingService.fileType = fileType;
     }
 }
