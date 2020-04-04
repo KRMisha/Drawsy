@@ -39,8 +39,8 @@ describe('DrawingComponent', () => {
         colorSpyObj.toRgbaString.and.returnValue('rgba(1, 1, 1, 1)');
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['reappendStoredElements'], {
             drawingRoot: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
             dimensions: returnedDimensions,
             backgroundColor: colorSpyObj,
         });
@@ -94,6 +94,15 @@ describe('DrawingComponent', () => {
         fixture = TestBed.createComponent(DrawingComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+    });
+
+    afterEach(() => {
+        component['drawingService'] = {
+            drawingRoot: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+        } as DrawingService;
+        fixture.destroy();
     });
 
     it('should create', () => {
