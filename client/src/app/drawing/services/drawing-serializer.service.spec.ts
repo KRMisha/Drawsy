@@ -1,7 +1,6 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FileType } from '@app/drawing/enums/file-type.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
@@ -19,7 +18,6 @@ describe('DrawingSerializerService', () => {
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
     let canvasSpyObj: jasmine.SpyObj<HTMLCanvasElement>;
     let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
     let anchorMock: HTMLAnchorElement;
@@ -44,10 +42,6 @@ describe('DrawingSerializerService', () => {
 
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['confirmNewDrawing', 'addElement']);
 
-        drawingPreviewServiceSpyObj = jasmine.createSpyObj('DrawingPreviewService', [], {
-            drawingPreviewRoot: drawingPreviewRootStub,
-        });
-
         canvasSpyObj = jasmine.createSpyObj('HTMLCanvasElement', ['toDataURL']);
         canvasSpyObj.toDataURL.and.returnValue(urlMock);
 
@@ -58,7 +52,6 @@ describe('DrawingSerializerService', () => {
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
-                { provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj },
                 { provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj },
             ],
         });
@@ -270,7 +263,7 @@ describe('DrawingSerializerService', () => {
 
         const filenameValue = 'filename';
 
-        service.exportDrawing(filenameValue, FileType.Svg);
+        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Svg);
         expect(xmlSerializerSpyObj.serializeToString).toHaveBeenCalledWith(drawingPreviewRootStub);
         expect(blobSpy).toHaveBeenCalledWith([contentMock], { type: 'image/svg+xml' });
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
@@ -283,7 +276,7 @@ describe('DrawingSerializerService', () => {
     it('#exportDrawing should trigger a download for a PNG if the file type is PNG', fakeAsync(() => {
         const filenameValue = 'filename';
 
-        service.exportDrawing(filenameValue, FileType.Png);
+        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Png);
         tick();
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
         expect(anchorMock.download).toEqual(filenameValue + '.png');
@@ -295,7 +288,7 @@ describe('DrawingSerializerService', () => {
     it('#exportDrawing should trigger a download for a JPEG if the file type is JPEG', fakeAsync(() => {
         const filenameValue = 'filename';
 
-        service.exportDrawing(filenameValue, FileType.Jpeg);
+        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Jpeg);
         tick();
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
         expect(anchorMock.download).toEqual(filenameValue + '.jpeg');
