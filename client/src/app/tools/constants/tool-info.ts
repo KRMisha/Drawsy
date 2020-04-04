@@ -8,6 +8,7 @@ export default {
     Rectangle: { name: 'Rectangle', icon: 'crop_5_4' } as ToolData,
     Ellipse: { name: 'Ellipse', icon: 'panorama_fish_eye' } as ToolData,
     Polygon: { name: 'Polygone', icon: 'star' } as ToolData,
+    Fill: { name: 'Sceau de peinture', icon: 'opacity' } as ToolData,
     Eyedropper: { name: 'Pipette', icon: 'colorize' } as ToolData,
     Recolor: { name: 'Applicateur de couleur', icon: 'format_paint' } as ToolData,
     Selection: { name: 'Sélection', icon: 'select_all' } as ToolData,

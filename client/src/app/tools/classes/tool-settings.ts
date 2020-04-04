@@ -19,6 +19,8 @@ type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.Li
     ? number
     : T extends ToolSetting.PolygonSideCount
     ? number
+    : T extends ToolSetting.FillDeviation
+    ? number
     : T extends ToolSetting.EraserSize
     ? number
     : never;

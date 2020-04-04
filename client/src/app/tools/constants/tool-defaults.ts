@@ -11,5 +11,6 @@ export default {
     defaultShapeType: ShapeType.FillWithBorder,
     defaultShapeBorderWidth: 5,
     defaultPolygonSideCount: 3,
+    defaultFillDeviation: 0,
     defaultEraserSize: 5,
 };

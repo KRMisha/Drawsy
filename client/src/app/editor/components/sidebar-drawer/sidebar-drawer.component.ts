@@ -25,6 +25,8 @@ const minimumShapeBorderWidth = 1;
 const maximumShapeBorderWidth = 100;
 const minimumPolygonSideCount = 3;
 const maximumPolygonSideCount = 12;
+const minimumFillDeviation = 0;
+const maximumFillDeviation = 100;
 const minimumEraserSize = 3;
 const maximumEraserSize = 25;
 
@@ -74,6 +76,13 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.max(maximumSprayRate),
     ]);
 
+    shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
+        Validators.required,
+        Validators.pattern(Regexes.integerRegex),
+        Validators.min(minimumShapeBorderWidth),
+        Validators.max(maximumShapeBorderWidth),
+    ]);
+
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
@@ -81,11 +90,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.max(maximumPolygonSideCount),
     ]);
 
-    shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
+    fillDeviationFormControl = new FormControl(ToolDefaults.defaultFillDeviation, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumShapeBorderWidth),
-        Validators.max(maximumShapeBorderWidth),
+        Validators.min(minimumFillDeviation),
+        Validators.max(maximumFillDeviation),
     ]);
 
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
@@ -137,6 +146,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             maximum: maximumPolygonSideCount,
         },
         {
+            formControl: this.fillDeviationFormControl,
+            toolSetting: ToolSetting.FillDeviation,
+            title: "Pourcentage d'écart ",
+            suffix: '%',
+            minimum: minimumFillDeviation,
+            maximum: maximumFillDeviation,
+        },
+        {
             formControl: this.eraserSizeFormControl,
             toolSetting: ToolSetting.EraserSize,
             title: "Taille de l'efface",
@@ -153,6 +170,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private sprayRateChangedSubscription: Subscription;
     private shapeBorderWidthChangedSubscription: Subscription;
     private polygonSideCountChangedSubscription: Subscription;
+    private fillDeviationChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
 
     private undoShortcutSubscription: Subscription;
@@ -213,6 +231,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
             }
         });
+        this.fillDeviationChangedSubscription = this.fillDeviationFormControl.valueChanges.subscribe(() => {
+            if (this.fillDeviationFormControl.valid) {
+                this.currentToolSettings.fillDeviation = this.fillDeviationFormControl.value;
+            }
+        });
 
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
             this.undoCommand();
@@ -231,6 +254,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.shapeBorderWidthChangedSubscription.unsubscribe();
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
+        this.fillDeviationChangedSubscription.unsubscribe();
 
         this.undoShortcutSubscription.unsubscribe();
         this.redoShortcutSubscription.unsubscribe();
@@ -260,6 +284,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
         if (this.currentToolSettings.eraserSize !== undefined) {
             this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
+        }
+        if (this.currentToolSettings.fillDeviation !== undefined) {
+            this.fillDeviationFormControl.reset(this.currentToolSettings.fillDeviation);
         }
     }
 
