@@ -7,6 +7,8 @@ import { GuideComponent } from '@app/guide/components/guide/guide.component';
 import { GuideService } from '@app/guide/services/guide.service';
 import { Subject } from 'rxjs';
 
+// tslint:disable: no-string-literal
+
 class FirstGuideContentMock implements GuideContent {}
 const firstGuideNodeMock: GuideNode = {
     name: 'FirstGuideNodeMock',
@@ -41,9 +43,9 @@ describe('GuideComponent', () => {
         const fixture = TestBed.createComponent(GuideComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        component.sidebar = guideSidebarSpyObj;
-        component['guideService'] = guideServiceSpyObj; // tslint:disable-line: no-string-literal
-        component['componentFactoryResolver'] = componentFactoryResolverSpyObj; // tslint:disable-line: no-string-literal
+        component['sidebar'] = guideSidebarSpyObj;
+        component['guideService'] = guideServiceSpyObj;
+        component['componentFactoryResolver'] = componentFactoryResolverSpyObj;
     }));
 
     it('should create', () => {
@@ -59,17 +61,16 @@ describe('GuideComponent', () => {
         componentFactoryResolverSpyObj.resolveComponentFactory.and.returnValue(componentFactoryStub);
         const changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         const componentRefSpyObj = jasmine.createSpyObj('ComponentRef<GuideContent>', [], { changeDetectorRef: changeDetectorRefSpyObj });
-        spyOn(component.guideContent, 'createComponent').and.returnValue(componentRefSpyObj);
+        spyOn(component['guideContent'], 'createComponent').and.returnValue(componentRefSpyObj);
 
         currentGuideChangedSubject.next(passedGuide);
         expect(loadGuideSpy).toHaveBeenCalledWith(passedGuide);
-        expect(component.guideContent.createComponent).toHaveBeenCalledWith(componentFactoryStub);
+        expect(component['guideContent'].createComponent).toHaveBeenCalledWith(componentFactoryStub);
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
     }));
 
     it('#ngOnDestroy should unsubscribe from currentGuideChangedSubscription', () => {
-        // tslint:disable-next-line: no-any no-string-literal
-        const subscriptionSpy = spyOn<any>(component['currentGuideChangedSubscription'], 'unsubscribe');
+        const subscriptionSpy = spyOn<any>(component['currentGuideChangedSubscription'], 'unsubscribe'); // tslint:disable-line: no-any
         component.ngOnDestroy();
         expect(subscriptionSpy).toHaveBeenCalled();
     });
