@@ -109,10 +109,25 @@ export class ToolFillService extends Tool {
         }
         this.visitedPoints.add(pointString);
 
-        if (!this.getPixelColor(point).equals(this.selectedColor)) {
+        if (!this.compareColors(point)) {
             return false;
         }
 
         return true;
+    }
+
+    private compareColors(point: Vec2): boolean {
+        const pointColor = this.getPixelColor(point);
+        const distanceFromSelectedColor = Math.sqrt(
+            Math.pow(pointColor.red - this.selectedColor.red, 2) +
+                Math.pow(pointColor.green - this.selectedColor.green, 2) +
+                Math.pow(pointColor.blue - this.selectedColor.blue, 2)
+        );
+        const maximalDistance = 442;
+        // The number 100 is used here to convert the distance to a percentage, because the user selects the deviation in percentage
+        // tslint:disable-next-line: no-magic-numbers
+        const percentageDifference = (distanceFromSelectedColor * 100) / maximalDistance;
+        // tslint:disable-next-line: no-non-null-assertion
+        return percentageDifference <= this.settings.fillDeviation! ? true : false;
     }
 }
