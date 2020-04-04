@@ -2,7 +2,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingFilter } from '@app/drawing/enums/drawing-filter.enum';
 import { FileType } from '@app/drawing/enums/file-type.enum';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
@@ -23,15 +22,12 @@ describe('ExportDrawingComponent', () => {
     beforeEach(async(() => {
         drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', ['exportDrawing']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], { title: initialTitle });
-        drawingPreviewServiceSpyObj = jasmine.createSpyObj('DrawingPreviewService', ['finalizePreview'], {
-            drawingFilter: initialDrawingFilter,
-        });
+
         TestBed.configureTestingModule({
             declarations: [ExportDrawingComponent],
             providers: [
                 { provide: DrawingSerializerService, useValue: drawingSerializerServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
-                { provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();

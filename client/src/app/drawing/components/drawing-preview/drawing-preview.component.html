@@ -3,7 +3,7 @@
     <desc #appDesc>{{ drawingLabels }}</desc>
 
     <defs #appDefs>
-        <filter id="drawingFilter1" filterUnits="userSpaceOnUse">
+        <filter id="drawingFilter0" filterUnits="userSpaceOnUse">
             <feColorMatrix
                 type="matrix"
                 values="0 1 0 0 0
@@ -13,7 +13,7 @@
             />
         </filter>
 
-        <filter id="drawingFilter2" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+        <filter id="drawingFilter1" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
             <feColorMatrix type="luminanceToAlpha" />
             <feComponentTransfer>
                 <feFuncA type="table" tableValues="0 0.2 0.5 0.8 1 0.8 0.5 0.20 0" />
@@ -39,7 +39,7 @@
             <feComposite operator="over" in="sepia-clip" in2="gscale" />
         </filter>
 
-        <filter id="drawingFilter3" filterUnits="userSpaceOnUse">
+        <filter id="drawingFilter2" filterUnits="userSpaceOnUse">
             <feFlood x="4" y="4" height="2" width="2" />
             <feComposite width="10" height="10" />
             <feTile result="flood" />
@@ -47,12 +47,12 @@
             <feMorphology operator="dilate" radius="5" />
         </filter>
 
-        <filter id="drawingFilter4" filterUnits="userSpaceOnUse">
+        <filter id="drawingFilter3" filterUnits="userSpaceOnUse">
             <feGaussianBlur stdDeviation="0 2" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic" edgeMode="none" result="blur" />
             <feComposite in="blur" in2="blur" operator="arithmetic" k1="2.3" k2="1.4" k3="-0.1" k4="-0.1" result="composite1" />
         </filter>
 
-        <filter id="drawingFilter5" filterUnits="userSpaceOnUse">
+        <filter id="drawingFilter4" filterUnits="userSpaceOnUse">
             <feTurbulence type="turbulence" baseFrequency="0.034 0.047" numOctaves="2" seed="2" stitchTiles="stitch" result="turbulence1" />
             <feTurbulence type="turbulence" baseFrequency="1.999 2.001" numOctaves="2" seed="2" stitchTiles="stitch" result="turbulence2" />
             <feComposite in="SourceGraphic" in2="turbulence1" operator="in" result="composite1" />
