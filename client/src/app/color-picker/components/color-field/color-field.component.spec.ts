@@ -4,6 +4,7 @@ import { ColorFieldComponent } from '@app/color-picker/components/color-field/co
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Subject } from 'rxjs';
 
 // tslint:disable: no-string-literal
@@ -133,7 +134,7 @@ describe('ColorFieldComponent', () => {
         component['isMouseInside'] = true;
         component['isLeftMouseButtonDown'] = false;
         const updateColorSpy = spyOn<any>(component, 'updateColor').and.callThrough();
-        const event = { clientX: 10, clientY: 10 } as MouseEvent;
+        const event = { button: MouseButton.Left, clientX: 10, clientY: 10 } as MouseEvent;
         component.onMouseDown(event);
         expect(component['isLeftMouseButtonDown']).toEqual(true);
         expect(updateColorSpy).toHaveBeenCalled();
@@ -143,16 +144,14 @@ describe('ColorFieldComponent', () => {
         component['isMouseInside'] = false;
         component['isLeftMouseButtonDown'] = false;
         const updateColorSpy = spyOn<any>(component, 'updateColor').and.callThrough();
-        const event = {} as MouseEvent;
-        component.onMouseDown(event);
+        component.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(component['isLeftMouseButtonDown']).toEqual(false);
         expect(updateColorSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp shouls set isLeftMouseButtonDown to false', () => {
+    it('#onMouseUp should set isLeftMouseButtonDown to false', () => {
         component['isLeftMouseButtonDown'] = true;
-        const event = {} as MouseEvent;
-        component.onMouseUp(event);
+        component.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(component['isLeftMouseButtonDown']).toEqual(false);
     });
 

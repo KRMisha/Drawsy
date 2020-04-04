@@ -84,15 +84,15 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#onEnter should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onEnter').and.callThrough();
-        tool.onEnter({} as MouseEvent);
+    it('#onMouseEnter should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onMouseEnter').and.callThrough();
+        tool.onMouseEnter({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#onLeave should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onLeave').and.callThrough();
-        tool.onLeave({} as MouseEvent);
+    it('#onMouseLeave should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onMouseLeave').and.callThrough();
+        tool.onMouseLeave({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 

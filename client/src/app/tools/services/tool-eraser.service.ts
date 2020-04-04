@@ -78,7 +78,7 @@ export class ToolEraserService extends Tool {
         this.svgElementsDeletedDuringDrag = [];
     }
 
-    onEnter(event: MouseEvent): void {
+    onMouseEnter(event: MouseEvent): void {
         this.updateEraserRect();
     }
 

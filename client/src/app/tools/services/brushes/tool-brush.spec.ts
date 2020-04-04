@@ -131,19 +131,19 @@ describe('ToolBrush', () => {
         expect(stopDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#onLeave should call #updatePath and #stopDrawing if left click is held', () => {
+    it('#onMouseLeave should call #updatePath and #stopDrawing if left click is held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = true;
-        toolBrush.onLeave({ button: MouseButton.Left } as MouseEvent);
+        toolBrush.onMouseLeave({ button: MouseButton.Left } as MouseEvent);
 
         expect(updatePathSpy).toHaveBeenCalled();
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#onLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
+    it('#oMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = false;
-        toolBrush.onLeave({ button: MouseButton.Right } as MouseEvent);
+        toolBrush.onMouseLeave({ button: MouseButton.Right } as MouseEvent);
 
         expect(updatePathSpy).not.toHaveBeenCalled();
         expect(stopDrawingSpy).not.toHaveBeenCalled();

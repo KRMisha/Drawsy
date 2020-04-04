@@ -40,7 +40,7 @@ export class ToolSprayCanService extends Tool {
         }
     }
 
-    onLeave(event: MouseEvent): void {
+    onMouseLeave(event: MouseEvent): void {
         this.stopSpraying();
     }
 
