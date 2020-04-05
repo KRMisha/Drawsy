@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { TouchService } from '@app/shared/services/touch.service';
 import { Subscription } from 'rxjs';
 
 const canvasWidth = 200;
@@ -50,15 +52,34 @@ export class HueSliderComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('document:mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
-        if (this.isMouseInside) {
+        if (this.isMouseInside && event.button === MouseButton.Left) {
             this.isLeftMouseButtonDown = true;
             this.updateHue(event);
         }
     }
 
-    @HostListener('document:mouseup')
-    onMouseUp(): void {
-        this.isLeftMouseButtonDown = false;
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(event: MouseEvent): void {
+        if (event.button === MouseButton.Left) {
+            this.isLeftMouseButtonDown = false;
+        }
+    }
+
+    @HostListener('document:touchmove', ['$event'])
+    onTouchMove(event: TouchEvent): void {
+        this.onMouseMove(TouchService.getMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onTouchStart(event: TouchEvent): void {
+        this.onMouseEnter();
+        this.onMouseDown(TouchService.getMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    onTouchEnd(event: TouchEvent): void {
+        this.onMouseUp(TouchService.getMouseEventFromTouchEvent(event));
+        this.onMouseLeave();
     }
 
     @HostListener('mouseenter')

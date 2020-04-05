@@ -43,3 +43,7 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+[mattooltipposition] {
+    touch-action: auto !important;
+}

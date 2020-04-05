@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
@@ -15,7 +15,7 @@ describe('ToolSelectionMoverService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionUiServiceSpyObj: jasmine.SpyObj<ToolSelectionUiService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     let moveElementListSpy: any;
     let setArrowStateFromEventSpy: any;
@@ -34,14 +34,14 @@ describe('ToolSelectionMoverService', () => {
 
         toolSelectionUiServiceSpyObj = jasmine.createSpyObj('ToolSelectionUiService', ['updateSvgSelectedShapesRect']);
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ToolSelectionStateService, useValue: toolSelectionStateServiceSpyObj },
                 { provide: ToolSelectionUiService, useValue: toolSelectionUiServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
 
@@ -140,7 +140,7 @@ describe('ToolSelectionMoverService', () => {
 
     it('#addMoveCommand should add command', () => {
         service.addMoveCommand();
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalled();
     });
 
     it('#setArrowStateFromEvent should set the correct state depeding on the event', () => {

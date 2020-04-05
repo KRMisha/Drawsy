@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { HistoryService } from '@app/drawing/services/history.service';
+import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -17,10 +17,10 @@ export class ToolEyedropperService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
-        private svgUtilityService: SvgUtilityService
+        historyService: HistoryService,
+        private rasterizationService: RasterizationService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eyedropper);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eyedropper);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -37,7 +37,7 @@ export class ToolEyedropperService extends Tool {
     }
 
     private async getPixelColor(pixelPosition: Vec2): Promise<Color> {
-        const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
 

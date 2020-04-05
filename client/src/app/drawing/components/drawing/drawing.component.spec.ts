@@ -55,8 +55,8 @@ describe('DrawingComponent', () => {
             'onMouseDoubleClick',
             'onKeyDown',
             'onKeyUp',
-            'onEnter',
-            'onLeave',
+            'onMouseEnter',
+            'onMouseLeave',
             'setMouseDown',
             'setMouseInsideDrawing',
         ]);
@@ -250,13 +250,13 @@ describe('DrawingComponent', () => {
         expect(currentToolServiceSpyObj.onKeyUp).not.toHaveBeenCalled();
     });
 
-    it("#onEnter should forward HostListener events to CurrentToolService's onEnter", () => {
-        component.onEnter({} as MouseEvent);
-        expect(currentToolServiceSpyObj.onEnter).toHaveBeenCalled();
+    it("#onMouseEnter should forward HostListener events to CurrentToolService's onMouseEnter", () => {
+        component.onMouseEnter({} as MouseEvent);
+        expect(currentToolServiceSpyObj.onMouseEnter).toHaveBeenCalled();
     });
 
-    it("#onLeave should forward HostListener events to CurrentToolService's onLeave", () => {
-        component.onLeave({} as MouseEvent);
-        expect(currentToolServiceSpyObj.onLeave).toHaveBeenCalled();
+    it("#onMouseLeave should forward HostListener events to CurrentToolService's onMouseLeave", () => {
+        component.onMouseLeave({} as MouseEvent);
+        expect(currentToolServiceSpyObj.onMouseLeave).toHaveBeenCalled();
     });
 });

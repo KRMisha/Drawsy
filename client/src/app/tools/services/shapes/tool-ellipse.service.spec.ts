@@ -1,8 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolEllipseService } from '@app/tools/services/shapes/tool-ellipse.service';
@@ -21,13 +21,13 @@ describe('ToolEllipseService', () => {
 
         const colorServiceStub = {} as ColorService;
 
-        const commandServiceStub = {} as CommandService;
+        const historyServiceStub = {} as HistoryService;
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: ColorService, useValue: colorServiceStub },
-                { provide: CommandService, useValue: commandServiceStub },
+                { provide: HistoryService, useValue: historyServiceStub },
             ],
         }).compileComponents();
 

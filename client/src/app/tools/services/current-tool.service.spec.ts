@@ -46,8 +46,8 @@ describe('CurrentToolService', () => {
             'onMouseDoubleClick',
             'onKeyDown',
             'onKeyUp',
-            'onEnter',
-            'onLeave',
+            'onMouseEnter',
+            'onMouseLeave',
             'onPrimaryColorChange',
             'onSecondaryColorChange',
             'onElementClick',
@@ -214,33 +214,33 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
     });
 
-    it('#onEnter should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onEnter', () => {
+    it('#onMouseEnter should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter', () => {
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
         const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
         getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
 
-        service.onEnter(mouseEvent);
+        service.onMouseEnter(mouseEvent);
 
         expect(Tool.isMouseInsideDrawing).toEqual(true);
         expect(getMousePositionSpy).toHaveBeenCalled();
         expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
-        expect(currentToolSpyObj.onEnter).toHaveBeenCalledWith(mouseEvent);
+        expect(currentToolSpyObj.onMouseEnter).toHaveBeenCalledWith(mouseEvent);
     });
 
-    it('#onLeave should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onLeave', () => {
+    it('#onMouseLeave should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseLeave', () => {
         Tool.isMouseInsideDrawing = true;
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
         const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
         getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
 
-        service.onLeave(mouseEvent);
+        service.onMouseLeave(mouseEvent);
 
         expect(Tool.isMouseInsideDrawing).toEqual(false);
         expect(getMousePositionSpy).toHaveBeenCalled();
         expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
-        expect(currentToolSpyObj.onLeave).toHaveBeenCalledWith(mouseEvent);
+        expect(currentToolSpyObj.onMouseLeave).toHaveBeenCalledWith(mouseEvent);
     });
 
     it('#update should update the current tool', () => {

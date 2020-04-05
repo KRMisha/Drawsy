@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -20,11 +20,11 @@ class ToolShapeMock extends ToolShape {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData,
         isShapeAlwaysRegular: boolean
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo, isShapeAlwaysRegular);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo, isShapeAlwaysRegular);
     }
     getShapeString(): string {
         return '';
@@ -36,7 +36,7 @@ class ToolShapeMock extends ToolShape {
 
 describe('ToolShape', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let colorSpyObj: jasmine.SpyObj<Color>;
@@ -48,7 +48,7 @@ describe('ToolShape', () => {
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
@@ -64,7 +64,7 @@ describe('ToolShape', () => {
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
             colorServiceSpyObj,
-            commandServiceSpyObj,
+            historyServiceSpyObj,
             ToolInfo.Pencil,
             false
         );

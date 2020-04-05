@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -13,7 +13,11 @@ import { SavedFile } from '@common/communication/saved-file';
 export class DrawingSerializerService {
     private renderer: Renderer2;
 
-    constructor(rendererFactory: RendererFactory2, private drawingService: DrawingService, private svgUtilityService: SvgUtilityService) {
+    constructor(
+        rendererFactory: RendererFactory2,
+        private drawingService: DrawingService,
+        private rasterizationService: RasterizationService
+    ) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -83,7 +87,7 @@ export class DrawingSerializerService {
         const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
         const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
 
-        const canvas = await this.svgUtilityService.getCanvasFromSvgRoot(drawingRoot);
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
 
         const link = this.renderer.createElement('a');
         link.download = filename + fileExtension;
