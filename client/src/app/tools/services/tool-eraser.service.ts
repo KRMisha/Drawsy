@@ -2,8 +2,8 @@ import { Injectable, RendererFactory2 } from '@angular/core';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -34,9 +34,9 @@ export class ToolEraserService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eraser);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 
@@ -72,11 +72,11 @@ export class ToolEraserService extends Tool {
             return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
         });
 
-        this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
         this.svgElementsDeletedDuringDrag = [];
     }
 
-    onEnter(event: MouseEvent): void {
+    onMouseEnter(event: MouseEvent): void {
         this.updateEraserRect();
     }
 

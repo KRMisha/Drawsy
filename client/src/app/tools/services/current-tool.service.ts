@@ -72,16 +72,16 @@ export class CurrentToolService implements OnDestroy {
         this.currentTool.onKeyUp(event);
     }
 
-    onEnter(event: MouseEvent): void {
+    onMouseEnter(event: MouseEvent): void {
         Tool.isMouseInsideDrawing = true;
         Tool.mousePosition = this.getMousePosition(event);
-        this.currentTool.onEnter(event);
+        this.currentTool.onMouseEnter(event);
     }
 
-    onLeave(event: MouseEvent): void {
+    onMouseLeave(event: MouseEvent): void {
         Tool.isMouseInsideDrawing = false;
         Tool.mousePosition = this.getMousePosition(event);
-        this.currentTool.onLeave(event);
+        this.currentTool.onMouseLeave(event);
     }
 
     update(): void {

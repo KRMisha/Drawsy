@@ -4,7 +4,7 @@ import { Command } from '@app/drawing/classes/commands/command';
 @Injectable({
     providedIn: 'root',
 })
-export class CommandService {
+export class HistoryService {
     private undoCommands: Command[] = [];
     private redoCommands: Command[] = [];
 
@@ -24,14 +24,6 @@ export class CommandService {
         }
     }
 
-    hasUndoCommands(): boolean {
-        return this.undoCommands.length > 0;
-    }
-
-    hasRedoCommands(): boolean {
-        return this.redoCommands.length > 0;
-    }
-
     addCommand(command: Command): void {
         this.undoCommands.push(command);
         this.redoCommands = [];
@@ -40,5 +32,13 @@ export class CommandService {
     clearCommands(): void {
         this.undoCommands = [];
         this.redoCommands = [];
+    }
+
+    hasUndoCommands(): boolean {
+        return this.undoCommands.length > 0;
+    }
+
+    hasRedoCommands(): boolean {
+        return this.redoCommands.length > 0;
     }
 }

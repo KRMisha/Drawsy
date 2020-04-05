@@ -2,8 +2,8 @@ import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -20,7 +20,7 @@ describe('ToolEraserService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     let getElementUnderAreaPixelPerfectSpy: any;
 
@@ -39,13 +39,13 @@ describe('ToolEraserService', () => {
             svgElements: svgElementsInitialArray,
         });
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
         service = TestBed.inject(ToolEraserService);
@@ -96,7 +96,7 @@ describe('ToolEraserService', () => {
         expect(updateSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp should add a removeElementCommand with the elements in the right order using the commandService', () => {
+    it('#onMouseUp should add a removeElementCommand with the elements in the right order using the historyService', () => {
         const svgElementStub1 = {} as SVGGraphicsElement;
         const svgElementStub2 = {} as SVGGraphicsElement;
         const svgElementStub3 = {} as SVGGraphicsElement;
@@ -109,7 +109,7 @@ describe('ToolEraserService', () => {
         service['svgElementsDeletedDuringDrag'] = [firstSiblingPair, secondSiblingPair];
         const expectedCommandElements = [secondSiblingPair, firstSiblingPair];
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalledWith(
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(
             new RemoveElementsCommand(drawingServiceSpyObj, expectedCommandElements)
         );
     });
@@ -117,19 +117,19 @@ describe('ToolEraserService', () => {
     it('#onMouseUp should return early if the button is not the left mouse button', () => {
         const event = { button: MouseButton.Right } as MouseEvent;
         service.onMouseUp(event);
-        expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
     it('#onMouseUp should return early if the eraser did not delete anything during the drag', () => {
         service['svgElementsDeletedDuringDrag'] = [];
         const event = { button: MouseButton.Left } as MouseEvent;
         service.onMouseUp(event);
-        expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
-    it('#onEnter should call #updateEraserRect', () => {
+    it('#onMouseEnter should call #updateEraserRect', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
-        service.onEnter({} as MouseEvent);
+        service.onMouseEnter({} as MouseEvent);
         expect(updateEraserRectSpy).toHaveBeenCalled();
     });
 

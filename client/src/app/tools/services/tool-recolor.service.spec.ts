@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolRecolorService } from '@app/tools/services/tool-recolor.service';
@@ -11,7 +11,7 @@ describe('ToolRecolorService', () => {
     let primaryColorSpyObj: jasmine.SpyObj<Color>;
     let secondaryColorSpyObj: jasmine.SpyObj<Color>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let service: ToolRecolorService;
 
     const primaryRgbaStringValue = 'rgba(69, 69, 69, 1)';
@@ -33,13 +33,13 @@ describe('ToolRecolorService', () => {
             secondaryColor: secondaryColorSpyObj,
         });
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: ColorService, useValue: colorServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
 

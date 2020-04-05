@@ -1,8 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
@@ -18,17 +18,17 @@ class ToolBrushMock extends ToolBrush {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo);
     }
 }
 
 describe('ToolBrush', () => {
     let toolBrush: ToolBrushMock;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let colorSpyObj: jasmine.SpyObj<Color>;
@@ -39,7 +39,7 @@ describe('ToolBrush', () => {
     beforeEach(() => {
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement']);
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['getAttribute', 'setAttribute', 'createElement']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
@@ -59,7 +59,7 @@ describe('ToolBrush', () => {
             rendererFactory2SpyObj,
             drawingServiceSpyObj,
             colorServiceSpyObj,
-            commandServiceSpyObj,
+            historyServiceSpyObj,
             ToolInfo.Pencil
         );
         updatePathSpy = spyOn<any>(toolBrush, 'updatePath').and.callThrough();
@@ -131,19 +131,19 @@ describe('ToolBrush', () => {
         expect(stopDrawingSpy).not.toHaveBeenCalled();
     });
 
-    it('#onLeave should call #updatePath and #stopDrawing if left click is held', () => {
+    it('#onMouseLeave should call #updatePath and #stopDrawing if left click is held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = true;
-        toolBrush.onLeave({ button: MouseButton.Left } as MouseEvent);
+        toolBrush.onMouseLeave({ button: MouseButton.Left } as MouseEvent);
 
         expect(updatePathSpy).toHaveBeenCalled();
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#onLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
+    it('#oMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = false;
-        toolBrush.onLeave({ button: MouseButton.Right } as MouseEvent);
+        toolBrush.onMouseLeave({ button: MouseButton.Right } as MouseEvent);
 
         expect(updatePathSpy).not.toHaveBeenCalled();
         expect(stopDrawingSpy).not.toHaveBeenCalled();
@@ -194,16 +194,16 @@ describe('ToolBrush', () => {
 
         toolBrush['stopDrawing']();
 
-        expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
-    it('#stopDrawing should add a command in commandService and set path to undefined if the path is not already undefined', () => {
+    it('#stopDrawing should add a command in historyService and set path to undefined if the path is not already undefined', () => {
         const pathMock = {} as SVGPathElement;
         toolBrush['path'] = pathMock;
 
         toolBrush['stopDrawing']();
 
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalledWith(new AppendElementCommand(drawingServiceSpyObj, pathMock));
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AppendElementCommand(drawingServiceSpyObj, pathMock));
         expect(toolBrush['path']).not.toBeTruthy();
     });
 });

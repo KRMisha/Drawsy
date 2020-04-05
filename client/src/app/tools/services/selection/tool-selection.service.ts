@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -31,14 +31,14 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Selection);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Selection);
     }
 
     ngOnDestroy(): void {

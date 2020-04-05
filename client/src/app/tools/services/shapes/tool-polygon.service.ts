@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
@@ -16,9 +16,9 @@ export class ToolPolygonService extends ToolShape {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Polygon, true);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Polygon, true);
         this.settings.polygonSideCount = ToolDefaults.defaultPolygonSideCount;
     }
 

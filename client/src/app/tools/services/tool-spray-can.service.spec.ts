@@ -1,8 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -17,7 +17,7 @@ describe('ToolSprayCanService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorSpyObj: jasmine.SpyObj<Color>;
-    let commandServiceSpyObj: jasmine.SpyObj<CommandService>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     const rgbaStringValue = 'rgba(1, 1, 1, 1)';
     beforeEach(() => {
@@ -33,14 +33,14 @@ describe('ToolSprayCanService', () => {
             primaryColor: colorSpyObj,
         });
 
-        commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['addCommand']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ColorService, useValue: colorServiceSpyObj },
-                { provide: CommandService, useValue: commandServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
         service = TestBed.inject(ToolSprayCanService);
@@ -99,11 +99,11 @@ describe('ToolSprayCanService', () => {
         expect(stopSprayingSpy).not.toHaveBeenCalled();
     });
 
-    it('#onLeave should call #stopSpraying', () => {
+    it('#onMouseLeave should call #stopSpraying', () => {
         const stopSprayingSpy = spyOn<any>(service, 'stopSpraying');
         const eventMock = {} as MouseEvent;
 
-        service.onLeave(eventMock);
+        service.onMouseLeave(eventMock);
         expect(stopSprayingSpy).toHaveBeenCalled();
     });
 
@@ -184,7 +184,7 @@ describe('ToolSprayCanService', () => {
         service['group'] = undefined;
         service['stopSpraying']();
         expect(clearIntervalSpy).not.toHaveBeenCalled();
-        expect(commandServiceSpyObj.addCommand).not.toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
     it('#stopSpraying should clear the interval and add the command when the group is defined', () => {
@@ -196,6 +196,6 @@ describe('ToolSprayCanService', () => {
 
         service['stopSpraying']();
         expect(clearIntervalSpy).toHaveBeenCalled();
-        expect(commandServiceSpyObj.addCommand).toHaveBeenCalled();
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalled();
     });
 });

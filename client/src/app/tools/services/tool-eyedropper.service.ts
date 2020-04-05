@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -17,10 +17,10 @@ export class ToolEyedropperService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         private rasterizationService: RasterizationService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eyedropper);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eyedropper);
     }
 
     onMouseDown(event: MouseEvent): void {

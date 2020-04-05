@@ -1,8 +1,8 @@
 import { RendererFactory2 } from '@angular/core';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
@@ -16,10 +16,10 @@ export abstract class ToolBrush extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
     }
 
@@ -43,7 +43,7 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
-    onLeave(event: MouseEvent): void {
+    onMouseLeave(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown) {
             this.updatePath();
             this.stopDrawing();
@@ -86,7 +86,7 @@ export abstract class ToolBrush extends Tool {
             return;
         }
 
-        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.path));
+        this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.path));
         this.path = undefined;
     }
 }
