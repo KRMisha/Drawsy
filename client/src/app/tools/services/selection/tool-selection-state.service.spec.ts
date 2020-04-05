@@ -26,8 +26,8 @@ describe('ToolSelectionStateService', () => {
     });
 
     it('#updateSelectionRect should give the selection rect the bounds of the selected elements', () => {
-        service.updateSelectionRect();
-        expect(service.selectionRect).toEqual(elementListBounds);
+        service.updateSelectedElementsRect();
+        expect(service.selectedElementsRect).toEqual(elementListBounds);
     });
 
     it('#selectedElements should update the selection rect', () => {

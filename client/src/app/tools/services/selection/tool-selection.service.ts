@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private isMouseDownInsideDrawing: boolean;
-    private currentMouseButtonDown?: MouseButton = undefined;
+    private currentMouseButtonDown?: MouseButton;
     private previousMousePosition: Vec2 = { x: 0, y: 0 };
 
     private hasUserJustClickedOnShape = false;
@@ -64,11 +64,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 );
             } else {
                 const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-                const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
+                const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );
-                this.invertObjectsSelection(currentSelectedElements, selectedElementsCopy);
+                this.invertElementsSelection(elementsToInvert, selectedElementsCopy);
             }
         }
 
@@ -143,7 +143,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (event.button === MouseButton.Left) {
             this.toolSelectionStateService.selectedElements = [element];
         } else if (event.button === MouseButton.Right) {
-            this.invertObjectsSelection([element], this.toolSelectionStateService.selectedElements);
+            this.invertElementsSelection([element], this.toolSelectionStateService.selectedElements);
         }
     }
 
@@ -169,8 +169,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     private isMouseInsideSelection(mousePosition: Vec2): boolean {
-        if (this.toolSelectionStateService.selectionRect !== undefined) {
-            return this.toolSelectionCollisionService.areRectsIntersecting(this.toolSelectionStateService.selectionRect, {
+        if (this.toolSelectionStateService.selectedElementsRect !== undefined) {
+            return this.toolSelectionCollisionService.areRectsIntersecting(this.toolSelectionStateService.selectedElementsRect, {
                 x: mousePosition.x,
                 y: mousePosition.y,
                 width: 0,
@@ -198,7 +198,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 if (isLeftButtonUp) {
                     this.toolSelectionStateService.selectedElements = currentSelectedElements;
                 } else if (isRightButtonUp) {
-                    this.invertObjectsSelection(currentSelectedElements, this.toolSelectionStateService.selectedElements);
+                    this.invertElementsSelection(currentSelectedElements, this.toolSelectionStateService.selectedElements);
                 }
             } else if (!this.hasUserJustClickedOnShape && isLeftButtonUp) {
                 this.toolSelectionStateService.selectedElements = [];
@@ -206,15 +206,15 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
     }
 
-    private invertObjectsSelection(svgElementsToInverse: SVGGraphicsElement[], selection: SVGGraphicsElement[]): void {
-        for (const svgElement of svgElementsToInverse) {
-            const elementToRemoveIndex = selection.indexOf(svgElement, 0);
+    private invertElementsSelection(elementsToInvert: SVGGraphicsElement[], selectedElements: SVGGraphicsElement[]): void {
+        for (const element of elementsToInvert) {
+            const elementToRemoveIndex = selectedElements.indexOf(element, 0);
             if (elementToRemoveIndex !== -1) {
-                selection.splice(elementToRemoveIndex, 1);
+                selectedElements.splice(elementToRemoveIndex, 1);
             } else {
-                selection.push(svgElement);
+                selectedElements.push(element);
             }
         }
-        this.toolSelectionUiService.updateSvgSelectedShapesRect(selection);
+        this.toolSelectionUiService.updateSvgSelectedShapesRect(selectedElements);
     }
 }

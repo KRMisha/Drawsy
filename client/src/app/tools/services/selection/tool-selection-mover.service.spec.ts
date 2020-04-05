@@ -64,7 +64,7 @@ describe('ToolSelectionMoverService', () => {
         service.moveSelection({ x: 0, y: 0 }, { x: 1, y: 2 });
         expect(moveElementListSpy).toHaveBeenCalled();
         expect(toolSelectionUiServiceSpyObj.updateSvgSelectedShapesRect).toHaveBeenCalled();
-        expect(toolSelectionStateServiceSpyObj.updateSelectionRect).toHaveBeenCalled();
+        expect(toolSelectionStateServiceSpyObj.updateSelectedElementsRect).toHaveBeenCalled();
     });
 
     it('#onKeyDown should set arrow state', () => {

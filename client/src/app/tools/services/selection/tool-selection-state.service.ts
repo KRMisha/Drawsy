@@ -11,7 +11,7 @@ export class ToolSelectionStateService {
     moveState = SelectionMoveState.None;
 
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
-    private _selectionRect?: Rect; // tslint:disable-line: variable-name
+    private _selectedElementsRect?: Rect; // tslint:disable-line: variable-name
 
     private selectedElementsChangedSource = new Subject<SVGGraphicsElement[]>();
 
@@ -20,8 +20,8 @@ export class ToolSelectionStateService {
 
     constructor(private toolSelectionCollisionService: ToolSelectionCollisionService) {}
 
-    updateSelectionRect(): void {
-        this._selectionRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
+    updateSelectedElementsRect(): void {
+        this._selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
     }
 
     get selectedElements(): SVGGraphicsElement[] {
@@ -30,11 +30,11 @@ export class ToolSelectionStateService {
 
     set selectedElements(selectedElements: SVGGraphicsElement[]) {
         this._selectedElements = selectedElements;
-        this.updateSelectionRect();
+        this.updateSelectedElementsRect();
         this.selectedElementsChangedSource.next(selectedElements);
     }
 
-    get selectionRect(): Rect | undefined {
-        return this._selectionRect;
+    get selectedElementsRect(): Rect | undefined {
+        return this._selectedElementsRect;
     }
 }
