@@ -3,6 +3,7 @@ import { TransformElementsCommand } from '@app/drawing/classes/commands/transfor
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { SelectionMoveState } from '@app/tools/enums/selection-move-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 
@@ -43,14 +44,13 @@ export class ToolSelectionMoverService {
     onKeyDown(event: KeyboardEvent): void {
         this.setArrowStateFromEvent(event, true);
         const canAppendMatrix =
-            !this.toolSelectionStateService.isMovingSelectionWithArrows &&
-            !this.toolSelectionStateService.isMovingSelectionWithMouse &&
+            this.toolSelectionStateService.moveState === SelectionMoveState.None &&
             (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld);
         if (!canAppendMatrix) {
             return;
         }
         this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-        this.toolSelectionStateService.isMovingSelectionWithArrows = true;
+        this.toolSelectionStateService.moveState = SelectionMoveState.WithArrows;
         this.moveSelectionInArrowDirection();
         const timeoutDurationMs = 500;
         this.movingTimeout = window.setTimeout(() => {
@@ -68,7 +68,7 @@ export class ToolSelectionMoverService {
             !this.isArrowUpHeld &&
             !this.isArrowLeftHeld &&
             !this.isArrowRightHeld &&
-            !this.toolSelectionStateService.isMovingSelectionWithMouse;
+            this.toolSelectionStateService.moveState !== SelectionMoveState.WithMouse;
         if (canAddMoveCommand) {
             if (this.totalSelectionMoveOffset.x !== 0 || this.totalSelectionMoveOffset.y !== 0) {
                 this.addMoveCommand();
@@ -79,7 +79,7 @@ export class ToolSelectionMoverService {
             }
             window.clearInterval(this.movingIntervalId);
             this.movingIntervalId = undefined;
-            this.toolSelectionStateService.isMovingSelectionWithArrows = false;
+            this.toolSelectionStateService.moveState = SelectionMoveState.None;
         }
     }
 

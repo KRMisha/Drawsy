@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Rect } from '@app/shared/classes/rect';
+import { SelectionMoveState } from '@app/tools/enums/selection-move-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { Subject } from 'rxjs';
 
@@ -7,8 +8,7 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class ToolSelectionStateService {
-    isMovingSelectionWithArrows = false;
-    isMovingSelectionWithMouse = false;
+    moveState = SelectionMoveState.None;
 
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
     private _selectionRect?: Rect; // tslint:disable-line: variable-name

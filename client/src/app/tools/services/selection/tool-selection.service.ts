@@ -7,6 +7,7 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import ToolInfo from '@app/tools/constants/tool-info';
+import { SelectionMoveState } from '@app/tools/enums/selection-move-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -51,7 +52,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             return;
         }
 
-        if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
+        if (this.toolSelectionStateService.moveState === SelectionMoveState.WithMouse) {
             this.toolSelectionMoverService.moveSelection(Tool.mousePosition, this.previousMousePosition);
         } else {
             const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
@@ -75,7 +76,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (this.toolSelectionStateService.isMovingSelectionWithArrows || this.currentMouseButtonDown !== undefined) {
+        if (this.toolSelectionStateService.moveState === SelectionMoveState.WithArrows || this.currentMouseButtonDown !== undefined) {
             return;
         }
 
@@ -84,7 +85,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (Tool.isMouseInsideDrawing) {
             if (this.isMouseInsideSelection(Tool.mousePosition) && event.button === MouseButton.Left) {
                 this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-                this.toolSelectionStateService.isMovingSelectionWithMouse = true;
+                this.toolSelectionStateService.moveState = SelectionMoveState.WithMouse;
                 this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {
                 this.drawingService.addUiElement(this.toolSelectionUiService.svgUserSelectionRect);
@@ -106,16 +107,16 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
         this.drawingService.removeUiElement(this.toolSelectionUiService.svgUserSelectionRect);
 
-        if (!this.toolSelectionStateService.isMovingSelectionWithMouse || this.isSingleClick()) {
+        if (this.toolSelectionStateService.moveState !== SelectionMoveState.WithMouse || this.isSingleClick()) {
             this.updateSelectionOnMouseUp(event);
         }
 
-        if (this.toolSelectionStateService.isMovingSelectionWithMouse && !this.isSingleClick()) {
+        if (this.toolSelectionStateService.moveState === SelectionMoveState.WithMouse && !this.isSingleClick()) {
             this.toolSelectionMoverService.addMoveCommand();
         }
 
         this.currentMouseButtonDown = undefined;
-        this.toolSelectionStateService.isMovingSelectionWithMouse = false;
+        this.toolSelectionStateService.moveState = SelectionMoveState.None;
         this.hasUserJustClickedOnShape = false;
         this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
     }
@@ -131,7 +132,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
         this.hasUserJustClickedOnShape = true;
         const isValidClick = !(
-            this.toolSelectionStateService.isMovingSelectionWithArrows ||
+            this.toolSelectionStateService.moveState === SelectionMoveState.WithArrows ||
             !this.isSingleClick() ||
             this.currentMouseButtonDown !== event.button
         );
