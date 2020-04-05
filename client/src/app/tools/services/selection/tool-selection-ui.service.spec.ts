@@ -1,9 +1,10 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Subject } from 'rxjs';
@@ -13,7 +14,7 @@ import { Subject } from 'rxjs';
 
 describe('ToolSelectionUiService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
-    let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
+    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
 
@@ -22,7 +23,6 @@ describe('ToolSelectionUiService', () => {
     let service: ToolSelectionUiService;
 
     const controlPointsCount = 4;
-    const elementListBounds = { x: 69, y: 420, width: 666, height: 69420 };
     let hideSvgSelectedShapesRectSpy: any;
 
     beforeEach(() => {
@@ -30,12 +30,7 @@ describe('ToolSelectionUiService', () => {
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
-        svgUtilityServiceSpyObj = jasmine.createSpyObj('SvgUtilityService', [
-            'getElementListBounds',
-            'updateSvgRectFromRect',
-            'createDashedRectBorder',
-        ]);
-        svgUtilityServiceSpyObj.getElementListBounds.and.returnValue(elementListBounds);
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementListBounds']);
 
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addUiElement', 'removeUiElement']);
 
@@ -47,7 +42,7 @@ describe('ToolSelectionUiService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
-                { provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj },
+                { provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ToolSelectionStateService, useValue: toolSelectionStateServiceSpyObj },
             ],
@@ -96,14 +91,14 @@ describe('ToolSelectionUiService', () => {
     });
 
     it('#updateSvgSelectedShapesRect should hide selected shapes rect if the elements bounds is undefined', () => {
-        svgUtilityServiceSpyObj.getElementListBounds.and.returnValue(undefined);
+        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(undefined);
         service.updateSvgSelectedShapesRect({} as SVGGraphicsElement[]);
         expect(hideSvgSelectedShapesRectSpy).toHaveBeenCalled();
     });
 
     it('#updateSvgSelectedShapesRect should change the position of the box around selected elements', () => {
         const selectionRect = { x: 69, y: 12, width: 420, height: 666 } as Rect;
-        svgUtilityServiceSpyObj.getElementListBounds.and.returnValue(selectionRect);
+        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(selectionRect);
         const expectedPositions = [
             { x: selectionRect.x, y: selectionRect.y + selectionRect.height / 2 } as Vec2,
             { x: selectionRect.x + selectionRect.width / 2, y: selectionRect.y } as Vec2,
@@ -130,25 +125,61 @@ describe('ToolSelectionUiService', () => {
 
     it('#showSvgSelectedShapesRect should do nothing if selection is already being displayed', () => {
         service['isSelectionDisplayed'] = true;
-        service.showSvgSelectedShapesRect();
+        service['showSvgSelectedShapesRect']();
         expect(drawingServiceSpyObj.addUiElement).not.toHaveBeenCalled();
     });
 
     it('#showSvgSelectedShapesRect should add the rect to the UI if selection is not already being displayed', () => {
         service['isSelectionDisplayed'] = false;
-        service.showSvgSelectedShapesRect();
+        service['showSvgSelectedShapesRect']();
         expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalled();
     });
 
     it('#hideSvgSelectedShapesRect should do nothing if selection is not being displayed', () => {
         service['isSelectionDisplayed'] = false;
-        service.hideSvgSelectedShapesRect();
+        service['hideSvgSelectedShapesRect']();
         expect(drawingServiceSpyObj.removeUiElement).not.toHaveBeenCalled();
     });
 
     it('#hideSvgSelectedShapesRect should remove the rect to the UI if selection being displayed', () => {
         service['isSelectionDisplayed'] = true;
-        service.hideSvgSelectedShapesRect();
+        service['hideSvgSelectedShapesRect']();
         expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalled();
+    });
+
+    it('#createDashedRectBorder should create a svg rect element and set its color according to the one passed by parameter', () => {
+        const colorValue = 10;
+        const colorStub = { red: colorValue, green: colorValue, blue: colorValue } as Color;
+        const svgRectStub = {} as SVGRectElement;
+        renderer2SpyObj.createElement.and.returnValue(svgRectStub);
+
+        service['createDashedRectBorder'](colorStub);
+
+        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
+            svgRectStub,
+            'fill',
+            `rgba(${colorValue}, ${colorValue}, ${colorValue}, 0.2)`
+        );
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-dasharray', '5, 3');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-width', '2');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-linecap', 'round');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
+            svgRectStub,
+            'stroke',
+            `rgba(${colorValue}, ${colorValue}, ${colorValue}, 0.8)`
+        );
+    });
+
+    it("#updateSvgRectFromRect should use renderer2 to set the svgRect's attributes", () => {
+        const svgRectStub = {} as SVGRectElement;
+        const rect: Rect = { x: 10, y: 10, width: 10, height: 10 };
+
+        service.updateSvgRectFromRect(svgRectStub, rect);
+
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', rect.x.toString());
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', rect.y.toString());
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', rect.width.toString());
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', rect.height.toString());
     });
 });

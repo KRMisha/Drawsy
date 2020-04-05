@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { GeometryService } from '@app/drawing/services/geometry.service';
 import { HistoryService } from '@app/drawing/services/history.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import ToolInfo from '@app/tools/constants/tool-info';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
@@ -35,7 +35,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionUiService: ToolSelectionUiService,
-        private svgUtilityService: SvgUtilityService,
+        private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Selection);
@@ -54,16 +54,16 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (this.toolSelectionStateService.isMovingSelectionWithMouse) {
             this.toolSelectionMoverService.moveSelection(Tool.mousePosition, this.previousMousePosition);
         } else {
-            const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
-            this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
+            const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
+            this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, userSelectionRect);
             if (this.currentMouseButtonDown === MouseButton.Left) {
-                this.toolSelectionStateService.selectedElements = this.svgUtilityService.getElementsUnderArea(
+                this.toolSelectionStateService.selectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );
             } else {
                 const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-                const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
+                const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );
@@ -88,8 +88,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 this.toolSelectionMoverService.totalSelectionMoveOffset = { x: 0, y: 0 };
             } else {
                 this.drawingService.addUiElement(this.toolSelectionUiService.svgUserSelectionRect);
-                const rect = GeometryService.getRectFromPoints(this.selectionOrigin, this.selectionOrigin);
-                this.svgUtilityService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, rect);
+                const rect = Rect.fromPoints(this.selectionOrigin, this.selectionOrigin);
+                this.toolSelectionUiService.updateSvgRectFromRect(this.toolSelectionUiService.svgUserSelectionRect, rect);
             }
         } else {
             this.toolSelectionStateService.selectedElements = [];
@@ -169,7 +169,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     private isMouseInsideSelection(mousePosition: Vec2): boolean {
         if (this.toolSelectionStateService.selectionRect !== undefined) {
-            return GeometryService.areRectsIntersecting(this.toolSelectionStateService.selectionRect, {
+            return this.toolSelectionCollisionService.areRectsIntersecting(this.toolSelectionStateService.selectionRect, {
                 x: mousePosition.x,
                 y: mousePosition.y,
                 width: 0,
@@ -180,7 +180,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     private isSingleClick(): boolean {
-        const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
+        const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
         return userSelectionRect.width === 0 && userSelectionRect.height === 0;
     }
 
@@ -188,8 +188,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         if (Tool.isMouseInsideDrawing && this.isMouseDownInsideDrawing) {
             const isLeftButtonUp = event.button === MouseButton.Left && this.currentMouseButtonDown === event.button;
             if (!this.isSingleClick()) {
-                const userSelectionRect = GeometryService.getRectFromPoints(this.selectionOrigin, Tool.mousePosition);
-                const currentSelectedElements = this.svgUtilityService.getElementsUnderArea(
+                const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
+                const currentSelectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
                     this.drawingService.svgElements,
                     userSelectionRect
                 );

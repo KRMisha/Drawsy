@@ -4,7 +4,7 @@ import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -21,7 +21,7 @@ describe('DrawingSerializerService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let drawingPreviewServiceSpyObj: jasmine.SpyObj<DrawingPreviewService>;
     let canvasSpyObj: jasmine.SpyObj<HTMLCanvasElement>;
-    let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
+    let rasterizationServiceSpyObj: jasmine.SpyObj<RasterizationService>;
     let anchorMock: HTMLAnchorElement;
     let anchorClickSpy: jasmine.Spy;
     const urlMock = 'http://test-url.com/resource';
@@ -51,15 +51,15 @@ describe('DrawingSerializerService', () => {
         canvasSpyObj = jasmine.createSpyObj('HTMLCanvasElement', ['toDataURL']);
         canvasSpyObj.toDataURL.and.returnValue(urlMock);
 
-        svgUtilityServiceSpyObj = jasmine.createSpyObj('SvgUtilityService', ['getCanvasFromSvgRoot']);
-        svgUtilityServiceSpyObj.getCanvasFromSvgRoot.and.returnValue(Promise.resolve(canvasSpyObj));
+        rasterizationServiceSpyObj = jasmine.createSpyObj('RasterizationService', ['getCanvasFromSvgRoot']);
+        rasterizationServiceSpyObj.getCanvasFromSvgRoot.and.returnValue(Promise.resolve(canvasSpyObj));
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: DrawingPreviewService, useValue: drawingPreviewServiceSpyObj },
-                { provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj },
+                { provide: RasterizationService, useValue: rasterizationServiceSpyObj },
             ],
         });
 
