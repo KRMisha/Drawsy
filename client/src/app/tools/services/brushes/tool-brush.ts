@@ -43,7 +43,7 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
-    onLeave(event: MouseEvent): void {
+    onMouseLeave(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown) {
             this.updatePath();
             this.stopDrawing();

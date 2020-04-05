@@ -3,6 +3,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { TouchService } from '@app/shared/services/touch.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
 
@@ -79,6 +80,25 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         }
     }
 
+    @HostListener('document:touchmove', ['$event'])
+    onTouchMove(event: TouchEvent): void {
+        this.onMouseMove(TouchService.getMouseEventFromTouchEvent(event));
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onTouchStart(event: TouchEvent): void {
+        const mouseEventMock = TouchService.getMouseEventFromTouchEvent(event);
+        this.onMouseEnter(mouseEventMock);
+        this.onMouseDown(mouseEventMock);
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    onTouchEnd(event: TouchEvent): void {
+        const mouseEventMock = TouchService.getMouseEventFromTouchEvent(event);
+        this.onMouseUp(mouseEventMock);
+        this.onMouseLeave(mouseEventMock);
+    }
+
     @HostListener('dblclick', ['$event'])
     onMouseDoubleClick(event: MouseEvent): void {
         if (!this.modalService.isModalPresent) {
@@ -101,13 +121,13 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     @HostListener('mouseenter', ['$event'])
-    onEnter(event: MouseEvent): void {
-        this.currentToolService.onEnter(event);
+    onMouseEnter(event: MouseEvent): void {
+        this.currentToolService.onMouseEnter(event);
     }
 
     @HostListener('mouseleave', ['$event'])
-    onLeave(event: MouseEvent): void {
-        this.currentToolService.onLeave(event);
+    onMouseLeave(event: MouseEvent): void {
+        this.currentToolService.onMouseLeave(event);
     }
 
     get width(): number {

@@ -4,7 +4,6 @@ import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -35,8 +34,7 @@ export class ToolEraserService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        historyService: HistoryService,
-        private svgUtilityService: SvgUtilityService
+        historyService: HistoryService
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
@@ -78,13 +76,13 @@ export class ToolEraserService extends Tool {
         this.svgElementsDeletedDuringDrag = [];
     }
 
-    onEnter(event: MouseEvent): void {
+    onMouseEnter(event: MouseEvent): void {
         this.updateEraserRect();
     }
 
     update(): void {
         this.timerId = undefined;
-        const elementToConsider = this.svgUtilityService.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
+        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
 
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
@@ -135,7 +133,7 @@ export class ToolEraserService extends Tool {
             width: this.eraserSize,
             height: this.eraserSize,
         };
-        this.svgUtilityService.updateSvgRectFromRect(this.svgEraserElement, this.eraserRect);
+        this.updateSvgRectFromRect(this.svgEraserElement, this.eraserRect);
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
@@ -168,10 +166,64 @@ export class ToolEraserService extends Tool {
         this.renderer.setAttribute(element, 'stroke-width', borderWidth.toString());
     }
 
+    private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
+        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
+        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
+        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
+        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
+    }
+
     private restoreElementUnderCursorAttributes(): void {
         if (this.svgElementUnderCursor !== undefined) {
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke-width', this.elementUnderCursorStrokeWidth);
         }
+    }
+
+    private getElementUnderAreaPixelPerfect(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement | undefined {
+        const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
+
+        const elementIndices = new Map<SVGGraphicsElement, number>();
+        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
+            elementIndices.set(this.drawingService.svgElements[i], i);
+        }
+
+        const availableElementsSet = new Set<SVGGraphicsElement>(elements);
+
+        let topmostElement: SVGGraphicsElement | undefined;
+        let topmostElementIndex = 0;
+
+        for (let i = 0; i < area.width; i++) {
+            for (let j = 0; j < area.height; j++) {
+                const x = drawingRect.x + area.x + i;
+                const y = drawingRect.y + area.y + j;
+
+                // Function does not exist in Renderer2
+                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGGraphicsElement;
+
+                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGGraphicsElement) {
+                    const parentElement = elementUnderPoint.parentElement;
+                    if (availableElementsSet.has(parentElement)) {
+                        elementUnderPoint = parentElement;
+                    }
+                }
+
+                if (
+                    elementUnderPoint === undefined ||
+                    !elementIndices.has(elementUnderPoint) ||
+                    !availableElementsSet.has(elementUnderPoint)
+                ) {
+                    continue;
+                }
+
+                const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
+                if (topmostElement === undefined || elementUnderPointIndex > topmostElementIndex) {
+                    topmostElement = elementUnderPoint;
+                    topmostElementIndex = elementUnderPointIndex;
+                }
+            }
+        }
+
+        return topmostElement;
     }
 }

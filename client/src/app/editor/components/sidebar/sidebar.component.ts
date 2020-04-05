@@ -15,8 +15,6 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-    @ViewChild('appSidebarDrawer') sidebarDrawer: SidebarDrawerComponent;
-
     readonly actionButtons: ActionButton[] = [
         { name: 'Nouveau dessin', icon: 'add', action: this.openNewDrawingModal.bind(this) },
         { name: 'Exporter le dessin localement', icon: 'save_alt', action: this.openExportDrawingModal.bind(this) },
@@ -26,6 +24,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         { name: 'Guide', icon: 'help_outline', action: this.openGuideModal.bind(this) },
         { name: 'Accueil', icon: 'home', action: this.navigateToHome.bind(this) },
     ];
+
+    @ViewChild('appSidebarDrawer') private sidebarDrawer: SidebarDrawerComponent;
 
     private selectToolPencilShortcutSubscription: Subscription;
     private selectToolPaintbrushShortcutSubscription: Subscription;

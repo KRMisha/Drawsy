@@ -99,11 +99,11 @@ describe('ToolSprayCanService', () => {
         expect(stopSprayingSpy).not.toHaveBeenCalled();
     });
 
-    it('#onLeave should call #stopSpraying', () => {
+    it('#onMouseLeave should call #stopSpraying', () => {
         const stopSprayingSpy = spyOn<any>(service, 'stopSpraying');
         const eventMock = {} as MouseEvent;
 
-        service.onLeave(eventMock);
+        service.onMouseLeave(eventMock);
         expect(stopSprayingSpy).toHaveBeenCalled();
     });
 

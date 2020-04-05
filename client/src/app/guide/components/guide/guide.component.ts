@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
     providers: [GuideService],
 })
 export class GuideComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('appSidebar') sidebar: GuideSidebarComponent;
-    @ViewChild('appGuideContent', { read: ViewContainerRef }) guideContent: ViewContainerRef;
+    @ViewChild('appSidebar') private sidebar: GuideSidebarComponent;
+    @ViewChild('appGuideContent', { read: ViewContainerRef }) private guideContent: ViewContainerRef;
 
     private currentGuideChangedSubscription: Subscription;
 
