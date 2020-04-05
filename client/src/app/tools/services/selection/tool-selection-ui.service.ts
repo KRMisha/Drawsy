@@ -3,9 +3,9 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 const controlPointSideSize = 10;
 

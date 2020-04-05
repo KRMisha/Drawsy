@@ -1,21 +1,21 @@
 import { TestBed } from '@angular/core/testing';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 // tslint:disable: no-any
 
 describe('ToolSelectionStateService', () => {
-    let toolSelectionCollisinoServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
+    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let service: ToolSelectionStateService;
 
     const elementListBounds = { x: 69, y: 420, width: 666, height: 69420 };
 
     beforeEach(() => {
-        toolSelectionCollisinoServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementListBounds']);
-        toolSelectionCollisinoServiceSpyObj.getElementListBounds.and.returnValue(elementListBounds);
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementListBounds']);
+        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(elementListBounds);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: ToolSelectionCollisionService, useValue: toolSelectionCollisinoServiceSpyObj }],
+            providers: [{ provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj }],
         });
 
         service = TestBed.inject(ToolSelectionStateService);

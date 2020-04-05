@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Rect } from '@app/shared/classes/rect';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { Subject } from 'rxjs';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 @Injectable({
     providedIn: 'root',

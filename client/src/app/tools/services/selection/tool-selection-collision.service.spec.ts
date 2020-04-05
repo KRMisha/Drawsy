@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 
 // tslint:disable: no-string-literal
 

@@ -6,11 +6,11 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection//tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection//tool-selection-ui.service';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-empty
