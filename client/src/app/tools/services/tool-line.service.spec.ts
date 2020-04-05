@@ -67,32 +67,6 @@ describe('ToolLineService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#calculateNextPointPosition should return mouse position if user is not drawing', () => {
-        const mousePosition = { x: 10, y: 10 };
-        expect(ToolLineService.calculateNextPointPosition({} as Vec2, mousePosition, true, false)).toEqual(mousePosition);
-    });
-
-    it('#calculateNextPointPosition should return mouse position if shift is not pressed', () => {
-        const mousePosition = { x: 10, y: 10 };
-        expect(ToolLineService.calculateNextPointPosition({} as Vec2, mousePosition, false, true)).toEqual(mousePosition);
-    });
-
-    it('#calculateNextPointPosition should return a relative horizontal mouse position to its previous point if angle is close to horizontal', () => {
-        expect(ToolLineService.calculateNextPointPosition({ x: 0, y: 10 }, { x: 10, y: 12 }, true, true)).toEqual({ x: 10, y: 10 });
-        expect(ToolLineService.calculateNextPointPosition({ x: 10, y: 10 }, { x: 0, y: 12 }, true, true)).toEqual({ x: 0, y: 10 });
-    });
-
-    it('#calculateNextPointPosition should return a relative vertical mouse position to its previous point if angle is close to vertical', () => {
-        expect(ToolLineService.calculateNextPointPosition({ x: 0, y: 0 }, { x: 2, y: 10 }, true, true)).toEqual({ x: 0, y: 10 });
-        expect(ToolLineService.calculateNextPointPosition({ x: 2, y: 10 }, { x: 0, y: 0 }, true, true)).toEqual({ x: 2, y: 0 });
-    });
-
-    it('#calculateNextPointPosition should return a relative diagonal mouse position to its previous point if angle is close to diagonal', () => {
-        const value = ToolLineService.calculateNextPointPosition({ x: 0, y: 0 }, { x: 10, y: 11 }, true, true);
-        expect(value.x).toBeCloseTo(10);
-        expect(value.y).toBeCloseTo(10);
-    });
-
     it('#onMouseMove should call updateNextPointPosition', () => {
         const updateNextPointPositionSpy = spyOn<any>(service, 'updateNextPointPosition');
         service.onMouseMove();
@@ -106,7 +80,7 @@ describe('ToolLineService', () => {
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should do nothin if mouse button is not left', () => {
+    it('#onMouseDown should do nothing if mouse button is not left', () => {
         service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
     });
@@ -264,5 +238,31 @@ describe('ToolLineService', () => {
         const pushSpy = spyOn<any>(service['junctionPoints'], 'push');
         service['createNewJunction']();
         expect(pushSpy).toHaveBeenCalled();
+    });
+
+    it('#calculateNextPointPosition should return mouse position if user is not drawing', () => {
+        const mousePosition = { x: 10, y: 10 };
+        expect(service['calculateNextPointPosition']({} as Vec2, mousePosition, true, false)).toEqual(mousePosition);
+    });
+
+    it('#calculateNextPointPosition should return mouse position if shift is not pressed', () => {
+        const mousePosition = { x: 10, y: 10 };
+        expect(service['calculateNextPointPosition']({} as Vec2, mousePosition, false, true)).toEqual(mousePosition);
+    });
+
+    it('#calculateNextPointPosition should return a relative horizontal mouse position to its previous point if angle is close to horizontal', () => {
+        expect(service['calculateNextPointPosition']({ x: 0, y: 10 }, { x: 10, y: 12 }, true, true)).toEqual({ x: 10, y: 10 });
+        expect(service['calculateNextPointPosition']({ x: 10, y: 10 }, { x: 0, y: 12 }, true, true)).toEqual({ x: 0, y: 10 });
+    });
+
+    it('#calculateNextPointPosition should return a relative vertical mouse position to its previous point if angle is close to vertical', () => {
+        expect(service['calculateNextPointPosition']({ x: 0, y: 0 }, { x: 2, y: 10 }, true, true)).toEqual({ x: 0, y: 10 });
+        expect(service['calculateNextPointPosition']({ x: 2, y: 10 }, { x: 0, y: 0 }, true, true)).toEqual({ x: 2, y: 0 });
+    });
+
+    it('#calculateNextPointPosition should return a relative diagonal mouse position to its previous point if angle is close to diagonal', () => {
+        const value = service['calculateNextPointPosition']({ x: 0, y: 0 }, { x: 10, y: 11 }, true, true);
+        expect(value.x).toBeCloseTo(10);
+        expect(value.y).toBeCloseTo(10);
     });
 });
