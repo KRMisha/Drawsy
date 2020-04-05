@@ -52,8 +52,9 @@ export class ToolFillService extends Tool {
         const point: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
         this.pointsQueue = new Queue<Vec2>();
         this.visitedPoints = new Set<string>();
-        this.pointsQueue.enqueue(point);
+
         await this.initializeCanvas();
+        this.pointsQueue.enqueue(point);
         this.selectedColor = this.getPixelColor(point);
         this.breadthFirstSearch();
     }
@@ -90,43 +91,42 @@ export class ToolFillService extends Tool {
         if (!this.verifyPoint(point)) {
             return;
         }
-        const circle: SVGPathElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(circle, 'x', `${point.x}`);
-        this.renderer.setAttribute(circle, 'y', `${point.y}`);
-        this.renderer.setAttribute(circle, 'width', '1');
-        this.renderer.setAttribute(circle, 'height', '1');
-        this.renderer.appendChild(this.group, circle);
+        const rectangle: SVGPathElement = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(rectangle, 'x', `${point.x}`);
+        this.renderer.setAttribute(rectangle, 'y', `${point.y}`);
+        this.renderer.setAttribute(rectangle, 'width', '1');
+        this.renderer.setAttribute(rectangle, 'height', '1');
+        this.renderer.appendChild(this.group, rectangle);
 
         this.pointsQueue.enqueue(point);
     }
 
     private verifyPoint(point: Vec2): boolean {
-        const drawingDimensions = this.drawingService.dimensions;
-        const isInDrawing = point.x >= 0 || point.y >= 0 || point.x <= drawingDimensions.x || point.y <= drawingDimensions.y;
+        const isInDrawing =
+            point.x >= 0 && point.y >= 0 && point.x <= this.drawingService.dimensions.x && point.y <= this.drawingService.dimensions.y;
         const pointString = `${point.x}, ${point.y}`;
         if (!isInDrawing || this.visitedPoints.has(pointString)) {
             return false;
         }
         this.visitedPoints.add(pointString);
 
-        if (!this.compareColors(point)) {
+        if (!this.matchesSelectedColor(this.getPixelColor(point))) {
             return false;
         }
-
         return true;
     }
 
-    private compareColors(point: Vec2): boolean {
-        const pointColor = this.getPixelColor(point);
+    private matchesSelectedColor(color: Color): boolean {
         const distanceFromSelectedColor = Math.sqrt(
-            Math.pow(pointColor.red - this.selectedColor.red, 2) +
-                Math.pow(pointColor.green - this.selectedColor.green, 2) +
-                Math.pow(pointColor.blue - this.selectedColor.blue, 2)
+            Math.pow(color.red - this.selectedColor.red, 2) +
+                Math.pow(color.green - this.selectedColor.green, 2) +
+                Math.pow(color.blue - this.selectedColor.blue, 2)
         );
+
         const maximalDistance = 442;
-        // The number 100 is used here to convert the distance to a percentage, because the user selects the deviation in percentage
-        // tslint:disable-next-line: no-magic-numbers
-        const percentageDifference = (distanceFromSelectedColor * 100) / maximalDistance;
+        const percentageMultiplier = 100;
+        const percentageDifference = (distanceFromSelectedColor * percentageMultiplier) / maximalDistance;
+
         // tslint:disable-next-line: no-non-null-assertion
         return percentageDifference <= this.settings.fillDeviation! ? true : false;
     }
