@@ -27,7 +27,7 @@ export class ExportDrawingComponent {
         Validators.maxLength(MetadataValidation.maxTitleLength),
     ]);
 
-    @ViewChild('appDrawingPreview') drawingPreview: DrawingPreviewComponent;
+    @ViewChild('appDrawingPreview') private drawingPreview: DrawingPreviewComponent;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
