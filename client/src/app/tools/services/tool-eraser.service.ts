@@ -190,8 +190,8 @@ export class ToolEraserService extends Tool {
 
         const availableElementsSet = new Set<SVGGraphicsElement>(elements);
 
-        let topMostElement: SVGGraphicsElement | undefined;
-        let topMostElementIndex = 0;
+        let topmostElement: SVGGraphicsElement | undefined;
+        let topmostElementIndex = 0;
 
         for (let i = 0; i < area.width; i++) {
             for (let j = 0; j < area.height; j++) {
@@ -217,13 +217,13 @@ export class ToolEraserService extends Tool {
                 }
 
                 const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
-                if (topMostElement === undefined || elementUnderPointIndex > topMostElementIndex) {
-                    topMostElement = elementUnderPoint;
-                    topMostElementIndex = elementUnderPointIndex;
+                if (topmostElement === undefined || elementUnderPointIndex > topmostElementIndex) {
+                    topmostElement = elementUnderPoint;
+                    topmostElementIndex = elementUnderPointIndex;
                 }
             }
         }
 
-        return topMostElement;
+        return topmostElement;
     }
 }
