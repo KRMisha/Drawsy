@@ -1,5 +1,6 @@
 import { HttpException } from '@app/classes/http-exception';
 import { DatabaseController } from '@app/controllers/database.controller';
+import { EmailController } from '@app/controllers/email.controller';
 import Types from '@app/types';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import * as cookieParser from 'cookie-parser';
@@ -13,7 +14,8 @@ import * as logger from 'morgan';
 export class Application {
     app = express();
 
-    constructor(@inject(Types.DatabaseController) private databaseController: DatabaseController) {
+    constructor(@inject(Types.DatabaseController) private databaseController: DatabaseController,
+                @inject(Types.EmailController) private emailController: EmailController) {
         this.setupMiddleware();
         this.setupRoutes();
         this.setupErrorHandler();
@@ -30,6 +32,7 @@ export class Application {
 
     private setupRoutes(): void {
         this.app.use('/api', this.databaseController.router);
+        this.app.use('/api', this.emailController.router);
     }
 
     private setupErrorHandler(): void {
