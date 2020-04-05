@@ -3,7 +3,7 @@ import { AppendElementCommand } from '@app/drawing/classes/commands/append-eleme
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { Queue } from '@app/shared/classes/queue';
 import { Vec2 } from '@app/shared/classes/vec2';
@@ -31,7 +31,7 @@ export class ToolFillService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         historyService: HistoryService,
-        private svgUtilityService: SvgUtilityService
+        private rasterizationService: RasterizationService
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Fill);
         this.settings.fillDeviation = ToolDefaults.defaultFillDeviation;
@@ -60,7 +60,7 @@ export class ToolFillService extends Tool {
     }
 
     private async initializeCanvas(): Promise<void> {
-        this.canvas = await this.svgUtilityService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        this.canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
         this.data = this.context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
     }
