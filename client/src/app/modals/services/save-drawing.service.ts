@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DrawingPreviewService } from '@app/drawing/services/drawing-preview.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
@@ -16,21 +15,15 @@ const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides.';
     providedIn: 'root',
 })
 export class SaveDrawingService {
-    constructor(
-        private drawingService: DrawingService,
-        private drawingPreviewService: DrawingPreviewService,
-        private serverService: ServerService,
-        private snackBar: MatSnackBar
-    ) {}
+    constructor(private drawingService: DrawingService, private serverService: ServerService, private snackBar: MatSnackBar) {}
 
-    saveDrawing(): void {
-        this.drawingPreviewService.finalizePreview();
-        this.drawingService.id === undefined ? this.createDrawing() : this.updateDrawing();
+    saveDrawing(drawingRoot: SVGSVGElement): void {
+        this.drawingService.id === undefined ? this.createDrawing(drawingRoot) : this.updateDrawing(drawingRoot);
     }
 
-    private createDrawing(): void {
+    private createDrawing(drawingRoot: SVGSVGElement): void {
         this.serverService
-            .createDrawing(this.drawingPreviewService.drawingPreviewRoot.outerHTML)
+            .createDrawing(drawingRoot.outerHTML)
             .pipe(catchError(this.alertCreateDrawingError()))
             .subscribe(
                 (newFileId: NewFileId): void => {
@@ -45,11 +38,11 @@ export class SaveDrawingService {
             );
     }
 
-    private updateDrawing(): void {
+    private updateDrawing(drawingRoot: SVGSVGElement): void {
         this.serverService
             // ID will not be undefined if this method is called
             // tslint:disable-next-line: no-non-null-assertion
-            .updateDrawing(this.drawingService.id!, this.drawingPreviewService.drawingPreviewRoot.outerHTML)
+            .updateDrawing(this.drawingService.id!, drawingRoot.outerHTML)
             .pipe(catchError(this.alertUpdateDrawingError()))
             .subscribe(
                 (): void => {
