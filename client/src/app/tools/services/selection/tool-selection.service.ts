@@ -81,6 +81,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 break;
         }
 
+        this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
         this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
     }
 
@@ -113,6 +114,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             this.toolSelectionUiService.setUserSelectionRect(userSelectionRect);
             this.toolSelectionUiService.showUserSelectionRect();
         }
+
+        this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -154,6 +157,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
         this.toolSelectionStateService.state = SelectionState.None;
         this.currentMouseButtonDown = undefined;
+        this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
     }
 
     onKeyDown(event: KeyboardEvent): void {
@@ -180,6 +184,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
         this.toolSelectionStateService.selectedElements = [];
+        this.toolSelectionUiService.hideUserSelectionRect();
+        this.toolSelectionUiService.resetUserSelectionRectCursor();
     }
 
     private isMouseInsideSelection(): boolean {

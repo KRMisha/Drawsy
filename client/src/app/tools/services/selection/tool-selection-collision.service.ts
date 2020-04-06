@@ -26,17 +26,17 @@ export class ToolSelectionCollisionService {
     }
 
     getElementBounds(element: SVGGraphicsElement): Rect {
-        const svgElementBounds = element.getBoundingClientRect() as DOMRect;
+        const elementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const paddingString = element.getAttribute('data-padding') || undefined;
-        const paddingValue = paddingString === undefined ? 0 : +paddingString;
+        const paddingString = element.getAttribute('data-padding');
+        const padding = paddingString === null ? 0 : +paddingString;
 
         return {
-            x: svgElementBounds.x - drawingRootBounds.x - paddingValue,
-            y: svgElementBounds.y - drawingRootBounds.y - paddingValue,
-            width: svgElementBounds.width + 2 * paddingValue,
-            height: svgElementBounds.height + 2 * paddingValue,
+            x: elementBounds.x - drawingRootBounds.x - padding,
+            y: elementBounds.y - drawingRootBounds.y - padding,
+            width: elementBounds.width + 2 * padding,
+            height: elementBounds.height + 2 * padding,
         } as Rect;
     }
 

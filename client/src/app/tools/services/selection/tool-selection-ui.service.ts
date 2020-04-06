@@ -3,6 +3,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
 
@@ -15,6 +16,7 @@ export class ToolSelectionUiService implements OnDestroy {
     private renderer: Renderer2;
 
     private svgUserSelectionRect: SVGRectElement;
+    private svgSelectedElementsRectGroup: SVGGElement;
     private svgSelectedElementsRect: SVGRectElement;
     private svgControlPoints: SVGGraphicsElement[] = [];
 
@@ -56,6 +58,18 @@ export class ToolSelectionUiService implements OnDestroy {
         this.drawingService.removeUiElement(this.svgUserSelectionRect);
     }
 
+    updateUserSelectionRectCursor(state: SelectionState): void {
+        if (state === SelectionState.MovingSelectionWithMouse) {
+            this.renderer.setStyle(this.drawingService.drawingRoot, 'cursor', 'move');
+        } else {
+            this.resetUserSelectionRectCursor();
+        }
+    }
+
+    resetUserSelectionRectCursor(): void {
+        this.renderer.removeStyle(this.drawingService.drawingRoot, 'cursor');
+    }
+
     private createUiElements(): void {
         // Disable magic numbers false positive lint error for values in static named constructor
         const selectionColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
@@ -64,20 +78,21 @@ export class ToolSelectionUiService implements OnDestroy {
         this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', selectionColor.toRgbaString());
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-dasharray', '5, 3');
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '2');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '1.5');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
         const fillColorAlpha = 0.8;
         selectionColor.alpha = fillColorAlpha;
         this.renderer.setAttribute( this.svgUserSelectionRect, 'stroke', selectionColor.toRgbaString());
 
+        this.svgSelectedElementsRectGroup = this.renderer.createElement('g', 'svg');
+
         // Disable magic numbers false positive lint error for values in static named constructor
         const selectedElementsRectColor = Color.fromRgb(64, 64, 64); // tslint:disable-line: no-magic-numbers
         this.svgSelectedElementsRect = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke', selectedElementsRectColor.toRgbString());
-        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke-width', '1');
-        this.renderer.setAttribute(this.svgSelectedElementsRect, 'fill', 'rgba(0, 0, 0, 0)');
-        this.renderer.setAttribute(this.svgSelectedElementsRect, 'cursor', 'move');
-        // this.renderer.setAttribute(this.svgSelectedElementsRect, 'pointer-events', 'auto'); // TODO: check if necessary
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke-width', '1.5');
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'fill', 'none');
+        this.renderer.appendChild(this.svgSelectedElementsRectGroup, this.svgSelectedElementsRect);
 
         const controlPointsCount = 4;
         for (let i = 0; i < controlPointsCount; i++) {
@@ -85,6 +100,7 @@ export class ToolSelectionUiService implements OnDestroy {
             this.renderer.setAttribute(this.svgControlPoints[i], 'width', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'height', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'fill', selectedElementsRectColor.toRgbString());
+            this.renderer.appendChild(this.svgSelectedElementsRectGroup, this.svgControlPoints[i]);
         }
     }
 
@@ -114,10 +130,7 @@ export class ToolSelectionUiService implements OnDestroy {
             return;
         }
         this.isSelectionDisplayed = true;
-        this.drawingService.addUiElement(this.svgSelectedElementsRect);
-        for (const controlPoint of this.svgControlPoints) {
-            this.drawingService.addUiElement(controlPoint);
-        }
+        this.drawingService.addUiElement(this.svgSelectedElementsRectGroup);
     }
 
     private hideSelectedElementsRect(): void {
@@ -125,10 +138,7 @@ export class ToolSelectionUiService implements OnDestroy {
             return;
         }
         this.isSelectionDisplayed = false;
-        this.drawingService.removeUiElement(this.svgSelectedElementsRect);
-        for (const controlPoint of this.svgControlPoints) {
-            this.drawingService.removeUiElement(controlPoint);
-        }
+        this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
     }
 
     private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
