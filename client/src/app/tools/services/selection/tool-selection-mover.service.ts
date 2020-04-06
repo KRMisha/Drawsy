@@ -73,7 +73,7 @@ export class ToolSelectionMoverService {
     }
 
     startSelectionMove(): void {
-        this.totalSelectionMoveOffset = { x: 0, y: 0};
+        this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
     moveSelection(currentMousePos: Vec2, lastMousePos: Vec2): void {
@@ -87,8 +87,9 @@ export class ToolSelectionMoverService {
         this.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
         // this.toolSelectionUiService.setSelectedElementsRectFromElements(this.toolSelectionStateService.selectedElements);
         // this.toolSelectionStateService.updateSelectedElementsRect();
-        this.toolSelectionStateService.selectedElementsRect =
-            this.toolSelectionCollisionService.getElementListBounds(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+            this.toolSelectionStateService.selectedElements
+        );
     }
 
     addMoveCommand(): void {
@@ -120,8 +121,9 @@ export class ToolSelectionMoverService {
         this.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
         // this.toolSelectionUiService.setSelectedElementsRectFromElements(this.toolSelectionStateService.selectedElements);
 
-        this.toolSelectionStateService.selectedElementsRect =
-            this.toolSelectionCollisionService.getElementListBounds(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+            this.toolSelectionStateService.selectedElements
+        );
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {

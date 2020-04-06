@@ -58,13 +58,17 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private createUiElements(): void {
         // Disable magic numbers false positive lint error for values in static named constructor
-        const borderColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
+        const selectionColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
+        const borderColorAlpha = 0.2;
+        selectionColor.alpha = borderColorAlpha;
         this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', `rgba(${borderColor.red}, ${borderColor.green}, ${borderColor.blue}, 0.2)`);
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', selectionColor.toRgbaString());
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-dasharray', '5, 3');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '2');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', `rgba(${borderColor.red}, ${borderColor.green}, ${borderColor.blue}, 0.8)`);
+        const fillColorAlpha = 0.8;
+        selectionColor.alpha = fillColorAlpha;
+        this.renderer.setAttribute( this.svgUserSelectionRect, 'stroke', selectionColor.toRgbaString());
 
         // Disable magic numbers false positive lint error for values in static named constructor
         const selectedElementsRectColor = Color.fromRgb(64, 64, 64); // tslint:disable-line: no-magic-numbers
@@ -86,7 +90,6 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private setSelectedElementsRect(rect: Rect | undefined): void {
         if (rect === undefined) {
-
             this.hideSelectedElementsRect();
             return;
         }

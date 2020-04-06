@@ -1,9 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 const defaultTitle = 'Sans titre';
@@ -27,13 +25,6 @@ export class DrawingService {
 
     private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
-    private elementClickUnlistenFunctionMap = new Map<SVGGraphicsElement, () => void>();
-
-    private elementClickedSource = new Subject<SvgClickEvent>();
-
-    // Disable member ordering lint error for public observables initialized after private subjects
-    elementClicked$ = this.elementClickedSource.asObservable(); // tslint:disable-line: member-ordering
-
     constructor(rendererFactory: RendererFactory2, private historyService: HistoryService) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
@@ -43,7 +34,6 @@ export class DrawingService {
         if (this.svgDrawingContent !== undefined) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
-        this.addElementClickListener(element);
     }
 
     addElementBefore(element: SVGGraphicsElement, elementAfter: SVGGraphicsElement): void {
@@ -53,7 +43,6 @@ export class DrawingService {
             if (this.svgDrawingContent !== undefined) {
                 this.renderer.insertBefore(this.svgDrawingContent, element, elementAfter);
             }
-            this.addElementClickListener(element);
         }
     }
 
@@ -65,12 +54,6 @@ export class DrawingService {
                 this.renderer.removeChild(this.svgDrawingContent, element);
             }
         }
-
-        const unlistenFunction = this.elementClickUnlistenFunctionMap.get(element);
-        if (unlistenFunction !== undefined) {
-            unlistenFunction();
-        }
-        this.elementClickUnlistenFunctionMap.delete(element);
     }
 
     addUiElement(element: SVGGraphicsElement): void {
@@ -127,14 +110,19 @@ export class DrawingService {
         return true;
     }
 
-    get svgElements(): SVGGraphicsElement[] {
-        return this._svgElements;
+    findDrawingChildElement(element: EventTarget | null): SVGGraphicsElement | undefined {
+        while (element instanceof SVGGraphicsElement && element.parentElement !== null) {
+            if (element.parentElement.id === 'drawingContent') {
+                return element;
+            } else {
+                element = element.parentElement;
+            }
+        }
+
+        return undefined;
     }
 
-    private addElementClickListener(element: SVGGraphicsElement): void {
-        const unlistenFunction = this.renderer.listen(element, 'mouseup', (event: MouseEvent) => {
-            this.elementClickedSource.next({ mouseEvent: event, element } as SvgClickEvent);
-        });
-        this.elementClickUnlistenFunctionMap.set(element, unlistenFunction);
+    get svgElements(): SVGGraphicsElement[] {
+        return this._svgElements;
     }
 }

@@ -239,12 +239,7 @@ export class ToolLineService extends Tool {
     }
 
     private updateNextPointPosition(): void {
-        this.nextPoint = this.calculateNextPointPosition(
-            this.lastPoint,
-            Tool.mousePosition,
-            this.isShiftDown,
-            this.isCurrentlyDrawing
-        );
+        this.nextPoint = this.calculateNextPointPosition(this.lastPoint, Tool.mousePosition, this.isShiftDown, this.isCurrentlyDrawing);
         this.updatePreviewLinePosition();
     }
 

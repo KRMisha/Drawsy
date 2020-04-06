@@ -43,7 +43,6 @@ export abstract class Tool {
     onMouseLeave(event: MouseEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
-    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {}
     update(): void {}
     onToolSelection(): void {}
     onToolDeselection(): void {}
