@@ -3,122 +3,135 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
 
-const controlPointSideSize = 10;
+const controlPointSideSize = 8;
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSelectionUiService implements OnDestroy {
-    svgSelectedShapesRect: SVGRectElement;
-    svgUserSelectionRect: SVGRectElement;
-    svgControlPoints: SVGGraphicsElement[] = [];
-
     private renderer: Renderer2;
+
+    private svgUserSelectionRect: SVGRectElement;
+    private svgSelectedElementsRect: SVGRectElement;
+    private svgControlPoints: SVGGraphicsElement[] = [];
 
     private isSelectionDisplayed = false;
 
     private selectedElementsChangedSubscription: Subscription;
+    private selectedElementsRectChangedSubscription: Subscription;
 
     constructor(
         rendererFactory: RendererFactory2,
         private drawingService: DrawingService,
-        private toolSelectionStateService: ToolSelectionStateService,
-        private toolSelectionCollisionService: ToolSelectionCollisionService
+        private toolSelectionStateService: ToolSelectionStateService
     ) {
-        this.selectedElementsChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
-            (elements: SVGGraphicsElement[]) => {
-                this.updateSvgSelectedShapesRect(elements);
+        this.renderer = rendererFactory.createRenderer(null, null);
+
+        this.selectedElementsRectChangedSubscription = this.toolSelectionStateService.selectedElementsRectChanged$.subscribe(
+            (rect: Rect | undefined) => {
+                this.setSelectedElementsRect(rect);
             }
         );
 
-        this.renderer = rendererFactory.createRenderer(null, null);
+        this.createUiElements();
+    }
 
-        this.svgSelectedShapesRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke-width', '2');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'stroke', '#000000');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'fill', 'rgba(0, 0, 0, 0)');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'pointer-events', 'auto');
-        this.renderer.setAttribute(this.svgSelectedShapesRect, 'cursor', 'move');
+    ngOnDestroy(): void {
+        this.selectedElementsChangedSubscription.unsubscribe();
+        this.selectedElementsRectChangedSubscription.unsubscribe();
+    }
 
+    setUserSelectionRect(rect: Rect): void {
+        this.updateSvgRectFromRect(this.svgUserSelectionRect, rect);
+    }
+
+    showUserSelectionRect(): void {
+        this.drawingService.addUiElement(this.svgUserSelectionRect);
+    }
+
+    hideUserSelectionRect(): void {
+        this.drawingService.removeUiElement(this.svgUserSelectionRect);
+    }
+
+    private createUiElements(): void {
         // Disable magic numbers false positive lint error for values in static named constructor
         const borderColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
-        this.svgUserSelectionRect = this.createDashedRectBorder(borderColor);
+        this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', `rgba(${borderColor.red}, ${borderColor.green}, ${borderColor.blue}, 0.2)`);
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-dasharray', '5, 3');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '2');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', `rgba(${borderColor.red}, ${borderColor.green}, ${borderColor.blue}, 0.8)`);
+
+        // Disable magic numbers false positive lint error for values in static named constructor
+        const selectedElementsRectColor = Color.fromRgb(64, 64, 64); // tslint:disable-line: no-magic-numbers
+        this.svgSelectedElementsRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke', selectedElementsRectColor.toRgbString());
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke-width', '1');
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'fill', 'rgba(0, 0, 0, 0)');
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'cursor', 'move');
+        // this.renderer.setAttribute(this.svgSelectedElementsRect, 'pointer-events', 'auto'); // TODO: check if necessary
 
         const controlPointsCount = 4;
         for (let i = 0; i < controlPointsCount; i++) {
             this.svgControlPoints.push(this.renderer.createElement('rect', 'svg'));
             this.renderer.setAttribute(this.svgControlPoints[i], 'width', controlPointSideSize.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'height', controlPointSideSize.toString());
-            this.renderer.setAttribute(this.svgControlPoints[i], 'fill', 'black');
+            this.renderer.setAttribute(this.svgControlPoints[i], 'fill', selectedElementsRectColor.toRgbString());
         }
     }
 
-    ngOnDestroy(): void {
-        this.selectedElementsChangedSubscription.unsubscribe();
-    }
+    private setSelectedElementsRect(rect: Rect | undefined): void {
+        if (rect === undefined) {
 
-    updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
-        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
-        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
-        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
-        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
-    }
-
-    updateSvgSelectedShapesRect(selectedElement: SVGGraphicsElement[]): void {
-        const elementsBounds = this.toolSelectionCollisionService.getElementListBounds(selectedElement);
-        if (elementsBounds !== undefined) {
-            this.updateSvgRectFromRect(this.svgSelectedShapesRect, elementsBounds);
-
-            const positions = [
-                { x: elementsBounds.x, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width, y: elementsBounds.y + elementsBounds.height / 2 } as Vec2,
-                { x: elementsBounds.x + elementsBounds.width / 2, y: elementsBounds.y + elementsBounds.height } as Vec2,
-            ];
-            for (let i = 0; i < positions.length; i++) {
-                this.renderer.setAttribute(this.svgControlPoints[i], 'x', `${positions[i].x - controlPointSideSize / 2}`);
-                this.renderer.setAttribute(this.svgControlPoints[i], 'y', `${positions[i].y - controlPointSideSize / 2}`);
-            }
-            this.showSvgSelectedShapesRect();
-        } else {
-            this.hideSvgSelectedShapesRect();
+            this.hideSelectedElementsRect();
+            return;
         }
-        this.toolSelectionStateService.updateSelectedElementsRect();
+
+        this.updateSvgRectFromRect(this.svgSelectedElementsRect, rect);
+
+        const controlPointPositions: Vec2[] = [
+            { x: rect.x, y: rect.y + rect.height / 2 },
+            { x: rect.x + rect.width / 2, y: rect.y },
+            { x: rect.x + rect.width, y: rect.y + rect.height / 2 },
+            { x: rect.x + rect.width / 2, y: rect.y + rect.height },
+        ];
+        for (let i = 0; i < controlPointPositions.length; i++) {
+            this.renderer.setAttribute(this.svgControlPoints[i], 'x', `${controlPointPositions[i].x - controlPointSideSize / 2}`);
+            this.renderer.setAttribute(this.svgControlPoints[i], 'y', `${controlPointPositions[i].y - controlPointSideSize / 2}`);
+        }
+        this.showSelectedElementsRect();
     }
 
-    private showSvgSelectedShapesRect(): void {
+    private showSelectedElementsRect(): void {
         if (this.isSelectionDisplayed) {
             return;
         }
         this.isSelectionDisplayed = true;
-        this.drawingService.addUiElement(this.svgSelectedShapesRect);
+        this.drawingService.addUiElement(this.svgSelectedElementsRect);
         for (const controlPoint of this.svgControlPoints) {
             this.drawingService.addUiElement(controlPoint);
         }
     }
 
-    private hideSvgSelectedShapesRect(): void {
+    private hideSelectedElementsRect(): void {
         if (!this.isSelectionDisplayed) {
             return;
         }
         this.isSelectionDisplayed = false;
-        this.drawingService.removeUiElement(this.svgSelectedShapesRect);
+        this.drawingService.removeUiElement(this.svgSelectedElementsRect);
         for (const controlPoint of this.svgControlPoints) {
             this.drawingService.removeUiElement(controlPoint);
         }
     }
 
-    private createDashedRectBorder(color: Color): SVGRectElement {
-        const svgRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(svgRect, 'fill', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.2)`);
-        this.renderer.setAttribute(svgRect, 'stroke-dasharray', '5, 3');
-        this.renderer.setAttribute(svgRect, 'stroke-width', '2');
-        this.renderer.setAttribute(svgRect, 'stroke-linecap', 'round');
-        this.renderer.setAttribute(svgRect, 'stroke', `rgba(${color.red}, ${color.green}, ${color.blue}, 0.8)`);
-        return svgRect;
+    private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
+        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
+        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
+        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
+        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
     }
 }

@@ -63,7 +63,7 @@ describe('ToolSelectionMoverService', () => {
     it('#moveSelection should move the selection', () => {
         service.moveSelection({ x: 0, y: 0 }, { x: 1, y: 2 });
         expect(moveElementListSpy).toHaveBeenCalled();
-        expect(toolSelectionUiServiceSpyObj.updateSvgSelectedShapesRect).toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.setSelectedElementsRectFromElements).toHaveBeenCalled();
         expect(toolSelectionStateServiceSpyObj.updateSelectedElementsRect).toHaveBeenCalled();
     });
 

@@ -345,7 +345,7 @@ describe('ToolSelectionService', () => {
 
     it('#update should update selected shapes rect', () => {
         service.update();
-        expect(toolSelectionUiServiceSpyObj.updateSvgSelectedShapesRect).toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.setSelectedElementsRectFromElements).toHaveBeenCalled();
     });
 
     it('#onToolSelection should subscribe from selectAllShortcutSubscription', () => {

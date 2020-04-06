@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
+import { Vec2 } from '@app/shared/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSelectionCollisionService {
     constructor(private drawingService: DrawingService) {}
+
+    isPointInRect(point: Vec2, rect: Rect): boolean {
+        const isHorizIntersecting = point.x >= rect.x && point.x <= rect.x + rect.width;
+        const isVertIntersecting = point.y >= rect.y && point.y <= rect.y + rect.height;
+        return isHorizIntersecting && isVertIntersecting;
+    }
 
     areRectsIntersecting(rect1: Rect, rect2: Rect): boolean {
         const isHorizIntersecting = rect1.x + rect1.width >= rect2.x && rect1.x <= rect2.x + rect2.width;

@@ -92,7 +92,7 @@ describe('ToolSelectionUiService', () => {
 
     it('#updateSvgSelectedShapesRect should hide selected shapes rect if the elements bounds is undefined', () => {
         toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(undefined);
-        service.updateSvgSelectedShapesRect({} as SVGGraphicsElement[]);
+        service.setSelectedElementsRectFromElements({} as SVGGraphicsElement[]);
         expect(hideSvgSelectedShapesRectSpy).toHaveBeenCalled();
     });
 
@@ -106,7 +106,7 @@ describe('ToolSelectionUiService', () => {
             { x: selectionRect.x + selectionRect.width / 2, y: selectionRect.y + selectionRect.height } as Vec2,
         ];
 
-        service.updateSvgSelectedShapesRect({} as SVGGraphicsElement[]);
+        service.setSelectedElementsRectFromElements({} as SVGGraphicsElement[]);
 
         for (let i = 0; i < expectedPositions.length; i++) {
             const controlPointHalfSideSize = 5;
