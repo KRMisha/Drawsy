@@ -80,14 +80,14 @@ export class ToolFillService extends Tool {
     private async breadthFirstSearch(): Promise<void> {
         while (!this.pointsQueue.isEmpty()) {
             const point = this.pointsQueue.dequeue() as Vec2;
-            this.addRectangeOnPoint({ x: point.x - 1, y: point.y });
-            this.addRectangeOnPoint({ x: point.x + 1, y: point.y });
-            this.addRectangeOnPoint({ x: point.x, y: point.y - 1 });
-            this.addRectangeOnPoint({ x: point.x, y: point.y + 1 });
+            this.addRectangleOnPoint({ x: point.x - 1, y: point.y });
+            this.addRectangleOnPoint({ x: point.x + 1, y: point.y });
+            this.addRectangleOnPoint({ x: point.x, y: point.y - 1 });
+            this.addRectangleOnPoint({ x: point.x, y: point.y + 1 });
         }
     }
 
-    private addRectangeOnPoint(point: Vec2): void {
+    private addRectangleOnPoint(point: Vec2): void {
         if (!this.verifyPoint(point)) {
             return;
         }
