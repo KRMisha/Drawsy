@@ -93,16 +93,38 @@
     margin-bottom: 0;
 }
 
-.undo-redo-container {
-    justify-self: end;
-    display: flex;
-    justify-content: space-evenly;
-    padding-bottom: 10px;
+.shape-type-toggle-button ::ng-deep .mat-button-toggle-label-content {
+    line-height: 44px;
+
+    .mat-icon {
+        width: 22px;
+        transform: scale(1.2);
+    }
 }
 
-.command-icon {
+.command-container {
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.clipboard-container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.undo-redo-container {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 4px;
+}
+
+.command-item {
     opacity: 0.9;
-    transform: scale(1.2);
 }
 
 * {
