@@ -20,7 +20,7 @@ export class ToolSelectionUiService implements OnDestroy {
     private svgSelectedElementsRect: SVGRectElement;
     private svgControlPoints: SVGGraphicsElement[] = [];
 
-    private isSelectionDisplayed = false;
+    private isSelectedElementsRectDisplayed = false;
 
     private selectedElementsChangedSubscription: Subscription;
     private selectedElementsRectChangedSubscription: Subscription;
@@ -126,18 +126,18 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     private showSelectedElementsRect(): void {
-        if (this.isSelectionDisplayed) {
+        if (this.isSelectedElementsRectDisplayed) {
             return;
         }
-        this.isSelectionDisplayed = true;
+        this.isSelectedElementsRectDisplayed = true;
         this.drawingService.addUiElement(this.svgSelectedElementsRectGroup);
     }
 
     private hideSelectedElementsRect(): void {
-        if (!this.isSelectionDisplayed) {
+        if (!this.isSelectedElementsRectDisplayed) {
             return;
         }
-        this.isSelectionDisplayed = false;
+        this.isSelectedElementsRectDisplayed = false;
         this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
     }
 
