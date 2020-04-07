@@ -25,10 +25,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const iconNames = [
-            'border-only',
             'brush',
             'card-plus-outline',
             'chart-timeline-variant',
+            'checkbox-blank',
+            'checkbox-blank-outline',
+            'checkbox-intermediate',
             'cloud-upload-outline',
             'cog',
             'content-copy',
@@ -36,12 +38,11 @@ export class AppComponent implements OnInit, OnDestroy {
             'content-duplicate',
             'content-paste',
             'crop-square',
+            'delete-outline',
             'download',
             'ellipse-outline',
             'eraser',
             'eyedropper-variant',
-            'fill-only',
-            'fill-with-border',
             'format-color-fill',
             'format-paint',
             'help-circle-outline',
@@ -49,8 +50,10 @@ export class AppComponent implements OnInit, OnDestroy {
             'home',
             'image-multiple-outline',
             'pencil',
+            'redo-variant',
             'selection',
             'spray',
+            'undo-variant',
         ];
 
         for (const iconName of iconNames) {
