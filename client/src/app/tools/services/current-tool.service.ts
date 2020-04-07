@@ -87,8 +87,12 @@ export class CurrentToolService implements OnDestroy {
     }
 
     set currentTool(tool: Tool) {
-        if (this.currentTool !== undefined) {
-            this.currentTool.onToolDeselection();
+        if (this._currentTool === tool) {
+            return;
+        }
+
+        if (this._currentTool !== undefined) {
+            this._currentTool.onToolDeselection();
         }
 
         this._currentTool = tool;
