@@ -111,11 +111,11 @@ export class DrawingService {
     }
 
     findDrawingChildElement(element: EventTarget | null): SVGGraphicsElement | undefined {
-        while (element instanceof SVGGraphicsElement && element.parentElement !== null) {
-            if (element.parentElement.id === 'drawingContent') {
+        while (element instanceof SVGGraphicsElement && element.parentNode !== null) {
+            if (element.parentNode === this.svgDrawingContent) {
                 return element;
             } else {
-                element = element.parentElement;
+                element = element.parentNode;
             }
         }
 
