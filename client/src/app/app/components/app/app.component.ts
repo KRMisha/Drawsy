@@ -1,4 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ThemeService } from '@app/app/services/theme.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -13,9 +15,48 @@ export class AppComponent implements OnInit, OnDestroy {
     private newDrawingShortcutSubscription: Subscription;
     private galleryShortcutSubscription: Subscription;
 
-    constructor(private modalService: ModalService, private shortcutService: ShortcutService, private themeService: ThemeService) {}
+    constructor(
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+        private modalService: ModalService,
+        private shortcutService: ShortcutService,
+        private themeService: ThemeService
+    ) {}
 
     ngOnInit(): void {
+        const iconNames = [
+            'border-only',
+            'brush',
+            'card-plus-outline',
+            'chart-timeline-variant',
+            'cloud-upload-outline',
+            'cog',
+            'content-copy',
+            'content-cut',
+            'content-duplicate',
+            'content-paste',
+            'crop-square',
+            'download',
+            'ellipse-outline',
+            'eraser',
+            'eyedropper-variant',
+            'fill-only',
+            'fill-with-border',
+            'format-color-fill',
+            'format-paint',
+            'help-circle-outline',
+            'hexagon-outline',
+            'home',
+            'image-multiple-outline',
+            'pencil',
+            'selection',
+            'spray',
+        ];
+
+        for (const iconName of iconNames) {
+            this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/' + iconName + '.svg'));
+        }
+
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
             this.modalService.openNewDrawingModal();
         });
