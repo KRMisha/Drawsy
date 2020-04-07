@@ -123,20 +123,6 @@ describe('DrawingService', () => {
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
-    it('#removeElement should unlisten from the elementClickListen function if it is found', () => {
-        const functionSpy = jasmine.createSpy();
-        spyOn(service['elementClickUnlistenFunctionMap'], 'get').and.returnValue(functionSpy);
-        service.removeElement({} as SVGGraphicsElement);
-        expect(functionSpy).toHaveBeenCalled();
-    });
-
-    it("#removeElement should call elementClickUnlistenFunctionMap's delete function", () => {
-        const deleteSpy = spyOn(service['elementClickUnlistenFunctionMap'], 'delete');
-        const testElement = {} as SVGGraphicsElement;
-        service.removeElement(testElement);
-        expect(deleteSpy).toHaveBeenCalledWith(testElement);
-    });
-
     it("#addUiElement should call renderer's appendChild if svgUserInterfaceContent is not undefined", () => {
         const svgUserInterfaceContentStub = {} as SVGGElement;
         service['svgUserInterfaceContent'] = svgUserInterfaceContentStub;

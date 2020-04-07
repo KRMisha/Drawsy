@@ -190,14 +190,14 @@ describe('ToolLineService', () => {
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#startDrawingShape should create new shape and use 0 diameter as data padding', () => {
-        service['startDrawingShape']();
+    it('#startDrawing should create new shape and use 0 diameter as data padding', () => {
+        service['startDrawing']();
         expect(renderer2SpyObj.createElement).toHaveBeenCalled();
     });
 
-    it('#startDrawingShape should create new shape and use junction diameter as data padding', () => {
+    it('#startDrawing should create new shape and use junction diameter as data padding', () => {
         service['isJunctionEnabled'] = true;
-        service['startDrawingShape']();
+        service['startDrawing']();
         expect(renderer2SpyObj.createElement).toHaveBeenCalled();
     });
 

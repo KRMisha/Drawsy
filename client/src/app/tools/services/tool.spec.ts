@@ -108,12 +108,6 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#onElementClick should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onElementClick').and.callThrough();
-        tool.onElementClick({} as MouseEvent, {} as SVGGraphicsElement);
-        expect(methodStubSpy).toHaveBeenCalled();
-    });
-
     it('#update should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'update').and.callThrough();
         tool.update();

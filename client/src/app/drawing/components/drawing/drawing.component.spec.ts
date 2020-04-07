@@ -5,7 +5,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { Color } from '@app/shared/classes/color';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -31,7 +30,7 @@ describe('DrawingComponent', () => {
 
     const toggleGridSubject = new Subject<Color>();
     const increaseGridSizeSubject = new Subject<Color>();
-    const decreaseGridSizeSubject = new Subject<SvgClickEvent>();
+    const decreaseGridSizeSubject = new Subject<Color>();
 
     const returnedDimensions: Vec2 = { x: 10, y: 10 };
     beforeEach(async(() => {
