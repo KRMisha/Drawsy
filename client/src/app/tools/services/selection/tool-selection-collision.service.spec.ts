@@ -10,9 +10,6 @@ describe('ToolSelectionCollisionService', () => {
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
 
-    // const elementStub = {} as SVGGraphicsElement;
-    // let elementArrayStub: SVGGraphicsElement[];
-
     beforeEach(() => {
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
@@ -23,7 +20,6 @@ describe('ToolSelectionCollisionService', () => {
             providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
         });
         service = TestBed.inject(ToolSelectionCollisionService);
-        // elementArrayStub = [elementStub, elementStub];
     });
 
     it('should be created', () => {
@@ -31,12 +27,15 @@ describe('ToolSelectionCollisionService', () => {
     });
 
     it('#getElementUnderArea should filterOut the elements not in the area', () => {
-        // const areRectsIntersectingSpy = spyOn(service, 'areRectsIntersecting');
+        const areRectsIntersectingSpy = spyOn(service, 'areRectsIntersecting');
         const getElementsBoundSpy = spyOn(service, 'getElementBounds');
+        const filterSpy = spyOn(drawingServiceSpyObj.svgElements, 'filter').and.callThrough();
 
-        // expect(areRectsIntersectingSpy).toHaveBeenCalled();
+        service.getElementsUnderArea({} as Rect);
+
+        expect(areRectsIntersectingSpy).toHaveBeenCalled();
         expect(getElementsBoundSpy).toHaveBeenCalled();
-        expect(drawingServiceSpyObj.svgElements.filter).toHaveBeenCalled();
+        expect(filterSpy).toHaveBeenCalled();
     });
 
     it('#areRectsIntersecting should return true when the Rects are intersecting', () => {
