@@ -47,9 +47,8 @@ export class ToolSelectionCollisionService {
             return undefined;
         }
 
-        const firstElementBounds = this.getElementBounds(elements[0]);
-        const minPos = { x: firstElementBounds.x, y: firstElementBounds.y };
-        const maxPos = { x: firstElementBounds.x + firstElementBounds.width, y: firstElementBounds.y + firstElementBounds.height };
+        const minPos = { x: Number.POSITIVE_INFINITY, y: Number.POSITIVE_INFINITY };
+        const maxPos = { x: Number.NEGATIVE_INFINITY, y: Number.NEGATIVE_INFINITY };
 
         for (const element of elements) {
             const currentElementBounds = this.getElementBounds(element);
