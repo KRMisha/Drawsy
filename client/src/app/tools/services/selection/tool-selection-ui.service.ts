@@ -82,7 +82,7 @@ export class ToolSelectionUiService implements OnDestroy {
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
         const fillColorAlpha = 0.8;
         selectionColor.alpha = fillColorAlpha;
-        this.renderer.setAttribute( this.svgUserSelectionRect, 'stroke', selectionColor.toRgbaString());
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', selectionColor.toRgbaString());
 
         this.svgSelectedElementsRectGroup = this.renderer.createElement('g', 'svg');
 

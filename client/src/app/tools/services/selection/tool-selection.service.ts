@@ -64,15 +64,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 this.toolSelectionUiService.setUserSelectionRect(userSelectionRect);
                 if (this.currentMouseButtonDown === MouseButton.Left) {
                     this.toolSelectionStateService.selectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
-                        this.drawingService.svgElements,
                         userSelectionRect
                     );
                 } else {
                     this.selectedElementsAfterInversion = [...this.toolSelectionStateService.selectedElements];
-                    const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(
-                        this.drawingService.svgElements,
-                        userSelectionRect
-                    );
+                    const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(userSelectionRect);
                     this.invertElementsSelection(elementsToInvert, this.selectedElementsAfterInversion);
                     this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
                         this.selectedElementsAfterInversion

@@ -21,8 +21,10 @@ export class ToolSelectionCollisionService {
         return isHorizIntersecting && isVertIntersecting;
     }
 
-    getElementsUnderArea(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement[] {
-        return elements.filter((element: SVGGraphicsElement) => this.areRectsIntersecting(area, this.getElementBounds(element)));
+    getElementsUnderArea(area: Rect): SVGGraphicsElement[] {
+        return this.drawingService.svgElements.filter((element: SVGGraphicsElement) =>
+            this.areRectsIntersecting(area, this.getElementBounds(element))
+        );
     }
 
     getElementBounds(element: SVGGraphicsElement): Rect {
