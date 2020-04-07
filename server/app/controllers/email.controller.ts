@@ -1,5 +1,6 @@
 import { EmailService } from '@app/services/email.service';
 import Types from '@app/types';
+import { EmailRequest } from '@common/communication/email-request';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
@@ -17,7 +18,11 @@ export class EmailController {
             '/send-email',
             async (req: Request, res: Response, next: NextFunction): Promise<void> => {
                 try {
-                    // await this.emailService.sendEmail(req.body.emailAddress, /* Get file attachment from request */);
+                    const emailRequest: EmailRequest = {
+                        address: req.body.to,
+                        drawing: req.files[0],
+                    };
+                    await this.emailService.sendEmail(emailRequest);
                     res.status(HttpStatusCode.Ok).end();
                 } catch (error) {
                     return next(error);

@@ -9,6 +9,7 @@ import * as express from 'express';
 import * as helmet from 'helmet';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
+import * as multer from 'multer';
 
 @injectable()
 export class Application {
@@ -25,6 +26,7 @@ export class Application {
         this.app.use(logger('dev'));
         this.app.use(express.json({ limit: '16mb' }));
         this.app.use(express.urlencoded({ limit: '16mb', extended: true }));
+        this.app.use(multer().any());
         this.app.use(cookieParser());
         this.app.use(cors());
         this.app.use(helmet());
