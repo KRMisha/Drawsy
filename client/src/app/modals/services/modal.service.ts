@@ -39,7 +39,7 @@ export class ModalService {
     }
 
     openGuideModal(): void {
-        const width = 1920;
+        const width = 1550;
         this.openDialog(GuideComponent, width, true);
     }
 
