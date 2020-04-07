@@ -98,7 +98,7 @@ describe('ModalService', () => {
 
     it('#openGuideModal should open a modal of the appropriate width containing GuideComponent', () => {
         service.openGuideModal();
-        const width = 1920;
+        const width = 1550;
         expect(openDialogSpy).toHaveBeenCalledWith(GuideComponent, width, true);
         expectedSecondParameter.width = `${width}px`;
         expectedSecondParameter.height = '100%';
