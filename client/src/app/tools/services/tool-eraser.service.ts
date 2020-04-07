@@ -82,7 +82,7 @@ export class ToolEraserService extends Tool {
 
     update(): void {
         this.timerId = undefined;
-        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
+        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.eraserRect);
 
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
@@ -180,46 +180,27 @@ export class ToolEraserService extends Tool {
         }
     }
 
-    private getElementUnderAreaPixelPerfect(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement | undefined {
+    private getElementUnderAreaPixelPerfect(area: Rect): SVGGraphicsElement | undefined {
         const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
-            elementIndices.set(this.drawingService.svgElements[i], i);
-        }
-
-        const availableElementsSet = new Set<SVGGraphicsElement>(elements);
-
         let topmostElement: SVGGraphicsElement | undefined;
-        let topmostElementIndex = 0;
-
         for (let i = 0; i < area.width; i++) {
             for (let j = 0; j < area.height; j++) {
-                const x = drawingRect.x + area.x + i;
-                const y = drawingRect.y + area.y + j;
-
                 // Function does not exist in Renderer2
-                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGGraphicsElement;
+                const elementUnderPoint = this.drawingService.findDrawingChildElement(
+                    (document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j) || undefined) as SVGGraphicsElement
+                );
 
-                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGGraphicsElement) {
-                    const parentElement = elementUnderPoint.parentElement;
-                    if (availableElementsSet.has(parentElement)) {
-                        elementUnderPoint = parentElement;
-                    }
-                }
-
-                if (
-                    elementUnderPoint === undefined ||
-                    !elementIndices.has(elementUnderPoint) ||
-                    !availableElementsSet.has(elementUnderPoint)
-                ) {
+                if (elementUnderPoint === undefined || elementUnderPoint === topmostElement) {
                     continue;
                 }
 
-                const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
-                if (topmostElement === undefined || elementUnderPointIndex > topmostElementIndex) {
+                if (
+                    topmostElement === undefined ||
+                    // tslint:disable-next-line: no-bitwise
+                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING
+                ) {
                     topmostElement = elementUnderPoint;
-                    topmostElementIndex = elementUnderPointIndex;
                 }
             }
         }
