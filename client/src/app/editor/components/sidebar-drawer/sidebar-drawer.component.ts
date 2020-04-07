@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
@@ -159,19 +157,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private redoShortcutSubscription: Subscription;
 
     constructor(
-        private iconRegistry: MatIconRegistry,
-        private sanitizer: DomSanitizer,
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
         private historyService: HistoryService
     ) {}
 
     ngOnInit(): void {
-        const shapeTypeIconNames = ['fill-with-border', 'fill-only', 'border-only'];
-        for (const icon of shapeTypeIconNames) {
-            this.iconRegistry.addSvgIcon(icon, this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/' + icon + '.svg'));
-        }
-
         this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
             if (this.lineWidthFormControl.valid) {
                 this.currentToolSettings.lineWidth = this.lineWidthFormControl.value;
