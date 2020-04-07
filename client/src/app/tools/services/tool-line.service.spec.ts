@@ -87,21 +87,21 @@ describe('ToolLineService', () => {
 
     it('#onMouseDown should start a drawing if user is not drawing', () => {
         service['isCurrentlyDrawing'] = false;
-        const startDrawingSpy = spyOn<any>(service, 'startDrawingShape');
+        const startDrawingSpy = spyOn<any>(service, 'startDrawing');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(startDrawingSpy).toHaveBeenCalled();
     });
 
     it('#onMouseDown should not start a drawing if user currently drawing', () => {
         service['isCurrentlyDrawing'] = true;
-        const startDrawingSpy = spyOn<any>(service, 'startDrawingShape');
+        const startDrawingSpy = spyOn<any>(service, 'startDrawing');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(startDrawingSpy).not.toHaveBeenCalled();
     });
 
     it('#onMouseDown should place junctions if junctions are enabled', () => {
         service['isJunctionEnabled'] = true;
-        spyOn<any>(service, 'startDrawingShape');
+        spyOn<any>(service, 'startDrawing');
         const createNewJunctionSpy = spyOn<any>(service, 'createNewJunction');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(createNewJunctionSpy).toHaveBeenCalled();
@@ -191,12 +191,14 @@ describe('ToolLineService', () => {
     });
 
     it('#startDrawing should create new shape and use 0 diameter as data padding', () => {
+        service['settings'].junctionSettings!.isEnabled = false; // tslint:disable-line: no-non-null-assertion
+        service['junctionDiameter'] = 10;
         service['startDrawing']();
         expect(renderer2SpyObj.createElement).toHaveBeenCalled();
     });
 
     it('#startDrawing should create new shape and use junction diameter as data padding', () => {
-        service['isJunctionEnabled'] = true;
+        service['settings'].junctionSettings!.isEnabled = true; // tslint:disable-line: no-non-null-assertion
         service['startDrawing']();
         expect(renderer2SpyObj.createElement).toHaveBeenCalled();
     });

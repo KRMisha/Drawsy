@@ -4,7 +4,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 
 // tslint:disable: no-any
 
-fdescribe('ToolSelectionStateService', () => {
+describe('ToolSelectionStateService', () => {
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let service: ToolSelectionStateService;
 
