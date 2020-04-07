@@ -5,7 +5,7 @@ import { ToolSelectionCollisionService } from '@app/tools/services/selection/too
 
 // tslint:disable: no-string-literal
 
-fdescribe('ToolSelectionCollisionService', () => {
+describe('ToolSelectionCollisionService', () => {
     let service: ToolSelectionCollisionService;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
