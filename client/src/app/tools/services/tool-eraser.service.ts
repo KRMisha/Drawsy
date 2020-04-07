@@ -40,7 +40,7 @@ export class ToolEraserService extends Tool {
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         const msDelayBetweenCalls = 16;
         this.updateEraserRect();
         if (this.timerId === undefined) {

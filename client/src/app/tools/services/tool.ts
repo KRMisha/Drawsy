@@ -33,7 +33,7 @@ export abstract class Tool {
     // Disable lint error for method stubs below because not all derived service classes
     // need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    onMouseMove(): void {}
+    onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
     onMouseDoubleClick(event: MouseEvent): void {}

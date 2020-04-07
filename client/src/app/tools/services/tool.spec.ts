@@ -50,7 +50,7 @@ describe('Tool', () => {
 
     it('#onMouseMove should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onMouseMove').and.callThrough();
-        tool.onMouseMove();
+        tool.onMouseMove({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 

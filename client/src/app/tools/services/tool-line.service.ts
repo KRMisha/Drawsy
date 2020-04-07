@@ -43,7 +43,7 @@ export class ToolLineService extends Tool {
         this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         this.updateNextPointPosition();
     }
 

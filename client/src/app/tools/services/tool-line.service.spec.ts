@@ -69,7 +69,7 @@ describe('ToolLineService', () => {
 
     it('#onMouseMove should call updateNextPointPosition', () => {
         const updateNextPointPositionSpy = spyOn<any>(service, 'updateNextPointPosition');
-        service.onMouseMove();
+        service.onMouseMove({} as MouseEvent);
         expect(updateNextPointPositionSpy).toHaveBeenCalled();
     });
 

@@ -21,7 +21,6 @@ import { Subscription } from 'rxjs';
 export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private currentMouseButtonDown?: MouseButton;
-    private previousMousePosition: Vec2 = { x: 0, y: 0 };
 
     private selectedElementsAfterInversion: SVGGraphicsElement[] = [];
 
@@ -32,8 +31,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         drawingService: DrawingService,
         colorService: ColorService,
         historyService: HistoryService,
-        private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionStateService: ToolSelectionStateService,
+        private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
@@ -45,7 +44,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.selectAllShortcutSubscription.unsubscribe();
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         switch (this.toolSelectionStateService.state) {
             case SelectionState.None:
             case SelectionState.MovingSelectionWithArrows:
@@ -54,7 +53,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             case SelectionState.SelectionMoveStartClick:
                 this.toolSelectionStateService.state = SelectionState.MovingSelectionWithMouse;
             case SelectionState.MovingSelectionWithMouse:
-                this.toolSelectionMoverService.moveSelection(this.previousMousePosition, Tool.mousePosition);
+                this.toolSelectionMoverService.moveSelectedElements({ x: event.movementX, y: event.movementY });
                 break;
 
             case SelectionState.SelectionChangeStartClick:
@@ -78,7 +77,6 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
-        this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -100,10 +98,9 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.currentMouseButtonDown = event.button;
         this.selectionOrigin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
 
-        if (this.isMouseInsideSelection() && event.button === MouseButton.Left) {
+        if (this.isMouseInsideSelectedElementsRect() && event.button === MouseButton.Left) {
             this.toolSelectionStateService.state = SelectionState.SelectionMoveStartClick;
             this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-            this.toolSelectionMoverService.startSelectionMove();
         } else {
             this.toolSelectionStateService.state = SelectionState.SelectionChangeStartClick;
             const userSelectionRect = Rect.fromPoints(this.selectionOrigin, this.selectionOrigin);
@@ -182,11 +179,12 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.selectAllShortcutSubscription.unsubscribe();
         this.toolSelectionStateService.state = SelectionState.None;
         this.toolSelectionStateService.selectedElements = [];
+        this.toolSelectionMoverService.onToolDeselection();
         this.toolSelectionUiService.hideUserSelectionRect();
         this.toolSelectionUiService.resetUserSelectionRectCursor();
     }
 
-    private isMouseInsideSelection(): boolean {
+    private isMouseInsideSelectedElementsRect(): boolean {
         if (this.toolSelectionStateService.selectedElementsRect === undefined) {
             return false;
         }

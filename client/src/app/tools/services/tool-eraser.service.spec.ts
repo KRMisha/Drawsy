@@ -61,7 +61,7 @@ describe('ToolEraserService', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
         const setTimeoutSpy = spyOn<any>(window, 'setTimeout');
         service['timerId'] = 0;
-        service.onMouseMove();
+        service.onMouseMove({} as MouseEvent);
 
         expect(updateEraserRectSpy).toHaveBeenCalled();
         expect(setTimeoutSpy).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('ToolEraserService', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
         const updateSpy = spyOn(service, 'update');
 
-        service.onMouseMove();
+        service.onMouseMove({} as MouseEvent);
         expect(updateEraserRectSpy).toHaveBeenCalled();
 
         expect(updateSpy).not.toHaveBeenCalled();

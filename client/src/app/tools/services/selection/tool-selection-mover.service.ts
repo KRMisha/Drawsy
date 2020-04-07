@@ -12,8 +12,6 @@ import { ToolSelectionCollisionService } from './tool-selection-collision.servic
     providedIn: 'root',
 })
 export class ToolSelectionMoverService {
-    private totalSelectionMoveOffset: Vec2 = { x: 0, y: 0 };
-
     private arrowKeysHeldStates: boolean[] = [false, false, false, false];
 
     private movingTimeoutId: number;
@@ -37,18 +35,11 @@ export class ToolSelectionMoverService {
         const isNewSelectionMove =
             this.toolSelectionStateService.state === SelectionState.None && this.arrowKeysHeldStates.some((value: boolean) => value);
         if (isNewSelectionMove) {
-            this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
+            this.startMovingSelectionWithArrows();
+        }
 
-            this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-            this.moveSelectionInArrowDirection();
-
-            const timeoutDurationMs = 500;
-            this.movingTimeoutId = window.setTimeout(() => {
-                const movingIntervalMs = 100;
-                this.movingIntervalId = window.setInterval(() => {
-                    this.moveSelectionInArrowDirection();
-                }, movingIntervalMs);
-            }, timeoutDurationMs);
+        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
+            event.preventDefault();
         }
     }
 
@@ -61,34 +52,29 @@ export class ToolSelectionMoverService {
 
         const hasStoppedMovingWithKeys = this.arrowKeysHeldStates.every((value: boolean) => !value);
         if (hasStoppedMovingWithKeys) {
-            this.toolSelectionStateService.state = SelectionState.None;
-
-            window.clearTimeout(this.movingTimeoutId);
-            window.clearInterval(this.movingIntervalId);
-
-            this.addMoveCommand();
+            this.stopMovingSelectionWithArrows();
         }
     }
 
-    startSelectionMove(): void {
-        this.totalSelectionMoveOffset = { x: 0, y: 0 };
+    onToolDeselection(): void {
+        this.stopMovingSelectionWithArrows();
+        this.arrowKeysHeldStates.fill(false);
     }
 
-    moveSelection(lastMousePos: Vec2, currentMousePos: Vec2): void {
-        const deltaMousePos: Vec2 = {
-            x: currentMousePos.x - lastMousePos.x,
-            y: currentMousePos.y - lastMousePos.y,
-        };
-
-        this.totalSelectionMoveOffset.x += deltaMousePos.x;
-        this.totalSelectionMoveOffset.y += deltaMousePos.y;
-        this.moveSelectedElements(deltaMousePos);
+    moveSelectedElements(moveOffset: Vec2): void {
+        for (const element of this.toolSelectionStateService.selectedElements) {
+            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
+            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
+        }
+        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+            this.toolSelectionStateService.selectedElements
+        );
     }
 
     addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
         this.historyService.addCommand(new TransformElementsCommand(selectedElementsCopy));
-        this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
@@ -108,7 +94,22 @@ export class ToolSelectionMoverService {
         }
     }
 
-    private moveSelectionInArrowDirection(): void {
+    private startMovingSelectionWithArrows(): void {
+        this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
+
+        this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
+        this.moveSelectionWithArrows();
+
+        const timeoutDurationMs = 500;
+        this.movingTimeoutId = window.setTimeout(() => {
+            const movingIntervalMs = 100;
+            this.movingIntervalId = window.setInterval(() => {
+                this.moveSelectionWithArrows();
+            }, movingIntervalMs);
+        }, timeoutDurationMs);
+    }
+
+    private moveSelectionWithArrows(): void {
         const moveOffset: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
         if (this.arrowKeysHeldStates[ArrowKey.Left] !== this.arrowKeysHeldStates[ArrowKey.Right]) {
@@ -118,19 +119,15 @@ export class ToolSelectionMoverService {
             moveOffset.y = this.arrowKeysHeldStates[ArrowKey.Down] ? moveDelta : -moveDelta;
         }
 
-        this.totalSelectionMoveOffset.x += moveOffset.x;
-        this.totalSelectionMoveOffset.y += moveOffset.y;
         this.moveSelectedElements(moveOffset);
     }
 
-    private moveSelectedElements(moveOffset: Vec2): void {
-        for (const element of this.toolSelectionStateService.selectedElements) {
-            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
-            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
-        }
-        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
-            this.toolSelectionStateService.selectedElements
-        );
+    private stopMovingSelectionWithArrows(): void {
+        this.toolSelectionStateService.state = SelectionState.None;
+
+        window.clearTimeout(this.movingTimeoutId);
+        window.clearInterval(this.movingIntervalId);
+
+        this.addMoveCommand();
     }
 }

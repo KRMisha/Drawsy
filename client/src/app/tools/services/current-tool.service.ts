@@ -32,7 +32,7 @@ export class CurrentToolService implements OnDestroy {
 
     onMouseMove(event: MouseEvent): void {
         Tool.mousePosition = this.getMousePosition(event);
-        this.currentTool.onMouseMove();
+        this.currentTool.onMouseMove(event);
     }
 
     onMouseDown(event: MouseEvent): void {
