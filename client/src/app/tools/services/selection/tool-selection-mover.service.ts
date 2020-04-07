@@ -56,6 +56,7 @@ export class ToolSelectionMoverService {
             !this.isArrowUpHeld &&
             !this.isArrowLeftHeld &&
             !this.isArrowRightHeld &&
+            this.isArrowKey(event.key) &&
             this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithMouse;
         if (canAddMoveCommand) {
             if (this.totalSelectionMoveOffset.x !== 0 || this.totalSelectionMoveOffset.y !== 0) {
@@ -120,6 +121,18 @@ export class ToolSelectionMoverService {
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
+    }
+
+    private isArrowKey(key: string) {
+        switch (key) {
+            case 'ArrowUp':
+            case 'ArrowDown':
+            case 'ArrowLeft':
+            case 'ArrowRight':
+                return true;
+            default:
+                return false;
+        }
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
