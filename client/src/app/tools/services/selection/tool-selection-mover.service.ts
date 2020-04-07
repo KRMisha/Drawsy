@@ -5,7 +5,6 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-// import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
 @Injectable({
@@ -25,7 +24,6 @@ export class ToolSelectionMoverService {
     constructor(
         private drawingService: DrawingService,
         private toolSelectionStateService: ToolSelectionStateService,
-        // private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private historyService: HistoryService
     ) {}
@@ -38,6 +36,7 @@ export class ToolSelectionMoverService {
         if (!canAppendMatrix) {
             return;
         }
+
         this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
         this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
         this.moveSelectionInArrowDirection();
@@ -76,7 +75,7 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset = { x: 0, y: 0 };
     }
 
-    moveSelection(currentMousePos: Vec2, lastMousePos: Vec2): void {
+    moveSelection(lastMousePos: Vec2, currentMousePos: Vec2): void {
         const deltaMousePos: Vec2 = {
             x: currentMousePos.x - lastMousePos.x,
             y: currentMousePos.y - lastMousePos.y,
@@ -85,8 +84,6 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset.y += deltaMousePos.y;
 
         this.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
-        // this.toolSelectionUiService.setSelectedElementsRectFromElements(this.toolSelectionStateService.selectedElements);
-        // this.toolSelectionStateService.updateSelectedElementsRect();
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
@@ -119,26 +116,25 @@ export class ToolSelectionMoverService {
         this.totalSelectionMoveOffset.x += moveDirection.x;
         this.totalSelectionMoveOffset.y += moveDirection.y;
         this.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
-        // this.toolSelectionUiService.setSelectedElementsRectFromElements(this.toolSelectionStateService.selectedElements);
 
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
     }
 
-    private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
+    private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
         switch (event.key) {
             case 'ArrowUp':
-                this.isArrowUpHeld = state;
+                this.isArrowUpHeld = isKeyDown;
                 break;
             case 'ArrowDown':
-                this.isArrowDownHeld = state;
+                this.isArrowDownHeld = isKeyDown;
                 break;
             case 'ArrowLeft':
-                this.isArrowLeftHeld = state;
+                this.isArrowLeftHeld = isKeyDown;
                 break;
             case 'ArrowRight':
-                this.isArrowRightHeld = state;
+                this.isArrowRightHeld = isKeyDown;
                 break;
         }
     }

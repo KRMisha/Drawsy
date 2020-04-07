@@ -54,7 +54,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             case SelectionState.SelectionMoveStartClick:
                 this.toolSelectionStateService.state = SelectionState.MovingSelectionWithMouse;
             case SelectionState.MovingSelectionWithMouse:
-                this.toolSelectionMoverService.moveSelection(Tool.mousePosition, this.previousMousePosition);
+                this.toolSelectionMoverService.moveSelection(this.previousMousePosition, Tool.mousePosition);
                 break;
 
             case SelectionState.SelectionChangeStartClick:
@@ -183,6 +183,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
+        this.toolSelectionStateService.state = SelectionState.None;
         this.toolSelectionStateService.selectedElements = [];
         this.toolSelectionUiService.hideUserSelectionRect();
         this.toolSelectionUiService.resetUserSelectionRectCursor();

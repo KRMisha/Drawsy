@@ -45,16 +45,16 @@ export class ToolSelectionCollisionService {
             return undefined;
         }
 
-        const firstShapeBounds = this.getElementBounds(elements[0]);
-        const minPos = { x: firstShapeBounds.x, y: firstShapeBounds.y };
-        const maxPos = { x: firstShapeBounds.x + firstShapeBounds.width, y: firstShapeBounds.y + firstShapeBounds.height };
+        const firstElementBounds = this.getElementBounds(elements[0]);
+        const minPos = { x: firstElementBounds.x, y: firstElementBounds.y };
+        const maxPos = { x: firstElementBounds.x + firstElementBounds.width, y: firstElementBounds.y + firstElementBounds.height };
 
         for (const element of elements) {
-            const currentShapeBounds = this.getElementBounds(element);
-            minPos.x = Math.min(minPos.x, currentShapeBounds.x);
-            minPos.y = Math.min(minPos.y, currentShapeBounds.y);
-            maxPos.x = Math.max(maxPos.x, currentShapeBounds.x + currentShapeBounds.width);
-            maxPos.y = Math.max(maxPos.y, currentShapeBounds.y + currentShapeBounds.height);
+            const currentElementBounds = this.getElementBounds(element);
+            minPos.x = Math.min(minPos.x, currentElementBounds.x);
+            minPos.y = Math.min(minPos.y, currentElementBounds.y);
+            maxPos.x = Math.max(maxPos.x, currentElementBounds.x + currentElementBounds.width);
+            maxPos.y = Math.max(maxPos.y, currentElementBounds.y + currentElementBounds.height);
         }
         return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
     }

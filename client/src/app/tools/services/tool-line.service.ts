@@ -58,7 +58,7 @@ export class ToolLineService extends Tool {
         }
 
         if (!this.isCurrentlyDrawing) {
-            this.startDrawingShape();
+            this.startDrawing();
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', this.nextPoint.x.toString());
@@ -154,7 +154,7 @@ export class ToolLineService extends Tool {
         this.stopDrawing();
     }
 
-    private startDrawingShape(): void {
+    private startDrawing(): void {
         // tslint:disable: no-non-null-assertion
         this.isCurrentlyDrawing = true;
 
