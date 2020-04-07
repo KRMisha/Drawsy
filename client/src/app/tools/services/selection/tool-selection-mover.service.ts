@@ -27,16 +27,15 @@ export class ToolSelectionMoverService {
     ) {}
 
     onKeyDown(event: KeyboardEvent): void {
-        const isArrowKey = event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
-                           event.key === 'ArrowLeft' || event.key === 'ArrowRight';
+        const isArrowKey = event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight';
         if (!isArrowKey) {
             return;
         }
 
         this.setArrowStateFromEvent(event, true);
 
-        const isNewSelectionMove = this.toolSelectionStateService.state === SelectionState.None &&
-                                   this.arrowKeysHeldStates.some((value: boolean) => value);
+        const isNewSelectionMove =
+            this.toolSelectionStateService.state === SelectionState.None && this.arrowKeysHeldStates.some((value: boolean) => value);
         if (isNewSelectionMove) {
             this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
 
