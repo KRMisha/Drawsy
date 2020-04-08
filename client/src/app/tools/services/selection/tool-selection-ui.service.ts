@@ -22,7 +22,6 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private isSelectedElementsRectDisplayed = false;
 
-    private selectedElementsChangedSubscription: Subscription;
     private selectedElementsRectChangedSubscription: Subscription;
 
     constructor(
@@ -42,7 +41,6 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.selectedElementsChangedSubscription.unsubscribe();
         this.selectedElementsRectChangedSubscription.unsubscribe();
     }
 
