@@ -18,7 +18,7 @@ import { ToolSelectionStateService } from './tool-selection-state.service';
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 
-fdescribe('ToolSelectionService', () => {
+describe('ToolSelectionService', () => {
     let service: ToolSelectionService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -28,6 +28,8 @@ fdescribe('ToolSelectionService', () => {
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
 
     let selectAllSubject: Subject<void>;
+
+    let selectionStateServiceStub: ToolSelectionStateService;
 
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
@@ -78,12 +80,17 @@ fdescribe('ToolSelectionService', () => {
             selectAllShortcut$: selectAllSubject,
         });
 
+        selectionStateServiceStub = {
+            state: SelectionState.None,
+            selectedElements: [],
+        } as unknown as ToolSelectionStateService;
+
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ToolSelectionMoverService, useValue: toolSelectionMoverServiceSpyObj },
-                // { provide: ToolSelectionStateService, useValue: toolSelectionStateServiceSpyObj },
+                { provide: ToolSelectionStateService, useValue: selectionStateServiceStub },
                 { provide: ToolSelectionUiService, useValue: toolSelectionUiServiceSpyObj },
                 { provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
@@ -116,36 +123,36 @@ fdescribe('ToolSelectionService', () => {
     });
 
     it('#onMouseMove should do nothing if the selection state is None', () => {
-        service['toolSelectionStateService'].state = SelectionState.None;
+        selectionStateServiceStub.state = SelectionState.None;
         service.onMouseMove({} as MouseEvent);
         expect(toolSelectionMoverServiceSpyObj.moveSelectedElements).not.toHaveBeenCalled();
         expect(toolSelectionUiServiceSpyObj.setUserSelectionRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseMove should change its state to MovingSelectionWithMouse in mouse move if its state was SelectionMoveStartClick', () => {
-        service['toolSelectionStateService'].state = SelectionState.SelectionMoveStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionMoveStartClick;
         service.onMouseMove({} as MouseEvent);
-        expect(service['toolSelectionStateService'].state.toString()).toEqual(SelectionState.MovingSelectionWithMouse.toString());
+        expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.MovingSelectionWithMouse.toString());
         expect(toolSelectionMoverServiceSpyObj.moveSelectedElements).toHaveBeenCalled();
     });
 
     it('#onMouseMove should change its state to ChangingSelection in mouse move if its state was SelectionChangeStartClick', () => {
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service.onMouseMove({} as MouseEvent);
-        expect(service['toolSelectionStateService'].state.toString()).toEqual(SelectionState.ChangingSelection.toString());
+        expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.ChangingSelection.toString());
     });
 
     it('#onMouseMove should change selected elements to elements under user selection rect if user is ChangingSelection with left mouse button', () => {
-        service['toolSelectionStateService'].state = SelectionState.ChangingSelection;
+        selectionStateServiceStub.state = SelectionState.ChangingSelection;
         service['currentMouseButtonDown'] = MouseButton.Left;
         const elemsUnderAreaMock = [{} as SVGGraphicsElement];
         toolSelectionCollisionServiceSpyObj.getElementsUnderArea.and.returnValue(elemsUnderAreaMock);
         service.onMouseMove({} as MouseEvent);
-        expect(service['toolSelectionStateService'].selectedElements).toBe(elemsUnderAreaMock);
+        expect(selectionStateServiceStub.selectedElements).toBe(elemsUnderAreaMock);
     });
 
     it('#onMouseMove invert selection under user selection rect if user is ChangingSelection with right mouse button', () => {
-        service['toolSelectionStateService'].state = SelectionState.ChangingSelection;
+        selectionStateServiceStub.state = SelectionState.ChangingSelection;
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseMove({} as MouseEvent);
         expect(toolSelectionCollisionServiceSpyObj.getElementsUnderArea).toHaveBeenCalled();
@@ -166,21 +173,21 @@ fdescribe('ToolSelectionService', () => {
         Tool.isMouseInsideDrawing = false;
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(toolSelectionUiServiceSpyObj.updateUserSelectionRectCursor).not.toHaveBeenCalled();
-        expect(service['toolSelectionStateService'].state.toString()).toEqual(SelectionState.None.toString());
+        expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.None.toString());
     });
 
     it('#onMouseDown should change state to SelectionMoveStartClick if click is inside selection and left mouse button is down', () => {
         Tool.isMouseInsideDrawing = true;
         spyOn<any>(service, 'isMouseInsideSelectedElementsRect').and.returnValue(true);
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
-        expect(service['toolSelectionStateService'].state.toString()).toEqual(SelectionState.SelectionMoveStartClick.toString());
+        expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.SelectionMoveStartClick.toString());
     });
 
     it('#onMouseDown should change state to SelectionChangeStartClick if click is outside selection and left mouse button is down', () => {
         Tool.isMouseInsideDrawing = true;
         spyOn<any>(service, 'isMouseInsideSelectedElementsRect').and.returnValue(false);
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
-        expect(service['toolSelectionStateService'].state.toString()).toEqual(SelectionState.SelectionChangeStartClick.toString());
+        expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.SelectionChangeStartClick.toString());
     });
 
     it('#onMouseUp should do nothing if mouse up is not the same as the current mouse button down', () => {
@@ -197,30 +204,30 @@ fdescribe('ToolSelectionService', () => {
     });
 
     it('#onMouseUp should invert selected elements if user was changing selection and right mouse button is up', () => {
-        service['toolSelectionStateService'].state = SelectionState.ChangingSelection;
+        selectionStateServiceStub.state = SelectionState.ChangingSelection;
         service['selectedElementsAfterInversion'] = [];
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
-        expect(service['toolSelectionStateService'].selectedElements).toBe(service['selectedElementsAfterInversion']);
+        expect(selectionStateServiceStub.selectedElements).toBe(service['selectedElementsAfterInversion']);
     });
 
     it('#onMouseUp should not invert selected elements if user was changing selection and left mouse button is up', () => {
-        service['toolSelectionStateService'].state = SelectionState.ChangingSelection;
+        selectionStateServiceStub.state = SelectionState.ChangingSelection;
         service['selectedElementsAfterInversion'] = [];
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
-        expect(service['toolSelectionStateService'].selectedElements).not.toBe(service['selectedElementsAfterInversion']);
+        expect(selectionStateServiceStub.selectedElements).not.toBe(service['selectedElementsAfterInversion']);
     });
 
     it('#onMouseUp add move command if user was moving selection', () => {
-        service['toolSelectionStateService'].state = SelectionState.MovingSelectionWithMouse;
+        selectionStateServiceStub.state = SelectionState.MovingSelectionWithMouse;
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(toolSelectionMoverServiceSpyObj.addMoveCommand).toHaveBeenCalled();
     });
 
     it('#onMouseUp should do nothing if user is moving selection with arrwos', () => {
-        service['toolSelectionStateService'].state = SelectionState.MovingSelectionWithArrows;
+        selectionStateServiceStub.state = SelectionState.MovingSelectionWithArrows;
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(toolSelectionUiServiceSpyObj.updateUserSelectionRectCursor).not.toHaveBeenCalled();
@@ -229,56 +236,56 @@ fdescribe('ToolSelectionService', () => {
     it('#onMouseUp should select element under mouse if click did not move', () => {
         const elementStub = {} as SVGGraphicsElement;
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(elementStub);
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
 
-        expect(service['toolSelectionStateService'].selectedElements).toEqual([elementStub]);
+        expect(selectionStateServiceStub.selectedElements).toEqual([elementStub]);
     });
 
     it('#onMouseUp should remove selection if left click on nothing', () => {
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
 
-        expect(service['toolSelectionStateService'].selectedElements).toEqual([]);
+        expect(selectionStateServiceStub.selectedElements).toEqual([]);
     });
 
     it('#onMouseUp should invert selection of click element if right click', () => {
         const elementStub = {} as SVGGraphicsElement;
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(elementStub);
-        service['toolSelectionStateService'].selectedElements = [];
+        selectionStateServiceStub.selectedElements = [];
 
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
 
-        expect(service['toolSelectionStateService'].selectedElements).toEqual([elementStub]);
+        expect(selectionStateServiceStub.selectedElements).toEqual([elementStub]);
     });
 
     it('#onMouseUp should invert selection of click element if right click', () => {
         const elementStub = {} as SVGGraphicsElement;
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(elementStub);
-        service['toolSelectionStateService'].selectedElements = [elementStub];
+        selectionStateServiceStub.selectedElements = [elementStub];
 
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
 
-        expect(service['toolSelectionStateService'].selectedElements).toEqual([]);
+        expect(selectionStateServiceStub.selectedElements).toEqual([]);
     });
 
     it('#onMouseUp should do nothing if right click has no elements under it', () => {
         const elementStub = {} as SVGGraphicsElement;
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
-        service['toolSelectionStateService'].selectedElements = [elementStub];
+        selectionStateServiceStub.selectedElements = [elementStub];
 
-        service['toolSelectionStateService'].state = SelectionState.SelectionChangeStartClick;
+        selectionStateServiceStub.state = SelectionState.SelectionChangeStartClick;
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
 
-        expect(service['toolSelectionStateService'].selectedElements).toEqual([elementStub]);
+        expect(selectionStateServiceStub.selectedElements).toEqual([elementStub]);
     });
 
     it('#onKeyDown should forward event toolSelectionMoverService', () => {
@@ -294,16 +301,15 @@ fdescribe('ToolSelectionService', () => {
     it('#update should remove from selection elements no longer in drawing', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
-        const toolSelectionStateMock = ({ selectedElements: [element2, element1] } as unknown) as ToolSelectionStateService;
         const drawingServiceMock = ({ svgElements: [element1] } as unknown) as DrawingService;
+        selectionStateServiceStub.selectedElements = [element2, element1];
 
-        service['toolSelectionStateService'] = toolSelectionStateMock;
         service['drawingService'] = drawingServiceMock;
 
         service.update();
 
-        expect(toolSelectionStateMock.selectedElements.length).toEqual(1);
-        expect(toolSelectionStateMock.selectedElements[0]).toBe(element1);
+        expect(selectionStateServiceStub.selectedElements.length).toEqual(1);
+        expect(selectionStateServiceStub.selectedElements[0]).toBe(element1);
     });
 
     it('#onToolSelection should subscribe from selectAllShortcutSubscription', () => {
@@ -316,15 +322,15 @@ fdescribe('ToolSelectionService', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
         const drawingServiceMock = ({ svgElements: [element1, element2] } as unknown) as DrawingService;
-        const toolSelectionStateMock = ({ selectedElements: [] } as unknown) as ToolSelectionStateService;
 
-        service['toolSelectionStateService'] = toolSelectionStateMock;
+        selectionStateServiceStub.selectedElements = [];
+
         service['drawingService'] = drawingServiceMock;
 
         service.onToolSelection();
         selectAllSubject.next();
 
-        expect(toolSelectionStateMock.selectedElements).toEqual(drawingServiceMock.svgElements);
+        expect(selectionStateServiceStub.selectedElements).toEqual(drawingServiceMock.svgElements);
     });
 
     it('#onToolDeselection should unsubsrcibe from selectAllShortcutSubscription', () => {
@@ -336,13 +342,13 @@ fdescribe('ToolSelectionService', () => {
 
     it('#isMouseInsideSelectedElementsRect should return false if selection rect is undefined', () => {
         const toolSelectionStateServiceMock = ({ selectionRect: undefined } as unknown) as ToolSelectionStateService;
-        service['toolSelectionStateService'] = toolSelectionStateServiceMock;
+        selectionStateServiceStub = toolSelectionStateServiceMock;
         const isMouseInsideSelectedElementsRect = service['isMouseInsideSelectedElementsRect']();
         expect(isMouseInsideSelectedElementsRect).toEqual(false);
     });
 
     it('#isMouseInsideSelectedElementsRect should return value of isPointInRect if selection rect is not undefined', () => {
-        service['toolSelectionStateService'].selectedElementsRect = {} as Rect;
+        selectionStateServiceStub.selectedElementsRect = {} as Rect;
         service['isMouseInsideSelectedElementsRect']();
         expect(toolSelectionCollisionServiceSpyObj.isPointInRect).toHaveBeenCalled();
     });
