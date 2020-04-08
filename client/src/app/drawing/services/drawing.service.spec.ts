@@ -230,7 +230,7 @@ describe('DrawingService', () => {
         expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
     });
 
-    it('#findDrawingChildElement should return undefined if the element\'parent node is undefined', () => {
+    it("#findDrawingChildElement should return undefined if the element'parent node is undefined", () => {
         const actualValue = service.findDrawingChildElement({} as EventTarget);
         expect(actualValue).toBeUndefined();
     });

@@ -1,7 +1,6 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-// import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
@@ -12,7 +11,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 
-fdescribe('ToolSelectionUiService', () => {
+describe('ToolSelectionUiService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -23,7 +22,6 @@ fdescribe('ToolSelectionUiService', () => {
     let service: ToolSelectionUiService;
 
     const controlPointsCount = 4;
-    // let hideSvgSelectedShapesRectSpy: any;
 
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'appendChild']);
@@ -48,8 +46,6 @@ fdescribe('ToolSelectionUiService', () => {
             ],
         });
         service = TestBed.inject(ToolSelectionUiService);
-
-        // hideSvgSelectedShapesRectSpy = spyOn<any>(service, 'hideSvgSelectedShapesRect').and.callThrough();
     });
 
     it('should be created', () => {
@@ -59,16 +55,8 @@ fdescribe('ToolSelectionUiService', () => {
     it('#constructor should set correct attributes to the 4 control points', () => {
         for (let i = 0; i < controlPointsCount; i++) {
             const controlPointSideSize = '8';
-            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
-                service['svgControlPoints'][i],
-                'width',
-                controlPointSideSize
-            );
-            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
-                service['svgControlPoints'][i],
-                'height',
-                controlPointSideSize
-            );
+            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'width', controlPointSideSize);
+            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'height', controlPointSideSize);
         }
     });
 

@@ -14,7 +14,7 @@ describe('ToolSelectionCollisionService', () => {
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             drawingRoot: drawingRootSpyObj,
-            svgElements: [{} as SVGGraphicsElement , {} as SVGGraphicsElement],
+            svgElements: [{} as SVGGraphicsElement, {} as SVGGraphicsElement],
         });
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
