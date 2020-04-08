@@ -2,10 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIconRegistry } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
-import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
@@ -29,8 +27,6 @@ describe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;
     let fixture: ComponentFixture<SidebarDrawerComponent>;
 
-    let iconRegistrySpyObj: jasmine.SpyObj<MatIconRegistry>;
-    let sanitizerSpyObj: jasmine.SpyObj<DomSanitizer>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
@@ -59,8 +55,6 @@ describe('SidebarDrawerComponent', () => {
     const initialFormControlValue = 10;
 
     beforeEach(async(() => {
-        iconRegistrySpyObj = jasmine.createSpyObj('MatIconRegistry', ['addSvgIcon']);
-        sanitizerSpyObj = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', ['update'], {
             currentTool: { name: toolName, settings: toolSettings } as Tool,
         });
@@ -125,8 +119,6 @@ describe('SidebarDrawerComponent', () => {
             declarations: [SidebarDrawerComponent],
             imports: [BrowserAnimationsModule, MatSliderModule, MatCheckboxModule, FormsModule, MatSelectModule],
             providers: [
-                { provide: MatIconRegistry, useValue: iconRegistrySpyObj },
-                { provide: DomSanitizer, useValue: sanitizerSpyObj },
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
                 { provide: HistoryService, useValue: historyServiceSpyObj },
@@ -143,10 +135,6 @@ describe('SidebarDrawerComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it("#ngOnInit should call iconRegistry's addSvgIcon for reach shapeTypeIcon name (3)", () => {
-        expect(iconRegistrySpyObj.addSvgIcon).toHaveBeenCalledTimes(3);
     });
 
     it("#ngOnInit should subscribe to the formControls' valueChanges", async(() => {

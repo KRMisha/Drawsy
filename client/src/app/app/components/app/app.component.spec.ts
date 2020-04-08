@@ -1,9 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { AppComponent } from '@app/app/components/app/app.component';
 import { ThemeService } from '@app/app/services/theme.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-classes-per-file
@@ -11,6 +14,8 @@ import { Subject } from 'rxjs';
 
 describe('AppComponent', () => {
     let component: AppComponent;
+    let iconRegistrySpyObj: jasmine.SpyObj<MatIconRegistry>;
+    let sanitizerSpyObj: jasmine.SpyObj<DomSanitizer>;
     let modalServiceSpyObject: jasmine.SpyObj<ModalService>;
     let shortcutServiceSpyObject: jasmine.SpyObj<ShortcutService>;
     let themeServiceSpyObject: jasmine.SpyObj<ThemeService>;
@@ -19,6 +24,9 @@ describe('AppComponent', () => {
     const initialTheme = 'initialTheme';
 
     beforeEach(async(() => {
+        iconRegistrySpyObj = jasmine.createSpyObj('MatIconRegistry', ['addSvgIcon']);
+        sanitizerSpyObj = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
+
         modalServiceSpyObject = jasmine.createSpyObj('ModalService', ['openNewDrawingModal', 'openGalleryModal']);
         openNewDrawingShortcutSubject = new Subject<void>();
         openGalleryShortcutSubject = new Subject<void>();
@@ -31,6 +39,8 @@ describe('AppComponent', () => {
         TestBed.configureTestingModule({
             declarations: [AppComponent],
             providers: [
+                { provide: MatIconRegistry, useValue: iconRegistrySpyObj },
+                { provide: DomSanitizer, useValue: sanitizerSpyObj },
                 { provide: ModalService, useValue: modalServiceSpyObject },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObject },
                 { provide: ThemeService, useValue: themeServiceSpyObject },
@@ -45,6 +55,11 @@ describe('AppComponent', () => {
 
     it('should create the app', () => {
         expect(component).toBeTruthy();
+    });
+
+    it("#ngOnInit should call iconRegistry's addSvgIcon for each icon name (29)", () => {
+        // tslint:disable-next-line: no-magic-numbers
+        expect(iconRegistrySpyObj.addSvgIcon).toHaveBeenCalledTimes(29);
     });
 
     it("#ngOnInit should subscribe to shortcutService's openNewDrawingShortcut and openGalleryShortcut", async(() => {
