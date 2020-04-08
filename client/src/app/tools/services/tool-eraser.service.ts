@@ -133,7 +133,10 @@ export class ToolEraserService extends Tool {
             width: this.eraserSize,
             height: this.eraserSize,
         };
-        this.updateSvgRectFromRect(this.svgEraserElement, this.eraserRect);
+        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
@@ -164,13 +167,6 @@ export class ToolEraserService extends Tool {
 
         this.renderer.setAttribute(element, 'stroke', borderColor);
         this.renderer.setAttribute(element, 'stroke-width', borderWidth.toString());
-    }
-
-    private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
-        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
-        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
-        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
-        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
     }
 
     private restoreElementUnderCursorAttributes(): void {

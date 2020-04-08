@@ -47,10 +47,7 @@
 
 //         service = TestBed.inject(ToolSelectionMoverService);
 
-//         service['isArrowUpHeld'] = false;
-//         service['isArrowDownHeld'] = false;
-//         service['isArrowLeftHeld'] = false;
-//         service['isArrowRightHeld'] = false;
+//         service['arrowKeysHeldStates'] = [ false, false, false, false ];
 
 //         moveElementListSpy = spyOn<any>(service, 'moveElementList').and.callThrough();
 //         setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent').and.callThrough();
@@ -112,20 +109,17 @@
 //     });
 
 //     it('#onKeyUp should set arrow state', () => {
-//         service['isArrowDownHeld'] = true;
 //         service.onKeyUp({} as KeyboardEvent);
 //         expect(setArrowStateFromEventSpy).toHaveBeenCalled();
 //     });
 
 //     it('#onKeyUp should add a command if object has moved and no other arrow is held by user', () => {
-//         service['totalSelectionMoveOffset'] = { x: 0, y: 420 };
 //         const addComandSpy = spyOn<any>(service, 'addMoveCommand');
 //         service.onKeyUp({} as KeyboardEvent);
 //         expect(addComandSpy).toHaveBeenCalled();
 //     });
 
 //     it('#onKeyUp should not add a command if object has not moved and no other arrow is held by user', () => {
-//         service['totalSelectionMoveOffset'] = { x: 0, y: 0 };
 //         const addComandSpy = spyOn<any>(service, 'addMoveCommand');
 //         service.onKeyUp({} as KeyboardEvent);
 //         expect(addComandSpy).not.toHaveBeenCalled();

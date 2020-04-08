@@ -229,7 +229,6 @@ describe('ToolEraserService', () => {
         service['updateEraserRect']();
         expect(service['eraserSize']).toEqual(expectedValue);
         expect(service['eraserRect']).not.toEqual(unwantedEraserRect);
-        expect(service['updateSvgRectFromRect']).toHaveBeenCalled();
     });
 
     it("#addRedBorderToElement should use default values to call renderer's setAttribute when the attributs of the element are none", () => {
