@@ -8,10 +8,10 @@ import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionUiService } from '@app/tools/services/selection//tool-selection-ui.service';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
-import { ToolSelectionStateService } from './tool-selection-state.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-empty
