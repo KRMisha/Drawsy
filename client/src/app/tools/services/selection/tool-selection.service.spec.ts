@@ -119,7 +119,7 @@ describe('ToolSelectionService', () => {
     it('#onMouseMove should do nothing if the selection state is None', () => {
         selectionStateServiceStub.state = SelectionState.None;
         service.onMouseMove({} as MouseEvent);
-        expect(toolSelectionMoverServiceSpyObj.moveSelectedElements).not.toHaveBeenCalled();
+        expect(toolSelectionMoverServiceSpyObj.moveSelection).not.toHaveBeenCalled();
         expect(toolSelectionUiServiceSpyObj.setUserSelectionRect).not.toHaveBeenCalled();
     });
 
@@ -127,7 +127,7 @@ describe('ToolSelectionService', () => {
         selectionStateServiceStub.state = SelectionState.SelectionMoveStartClick;
         service.onMouseMove({} as MouseEvent);
         expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.MovingSelectionWithMouse.toString());
-        expect(toolSelectionMoverServiceSpyObj.moveSelectedElements).toHaveBeenCalled();
+        expect(toolSelectionMoverServiceSpyObj.moveSelection).toHaveBeenCalled();
     });
 
     it('#onMouseMove should change its state to ChangingSelection in mouse move if its state was SelectionChangeStartClick', () => {
