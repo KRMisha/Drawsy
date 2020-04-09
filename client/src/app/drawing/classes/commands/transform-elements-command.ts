@@ -8,14 +8,14 @@ export class TransformElementsCommand implements Command {
     ) {}
 
     undo(): void {
-        this.setElementSvgTransformListArray(this.transformListBefore);
+        this.setElementSvgTransformList(this.transformListBefore);
     }
 
     redo(): void {
-        this.setElementSvgTransformListArray(this.transformListAfter);
+        this.setElementSvgTransformList(this.transformListAfter);
     }
 
-    private setElementSvgTransformListArray(transformList: SVGTransform[][]): void {
+    private setElementSvgTransformList(transformList: SVGTransform[][]): void {
         for (let i = 0; i < this.elements.length; i++) {
             this.elements[i].transform.baseVal.clear();
             for (const svgTransform of transformList[i]) {
