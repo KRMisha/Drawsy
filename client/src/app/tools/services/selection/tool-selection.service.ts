@@ -14,6 +14,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
+import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -33,6 +34,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         historyService: HistoryService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionMoverService: ToolSelectionMoverService,
+        private toolSelectionRotatorService: ToolSelectionRotatorService,
         private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
@@ -152,6 +154,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionStateService.state = SelectionState.None;
         this.currentMouseButtonDown = undefined;
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
+    }
+
+    onScroll(event: WheelEvent): void {
+        this.toolSelectionRotatorService.onScroll(event.deltaY, event.altKey, event.shiftKey);
     }
 
     onKeyDown(event: KeyboardEvent): void {

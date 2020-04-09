@@ -32,13 +32,13 @@ export class ToolSelectionCollisionService {
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
         const paddingString = element.getAttribute('data-padding');
-        const padding = paddingString === null ? 0 : +paddingString;
+        const padding = (paddingString === null ? 0 : +paddingString);
 
         return {
-            x: elementBounds.x - drawingRootBounds.x - padding,
-            y: elementBounds.y - drawingRootBounds.y - padding,
-            width: elementBounds.width + 2 * padding,
-            height: elementBounds.height + 2 * padding,
+            x: elementBounds.left - drawingRootBounds.x - padding,
+            y: elementBounds.top - drawingRootBounds.y - padding,
+            width: (elementBounds.right - elementBounds.left) + 2 * padding,
+            height: (elementBounds.bottom - elementBounds.top) + 2 * padding,
         } as Rect;
     }
 
