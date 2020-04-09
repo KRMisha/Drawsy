@@ -8,9 +8,21 @@ import { injectable } from 'inversify';
 @injectable()
 export class EmailService {
     async sendEmail(emailRequest: EmailRequest): Promise<void> {
-        await this.makeEmailValidationRequest(emailRequest);
-        await this.sendEmailVerificationRequest(emailRequest);
-        await this.sendEmailRequest(emailRequest);
+        if (emailRequest.drawing === undefined || emailRequest.address === undefined) {
+            throw new HttpException(HttpStatusCode.BadRequest, 'La requete est incomplète');
+        }
+        try {
+            await this.makeEmailValidationRequest(emailRequest);
+            await this.sendEmailVerificationRequest(emailRequest);
+            const remainingRequests = await this.sendEmailRequest(emailRequest);
+            console.log(remainingRequests);
+        } catch (error) {
+            if (error.response.status === HttpStatusCode.Forbidden || error.response.status === HttpStatusCode.UnprocessableEntity) {
+                throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
+            } else {
+                throw error;
+            }
+        }
     }
 
     private async makeEmailValidationRequest(emailRequest: EmailRequest): Promise<void> {
@@ -18,7 +30,11 @@ export class EmailService {
         try {
             await this.sendRequest(formData, true, true, false);
         } catch (error) {
-            throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
+            if (error.response.status === HttpStatusCode.BadRequest) {
+                throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
+            } else {
+                throw error;
+            }
         }
     }
 
@@ -27,16 +43,25 @@ export class EmailService {
         try {
             await this.sendRequest(formData, true, false, true);
         } catch (error) {
-            throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'existe pas");
+            if (error.response.status === HttpStatusCode.BadRequest) {
+                throw new HttpException(HttpStatusCode.BadRequest, "L'adresse courriel envoyé n'existe pas");
+            } else {
+                throw error;
+            }
         }
     }
 
-    private async sendEmailRequest(emailRequest: EmailRequest): Promise<void> {
+    private async sendEmailRequest(emailRequest: EmailRequest): Promise<number> {
         const formData = this.makeFormData(emailRequest);
         try {
-            await this.sendRequest(formData, false, false, false);
+            const requestReponse = await this.sendRequest(formData, true, false, false);
+            return parseInt(requestReponse.headers['x-ratelimit-remaining'], 10);
         } catch (error) {
-            throw new HttpException(HttpStatusCode.BadRequest, "Le courriel n'envoyé pas pu être envoyé");
+            if (error.response.status === HttpStatusCode.BadRequest) {
+                throw new HttpException(HttpStatusCode.BadRequest, "Le courriel n'envoyé pas pu être envoyé");
+            } else {
+                throw error;
+            }
         }
     }
 
@@ -48,7 +73,12 @@ export class EmailService {
         return form;
     }
 
-    private async sendRequest(form: FormData, isDryRun: boolean, isQuickReturn: boolean, isAddressValidation: boolean): Promise<void> {
+    private async sendRequest(
+        form: FormData,
+        isDryRun: boolean,
+        isQuickReturn: boolean,
+        isAddressValidation: boolean
+    ): Promise<axios.AxiosResponse> {
         const requestConfig = {
             baseURL: 'https://log2990.step.polymtl.ca',
             headers: {
@@ -63,7 +93,7 @@ export class EmailService {
         } as axios.AxiosRequestConfig;
 
         try {
-            await axios.default.post('/email', form, requestConfig);
+            return await axios.default.post('/email', form, requestConfig);
         } catch (error) {
             throw new HttpException(error.response.status, error.response.data.error);
         }
