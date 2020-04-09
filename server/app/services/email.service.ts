@@ -14,13 +14,19 @@ export class EmailService {
         try {
             await this.makeEmailValidationRequest(emailRequest);
             await this.sendEmailVerificationRequest(emailRequest);
-            const remainingRequests = await this.sendEmailRequest(emailRequest);
-            console.log(remainingRequests);
+            await this.sendEmailRequest(emailRequest);
         } catch (error) {
-            if (error.response.status === HttpStatusCode.Forbidden || error.response.status === HttpStatusCode.UnprocessableEntity) {
-                throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
-            } else {
-                throw error;
+            switch(error.status) {
+                case HttpStatusCode.Forbidden:
+                case HttpStatusCode.UnprocessableEntity:
+                    throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
+                    break;
+                case HttpStatusCode.TooManyRequests:
+                    throw new HttpException(HttpStatusCode.InternalServerError, "Vous avez dépasser votre limite de d'envois de couriels");
+                    break;
+                default:
+                    throw error;
+                    break;
             }
         }
     }
@@ -28,9 +34,9 @@ export class EmailService {
     private async makeEmailValidationRequest(emailRequest: EmailRequest): Promise<void> {
         const formData = this.makeFormData(emailRequest);
         try {
-            await this.sendRequest(formData, true, true, false);
+            await this.sendRequest(formData, false, true, false);
         } catch (error) {
-            if (error.response.status === HttpStatusCode.BadRequest) {
+            if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
             } else {
                 throw error;
@@ -41,9 +47,9 @@ export class EmailService {
     private async sendEmailVerificationRequest(emailRequest: EmailRequest): Promise<void> {
         const formData = this.makeFormData(emailRequest);
         try {
-            await this.sendRequest(formData, true, false, true);
+            await this.sendRequest(formData, false, false, true);
         } catch (error) {
-            if (error.response.status === HttpStatusCode.BadRequest) {
+            if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, "L'adresse courriel envoyé n'existe pas");
             } else {
                 throw error;
@@ -54,10 +60,10 @@ export class EmailService {
     private async sendEmailRequest(emailRequest: EmailRequest): Promise<number> {
         const formData = this.makeFormData(emailRequest);
         try {
-            const requestReponse = await this.sendRequest(formData, true, false, false);
+            const requestReponse = await this.sendRequest(formData, false, false, false);
             return parseInt(requestReponse.headers['x-ratelimit-remaining'], 10);
         } catch (error) {
-            if (error.response.status === HttpStatusCode.BadRequest) {
+            if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, "Le courriel n'envoyé pas pu être envoyé");
             } else {
                 throw error;
