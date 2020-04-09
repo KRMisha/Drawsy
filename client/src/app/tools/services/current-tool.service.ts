@@ -53,6 +53,10 @@ export class CurrentToolService implements OnDestroy {
         this.currentTool.onMouseUp(event);
     }
 
+    onScroll(event: WheelEvent): void {
+        this.currentTool.onScroll(event);
+    }
+
     onMouseDoubleClick(event: MouseEvent): void {
         Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseDoubleClick(event);
