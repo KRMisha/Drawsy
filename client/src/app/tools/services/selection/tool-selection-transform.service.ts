@@ -20,8 +20,8 @@ export class ToolSelectionTransformService {
 
     static initializeTransformsOnElements(elements: SVGGraphicsElement[], drawingRoot: SVGSVGElement): void {
         for (const element of elements) {
-            const matrixCount = 2;
-            while (element.transform.baseVal.numberOfItems < matrixCount) {
+            const transformCount = 2;
+            while (element.transform.baseVal.numberOfItems < transformCount) {
                 element.transform.baseVal.appendItem(drawingRoot.createSVGTransform());
             }
         }
