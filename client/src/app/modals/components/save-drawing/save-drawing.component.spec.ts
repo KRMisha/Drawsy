@@ -121,14 +121,14 @@ describe('SaveDrawingComponent', () => {
         expect(pushSpy).toHaveBeenCalled();
     });
 
-    it("#removeLabel should not remove label if it's not in the labels", () => {
+    it('#removeLabel should not remove label if it is not in the labels', () => {
         const label = 'aloha';
         const spliceSpy = spyOn(component.labels, 'splice');
         component.removeLabel(label);
         expect(spliceSpy).not.toHaveBeenCalled();
     });
 
-    it("#removeLabel should remove label if it's in the labels", () => {
+    it('#removeLabel should remove label if it is in the labels', () => {
         const label = 'def';
         const spliceSpy = spyOn(component.labels, 'splice');
         component.removeLabel(label);

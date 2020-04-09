@@ -221,7 +221,7 @@ describe('SidebarDrawerComponent', () => {
         expect(settingsMock.lineWidth).toEqual(0);
     }));
 
-    it("junctionEnabledSubscription should change the currentTool's isEnabled setting and enable the junctionDiameter form control if it's value is true", async(() => {
+    it("junctionEnabledSubscription should change the currentTool's isEnabled setting and enable the junctionDiameter form control if its value is true", async(() => {
         component['junctionEnabledFormControl'] = junctionEnabledFormControlSpyObj;
         component['junctionDiameterFormControl'] = junctionDiameterFormControlSpyObj;
         const settingsMock = { junctionSettings: { isEnabled: false } as JunctionSettings } as ToolSettings;
@@ -237,7 +237,7 @@ describe('SidebarDrawerComponent', () => {
         expect(junctionDiameterFormControlSpyObj.enable).toHaveBeenCalled();
     }));
 
-    it("junctionEnabledSubscription should change the currentTool's isEnabled setting and disable the junctionDiameter form control if it's value is false", async(() => {
+    it("junctionEnabledSubscription should change the currentTool's isEnabled setting and disable the junctionDiameter form control if its value is false", async(() => {
         junctionEnabledFormControlSpyObj = jasmine.createSpyObj('FormControl', [], {
             value: false,
             valueChanges: junctionEnabledChangedSubject,
