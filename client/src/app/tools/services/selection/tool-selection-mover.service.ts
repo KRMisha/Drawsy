@@ -5,9 +5,9 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
-import { ToolSelectionTransformService } from './tool-selection-transform.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
 @Injectable({
     providedIn: 'root',
@@ -91,20 +91,6 @@ export class ToolSelectionMoverService {
         this.addMoveCommand();
     }
 
-    private addMoveCommand(): void {
-        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.historyService.addCommand(
-            new TransformElementsCommand(
-                selectedElementsCopy,
-                this.selectedElementTransformsBeforeMove,
-                ToolSelectionTransformService.getElementListTransformsCopy(
-                    this.toolSelectionStateService.selectedElements,
-                    this.drawingService.drawingRoot
-                )
-            )
-        );
-    }
-
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
         switch (event.key) {
             case 'ArrowUp':
@@ -155,5 +141,19 @@ export class ToolSelectionMoverService {
 
         window.clearTimeout(this.movingTimeoutId);
         window.clearInterval(this.movingIntervalId);
+    }
+
+    private addMoveCommand(): void {
+        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
+        this.historyService.addCommand(
+            new TransformElementsCommand(
+                selectedElementsCopy,
+                this.selectedElementTransformsBeforeMove,
+                ToolSelectionTransformService.getElementListTransformsCopy(
+                    this.toolSelectionStateService.selectedElements,
+                    this.drawingService.drawingRoot
+                )
+            )
+        );
     }
 }
