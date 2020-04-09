@@ -176,23 +176,6 @@ describe('DrawingService', () => {
         expect(renderer2SpyObj.removeChild).toHaveBeenCalledTimes(svgElementsMock.length);
     });
 
-    it('#appendNewMatrixToElements should call ', () => {
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['createSVGTransform']);
-        service['drawingRoot'] = drawingRootSpyObj;
-
-        const svgTransformListSpyObj = jasmine.createSpyObj('SVGTransformList', ['appendItem']);
-        const svgAnimatedTransformListSpyObj = jasmine.createSpyObj('SVGAnimatedTransformList', [], { baseVal: svgTransformListSpyObj });
-        const svgGraphicElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { transform: svgAnimatedTransformListSpyObj });
-        const elementsList: SVGGraphicsElement[] = [
-            svgGraphicElementSpyObj,
-            svgGraphicElementSpyObj,
-            svgGraphicElementSpyObj,
-            svgGraphicElementSpyObj,
-        ];
-        service.appendNewMatrixToElements(elementsList);
-        expect(svgTransformListSpyObj.appendItem).toHaveBeenCalledTimes(elementsList.length);
-    });
-
     it('#isDrawingStarted should return true if there is an element in _svgElements', () => {
         service['_svgElements'] = [{} as SVGGraphicsElement];
         const actualValue = service.isDrawingStarted();

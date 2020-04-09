@@ -8,6 +8,8 @@ import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
+const matrixCount = 2;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -16,6 +18,8 @@ export class ToolSelectionMoverService {
 
     private movingTimeoutId: number;
     private movingIntervalId: number;
+
+    private selectedElementTransformsBeforeMove: SVGTransform[][];
 
     constructor(
         private drawingService: DrawingService,
@@ -63,18 +67,37 @@ export class ToolSelectionMoverService {
 
     moveSelectedElements(moveOffset: Vec2): void {
         for (const element of this.toolSelectionStateService.selectedElements) {
-            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
-            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
+            const newMatrix = element.transform.baseVal.getItem(0).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(0).setMatrix(newMatrix);
         }
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
     }
 
-    addMoveCommand(): void {
+    startMovingSelection(): void {
+        this.selectedElementTransformsBeforeMove = this.getSelectedElementTransforms();
+        for (const element of this.toolSelectionStateService.selectedElements) {
+            while (element.transform.baseVal.numberOfItems < matrixCount) {
+                element.transform.baseVal.appendItem(this.drawingService.drawingRoot.createSVGTransform());
+            }
+        }
+    }
+
+    stopMovingSelection(): void {
+        this.toolSelectionStateService.state = SelectionState.None;
+        this.addMoveCommand();
+    }
+
+    private addMoveCommand(): void {
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.historyService.addCommand(new TransformElementsCommand(selectedElementsCopy));
+        this.historyService.addCommand(
+            new TransformElementsCommand(
+                selectedElementsCopy,
+                this.selectedElementTransformsBeforeMove,
+                this.getSelectedElementTransforms()
+            )
+        );
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
@@ -96,8 +119,8 @@ export class ToolSelectionMoverService {
 
     private startMovingSelectionWithArrows(): void {
         this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
+        this.startMovingSelection();
 
-        this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
         this.moveSelectionWithArrows();
 
         const timeoutDurationMs = 500;
@@ -107,6 +130,20 @@ export class ToolSelectionMoverService {
                 this.moveSelectionWithArrows();
             }, movingIntervalMs);
         }, timeoutDurationMs);
+    }
+
+    private getSelectedElementTransforms(): SVGTransform[][] {
+        const selectedElementMatrices: SVGTransform[][] = [];
+        for (const element of this.toolSelectionStateService.selectedElements) {
+            const elementTransforms: SVGTransform[] = [];
+            for (let i = 0; i < element.transform.baseVal.numberOfItems; i++) {
+                const svgTransform = this.drawingService.drawingRoot.createSVGTransform();
+                svgTransform.setMatrix(element.transform.baseVal.getItem(i).matrix);
+                elementTransforms.push(svgTransform);
+            }
+            selectedElementMatrices.push(elementTransforms);
+        }
+        return selectedElementMatrices;
     }
 
     private moveSelectionWithArrows(): void {
@@ -123,11 +160,9 @@ export class ToolSelectionMoverService {
     }
 
     private stopMovingSelectionWithArrows(): void {
-        this.toolSelectionStateService.state = SelectionState.None;
+        this.stopMovingSelection();
 
         window.clearTimeout(this.movingTimeoutId);
         window.clearInterval(this.movingIntervalId);
-
-        this.addMoveCommand();
     }
 }

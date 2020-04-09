@@ -80,12 +80,6 @@ export class DrawingService {
         }
     }
 
-    appendNewMatrixToElements(elements: SVGGraphicsElement[]): void {
-        for (const element of elements) {
-            element.transform.baseVal.appendItem(this.drawingRoot.createSVGTransform());
-        }
-    }
-
     isDrawingStarted(): boolean {
         return this._svgElements.length > 0;
     }

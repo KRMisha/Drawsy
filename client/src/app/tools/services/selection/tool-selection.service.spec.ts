@@ -46,7 +46,7 @@ describe('ToolSelectionService', () => {
 
         toolSelectionMoverServiceSpyObj = jasmine.createSpyObj(
             'ToolSelectionMoverService',
-            ['moveSelectedElements', 'addMoveCommand', 'onKeyDown', 'onKeyUp', 'onToolDeselection'],
+            ['moveSelectedElements', 'startMovingSelection', 'stopMovingSelection', 'onKeyDown', 'onKeyUp', 'onToolDeselection'],
             {
                 totalSelectionMoveOffset: { x: 0, y: 0 },
             }
@@ -80,10 +80,10 @@ describe('ToolSelectionService', () => {
             selectAllShortcut$: selectAllSubject,
         });
 
-        selectionStateServiceStub = {
+        selectionStateServiceStub = ({
             state: SelectionState.None,
             selectedElements: [],
-        } as unknown as ToolSelectionStateService;
+        } as unknown) as ToolSelectionStateService;
 
         TestBed.configureTestingModule({
             providers: [
@@ -194,7 +194,7 @@ describe('ToolSelectionService', () => {
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(drawingServiceSpyObj.removeUiElement).not.toHaveBeenCalled();
-        expect(toolSelectionMoverServiceSpyObj.addMoveCommand).not.toHaveBeenCalled();
+        expect(toolSelectionMoverServiceSpyObj.stopMovingSelection).not.toHaveBeenCalled();
     });
 
     it('#onMouseUp should remove Ui element if mouse up button is valid', () => {
@@ -223,7 +223,7 @@ describe('ToolSelectionService', () => {
         selectionStateServiceStub.state = SelectionState.MovingSelectionWithMouse;
         service['currentMouseButtonDown'] = MouseButton.Left;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
-        expect(toolSelectionMoverServiceSpyObj.addMoveCommand).toHaveBeenCalled();
+        expect(toolSelectionMoverServiceSpyObj.stopMovingSelection).toHaveBeenCalled();
     });
 
     it('#onMouseUp should do nothing if user is moving selection with arrwos', () => {

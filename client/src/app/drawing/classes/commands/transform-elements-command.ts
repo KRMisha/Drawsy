@@ -1,23 +1,26 @@
 import { Command } from '@app/drawing/classes/commands/command';
 
 export class TransformElementsCommand implements Command {
-    private svgTransformToRedo: SVGTransform;
-
-    constructor(private elements: SVGGraphicsElement[]) {}
+    constructor(
+        private elements: SVGGraphicsElement[],
+        private transformListBefore: SVGTransform[][],
+        private transformListAfter: SVGTransform[][]
+    ) {}
 
     undo(): void {
-        for (const element of this.elements) {
-            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
-            if (this.svgTransformToRedo === undefined) {
-                this.svgTransformToRedo = element.transform.baseVal.getItem(lastTransformIndex);
-            }
-            element.transform.baseVal.removeItem(lastTransformIndex);
-        }
+        this.setElementSvgTransformListArray(this.transformListBefore);
     }
 
     redo(): void {
-        for (const element of this.elements) {
-            element.transform.baseVal.appendItem(this.svgTransformToRedo);
+        this.setElementSvgTransformListArray(this.transformListAfter);
+    }
+
+    private setElementSvgTransformListArray(transformList: SVGTransform[][]): void {
+        for (let i = 0; i < this.elements.length; i++) {
+            this.elements[i].transform.baseVal.clear();
+            for (const svgTransform of transformList[i]) {
+                this.elements[i].transform.baseVal.appendItem(svgTransform);
+            }
         }
     }
 }

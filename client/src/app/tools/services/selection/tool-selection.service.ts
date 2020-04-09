@@ -100,7 +100,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
         if (this.isMouseInsideSelectedElementsRect() && event.button === MouseButton.Left) {
             this.toolSelectionStateService.state = SelectionState.SelectionMoveStartClick;
-            this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
+            this.toolSelectionMoverService.startMovingSelection();
         } else {
             this.toolSelectionStateService.state = SelectionState.SelectionChangeStartClick;
             const userSelectionRect = Rect.fromPoints(this.selectionOrigin, this.selectionOrigin);
@@ -125,7 +125,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 }
                 break;
             case SelectionState.MovingSelectionWithMouse:
-                this.toolSelectionMoverService.addMoveCommand();
+                this.toolSelectionMoverService.stopMovingSelection();
                 break;
             case SelectionState.MovingSelectionWithArrows:
                 return;
