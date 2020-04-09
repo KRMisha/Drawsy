@@ -17,6 +17,7 @@ export class ToolSelectionRotatorService {
         private drawingService: DrawingService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
+        private toolSelectionTransformService: ToolSelectionTransformService,
         private toolSelectionStateService: ToolSelectionStateService,
         private historyService: HistoryService
     ) {}
@@ -33,15 +34,11 @@ export class ToolSelectionRotatorService {
             return;
         }
 
-        const selectedElementTransformsBeforeRotate = ToolSelectionTransformService.getElementListTransformsCopy(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
+        const selectedElementTransformsBeforeRotate = this.toolSelectionTransformService.getElementListTransformsCopy(
+            this.toolSelectionStateService.selectedElements
         );
 
-        ToolSelectionTransformService.initializeElementTransforms(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
-        );
+        this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
 
         const centerOfSelectedElementsRectBeforeRotation: Vec2 = {
             x: this.toolSelectionStateService.selectedElementsRect.x + this.toolSelectionStateService.selectedElementsRect.width / 2,
@@ -98,9 +95,8 @@ export class ToolSelectionRotatorService {
             new TransformElementsCommand(
                 selectedElementsCopy,
                 selectedElementTransformsBeforeRotate,
-                ToolSelectionTransformService.getElementListTransformsCopy(
-                    this.toolSelectionStateService.selectedElements,
-                    this.drawingService.drawingRoot
+                this.toolSelectionTransformService.getElementListTransformsCopy(
+                    this.toolSelectionStateService.selectedElements
                 )
             )
         );
