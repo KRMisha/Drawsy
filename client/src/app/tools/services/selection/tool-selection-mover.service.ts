@@ -8,8 +8,6 @@ import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionCollisionService } from './tool-selection-collision.service';
 
-const matrixCount = 2;
-
 @Injectable({
     providedIn: 'root',
 })
@@ -67,8 +65,9 @@ export class ToolSelectionMoverService {
 
     moveSelectedElements(moveOffset: Vec2): void {
         for (const element of this.toolSelectionStateService.selectedElements) {
-            const newMatrix = element.transform.baseVal.getItem(0).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(0).setMatrix(newMatrix);
+            const translateTransformIndex = 0;
+            const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
         }
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
@@ -78,6 +77,7 @@ export class ToolSelectionMoverService {
     startMovingSelection(): void {
         this.selectedElementTransformsBeforeMove = this.getSelectedElementTransforms();
         for (const element of this.toolSelectionStateService.selectedElements) {
+            const matrixCount = 2;
             while (element.transform.baseVal.numberOfItems < matrixCount) {
                 element.transform.baseVal.appendItem(this.drawingService.drawingRoot.createSVGTransform());
             }
