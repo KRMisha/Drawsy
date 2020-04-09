@@ -15,8 +15,10 @@ import * as multer from 'multer';
 export class Application {
     app = express();
 
-    constructor(@inject(Types.DatabaseController) private databaseController: DatabaseController,
-                @inject(Types.EmailController) private emailController: EmailController) {
+    constructor(
+        @inject(Types.DatabaseController) private databaseController: DatabaseController,
+        @inject(Types.EmailController) private emailController: EmailController
+    ) {
         this.setupMiddleware();
         this.setupRoutes();
         this.setupErrorHandler();
