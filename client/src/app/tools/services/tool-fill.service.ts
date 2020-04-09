@@ -34,7 +34,7 @@ export class ToolFillService extends Tool {
     private pointsQueue = new Queue<Vec2>();
     private validPoints = new Queue<Vec2>();
     private validPointsCopy = new Queue<Vec2>();
-    private edgePointMap = new Map<Vec2, Vec2>();
+    private edgePointMap = new Map<string, Vec2>();
     private vec2ObjectArray: Vec2[][] = [];
     private pointState: boolean[][] = [];
 
@@ -70,14 +70,14 @@ export class ToolFillService extends Tool {
         this.initialColor = this.getPixelColor(point);
         this.breadthFirstSearch();
         this.findAllBorders();
-        this.addBorder();
+        this.addPathBorder();
 
         this.drawingService.addElement(this.group as SVGGraphicsElement);
         this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
 
         this.pointsQueue = new Queue<Vec2>();
         this.validPoints = new Queue<Vec2>();
-        this.edgePointMap = new Map<Vec2, Vec2>();
+        this.edgePointMap = new Map<string, Vec2>();
         this.pointState = [[]];
         this.vec2ObjectArray = [[]];
     }
@@ -164,7 +164,7 @@ export class ToolFillService extends Tool {
             const borderState = this.verifyBorders(currentPoint);
             const nextPixel = this.findVector(currentPoint, borderState);
             if (nextPixel !== undefined) {
-                this.edgePointMap.set(currentPoint, this.vec2ObjectArray[nextPixel.x][nextPixel.y]);
+                this.edgePointMap.set(this.pointToStringKey(currentPoint), this.vec2ObjectArray[nextPixel.x][nextPixel.y]);
             }
         }
     }
@@ -179,8 +179,8 @@ export class ToolFillService extends Tool {
             this.pointState[point.x - 1] = [];
         }
 
-        borderValue += this.pointState[point.x + 1][point.y] !== true ? PixelBorderValue.top : 0;
-        borderValue += this.pointState[point.x][point.y + 1] !== true ? PixelBorderValue.right : 0;
+        borderValue += this.pointState[point.x][point.y + 1] !== true ? PixelBorderValue.top : 0;
+        borderValue += this.pointState[point.x + 1][point.y] !== true ? PixelBorderValue.right : 0;
         borderValue += this.pointState[point.x][point.y - 1] !== true ? PixelBorderValue.bottom : 0;
         borderValue += this.pointState[point.x - 1][point.y] !== true ? PixelBorderValue.left : 0;
         return borderValue;
@@ -192,32 +192,63 @@ export class ToolFillService extends Tool {
         }
         let destinationPoint: Vec2 = { x: 0, y: 0 };
         if (totalMatchingTop.includes(sideState)) {
-            destinationPoint = { x: point.x, y: point.y };
+            destinationPoint = { x: point.x, y: point.y + 1 };
         } else if (totalMatchingRight.includes(sideState)) {
-            destinationPoint = { x: point.x, y: point.y };
+            destinationPoint = { x: point.x + 1, y: point.y };
+        } else if (totalMatchingRight.includes(sideState)) {
+            destinationPoint = { x: point.x + 1, y: point.y };
         } else if (totalMatchingBottom.includes(sideState)) {
-            destinationPoint = { x: point.x, y: point.y };
+            destinationPoint = { x: point.x, y: point.y - 1 };
         } else if (totalMatchingLeft.includes(sideState)) {
-            destinationPoint = { x: point.x, y: point.y };
+            destinationPoint = { x: point.x - 1, y: point.y };
         } else {
             destinationPoint = point;
         }
         return destinationPoint;
     }
 
-    private addBorder(): void {
+    private addPathBorder(): void {
         while (!this.validPoints.isEmpty()) {
-            let point = this.validPoints.dequeue() as Vec2;
-            console.log(point);
-            while (this.edgePointMap.has(point)) {
-                const rectangle: SVGPathElement = this.renderer.createElement('rect', 'svg');
-                this.renderer.setAttribute(rectangle, 'x', `${point.x}`);
-                this.renderer.setAttribute(rectangle, 'y', `${point.y}`);
-                this.renderer.setAttribute(rectangle, 'width', '1');
-                this.renderer.setAttribute(rectangle, 'height', '1');
-                this.renderer.appendChild(this.group, rectangle);
-                point = this.edgePointMap.get(point) as Vec2;
+            let currentPoint = this.validPoints.dequeue() as Vec2;
+            let nextPoint: Vec2;
+            let pathString = '';
+            if (this.edgePointMap.has(this.pointToStringKey(currentPoint))) {
+                pathString += `M${currentPoint.x} ${currentPoint.y} L${currentPoint.x} ${currentPoint.y} `;
+                currentPoint = this.edgePointMap.get(this.pointToStringKey(currentPoint)) as Vec2;
             }
+            while (this.edgePointMap.has(this.pointToStringKey(currentPoint))) {
+                pathString += `L${currentPoint.x} ${currentPoint.y} `;
+                nextPoint = this.edgePointMap.get(this.pointToStringKey(currentPoint)) as Vec2;
+                this.edgePointMap.delete(this.pointToStringKey(currentPoint));
+                currentPoint = nextPoint;
+            }
+            const path: SVGPathElement = this.renderer.createElement('path', 'svg');
+            this.renderer.setAttribute(path, 'fill', 'none');
+            this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
+            this.renderer.setAttribute(path, 'stroke-width', '1');
+            this.renderer.setAttribute(path, 'stroke-linecap', 'round');
+            this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
+            this.renderer.setAttribute(path, 'd', pathString);
+            this.renderer.appendChild(this.group, path);
         }
     }
+
+    private pointToStringKey(point: Vec2): string {
+        return `${point.x} ${point.y}`;
+    }
+
+    // private addBorder(): void {
+    //     while (!this.validPoints.isEmpty()) {
+    //         let point = this.validPoints.dequeue() as Vec2;
+    //         while (this.edgePointMap.has(point)) {
+    //             const rectangle: SVGPathElement = this.renderer.createElement('rect', 'svg');
+    //             this.renderer.setAttribute(rectangle, 'x', `${point.x}`);
+    //             this.renderer.setAttribute(rectangle, 'y', `${point.y}`);
+    //             this.renderer.setAttribute(rectangle, 'width', '1');
+    //             this.renderer.setAttribute(rectangle, 'height', '1');
+    //             this.renderer.appendChild(this.group, rectangle);
+    //             point = this.edgePointMap.get(point) as Vec2;
+    //         }
+    //     }
+    // }
 }
