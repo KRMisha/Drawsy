@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -16,7 +15,6 @@ export class CurrentToolService implements OnDestroy {
 
     private primaryColorChangedSubscription: Subscription;
     private secondaryColorChangedSubscription: Subscription;
-    private elementClickedSubscription: Subscription;
 
     constructor(private colorService: ColorService, private drawingService: DrawingService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
@@ -25,20 +23,16 @@ export class CurrentToolService implements OnDestroy {
         this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onSecondaryColorChange(color);
         });
-        this.elementClickedSubscription = this.drawingService.elementClicked$.subscribe((svgClickEvent: SvgClickEvent) => {
-            this.currentTool.onElementClick(svgClickEvent.mouseEvent, svgClickEvent.element);
-        });
     }
 
     ngOnDestroy(): void {
         this.primaryColorChangedSubscription.unsubscribe();
         this.secondaryColorChangedSubscription.unsubscribe();
-        this.elementClickedSubscription.unsubscribe();
     }
 
     onMouseMove(event: MouseEvent): void {
         Tool.mousePosition = this.getMousePosition(event);
-        this.currentTool.onMouseMove();
+        this.currentTool.onMouseMove(event);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -57,6 +51,10 @@ export class CurrentToolService implements OnDestroy {
 
         Tool.mousePosition = this.getMousePosition(event);
         this.currentTool.onMouseUp(event);
+    }
+
+    onScroll(event: WheelEvent): void {
+        this.currentTool.onScroll(event);
     }
 
     onMouseDoubleClick(event: MouseEvent): void {
@@ -93,8 +91,12 @@ export class CurrentToolService implements OnDestroy {
     }
 
     set currentTool(tool: Tool) {
-        if (this.currentTool !== undefined) {
-            this.currentTool.onToolDeselection();
+        if (this._currentTool === tool) {
+            return;
+        }
+
+        if (this._currentTool !== undefined) {
+            this._currentTool.onToolDeselection();
         }
 
         this._currentTool = tool;

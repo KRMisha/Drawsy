@@ -33,9 +33,10 @@ export abstract class Tool {
     // Disable lint error for method stubs below because not all derived service classes
     // need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    onMouseMove(): void {}
+    onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
+    onScroll(event: WheelEvent): void {}
     onMouseDoubleClick(event: MouseEvent): void {}
     onKeyDown(event: KeyboardEvent): void {}
     onKeyUp(event: KeyboardEvent): void {}
@@ -43,7 +44,6 @@ export abstract class Tool {
     onMouseLeave(event: MouseEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
-    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {}
     update(): void {}
     onToolSelection(): void {}
     onToolDeselection(): void {}

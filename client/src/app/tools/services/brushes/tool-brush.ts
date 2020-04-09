@@ -23,7 +23,7 @@ export abstract class ToolBrush extends Tool {
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         if (Tool.isLeftMouseButtonDown && Tool.isMouseInsideDrawing) {
             this.updatePath();
         }
