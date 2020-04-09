@@ -15,7 +15,6 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private eraserSize = ToolDefaults.defaultEraserSize;
     private svgEraserElement: SVGRectElement;
 
     private svgElementUnderCursor?: SVGGraphicsElement = undefined;
@@ -126,17 +125,12 @@ export class ToolEraserService extends Tool {
     }
 
     private updateEraserRect(): void {
-        this.eraserSize = this.settings.eraserSize!; // tslint:disable-line: no-non-null-assertion
-        this.eraserRect = {
-            x: Tool.mousePosition.x - this.eraserSize / 2,
-            y: Tool.mousePosition.y - this.eraserSize / 2,
-            width: this.eraserSize,
-            height: this.eraserSize,
-        };
-        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
+        // tslint:disable: no-non-null-assertion
+        this.renderer.setAttribute(this.svgEraserElement, 'x', `${Tool.mousePosition.x - this.settings.eraserSize! / 2}`);
+        this.renderer.setAttribute(this.svgEraserElement, 'y', `${Tool.mousePosition.y - this.settings.eraserSize! / 2}`);
+        this.renderer.setAttribute(this.svgEraserElement, 'width', this.settings.eraserSize!.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'height', this.settings.eraserSize!.toString());
+        // tslint:enable: no-non-null-assertion
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
@@ -184,18 +178,19 @@ export class ToolEraserService extends Tool {
             for (let j = 0; j < area.height; j++) {
                 // Function does not exist in Renderer2
                 const elementUnderPoint = this.drawingService.findDrawingChildElement(
-                    (document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j) || undefined) as SVGGraphicsElement
+                    document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j)
                 );
 
                 if (elementUnderPoint === undefined || elementUnderPoint === topmostElement) {
                     continue;
                 }
 
-                if (
+                // tslint:disable: no-bitwise
+                const isElementAboveTopmostElement =
                     topmostElement === undefined ||
-                    // tslint:disable-next-line: no-bitwise
-                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING
-                ) {
+                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING;
+                // tslint:enable: no-bitwise
+                if (isElementAboveTopmostElement) {
                     topmostElement = elementUnderPoint;
                 }
             }
