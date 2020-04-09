@@ -75,7 +75,7 @@ export class ToolSelectionMoverService {
     }
 
     startMovingSelection(): void {
-        this.selectedElementTransformsBeforeMove = this.getSelectedElementTransforms();
+        this.selectedElementTransformsBeforeMove = this.getSelectedElementTransformsCopy();
         for (const element of this.toolSelectionStateService.selectedElements) {
             const matrixCount = 2;
             while (element.transform.baseVal.numberOfItems < matrixCount) {
@@ -95,7 +95,7 @@ export class ToolSelectionMoverService {
             new TransformElementsCommand(
                 selectedElementsCopy,
                 this.selectedElementTransformsBeforeMove,
-                this.getSelectedElementTransforms()
+                this.getSelectedElementTransformsCopy()
             )
         );
     }
@@ -132,8 +132,8 @@ export class ToolSelectionMoverService {
         }, timeoutDurationMs);
     }
 
-    private getSelectedElementTransforms(): SVGTransform[][] {
-        const selectedElementMatrices: SVGTransform[][] = [];
+    private getSelectedElementTransformsCopy(): SVGTransform[][] {
+        const selectedElementTransformsCopy: SVGTransform[][] = [];
         for (const element of this.toolSelectionStateService.selectedElements) {
             const elementTransforms: SVGTransform[] = [];
             for (let i = 0; i < element.transform.baseVal.numberOfItems; i++) {
@@ -141,9 +141,9 @@ export class ToolSelectionMoverService {
                 svgTransform.setMatrix(element.transform.baseVal.getItem(i).matrix);
                 elementTransforms.push(svgTransform);
             }
-            selectedElementMatrices.push(elementTransforms);
+            selectedElementTransformsCopy.push(elementTransforms);
         }
-        return selectedElementMatrices;
+        return selectedElementTransformsCopy;
     }
 
     private moveSelectionWithArrows(): void {
