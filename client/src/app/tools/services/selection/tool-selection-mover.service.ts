@@ -7,6 +7,7 @@ import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionCollisionService } from './tool-selection-collision.service';
+import { ToolSelectionTransformService } from './tool-selection-transform.service';
 
 @Injectable({
     providedIn: 'root',
@@ -75,13 +76,14 @@ export class ToolSelectionMoverService {
     }
 
     startMovingSelection(): void {
-        this.selectedElementTransformsBeforeMove = this.getSelectedElementTransformsCopy();
-        for (const element of this.toolSelectionStateService.selectedElements) {
-            const matrixCount = 2;
-            while (element.transform.baseVal.numberOfItems < matrixCount) {
-                element.transform.baseVal.appendItem(this.drawingService.drawingRoot.createSVGTransform());
-            }
-        }
+        this.selectedElementTransformsBeforeMove = ToolSelectionTransformService.getElementListTransformsCopy(
+            this.toolSelectionStateService.selectedElements,
+            this.drawingService.drawingRoot
+        );
+        ToolSelectionTransformService.initializeTransformsOnElements(
+            this.toolSelectionStateService.selectedElements,
+            this.drawingService.drawingRoot
+        );
     }
 
     stopMovingSelection(): void {
@@ -95,7 +97,10 @@ export class ToolSelectionMoverService {
             new TransformElementsCommand(
                 selectedElementsCopy,
                 this.selectedElementTransformsBeforeMove,
-                this.getSelectedElementTransformsCopy()
+                ToolSelectionTransformService.getElementListTransformsCopy(
+                    this.toolSelectionStateService.selectedElements,
+                    this.drawingService.drawingRoot
+                )
             )
         );
     }
@@ -130,20 +135,6 @@ export class ToolSelectionMoverService {
                 this.moveSelectionWithArrows();
             }, movingIntervalMs);
         }, timeoutDurationMs);
-    }
-
-    private getSelectedElementTransformsCopy(): SVGTransform[][] {
-        const selectedElementTransformsCopy: SVGTransform[][] = [];
-        for (const element of this.toolSelectionStateService.selectedElements) {
-            const elementTransforms: SVGTransform[] = [];
-            for (let i = 0; i < element.transform.baseVal.numberOfItems; i++) {
-                const svgTransform = this.drawingService.drawingRoot.createSVGTransform();
-                svgTransform.setMatrix(element.transform.baseVal.getItem(i).matrix);
-                elementTransforms.push(svgTransform);
-            }
-            selectedElementTransformsCopy.push(elementTransforms);
-        }
-        return selectedElementTransformsCopy;
     }
 
     private moveSelectionWithArrows(): void {
