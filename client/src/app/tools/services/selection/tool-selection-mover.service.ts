@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TransformElementsCommand } from '@app/drawing/classes/commands/transform-elements-command';
-import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
@@ -21,9 +20,9 @@ export class ToolSelectionMoverService {
     private selectedElementTransformsBeforeMove: SVGTransform[][];
 
     constructor(
-        private drawingService: DrawingService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
+        private toolSelectionTransformService: ToolSelectionTransformService,
         private historyService: HistoryService
     ) {}
 
@@ -65,14 +64,10 @@ export class ToolSelectionMoverService {
     }
 
     startMovingSelection(): void {
-        this.selectedElementTransformsBeforeMove = ToolSelectionTransformService.getElementListTransformsCopy(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
+        this.selectedElementTransformsBeforeMove = this.toolSelectionTransformService.getElementListTransformsCopy(
+            this.toolSelectionStateService.selectedElements
         );
-        ToolSelectionTransformService.initializeElementTransforms(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
-        );
+        this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
     }
 
     moveSelection(moveOffset: Vec2): void {
@@ -94,10 +89,7 @@ export class ToolSelectionMoverService {
             new TransformElementsCommand(
                 selectedElementsCopy,
                 this.selectedElementTransformsBeforeMove,
-                ToolSelectionTransformService.getElementListTransformsCopy(
-                    this.toolSelectionStateService.selectedElements,
-                    this.drawingService.drawingRoot
-                )
+                this.toolSelectionTransformService.getElementListTransformsCopy(this.toolSelectionStateService.selectedElements)
             )
         );
     }
