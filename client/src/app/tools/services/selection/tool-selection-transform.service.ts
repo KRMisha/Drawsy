@@ -1,8 +1,3 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-    providedIn: 'root',
-})
 export class ToolSelectionTransformService {
     static getElementListTransformsCopy(elements: SVGGraphicsElement[], drawingRoot: SVGSVGElement): SVGTransform[][] {
         const selectedElementTransformsCopy: SVGTransform[][] = [];
