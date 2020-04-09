@@ -22,7 +22,7 @@ export class ToolSelectionRotatorService {
         private historyService: HistoryService
     ) {}
 
-    onScroll(deltaY: number, isAltKeyHeld: boolean, isShiftKeyHeld: boolean): void {
+    onScroll(deltaY: number, isSmallAngle: boolean, isIndividualRotation: boolean): void {
         if (
             this.toolSelectionStateService.state !== SelectionState.None ||
             this.toolSelectionStateService.selectedElementsRect === undefined
@@ -49,11 +49,12 @@ export class ToolSelectionRotatorService {
             const scrollDirection = deltaY > 0 ? 1 : -1;
             const smallAngleChange = 1;
             const bigAngleChange = 15;
-            const angleChange = scrollDirection * (isAltKeyHeld ? smallAngleChange : bigAngleChange);
+            const angleChange = scrollDirection * (isSmallAngle ? smallAngleChange : bigAngleChange);
 
-            const rect = isShiftKeyHeld
+            const rect = isIndividualRotation
                 ? this.toolSelectionCollisionService.getElementBounds(element)
                 : this.toolSelectionStateService.selectedElementsRect;
+
             const globalCenterOfRotation = this.drawingService.drawingRoot.createSVGPoint();
             globalCenterOfRotation.x = rect.x + rect.width / 2;
             globalCenterOfRotation.y = rect.y + rect.height / 2;
@@ -76,19 +77,21 @@ export class ToolSelectionRotatorService {
             this.toolSelectionStateService.selectedElements
         );
 
-        // tslint:disable: no-non-null-assertion
-        const centerOfSelectedElementsRectAfterRotation: Vec2 = {
-            x: this.toolSelectionStateService.selectedElementsRect!.x + this.toolSelectionStateService.selectedElementsRect!.width / 2,
-            y: this.toolSelectionStateService.selectedElementsRect!.y + this.toolSelectionStateService.selectedElementsRect!.height / 2,
-        };
-        // tslint:enable: no-non-null-assertion
+        if (!isIndividualRotation) {
+            // tslint:disable: no-non-null-assertion
+            const centerOfSelectedElementsRectAfterRotation: Vec2 = {
+                x: this.toolSelectionStateService.selectedElementsRect!.x + this.toolSelectionStateService.selectedElementsRect!.width / 2,
+                y: this.toolSelectionStateService.selectedElementsRect!.y + this.toolSelectionStateService.selectedElementsRect!.height / 2,
+            };
+            // tslint:enable: no-non-null-assertion
 
-        const moveDuringRotation: Vec2 = {
-            x: centerOfSelectedElementsRectBeforeRotation.x - centerOfSelectedElementsRectAfterRotation.x,
-            y: centerOfSelectedElementsRectBeforeRotation.y - centerOfSelectedElementsRectAfterRotation.y,
-        };
+            const moveDuringRotation: Vec2 = {
+                x: centerOfSelectedElementsRectBeforeRotation.x - centerOfSelectedElementsRectAfterRotation.x,
+                y: centerOfSelectedElementsRectBeforeRotation.y - centerOfSelectedElementsRectAfterRotation.y,
+            };
 
-        this.toolSelectionMoverService.moveSelection(moveDuringRotation);
+            this.toolSelectionMoverService.moveSelection(moveDuringRotation);
+        }
 
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
         this.historyService.addCommand(
