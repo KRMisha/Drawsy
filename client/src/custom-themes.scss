@@ -79,7 +79,8 @@ $theme-colors: (
         stroke: rgba(mat-color($primary), 0.8);
     }
 
-    .theme-selected-elements-rect {
+    .theme-selected-elements-rect,
+    .theme-eraser {
         stroke: mat-color($primary, darker);
     }
 
