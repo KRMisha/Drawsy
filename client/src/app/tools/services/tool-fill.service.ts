@@ -33,9 +33,10 @@ export class ToolFillService extends Tool {
 
     private pointsQueue = new Queue<Vec2>();
     private validPoints = new Queue<Vec2>();
+    private validPointsCopy = new Queue<Vec2>();
     private edgePointMap = new Map<Vec2, Vec2>();
-    private vec2ObjectArray: Vec2[][] = [[]];
-    private pointState: boolean[][] = [[]];
+    private vec2ObjectArray: Vec2[][] = [];
+    private pointState: boolean[][] = [];
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -64,10 +65,8 @@ export class ToolFillService extends Tool {
 
     private async applyColor(): Promise<void> {
         const point: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
-        console.log('Before');
         await this.initializeCanvas();
         this.pointsQueue.enqueue(point);
-        console.log('After');
         this.initialColor = this.getPixelColor(point);
         this.breadthFirstSearch();
         this.findAllBorders();
@@ -103,9 +102,7 @@ export class ToolFillService extends Tool {
 
     private breadthFirstSearch(): void {
         while (!this.pointsQueue.isEmpty()) {
-            console.log('Start THE SEARCH');
             const point = this.pointsQueue.dequeue() as Vec2;
-            console.log(point);
             this.verifyPoint({ x: point.x - 1, y: point.y });
             this.verifyPoint({ x: point.x + 1, y: point.y });
             this.verifyPoint({ x: point.x, y: point.y - 1 });
@@ -114,16 +111,23 @@ export class ToolFillService extends Tool {
     }
 
     private verifyPoint(point: Vec2): void {
-        const isInDrawing = point.x >= 0
-                         && point.y >= 0
-                         && point.x <= this.drawingService.dimensions.x
-                         && point.y <= this.drawingService.dimensions.y;
-        console.log(this.pointState[point.x][point.y] !== undefined);
-        console.log(!isInDrawing);
-        console.log('Verify');
+        const isInDrawing =
+            point.x >= 0 && point.y >= 0 && point.x <= this.drawingService.dimensions.x && point.y <= this.drawingService.dimensions.y;
 
-        if (this.pointState[point.x][point.y] !== undefined || !isInDrawing) {
+        if (!isInDrawing) {
             return;
+        }
+
+        if (this.pointState[point.x] !== undefined && this.pointState[point.x][point.y] !== undefined) {
+            return;
+        }
+
+        if (this.pointState[point.x] === undefined) {
+            this.pointState[point.x] = [];
+        }
+
+        if (this.vec2ObjectArray[point.x] === undefined) {
+            this.vec2ObjectArray[point.x] = [];
         }
 
         if (!this.matchesSelectedColor(this.getPixelColor(point))) {
@@ -131,9 +135,11 @@ export class ToolFillService extends Tool {
             return;
         }
         this.pointState[point.x][point.y] = true;
-        this.vec2ObjectArray[point.x][point.y] = {x: point.x, y: point.y};
+
+        this.vec2ObjectArray[point.x][point.y] = { x: point.x, y: point.y };
         this.pointsQueue.enqueue(point);
         this.validPoints.enqueue(point);
+        this.validPointsCopy.enqueue(point);
         return;
     }
 
@@ -153,8 +159,8 @@ export class ToolFillService extends Tool {
     }
 
     private findAllBorders(): void {
-        while (!this.validPoints.isEmpty()) {
-            const currentPoint = this.validPoints.dequeue() as Vec2;
+        while (!this.validPointsCopy.isEmpty()) {
+            const currentPoint = this.validPointsCopy.dequeue() as Vec2;
             const borderState = this.verifyBorders(currentPoint);
             const nextPixel = this.findVector(currentPoint, borderState);
             if (nextPixel !== undefined) {
@@ -165,10 +171,18 @@ export class ToolFillService extends Tool {
 
     private verifyBorders(point: Vec2): number {
         let borderValue = 0;
-        borderValue += this.pointState[point.x + 1][point.y] !== true ? PixelBorderValue.top : 0 ;
-        borderValue += this.pointState[point.x][point.y + 1] !== true ? PixelBorderValue.right : 0 ;
-        borderValue += this.pointState[point.x][point.y - 1] !== true ? PixelBorderValue.bottom : 0 ;
-        borderValue += this.pointState[point.x - 1][point.y] !== true ? PixelBorderValue.left : 0 ;
+
+        if (this.pointState[point.x + 1] === undefined) {
+            this.pointState[point.x + 1] = [];
+        }
+        if (this.pointState[point.x - 1] === undefined) {
+            this.pointState[point.x - 1] = [];
+        }
+
+        borderValue += this.pointState[point.x + 1][point.y] !== true ? PixelBorderValue.top : 0;
+        borderValue += this.pointState[point.x][point.y + 1] !== true ? PixelBorderValue.right : 0;
+        borderValue += this.pointState[point.x][point.y - 1] !== true ? PixelBorderValue.bottom : 0;
+        borderValue += this.pointState[point.x - 1][point.y] !== true ? PixelBorderValue.left : 0;
         return borderValue;
     }
 
@@ -176,15 +190,15 @@ export class ToolFillService extends Tool {
         if (sideState === 0) {
             return undefined;
         }
-        let destinationPoint: Vec2 = {x: 0, y: 0};
+        let destinationPoint: Vec2 = { x: 0, y: 0 };
         if (totalMatchingTop.includes(sideState)) {
-            destinationPoint =  {x: point.x, y: point.y};
+            destinationPoint = { x: point.x, y: point.y };
         } else if (totalMatchingRight.includes(sideState)) {
-            destinationPoint = {x: point.x, y: point.y};
+            destinationPoint = { x: point.x, y: point.y };
         } else if (totalMatchingBottom.includes(sideState)) {
-            destinationPoint = {x: point.x, y: point.y};
+            destinationPoint = { x: point.x, y: point.y };
         } else if (totalMatchingLeft.includes(sideState)) {
-            destinationPoint = {x: point.x, y: point.y};
+            destinationPoint = { x: point.x, y: point.y };
         } else {
             destinationPoint = point;
         }
@@ -194,6 +208,7 @@ export class ToolFillService extends Tool {
     private addBorder(): void {
         while (!this.validPoints.isEmpty()) {
             let point = this.validPoints.dequeue() as Vec2;
+            console.log(point);
             while (this.edgePointMap.has(point)) {
                 const rectangle: SVGPathElement = this.renderer.createElement('rect', 'svg');
                 this.renderer.setAttribute(rectangle, 'x', `${point.x}`);
