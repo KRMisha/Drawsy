@@ -16,7 +16,7 @@ export class EmailService {
             await this.sendEmailVerificationRequest(emailRequest);
             await this.sendEmailRequest(emailRequest);
         } catch (error) {
-            switch(error.status) {
+            switch (error.status) {
                 case HttpStatusCode.Forbidden:
                 case HttpStatusCode.UnprocessableEntity:
                     throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
