@@ -13,7 +13,7 @@ export class ToolSelectionTransformService {
         return selectedElementTransformsCopy;
     }
 
-    static initializeTransformsOnElements(elements: SVGGraphicsElement[], drawingRoot: SVGSVGElement): void {
+    static initializeElementTransforms(elements: SVGGraphicsElement[], drawingRoot: SVGSVGElement): void {
         for (const element of elements) {
             const transformCount = 2;
             while (element.transform.baseVal.numberOfItems < transformCount) {

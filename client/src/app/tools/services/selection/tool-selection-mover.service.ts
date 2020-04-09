@@ -64,7 +64,18 @@ export class ToolSelectionMoverService {
         this.arrowKeysHeldStates.fill(false);
     }
 
-    moveSelectedElements(moveOffset: Vec2): void {
+    startMovingSelection(): void {
+        this.selectedElementTransformsBeforeMove = ToolSelectionTransformService.getElementListTransformsCopy(
+            this.toolSelectionStateService.selectedElements,
+            this.drawingService.drawingRoot
+        );
+        ToolSelectionTransformService.initializeElementTransforms(
+            this.toolSelectionStateService.selectedElements,
+            this.drawingService.drawingRoot
+        );
+    }
+
+    moveSelection(moveOffset: Vec2): void {
         for (const element of this.toolSelectionStateService.selectedElements) {
             const translateTransformIndex = 0;
             const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
@@ -75,20 +86,20 @@ export class ToolSelectionMoverService {
         );
     }
 
-    startMovingSelection(): void {
-        this.selectedElementTransformsBeforeMove = ToolSelectionTransformService.getElementListTransformsCopy(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
-        );
-        ToolSelectionTransformService.initializeTransformsOnElements(
-            this.toolSelectionStateService.selectedElements,
-            this.drawingService.drawingRoot
-        );
-    }
-
     stopMovingSelection(): void {
         this.toolSelectionStateService.state = SelectionState.None;
-        this.addMoveCommand();
+
+        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
+        this.historyService.addCommand(
+            new TransformElementsCommand(
+                selectedElementsCopy,
+                this.selectedElementTransformsBeforeMove,
+                ToolSelectionTransformService.getElementListTransformsCopy(
+                    this.toolSelectionStateService.selectedElements,
+                    this.drawingService.drawingRoot
+                )
+            )
+        );
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
@@ -110,6 +121,7 @@ export class ToolSelectionMoverService {
 
     private startMovingSelectionWithArrows(): void {
         this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
+
         this.startMovingSelection();
 
         this.moveSelectionWithArrows();
@@ -133,7 +145,7 @@ export class ToolSelectionMoverService {
             moveOffset.y = this.arrowKeysHeldStates[ArrowKey.Down] ? moveDelta : -moveDelta;
         }
 
-        this.moveSelectedElements(moveOffset);
+        this.moveSelection(moveOffset);
     }
 
     private stopMovingSelectionWithArrows(): void {
@@ -141,19 +153,5 @@ export class ToolSelectionMoverService {
 
         window.clearTimeout(this.movingTimeoutId);
         window.clearInterval(this.movingIntervalId);
-    }
-
-    private addMoveCommand(): void {
-        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.historyService.addCommand(
-            new TransformElementsCommand(
-                selectedElementsCopy,
-                this.selectedElementTransformsBeforeMove,
-                ToolSelectionTransformService.getElementListTransformsCopy(
-                    this.toolSelectionStateService.selectedElements,
-                    this.drawingService.drawingRoot
-                )
-            )
-        );
     }
 }
