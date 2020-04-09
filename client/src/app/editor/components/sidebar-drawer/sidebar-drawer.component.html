@@ -59,6 +59,7 @@
             <mat-slide-toggle class="toggle-item" [formControl]="junctionEnabledFormControl"></mat-slide-toggle>
             <mat-slider
                 class="slider-item"
+                [disabled]="!junctionEnabledFormControl.value"
                 [min]="minimumJunctionDiameter"
                 [max]="maximumJunctionDiameter"
                 [value]="junctionDiameterFormControl.value"
