@@ -192,6 +192,7 @@ export class ToolEraserService extends Tool {
                     continue;
                 }
 
+                // API requires use of bit mask
                 // tslint:disable: no-bitwise
                 const isElementAboveTopmostElement =
                     topmostElement === undefined ||
