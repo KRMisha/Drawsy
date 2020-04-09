@@ -26,7 +26,7 @@ describe('ToolSelectionCollisionService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#getElementUnderArea should filterOut the elements not in the area', () => {
+    it('#getElementsUnderArea should filter out the elements not in the area', () => {
         const areRectsIntersectingSpy = spyOn(service, 'areRectsIntersecting');
         const getElementsBoundSpy = spyOn(service, 'getElementBounds');
         const filterSpy = spyOn(drawingServiceSpyObj.svgElements, 'filter').and.callThrough();

@@ -14,9 +14,9 @@ import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-file-line-count
+// tslint:disable: no-any
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal
-// tslint:disable: no-any
 
 describe('ToolSelectionService', () => {
     let service: ToolSelectionService;
@@ -100,12 +100,6 @@ describe('ToolSelectionService', () => {
         service = TestBed.inject(ToolSelectionService);
 
         service['selectionOrigin'] = { x: 0, y: 0 };
-        // invertObjectsSelectionSpy = spyOn<any>(service, 'invertObjectsSelection').and.callThrough();
-
-        // toolSelectionStateServiceMock = ({
-        //     isMovingSelectionWithMouse: false,
-        //     selectedElements: [],
-        // } as unknown) as ToolSelectionStateService;
 
         Tool.mousePosition = { x: 69, y: 420 };
         Tool.isMouseInsideDrawing = true;

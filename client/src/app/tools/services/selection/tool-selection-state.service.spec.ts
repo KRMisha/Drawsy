@@ -33,7 +33,7 @@ describe('ToolSelectionStateService', () => {
         expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalled();
     });
 
-    it("#selectedElements should notify it's subcribers that it's value has changed", () => {
+    it('#selectedElements should notify its subcribers that its value has changed', () => {
         // tslint:disable-next-line: no-string-literal
         const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
         service.selectedElements = [];

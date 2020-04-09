@@ -8,8 +8,8 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Subject } from 'rxjs';
 
-// tslint:disable: no-string-literal
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 
 describe('ToolSelectionUiService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;

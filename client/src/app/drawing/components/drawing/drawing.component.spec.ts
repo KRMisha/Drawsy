@@ -28,9 +28,9 @@ describe('DrawingComponent', () => {
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
     let colorSpyObj: jasmine.SpyObj<Color>;
 
-    const toggleGridSubject = new Subject<Color>();
-    const increaseGridSizeSubject = new Subject<Color>();
-    const decreaseGridSizeSubject = new Subject<Color>();
+    const toggleGridSubject = new Subject<void>();
+    const increaseGridSizeSubject = new Subject<void>();
+    const decreaseGridSizeSubject = new Subject<void>();
 
     const returnedDimensions: Vec2 = { x: 10, y: 10 };
     beforeEach(async(() => {

@@ -5,9 +5,9 @@
 // import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 // import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 
+// // tslint:disable: no-any
 // // tslint:disable: no-empty
 // // tslint:disable: no-string-literal
-// // tslint:disable: no-any
 
 // describe('ToolSelectionMoverService', () => {
 //     const moveOffset = 3;
