@@ -1,132 +1,149 @@
 import { Injectable } from '@angular/core';
 import { TransformElementsCommand } from '@app/drawing/classes/commands/transform-elements-command';
-import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
+import { SelectionState } from '@app/tools/enums/selection-state.enum';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolSelectionMoverService {
-    totalSelectionMoveOffset: Vec2 = { x: 0, y: 0 };
+    private arrowKeysHeldStates: boolean[] = [false, false, false, false];
 
-    private isArrowUpHeld = false;
-    private isArrowDownHeld = false;
-    private isArrowLeftHeld = false;
-    private isArrowRightHeld = false;
+    private movingTimeoutId: number;
+    private movingIntervalId: number;
 
-    private movingIntervalId?: number;
-    private movingTimeout?: number;
+    private selectedElementTransformsBeforeMove: SVGTransform[][];
 
     constructor(
-        private drawingService: DrawingService,
         private toolSelectionStateService: ToolSelectionStateService,
-        private toolSelectionUiService: ToolSelectionUiService,
+        private toolSelectionCollisionService: ToolSelectionCollisionService,
+        private toolSelectionTransformService: ToolSelectionTransformService,
         private historyService: HistoryService
     ) {}
 
-    moveSelection(currentMousePos: Vec2, lastMousePos: Vec2): void {
-        const deltaMousePos: Vec2 = {
-            x: currentMousePos.x - lastMousePos.x,
-            y: currentMousePos.y - lastMousePos.y,
-        };
-        this.totalSelectionMoveOffset.x += deltaMousePos.x;
-        this.totalSelectionMoveOffset.y += deltaMousePos.y;
-
-        this.moveElementList(this.toolSelectionStateService.selectedElements, deltaMousePos);
-        this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
-        this.toolSelectionStateService.updateSelectionRect();
-    }
-
     onKeyDown(event: KeyboardEvent): void {
-        this.setArrowStateFromEvent(event, true);
-        const canAppendMatrix =
-            !this.toolSelectionStateService.isMovingSelectionWithArrows &&
-            !this.toolSelectionStateService.isMovingSelectionWithMouse &&
-            (this.isArrowUpHeld || this.isArrowDownHeld || this.isArrowLeftHeld || this.isArrowRightHeld);
-        if (!canAppendMatrix) {
+        const isArrowKey = event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight';
+        if (!isArrowKey) {
             return;
         }
-        this.drawingService.appendNewMatrixToElements(this.toolSelectionStateService.selectedElements);
-        this.toolSelectionStateService.isMovingSelectionWithArrows = true;
-        this.moveSelectionInArrowDirection();
+
+        this.setArrowStateFromEvent(event, true);
+
+        const isNewSelectionMove =
+            this.toolSelectionStateService.state === SelectionState.None && this.arrowKeysHeldStates.some((value: boolean) => value);
+        if (isNewSelectionMove) {
+            this.startMovingSelectionWithArrows();
+        }
+
+        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
+            event.preventDefault();
+        }
+    }
+
+    onKeyUp(event: KeyboardEvent): void {
+        if (this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows) {
+            return;
+        }
+
+        this.setArrowStateFromEvent(event, false);
+
+        const hasStoppedMovingWithKeys = this.arrowKeysHeldStates.every((value: boolean) => !value);
+        if (hasStoppedMovingWithKeys) {
+            this.stopMovingSelectionWithArrows();
+        }
+    }
+
+    onToolDeselection(): void {
+        this.stopMovingSelectionWithArrows();
+        this.arrowKeysHeldStates.fill(false);
+    }
+
+    startMovingSelection(): void {
+        this.selectedElementTransformsBeforeMove = this.toolSelectionTransformService.getElementListTransformsCopy(
+            this.toolSelectionStateService.selectedElements
+        );
+        this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
+    }
+
+    moveSelection(moveOffset: Vec2): void {
+        for (const element of this.toolSelectionStateService.selectedElements) {
+            const translateTransformIndex = 0;
+            const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+            element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
+        }
+        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+            this.toolSelectionStateService.selectedElements
+        );
+    }
+
+    stopMovingSelection(): void {
+        this.toolSelectionStateService.state = SelectionState.None;
+
+        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
+        this.historyService.addCommand(
+            new TransformElementsCommand(
+                selectedElementsCopy,
+                this.selectedElementTransformsBeforeMove,
+                this.toolSelectionTransformService.getElementListTransformsCopy(this.toolSelectionStateService.selectedElements)
+            )
+        );
+    }
+
+    private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
+        switch (event.key) {
+            case 'ArrowUp':
+                this.arrowKeysHeldStates[ArrowKey.Up] = isKeyDown;
+                break;
+            case 'ArrowDown':
+                this.arrowKeysHeldStates[ArrowKey.Down] = isKeyDown;
+                break;
+            case 'ArrowLeft':
+                this.arrowKeysHeldStates[ArrowKey.Left] = isKeyDown;
+                break;
+            case 'ArrowRight':
+                this.arrowKeysHeldStates[ArrowKey.Right] = isKeyDown;
+                break;
+        }
+    }
+
+    private startMovingSelectionWithArrows(): void {
+        this.toolSelectionStateService.state = SelectionState.MovingSelectionWithArrows;
+
+        this.startMovingSelection();
+
+        this.moveSelectionWithArrows();
+
         const timeoutDurationMs = 500;
-        this.movingTimeout = window.setTimeout(() => {
+        this.movingTimeoutId = window.setTimeout(() => {
             const movingIntervalMs = 100;
             this.movingIntervalId = window.setInterval(() => {
-                this.moveSelectionInArrowDirection();
+                this.moveSelectionWithArrows();
             }, movingIntervalMs);
         }, timeoutDurationMs);
     }
 
-    onKeyUp(event: KeyboardEvent): void {
-        this.setArrowStateFromEvent(event, false);
-        const canAddMoveCommand =
-            !this.isArrowDownHeld &&
-            !this.isArrowUpHeld &&
-            !this.isArrowLeftHeld &&
-            !this.isArrowRightHeld &&
-            !this.toolSelectionStateService.isMovingSelectionWithMouse;
-        if (canAddMoveCommand) {
-            if (this.totalSelectionMoveOffset.x !== 0 || this.totalSelectionMoveOffset.y !== 0) {
-                this.addMoveCommand();
-            }
-            if (this.movingTimeout !== undefined) {
-                window.clearTimeout(this.movingTimeout);
-                this.movingTimeout = undefined;
-            }
-            window.clearInterval(this.movingIntervalId);
-            this.movingIntervalId = undefined;
-            this.toolSelectionStateService.isMovingSelectionWithArrows = false;
-        }
-    }
-
-    addMoveCommand(): void {
-        const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
-        this.historyService.addCommand(new TransformElementsCommand(selectedElementsCopy));
-        this.totalSelectionMoveOffset = { x: 0, y: 0 };
-    }
-
-    private setArrowStateFromEvent(event: KeyboardEvent, state: boolean): void {
-        switch (event.key) {
-            case 'ArrowUp':
-                this.isArrowUpHeld = state;
-                break;
-            case 'ArrowDown':
-                this.isArrowDownHeld = state;
-                break;
-            case 'ArrowLeft':
-                this.isArrowLeftHeld = state;
-                break;
-            case 'ArrowRight':
-                this.isArrowRightHeld = state;
-                break;
-        }
-    }
-
-    private moveElementList(elements: SVGGraphicsElement[], moveOffset: Vec2): void {
-        for (const element of elements) {
-            const lastTransformIndex = element.transform.baseVal.numberOfItems - 1;
-            const newMatrix = element.transform.baseVal.getItem(lastTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(lastTransformIndex).setMatrix(newMatrix);
-        }
-    }
-
-    private moveSelectionInArrowDirection(): void {
-        const moveDirection: Vec2 = { x: 0, y: 0 };
+    private moveSelectionWithArrows(): void {
+        const moveOffset: Vec2 = { x: 0, y: 0 };
         const moveDelta = 3;
-        if (this.isArrowLeftHeld !== this.isArrowRightHeld) {
-            moveDirection.x = this.isArrowRightHeld ? moveDelta : -moveDelta;
+        if (this.arrowKeysHeldStates[ArrowKey.Left] !== this.arrowKeysHeldStates[ArrowKey.Right]) {
+            moveOffset.x = this.arrowKeysHeldStates[ArrowKey.Right] ? moveDelta : -moveDelta;
         }
-        if (this.isArrowUpHeld !== this.isArrowDownHeld) {
-            moveDirection.y = this.isArrowDownHeld ? moveDelta : -moveDelta;
+        if (this.arrowKeysHeldStates[ArrowKey.Up] !== this.arrowKeysHeldStates[ArrowKey.Down]) {
+            moveOffset.y = this.arrowKeysHeldStates[ArrowKey.Down] ? moveDelta : -moveDelta;
         }
 
-        this.totalSelectionMoveOffset.x += moveDirection.x;
-        this.totalSelectionMoveOffset.y += moveDirection.y;
-        this.moveElementList(this.toolSelectionStateService.selectedElements, moveDirection);
-        this.toolSelectionUiService.updateSvgSelectedShapesRect(this.toolSelectionStateService.selectedElements);
+        this.moveSelection(moveOffset);
+    }
+
+    private stopMovingSelectionWithArrows(): void {
+        this.stopMovingSelection();
+
+        window.clearTimeout(this.movingTimeoutId);
+        window.clearInterval(this.movingIntervalId);
     }
 }

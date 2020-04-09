@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Rect } from '@app/shared/classes/rect';
+import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { Subject } from 'rxjs';
 
@@ -7,22 +8,17 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class ToolSelectionStateService {
-    isMovingSelectionWithArrows = false;
-    isMovingSelectionWithMouse = false;
+    state = SelectionState.None;
 
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
-    private _selectionRect?: Rect; // tslint:disable-line: variable-name
+    private _selectedElementsRect?: Rect; // tslint:disable-line: variable-name
 
-    private selectedElementsChangedSource = new Subject<SVGGraphicsElement[]>();
+    private selectedElementsRectChangedSource = new Subject<Rect | undefined>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
-    selectedElementsChanged$ = this.selectedElementsChangedSource.asObservable(); // tslint:disable-line: member-ordering
+    selectedElementsRectChanged$ = this.selectedElementsRectChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
     constructor(private toolSelectionCollisionService: ToolSelectionCollisionService) {}
-
-    updateSelectionRect(): void {
-        this._selectionRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
-    }
 
     get selectedElements(): SVGGraphicsElement[] {
         return this._selectedElements;
@@ -30,11 +26,16 @@ export class ToolSelectionStateService {
 
     set selectedElements(selectedElements: SVGGraphicsElement[]) {
         this._selectedElements = selectedElements;
-        this.updateSelectionRect();
-        this.selectedElementsChangedSource.next(selectedElements);
+        this._selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
+        this.selectedElementsRectChangedSource.next(this._selectedElementsRect);
     }
 
-    get selectionRect(): Rect | undefined {
-        return this._selectionRect;
+    get selectedElementsRect(): Rect | undefined {
+        return this._selectedElementsRect;
+    }
+
+    set selectedElementsRect(rect: Rect | undefined) {
+        this._selectedElementsRect = rect;
+        this.selectedElementsRectChangedSource.next(this._selectedElementsRect);
     }
 }

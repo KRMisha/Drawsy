@@ -80,6 +80,13 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         }
     }
 
+    @HostListener('document:wheel', ['$event'])
+    onScroll(event: WheelEvent): void {
+        if (!this.modalService.isModalPresent) {
+            this.currentToolService.onScroll(event);
+        }
+    }
+
     @HostListener('document:touchmove', ['$event'])
     onTouchMove(event: TouchEvent): void {
         this.onMouseMove(TouchService.getMouseEventFromTouchEvent(event));

@@ -73,7 +73,7 @@ describe('ToolBrush', () => {
         Tool.isLeftMouseButtonDown = true;
         Tool.isMouseInsideDrawing = true;
 
-        toolBrush.onMouseMove();
+        toolBrush.onMouseMove({} as MouseEvent);
 
         expect(updatePathSpy).toHaveBeenCalled();
     });
@@ -82,7 +82,7 @@ describe('ToolBrush', () => {
         Tool.isLeftMouseButtonDown = false;
         Tool.isMouseInsideDrawing = true;
 
-        toolBrush.onMouseMove();
+        toolBrush.onMouseMove({} as MouseEvent);
 
         expect(updatePathSpy).not.toHaveBeenCalled();
     });

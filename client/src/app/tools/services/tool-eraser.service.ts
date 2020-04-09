@@ -15,7 +15,6 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private eraserSize = ToolDefaults.defaultEraserSize;
     private svgEraserElement: SVGRectElement;
 
     private svgElementUnderCursor?: SVGGraphicsElement = undefined;
@@ -40,7 +39,7 @@ export class ToolEraserService extends Tool {
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         const msDelayBetweenCalls = 16;
         this.updateEraserRect();
         if (this.timerId === undefined) {
@@ -82,7 +81,7 @@ export class ToolEraserService extends Tool {
 
     update(): void {
         this.timerId = undefined;
-        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
+        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.eraserRect);
 
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
@@ -126,14 +125,19 @@ export class ToolEraserService extends Tool {
     }
 
     private updateEraserRect(): void {
-        this.eraserSize = this.settings.eraserSize!; // tslint:disable-line: no-non-null-assertion
+        // tslint:disable: no-non-null-assertion
         this.eraserRect = {
-            x: Tool.mousePosition.x - this.eraserSize / 2,
-            y: Tool.mousePosition.y - this.eraserSize / 2,
-            width: this.eraserSize,
-            height: this.eraserSize,
+            x: Tool.mousePosition.x - this.settings.eraserSize! / 2,
+            y: Tool.mousePosition.y - this.settings.eraserSize! / 2,
+            width: this.settings.eraserSize!,
+            height: this.settings.eraserSize!,
         };
-        this.updateSvgRectFromRect(this.svgEraserElement, this.eraserRect);
+        // tslint:enable: no-non-null-assertion
+
+        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
@@ -166,13 +170,6 @@ export class ToolEraserService extends Tool {
         this.renderer.setAttribute(element, 'stroke-width', borderWidth.toString());
     }
 
-    private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
-        this.renderer.setAttribute(svgRect, 'x', rect.x.toString());
-        this.renderer.setAttribute(svgRect, 'y', rect.y.toString());
-        this.renderer.setAttribute(svgRect, 'width', rect.width.toString());
-        this.renderer.setAttribute(svgRect, 'height', rect.height.toString());
-    }
-
     private restoreElementUnderCursorAttributes(): void {
         if (this.svgElementUnderCursor !== undefined) {
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
@@ -180,46 +177,29 @@ export class ToolEraserService extends Tool {
         }
     }
 
-    private getElementUnderAreaPixelPerfect(elements: SVGGraphicsElement[], area: Rect): SVGGraphicsElement | undefined {
+    private getElementUnderAreaPixelPerfect(area: Rect): SVGGraphicsElement | undefined {
         const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
 
-        const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
-            elementIndices.set(this.drawingService.svgElements[i], i);
-        }
-
-        const availableElementsSet = new Set<SVGGraphicsElement>(elements);
-
         let topmostElement: SVGGraphicsElement | undefined;
-        let topmostElementIndex = 0;
-
         for (let i = 0; i < area.width; i++) {
             for (let j = 0; j < area.height; j++) {
-                const x = drawingRect.x + area.x + i;
-                const y = drawingRect.y + area.y + j;
-
                 // Function does not exist in Renderer2
-                let elementUnderPoint = (document.elementFromPoint(x, y) || undefined) as SVGGraphicsElement;
+                const elementUnderPoint = this.drawingService.findDrawingChildElement(
+                    document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j)
+                );
 
-                if (elementUnderPoint !== undefined && elementUnderPoint.parentElement instanceof SVGGraphicsElement) {
-                    const parentElement = elementUnderPoint.parentElement;
-                    if (availableElementsSet.has(parentElement)) {
-                        elementUnderPoint = parentElement;
-                    }
-                }
-
-                if (
-                    elementUnderPoint === undefined ||
-                    !elementIndices.has(elementUnderPoint) ||
-                    !availableElementsSet.has(elementUnderPoint)
-                ) {
+                if (elementUnderPoint === undefined || elementUnderPoint === topmostElement) {
                     continue;
                 }
 
-                const elementUnderPointIndex = elementIndices.get(elementUnderPoint) as number;
-                if (topmostElement === undefined || elementUnderPointIndex > topmostElementIndex) {
+                // API requires use of bit mask
+                // tslint:disable: no-bitwise
+                const isElementAboveTopmostElement =
+                    topmostElement === undefined ||
+                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING;
+                // tslint:enable: no-bitwise
+                if (isElementAboveTopmostElement) {
                     topmostElement = elementUnderPoint;
-                    topmostElementIndex = elementUnderPointIndex;
                 }
             }
         }

@@ -22,8 +22,13 @@ export class ToolRecolorService extends Tool {
 
     // Impertinent warning because of null to undefined stylistic conversions
     // tslint:disable-next-line: cyclomatic-complexity
-    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
+    onMouseDown(event: MouseEvent): void {
         if (event.button !== MouseButton.Left && event.button !== MouseButton.Right) {
+            return;
+        }
+
+        const element = this.drawingService.findDrawingChildElement(event.target);
+        if (element === undefined) {
             return;
         }
 
@@ -38,9 +43,9 @@ export class ToolRecolorService extends Tool {
                 const isLeftClick = event.button === MouseButton.Left;
                 const attributeToChange = isLeftClick ? 'fill' : 'stroke';
                 const colorToApply = isLeftClick ? this.colorService.primaryColor : this.colorService.secondaryColor;
-                const attributeValue = element.getAttribute(attributeToChange) || undefined;
+                const attributeValue = element.getAttribute(attributeToChange);
 
-                if (attributeValue !== undefined && attributeValue !== 'none') {
+                if (attributeValue !== null && attributeValue !== 'none') {
                     this.renderer.setAttribute(element, attributeToChange, colorToApply.toRgbaString());
                 }
                 break;

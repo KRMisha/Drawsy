@@ -50,7 +50,7 @@ describe('Tool', () => {
 
     it('#onMouseMove should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onMouseMove').and.callThrough();
-        tool.onMouseMove();
+        tool.onMouseMove({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
@@ -105,12 +105,6 @@ describe('Tool', () => {
     it('#onSecondaryColorChange should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onSecondaryColorChange').and.callThrough();
         tool.onSecondaryColorChange({} as Color);
-        expect(methodStubSpy).toHaveBeenCalled();
-    });
-
-    it('#onElementClick should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onElementClick').and.callThrough();
-        tool.onElementClick({} as MouseEvent, {} as SVGGraphicsElement);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
