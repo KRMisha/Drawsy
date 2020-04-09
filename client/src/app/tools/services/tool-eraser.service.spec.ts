@@ -220,13 +220,10 @@ describe('ToolEraserService', () => {
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
 
-    it('#updateEraserRect should update the eraserSize and eraserRect with the new values', () => {
-        const expectedValue = 50;
-        service['settings'].eraserSize = expectedValue;
+    it('#updateEraserRect should update the eraserRect with the new value', () => {
         const unwantedEraserRect = {} as Rect;
         service['eraserRect'] = unwantedEraserRect;
         service['updateEraserRect']();
-        expect(service['eraserSize']).toEqual(expectedValue);
         expect(service['eraserRect']).not.toEqual(unwantedEraserRect);
     });
 

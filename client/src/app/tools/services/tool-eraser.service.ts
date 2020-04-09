@@ -126,11 +126,18 @@ export class ToolEraserService extends Tool {
 
     private updateEraserRect(): void {
         // tslint:disable: no-non-null-assertion
-        this.renderer.setAttribute(this.svgEraserElement, 'x', `${Tool.mousePosition.x - this.settings.eraserSize! / 2}`);
-        this.renderer.setAttribute(this.svgEraserElement, 'y', `${Tool.mousePosition.y - this.settings.eraserSize! / 2}`);
-        this.renderer.setAttribute(this.svgEraserElement, 'width', this.settings.eraserSize!.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'height', this.settings.eraserSize!.toString());
+        this.eraserRect = {
+            x: Tool.mousePosition.x - this.settings.eraserSize! / 2,
+            y: Tool.mousePosition.y - this.settings.eraserSize! / 2,
+            width: this.settings.eraserSize!,
+            height: this.settings.eraserSize!,
+        };
         // tslint:enable: no-non-null-assertion
+
+        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
