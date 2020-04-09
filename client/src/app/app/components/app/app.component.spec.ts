@@ -6,7 +6,6 @@ import { AppComponent } from '@app/app/components/app/app.component';
 import { ThemeService } from '@app/app/services/theme.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
-
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-classes-per-file
@@ -58,8 +57,7 @@ describe('AppComponent', () => {
     });
 
     it("#ngOnInit should call iconRegistry's addSvgIcon for each icon name (29)", () => {
-        // tslint:disable-next-line: no-magic-numbers
-        expect(iconRegistrySpyObj.addSvgIcon).toHaveBeenCalledTimes(29);
+        expect(iconRegistrySpyObj.addSvgIcon).toHaveBeenCalledTimes(29); // tslint:disable-line: no-magic-numbers
     });
 
     it("#ngOnInit should subscribe to shortcutService's openNewDrawingShortcut and openGalleryShortcut", async(() => {
