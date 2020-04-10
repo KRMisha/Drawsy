@@ -6,6 +6,7 @@ import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ExportDrawingService } from '@app/modals/services/export-drawing.service';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
+import EmailValidation from '@common/validation/email-validation';
 import MetadataValidation from '@common/validation/metadata-validation';
 
 @Component({
@@ -20,12 +21,15 @@ export class ExportDrawingComponent {
 
     drawingFilter = DrawingFilter.None;
     fileType = FileType.Svg;
+    isSentByEmail = false;
 
     titleFormControl = new FormControl(this.drawingService.title, [
         Validators.required,
         Validators.pattern(MetadataValidation.contentRegex),
         Validators.maxLength(MetadataValidation.maxTitleLength),
     ]);
+
+    emailFormControl = new FormControl('', [Validators.required, Validators.pattern(EmailValidation.emailRegex)]);
 
     @ViewChild('appDrawingPreview') private drawingPreview: DrawingPreviewComponent;
 
@@ -38,10 +42,14 @@ export class ExportDrawingComponent {
     onSubmit(): void {
         this.drawingService.title = this.titleFormControl.value;
         this.changeDetectorRef.detectChanges();
-        this.exportDrawingService.exportDrawing(this.drawingPreview.drawingRoot.nativeElement, this.fileType);
+        this.exportDrawingService.sendEmail(this.drawingPreview.drawingRoot.nativeElement, this.emailFormControl.value, this.fileType);
     }
 
     getErrorMessage(): string {
         return ErrorMessageService.getErrorMessage(this.titleFormControl, 'A-Z, a-z, 0-9');
+    }
+
+    get isInformationValid(): boolean {
+        return this.isSentByEmail ? this.titleFormControl.valid && this.emailFormControl.valid : this.titleFormControl.valid;
     }
 }

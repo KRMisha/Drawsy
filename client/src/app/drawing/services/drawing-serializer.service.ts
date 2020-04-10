@@ -60,6 +60,12 @@ export class DrawingSerializerService {
             : this.exportRasterDrawing(drawingRoot, filename, fileType);
     }
 
+    exportAsBlob(drawingRoot: SVGSVGElement): Blob {
+        const xmlSerializer = new XMLSerializer();
+        const content = xmlSerializer.serializeToString(drawingRoot);
+        return new Blob([content], { type: 'image/svg+xml' });
+    }
+
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
         const domParser = new DOMParser();
         const document = domParser.parseFromString(content, 'image/svg+xml');

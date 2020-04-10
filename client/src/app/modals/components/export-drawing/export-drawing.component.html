@@ -22,7 +22,7 @@
 
             <div class="file-item">
                 <h4 class="file-type">Type de fichier&nbsp;:</h4>
-                <mat-button-toggle-group [(ngModel)]="fileType" [ngModelOptions]="{ standalone: true }">
+                <mat-button-toggle-group class="toggle-group" [(ngModel)]="fileType" [ngModelOptions]="{ standalone: true }">
                     <mat-button-toggle [class.theme-selected-button]="fileType === FileType.Svg" [value]="FileType.Svg">
                         SVG
                     </mat-button-toggle>
@@ -35,6 +35,19 @@
                 </mat-button-toggle-group>
             </div>
 
+            <div class="email-item">
+                <div class="email-checkbox">
+                    <h4 class="email-title">Envoi par courriel&nbsp;</h4>
+                    <mat-checkbox [(ngModel)]="isSentByEmail" [ngModelOptions]="{ standalone: true }"></mat-checkbox>
+                </div>
+
+                <mat-form-field class="email-input">
+                    <mat-label>Adresse courriel</mat-label>
+                    <input matInput [formControl]="emailFormControl" />
+                    <mat-error *ngIf="emailFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+                </mat-form-field>
+            </div>
+
             <mat-card class="preview-item">
                 <mat-card-title>Aperçu</mat-card-title>
                 <app-drawing-preview #appDrawingPreview [drawingFilter]="drawingFilter" class="drawing-preview"></app-drawing-preview>
@@ -44,8 +57,8 @@
 
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
-        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="titleFormControl.invalid" cdkFocusInitial>
-            Exporter le dessin
+        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="!isInformationValid" cdkFocusInitial>
+            {{ isSentByEmail ? 'Envoyer par courriel' : 'Exporter le dessin' }}
         </button>
     </mat-dialog-actions>
 </form>

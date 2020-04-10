@@ -44,6 +44,10 @@ export class ServerService {
         return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
+    sendEmail(form: FormData): Observable<void> {
+        return this.httpService.post<void>(serverUrl + '/send-email', form).pipe(catchError(this.alertRequestError('send-email')));
+    }
+
     private alertRequestError(request: string): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage: string;
