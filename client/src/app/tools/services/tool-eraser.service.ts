@@ -111,9 +111,9 @@ export class ToolEraserService extends Tool {
 
     onToolSelection(): void {
         this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgEraserElement, 'fill', '#fafafa');
-        this.renderer.setAttribute(this.svgEraserElement, 'stroke', '#424242');
+        this.renderer.setAttribute(this.svgEraserElement, 'fill', 'rgb(255, 255, 255)');
         this.renderer.setAttribute(this.svgEraserElement, 'stroke-width', '1');
+        this.renderer.addClass(this.svgEraserElement, 'theme-eraser');
         this.drawingService.addUiElement(this.svgEraserElement);
         this.updateEraserRect();
     }
