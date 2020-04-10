@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { ClipboardService } from '@app/drawing/services/clipboard.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
@@ -153,12 +154,17 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private polygonSideCountChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
 
+    private copySelectionShortcutSubscription: Subscription;
+    private pasteSelectionShortcutSubscription: Subscription;
+    private cutSelectionShortcutSubscription: Subscription;
+    private duplicateSelectionShortcutSubscription: Subscription;
     private undoShortcutSubscription: Subscription;
     private redoShortcutSubscription: Subscription;
 
     constructor(
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
+        private clipboardService: ClipboardService,
         private historyService: HistoryService
     ) {}
 
@@ -205,6 +211,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
+            this.copyCommand();
+        });
+        this.pasteSelectionShortcutSubscription = this.shortcutService.pasteSelectionShortcut$.subscribe(() => {
+            this.pasteCommand();
+        });
+        this.cutSelectionShortcutSubscription = this.shortcutService.cutSelectionShortcut$.subscribe(() => {
+            this.cutCommand();
+        });
+        this.duplicateSelectionShortcutSubscription = this.shortcutService.duplicateSelectionShortcut$.subscribe(() => {
+            this.duplicateCommand();
+        });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
             this.undoCommand();
         });
@@ -223,6 +241,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
 
+        this.copySelectionShortcutSubscription.unsubscribe();
+        this.pasteSelectionShortcutSubscription.unsubscribe();
+        this.cutSelectionShortcutSubscription.unsubscribe();
+        this.duplicateSelectionShortcutSubscription.unsubscribe();
         this.undoShortcutSubscription.unsubscribe();
         this.redoShortcutSubscription.unsubscribe();
     }
@@ -252,6 +274,22 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolSettings.eraserSize !== undefined) {
             this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
+    }
+
+    copyCommand(): void {
+        this.clipboardService.copy();
+    }
+
+    pasteCommand(): void {
+        this.clipboardService.paste();
+    }
+
+    cutCommand(): void {
+        this.clipboardService.cut();
+    }
+
+    duplicateCommand(): void {
+        this.clipboardService.duplicate();
     }
 
     undoCommand(): void {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { DrawingService } from './drawing.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
 const placementPositionOffsetIncrement = 25;
 
@@ -16,21 +17,19 @@ export class ClipboardService {
     constructor(
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionMoverService: ToolSelectionMoverService,
+        private toolSelectionTransformService: ToolSelectionTransformService,
         private drawingService: DrawingService
     ) {}
 
     copy(): void {
         this.placementPositionOffset = 0;
-        this.copiedElements = [];
-        for (const element of this.toolSelectionStateService.selectedElements) {
-            this.copiedElements.push(element.cloneNode(true) as SVGGraphicsElement);
-        }
+        this.copiedElements = [...this.toolSelectionStateService.selectedElements];
     }
 
     paste(): void {
         this.placeElements(this.copiedElements);
-
         this.placementPositionOffset += placementPositionOffsetIncrement;
+        this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
         this.toolSelectionMoverService.moveSelection({ x: this.placementPositionOffset, y: this.placementPositionOffset });
     }
 
@@ -40,11 +39,8 @@ export class ClipboardService {
     }
 
     duplicate(): void {
-        const selectedElementsCopy: SVGGraphicsElement[] = [];
-        for (const element of this.toolSelectionStateService.selectedElements) {
-            selectedElementsCopy.push(element.cloneNode(true) as SVGGraphicsElement);
-        }
-        this.placeElements(selectedElementsCopy);
+        this.placeElements(this.toolSelectionStateService.selectedElements);
+        this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
         this.toolSelectionMoverService.moveSelection({ x: placementPositionOffsetIncrement, y: placementPositionOffsetIncrement });
     }
 
@@ -56,9 +52,13 @@ export class ClipboardService {
     }
 
     private placeElements(elements: SVGGraphicsElement[]): void {
+        console.log('a');
+        const elementCopies: SVGGraphicsElement[] = [];
         for (const element of elements) {
-            this.drawingService.addElement(element);
+            const elementCopy = element.cloneNode(true) as SVGGraphicsElement;
+            this.drawingService.addElement(elementCopy);
+            elementCopies.push(elementCopy)
         }
-        this.toolSelectionStateService.selectedElements = [...elements];
+        this.toolSelectionStateService.selectedElements = elementCopies;
     }
 }
