@@ -190,6 +190,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     deleteSelection(): void {
+        if (this.toolSelectionStateService.selectedElements.length === 0) {
+            return;
+        }
+
         const elementIndices = new Map<SVGGraphicsElement, number>();
         for (let i = 0; i < this.drawingService.svgElements.length; i++) {
             elementIndices.set(this.drawingService.svgElements[i], i);
