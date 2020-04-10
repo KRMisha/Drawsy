@@ -160,6 +160,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onKeyDown(event);
         if (event.key === 'Delete') {
             this.deleteSelection();
+        } else if (event.key === 'Escape') {
+            this.toolSelectionStateService.selectedElements = [];
         }
     }
 
