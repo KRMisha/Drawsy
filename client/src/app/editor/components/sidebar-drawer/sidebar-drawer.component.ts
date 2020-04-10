@@ -12,8 +12,8 @@ import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
-import { Subscription } from 'rxjs';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
+import { Subscription } from 'rxjs';
 
 const minimumLineWidth = 1;
 const maximumLineWidth = 500;
@@ -284,6 +284,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     pasteCommand(): void {
         this.currentToolService.currentTool = this.toolSelectionService;
+        this.resetCurrentControls();
         this.clipboardService.paste();
     }
 
