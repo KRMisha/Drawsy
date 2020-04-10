@@ -5,40 +5,40 @@ import { Command } from '@app/drawing/classes/commands/command';
     providedIn: 'root',
 })
 export class HistoryService {
-    private undoCommands: Command[] = [];
-    private redoCommands: Command[] = [];
+    private undoStack: Command[] = [];
+    private redoStack: Command[] = [];
 
     undo(): void {
-        const command = this.undoCommands.pop();
+        const command = this.undoStack.pop();
         if (command !== undefined) {
             command.undo();
-            this.redoCommands.push(command);
+            this.redoStack.push(command);
         }
     }
 
     redo(): void {
-        const command = this.redoCommands.pop();
+        const command = this.redoStack.pop();
         if (command !== undefined) {
             command.redo();
-            this.undoCommands.push(command);
+            this.undoStack.push(command);
         }
     }
 
     addCommand(command: Command): void {
-        this.undoCommands.push(command);
-        this.redoCommands = [];
+        this.undoStack.push(command);
+        this.redoStack = [];
     }
 
     clearCommands(): void {
-        this.undoCommands = [];
-        this.redoCommands = [];
+        this.undoStack = [];
+        this.redoStack = [];
     }
 
-    hasUndoCommands(): boolean {
-        return this.undoCommands.length > 0;
+    canUndo(): boolean {
+        return this.undoStack.length > 0;
     }
 
-    hasRedoCommands(): boolean {
-        return this.redoCommands.length > 0;
+    canRedo(): boolean {
+        return this.redoStack.length > 0;
     }
 }
