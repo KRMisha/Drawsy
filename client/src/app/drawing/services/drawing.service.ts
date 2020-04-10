@@ -1,4 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { Subject } from 'rxjs';
@@ -83,39 +84,27 @@ export class DrawingService {
         return this._svgElements.length > 0;
     }
 
-    resetDrawing(dimensions: Vec2, backgroundColor: Color): boolean {
+    loadDrawing(drawingLoadOptions: DrawingLoadOptions): boolean {
         if (!this.clearElementsWithConfirmation()) {
             return false;
         }
 
-        this.dimensions = dimensions;
-        this.backgroundColor = backgroundColor;
+        this.dimensions = drawingLoadOptions.dimensions;
+        this.backgroundColor = drawingLoadOptions.backgroundColor;
 
-        this.id = undefined;
-        this.title = defaultTitle;
-        this.labels = [];
+        const drawingData = drawingLoadOptions.drawingData;
+        if (drawingData !== undefined) {
+            this.id = drawingData.id;
+            this.title = drawingData.title;
+            this.labels = drawingData.labels;
 
-        this.drawingLoadedSource.next();
-
-        return true;
-    }
-
-    loadDrawing(dimensions: Vec2, backgroundColor: Color,
-                id: string | undefined, title: string, labels: string[],
-                elements: SVGGraphicsElement[]): boolean {
-        if (!this.clearElementsWithConfirmation()) {
-            return false;
-        }
-
-        this.dimensions = dimensions;
-        this.backgroundColor = backgroundColor;
-
-        this.id = id;
-        this.title = title;
-        this.labels = labels;
-
-        for (const element of elements) {
-            this.addElement(element);
+            for (const element of drawingData.elements) {
+                this.addElement(element);
+            }
+        } else {
+            this.id = undefined;
+            this.title = defaultTitle;
+            this.labels = [];
         }
 
         this.drawingLoadedSource.next();

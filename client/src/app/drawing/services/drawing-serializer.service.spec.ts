@@ -40,7 +40,7 @@ describe('DrawingSerializerService', () => {
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['resetDrawing', 'addElement']);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['loadDrawing', 'addElement']);
 
         canvasSpyObj = jasmine.createSpyObj('HTMLCanvasElement', ['toDataURL']);
         canvasSpyObj.toDataURL.and.returnValue(urlMock);
@@ -148,13 +148,13 @@ describe('DrawingSerializerService', () => {
 
     it('#loadDrawing should load the drawing in the drawing service and return true if the confirmation is accepted', () => {
         const drawingServiceMock = ({
-            resetDrawing: () => {},
+            loadDrawing: () => {},
             addElement: () => {},
             id: '',
             title: '',
             labels: [],
         } as unknown) as DrawingService;
-        const resetDrawingSpy = spyOn(drawingServiceMock, 'resetDrawing').and.returnValue(true);
+        const loadDrawingSpy = spyOn(drawingServiceMock, 'loadDrawing').and.returnValue(true);
         const addElementSpy = spyOn(drawingServiceMock, 'addElement');
         service['drawingService'] = drawingServiceMock;
 
@@ -196,7 +196,7 @@ describe('DrawingSerializerService', () => {
         };
 
         const returnedValue = service.loadDrawing(svgFileContainerValue);
-        expect(resetDrawingSpy).toHaveBeenCalledWith(expectedDimensions, backgroundColor);
+        expect(loadDrawingSpy).toHaveBeenCalledWith(expectedDimensions, backgroundColor);
         expect(drawingServiceMock.id).toEqual(svgFileContainerValue.id);
         expect(drawingServiceMock.title).toEqual(svgFileContainerValue.title);
         expect(drawingServiceMock.labels).toEqual(svgFileContainerValue.labels);
@@ -207,13 +207,13 @@ describe('DrawingSerializerService', () => {
 
     it('#loadDrawing should not load the drawing in the drawing service and should return false if the confirmation is declined', () => {
         const drawingServiceMock = ({
-            resetDrawing: () => {},
+            loadDrawing: () => {},
             addElement: () => {},
             id: '',
             title: '',
             labels: [],
         } as unknown) as DrawingService;
-        const resetDrawingSpy = spyOn(drawingServiceMock, 'resetDrawing').and.returnValue(false);
+        const loadDrawingSpy = spyOn(drawingServiceMock, 'loadDrawing').and.returnValue(false);
         const addElementSpy = spyOn(drawingServiceMock, 'addElement');
         service['drawingService'] = drawingServiceMock;
 
@@ -241,7 +241,7 @@ describe('DrawingSerializerService', () => {
         };
 
         const returnedValue = service.loadDrawing(svgFileContainerValue);
-        expect(resetDrawingSpy).toHaveBeenCalledWith(expectedDimensions, backgroundColor);
+        expect(loadDrawingSpy).toHaveBeenCalledWith(expectedDimensions, backgroundColor);
         expect(drawingServiceMock.id).not.toEqual(svgFileContainerValue.id);
         expect(drawingServiceMock.title).not.toEqual(svgFileContainerValue.title);
         expect(drawingServiceMock.labels).not.toEqual(svgFileContainerValue.labels);

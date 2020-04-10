@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import DrawingDimensionsValidation from '@app/drawing/constants/drawing-dimensions-validation';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
@@ -57,8 +58,12 @@ export class NewDrawingComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        const dimensions = { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value };
-        if (this.drawingFormGroup.valid && this.drawingService.resetDrawing(dimensions, this.backgroundColor)) {
+        const drawingLoadOptions: DrawingLoadOptions = {
+            dimensions: { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value },
+            backgroundColor: this.backgroundColor,
+        };
+
+        if (this.drawingFormGroup.valid && this.drawingService.loadDrawing(drawingLoadOptions)) {
             this.router.navigate(['/editor']);
         }
     }
