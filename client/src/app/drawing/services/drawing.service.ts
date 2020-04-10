@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 const defaultTitle = 'Sans titre';
@@ -25,7 +25,12 @@ export class DrawingService {
 
     private _svgElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
 
-    constructor(rendererFactory: RendererFactory2, private historyService: HistoryService) {
+    private drawingLoadedSource = new Subject<void>();
+
+    // Disable member ordering lint error for public observables initialized after private subjects
+    drawingLoaded$ = this.drawingLoadedSource.asObservable(); // tslint:disable-line: member-ordering
+
+    constructor(rendererFactory: RendererFactory2) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -56,6 +61,12 @@ export class DrawingService {
         }
     }
 
+    reappendStoredElements(): void {
+        for (const element of this._svgElements) {
+            this.renderer.appendChild(this.svgDrawingContent, element);
+        }
+    }
+
     addUiElement(element: SVGGraphicsElement): void {
         if (this.svgUserInterfaceContent !== undefined) {
             this.renderer.appendChild(this.svgUserInterfaceContent, element);
@@ -68,27 +79,12 @@ export class DrawingService {
         }
     }
 
-    reappendStoredElements(): void {
-        for (const element of this._svgElements) {
-            this.renderer.appendChild(this.svgDrawingContent, element);
-        }
-    }
-
-    clearStoredElements(): void {
-        for (let i = this._svgElements.length - 1; i >= 0; i--) {
-            this.removeElement(this._svgElements[i]);
-        }
-    }
-
     isDrawingStarted(): boolean {
         return this._svgElements.length > 0;
     }
 
-    confirmNewDrawing(dimensions: Vec2, backgroundColor: Color): boolean {
-        const confirmationMessage =
-            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
-            'Désirez-vous continuer et abandonner vos changements?';
-        if (this.isDrawingStarted() && !confirm(confirmationMessage)) {
+    resetDrawing(dimensions: Vec2, backgroundColor: Color): boolean {
+        if (!this.clearElementsWithConfirmation()) {
             return false;
         }
 
@@ -99,8 +95,31 @@ export class DrawingService {
         this.title = defaultTitle;
         this.labels = [];
 
-        this.clearStoredElements();
-        this.historyService.clearCommands();
+        this.drawingLoadedSource.next();
+
+        return true;
+    }
+
+    loadDrawing(dimensions: Vec2, backgroundColor: Color,
+                id: string | undefined, title: string, labels: string[],
+                elements: SVGGraphicsElement[]): boolean {
+        if (!this.clearElementsWithConfirmation()) {
+            return false;
+        }
+
+        this.dimensions = dimensions;
+        this.backgroundColor = backgroundColor;
+
+        this.id = id;
+        this.title = title;
+        this.labels = labels;
+
+        for (const element of elements) {
+            this.addElement(element);
+        }
+
+        this.drawingLoadedSource.next();
+
         return true;
     }
 
@@ -118,5 +137,23 @@ export class DrawingService {
 
     get svgElements(): SVGGraphicsElement[] {
         return this._svgElements;
+    }
+
+    private clearElementsWithConfirmation(): boolean {
+        const confirmationMessage =
+            'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
+            'Désirez-vous continuer et abandonner vos changements?';
+        if (this.isDrawingStarted() && !confirm(confirmationMessage)) {
+            return false;
+        }
+
+        this.clearElements();
+        return true;
+    }
+
+    private clearElements(): void {
+        for (let i = this._svgElements.length - 1; i >= 0; i--) {
+            this.removeElement(this._svgElements[i]);
+        }
     }
 }

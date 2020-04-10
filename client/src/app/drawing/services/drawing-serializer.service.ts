@@ -33,25 +33,18 @@ export class DrawingSerializerService {
             y: svgFileContainer.drawingRoot.viewBox.baseVal.height,
         };
 
-        // Imported format will always have rect with fill because the format is controlled
-        // tslint:disable-next-line: no-non-null-assertion
-        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill')!;
-        const backgroundColor = Color.fromRgbaString(backgroundRectFillString);
+        const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill');
+        const backgroundColor = Color.fromRgbaString(backgroundRectFillString || 'rgb(255, 255, 255)');
 
-        if (!this.drawingService.confirmNewDrawing(dimensions, backgroundColor)) {
-            return false;
-        }
-
-        this.drawingService.id = svgFileContainer.id;
-        this.drawingService.title = svgFileContainer.title;
-        this.drawingService.labels = svgFileContainer.labels;
+        const [id, title, labels] = [svgFileContainer.id, svgFileContainer.title, svgFileContainer.labels];
 
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
+        const elements: SVGGraphicsElement[] = [];
         for (const element of Array.from(svgDrawingContent.children)) {
-            this.drawingService.addElement(element.cloneNode(true) as SVGGraphicsElement);
+            elements.push(element.cloneNode(true) as SVGGraphicsElement);
         }
 
-        return true;
+        return this.drawingService.loadDrawing(dimensions, backgroundColor, id, title, labels, elements);
     }
 
     exportDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): void {

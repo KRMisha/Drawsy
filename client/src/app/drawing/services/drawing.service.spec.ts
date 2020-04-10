@@ -56,10 +56,10 @@ describe('DrawingService', () => {
     });
 
     it("#addElementBefore should call and call renderer's insertBefore if the elementAfter is found in _svgElements and svgDrawingContent is not undefined", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const elementAfter = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, elementAfter];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement, elementAfter];
 
         service['_svgElements'] = svgElementsMock;
         service['svgDrawingContent'] = {} as SVGGElement;
@@ -69,10 +69,10 @@ describe('DrawingService', () => {
     });
 
     it("#addElementBefore should call, but should not call renderer's insertBefore if the elementAfter is found, but the svgDrawingContent is undefined", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const elementAfter = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, elementAfter];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement, elementAfter];
 
         service['_svgElements'] = svgElementsMock;
 
@@ -81,10 +81,10 @@ describe('DrawingService', () => {
     });
 
     it("#addElementsBefore should not call or renderer's insertBefore if the elementAfter is not found in _svgElements", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const elementAfter = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement];
 
         service['_svgElements'] = svgElementsMock;
 
@@ -93,31 +93,45 @@ describe('DrawingService', () => {
     });
 
     it("#removeElement should call renderer's removeChild if the element was found in _svgElements and svgDrawingContent is not undefined", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
         service['svgDrawingContent'] = {} as SVGGElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, testElement];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement, testElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
-        expect(renderer2SpyObj.removeChild).toHaveBeenCalledWith(svgGraphicElement, testElement);
+        expect(renderer2SpyObj.removeChild).toHaveBeenCalledWith(svgGraphicsElement, testElement);
     });
 
     it("#removeElement should not call renderer's removeChild if the element was found, but the svgDrawingContent was undefined", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement, testElement];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement, testElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
     it("#removeElement should not call renderer's removeChild if the element was not found", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement];
+        const svgElementsMock: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement];
         service['_svgElements'] = svgElementsMock;
         service.removeElement(testElement);
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
+    });
+
+    it("#reappendStoredElements should call renderer's appendChild for each of the elements of _svgElements", () => {
+        const svgGraphicsElement = {} as SVGGraphicsElement;
+        const svgElementsMock: SVGGraphicsElement[] = [
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+        ];
+        service['_svgElements'] = svgElementsMock;
+        service.reappendStoredElements();
+        expect(renderer2SpyObj.appendChild).toHaveBeenCalledTimes(svgElementsMock.length);
     });
 
     it("#addUiElement should call renderer's appendChild if svgUserInterfaceContent is not undefined", () => {
@@ -148,28 +162,14 @@ describe('DrawingService', () => {
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
     });
 
-    it("#reappendStoredElements should call renderer's appendChild for each of the elements of _svgElements", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
-        const svgElementsMock: SVGGraphicsElement[] = [
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
-        ];
-        service['_svgElements'] = svgElementsMock;
-        service.reappendStoredElements();
-        expect(renderer2SpyObj.appendChild).toHaveBeenCalledTimes(svgElementsMock.length);
-    });
-
     it("#clearStoredElements should call renderer's removeChild for each of the elements of _svgElements", () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
+        const svgGraphicsElement = {} as SVGGraphicsElement;
         const svgElementsMock: SVGGraphicsElement[] = [
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
-            svgGraphicElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
+            svgGraphicsElement,
         ];
         service['_svgElements'] = svgElementsMock;
         service.clearStoredElements();
@@ -188,26 +188,26 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(false);
     });
 
-    it('#confirmNewDrawing should return false if there is a drawing started and the user declines the message', () => {
+    it('#resetDrawing should return false if there is a drawing started and the user declines the message', () => {
         spyOn(service, 'isDrawingStarted').and.returnValue(true);
         spyOn(window, 'confirm').and.returnValue(false);
-        const actualValue = service.confirmNewDrawing({} as Vec2, {} as Color);
+        const actualValue = service.resetDrawing({} as Vec2, {} as Color);
         expect(actualValue).toEqual(false);
     });
 
-    it("#confirmNewDrawing should return true, call #clearStoredElements and call historyService's clearCommands if there is not a drawing started", () => {
+    it("#resetDrawing should return true, call #clearStoredElements and call historyService's clearCommands if there is not a drawing started", () => {
         spyOn(service, 'isDrawingStarted').and.returnValue(false);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
-        const actualValue = service.confirmNewDrawing({} as Vec2, {} as Color);
+        const actualValue = service.resetDrawing({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
         expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
     });
 
-    it("#confirmNewDrawing should return true, call #clearStoredElements and call historyService's clearCommands if the user confirms the warning message", () => {
+    it("#resetDrawing should return true, call #clearStoredElements and call historyService's clearCommands if the user confirms the warning message", () => {
         spyOn(window, 'confirm').and.returnValue(true);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
-        const actualValue = service.confirmNewDrawing({} as Vec2, {} as Color);
+        const actualValue = service.resetDrawing({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
         expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
@@ -239,8 +239,8 @@ describe('DrawingService', () => {
     });
 
     it('#get svgElements should return the cached elements', () => {
-        const svgGraphicElement = {} as SVGGraphicsElement;
-        const expectedValue: SVGGraphicsElement[] = [svgGraphicElement, svgGraphicElement];
+        const svgGraphicsElement = {} as SVGGraphicsElement;
+        const expectedValue: SVGGraphicsElement[] = [svgGraphicsElement, svgGraphicsElement];
         service['_svgElements'] = expectedValue;
         const actualValue = service.svgElements;
         expect(actualValue).toEqual(expectedValue);

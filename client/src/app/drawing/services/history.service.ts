@@ -1,12 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Command } from '@app/drawing/classes/commands/command';
+import { DrawingService } from '@app/drawing/services/drawing.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class HistoryService {
+export class HistoryService implements OnDestroy {
     private undoStack: Command[] = [];
     private redoStack: Command[] = [];
+
+    private drawingLoadedSubscription: Subscription;
+
+    constructor(private drawingService: DrawingService) {
+        this.drawingLoadedSubscription = this.drawingService.drawingLoaded$.subscribe(this.clearCommands.bind(this));
+    }
+
+    ngOnDestroy(): void {
+        this.drawingLoadedSubscription.unsubscribe();
+    }
 
     undo(): void {
         const command = this.undoStack.pop();
