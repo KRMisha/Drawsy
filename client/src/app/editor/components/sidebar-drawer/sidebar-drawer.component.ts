@@ -13,6 +13,7 @@ import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { Subscription } from 'rxjs';
+import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 
 const minimumLineWidth = 1;
 const maximumLineWidth = 500;
@@ -165,6 +166,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
         private clipboardService: ClipboardService,
+        private toolSelectionService: ToolSelectionService,
         private historyService: HistoryService
     ) {}
 
@@ -281,6 +283,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     pasteCommand(): void {
+        this.currentToolService.currentTool = this.toolSelectionService;
         this.clipboardService.paste();
     }
 
@@ -290,6 +293,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     duplicateCommand(): void {
         this.clipboardService.duplicate();
+    }
+
+    deleteCommand(): void {
+        this.toolSelectionService.deleteSelection();
     }
 
     undoCommand(): void {
@@ -316,6 +323,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     get currentToolSettings(): ToolSettings {
         return this.currentToolService.currentTool.settings;
+    }
+
+    get hasSelection(): boolean {
+        return this.clipboardService.hasSelection();
+    }
+
+    get hasCopiedElements(): boolean {
+        return this.clipboardService.hasCopiedElements();
     }
 
     get isUndoAvailable(): boolean {
