@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { DrawingService } from './drawing.service';
 import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
+import { DrawingService } from './drawing.service';
 
 const placementPositionOffsetIncrement = 25;
 
@@ -57,7 +57,7 @@ export class ClipboardService {
         for (const element of elements) {
             const elementCopy = element.cloneNode(true) as SVGGraphicsElement;
             this.drawingService.addElement(elementCopy);
-            elementCopies.push(elementCopy)
+            elementCopies.push(elementCopy);
         }
         this.toolSelectionStateService.selectedElements = elementCopies;
     }

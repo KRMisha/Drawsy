@@ -1,4 +1,6 @@
 import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
+import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -156,6 +158,9 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectionMoverService.onKeyDown(event);
+        if (event.key === 'Delete') {
+            this.deleteSelection();
+        }
     }
 
     onKeyUp(event: KeyboardEvent): void {
@@ -182,6 +187,26 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onToolDeselection();
         this.toolSelectionUiService.hideUserSelectionRect();
         this.toolSelectionUiService.resetUserSelectionRectCursor();
+    }
+
+    deleteSelection(): void {
+        const elementIndices = new Map<SVGGraphicsElement, number>();
+        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
+            elementIndices.set(this.drawingService.svgElements[i], i);
+        }
+        this.toolSelectionStateService.selectedElements.sort((element1: SVGGraphicsElement, element2: SVGGraphicsElement) => {
+            return elementIndices.get(element2)! - elementIndices.get(element1)!; // tslint:disable-line: no-non-null-assertion
+        });
+        const elementSiblingPairs: ElementSiblingPair[] = [];
+        for (const selectedElement of this.toolSelectionStateService.selectedElements) {
+            elementSiblingPairs.push({
+                element: selectedElement,
+                sibling: (selectedElement.nextSibling as SVGGraphicsElement) || undefined,
+            });
+            this.drawingService.removeElement(selectedElement);
+        }
+        this.toolSelectionStateService.selectedElements = [];
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, elementSiblingPairs));
     }
 
     private isMouseInsideSelectedElementsRect(): boolean {
