@@ -1,6 +1,6 @@
+import { EmailRequest } from '@app/classes/email-request';
 import { EmailService } from '@app/services/email.service';
 import Types from '@app/types';
-import { EmailRequest } from '@common/communication/email-request';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';

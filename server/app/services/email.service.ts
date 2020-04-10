@@ -1,5 +1,5 @@
+import { EmailRequest } from '@app/classes/email-request';
 import { HttpException } from '@app/classes/http-exception';
-import { EmailRequest } from '@common/communication/email-request';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import * as axios from 'axios';
 import * as FormData from 'form-data';
