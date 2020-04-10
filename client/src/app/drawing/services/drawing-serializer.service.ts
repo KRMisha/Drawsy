@@ -54,16 +54,23 @@ export class DrawingSerializerService {
         return true;
     }
 
-    exportDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): void {
-        fileType === FileType.Svg
-            ? this.exportVectorDrawing(drawingRoot, filename)
-            : this.exportRasterDrawing(drawingRoot, filename, fileType);
+    async downloadDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): Promise<void> {
+        const blob = await this.exportAsBlob(drawingRoot, fileType);
+
+        const link = this.renderer.createElement('a');
+        link.download = filename + '.' + fileType;
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.click();
+        window.URL.revokeObjectURL(url);
     }
 
-    exportAsBlob(drawingRoot: SVGSVGElement): Blob {
-        const xmlSerializer = new XMLSerializer();
-        const content = xmlSerializer.serializeToString(drawingRoot);
-        return new Blob([content], { type: 'image/svg+xml' });
+    async exportAsBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
+        const blob =
+            (await fileType) === FileType.Svg
+                ? this.convertVectorDrawingToBlob(drawingRoot)
+                : this.convertRasterDrawingToBlob(drawingRoot, fileType);
+        return blob;
     }
 
     private makeSvgFileContainerFromString(content: string): SvgFileContainer {
@@ -76,28 +83,20 @@ export class DrawingSerializerService {
         return { id: '', title: parsedTitle, labels: parsedLabels, drawingRoot: parsedDrawingRoot } as SvgFileContainer;
     }
 
-    private exportVectorDrawing(drawingRoot: SVGSVGElement, filename: string): void {
-        const fileExtension = '.svg';
-
+    private convertVectorDrawingToBlob(drawingRoot: SVGSVGElement): Blob {
         const xmlSerializer = new XMLSerializer();
         const content = xmlSerializer.serializeToString(drawingRoot);
-        const blob = new Blob([content], { type: 'image/svg+xml' });
-
-        const link = this.renderer.createElement('a');
-        link.download = filename + fileExtension;
-        link.href = window.URL.createObjectURL(blob);
-        link.click();
+        return new Blob([content], { type: 'image/svg+xml' });
     }
 
-    private async exportRasterDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): Promise<void> {
-        const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
+    private async convertRasterDrawingToBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
         const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
 
-        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
-
-        const link = this.renderer.createElement('a');
-        link.download = filename + fileExtension;
-        link.href = canvas.toDataURL(mimeType);
-        link.click();
+        return new Promise<Blob>((resolve: (blob: Blob) => void): void => {
+            canvas.toBlob((blob: Blob) => {
+                resolve(new Blob([blob], { type: mimeType }));
+            }, mimeType);
+        });
     }
 }

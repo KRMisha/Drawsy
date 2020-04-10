@@ -42,7 +42,9 @@ export class ExportDrawingComponent {
     onSubmit(): void {
         this.drawingService.title = this.titleFormControl.value;
         this.changeDetectorRef.detectChanges();
-        this.exportDrawingService.sendEmail(this.drawingPreview.drawingRoot.nativeElement, this.emailFormControl.value, this.fileType);
+        this.isSentByEmail
+            ? this.exportDrawingService.sendEmail(this.drawingPreview.drawingRoot.nativeElement, this.emailFormControl.value, this.fileType)
+            : this.exportDrawingService.downloadDrawing(this.drawingPreview.drawingRoot.nativeElement, this.fileType);
     }
 
     getErrorMessage(): string {

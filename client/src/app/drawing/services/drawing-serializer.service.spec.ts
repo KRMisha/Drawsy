@@ -263,7 +263,7 @@ describe('DrawingSerializerService', () => {
 
         const filenameValue = 'filename';
 
-        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Svg);
+        service.downloadDrawing(drawingPreviewRootStub, filenameValue, FileType.Svg);
         expect(xmlSerializerSpyObj.serializeToString).toHaveBeenCalledWith(drawingPreviewRootStub);
         expect(blobSpy).toHaveBeenCalledWith([contentMock], { type: 'image/svg+xml' });
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
@@ -276,7 +276,7 @@ describe('DrawingSerializerService', () => {
     it('#exportDrawing should trigger a download for a PNG if the file type is PNG', fakeAsync(() => {
         const filenameValue = 'filename';
 
-        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Png);
+        service.downloadDrawing(drawingPreviewRootStub, filenameValue, FileType.Png);
         tick();
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
         expect(anchorMock.download).toEqual(filenameValue + '.png');
@@ -288,7 +288,7 @@ describe('DrawingSerializerService', () => {
     it('#exportDrawing should trigger a download for a JPEG if the file type is JPEG', fakeAsync(() => {
         const filenameValue = 'filename';
 
-        service.exportDrawing(drawingPreviewRootStub, filenameValue, FileType.Jpeg);
+        service.downloadDrawing(drawingPreviewRootStub, filenameValue, FileType.Jpeg);
         tick();
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('a');
         expect(anchorMock.download).toEqual(filenameValue + '.jpeg');
