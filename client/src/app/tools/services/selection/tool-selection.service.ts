@@ -194,6 +194,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         for (let i = 0; i < this.drawingService.svgElements.length; i++) {
             elementIndices.set(this.drawingService.svgElements[i], i);
         }
+
         this.toolSelectionStateService.selectedElements.sort((element1: SVGGraphicsElement, element2: SVGGraphicsElement) => {
             return elementIndices.get(element2)! - elementIndices.get(element1)!; // tslint:disable-line: no-non-null-assertion
         });
@@ -206,6 +207,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             this.drawingService.removeElement(selectedElement);
         }
         this.toolSelectionStateService.selectedElements = [];
+
         this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, elementSiblingPairs));
     }
 
