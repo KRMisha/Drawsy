@@ -51,13 +51,13 @@ export class ToolSelectionRotatorService {
             const bigAngleChange = 15;
             const angleChange = scrollDirection * (isSmallAngle ? smallAngleChange : bigAngleChange);
 
-            const rect = isIndividualRotation
+            const rotationRect = isIndividualRotation
                 ? this.toolSelectionCollisionService.getElementBounds(element)
                 : this.toolSelectionStateService.selectedElementsRect;
 
             const globalCenterOfRotation = this.drawingService.drawingRoot.createSVGPoint();
-            globalCenterOfRotation.x = rect.x + rect.width / 2;
-            globalCenterOfRotation.y = rect.y + rect.height / 2;
+            globalCenterOfRotation.x = rotationRect.x + rotationRect.width / 2;
+            globalCenterOfRotation.y = rotationRect.y + rotationRect.height / 2;
 
             const globalToLocalMatrix =
                 // tslint:disable-next-line: no-non-null-assertion
@@ -85,12 +85,12 @@ export class ToolSelectionRotatorService {
             };
             // tslint:enable: no-non-null-assertion
 
-            const moveDuringRotation: Vec2 = {
+            const moveDuringRotationToCorrect: Vec2 = {
                 x: centerOfSelectedElementsRectBeforeRotation.x - centerOfSelectedElementsRectAfterRotation.x,
                 y: centerOfSelectedElementsRectBeforeRotation.y - centerOfSelectedElementsRectAfterRotation.y,
             };
 
-            this.toolSelectionMoverService.moveSelection(moveDuringRotation);
+            this.toolSelectionMoverService.moveSelection(moveDuringRotationToCorrect);
         }
 
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
