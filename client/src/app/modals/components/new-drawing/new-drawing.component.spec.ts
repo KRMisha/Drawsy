@@ -77,7 +77,7 @@ describe('NewDrawingComponent', () => {
     });
 
     it('#ngOnDestroy should unsubscribe from its subscription', () => {
-        const dimensionChangedSubscription = spyOn(component['drawingDimensionChangedSubscription'], 'unsubscribe');
+        const dimensionChangedSubscription = spyOn(component['drawingDimensionsChangedSubscription'], 'unsubscribe');
         component.ngOnDestroy();
         expect(dimensionChangedSubscription).toHaveBeenCalled();
     });
