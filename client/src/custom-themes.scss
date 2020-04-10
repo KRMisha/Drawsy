@@ -74,6 +74,16 @@ $theme-colors: (
         }
     }
 
+    .theme-user-selection-rect {
+        fill: rgba(mat-color($primary), 0.2);
+        stroke: rgba(mat-color($primary), 0.8);
+    }
+
+    .theme-selected-elements-rect,
+    .theme-eraser {
+        stroke: mat-color($primary, darker);
+    }
+
     ::-webkit-scrollbar-thumb:hover {
         background: mat-color($primary);
     }
