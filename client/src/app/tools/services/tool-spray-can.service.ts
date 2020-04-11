@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -21,9 +21,9 @@ export class ToolSprayCanService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.SprayCan);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.SprayCan);
         this.settings.sprayDiameter = ToolDefaults.defaultSprayDiameter;
         this.settings.sprayRate = ToolDefaults.defaultSprayRate;
     }
@@ -40,7 +40,7 @@ export class ToolSprayCanService extends Tool {
         }
     }
 
-    onLeave(event: MouseEvent): void {
+    onMouseLeave(event: MouseEvent): void {
         this.stopSpraying();
     }
 
@@ -93,7 +93,7 @@ export class ToolSprayCanService extends Tool {
             return;
         }
         window.clearInterval(this.intervalId);
-        this.commandService.addCommand(new AppendElementCommand(this.drawingService, this.group));
+        this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
         this.group = undefined;
     }
 }

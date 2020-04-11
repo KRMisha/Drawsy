@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { Command } from '@app/drawing/classes/commands/command';
-import { CommandService } from '@app/drawing/services/command.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 
 // tslint:disable: no-string-literal
 
-describe('CommandService', () => {
-    let service: CommandService;
+describe('HistoryService', () => {
+    let service: HistoryService;
     let commandSpyObj: jasmine.SpyObj<Command>;
     let undoCommandsPopSpy: jasmine.Spy;
     let redoCommandsPopSpy: jasmine.Spy;
@@ -13,7 +13,7 @@ describe('CommandService', () => {
     let redoCommandsPushSpy: jasmine.Spy;
 
     beforeEach(() => {
-        service = TestBed.inject(CommandService);
+        service = TestBed.inject(HistoryService);
         commandSpyObj = jasmine.createSpyObj('Command', ['undo', 'redo']);
         undoCommandsPopSpy = spyOn(service['undoCommands'], 'pop').and.callThrough();
         redoCommandsPopSpy = spyOn(service['redoCommands'], 'pop').and.callThrough();

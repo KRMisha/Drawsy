@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
@@ -15,15 +15,20 @@ export class ToolRecolorService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Recolor);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Recolor);
     }
 
     // Impertinent warning because of null to undefined stylistic conversions
     // tslint:disable-next-line: cyclomatic-complexity
-    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {
+    onMouseDown(event: MouseEvent): void {
         if (event.button !== MouseButton.Left && event.button !== MouseButton.Right) {
+            return;
+        }
+
+        const element = this.drawingService.findDrawingChildElement(event.target);
+        if (element === undefined) {
             return;
         }
 
@@ -38,9 +43,9 @@ export class ToolRecolorService extends Tool {
                 const isLeftClick = event.button === MouseButton.Left;
                 const attributeToChange = isLeftClick ? 'fill' : 'stroke';
                 const colorToApply = isLeftClick ? this.colorService.primaryColor : this.colorService.secondaryColor;
-                const attributeValue = element.getAttribute(attributeToChange) || undefined;
+                const attributeValue = element.getAttribute(attributeToChange);
 
-                if (attributeValue !== undefined && attributeValue !== 'none') {
+                if (attributeValue !== null && attributeValue !== 'none') {
                     this.renderer.setAttribute(element, attributeToChange, colorToApply.toRgbaString());
                 }
                 break;
@@ -60,6 +65,6 @@ export class ToolRecolorService extends Tool {
         const strokeAfter = element.getAttribute('stroke') || undefined;
         const fillAfter = element.getAttribute('fill') || undefined;
 
-        this.commandService.addCommand(new RecolorCommand(element, strokeBefore, fillBefore, strokeAfter, fillAfter));
+        this.historyService.addCommand(new RecolorCommand(element, strokeBefore, fillBefore, strokeAfter, fillAfter));
     }
 }

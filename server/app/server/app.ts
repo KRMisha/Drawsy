@@ -45,7 +45,9 @@ export class Application {
         });
 
         this.app.use((err: HttpException, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            console.error(err.stack);
+            if (this.app.get('env') === 'development') {
+                console.error(err.stack);
+            }
             res.status(err.status || HttpStatusCode.InternalServerError).send({ message: err.message });
         });
     }

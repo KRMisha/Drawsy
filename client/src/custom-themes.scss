@@ -54,10 +54,8 @@ $theme-colors: (
         border-right: $drawer-side-border;
     }
 
-    .theme-selected-button,
-    .mat-action-list .theme-selected-button:hover,
-    .mat-action-list .theme-selected-button:focus {
-        background-color: mat-color($primary);
+    .theme-selected-button {
+        background-color: mat-color($primary) !important;
 
         @if $primary ==
             map-get($theme-colors, purple) or
@@ -74,6 +72,16 @@ $theme-colors: (
                 color: rgba(0, 0, 0, 0.87);
             }
         }
+    }
+
+    .theme-user-selection-rect {
+        fill: rgba(mat-color($primary), 0.2);
+        stroke: rgba(mat-color($primary), 0.8);
+    }
+
+    .theme-selected-elements-rect,
+    .theme-eraser {
+        stroke: mat-color($primary, darker);
     }
 
     ::-webkit-scrollbar-thumb:hover {

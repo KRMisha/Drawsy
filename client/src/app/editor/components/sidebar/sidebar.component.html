@@ -17,7 +17,7 @@
                     [matTooltip]="tool.name"
                     matTooltipPosition="right"
                 >
-                    <mat-icon>{{ tool.icon }}</mat-icon>
+                    <mat-icon [svgIcon]="tool.icon"></mat-icon>
                 </button>
             </mat-action-list>
             <mat-action-list dense>
@@ -29,7 +29,7 @@
                     [matTooltip]="actionButton.name"
                     matTooltipPosition="right"
                 >
-                    <mat-icon>{{ actionButton.icon }}</mat-icon>
+                    <mat-icon [svgIcon]="actionButton.icon"></mat-icon>
                 </button>
             </mat-action-list>
         </div>

@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CommandService } from '@app/drawing/services/command.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
@@ -159,19 +157,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private redoShortcutSubscription: Subscription;
 
     constructor(
-        private iconRegistry: MatIconRegistry,
-        private sanitizer: DomSanitizer,
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
-        private commandService: CommandService
+        private historyService: HistoryService
     ) {}
 
     ngOnInit(): void {
-        const shapeTypeIconNames = ['fill-with-border', 'fill-only', 'border-only'];
-        for (const icon of shapeTypeIconNames) {
-            this.iconRegistry.addSvgIcon(icon, this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/' + icon + '.svg'));
-        }
-
         this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
             if (this.lineWidthFormControl.valid) {
                 this.currentToolSettings.lineWidth = this.lineWidthFormControl.value;
@@ -264,12 +255,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     undoCommand(): void {
-        this.commandService.undo();
+        this.historyService.undo();
         this.currentToolService.update();
     }
 
     redoCommand(): void {
-        this.commandService.redo();
+        this.historyService.redo();
         this.currentToolService.update();
     }
 
@@ -290,10 +281,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     get isUndoAvailable(): boolean {
-        return this.commandService.hasUndoCommands();
+        return this.historyService.hasUndoCommands();
     }
 
     get isRedoAvailable(): boolean {
-        return this.commandService.hasRedoCommands();
+        return this.historyService.hasRedoCommands();
     }
 }

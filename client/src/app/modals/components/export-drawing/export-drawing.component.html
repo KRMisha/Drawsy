@@ -22,14 +22,14 @@
 
             <div class="file-item">
                 <h4 class="file-type">Type de fichier&nbsp;:</h4>
-                <mat-button-toggle-group [(ngModel)]="currentFileType" [ngModelOptions]="{ standalone: true }">
-                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Svg" [value]="FileType.Svg">
+                <mat-button-toggle-group [(ngModel)]="fileType" [ngModelOptions]="{ standalone: true }">
+                    <mat-button-toggle [class.theme-selected-button]="fileType === FileType.Svg" [value]="FileType.Svg">
                         SVG
                     </mat-button-toggle>
-                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Png" [value]="FileType.Png">
+                    <mat-button-toggle [class.theme-selected-button]="fileType === FileType.Png" [value]="FileType.Png">
                         PNG
                     </mat-button-toggle>
-                    <mat-button-toggle [class.theme-selected-button]="currentFileType === FileType.Jpeg" [value]="FileType.Jpeg">
+                    <mat-button-toggle [class.theme-selected-button]="fileType === FileType.Jpeg" [value]="FileType.Jpeg">
                         JPEG
                     </mat-button-toggle>
                 </mat-button-toggle-group>
@@ -37,7 +37,7 @@
 
             <mat-card class="preview-item">
                 <mat-card-title>Aperçu</mat-card-title>
-                <app-drawing-preview class="drawing-preview"></app-drawing-preview>
+                <app-drawing-preview #appDrawingPreview [drawingFilter]="drawingFilter" class="drawing-preview"></app-drawing-preview>
             </mat-card>
         </div>
     </mat-dialog-content>

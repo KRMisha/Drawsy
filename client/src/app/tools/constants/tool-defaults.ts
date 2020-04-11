@@ -10,6 +10,6 @@ export default {
     defaultSprayRate: 20,
     defaultShapeType: ShapeType.FillWithBorder,
     defaultShapeBorderWidth: 5,
-    defaultPolygonSideCount: 3,
+    defaultPolygonSideCount: 6,
     defaultEraserSize: 5,
 };

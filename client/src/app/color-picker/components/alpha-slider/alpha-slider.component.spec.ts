@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/alpha-slider.component';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Subject } from 'rxjs';
 
 // tslint:disable: no-string-literal
@@ -112,7 +113,7 @@ describe('AlphaSliderComponent', () => {
         component['isMouseInside'] = true;
         component['isLeftMouseButtonDown'] = false;
         const updateAlphaSpy = spyOn<any>(component, 'updateAlpha').and.callThrough();
-        const event = { clientX: 6 } as MouseEvent;
+        const event = { button: MouseButton.Left, clientX: 6 } as MouseEvent;
         component.onMouseDown(event);
         expect(component['isLeftMouseButtonDown']).toEqual(true);
         expect(updateAlphaSpy).toHaveBeenCalledWith(event);
@@ -128,9 +129,9 @@ describe('AlphaSliderComponent', () => {
         expect(updateAlphaSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp should set isLeftMouseButtonDown to false', () => {
+    it('#onMouseUp should set isLeftMouseButtonDown to false if left button is up', () => {
         component['isLeftMouseButtonDown'] = true;
-        component.onMouseUp();
+        component.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(component['isLeftMouseButtonDown']).toEqual(false);
     });
 

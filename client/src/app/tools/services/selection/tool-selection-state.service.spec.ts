@@ -1,21 +1,21 @@
 import { TestBed } from '@angular/core/testing';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 
 // tslint:disable: no-any
 
 describe('ToolSelectionStateService', () => {
-    let svgUtilityServiceSpyObj: jasmine.SpyObj<SvgUtilityService>;
+    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let service: ToolSelectionStateService;
 
     const elementListBounds = { x: 69, y: 420, width: 666, height: 69420 };
 
     beforeEach(() => {
-        svgUtilityServiceSpyObj = jasmine.createSpyObj('SvgUtilityService', ['getElementListBounds']);
-        svgUtilityServiceSpyObj.getElementListBounds.and.returnValue(elementListBounds);
+        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementListBounds']);
+        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(elementListBounds);
 
         TestBed.configureTestingModule({
-            providers: [{ provide: SvgUtilityService, useValue: svgUtilityServiceSpyObj }],
+            providers: [{ provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj }],
         });
 
         service = TestBed.inject(ToolSelectionStateService);
@@ -25,21 +25,18 @@ describe('ToolSelectionStateService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#updateSelectionRect should give the selection rect the bounds of the selected elements', () => {
-        service.updateSelectionRect();
-        expect(service.selectionRect).toEqual(elementListBounds);
-    });
-
     it('#selectedElements should update the selection rect', () => {
-        const updateSelectionRectSpy = spyOn<any>(service, 'updateSelectionRect');
+        // tslint:disable-next-line: no-string-literal
+        const selectedElementChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
         service.selectedElements = [];
-        expect(updateSelectionRectSpy).toHaveBeenCalled();
+        expect(selectedElementChangedSourceSpy).toHaveBeenCalled();
+        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalled();
     });
 
-    it("#selectedElements should notify it's subcribers that it's value has changed", () => {
+    it('#selectedElements should notify its subcribers that its value has changed', () => {
         // tslint:disable-next-line: no-string-literal
-        const selectedElementsChangedSourceSpy = spyOn<any>(service['selectedElementsChangedSource'], 'next');
+        const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
         service.selectedElements = [];
-        expect(selectedElementsChangedSourceSpy).toHaveBeenCalled();
+        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalled();
     });
 });

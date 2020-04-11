@@ -2,7 +2,6 @@ import { async, TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -22,7 +21,6 @@ describe('CurrentToolService', () => {
 
     let primaryColorChangedSubject = new Subject<Color>();
     let secondaryColorChangedSubject = new Subject<Color>();
-    let elementClickedSubject = new Subject<SvgClickEvent>();
 
     beforeEach(() => {
         primaryColorChangedSubject = new Subject<Color>();
@@ -33,10 +31,8 @@ describe('CurrentToolService', () => {
         });
 
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getScreenCTM']);
-        elementClickedSubject = new Subject<SvgClickEvent>();
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement'], {
             drawingRoot: drawingRootSpyObj,
-            elementClicked$: elementClickedSubject,
         });
 
         currentToolSpyObj = jasmine.createSpyObj('Tool', [
@@ -46,8 +42,8 @@ describe('CurrentToolService', () => {
             'onMouseDoubleClick',
             'onKeyDown',
             'onKeyUp',
-            'onEnter',
-            'onLeave',
+            'onMouseEnter',
+            'onMouseLeave',
             'onPrimaryColorChange',
             'onSecondaryColorChange',
             'onElementClick',
@@ -76,27 +72,22 @@ describe('CurrentToolService', () => {
 
     it("#constructor should subscribe to colorService's primary, secondary color changes and drawingService's elementClick", async(() => {
         const colorStub = {} as Color;
-        const svgClickEventStub = {} as SvgClickEvent;
 
         primaryColorChangedSubject.next(colorStub);
         secondaryColorChangedSubject.next(colorStub);
-        elementClickedSubject.next(svgClickEventStub);
 
         expect(currentToolSpyObj.onPrimaryColorChange).toHaveBeenCalledWith(colorStub);
         expect(currentToolSpyObj.onSecondaryColorChange).toHaveBeenCalledWith(colorStub);
-        expect(currentToolSpyObj.onElementClick).toHaveBeenCalled();
     }));
 
     it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
         const primaryColorChangedSubscriptionSpy = spyOn<any>(service['primaryColorChangedSubscription'], 'unsubscribe');
         const secondaryColorChangedSubscriptionSpy = spyOn<any>(service['secondaryColorChangedSubscription'], 'unsubscribe');
-        const elementClickedSubscriptionSpy = spyOn<any>(service['elementClickedSubscription'], 'unsubscribe');
 
         service.ngOnDestroy();
 
         expect(primaryColorChangedSubscriptionSpy).toHaveBeenCalled();
         expect(secondaryColorChangedSubscriptionSpy).toHaveBeenCalled();
-        expect(elementClickedSubscriptionSpy).toHaveBeenCalled();
     }));
 
     it('#onMouseMove should update the mouse position and call the currentTool onMouseMove', () => {
@@ -214,33 +205,33 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
     });
 
-    it('#onEnter should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onEnter', () => {
+    it('#onMouseEnter should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter', () => {
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
         const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
         getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
 
-        service.onEnter(mouseEvent);
+        service.onMouseEnter(mouseEvent);
 
         expect(Tool.isMouseInsideDrawing).toEqual(true);
         expect(getMousePositionSpy).toHaveBeenCalled();
         expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
-        expect(currentToolSpyObj.onEnter).toHaveBeenCalledWith(mouseEvent);
+        expect(currentToolSpyObj.onMouseEnter).toHaveBeenCalledWith(mouseEvent);
     });
 
-    it('#onLeave should set isMouseInsideDrawing from Tool to true, update the mouse position and call the currentTool onLeave', () => {
+    it('#onMouseLeave should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseLeave', () => {
         Tool.isMouseInsideDrawing = true;
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
         const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
         getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
 
-        service.onLeave(mouseEvent);
+        service.onMouseLeave(mouseEvent);
 
         expect(Tool.isMouseInsideDrawing).toEqual(false);
         expect(getMousePositionSpy).toHaveBeenCalled();
         expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
-        expect(currentToolSpyObj.onLeave).toHaveBeenCalledWith(mouseEvent);
+        expect(currentToolSpyObj.onMouseLeave).toHaveBeenCalledWith(mouseEvent);
     });
 
     it('#update should update the current tool', () => {

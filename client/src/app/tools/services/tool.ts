@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolData } from '@app/tools/classes/tool-data';
@@ -23,7 +23,7 @@ export abstract class Tool {
         rendererFactory: RendererFactory2,
         protected drawingService: DrawingService,
         protected colorService: ColorService,
-        protected commandService: CommandService,
+        protected historyService: HistoryService,
         toolInfo: ToolData
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
@@ -33,17 +33,17 @@ export abstract class Tool {
     // Disable lint error for method stubs below because not all derived service classes
     // need to override the functionality and would needlessly define no-ops otherwise
     // tslint:disable: no-empty
-    onMouseMove(): void {}
+    onMouseMove(event: MouseEvent): void {}
     onMouseDown(event: MouseEvent): void {}
     onMouseUp(event: MouseEvent): void {}
+    onScroll(event: WheelEvent): void {}
     onMouseDoubleClick(event: MouseEvent): void {}
     onKeyDown(event: KeyboardEvent): void {}
     onKeyUp(event: KeyboardEvent): void {}
-    onEnter(event: MouseEvent): void {}
-    onLeave(event: MouseEvent): void {}
+    onMouseEnter(event: MouseEvent): void {}
+    onMouseLeave(event: MouseEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
-    onElementClick(event: MouseEvent, element: SVGGraphicsElement): void {}
     update(): void {}
     onToolSelection(): void {}
     onToolDeselection(): void {}

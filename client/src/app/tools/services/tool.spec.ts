@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { ToolData } from '@app/tools/classes/tool-data';
 import { Tool } from '@app/tools/services/tool';
@@ -13,10 +13,10 @@ class ToolMock extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
+        historyService: HistoryService,
         toolInfo: ToolData
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, toolInfo);
+        super(rendererFactory, drawingService, colorService, historyService, toolInfo);
     }
 }
 
@@ -32,9 +32,9 @@ describe('Tool', () => {
 
         const drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['']);
         const colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['']);
-        const commandServiceSpyObj = jasmine.createSpyObj('CommandService', ['']);
+        const historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['']);
 
-        tool = new ToolMock(rendererFactory2SpyObj, drawingServiceSpyObj, colorServiceSpyObj, commandServiceSpyObj, toolInfo);
+        tool = new ToolMock(rendererFactory2SpyObj, drawingServiceSpyObj, colorServiceSpyObj, historyServiceSpyObj, toolInfo);
     });
 
     it('should be created', () => {
@@ -50,7 +50,7 @@ describe('Tool', () => {
 
     it('#onMouseMove should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onMouseMove').and.callThrough();
-        tool.onMouseMove();
+        tool.onMouseMove({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
@@ -84,15 +84,15 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#onEnter should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onEnter').and.callThrough();
-        tool.onEnter({} as MouseEvent);
+    it('#onMouseEnter should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onMouseEnter').and.callThrough();
+        tool.onMouseEnter({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#onLeave should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onLeave').and.callThrough();
-        tool.onLeave({} as MouseEvent);
+    it('#onMouseLeave should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onMouseLeave').and.callThrough();
+        tool.onMouseLeave({} as MouseEvent);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
@@ -105,12 +105,6 @@ describe('Tool', () => {
     it('#onSecondaryColorChange should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onSecondaryColorChange').and.callThrough();
         tool.onSecondaryColorChange({} as Color);
-        expect(methodStubSpy).toHaveBeenCalled();
-    });
-
-    it('#onElementClick should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'onElementClick').and.callThrough();
-        tool.onElementClick({} as MouseEvent, {} as SVGGraphicsElement);
         expect(methodStubSpy).toHaveBeenCalled();
     });
 

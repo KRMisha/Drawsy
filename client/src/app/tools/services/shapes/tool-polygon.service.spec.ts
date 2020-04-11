@@ -1,8 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.service';
@@ -18,7 +18,7 @@ describe('ToolPolygonService', () => {
     beforeEach(() => {
         const drawingServiceStub = {} as DrawingService;
         const colorServiceStub = {} as ColorService;
-        const commandServiceStub = {} as CommandService;
+        const historyServiceStub = {} as HistoryService;
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
 
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
@@ -27,7 +27,7 @@ describe('ToolPolygonService', () => {
             providers: [
                 { provide: DrawingService, useValue: drawingServiceStub },
                 { provide: ColorService, useValue: colorServiceStub },
-                { provide: CommandService, useValue: commandServiceStub },
+                { provide: HistoryService, useValue: historyServiceStub },
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
             ],
         });

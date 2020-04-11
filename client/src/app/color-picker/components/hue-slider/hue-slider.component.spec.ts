@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HueSliderComponent } from '@app/color-picker/components/hue-slider/hue-slider.component';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
+import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Subject } from 'rxjs';
 
 // tslint:disable: no-any
@@ -79,7 +80,7 @@ describe('HueSliderComponent', () => {
     });
 
     it('#onMouseDown should call updateHue method and change isLeftMouseButtonDown to true if mouse is inside', () => {
-        const mouseEventStub = { clientX: 10 } as MouseEvent;
+        const mouseEventStub = { button: MouseButton.Left, clientX: 10 } as MouseEvent;
         component['isMouseInside'] = true;
         component['isLeftMouseButtonDown'] = false;
         component.onMouseDown(mouseEventStub);
@@ -98,9 +99,9 @@ describe('HueSliderComponent', () => {
         expect(updateHueSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp should set isLeftMouseButtonDown to false', () => {
+    it('#onMouseUp should set isLeftMouseButtonDown to false if mouse button is left', () => {
         component['isLeftMouseButtonDown'] = true;
-        component.onMouseUp();
+        component.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(component['isLeftMouseButtonDown']).toEqual(false);
     });
 

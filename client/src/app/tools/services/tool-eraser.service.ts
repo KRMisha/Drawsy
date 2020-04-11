@@ -2,9 +2,8 @@ import { Injectable, RendererFactory2 } from '@angular/core';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
-import { CommandService } from '@app/drawing/services/command.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { SvgUtilityService } from '@app/drawing/services/svg-utility.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -16,7 +15,6 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private eraserSize = ToolDefaults.defaultEraserSize;
     private svgEraserElement: SVGRectElement;
 
     private svgElementUnderCursor?: SVGGraphicsElement = undefined;
@@ -35,14 +33,13 @@ export class ToolEraserService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        commandService: CommandService,
-        private svgUtilityService: SvgUtilityService
+        historyService: HistoryService
     ) {
-        super(rendererFactory, drawingService, colorService, commandService, ToolInfo.Eraser);
+        super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         const msDelayBetweenCalls = 16;
         this.updateEraserRect();
         if (this.timerId === undefined) {
@@ -74,17 +71,17 @@ export class ToolEraserService extends Tool {
             return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
         });
 
-        this.commandService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
         this.svgElementsDeletedDuringDrag = [];
     }
 
-    onEnter(event: MouseEvent): void {
+    onMouseEnter(event: MouseEvent): void {
         this.updateEraserRect();
     }
 
     update(): void {
         this.timerId = undefined;
-        const elementToConsider = this.svgUtilityService.getElementUnderAreaPixelPerfect(this.drawingService.svgElements, this.eraserRect);
+        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.eraserRect);
 
         if (elementToConsider === undefined) {
             this.restoreElementUnderCursorAttributes();
@@ -114,9 +111,9 @@ export class ToolEraserService extends Tool {
 
     onToolSelection(): void {
         this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgEraserElement, 'fill', '#fafafa');
-        this.renderer.setAttribute(this.svgEraserElement, 'stroke', '#424242');
+        this.renderer.setAttribute(this.svgEraserElement, 'fill', 'rgb(255, 255, 255)');
         this.renderer.setAttribute(this.svgEraserElement, 'stroke-width', '1');
+        this.renderer.addClass(this.svgEraserElement, 'theme-eraser');
         this.drawingService.addUiElement(this.svgEraserElement);
         this.updateEraserRect();
     }
@@ -128,14 +125,19 @@ export class ToolEraserService extends Tool {
     }
 
     private updateEraserRect(): void {
-        this.eraserSize = this.settings.eraserSize!; // tslint:disable-line: no-non-null-assertion
+        // tslint:disable: no-non-null-assertion
         this.eraserRect = {
-            x: Tool.mousePosition.x - this.eraserSize / 2,
-            y: Tool.mousePosition.y - this.eraserSize / 2,
-            width: this.eraserSize,
-            height: this.eraserSize,
+            x: Tool.mousePosition.x - this.settings.eraserSize! / 2,
+            y: Tool.mousePosition.y - this.settings.eraserSize! / 2,
+            width: this.settings.eraserSize!,
+            height: this.settings.eraserSize!,
         };
-        this.svgUtilityService.updateSvgRectFromRect(this.svgEraserElement, this.eraserRect);
+        // tslint:enable: no-non-null-assertion
+
+        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
+        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
@@ -173,5 +175,35 @@ export class ToolEraserService extends Tool {
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
             this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke-width', this.elementUnderCursorStrokeWidth);
         }
+    }
+
+    private getElementUnderAreaPixelPerfect(area: Rect): SVGGraphicsElement | undefined {
+        const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
+
+        let topmostElement: SVGGraphicsElement | undefined;
+        for (let i = 0; i < area.width; i++) {
+            for (let j = 0; j < area.height; j++) {
+                // Function does not exist in Renderer2
+                const elementUnderPoint = this.drawingService.findDrawingChildElement(
+                    document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j)
+                );
+
+                if (elementUnderPoint === undefined || elementUnderPoint === topmostElement) {
+                    continue;
+                }
+
+                // API requires use of bit mask
+                // tslint:disable: no-bitwise
+                const isElementAboveTopmostElement =
+                    topmostElement === undefined ||
+                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING;
+                // tslint:enable: no-bitwise
+                if (isElementAboveTopmostElement) {
+                    topmostElement = elementUnderPoint;
+                }
+            }
+        }
+
+        return topmostElement;
     }
 }

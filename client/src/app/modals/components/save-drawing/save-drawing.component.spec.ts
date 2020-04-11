@@ -1,7 +1,8 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { SaveDrawingService } from '@app/modals/services/save-drawing.service';
@@ -10,13 +11,14 @@ import { ErrorMessageService } from '@app/shared/services/error-message.service'
 // tslint:disable: no-string-literal
 
 describe('SaveDrawingComponent', () => {
+    let component: SaveDrawingComponent;
     let saveDrawingServiceSpyObj: jasmine.SpyObj<SaveDrawingService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let titleControlSpyObj: jasmine.SpyObj<FormControl>;
     let labelsControlSpyObj: jasmine.SpyObj<FormControl>;
     let saveDrawingFormGroupSpyObj: jasmine.SpyObj<FormGroup>;
-    let component: SaveDrawingComponent;
-    let fixture: ComponentFixture<SaveDrawingComponent>;
+    let drawingPreviewComponentSpyObj: jasmine.SpyObj<DrawingPreviewComponent>;
+    let changeDetectorRefSpyObj: jasmine.SpyObj<ChangeDetectorRef>;
 
     const initialLabels = ['abc', 'def', 'hij'];
     const initialTitle = 'bonjour';
@@ -43,6 +45,13 @@ describe('SaveDrawingComponent', () => {
                 labels: labelsControlSpyObj,
             },
         });
+        drawingPreviewComponentSpyObj = jasmine.createSpyObj('DrawingPreviewComponent', [], {
+            drawingRoot: {
+                nativeElement: {},
+            },
+        });
+
+        changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
         TestBed.configureTestingModule({
             declarations: [SaveDrawingComponent],
@@ -55,9 +64,11 @@ describe('SaveDrawingComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SaveDrawingComponent);
+        const fixture = TestBed.createComponent(SaveDrawingComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component['drawingPreview'] = drawingPreviewComponentSpyObj;
+        component['changeDetectorRef'] = changeDetectorRefSpyObj;
     });
 
     it('should create', () => {
@@ -110,14 +121,14 @@ describe('SaveDrawingComponent', () => {
         expect(pushSpy).toHaveBeenCalled();
     });
 
-    it("#removeLabel should not remove label if it's not in the labels", () => {
+    it('#removeLabel should not remove label if it is not in the labels', () => {
         const label = 'aloha';
         const spliceSpy = spyOn(component.labels, 'splice');
         component.removeLabel(label);
         expect(spliceSpy).not.toHaveBeenCalled();
     });
 
-    it("#removeLabel should remove label if it's in the labels", () => {
+    it('#removeLabel should remove label if it is in the labels', () => {
         const label = 'def';
         const spliceSpy = spyOn(component.labels, 'splice');
         component.removeLabel(label);
@@ -131,7 +142,8 @@ describe('SaveDrawingComponent', () => {
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(initialTitle);
         expect(drawingServiceMock.labels).toEqual(initialLabels);
-        expect(saveDrawingServiceSpyObj.saveDrawing).toHaveBeenCalled();
+        expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
+        expect(saveDrawingServiceSpyObj.saveDrawing).toHaveBeenCalledWith(drawingPreviewComponentSpyObj.drawingRoot.nativeElement);
     });
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
