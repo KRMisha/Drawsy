@@ -142,9 +142,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                     }
                 } else if (element !== undefined) {
                     this.invertElementsSelection([element], this.toolSelectionStateService.selectedElements);
-                    this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
-                        this.toolSelectionStateService.selectedElements
-                    );
+                    this.toolSelectionStateService.selectedElementsChanged$.next(this.toolSelectionStateService.selectedElements);
                 }
                 break;
             default:
