@@ -15,17 +15,17 @@ export class AppendElementsClipboardCommand implements Command {
         for (const element of this.elements) {
             this.drawingService.removeElement(element);
         }
-        // setTimeout(() => {
+        setTimeout(() => {
             this.clipboardService.placementPositionOffset = this.offsetBefore;
-        // }, 0);
+        }, 0);
     }
 
     redo(): void {
         for (const element of this.elements) {
             this.drawingService.addElement(element);
         }
-        // setTimeout(() => {
+        setTimeout(() => {
             this.clipboardService.placementPositionOffset = this.offsetAfter;
-        // }, 0);
+        }, 0);
     }
 }
