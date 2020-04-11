@@ -283,7 +283,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     pasteCommand(): void {
-        if (this.hasCopiedElements) {
+        if (this.canPasteElements) {
             this.currentToolService.currentTool = this.toolSelectionService;
             this.resetCurrentControls();
             this.clipboardService.paste();
@@ -328,12 +328,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         return this.currentToolService.currentTool.settings;
     }
 
-    get hasSelection(): boolean {
-        return this.clipboardService.hasSelection();
+    get canModifySelection(): boolean {
+        return this.clipboardService.canModifySelection();
     }
 
-    get hasCopiedElements(): boolean {
-        return this.clipboardService.hasCopiedElements();
+    get canPasteElements(): boolean {
+        return this.clipboardService.canPasteElements();
     }
 
     get isUndoAvailable(): boolean {

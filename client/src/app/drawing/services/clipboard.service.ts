@@ -3,6 +3,7 @@ import { AppendElementsClipboardCommand } from '@app/drawing/classes/commands/ap
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
+import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -40,17 +41,16 @@ export class ClipboardService implements OnDestroy {
     }
 
     copy(): void {
-        if (!this.hasSelection()) {
+        if (!this.canModifySelection()) {
             return;
         }
 
         this.placementPositionOffset = 0;
         this.clipboardBuffer = [...this.toolSelectionStateService.selectedElements];
-        this.duplicationBuffer = [...this.toolSelectionStateService.selectedElements];
     }
 
     paste(): void {
-        if (!this.hasCopiedElements()) {
+        if (!this.canPasteElements()) {
             return;
         }
 
@@ -58,7 +58,7 @@ export class ClipboardService implements OnDestroy {
     }
 
     cut(): void {
-        if (!this.hasSelection()) {
+        if (!this.canModifySelection()) {
             return;
         }
 
@@ -67,19 +67,19 @@ export class ClipboardService implements OnDestroy {
     }
 
     duplicate(): void {
-        if (!this.hasSelection()) {
+        if (!this.canModifySelection() || this.duplicationBuffer.length === 0) {
             return;
         }
 
         this.placeElements(this.duplicationBuffer);
     }
 
-    hasSelection(): boolean {
-        return this.toolSelectionStateService.selectedElements.length > 0;
+    canPasteElements(): boolean {
+        return this.clipboardBuffer.length > 0 && this.toolSelectionStateService.state === SelectionState.None;
     }
 
-    hasCopiedElements(): boolean {
-        return this.clipboardBuffer.length > 0;
+    canModifySelection(): boolean {
+        return this.toolSelectionStateService.selectedElements.length > 0 && this.toolSelectionStateService.state === SelectionState.None;
     }
 
     private placeElements(elements: SVGGraphicsElement[]): void {
@@ -132,10 +132,6 @@ export class ClipboardService implements OnDestroy {
     private subscribeToSelectionChanged(): void {
         this.selectionChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
             (elements: SVGGraphicsElement[]) => {
-                if (!this.hasSelection()) {
-                    return;
-                }
-
                 this.duplicationBuffer = [...elements];
                 this.placementPositionOffset = 0;
             }

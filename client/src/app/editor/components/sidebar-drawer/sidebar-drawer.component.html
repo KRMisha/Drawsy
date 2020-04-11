@@ -103,19 +103,19 @@
     <div class="command-container">
         <mat-divider></mat-divider>
         <div class="clipboard-container">
-            <button mat-icon-button class="command-item" matTooltip="Copier" [disabled]="!hasSelection" (click)="copyCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Copier" [disabled]="!canModifySelection" (click)="copyCommand()">
                 <mat-icon svgIcon="content-copy"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Coller" [disabled]="!hasCopiedElements" (click)="pasteCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Coller" [disabled]="!canPasteElements" (click)="pasteCommand()">
                 <mat-icon svgIcon="content-paste"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Couper" [disabled]="!hasSelection" (click)="cutCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Couper" [disabled]="!canModifySelection" (click)="cutCommand()">
                 <mat-icon svgIcon="content-cut"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Dupliquer" [disabled]="!hasSelection" (click)="duplicateCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Dupliquer" [disabled]="!canModifySelection" (click)="duplicateCommand()">
                 <mat-icon svgIcon="content-duplicate"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Supprimer" [disabled]="!hasSelection" (click)="deleteCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Supprimer" [disabled]="!canModifySelection" (click)="deleteCommand()">
                 <mat-icon svgIcon="delete-outline"></mat-icon>
             </button>
         </div>
