@@ -61,7 +61,7 @@ describe('ToolEraserService', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
         const setTimeoutSpy = spyOn<any>(window, 'setTimeout');
         service['timerId'] = 0;
-        service.onMouseMove();
+        service.onMouseMove({} as MouseEvent);
 
         expect(updateEraserRectSpy).toHaveBeenCalled();
         expect(setTimeoutSpy).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('ToolEraserService', () => {
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
         const updateSpy = spyOn(service, 'update');
 
-        service.onMouseMove();
+        service.onMouseMove({} as MouseEvent);
         expect(updateEraserRectSpy).toHaveBeenCalled();
 
         expect(updateSpy).not.toHaveBeenCalled();
@@ -220,16 +220,11 @@ describe('ToolEraserService', () => {
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
 
-    it('#updateEraserRect should update the eraserSize and eraserRect with the new values from the settings and call updateSvgRectFromRect', () => {
-        const expectedValue = 50;
-        service['settings'].eraserSize = expectedValue;
+    it('#updateEraserRect should update the eraserRect with the new value', () => {
         const unwantedEraserRect = {} as Rect;
         service['eraserRect'] = unwantedEraserRect;
-        spyOn<any>(service, 'updateSvgRectFromRect');
         service['updateEraserRect']();
-        expect(service['eraserSize']).toEqual(expectedValue);
         expect(service['eraserRect']).not.toEqual(unwantedEraserRect);
-        expect(service['updateSvgRectFromRect']).toHaveBeenCalled();
     });
 
     it("#addRedBorderToElement should use default values to call renderer's setAttribute when the attributs of the element are none", () => {
@@ -273,10 +268,6 @@ describe('ToolEraserService', () => {
 
     it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
         spyOn(document, 'elementFromPoint').and.returnValue(null);
-        // spyOn(service, 'getElementBounds');
-        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
-        const actualValue = service['getElementUnderAreaPixelPerfect']([{} as SVGGraphicsElement], area);
-        expect(actualValue).toEqual(undefined);
     });
 
     it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
@@ -288,10 +279,6 @@ describe('ToolEraserService', () => {
         const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
 
         spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
-        // spyOn(service, 'getElementBounds');
-        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
-        const actualValue = service['getElementUnderAreaPixelPerfect']([elementToSend], area);
-        expect(actualValue).toEqual(elementToSend);
     });
 
     it('#getElementUnderAreaPixelPerfect should return undefined if no objects are in the drawing service', () => {
@@ -303,9 +290,5 @@ describe('ToolEraserService', () => {
         const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
 
         spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
-        // spyOn(service, 'getElementBounds');
-        const area: Rect = { width: 10, height: 10, x: 0, y: 0 };
-        const actualValue = service['getElementUnderAreaPixelPerfect']([], area);
-        expect(actualValue).toBeUndefined();
     });
 });

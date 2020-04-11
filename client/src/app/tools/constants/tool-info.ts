@@ -1,16 +1,16 @@
 import { ToolData } from '@app/tools/classes/tool-data';
 
 export default {
-    Pencil: { name: 'Crayon', icon: 'create' } as ToolData,
+    Pencil: { name: 'Crayon', icon: 'pencil' } as ToolData,
     Paintbrush: { name: 'Pinceau', icon: 'brush' } as ToolData,
-    Line: { name: 'Ligne', icon: 'timeline' } as ToolData,
-    SprayCan: { name: 'Aérosol', icon: 'blur_on' } as ToolData,
-    Rectangle: { name: 'Rectangle', icon: 'crop_5_4' } as ToolData,
-    Ellipse: { name: 'Ellipse', icon: 'panorama_fish_eye' } as ToolData,
-    Polygon: { name: 'Polygone', icon: 'star' } as ToolData,
-    Fill: { name: 'Sceau de peinture', icon: 'opacity' } as ToolData,
-    Eyedropper: { name: 'Pipette', icon: 'colorize' } as ToolData,
-    Recolor: { name: 'Applicateur de couleur', icon: 'format_paint' } as ToolData,
-    Selection: { name: 'Sélection', icon: 'select_all' } as ToolData,
-    Eraser: { name: 'Efface', icon: 'delete_sweep' } as ToolData,
+    Line: { name: 'Ligne', icon: 'chart-timeline-variant' } as ToolData,
+    SprayCan: { name: 'Aérosol', icon: 'spray' } as ToolData,
+    Rectangle: { name: 'Rectangle', icon: 'crop-square' } as ToolData,
+    Ellipse: { name: 'Ellipse', icon: 'ellipse-outline' } as ToolData,
+    Polygon: { name: 'Polygone', icon: 'hexagon-outline' } as ToolData,
+    Eyedropper: { name: 'Pipette', icon: 'eyedropper-variant' } as ToolData,
+    Fill: { name: 'Sceau de peinture', icon: 'format-color-fill' } as ToolData,
+    Recolor: { name: 'Applicateur de couleur', icon: 'format-paint' } as ToolData,
+    Selection: { name: 'Sélection', icon: 'selection' } as ToolData,
+    Eraser: { name: 'Efface', icon: 'eraser' } as ToolData,
 };

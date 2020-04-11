@@ -1,4 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ThemeService } from '@app/app/services/theme.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -13,9 +15,51 @@ export class AppComponent implements OnInit, OnDestroy {
     private newDrawingShortcutSubscription: Subscription;
     private galleryShortcutSubscription: Subscription;
 
-    constructor(private modalService: ModalService, private shortcutService: ShortcutService, private themeService: ThemeService) {}
+    constructor(
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
+        private modalService: ModalService,
+        private shortcutService: ShortcutService,
+        private themeService: ThemeService
+    ) {}
 
     ngOnInit(): void {
+        const iconNames = [
+            'brush',
+            'card-plus-outline',
+            'chart-timeline-variant',
+            'checkbox-blank',
+            'checkbox-blank-outline',
+            'checkbox-intermediate',
+            'cloud-upload-outline',
+            'cog',
+            'content-copy',
+            'content-cut',
+            'content-duplicate',
+            'content-paste',
+            'crop-square',
+            'delete-outline',
+            'download',
+            'ellipse-outline',
+            'eraser',
+            'eyedropper-variant',
+            'format-color-fill',
+            'format-paint',
+            'help-circle-outline',
+            'hexagon-outline',
+            'home',
+            'image-multiple-outline',
+            'pencil',
+            'redo-variant',
+            'selection',
+            'spray',
+            'undo-variant',
+        ];
+
+        for (const iconName of iconNames) {
+            this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl('assets/icons/' + iconName + '.svg'));
+        }
+
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
             this.modalService.openNewDrawingModal();
         });

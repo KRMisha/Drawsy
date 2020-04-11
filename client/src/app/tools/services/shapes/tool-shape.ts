@@ -32,7 +32,7 @@ export abstract class ToolShape extends Tool {
         this.settings.shapeBorderWidth = ToolDefaults.defaultShapeBorderWidth;
     }
 
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         this.updateShapeArea();
     }
 

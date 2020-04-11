@@ -43,37 +43,7 @@ export class ToolLineService extends Tool {
         this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
     }
 
-    static calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, isCurrentlyDrawing: boolean): Vec2 {
-        if (!isCurrentlyDrawing || !isShiftDown) {
-            return mousePosition;
-        }
-
-        const maxAngle = 360;
-        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle) / 2 / Math.PI;
-        const snapAngle = 45;
-        angle = Math.round(angle / snapAngle) * snapAngle;
-        if (angle <= 0) {
-            angle += maxAngle;
-        }
-
-        const nextPoint: Vec2 = { x: 0, y: 0 };
-        const horizontalAngles = [180, 360]; // tslint:disable-line: no-magic-numbers
-        const verticalAngles = [90, 270]; // tslint:disable-line: no-magic-numbers
-
-        if (horizontalAngles.includes(angle)) {
-            nextPoint.x = mousePosition.x;
-            nextPoint.y = lastPoint.y;
-        } else if (verticalAngles.includes(angle)) {
-            nextPoint.x = lastPoint.x;
-            nextPoint.y = mousePosition.y;
-        } else {
-            nextPoint.x = mousePosition.x;
-            nextPoint.y = Math.tan((angle / (maxAngle / 2)) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
-        }
-        return nextPoint;
-    }
-
-    onMouseMove(): void {
+    onMouseMove(event: MouseEvent): void {
         this.updateNextPointPosition();
     }
 
@@ -88,7 +58,7 @@ export class ToolLineService extends Tool {
         }
 
         if (!this.isCurrentlyDrawing) {
-            this.startDrawingShape();
+            this.startDrawing();
         }
 
         this.renderer.setAttribute(this.previewLine, 'x1', this.nextPoint.x.toString());
@@ -184,7 +154,7 @@ export class ToolLineService extends Tool {
         this.stopDrawing();
     }
 
-    private startDrawingShape(): void {
+    private startDrawing(): void {
         // tslint:disable: no-non-null-assertion
         this.isCurrentlyDrawing = true;
 
@@ -269,13 +239,38 @@ export class ToolLineService extends Tool {
     }
 
     private updateNextPointPosition(): void {
-        this.nextPoint = ToolLineService.calculateNextPointPosition(
-            this.lastPoint,
-            Tool.mousePosition,
-            this.isShiftDown,
-            this.isCurrentlyDrawing
-        );
+        this.nextPoint = this.calculateNextPointPosition(this.lastPoint, Tool.mousePosition, this.isShiftDown, this.isCurrentlyDrawing);
         this.updatePreviewLinePosition();
+    }
+
+    private calculateNextPointPosition(lastPoint: Vec2, mousePosition: Vec2, isShiftDown: boolean, isCurrentlyDrawing: boolean): Vec2 {
+        if (!isCurrentlyDrawing || !isShiftDown) {
+            return mousePosition;
+        }
+
+        const maxAngle = 360;
+        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle) / 2 / Math.PI;
+        const snapAngle = 45;
+        angle = Math.round(angle / snapAngle) * snapAngle;
+        if (angle <= 0) {
+            angle += maxAngle;
+        }
+
+        const nextPoint: Vec2 = { x: 0, y: 0 };
+        const horizontalAngles = [180, 360]; // tslint:disable-line: no-magic-numbers
+        const verticalAngles = [90, 270]; // tslint:disable-line: no-magic-numbers
+
+        if (horizontalAngles.includes(angle)) {
+            nextPoint.x = mousePosition.x;
+            nextPoint.y = lastPoint.y;
+        } else if (verticalAngles.includes(angle)) {
+            nextPoint.x = lastPoint.x;
+            nextPoint.y = mousePosition.y;
+        } else {
+            nextPoint.x = mousePosition.x;
+            nextPoint.y = Math.tan((angle / (maxAngle / 2)) * Math.PI) * (mousePosition.x - lastPoint.x) + lastPoint.y;
+        }
+        return nextPoint;
     }
 
     private updatePreviewLinePosition(): void {

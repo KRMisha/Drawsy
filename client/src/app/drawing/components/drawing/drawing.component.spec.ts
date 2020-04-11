@@ -5,7 +5,6 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ModalService } from '@app/modals/services/modal.service';
 import { Color } from '@app/shared/classes/color';
-import { SvgClickEvent } from '@app/shared/classes/svg-click-event';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -29,9 +28,9 @@ describe('DrawingComponent', () => {
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
     let colorSpyObj: jasmine.SpyObj<Color>;
 
-    const toggleGridSubject = new Subject<Color>();
-    const increaseGridSizeSubject = new Subject<Color>();
-    const decreaseGridSizeSubject = new Subject<SvgClickEvent>();
+    const toggleGridSubject = new Subject<void>();
+    const increaseGridSizeSubject = new Subject<void>();
+    const decreaseGridSizeSubject = new Subject<void>();
 
     const returnedDimensions: Vec2 = { x: 10, y: 10 };
     beforeEach(async(() => {

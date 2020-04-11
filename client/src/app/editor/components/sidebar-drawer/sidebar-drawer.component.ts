@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
@@ -177,19 +175,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private redoShortcutSubscription: Subscription;
 
     constructor(
-        private iconRegistry: MatIconRegistry,
-        private sanitizer: DomSanitizer,
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
         private historyService: HistoryService
     ) {}
 
     ngOnInit(): void {
-        const shapeTypeIconNames = ['fill-with-border', 'fill-only', 'border-only'];
-        for (const icon of shapeTypeIconNames) {
-            this.iconRegistry.addSvgIcon(icon, this.sanitizer.bypassSecurityTrustResourceUrl('assets/shape-types/' + icon + '.svg'));
-        }
-
         this.lineWidthChangedSubscription = this.lineWidthFormControl.valueChanges.subscribe(() => {
             if (this.lineWidthFormControl.valid) {
                 this.currentToolSettings.lineWidth = this.lineWidthFormControl.value;
@@ -226,14 +217,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.polygonSideCount = this.polygonSideCountFormControl.value;
             }
         });
-        this.eraserSizeChangedSubscription = this.eraserSizeFormControl.valueChanges.subscribe(() => {
-            if (this.eraserSizeFormControl.valid) {
-                this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
-            }
-        });
         this.fillDeviationChangedSubscription = this.fillDeviationFormControl.valueChanges.subscribe(() => {
             if (this.fillDeviationFormControl.valid) {
                 this.currentToolSettings.fillDeviation = this.fillDeviationFormControl.value;
+            }
+        });
+        this.eraserSizeChangedSubscription = this.eraserSizeFormControl.valueChanges.subscribe(() => {
+            if (this.eraserSizeFormControl.valid) {
+                this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
             }
         });
 
@@ -253,8 +244,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.sprayRateChangedSubscription.unsubscribe();
         this.shapeBorderWidthChangedSubscription.unsubscribe();
         this.polygonSideCountChangedSubscription.unsubscribe();
-        this.eraserSizeChangedSubscription.unsubscribe();
         this.fillDeviationChangedSubscription.unsubscribe();
+        this.eraserSizeChangedSubscription.unsubscribe();
 
         this.undoShortcutSubscription.unsubscribe();
         this.redoShortcutSubscription.unsubscribe();
@@ -282,11 +273,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolSettings.polygonSideCount !== undefined) {
             this.polygonSideCountFormControl.reset(this.currentToolSettings.polygonSideCount);
         }
-        if (this.currentToolSettings.eraserSize !== undefined) {
-            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
-        }
         if (this.currentToolSettings.fillDeviation !== undefined) {
             this.fillDeviationFormControl.reset(this.currentToolSettings.fillDeviation);
+        }
+        if (this.currentToolSettings.eraserSize !== undefined) {
+            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
     }
 

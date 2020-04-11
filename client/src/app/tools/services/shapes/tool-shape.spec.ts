@@ -76,7 +76,7 @@ describe('ToolShape', () => {
     });
 
     it('#onMouseMove should call #updateShapeArea', () => {
-        toolShape.onMouseMove();
+        toolShape.onMouseMove({} as MouseEvent);
         expect(updateShapeAreaSpy).toHaveBeenCalled();
     });
 
