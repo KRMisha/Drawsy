@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppendElementsCommand } from '@app/drawing/classes/commands/append-elements-command';
+import { AppendElementsClipboardCommand } from '@app/drawing/classes/commands/append-elements-clipboard-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
@@ -15,9 +15,9 @@ const placementPositionOffsetIncrement = 25;
     providedIn: 'root',
 })
 export class ClipboardService {
-    private copiedElements: SVGGraphicsElement[] = [];
+    placementPositionOffset = 0;
 
-    private placementPositionOffset = 0;
+    private clipboardBuffer: SVGGraphicsElement[] = [];
 
     constructor(
         private historyService: HistoryService,
@@ -35,7 +35,7 @@ export class ClipboardService {
         }
 
         this.placementPositionOffset = 0;
-        this.copiedElements = [...this.toolSelectionStateService.selectedElements];
+        this.clipboardBuffer = [...this.toolSelectionStateService.selectedElements];
     }
 
     paste(): void {
@@ -43,12 +43,14 @@ export class ClipboardService {
             return;
         }
 
-        this.placeElements(this.copiedElements);
+        this.placeElements(this.clipboardBuffer);
 
         const isNextPlacementOutOfDrawing = this.isNextPlacementOutOfDrawing(
             this.toolSelectionStateService.selectedElements,
             this.placementPositionOffset + placementPositionOffsetIncrement
         );
+
+        const offsetBefore = this.placementPositionOffset;
 
         if (isNextPlacementOutOfDrawing) {
             this.placementPositionOffset = 0;
@@ -57,6 +59,16 @@ export class ClipboardService {
             this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
             this.toolSelectionMoverService.moveSelection({ x: this.placementPositionOffset, y: this.placementPositionOffset });
         }
+
+        this.historyService.addCommand(
+            new AppendElementsClipboardCommand(
+                this,
+                this.drawingService,
+                [...this.toolSelectionStateService.selectedElements],
+                offsetBefore,
+                this.placementPositionOffset
+            )
+        );
     }
 
     cut(): void {
@@ -75,13 +87,25 @@ export class ClipboardService {
 
         this.placeElements(this.toolSelectionStateService.selectedElements);
 
-        const isNextPlacementOutOfDrawing =
-            this.isNextPlacementOutOfDrawing(this.toolSelectionStateService.selectedElements, placementPositionOffsetIncrement);
+        const isNextPlacementOutOfDrawing = this.isNextPlacementOutOfDrawing(
+            this.toolSelectionStateService.selectedElements,
+            placementPositionOffsetIncrement
+        );
 
         if (!isNextPlacementOutOfDrawing) {
             this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
             this.toolSelectionMoverService.moveSelection({ x: placementPositionOffsetIncrement, y: placementPositionOffsetIncrement });
         }
+
+        this.historyService.addCommand(
+            new AppendElementsClipboardCommand(
+                this,
+                this.drawingService,
+                [...this.toolSelectionStateService.selectedElements],
+                this.placementPositionOffset,
+                this.placementPositionOffset
+            )
+        );
     }
 
     hasSelection(): boolean {
@@ -89,7 +113,7 @@ export class ClipboardService {
     }
 
     hasCopiedElements(): boolean {
-        return this.copiedElements.length > 0;
+        return this.clipboardBuffer.length > 0;
     }
 
     private placeElements(elements: SVGGraphicsElement[]): void {
@@ -100,7 +124,6 @@ export class ClipboardService {
             elementCopies.push(elementCopy);
         }
         this.toolSelectionStateService.selectedElements = elementCopies;
-        this.historyService.addCommand(new AppendElementsCommand(this.drawingService, elementCopies));
     }
 
     private isNextPlacementOutOfDrawing(elementsToPlace: SVGGraphicsElement[], nextPlacementPositionOffset: number): boolean {

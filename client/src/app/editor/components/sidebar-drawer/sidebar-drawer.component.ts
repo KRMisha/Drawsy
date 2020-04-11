@@ -283,9 +283,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     pasteCommand(): void {
-        this.currentToolService.currentTool = this.toolSelectionService;
-        this.resetCurrentControls();
-        this.clipboardService.paste();
+        if (this.hasCopiedElements) {
+            this.currentToolService.currentTool = this.toolSelectionService;
+            this.resetCurrentControls();
+            this.clipboardService.paste();
+        }
     }
 
     cutCommand(): void {
