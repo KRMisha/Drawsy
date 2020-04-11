@@ -1,6 +1,7 @@
 import { EmailRequest } from '@app/classes/email-request';
 import { HttpException } from '@app/classes/http-exception';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
+import EmailValidation from '@common/validation/email-validation';
 import * as axios from 'axios';
 import * as FormData from 'form-data';
 import { injectable } from 'inversify';
@@ -11,6 +12,11 @@ export class EmailService {
         if (emailRequest.drawing === undefined || emailRequest.address === undefined) {
             throw new HttpException(HttpStatusCode.BadRequest, 'La requete est incomplète');
         }
+
+        if (!EmailValidation.emailRegex.test(emailRequest.address)) {
+            throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
+        }
+
         try {
             await this.makeEmailValidationRequest(emailRequest);
             await this.sendEmailVerificationRequest(emailRequest);

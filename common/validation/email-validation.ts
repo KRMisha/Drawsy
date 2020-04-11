@@ -1,3 +1,3 @@
 export default {
-    emailRegex: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+    emailRegex: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
 }
