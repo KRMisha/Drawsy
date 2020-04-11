@@ -9,7 +9,7 @@ import { injectable } from 'inversify';
 @injectable()
 export class EmailService {
     async sendEmail(emailRequest: EmailRequest): Promise<void> {
-        if (emailRequest.drawing === undefined || emailRequest.address === undefined) {
+        if (emailRequest.payload === undefined || emailRequest.address === undefined) {
             throw new HttpException(HttpStatusCode.BadRequest, 'La requete est incomplète');
         }
 
@@ -28,7 +28,7 @@ export class EmailService {
                     throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
                     break;
                 case HttpStatusCode.TooManyRequests:
-                    throw new HttpException(HttpStatusCode.InternalServerError, "Vous avez dépasser votre limite de d'envois de couriels");
+                    throw new HttpException(HttpStatusCode.TooManyRequests, "Vous avez dépassé votre limite de d'envois de couriels");
                     break;
                 default:
                     throw error;
@@ -80,7 +80,7 @@ export class EmailService {
     private makeFormData(emailRequest: EmailRequest): FormData {
         const form = new FormData();
         form.append('to', emailRequest.address);
-        const convertedFile = (emailRequest.drawing as unknown) as Express.Multer.File;
+        const convertedFile = (emailRequest.payload as unknown) as Express.Multer.File;
         form.append('payload', convertedFile.buffer, { filename: convertedFile.originalname, contentType: convertedFile.mimetype });
         return form;
     }
