@@ -25,7 +25,7 @@ export class ColorService {
     // tslint:disable: variable-name
     private _primaryColor = defaultPrimaryColor;
     private _secondaryColor = defaultSecondaryColor;
-    private _previousColors: Color[] = defaultColors;
+    private _lastColors: Color[] = defaultColors;
     // tslint:enable: variable-name
 
     private primaryColorChangedSource = new Subject<Color>();
@@ -65,19 +65,19 @@ export class ColorService {
         this.secondaryColorChangedSource.next(this._secondaryColor);
     }
 
-    get previousColors(): Color[] {
-        return this._previousColors;
+    get lastColors(): Color[] {
+        return this._lastColors;
     }
 
     private addColor(color: Color): void {
         const isColorPresent = (element: Color) => color.getHex() === element.getHex();
-        const colorIndex = this._previousColors.findIndex(isColorPresent);
+        const colorIndex = this._lastColors.findIndex(isColorPresent);
 
         if (colorIndex === -1) {
-            this._previousColors.pop();
-            this._previousColors.unshift(color);
+            this._lastColors.pop();
+            this._lastColors.unshift(color);
         } else {
-            this._previousColors[colorIndex] = color;
+            this._lastColors[colorIndex] = color;
         }
     }
 }
