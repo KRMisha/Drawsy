@@ -40,7 +40,7 @@ export class EmailService {
     private async makeEmailValidationRequest(emailRequest: EmailRequest): Promise<void> {
         const formData = this.makeFormData(emailRequest);
         try {
-            await this.sendRequest(formData, false, true, false);
+            await this.sendRequest(formData, true, true, false);
         } catch (error) {
             if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
@@ -53,7 +53,7 @@ export class EmailService {
     private async sendEmailVerificationRequest(emailRequest: EmailRequest): Promise<void> {
         const formData = this.makeFormData(emailRequest);
         try {
-            await this.sendRequest(formData, false, false, true);
+            await this.sendRequest(formData, true, false, true);
         } catch (error) {
             if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, "L'adresse courriel envoyé n'existe pas");
