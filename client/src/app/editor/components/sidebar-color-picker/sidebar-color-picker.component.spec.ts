@@ -21,7 +21,7 @@ describe('SidebarColorPickerComponent', () => {
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', ['swapPrimaryAndSecondaryColors'], {
             primaryColor: primaryColorSpyObj,
             secondaryColor: secondaryColorSpyObj,
-            previousColors: [primaryColorSpyObj, secondaryColorSpyObj],
+            lastColors: [primaryColorSpyObj, secondaryColorSpyObj],
         });
         TestBed.configureTestingModule({
             declarations: [SidebarColorPickerComponent],
@@ -108,25 +108,25 @@ describe('SidebarColorPickerComponent', () => {
         expect(component['color']).toBe(secondaryColorSpyObj);
     });
 
-    it('#onPreviousColorClick should change the color, change the secondary color and set isColorPickerDisplayEnabled to false if the right mouse button is pressed', () => {
+    it('#onlastColorClick should change the color, change the secondary color and set isColorPickerDisplayEnabled to false if the right mouse button is pressed', () => {
         component['isColorPickerDisplayEnabled'] = true;
         const colorServiceMock = { primaryColor: {} as Color, secondaryColor: {} as Color } as ColorService;
         component['colorService'] = colorServiceMock;
         const event = { button: MouseButton.Right } as MouseEvent;
         const colorStub = {} as Color;
-        component.onPreviousColorClick(event, colorStub);
+        component.onLastColorClick(event, colorStub);
         expect(component['color']).toBe(colorStub);
         expect(component.secondaryColor).toBe(colorStub);
         expect(component['isColorPickerDisplayEnabled']).toEqual(false);
     });
 
-    it('#onPreviousColorClick should change the color, change the primary color and set isColorPickerDisplayEnabled to false if the left mouse button is pressed', () => {
+    it('#onlastColorClick should change the color, change the primary color and set isColorPickerDisplayEnabled to false if the left mouse button is pressed', () => {
         component['isColorPickerDisplayEnabled'] = true;
         const colorServiceMock = { primaryColor: {} as Color, secondaryColor: {} as Color } as ColorService;
         component['colorService'] = colorServiceMock;
         const event = { button: MouseButton.Left } as MouseEvent;
         const colorStub = {} as Color;
-        component.onPreviousColorClick(event, colorStub);
+        component.onLastColorClick(event, colorStub);
         expect(component['color']).toBe(colorStub);
         expect(component.primaryColor).toBe(colorStub);
         expect(component['isColorPickerDisplayEnabled']).toEqual(false);
@@ -138,7 +138,7 @@ describe('SidebarColorPickerComponent', () => {
         component['colorService'] = colorServiceMock;
         const event = { button: MouseButton.Forward } as MouseEvent;
         const colorStub = {} as Color;
-        component.onPreviousColorClick(event, colorStub);
+        component.onLastColorClick(event, colorStub);
         expect(component['color']).toBe(colorStub);
         expect(component.primaryColor).not.toBe(colorStub);
         expect(component.secondaryColor).not.toBe(colorStub);
