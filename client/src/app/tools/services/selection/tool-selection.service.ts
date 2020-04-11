@@ -27,6 +27,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     private selectAllShortcutSubscription: Subscription;
 
+    private previousMousePosition: Vec2;
+
     constructor(
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
@@ -55,7 +57,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             case SelectionState.SelectionMoveStartClick:
                 this.toolSelectionStateService.state = SelectionState.MovingSelectionWithMouse;
             case SelectionState.MovingSelectionWithMouse:
-                this.toolSelectionMoverService.moveSelection({ x: event.movementX, y: event.movementY });
+                const mouseMovement: Vec2 = {
+                    x: Tool.mousePosition.x - this.previousMousePosition.x,
+                    y: Tool.mousePosition.y - this.previousMousePosition.y,
+                };
+                this.toolSelectionMoverService.moveSelection(mouseMovement);
                 break;
 
             case SelectionState.SelectionChangeStartClick:
@@ -79,6 +85,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
+        this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
     }
 
     onMouseDown(event: MouseEvent): void {
