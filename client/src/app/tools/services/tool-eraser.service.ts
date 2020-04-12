@@ -141,11 +141,11 @@ export class ToolEraserService extends Tool {
     }
 
     private addRedBorderToElement(element: SVGGraphicsElement): void {
-        const elementStrokeWidth = element.getAttribute('stroke-width') || undefined;
-        const elementStrokeColor = element.getAttribute('stroke') || undefined;
+        const elementStrokeColor = element.getAttribute('stroke');
+        const elementStrokeWidth = element.getAttribute('stroke-width');
 
-        this.elementUnderCursorStrokeColor = elementStrokeColor === undefined ? 'none' : elementStrokeColor;
-        this.elementUnderCursorStrokeWidth = elementStrokeWidth === undefined ? 'none' : elementStrokeWidth;
+        this.elementUnderCursorStrokeColor = elementStrokeColor === null ? 'none' : elementStrokeColor;
+        this.elementUnderCursorStrokeWidth = elementStrokeWidth === null ? 'none' : elementStrokeWidth;
 
         let borderColor = 'rgb(255, 0, 0)';
         if (this.elementUnderCursorStrokeColor !== 'none') {
