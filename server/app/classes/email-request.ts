@@ -1,4 +1,4 @@
 export interface EmailRequest {
-    address: string;
+    to: string;
     payload: Express.Multer.File;
 }

@@ -9,105 +9,70 @@ import { injectable } from 'inversify';
 @injectable()
 export class EmailService {
     async sendEmail(emailRequest: EmailRequest): Promise<void> {
-        if (emailRequest.payload === undefined || emailRequest.address === undefined) {
-            throw new HttpException(HttpStatusCode.BadRequest, 'La requete est incomplète');
+        if (emailRequest.to === undefined) {
+            throw new HttpException(HttpStatusCode.BadRequest, 'Incomplete fields');
         }
 
-        if (!EmailValidation.emailRegex.test(emailRequest.address)) {
-            throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
+        if (!EmailValidation.emailRegex.test(emailRequest.to)) {
+            throw new HttpException(HttpStatusCode.BadRequest, 'Invalid email');
         }
 
-        try {
-            await this.makeEmailValidationRequest(emailRequest);
-            await this.sendEmailVerificationRequest(emailRequest);
-            await this.sendEmailRequest(emailRequest);
-        } catch (error) {
-            switch (error.status) {
-                case HttpStatusCode.Forbidden:
-                case HttpStatusCode.UnprocessableEntity:
-                    throw new HttpException(HttpStatusCode.InternalServerError, 'Un problème interne est survenu');
-                    break;
-                case HttpStatusCode.TooManyRequests:
-                    throw new HttpException(HttpStatusCode.TooManyRequests, "Vous avez dépassé votre limite de d'envois de couriels");
-                    break;
-                default:
-                    throw error;
-                    break;
-            }
-        }
+        await this.sendEmailValidationRequest(emailRequest);
+        await this.sendEmailRequest(emailRequest);
     }
 
-    private async makeEmailValidationRequest(emailRequest: EmailRequest): Promise<void> {
-        const formData = this.makeFormData(emailRequest);
+    private async sendEmailValidationRequest(emailRequest: EmailRequest): Promise<void> {
         try {
-            await this.sendRequest(formData, true, true, false);
+            await this.sendRequest(emailRequest, true);
         } catch (error) {
             if (error.status === HttpStatusCode.BadRequest) {
-                throw new HttpException(HttpStatusCode.BadRequest, "Le courriel envoyé n'est pas valide");
+                throw new HttpException(HttpStatusCode.BadRequest, 'Email not found');
             } else {
-                throw error;
+                throw new HttpException(HttpStatusCode.InternalServerError, error.message);
             }
         }
     }
 
-    private async sendEmailVerificationRequest(emailRequest: EmailRequest): Promise<void> {
-        const formData = this.makeFormData(emailRequest);
+    private async sendEmailRequest(emailRequest: EmailRequest): Promise<void> {
         try {
-            await this.sendRequest(formData, true, false, true);
+            await this.sendRequest(emailRequest, false);
         } catch (error) {
-            if (error.status === HttpStatusCode.BadRequest) {
-                throw new HttpException(HttpStatusCode.BadRequest, "L'adresse courriel envoyé n'existe pas");
+            if (error.status === HttpStatusCode.TooManyRequests) {
+                throw new HttpException(HttpStatusCode.TooManyRequests, 'Email limit reached');
             } else {
-                throw error;
+                throw new HttpException(HttpStatusCode.InternalServerError, error.message);
             }
         }
     }
 
-    private async sendEmailRequest(emailRequest: EmailRequest): Promise<number> {
-        const formData = this.makeFormData(emailRequest);
-        try {
-            const requestReponse = await this.sendRequest(formData, false, false, false);
-            return parseInt(requestReponse.headers['x-ratelimit-remaining'], 10);
-        } catch (error) {
-            if (error.status === HttpStatusCode.BadRequest) {
-                throw new HttpException(HttpStatusCode.BadRequest, "Le courriel n'envoyé pas pu être envoyé");
-            } else {
-                throw error;
-            }
-        }
-    }
-
-    private makeFormData(emailRequest: EmailRequest): FormData {
+    private async sendRequest(emailRequest: EmailRequest, isAddressValidation: boolean): Promise<axios.AxiosResponse> {
         const form = new FormData();
-        form.append('to', emailRequest.address);
-        const convertedFile = (emailRequest.payload as unknown) as Express.Multer.File;
-        form.append('payload', convertedFile.buffer, { filename: convertedFile.originalname, contentType: convertedFile.mimetype });
-        return form;
-    }
+        form.append('to', emailRequest.to);
+        form.append('payload', emailRequest.payload.buffer, {
+            filename: emailRequest.payload.originalname,
+            contentType: emailRequest.payload.mimetype,
+        });
 
-    private async sendRequest(
-        form: FormData,
-        isDryRun: boolean,
-        isQuickReturn: boolean,
-        isAddressValidation: boolean
-    ): Promise<axios.AxiosResponse> {
-        const requestConfig = {
-            baseURL: 'https://log2990.step.polymtl.ca',
+        const config: axios.AxiosRequestConfig = {
             headers: {
-                'X-team-key': process.env.EMAIL_API_KEY,
                 ...form.getHeaders(),
+                'X-Team-Key': process.env.EMAIL_API_KEY,
             },
             params: {
-                dry_run: isDryRun,
-                quick_return: isQuickReturn,
                 address_validation: isAddressValidation,
+                quick_return: isAddressValidation,
+                dry_run: isAddressValidation,
             },
-        } as axios.AxiosRequestConfig;
+        };
 
-        try {
-            return await axios.default.post('/email', form, requestConfig);
-        } catch (error) {
-            throw new HttpException(error.response.status, error.response.data.error);
+        if (process.env.EMAIL_API_URL !== undefined) {
+            try {
+                return await axios.default.post(process.env.EMAIL_API_URL, form, config);
+            } catch (error) {
+                throw new HttpException(error.response.status, error.response.data.error ?? 'Email API error');
+            }
+        } else {
+            throw new HttpException(HttpStatusCode.InternalServerError, 'Invalid email endpoint');
         }
     }
 }

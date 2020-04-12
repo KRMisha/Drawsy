@@ -24,38 +24,35 @@ export class EmailController {
     }
 
     private setupRoutes(): void {
-        this.router.post(
-            '/send-email',
-            (req: Request, res: Response, next: NextFunction) => {
-                upload(req, res, async (error: Error) => {
-                    if (error instanceof multer.MulterError) {
-                        let status: HttpStatusCode;
-                        switch (error.code) {
-                            case 'LIMIT_FILE_SIZE':
-                                status = HttpStatusCode.PayloadTooLarge;
-                                break;
-                            case 'LIMIT_FIELD_COUNT':
-                            case 'LIMIT_FILE_COUNT':
-                            case 'LIMIT_UNEXPECTED_FILE':
-                            default:
-                                status = HttpStatusCode.BadRequest;
-                                break;
-                        }
-                        return next(new HttpException(status, error.message));
+        this.router.post('/send-email', (req: Request, res: Response, next: NextFunction) => {
+            upload(req, res, async (error: Error) => {
+                if (error instanceof multer.MulterError) {
+                    let status: HttpStatusCode;
+                    switch (error.code) {
+                        case 'LIMIT_FILE_SIZE':
+                            status = HttpStatusCode.PayloadTooLarge;
+                            break;
+                        case 'LIMIT_FIELD_COUNT':
+                        case 'LIMIT_FILE_COUNT':
+                        case 'LIMIT_UNEXPECTED_FILE':
+                        default:
+                            status = HttpStatusCode.BadRequest;
+                            break;
                     }
+                    return next(new HttpException(status, error.message));
+                }
 
-                    try {
-                        const emailRequest: EmailRequest = {
-                            address: req.body.to,
-                            payload: req.file,
-                        };
-                        await this.emailService.sendEmail(emailRequest);
-                        res.status(HttpStatusCode.Ok).end();
-                    } catch (error) {
-                        return next(error);
-                    }
-                });
-            }
-        );
+                try {
+                    const emailRequest: EmailRequest = {
+                        to: req.body.to,
+                        payload: req.file,
+                    };
+                    await this.emailService.sendEmail(emailRequest);
+                    res.status(HttpStatusCode.Ok).end();
+                } catch (error) {
+                    return next(error);
+                }
+            });
+        });
     }
 }
