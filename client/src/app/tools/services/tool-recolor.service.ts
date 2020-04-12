@@ -65,6 +65,8 @@ export class ToolRecolorService extends Tool {
         const strokeAfter = element.getAttribute('stroke') || undefined;
         const fillAfter = element.getAttribute('fill') || undefined;
 
-        this.historyService.addCommand(new RecolorCommand(element, strokeBefore, fillBefore, strokeAfter, fillAfter));
+        if (strokeBefore !== strokeAfter || fillBefore !== fillAfter) {
+            this.historyService.addCommand(new RecolorCommand(element, strokeBefore, fillBefore, strokeAfter, fillAfter));
+        }
     }
 }
