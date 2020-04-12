@@ -71,7 +71,7 @@ describe('CurrentToolService', () => {
         expect(service).toBeTruthy();
     });
 
-    it("#constructor should subscribe to colorService's primary, secondary color changes and drawingService's elementClick", async(() => {
+    it("#constructor should subscribe to colorService's primary and secondary color changes", async(() => {
         const colorStub = {} as Color;
 
         primaryColorChangedSubject.next(colorStub);
@@ -177,6 +177,12 @@ describe('CurrentToolService', () => {
         }
     );
 
+    it('#onScroll should call currentTool\'s onScroll function', () => {
+        const event = {} as WheelEvent;
+        service.onScroll(event);
+        expect(currentToolSpyObj.onScroll).toHaveBeenCalledWith(event);
+    });
+
     it('#onMouseDoubleClick should update the mouse position and call the currentTool onMouseDoubleClick', () => {
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
@@ -204,12 +210,6 @@ describe('CurrentToolService', () => {
         service.onKeyUp(keyboardEvent);
 
         expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
-    });
-
-    it('#onScroll should call currentTool\'s onScroll function', () => {
-        const event = {} as WheelEvent;
-        service.onScroll(event);
-        expect(currentToolSpyObj.onScroll).toHaveBeenCalledWith(event);
     });
 
     it('#onMouseEnter should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter', () => {
