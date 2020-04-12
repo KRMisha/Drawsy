@@ -39,6 +39,7 @@ describe('CurrentToolService', () => {
             'onMouseMove',
             'onMouseDown',
             'onMouseUp',
+            'onScroll',
             'onMouseDoubleClick',
             'onKeyDown',
             'onKeyUp',
@@ -205,6 +206,12 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
     });
 
+    it('#onScroll should call currentTool\'s onScroll function', () => {
+        const event = {} as WheelEvent;
+        service.onScroll(event);
+        expect(currentToolSpyObj.onScroll).toHaveBeenCalledWith(event);
+    });
+
     it('#onMouseEnter should set Too.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter', () => {
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
@@ -243,6 +250,12 @@ describe('CurrentToolService', () => {
         const toolStub = {} as Tool;
         service['_currentTool'] = toolStub;
         expect(service.currentTool).toEqual(toolStub);
+    });
+
+    it('#set currentTool should return early if the parameter tool is thhe same as the current tool', () => {
+        service['_currentTool'] = currentToolSpyObj;
+        service.currentTool = currentToolSpyObj;
+        expect(currentToolSpyObj.onToolSelection).not.toHaveBeenCalled();
     });
 
     it(
