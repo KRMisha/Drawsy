@@ -27,7 +27,7 @@ describe('ToolEraserService', () => {
     const sVGGraphicsElementStub = {} as SVGGraphicsElement;
     const svgElementsInitialArray = [sVGGraphicsElementStub, sVGGraphicsElementStub, sVGGraphicsElementStub];
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'addClass']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
@@ -204,9 +204,9 @@ describe('ToolEraserService', () => {
         service.onToolSelection();
 
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'fill', '#fafafa');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'stroke', '#424242');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'fill', 'rgb(255, 255, 255)');
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'stroke-width', '1');
+        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgEraserElementStub, 'theme-eraser');
         expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalledWith(svgEraserElementStub);
         expect(updateEraserRectSpy);
     });
