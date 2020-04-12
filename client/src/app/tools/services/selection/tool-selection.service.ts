@@ -22,12 +22,11 @@ import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private currentMouseButtonDown?: MouseButton;
+    private previousMousePosition: Vec2;
 
     private selectedElementsAfterInversion: SVGGraphicsElement[] = [];
 
     private selectAllShortcutSubscription: Subscription;
-
-    private previousMousePosition: Vec2;
 
     constructor(
         rendererFactory: RendererFactory2,
