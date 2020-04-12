@@ -66,6 +66,12 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
+    it('#onScroll should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onScroll').and.callThrough();
+        tool.onScroll({} as WheelEvent);
+        expect(methodStubSpy).toHaveBeenCalled();
+    });
+
     it('#onMouseDoubleClick should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onMouseDoubleClick').and.callThrough();
         tool.onMouseDoubleClick({} as MouseEvent);
