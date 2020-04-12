@@ -11,10 +11,10 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Tool } from '@app/tools/services/tool';
 import { ToolFillService } from '@app/tools/services/tool-fill.service';
 
+// tslint:disable: max-line-length
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
-// tslint:disable: max-line-length
 
 describe('ToolFillService', () => {
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;

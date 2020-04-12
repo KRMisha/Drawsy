@@ -12,7 +12,7 @@ import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
-enum Direction {
+enum Direction { // todo pascalcase
     top,
     topRight,
     right,
@@ -21,25 +21,26 @@ enum Direction {
     bottomLeft,
     left,
     topLeft,
-}
+} // todo rename top -> up, bottom -> down
 
 @Injectable({
     providedIn: 'root',
 })
 export class ToolFillService extends Tool {
     private group: SVGGElement;
-    private initialColor: Color;
 
-    private pointsQueue = new Queue<Vec2>();
-    private visitedEdgePixels = new Set<string>();
-    private visitedColorPixels = new Set<string>();
+    private selectedColor: Color;
+
+    private pixelQueue = new Queue<[Vec2, Direction]>();
+    // private visitedEdgePixels = new Set<string>();
+    private visitedPixels = new Set<string>();
 
     private currentAbsoluteDirection: Direction;
     private currentPixel: Vec2;
     private pathString = '';
 
     private canvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
+    // private context: CanvasRenderingContext2D;
     private data: Uint8ClampedArray;
 
     constructor(
@@ -54,35 +55,32 @@ export class ToolFillService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (event.button !== MouseButton.Left || !Tool.isMouseInsideDrawing) {
-            return;
+        if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
+            this.group = this.renderer.createElement('g', 'svg');
+            this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
+            this.fillWithColor();
         }
-
-        this.group = this.renderer.createElement('g', 'svg');
-        this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
-        this.applyColor();
     }
 
-    private async applyColor(): Promise<void> {
-        const point: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
+    private async fillWithColor(): Promise<void> {
+        const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
         await this.initializeCanvas();
-        this.pointsQueue.enqueue(point);
-        this.initialColor = this.getPixelColor(point);
-        this.breadthFirstSearch();
+        this.selectedColor = this.getPixelColor(startPixel);
+        this.breadthFirstSearch(startPixel);
 
         this.drawingService.addElement(this.group as SVGGraphicsElement);
         this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
 
-        this.pointsQueue = new Queue<Vec2>();
-        this.visitedEdgePixels = new Set<string>();
-        this.visitedColorPixels = new Set<string>();
+        this.pixelQueue = new Queue<[Vec2, Direction]>();
+        // this.visitedEdgePixels = new Set<string>();
+        this.visitedPixels = new Set<string>();
         this.pathString = '';
     }
 
     private async initializeCanvas(): Promise<void> {
         this.canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
-        this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
-        this.data = this.context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
+        const context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+        this.data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
     }
 
     private getPixelColor(pixelPosition: Vec2): Color {
@@ -97,9 +95,110 @@ export class ToolFillService extends Tool {
         return Color.fromRgba(red, green, blue, alpha / Color.maxRgb);
     }
 
+    private breadthFirstSearch(startPixel: Vec2): void {
+        this.pixelQueue.enqueue([startPixel, Direction.top]);
+
+        while (!this.pixelQueue.isEmpty()) {
+            const [pixel, direction] = this.pixelQueue.dequeue()!; // tslint:disable-line: no-non-null-assertion
+            this.visitPixel(pixel, direction);
+            this.pixelQueue.enqueue([{ x: pixel.x, y: pixel.y + 1 }, Direction.top]);
+            this.pixelQueue.enqueue([{ x: pixel.x + 1, y: pixel.y }, Direction.right]);
+            this.pixelQueue.enqueue([{ x: pixel.x, y: pixel.y - 1 }, Direction.bottom]);
+            this.pixelQueue.enqueue([{ x: pixel.x - 1, y: pixel.y }, Direction.left]);
+        }
+    }
+
+    private visitPixel(pixel: Vec2, absoluteDirection: Direction): void {
+        // if (pixel === undefined) {
+        //     return;
+        // }
+
+        const isInDrawing =
+            pixel.x >= 0 && pixel.y >= 0 && pixel.x <= this.drawingService.dimensions.x && pixel.y <= this.drawingService.dimensions.y;
+
+        if (!isInDrawing || this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
+            return;
+        }
+
+        this.visitedPixels.add(`${pixel.x} ${pixel.y}`);
+
+        if (this.isSelectedColor(this.getPixelColor(pixel))) {
+            return;
+        }
+
+        const rearPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.bottom));
+        const rearLeftPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.bottomLeft));
+        const leftPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.left));
+
+        const isRearPixelConditionSatisfied = this.isSelectedColor(this.getPixelColor(rearPixel));
+        const isLeftRearInnerOuterCornerConditionSatisfied =
+            isRearPixelConditionSatisfied &&
+            this.isSelectedColor(this.getPixelColor(leftPixel)) &&
+            !this.isSelectedColor(this.getPixelColor(rearLeftPixel));
+
+        const isValidStartingPixel = isRearPixelConditionSatisfied && !isLeftRearInnerOuterCornerConditionSatisfied;
+        if (isValidStartingPixel) {
+            this.traceContour(pixel, absoluteDirection);
+        }
+    }
+
+    private traceContour(pixel: Vec2, absoluteDirection: Direction): void {
+        this.pathString = `M${pixel.x} ${pixel.y} L${pixel.x} ${pixel.y} `;
+        this.currentAbsoluteDirection = absoluteDirection;
+        this.currentPixel = pixel;
+        do {
+            if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.bottomLeft)) {
+                if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.left)) {
+                    this.updatePath(Direction.left, Direction.left);
+                    this.updatePath(Direction.left, Direction.left);
+                } else {
+                    this.updatePath(Direction.bottomLeft, Direction.bottom);
+                }
+            } else {
+                if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.left)) {
+                    this.updatePath(Direction.left, Direction.left);
+                }
+                // else {
+                //     i += 1;
+                // }
+            }
+
+            if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.topLeft)) {
+                if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.top)) {
+                    this.updatePath(Direction.top, Direction.left);
+                    this.updatePath(Direction.left, Direction.right);
+                } else {
+                    this.updatePath(Direction.topLeft, -1);
+                }
+            } else if (this.isNextPixelOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.top)) {
+                this.updatePath(Direction.top, Direction.right);
+            } else {
+                this.updatePath(-1, Direction.bottom);
+            }
+        } while (
+            !(this.currentPixel.x === pixel.x && this.currentPixel.y === pixel.y) &&
+            this.currentAbsoluteDirection !== absoluteDirection
+        );
+        this.addPathBorder();
+    }
+
+    private updatePath(pixelDirection: Direction, newDirection: Direction): void {
+        if (pixelDirection !== -1) {
+            this.currentPixel = this.findNextPixel(
+                this.currentPixel,
+                this.findAbsoluteDirection(this.currentAbsoluteDirection, pixelDirection)
+            );
+        }
+        if (newDirection !== -1) {
+            this.currentAbsoluteDirection = this.findAbsoluteDirection(this.currentAbsoluteDirection, newDirection);
+        }
+        this.pathString += `L${this.currentPixel.x} ${this.currentPixel.y} `;
+        this.visitedPixels.add(`${this.currentPixel.x} ${this.currentPixel.y}`);
+    }
+
     private findAbsoluteDirection(currentAbsoluteDirection: Direction, newRelativeDirection: Direction): Direction {
-        const directionsLength = 8;
-        return (currentAbsoluteDirection + newRelativeDirection) % directionsLength;
+        const directionCount = 8;
+        return (currentAbsoluteDirection + newRelativeDirection) % directionCount;
     }
 
     private findNextPixel(pixel: Vec2, absoluteDirection: Direction): Vec2 {
@@ -123,121 +222,30 @@ export class ToolFillService extends Tool {
         }
     }
 
-    private breadthFirstSearch(): void {
-        while (!this.pointsQueue.isEmpty()) {
-            const point = this.pointsQueue.dequeue() as Vec2;
-            this.verifyStartingPixel({ x: point.x, y: point.y + 1 }, Direction.top);
-            this.verifyStartingPixel({ x: point.x + 1, y: point.y }, Direction.right);
-            this.verifyStartingPixel({ x: point.x, y: point.y - 1 }, Direction.bottom);
-            this.verifyStartingPixel({ x: point.x - 1, y: point.y }, Direction.left);
-        }
-    }
-
-    private verifyStartingPixel(pixel: Vec2, absoluteDirection: Direction): void {
-        const isInDrawing =
-            pixel.x >= 0 && pixel.y >= 0 && pixel.x <= this.drawingService.dimensions.x && pixel.y <= this.drawingService.dimensions.y;
-
-        if (!isInDrawing || this.visitedColorPixels.has(`${pixel.x} ${pixel.y}`)) {
-            return;
-        }
-
-        if (this.matchesSelectedColor(this.getPixelColor(pixel))) {
-            this.visitedColorPixels.add(`${pixel.x} ${pixel.y}`);
-            this.pointsQueue.enqueue(pixel);
-            return;
-        }
-
-        const rearPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.bottom));
-        const rearLeftPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.bottomLeft));
-        const leftPixel = this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, Direction.left));
-
-        const rearPixelCondition = this.matchesSelectedColor(this.getPixelColor(rearPixel));
-        const innerOuterCornerCondition =
-            rearPixelCondition &&
-            this.matchesSelectedColor(this.getPixelColor(leftPixel)) &&
-            !this.matchesSelectedColor(this.getPixelColor(rearLeftPixel));
-
-        if (!rearPixelCondition || innerOuterCornerCondition) {
-            return;
-        }
-
-        this.createPath(pixel, absoluteDirection);
-    }
-
-    private matchesSelectedColor(color: Color): boolean {
+    private isSelectedColor(color: Color): boolean {
         const distanceFromSelectedColor = Math.sqrt(
-            Math.pow(color.red - this.initialColor.red, 2) +
-                Math.pow(color.green - this.initialColor.green, 2) +
-                Math.pow(color.blue - this.initialColor.blue, 2)
+            Math.pow(color.red - this.selectedColor.red, 2) +
+                Math.pow(color.green - this.selectedColor.green, 2) +
+                Math.pow(color.blue - this.selectedColor.blue, 2)
         );
 
-        const maximalDistance = 442;
+        const maxDistance = 442;
         const percentageMultiplier = 100;
-        const percentageDifference = (distanceFromSelectedColor * percentageMultiplier) / maximalDistance;
+        const percentageDifference = (distanceFromSelectedColor * percentageMultiplier) / maxDistance;
 
         // tslint:disable-next-line: no-non-null-assertion
-        return percentageDifference <= this.settings.fillDeviation! ? true : false;
+        return percentageDifference <= this.settings.fillDeviation!;
     }
 
-    private nextPixelIsOddColor(pixel: Vec2, absoluteDirection: Direction, newRelativeDirection: Direction): boolean {
-        return !this.matchesSelectedColor(
+    private isNextPixelOddColor(pixel: Vec2, absoluteDirection: Direction, newRelativeDirection: Direction): boolean {
+        return !this.isSelectedColor(
             this.getPixelColor(this.findNextPixel(pixel, this.findAbsoluteDirection(absoluteDirection, newRelativeDirection)))
         );
     }
 
-    private updatePath(pixelDirection: Direction, newDirection: Direction): void {
-        if (pixelDirection !== -1) {
-            this.currentPixel = this.findNextPixel(
-                this.currentPixel,
-                this.findAbsoluteDirection(this.currentAbsoluteDirection, pixelDirection)
-            );
-        }
-        if (newDirection !== -1) {
-            this.currentAbsoluteDirection = this.findAbsoluteDirection(this.currentAbsoluteDirection, newDirection);
-        }
-        this.pathString += `L${this.currentPixel.x} ${this.currentPixel.y} `;
-        this.visitedEdgePixels.add(`${this.currentPixel.x} ${this.currentPixel.y}`);
-    }
-
-    private createPath(pixel: Vec2, absoluteDirection: Direction): void {
-        this.pathString = `M${pixel.x} ${pixel.y} L${pixel.x} ${pixel.y} `;
-        this.currentAbsoluteDirection = absoluteDirection;
-        this.currentPixel = pixel;
-        do {
-            if (this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.left)) {
-                this.updatePath(Direction.left, Direction.left);
-            } else {
-                if (
-                    this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.bottomLeft) &&
-                    !this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.bottom)
-                ) {
-                    this.updatePath(Direction.bottomLeft, Direction.bottom);
-                } else {
-                    if (this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.topLeft)) {
-                        if (this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.top)) {
-                            this.updatePath(Direction.top, -1);
-                            this.updatePath(Direction.left, -1);
-                        } else {
-                            this.updatePath(Direction.topLeft, -1);
-                        }
-                    } else if (this.nextPixelIsOddColor(this.currentPixel, this.currentAbsoluteDirection, Direction.top)) {
-                        this.updatePath(Direction.top, Direction.right);
-                    } else {
-                        this.updatePath(-1, Direction.bottom);
-                    }
-                }
-            }
-        } while (
-            !(this.currentPixel.x === pixel.x && this.currentPixel.y === pixel.y) &&
-            this.currentAbsoluteDirection !== absoluteDirection
-        );
-        this.addPathBorder();
-    }
-
     private addPathBorder(): void {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
-        this.renderer.setAttribute(path, 'fill', 'none');
-        this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
+        this.renderer.setAttribute(path, 'fill', this.colorService.primaryColor.toRgbaString());
         this.renderer.setAttribute(path, 'stroke-width', '1');
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
