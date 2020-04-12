@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
+import { ToolSelectionRotatorService } from '@app/tools/services/selection/tool-selection-rotator.service';
 
 describe('ToolSelectionRotatorService', () => {
     let service: ToolSelectionRotatorService;
