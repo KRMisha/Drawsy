@@ -142,7 +142,7 @@ describe('AlphaSliderComponent', () => {
         expect(component['isLeftMouseButtonDown']).toEqual(true);
     });
 
-    it('#onTouchMove should call #onMouseMove using TouchService\'s getMouseEventFromTouchEvent', () => {
+    it("#onTouchMove should call #onMouseMove using TouchService's getMouseEventFromTouchEvent", () => {
         const onMouseMoveSpy = spyOn(component, 'onMouseMove');
         const expectedParam = {} as MouseEvent;
         const touchServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent').and.returnValue(expectedParam);
@@ -152,7 +152,7 @@ describe('AlphaSliderComponent', () => {
         expect(onMouseMoveSpy).toHaveBeenCalledWith(expectedParam);
     });
 
-    it('#onTouchStart should call #onMouseEnter and #onMouseDown using TouchService\'s getMouseEventFromTouchEvent', () => {
+    it("#onTouchStart should call #onMouseEnter and #onMouseDown using TouchService's getMouseEventFromTouchEvent", () => {
         const onMouseEnterSpy = spyOn(component, 'onMouseEnter');
         const onMouseDownSpy = spyOn(component, 'onMouseDown');
         const expectedParam = {} as MouseEvent;
@@ -164,7 +164,7 @@ describe('AlphaSliderComponent', () => {
         expect(onMouseDownSpy).toHaveBeenCalledWith(expectedParam);
     });
 
-    it('#onTouchEnd should call #onMouseLeave and onMouseUp using TouchService\'s getMouseEventFromTouchEvent', () => {
+    it("#onTouchEnd should call #onMouseLeave and onMouseUp using TouchService's getMouseEventFromTouchEvent", () => {
         const onMouseLeaveSpy = spyOn(component, 'onMouseLeave');
         const onMouseUpSpy = spyOn(component, 'onMouseUp');
         const expectedParam = {} as MouseEvent;
