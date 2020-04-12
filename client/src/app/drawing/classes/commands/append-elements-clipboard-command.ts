@@ -1,6 +1,6 @@
+import { Command } from '@app/drawing/classes/commands/command';
 import { ClipboardService } from '@app/drawing/services/clipboard.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Command } from './command';
 
 export class AppendElementsClipboardCommand implements Command {
     constructor(

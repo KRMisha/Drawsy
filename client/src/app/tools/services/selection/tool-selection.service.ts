@@ -12,11 +12,11 @@ import ToolInfo from '@app/tools/constants/tool-info';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionRotatorService } from '@app/tools/services/selection/tool-selection-rotator.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
-import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 @Injectable({
     providedIn: 'root',
