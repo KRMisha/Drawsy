@@ -16,6 +16,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
+import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -23,6 +24,7 @@ import { Subscription } from 'rxjs';
 export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private currentMouseButtonDown?: MouseButton;
+    private previousMousePosition: Vec2;
 
     private selectedElementsAfterInversion: SVGGraphicsElement[] = [];
 
@@ -35,6 +37,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         historyService: HistoryService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionMoverService: ToolSelectionMoverService,
+        private toolSelectionRotatorService: ToolSelectionRotatorService,
         private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
@@ -55,7 +58,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             case SelectionState.SelectionMoveStartClick:
                 this.toolSelectionStateService.state = SelectionState.MovingSelectionWithMouse;
             case SelectionState.MovingSelectionWithMouse:
-                this.toolSelectionMoverService.moveSelection({ x: event.movementX, y: event.movementY });
+                const mouseMovement: Vec2 = {
+                    x: Tool.mousePosition.x - this.previousMousePosition.x,
+                    y: Tool.mousePosition.y - this.previousMousePosition.y,
+                };
+                this.toolSelectionMoverService.moveSelection(mouseMovement);
                 break;
 
             case SelectionState.SelectionChangeStartClick:
@@ -79,6 +86,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
+        this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -152,6 +160,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionStateService.state = SelectionState.None;
         this.currentMouseButtonDown = undefined;
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
+    }
+
+    onScroll(event: WheelEvent): void {
+        this.toolSelectionRotatorService.onScroll(event);
     }
 
     onKeyDown(event: KeyboardEvent): void {

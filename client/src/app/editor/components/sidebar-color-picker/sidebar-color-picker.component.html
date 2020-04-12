@@ -24,15 +24,15 @@
     ></div>
 </div>
 
-<div class="previous-colors-container" [class.previous-colors-container-margin]="!isColorPickerDisplayEnabled">
+<div class="last-colors-container" [class.last-colors-container-margin]="!isColorPickerDisplayEnabled">
     <div
         class="circle-item mat-elevation-z2"
-        *ngFor="let color of previousColors"
+        *ngFor="let color of lastColors"
         [matTooltip]="'#' + color.getHex()"
         matRipple
         [style.background-color]="color.toRgbString()"
-        (click)="onPreviousColorClick($event, color)"
-        (contextmenu)="onPreviousColorClick($event, color)"
+        (click)="onLastColorClick($event, color)"
+        (contextmenu)="onLastColorClick($event, color)"
     ></div>
 </div>
 
