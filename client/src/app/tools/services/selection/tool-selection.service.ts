@@ -163,7 +163,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     onScroll(event: WheelEvent): void {
-        this.toolSelectionRotatorService.onScroll(event.deltaY, event.altKey, event.shiftKey);
+        this.toolSelectionRotatorService.onScroll(event);
     }
 
     onKeyDown(event: KeyboardEvent): void {

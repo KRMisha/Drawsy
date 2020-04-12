@@ -4,10 +4,10 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
-import { ToolSelectionMoverService } from './tool-selection-mover.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
-import { ToolSelectionTransformService } from './tool-selection-transform.service';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
+import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,8 +22,7 @@ export class ToolSelectionRotatorService {
         private historyService: HistoryService
     ) {}
 
-    // Note a Misha:                                     ecq ce nom est deg
-    onScroll(mouseDeltaY: number, isSmallAngle: boolean, isIndividualRotation: boolean): void {
+    onScroll(event: WheelEvent): void {
         if (
             this.toolSelectionStateService.state !== SelectionState.None ||
             this.toolSelectionStateService.selectedElements.length === 0
@@ -31,25 +30,19 @@ export class ToolSelectionRotatorService {
             return;
         }
 
-        if (mouseDeltaY === 0) {
+        if (event.deltaY === 0) {
             return;
         }
 
         const selectedElementTransformsBeforeRotate = this.toolSelectionTransformService.getElementListTransformsCopy(
             this.toolSelectionStateService.selectedElements
         );
-
         this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
-        const angle = this.getAngle(mouseDeltaY, isSmallAngle);
 
-        if (isIndividualRotation) {
-            this.rotateSelectedElements(angle);
-        } else {
-            this.rotateSelection(angle);
-        }
-        // Note a misha:
-        // Ecq c'est mieux de faire un ternary?
-        // isIndividualRotation ? this.rotateSelectedElements(angle) : this.rotateSelection(angle);
+        const angle = this.getAngle(event.deltaY, event.altKey);
+
+        const isIndividualRotation = event.shiftKey;
+        isIndividualRotation ? this.rotateSelectedElementsIndividually(angle) : this.rotateSelectionAroundCenter(angle);
 
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
         this.historyService.addCommand(
@@ -61,26 +54,25 @@ export class ToolSelectionRotatorService {
         );
     }
 
-    private getAngle(mouseDeltaY: number, isSmallAngle: boolean): number {
-        const smallAngleChange = 1;
-        const bigAngleChange = 15;
-        return (mouseDeltaY > 0 ? 1 : -1) * (isSmallAngle ? smallAngleChange : bigAngleChange);
+    private getAngle(mouseWheelDeltaY: number, isSmallAngle: boolean): number {
+        const smallAngleRotationDegrees = 1;
+        const bigAngleRotationDegrees = 15;
+        return (mouseWheelDeltaY > 0 ? 1 : -1) * (isSmallAngle ? smallAngleRotationDegrees : bigAngleRotationDegrees);
     }
 
-    private rotateSelection(angle: number): void {
+    private rotateSelectionAroundCenter(angle: number): void {
         if (this.toolSelectionStateService.selectedElementsRect === undefined) {
             return;
         }
-        const centerOfSelectedElementsRectBeforeRotation: Vec2 = {
+
+        const selectedElementsRectCenterBeforeRotation: Vec2 = {
             x: this.toolSelectionStateService.selectedElementsRect.x + this.toolSelectionStateService.selectedElementsRect.width / 2,
             y: this.toolSelectionStateService.selectedElementsRect.y + this.toolSelectionStateService.selectedElementsRect.height / 2,
         };
 
         const rotationPoint = this.drawingService.drawingRoot.createSVGPoint();
-        rotationPoint.x =
-            this.toolSelectionStateService.selectedElementsRect.x + this.toolSelectionStateService.selectedElementsRect.width / 2;
-        rotationPoint.y =
-            this.toolSelectionStateService.selectedElementsRect.y + this.toolSelectionStateService.selectedElementsRect.height / 2;
+        rotationPoint.x = selectedElementsRectCenterBeforeRotation.x;
+        rotationPoint.y = selectedElementsRectCenterBeforeRotation.y;
 
         for (const element of this.toolSelectionStateService.selectedElements) {
             this.rotateElementAroundPoint(element, rotationPoint, angle);
@@ -90,27 +82,28 @@ export class ToolSelectionRotatorService {
             this.toolSelectionStateService.selectedElements
         );
 
+        // Disable non-null assertion lint error because the selectedElementsRect will always be defined since a selection exists
         // tslint:disable: no-non-null-assertion
-        const centerOfSelectedElementsRectAfterRotation: Vec2 = {
+        const selectedElementsRectCenterAfterRotation: Vec2 = {
             x: this.toolSelectionStateService.selectedElementsRect!.x + this.toolSelectionStateService.selectedElementsRect!.width / 2,
             y: this.toolSelectionStateService.selectedElementsRect!.y + this.toolSelectionStateService.selectedElementsRect!.height / 2,
         };
         // tslint:enable: no-non-null-assertion
 
-        const moveDuringRotationToCorrect: Vec2 = {
-            x: centerOfSelectedElementsRectBeforeRotation.x - centerOfSelectedElementsRectAfterRotation.x,
-            y: centerOfSelectedElementsRectBeforeRotation.y - centerOfSelectedElementsRectAfterRotation.y,
+        const rotationMovementToCorrect: Vec2 = {
+            x: selectedElementsRectCenterBeforeRotation.x - selectedElementsRectCenterAfterRotation.x,
+            y: selectedElementsRectCenterBeforeRotation.y - selectedElementsRectCenterAfterRotation.y,
         };
 
-        this.toolSelectionMoverService.moveSelection(moveDuringRotationToCorrect);
+        this.toolSelectionMoverService.moveSelection(rotationMovementToCorrect);
     }
 
-    private rotateSelectedElements(angle: number): void {
+    private rotateSelectedElementsIndividually(angle: number): void {
         for (const element of this.toolSelectionStateService.selectedElements) {
-            const elementRect = this.toolSelectionCollisionService.getElementBounds(element);
+            const elementBounds = this.toolSelectionCollisionService.getElementBounds(element);
             const rotationPoint = this.drawingService.drawingRoot.createSVGPoint();
-            rotationPoint.x = elementRect.x + elementRect.width / 2;
-            rotationPoint.y = elementRect.y + elementRect.height / 2;
+            rotationPoint.x = elementBounds.x + elementBounds.width / 2;
+            rotationPoint.y = elementBounds.y + elementBounds.height / 2;
             this.rotateElementAroundPoint(element, rotationPoint, angle);
         }
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
@@ -119,9 +112,8 @@ export class ToolSelectionRotatorService {
     }
 
     private rotateElementAroundPoint(element: SVGGraphicsElement, point: SVGPoint, angle: number): void {
-        const globalToLocalMatrix =
-            // tslint:disable-next-line: no-non-null-assertion
-            this.drawingService.drawingRoot.getScreenCTM()!.inverse().multiply(element.getScreenCTM()!).inverse();
+        // tslint:disable-next-line: no-non-null-assertion
+        const globalToLocalMatrix = this.drawingService.drawingRoot.getScreenCTM()!.inverse().multiply(element.getScreenCTM()!).inverse();
         const localCenterOfRotation = point.matrixTransform(globalToLocalMatrix);
 
         const rotateTransformIndex = 1;
