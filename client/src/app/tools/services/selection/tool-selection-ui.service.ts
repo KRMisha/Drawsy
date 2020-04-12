@@ -1,13 +1,12 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { Subscription } from 'rxjs';
 
-const controlPointSideSize = 8;
+const controlPointRadius = 3;
 
 @Injectable({
     providedIn: 'root',
@@ -69,35 +68,27 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     private createUiElements(): void {
-        // Disable magic numbers false positive lint error for values in static named constructor
-        const selectionColor = Color.fromRgb(49, 104, 142); // tslint:disable-line: no-magic-numbers
-        const borderColorAlpha = 0.2;
-        selectionColor.alpha = borderColorAlpha;
         this.svgUserSelectionRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'fill', selectionColor.toRgbaString());
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-dasharray', '5, 3');
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '1.5');
+        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-width', '1');
         this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke-linecap', 'round');
-        const fillColorAlpha = 0.8;
-        selectionColor.alpha = fillColorAlpha;
-        this.renderer.setAttribute(this.svgUserSelectionRect, 'stroke', selectionColor.toRgbaString());
+        this.renderer.addClass(this.svgUserSelectionRect, 'theme-user-selection-rect');
 
         this.svgSelectedElementsRectGroup = this.renderer.createElement('g', 'svg');
 
-        // Disable magic numbers false positive lint error for values in static named constructor
-        const selectedElementsRectColor = Color.fromRgb(64, 64, 64); // tslint:disable-line: no-magic-numbers
         this.svgSelectedElementsRect = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke', selectedElementsRectColor.toRgbString());
-        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke-width', '1.5');
         this.renderer.setAttribute(this.svgSelectedElementsRect, 'fill', 'none');
+        this.renderer.setAttribute(this.svgSelectedElementsRect, 'stroke-width', '1.5');
+        this.renderer.addClass(this.svgSelectedElementsRect, 'theme-selected-elements-rect');
         this.renderer.appendChild(this.svgSelectedElementsRectGroup, this.svgSelectedElementsRect);
 
         const controlPointsCount = 4;
         for (let i = 0; i < controlPointsCount; i++) {
-            this.svgControlPoints.push(this.renderer.createElement('rect', 'svg'));
-            this.renderer.setAttribute(this.svgControlPoints[i], 'width', controlPointSideSize.toString());
-            this.renderer.setAttribute(this.svgControlPoints[i], 'height', controlPointSideSize.toString());
-            this.renderer.setAttribute(this.svgControlPoints[i], 'fill', selectedElementsRectColor.toRgbString());
+            this.svgControlPoints.push(this.renderer.createElement('circle', 'svg'));
+            this.renderer.setAttribute(this.svgControlPoints[i], 'r', controlPointRadius.toString());
+            this.renderer.setAttribute(this.svgControlPoints[i], 'fill', 'rgb(255, 255, 255)');
+            this.renderer.setAttribute(this.svgControlPoints[i], 'stroke-width', '1.25');
+            this.renderer.addClass(this.svgControlPoints[i], 'theme-selected-elements-rect');
             this.renderer.appendChild(this.svgSelectedElementsRectGroup, this.svgControlPoints[i]);
         }
     }
@@ -117,8 +108,8 @@ export class ToolSelectionUiService implements OnDestroy {
             { x: rect.x + rect.width / 2, y: rect.y + rect.height },
         ];
         for (let i = 0; i < controlPointPositions.length; i++) {
-            this.renderer.setAttribute(this.svgControlPoints[i], 'x', `${controlPointPositions[i].x - controlPointSideSize / 2}`);
-            this.renderer.setAttribute(this.svgControlPoints[i], 'y', `${controlPointPositions[i].y - controlPointSideSize / 2}`);
+            this.renderer.setAttribute(this.svgControlPoints[i], 'cx', controlPointPositions[i].x.toString());
+            this.renderer.setAttribute(this.svgControlPoints[i], 'cy', controlPointPositions[i].y.toString());
         }
         this.showSelectedElementsRect();
     }

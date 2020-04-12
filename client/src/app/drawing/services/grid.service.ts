@@ -13,7 +13,7 @@ export class GridService {
     isDisplayEnabled = false;
 
     private _size = 100; // tslint:disable-line: variable-name
-    private _opacity = 1; // tslint:disable-line: variable-name
+    private _opacity = 0.5; // tslint:disable-line: variable-name
 
     toggleDisplay(): void {
         this.isDisplayEnabled = !this.isDisplayEnabled;
