@@ -23,10 +23,7 @@ export class ToolSelectionRotatorService {
     ) {}
 
     onScroll(event: WheelEvent): void {
-        if (
-            this.toolSelectionStateService.state !== SelectionState.None ||
-            this.toolSelectionStateService.selectedElements.length === 0
-        ) {
+        if (this.toolSelectionStateService.state !== SelectionState.None || this.toolSelectionStateService.selectedElements.length === 0) {
             return;
         }
 
@@ -112,6 +109,7 @@ export class ToolSelectionRotatorService {
     }
 
     private rotateElementAroundPoint(element: SVGGraphicsElement, point: SVGPoint, angle: number): void {
+        // TODO: Justify (Disable non-null assertion lint error because ...)
         // tslint:disable-next-line: no-non-null-assertion
         const globalToLocalMatrix = this.drawingService.drawingRoot.getScreenCTM()!.inverse().multiply(element.getScreenCTM()!).inverse();
         const localCenterOfRotation = point.matrixTransform(globalToLocalMatrix);
