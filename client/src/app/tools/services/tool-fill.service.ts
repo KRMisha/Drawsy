@@ -112,9 +112,9 @@ export class ToolFillService extends Tool {
             this.visitPixel(pixel, direction);
 
             const adjacentPixelDirectionPairs: [Vec2, Direction][] = [
-                [{ x: pixel.x, y: pixel.y + 1 }, Direction.Up],
+                [{ x: pixel.x, y: pixel.y - 1 }, Direction.Up],
                 [{ x: pixel.x + 1, y: pixel.y }, Direction.Right],
-                [{ x: pixel.x, y: pixel.y - 1 }, Direction.Down],
+                [{ x: pixel.x, y: pixel.y + 1 }, Direction.Down],
                 [{ x: pixel.x - 1, y: pixel.y }, Direction.Left],
             ];
             for (const pixelDirectionPair of adjacentPixelDirectionPairs) {
@@ -129,7 +129,7 @@ export class ToolFillService extends Tool {
         const isPixelInDrawing =
             pixel.x >= 0 && pixel.x < this.drawingService.dimensions.x && pixel.y >= 0 && pixel.y < this.drawingService.dimensions.y;
 
-        if (isPixelInDrawing && this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
+        if (isPixelInDrawing && !this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
             this.pixelQueue.enqueue(pixelDirectionPair);
         }
     }
@@ -165,21 +165,21 @@ export class ToolFillService extends Tool {
     private getAdjacentPixel(pixel: Vec2, absoluteDirection: Direction): Vec2 {
         switch (absoluteDirection) {
             case Direction.Up:
-                return { x: pixel.x, y: pixel.y + 1 };
+                return { x: pixel.x, y: pixel.y - 1 };
             case Direction.UpRight:
-                return { x: pixel.x + 1, y: pixel.y + 1 };
+                return { x: pixel.x + 1, y: pixel.y - 1 };
             case Direction.Right:
                 return { x: pixel.x + 1, y: pixel.y };
             case Direction.DownRight:
-                return { x: pixel.x + 1, y: pixel.y - 1 };
+                return { x: pixel.x + 1, y: pixel.y + 1 };
             case Direction.Down:
-                return { x: pixel.x, y: pixel.y - 1 };
+                return { x: pixel.x, y: pixel.y + 1 };
             case Direction.DownLeft:
-                return { x: pixel.x - 1, y: pixel.y - 1 };
+                return { x: pixel.x - 1, y: pixel.y + 1 };
             case Direction.Left:
                 return { x: pixel.x - 1, y: pixel.y };
             case Direction.UpLeft:
-                return { x: pixel.x - 1, y: pixel.y + 1 };
+                return { x: pixel.x - 1, y: pixel.y - 1 };
         }
     }
 
