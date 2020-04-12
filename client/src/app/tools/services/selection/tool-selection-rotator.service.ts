@@ -23,6 +23,10 @@ export class ToolSelectionRotatorService {
     ) {}
 
     onScroll(event: WheelEvent): void {
+        if (event.ctrlKey) {
+            return;
+        }
+
         if (this.toolSelectionStateService.state !== SelectionState.None || this.toolSelectionStateService.selectedElements.length === 0) {
             return;
         }
@@ -67,12 +71,8 @@ export class ToolSelectionRotatorService {
             y: this.toolSelectionStateService.selectedElementsRect.y + this.toolSelectionStateService.selectedElementsRect.height / 2,
         };
 
-        const rotationPoint = this.drawingService.drawingRoot.createSVGPoint();
-        rotationPoint.x = selectedElementsRectCenterBeforeRotation.x;
-        rotationPoint.y = selectedElementsRectCenterBeforeRotation.y;
-
         for (const element of this.toolSelectionStateService.selectedElements) {
-            this.rotateElementAroundPoint(element, rotationPoint, angle);
+            this.rotateElementAroundPoint(element, selectedElementsRectCenterBeforeRotation, angle);
         }
 
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
@@ -108,11 +108,19 @@ export class ToolSelectionRotatorService {
         );
     }
 
-    private rotateElementAroundPoint(element: SVGGraphicsElement, point: SVGPoint, angle: number): void {
-        // TODO: Justify (Disable non-null assertion lint error because ...)
-        // tslint:disable-next-line: no-non-null-assertion
-        const globalToLocalMatrix = this.drawingService.drawingRoot.getScreenCTM()!.inverse().multiply(element.getScreenCTM()!).inverse();
-        const localCenterOfRotation = point.matrixTransform(globalToLocalMatrix);
+    private rotateElementAroundPoint(element: SVGGraphicsElement, point: Vec2, angle: number): void {
+        const drawingRootScreenCtm = this.drawingService.drawingRoot.getScreenCTM();
+        const elementScreenCtm = element.getScreenCTM();
+        if (drawingRootScreenCtm === null || elementScreenCtm === null) {
+            return;
+        }
+
+        const rotationPoint = this.drawingService.drawingRoot.createSVGPoint();
+        rotationPoint.x = point.x;
+        rotationPoint.y = point.y;
+
+        const globalToLocalMatrix = drawingRootScreenCtm.inverse().multiply(elementScreenCtm).inverse();
+        const localCenterOfRotation = rotationPoint.matrixTransform(globalToLocalMatrix);
 
         const rotateTransformIndex = 1;
         const newMatrix = element.transform.baseVal
