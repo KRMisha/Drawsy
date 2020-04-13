@@ -24,8 +24,8 @@ describe('ToolEraserService', () => {
 
     let getElementUnderAreaPixelPerfectSpy: any;
 
-    const sVGGraphicsElementStub = {} as SVGGraphicsElement;
-    const svgElementsInitialArray = [sVGGraphicsElementStub, sVGGraphicsElementStub, sVGGraphicsElementStub];
+    const svgGraphicsElementStub = {} as SVGGraphicsElement;
+    const initialElementsArray = [svgGraphicsElementStub, svgGraphicsElementStub, svgGraphicsElementStub];
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'addClass']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
@@ -39,7 +39,7 @@ describe('ToolEraserService', () => {
             ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
             {
                 drawingRoot: drawingRootSpyObj,
-                svgElements: svgElementsInitialArray,
+                elements: initialElementsArray,
             }
         );
 
@@ -87,10 +87,10 @@ describe('ToolEraserService', () => {
         jasmine.clock().uninstall();
     });
 
-    it("#onMouseDown should make a copy of the drawingService's svgElements and call #update", () => {
+    it("#onMouseDown should make a copy of the drawingService's elements and call #update", () => {
         const updateSpy = spyOn(service, 'update');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
-        expect(service['drawingElementsCopy']).toEqual(svgElementsInitialArray);
+        expect(service['drawingElementsCopy']).toEqual(initialElementsArray);
         expect(updateSpy).toHaveBeenCalled();
     });
 
@@ -110,7 +110,7 @@ describe('ToolEraserService', () => {
         const firstSiblingPair = { element: svgElementStub1, sibling: svgElementStub2 } as ElementSiblingPair;
         const secondSiblingPair = { element: svgElementStub2, sibling: svgElementStub3 } as ElementSiblingPair;
 
-        service['svgElementsDeletedDuringDrag'] = [firstSiblingPair, secondSiblingPair];
+        service['elementsDeletedDuringDrag'] = [firstSiblingPair, secondSiblingPair];
         const expectedCommandElements = [secondSiblingPair, firstSiblingPair];
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(
@@ -125,7 +125,7 @@ describe('ToolEraserService', () => {
     });
 
     it('#onMouseUp should return early if the eraser did not delete anything during the drag', () => {
-        service['svgElementsDeletedDuringDrag'] = [];
+        service['elementsDeletedDuringDrag'] = [];
         const event = { button: MouseButton.Left } as MouseEvent;
         service.onMouseUp(event);
         expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
@@ -168,8 +168,8 @@ describe('ToolEraserService', () => {
         expect(addRedBorderSpy).not.toHaveBeenCalled();
     });
 
-    it("#update should add the svgElementUnderCursor to the svgElementsDeletedDuringDrag and call drawingService's removeElement if the svgElementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the drawingElementsCopy", () => {
-        const pushSpy = spyOn(service['svgElementsDeletedDuringDrag'], 'push');
+    it("#update should add the svgElementUnderCursor to the elementsDeletedDuringDrag and call drawingService's removeElement if the svgElementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the drawingElementsCopy", () => {
+        const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
         const drawingElementsCopy = [fillElement, fillElement, fillElement, testElement];
@@ -184,8 +184,8 @@ describe('ToolEraserService', () => {
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
 
-    it("#update should not add the svgElementUnderCursor to the svgElementsDeletedDuringDrag, should not call drawingService's removeElement and should set svgElementUnderCursor to undefined if the svgElementUnderCursor not in drawingElementsCopy", () => {
-        const pushSpy = spyOn(service['svgElementsDeletedDuringDrag'], 'push');
+    it("#update should not add the svgElementUnderCursor to the elementsDeletedDuringDrag, should not call drawingService's removeElement and should set svgElementUnderCursor to undefined if the svgElementUnderCursor not in drawingElementsCopy", () => {
+        const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
         const drawingElementsCopy = [fillElement, fillElement, fillElement];

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
-import { merge, Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-color-picker',
@@ -23,12 +23,12 @@ export class ColorPickerComponent implements OnInit, OnDestroy {
     constructor(private colorPickerService: ColorPickerService) {}
 
     ngOnInit(): void {
-        this.colorChangedSubscription = merge(
+        this.colorChangedSubscription = combineLatest([
             this.colorPickerService.hueChanged$,
             this.colorPickerService.saturationChanged$,
             this.colorPickerService.valueChanged$,
-            this.colorPickerService.alphaChanged$
-        ).subscribe(() => {
+            this.colorPickerService.alphaChanged$,
+        ]).subscribe(() => {
             this.colorModelChange.emit(this.colorPickerService.getColor());
         });
     }

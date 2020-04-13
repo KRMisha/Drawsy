@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChil
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { TouchService } from '@app/shared/services/touch.service';
-import { merge, Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 const canvasWidth = 200;
 const canvasHeight = 20;
@@ -32,12 +32,12 @@ export class AlphaSliderComponent implements AfterViewInit, OnDestroy {
 
         this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        this.colorChangedSubscription = merge(
+        this.colorChangedSubscription = combineLatest([
             this.colorPickerService.hueChanged$,
             this.colorPickerService.saturationChanged$,
             this.colorPickerService.valueChanged$,
-            this.colorPickerService.alphaChanged$
-        ).subscribe(() => {
+            this.colorPickerService.alphaChanged$,
+        ]).subscribe(() => {
             this.sliderPosition = this.colorPickerService.alpha * canvasWidth;
             this.draw();
         });

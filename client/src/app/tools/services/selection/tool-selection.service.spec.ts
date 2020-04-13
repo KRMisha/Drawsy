@@ -40,7 +40,7 @@ describe('ToolSelectionService', () => {
             'DrawingService',
             ['appendNewMatrixToElements', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
             {
-                svgElements: [],
+                elements: [],
             }
         );
 
@@ -295,7 +295,7 @@ describe('ToolSelectionService', () => {
     it('#update should remove from selection elements no longer in drawing', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
-        const drawingServiceMock = ({ svgElements: [element1] } as unknown) as DrawingService;
+        const drawingServiceMock = ({ elements: [element1] } as unknown) as DrawingService;
         selectionStateServiceStub.selectedElements = [element2, element1];
 
         service['drawingService'] = drawingServiceMock;
@@ -315,7 +315,7 @@ describe('ToolSelectionService', () => {
     it('#onToolSelection should subscribe to selectAllShortcut with function that selects all element from drawing', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
-        const drawingServiceMock = ({ svgElements: [element1, element2] } as unknown) as DrawingService;
+        const drawingServiceMock = ({ elements: [element1, element2] } as unknown) as DrawingService;
 
         selectionStateServiceStub.selectedElements = [];
 
@@ -324,7 +324,7 @@ describe('ToolSelectionService', () => {
         service.onToolSelection();
         selectAllSubject.next();
 
-        expect(selectionStateServiceStub.selectedElements).toEqual(drawingServiceMock.svgElements);
+        expect(selectionStateServiceStub.selectedElements).toEqual(drawingServiceMock.elements);
     });
 
     it('#onToolDeselection should unsubsrcibe from selectAllShortcutSubscription', () => {

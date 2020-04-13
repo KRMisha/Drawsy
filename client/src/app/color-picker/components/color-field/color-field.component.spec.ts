@@ -8,9 +8,9 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { TouchService } from '@app/shared/services/touch.service';
 import { Subject } from 'rxjs';
 
-// tslint:disable: no-string-literal
-// tslint:disable: no-any
 // tslint:disable: max-line-length
+// tslint:disable: no-any
+// tslint:disable: no-string-literal
 
 describe('ColorFieldComponent', () => {
     let component: ColorFieldComponent;

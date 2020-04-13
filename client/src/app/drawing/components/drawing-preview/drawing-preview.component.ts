@@ -22,7 +22,7 @@ export class DrawingPreviewComponent implements AfterViewInit {
             this.renderer.appendChild(this.svgDefs.nativeElement, filter.cloneNode(true));
         }
 
-        for (const element of this.drawingService.svgElements) {
+        for (const element of this.drawingService.elements) {
             this.renderer.appendChild(this.svgDrawingContent.nativeElement, element.cloneNode(true));
         }
     }

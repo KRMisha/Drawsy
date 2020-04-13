@@ -64,7 +64,7 @@ describe('SidebarDrawerComponent', () => {
             undoShortcut$: undoShortcutSubject,
             redoShortcut$: redoShortcutSubject,
         });
-        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['undo', 'redo', 'hasUndoCommands', 'hasRedoCommands']);
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['undo', 'redo', 'canUndo', 'canRedo']);
 
         lineWidthChangedSubject = new Subject<any>();
         junctionEnabledChangedSubject = new Subject<any>();
@@ -443,7 +443,7 @@ describe('SidebarDrawerComponent', () => {
         expect(settingsMock.eraserSize).toEqual(0);
     }));
 
-    it('undoShortcutSbuscription should call #undoCommand', async(() => {
+    it('undoShortcutSubscription should call #undoCommand', async(() => {
         const undoCommandSpy = spyOn(component, 'undoCommand');
         undoShortcutSubject.next();
         expect(undoCommandSpy).toHaveBeenCalled();
