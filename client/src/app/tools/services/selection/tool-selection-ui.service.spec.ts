@@ -51,14 +51,13 @@ describe('ToolSelectionUiService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#constructor should instanciate the renderer, subscribe to toolSelectionStateService\'s selectedElementsRectChanged and call #createUiElements', () => {
+    it("#constructor should instanciate the renderer, subscribe to toolSelectionStateService's selectedElementsRectChanged and call #createUiElements", () => {
         const subscribeSpy = spyOn(selectedElementsRectChangedSubject, 'subscribe');
         const createUiElementsSpy = spyOn<any>(ToolSelectionUiService.prototype, 'createUiElements');
         service = new ToolSelectionUiService(rendererFactory2SpyObj, drawingServiceSpyObj, toolSelectionStateServiceSpyObj);
         expect(service['renderer']).not.toBeUndefined();
         expect(subscribeSpy).toHaveBeenCalled();
         expect(createUiElementsSpy).toHaveBeenCalled();
-
     });
 
     it('#selectedElementsRectChangedSubscription should update svg rect', () => {
@@ -92,16 +91,8 @@ describe('ToolSelectionUiService', () => {
         service['setSelectedElementsRect'](selectionRect);
 
         for (let i = 0; i < expectedPositions.length; i++) {
-            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
-                service['svgControlPoints'][i],
-                'cx',
-                `${expectedPositions[i].x}`
-            );
-            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(
-                service['svgControlPoints'][i],
-                'cy',
-                `${expectedPositions[i].y}`
-            );
+            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'cx', `${expectedPositions[i].x}`);
+            expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'cy', `${expectedPositions[i].y}`);
         }
     });
 
