@@ -20,7 +20,7 @@ describe('RasterizationService', () => {
 
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             drawingRoot: drawingRootSpyObj,
-            svgElements: [],
+            elements: [],
         });
 
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);

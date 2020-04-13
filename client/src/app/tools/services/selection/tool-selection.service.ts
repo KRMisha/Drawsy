@@ -14,6 +14,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
+import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -21,12 +22,11 @@ import { Subscription } from 'rxjs';
 export class ToolSelectionService extends Tool implements OnDestroy {
     private selectionOrigin: Vec2;
     private currentMouseButtonDown?: MouseButton;
+    private previousMousePosition: Vec2;
 
     private selectedElementsAfterInversion: SVGGraphicsElement[] = [];
 
     private selectAllShortcutSubscription: Subscription;
-
-    private previousMousePosition: Vec2;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -35,6 +35,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         historyService: HistoryService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionMoverService: ToolSelectionMoverService,
+        private toolSelectionRotatorService: ToolSelectionRotatorService,
         private toolSelectionUiService: ToolSelectionUiService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
         private shortcutService: ShortcutService
@@ -161,6 +162,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
     }
 
+    onScroll(event: WheelEvent): void {
+        this.toolSelectionRotatorService.onScroll(event);
+    }
+
     onKeyDown(event: KeyboardEvent): void {
         this.toolSelectionMoverService.onKeyDown(event);
     }
@@ -170,7 +175,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     update(): void {
-        const elements = new Set(this.drawingService.svgElements);
+        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
         this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
             (element: SVGGraphicsElement) => elements.has(element)
         );
@@ -178,7 +183,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolSelection(): void {
         this.selectAllShortcutSubscription = this.shortcutService.selectAllShortcut$.subscribe(() => {
-            this.toolSelectionStateService.selectedElements = [...this.drawingService.svgElements];
+            this.toolSelectionStateService.selectedElements = [...this.drawingService.elements];
         });
     }
 

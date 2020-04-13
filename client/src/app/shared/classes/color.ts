@@ -86,8 +86,8 @@ export class Color {
     }
 
     static fromRgbString(rgbString: string): Color {
-        const matches = rgbString.match(Regexes.rgbRegex) || undefined;
-        if (matches === undefined) {
+        const matches = rgbString.match(Regexes.rgbRegex);
+        if (matches === null) {
             return new Color();
         }
 
@@ -98,8 +98,8 @@ export class Color {
     }
 
     static fromRgbaString(rgbaString: string): Color {
-        const matches = rgbaString.match(Regexes.rgbaRegex) || undefined;
-        if (matches === undefined) {
+        const matches = rgbaString.match(Regexes.rgbaRegex);
+        if (matches === null) {
             return new Color();
         }
 

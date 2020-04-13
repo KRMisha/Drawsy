@@ -1,6 +1,9 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 
+const localStorageThemeColorKey = 'themeColor';
+const localStorageThemeIsDarkKey = 'themeIsDark';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -9,11 +12,8 @@ export class ThemeService {
     private _isDarkTheme = true; // tslint:disable-line: variable-name
 
     constructor(private overlayContainer: OverlayContainer) {
-        overlayContainer.getContainerElement().classList.add('blue-dark-theme');
-    }
-
-    toggleDarkTheme(): void {
-        this.isDarkTheme = !this.isDarkTheme;
+        this.loadSettingsFromStorage();
+        overlayContainer.getContainerElement().classList.add(this.theme);
     }
 
     get theme(): string {
@@ -28,6 +28,7 @@ export class ThemeService {
         const oldTheme = this.theme;
         this._color = color;
         this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.theme);
+        this.saveSettingsToStorage();
     }
 
     get isDarkTheme(): boolean {
@@ -38,5 +39,23 @@ export class ThemeService {
         const oldTheme = this.theme;
         this._isDarkTheme = isDarkTheme;
         this.overlayContainer.getContainerElement().classList.replace(oldTheme, this.theme);
+        this.saveSettingsToStorage();
+    }
+
+    private loadSettingsFromStorage(): void {
+        const colorString = localStorage.getItem(localStorageThemeColorKey);
+        if (colorString !== null) {
+            this._color = colorString;
+        }
+
+        const isDarkThemeString = localStorage.getItem(localStorageThemeIsDarkKey);
+        if (isDarkThemeString !== null) {
+            this._isDarkTheme = JSON.parse(isDarkThemeString);
+        }
+    }
+
+    private saveSettingsToStorage(): void {
+        localStorage.setItem(localStorageThemeColorKey, this.color);
+        localStorage.setItem(localStorageThemeIsDarkKey, JSON.stringify(this._isDarkTheme));
     }
 }

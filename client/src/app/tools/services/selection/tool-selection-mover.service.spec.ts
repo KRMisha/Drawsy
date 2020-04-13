@@ -22,7 +22,7 @@
 
 //     beforeEach(() => {
 //         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['appendNewMatrixToElements'], {
-//             svgElements: [],
+//             elements: [],
 //         });
 
 //         toolSelectionStateServiceSpyObj = jasmine.createSpyObj('ToolSelectionStateService', ['updateSelectionRect'], {
