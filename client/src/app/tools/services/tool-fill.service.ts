@@ -156,7 +156,7 @@ export class ToolFillService extends Tool {
         //     !this.isSelectedColor(this.getPixelColor(rearLeftPixel));
 
         // !isRearPixelContour && (!isRearPixelContour && !isLeft(!isRearPixelContourPixelContour && isRearLeftPixelContour)
-        const isValidStartingPixel = !isRearPixelContour && !isLeftPixelContour && isRearLeftPixelContour;
+        const isValidStartingPixel = !isRearPixelContour && !(!isRearPixelContour && !isLeftPixelContour && isRearLeftPixelContour);
         if (isValidStartingPixel) {
             this.traceContour(pixel, direction);
         }
