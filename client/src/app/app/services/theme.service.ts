@@ -1,8 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 
-const localStorageColorKey = 'themeColor';
-const localStorageIsDarkThemeKey = 'themeIsDark';
+const localStorageThemeColorKey = 'themeColor';
+const localStorageThemeIsDarkKey = 'themeIsDark';
 
 @Injectable({
     providedIn: 'root',
@@ -43,19 +43,19 @@ export class ThemeService {
     }
 
     private getSettingsFromStorage(): void {
-        const colorString = localStorage.getItem(localStorageColorKey);
+        const colorString = localStorage.getItem(localStorageThemeColorKey);
         if (colorString !== null) {
             this._color = colorString;
         }
 
-        const isDarkThemeString = localStorage.getItem(localStorageIsDarkThemeKey);
+        const isDarkThemeString = localStorage.getItem(localStorageThemeIsDarkKey);
         if (isDarkThemeString !== null) {
             this._isDarkTheme = JSON.parse(isDarkThemeString);
         }
     }
 
     private saveSettingsToStorage(): void {
-        localStorage.setItem(localStorageColorKey, this.color);
-        localStorage.setItem(localStorageIsDarkThemeKey, JSON.stringify(this._isDarkTheme));
+        localStorage.setItem(localStorageThemeColorKey, this.color);
+        localStorage.setItem(localStorageThemeIsDarkKey, JSON.stringify(this._isDarkTheme));
     }
 }
