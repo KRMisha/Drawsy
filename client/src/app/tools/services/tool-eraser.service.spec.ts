@@ -15,7 +15,7 @@ import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: max-line-length
 
-fdescribe('ToolEraserService', () => {
+describe('ToolEraserService', () => {
     let service: ToolEraserService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
