@@ -15,7 +15,7 @@ import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: max-line-length
 
-describe('ToolEraserService', () => {
+fdescribe('ToolEraserService', () => {
     let service: ToolEraserService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
@@ -244,7 +244,7 @@ describe('ToolEraserService', () => {
     it('#addRedBorderToElement should put default border width to 3 if object does not have a border initially', () => {
         spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
         const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-        elementToSendSpy.getAttribute.and.returnValue(undefined);
+        elementToSendSpy.getAttribute.and.returnValue(null);
         service['addRedBorderToElement'](elementToSendSpy);
 
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(255, 0, 0)');
