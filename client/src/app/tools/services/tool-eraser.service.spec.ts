@@ -15,7 +15,7 @@ import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: max-line-length
 
-fdescribe('ToolEraserService', () => {
+describe('ToolEraserService', () => {
     let service: ToolEraserService;
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
@@ -34,15 +34,14 @@ fdescribe('ToolEraserService', () => {
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 69, y: 911, width: 420, height: 666 } as DOMRect);
 
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [
-            'removeElement',
-            'addUiElement',
-            'removeUiElement',
-            'findDrawingChildElement',
-        ], {
-            drawingRoot: drawingRootSpyObj,
-            svgElements: svgElementsInitialArray,
-        });
+        drawingServiceSpyObj = jasmine.createSpyObj(
+            'DrawingService',
+            ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
+            {
+                drawingRoot: drawingRootSpyObj,
+                svgElements: svgElementsInitialArray,
+            }
+        );
 
         historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
@@ -274,7 +273,7 @@ fdescribe('ToolEraserService', () => {
     it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
         // spyOn(document, 'elementFromPoint').and.returnValue(null);
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
-        const returnValue = service['getElementUnderAreaPixelPerfect']( { width: 1, height: 1, x: 0, y: 0 } as Rect);
+        const returnValue = service['getElementUnderAreaPixelPerfect']({ width: 1, height: 1, x: 0, y: 0 } as Rect);
         expect(returnValue).toBeUndefined();
     });
 
@@ -286,7 +285,7 @@ fdescribe('ToolEraserService', () => {
         const otherElement = {} as SVGGraphicsElement;
         let firstIteration = true;
         let secondIteration = false;
-        drawingServiceSpyObj.findDrawingChildElement.and.callFake( (el: EventTarget) => {
+        drawingServiceSpyObj.findDrawingChildElement.and.callFake((el: EventTarget) => {
             if (firstIteration) {
                 firstIteration = false;
                 secondIteration = true;
