@@ -27,14 +27,14 @@ describe('ToolEraserService', () => {
     const svgGraphicsElementStub = {} as SVGGraphicsElement;
     const initialElementsArray = [svgGraphicsElementStub, svgGraphicsElementStub, svgGraphicsElementStub];
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'addClass']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 69, y: 911, width: 420, height: 666 } as DOMRect);
 
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['removeElement', 'addUiElement', 'removeUiElement'], {
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'], {
             drawingRoot: drawingRootSpyObj,
             elements: initialElementsArray,
         });
@@ -204,9 +204,9 @@ describe('ToolEraserService', () => {
         service.onToolSelection();
 
         expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'fill', '#fafafa');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'stroke', '#424242');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'fill', 'rgb(255, 255, 255)');
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'stroke-width', '1');
+        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgEraserElementStub, 'theme-eraser');
         expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalledWith(svgEraserElementStub);
         expect(updateEraserRectSpy);
     });
@@ -237,10 +237,10 @@ describe('ToolEraserService', () => {
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke-width', '3');
     });
 
-    it('#addRedBorderToElement should put default border width to 3 if object doesn not have a border initially', () => {
+    it('#addRedBorderToElement should put default border width to 3 if object does not have a border initially', () => {
         spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
         const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-        elementToSendSpy.getAttribute.and.returnValue(undefined);
+        elementToSendSpy.getAttribute.and.returnValue(null);
         service['addRedBorderToElement'](elementToSendSpy);
 
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(255, 0, 0)');
@@ -267,28 +267,32 @@ describe('ToolEraserService', () => {
     });
 
     it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
-        spyOn(document, 'elementFromPoint').and.returnValue(null);
+        drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
+        const returnValue = service['getElementUnderAreaPixelPerfect']({ width: 1, height: 1, x: 0, y: 0 } as Rect);
+        expect(returnValue).toBeUndefined();
     });
 
     it('#getElementUnderAreaPixelPerfect should return the topmost element if the cursor is over a shape', () => {
-        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        service['drawingService'] = ({
-            drawingRoot: drawingRootSpyObj,
-            elements: [elementToSend],
-        } as unknown) as DrawingService;
-        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
+        const topmostElement = jasmine.createSpyObj('SVGGraphicsElement', ['compareDocumentPosition']);
+        topmostElement.compareDocumentPosition.and.returnValue(Node.DOCUMENT_POSITION_PRECEDING);
+        const notTopMostElement = jasmine.createSpyObj('SVGGraphicsElement', ['compareDocumentPosition']);
+        notTopMostElement.compareDocumentPosition.and.returnValue(0);
+        const otherElement = {} as SVGGraphicsElement;
+        let firstIteration = true;
+        let secondIteration = false;
+        drawingServiceSpyObj.findDrawingChildElement.and.callFake((el: EventTarget) => {
+            if (firstIteration) {
+                firstIteration = false;
+                secondIteration = true;
+                return otherElement;
+            } else if (secondIteration) {
+                secondIteration = false;
+                return notTopMostElement;
+            }
+            return topmostElement;
+        });
 
-        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
-    });
-
-    it('#getElementUnderAreaPixelPerfect should return undefined if no objects are in the drawing service', () => {
-        const elementToSend = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        service['drawingService'] = ({
-            drawingRoot: drawingRootSpyObj,
-            elements: [elementToSend],
-        } as unknown) as DrawingService;
-        const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], { parentElement: elementToSend });
-
-        spyOn(document, 'elementFromPoint').and.returnValue(elementSpyObj);
+        const returnValue = service['getElementUnderAreaPixelPerfect']({ width: 1, height: 3, x: 0, y: 0 } as Rect);
+        expect(returnValue).toBe(topmostElement);
     });
 });

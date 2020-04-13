@@ -46,7 +46,7 @@ describe('ToolSelectionService', () => {
 
         toolSelectionMoverServiceSpyObj = jasmine.createSpyObj(
             'ToolSelectionMoverService',
-            ['moveSelectedElements', 'startMovingSelection', 'stopMovingSelection', 'onKeyDown', 'onKeyUp', 'onToolDeselection'],
+            ['moveSelection', 'startMovingSelection', 'stopMovingSelection', 'onKeyDown', 'onKeyUp', 'onToolDeselection'],
             {
                 totalSelectionMoveOffset: { x: 0, y: 0 },
             }
