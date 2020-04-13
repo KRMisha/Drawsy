@@ -6,10 +6,11 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileContent } from '@common/communication/new-file-content';
 import { NewFileId } from '@common/communication/new-file-id';
 import { SavedFile } from '@common/communication/saved-file';
+import { environment } from '@env/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-const serverUrl = 'http://localhost:3000/api';
+const serverUrl = environment.apiUrl;
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
