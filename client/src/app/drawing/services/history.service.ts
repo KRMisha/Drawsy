@@ -1,24 +1,18 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Command } from '@app/drawing/classes/commands/command';
-import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class HistoryService implements OnDestroy {
+export class HistoryService {
     private undoStack: Command[] = [];
     private redoStack: Command[] = [];
 
-    private drawingLoadedSubscription: Subscription;
+    private drawingHistoryChangedSource = new Subject<void>();
 
-    constructor(private drawingService: DrawingService) {
-        this.drawingLoadedSubscription = this.drawingService.drawingLoaded$.subscribe(this.clearCommands.bind(this));
-    }
-
-    ngOnDestroy(): void {
-        this.drawingLoadedSubscription.unsubscribe();
-    }
+    // Disable member ordering lint error for public observables initialized after private subjects
+    drawingHistoryChanged$ = this.drawingHistoryChangedSource.asObservable(); // tslint:disable-line: member-ordering
 
     undo(): void {
         const command = this.undoStack.pop();
@@ -26,6 +20,7 @@ export class HistoryService implements OnDestroy {
             command.undo();
             this.redoStack.push(command);
         }
+        this.drawingHistoryChangedSource.next();
     }
 
     redo(): void {
@@ -34,14 +29,16 @@ export class HistoryService implements OnDestroy {
             command.redo();
             this.undoStack.push(command);
         }
+        this.drawingHistoryChangedSource.next();
     }
 
     addCommand(command: Command): void {
         this.undoStack.push(command);
         this.redoStack = [];
+        this.drawingHistoryChangedSource.next();
     }
 
-    clearCommands(): void {
+    onDrawingLoad(): void {
         this.undoStack = [];
         this.redoStack = [];
     }

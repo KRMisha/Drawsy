@@ -86,11 +86,11 @@ describe('HistoryService', () => {
         expect(service['redoStack'].length).toEqual(0);
     });
 
-    it('#clearCommands should empty undoStack and redoStack', () => {
+    it('#onDrawingLoad should empty undoStack and redoStack', () => {
         service['undoStack'] = [commandSpyObj];
         service['redoStack'] = [commandSpyObj];
 
-        service.clearCommands();
+        service.onDrawingLoad();
 
         expect(service['undoStack'].length).toEqual(0);
         expect(service['redoStack'].length).toEqual(0);
