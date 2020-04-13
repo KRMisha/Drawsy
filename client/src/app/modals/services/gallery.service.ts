@@ -28,7 +28,8 @@ export class GalleryService {
     ) {}
 
     loadDrawing(drawing: SvgFileContainer): void {
-        if (this.drawingSerializerService.loadDrawing(drawing)) {
+        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
+        if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
             this.snackBar.open('Dessin chargé : ' + drawing.title, undefined, {
                 duration: snackBarDuration,
             });
@@ -81,7 +82,7 @@ export class GalleryService {
             .subscribe(
                 (savedFiles: SavedFile[]) => {
                     this._drawings = savedFiles.map((savedFile: SavedFile) =>
-                        this.drawingSerializerService.makeSvgFileContainerFromSavedFile(savedFile)
+                        this.drawingSerializerService.deserializeDrawing(savedFile.content, savedFile.id)
                     );
                 },
                 (error: HttpErrorResponse): void => {

@@ -101,11 +101,11 @@ describe('NewDrawingComponent', () => {
 
     it('#onSubmit should forward navigate call to the router if the drawing form is valid and drawingService.loadDrawing returns succesfully', () => {
         component.drawingFormGroup = validFormGroupSpyObj;
-        drawingServiceSpyObj.loadDrawing.and.returnValue(true);
+        drawingServiceSpyObj.loadDrawingWithConfirmation.and.returnValue(true);
         const color = {} as Color;
         component.backgroundColor = color;
         component.onSubmit();
-        expect(drawingServiceSpyObj.loadDrawing).toHaveBeenCalledWith({ x: 18, y: 18 }, color);
+        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith({ x: 18, y: 18 }, color);
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
     });
 
@@ -117,7 +117,7 @@ describe('NewDrawingComponent', () => {
 
     it("#onSubmit should not forward call to the router if drawingService's loadDrawing returns false", () => {
         component.drawingFormGroup = validFormGroupSpyObj;
-        drawingServiceSpyObj.loadDrawing.and.returnValue(false);
+        drawingServiceSpyObj.loadDrawingWithConfirmation.and.returnValue(false);
         component.onSubmit();
         expect(routerSpyObj.navigate).not.toHaveBeenCalled();
     });

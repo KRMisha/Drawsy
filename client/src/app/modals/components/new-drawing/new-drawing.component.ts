@@ -63,7 +63,7 @@ export class NewDrawingComponent implements OnInit, OnDestroy {
             backgroundColor: this.backgroundColor,
         };
 
-        if (this.drawingFormGroup.valid && this.drawingService.loadDrawing(drawingLoadOptions)) {
+        if (this.drawingFormGroup.valid && this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
             this.router.navigate(['/editor']);
         }
     }

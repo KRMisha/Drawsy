@@ -191,26 +191,26 @@ describe('DrawingService', () => {
     it('#loadDrawing should return false if there is a drawing started and the user declines the message', () => {
         spyOn(service, 'isDrawingStarted').and.returnValue(true);
         spyOn(window, 'confirm').and.returnValue(false);
-        const actualValue = service.loadDrawing({} as Vec2, {} as Color);
+        const actualValue = service.loadDrawingWithConfirmation({} as Vec2, {} as Color);
         expect(actualValue).toEqual(false);
     });
 
-    it("#loadDrawing should return true, call #clearStoredElements and call historyService's clearCommands if there is not a drawing started", () => {
+    it("#loadDrawing should return true, call #clearStoredElements and call historyService's onDrawingLoad if there is not a drawing started", () => {
         spyOn(service, 'isDrawingStarted').and.returnValue(false);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
-        const actualValue = service.loadDrawing({} as Vec2, {} as Color);
+        const actualValue = service.loadDrawingWithConfirmation({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
-        expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
+        expect(historyServiceSpyObj.onDrawingLoad).toHaveBeenCalled();
     });
 
-    it("#loadDrawing should return true, call #clearStoredElements and call historyService's clearCommands if the user confirms the warning message", () => {
+    it("#loadDrawing should return true, call #clearStoredElements and call historyService's onDrawingLoad if the user confirms the warning message", () => {
         spyOn(window, 'confirm').and.returnValue(true);
         const clearStoredElementsSpy = spyOn(service, 'clearStoredElements');
-        const actualValue = service.loadDrawing({} as Vec2, {} as Color);
+        const actualValue = service.loadDrawingWithConfirmation({} as Vec2, {} as Color);
         expect(actualValue).toEqual(true);
         expect(clearStoredElementsSpy).toHaveBeenCalled();
-        expect(historyServiceSpyObj.clearCommands).toHaveBeenCalled();
+        expect(historyServiceSpyObj.onDrawingLoad).toHaveBeenCalled();
     });
 
     it("#findDrawingChildElement should return undefined if the element'parent node is undefined", () => {
