@@ -77,9 +77,9 @@ describe('NewDrawingComponent', () => {
     });
 
     it('#ngOnDestroy should unsubscribe from its subscription', () => {
-        const dimensionChangedSubscription = spyOn(component['drawingDimensionsChangedSubscription'], 'unsubscribe');
+        const drawingDimensionsChangedSubscriptionSpy = spyOn(component['drawingDimensionsChangedSubscription'], 'unsubscribe');
         component.ngOnDestroy();
-        expect(dimensionChangedSubscription).toHaveBeenCalled();
+        expect(drawingDimensionsChangedSubscriptionSpy).toHaveBeenCalled();
     });
 
     it('#onResize should not change the dimensions if the dimensions have been modified by the user', () => {
