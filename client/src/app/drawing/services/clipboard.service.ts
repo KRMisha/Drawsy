@@ -163,7 +163,6 @@ export class ClipboardService implements OnDestroy {
     private offsetSelectedElements(areSomeElementsStillInDrawing: boolean, placementType: PlacementType): void {
         let offset = this.getOffset(placementType);
         if (this.isNextPlacementOutOfDrawing(placementType) || !areSomeElementsStillInDrawing) {
-            console.log('wtf');
             this.setOffset(placementType, 0);
         } else {
             offset += placementPositionOffsetIncrement;
@@ -181,7 +180,6 @@ export class ClipboardService implements OnDestroy {
     private isNextPlacementOutOfDrawing(placementType: PlacementType): boolean {
         const elementsToPlaceRect =
             this.toolSelectionCollisionService.getElementListBounds(this.toolSelectionStateService.selectedElements) as Rect;
-        console.log(elementsToPlaceRect.x);
         return (
             elementsToPlaceRect.x + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.x ||
             elementsToPlaceRect.y + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.y
