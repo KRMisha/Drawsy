@@ -59,8 +59,9 @@ export class ToolSelectionMoverService {
     }
 
     onToolDeselection(): void {
-        window.clearTimeout(this.movingTimeoutId);
-        window.clearInterval(this.movingIntervalId);
+        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
+            this.stopMovingSelectionWithArrows();
+        }
         this.arrowKeysHeldStates.fill(false);
     }
 
