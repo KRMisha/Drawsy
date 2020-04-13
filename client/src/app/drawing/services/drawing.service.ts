@@ -40,10 +40,7 @@ export class DrawingService {
     forceDetectChanges$ = this.forceDetectChangesSource.asObservable();
     // tslint:enable: member-ordering
 
-    constructor(
-        rendererFactory: RendererFactory2,
-        private drawingSerializerService: DrawingSerializerService
-    ) {
+    constructor(rendererFactory: RendererFactory2, private drawingSerializerService: DrawingSerializerService) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
         this.loadDrawingFromStorage();
