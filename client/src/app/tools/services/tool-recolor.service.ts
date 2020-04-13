@@ -32,8 +32,8 @@ export class ToolRecolorService extends Tool {
             return;
         }
 
-        const strokeBefore = element.getAttribute('stroke') || undefined;
-        const fillBefore = element.getAttribute('fill') || undefined;
+        const strokeBefore = element.getAttribute('stroke') ?? undefined;
+        const fillBefore = element.getAttribute('fill') ?? undefined;
 
         const elementType = element.nodeName;
         switch (elementType) {
@@ -62,8 +62,8 @@ export class ToolRecolorService extends Tool {
             }
         }
 
-        const strokeAfter = element.getAttribute('stroke') || undefined;
-        const fillAfter = element.getAttribute('fill') || undefined;
+        const strokeAfter = element.getAttribute('stroke') ?? undefined;
+        const fillAfter = element.getAttribute('fill') ?? undefined;
 
         if (strokeBefore !== strokeAfter || fillBefore !== fillAfter) {
             this.historyService.addCommand(new RecolorCommand(element, strokeBefore, fillBefore, strokeAfter, fillAfter));
