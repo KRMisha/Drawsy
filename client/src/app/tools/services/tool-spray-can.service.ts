@@ -55,9 +55,9 @@ export class ToolSprayCanService extends Tool {
     }
 
     private startSpraying(): void {
-        this.group = this.renderer.createElement('g', 'svg');
+        this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
         this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
-        this.drawingService.addElement(this.group as SVGGraphicsElement);
+        this.drawingService.addElement(this.group);
 
         const oneSecondInMilliseconds = 1000;
         this.intervalId = window.setInterval(() => {

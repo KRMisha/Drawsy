@@ -6,10 +6,10 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { TouchService } from '@app/shared/services/touch.service';
 import { Subject } from 'rxjs';
 
-// tslint:disable: no-string-literal
+// tslint:disable: max-line-length
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
-// tslint:disable: max-line-length
+// tslint:disable: no-string-literal
 
 describe('AlphaSliderComponent', () => {
     let component: AlphaSliderComponent;

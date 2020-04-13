@@ -26,14 +26,6 @@ describe('ThemeService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#toggleDarkTheme should invert isDarkTheme', () => {
-        service['_isDarkTheme'] = true;
-        service.toggleDarkTheme();
-        expect(service['_isDarkTheme']).toEqual(false);
-        service.toggleDarkTheme();
-        expect(service['_isDarkTheme']).toEqual(true);
-    });
-
     it('#get Theme should return a string with the color and "dark" when isDarkTheme is true', () => {
         service['_isDarkTheme'] = true;
         service['_color'] = 'orange';

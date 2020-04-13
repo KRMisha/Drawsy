@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GridService } from '@app/drawing/services/grid.service';
 import { ModalService } from '@app/modals/services/modal.service';
@@ -18,11 +28,13 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
 
+    private forceDetectChangesSubscription: Subscription;
     private toggleGridSubscription: Subscription;
     private increaseGridSizeSubscription: Subscription;
     private decreaseGridSizeSubscription: Subscription;
 
     constructor(
+        private changeDetectorRef: ChangeDetectorRef,
         private drawingService: DrawingService,
         private currentToolService: CurrentToolService,
         private gridService: GridService,
@@ -31,6 +43,9 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.forceDetectChangesSubscription = this.drawingService.forceDetectChanges$.subscribe(() => {
+            this.changeDetectorRef.detectChanges();
+        });
         this.toggleGridSubscription = this.shortcutService.toggleGrid$.subscribe(() => {
             this.gridService.toggleDisplay();
         });
@@ -47,9 +62,13 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         this.drawingService.svgDrawingContent = this.svgDrawingContent.nativeElement;
         this.drawingService.svgUserInterfaceContent = this.svgUserInterfaceContent.nativeElement;
         this.drawingService.reappendStoredElements();
+        this.drawingService.saveDrawingToStorage();
     }
 
     ngOnDestroy(): void {
+        this.currentToolService.currentTool.onToolDeselection();
+
+        this.forceDetectChangesSubscription.unsubscribe();
         this.toggleGridSubscription.unsubscribe();
         this.increaseGridSizeSubscription.unsubscribe();
         this.decreaseGridSizeSubscription.unsubscribe();
@@ -147,6 +166,10 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
 
     get viewBox(): string {
         return `0 0 ${this.width} ${this.height}`;
+    }
+
+    get drawingLabels(): string {
+        return this.drawingService.labels.join(',');
     }
 
     get isGridDisplayEnabled(): boolean {

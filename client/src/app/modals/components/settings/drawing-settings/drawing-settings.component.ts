@@ -20,12 +20,18 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.widthSubscription = this.formGroup.controls.drawingWidth.valueChanges.subscribe(() => {
             if (this.formGroup.controls.drawingWidth.valid) {
-                this.drawingService.dimensions.x = this.formGroup.controls.drawingWidth.value;
+                this.drawingService.dimensions = {
+                    x: this.formGroup.controls.drawingWidth.value,
+                    y: this.drawingService.dimensions.y,
+                };
             }
         });
         this.heightSubscription = this.formGroup.controls.drawingHeight.valueChanges.subscribe(() => {
             if (this.formGroup.controls.drawingHeight.valid) {
-                this.drawingService.dimensions.y = this.formGroup.controls.drawingHeight.value;
+                this.drawingService.dimensions = {
+                    x: this.drawingService.dimensions.x,
+                    y: this.formGroup.controls.drawingHeight.value,
+                };
             }
         });
     }

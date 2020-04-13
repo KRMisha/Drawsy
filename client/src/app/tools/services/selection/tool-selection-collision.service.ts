@@ -22,7 +22,7 @@ export class ToolSelectionCollisionService {
     }
 
     getElementsUnderArea(area: Rect): SVGGraphicsElement[] {
-        return this.drawingService.svgElements.filter((element: SVGGraphicsElement) =>
+        return this.drawingService.elements.filter((element: SVGGraphicsElement) =>
             this.areRectsIntersecting(area, this.getElementBounds(element))
         );
     }
