@@ -12,7 +12,7 @@ export class ThemeService {
     private _isDarkTheme = true; // tslint:disable-line: variable-name
 
     constructor(private overlayContainer: OverlayContainer) {
-        this.getSettingsFromStorage();
+        this.loadSettingsFromStorage();
         overlayContainer.getContainerElement().classList.add(this.theme);
     }
 
@@ -42,7 +42,7 @@ export class ThemeService {
         this.saveSettingsToStorage();
     }
 
-    private getSettingsFromStorage(): void {
+    private loadSettingsFromStorage(): void {
         const colorString = localStorage.getItem(localStorageThemeColorKey);
         if (colorString !== null) {
             this._color = colorString;
