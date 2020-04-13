@@ -66,6 +66,8 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
+        this.currentToolService.currentTool.onToolDeselection();
+
         this.forceDetectChangesSubscription.unsubscribe();
         this.toggleGridSubscription.unsubscribe();
         this.increaseGridSizeSubscription.unsubscribe();
