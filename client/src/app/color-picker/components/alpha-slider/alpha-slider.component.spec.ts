@@ -3,6 +3,7 @@ import { AlphaSliderComponent } from '@app/color-picker/components/alpha-slider/
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { Color } from '@app/shared/classes/color';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { TouchService } from '@app/shared/services/touch.service';
 import { Subject } from 'rxjs';
 
 // tslint:disable: no-string-literal
@@ -129,10 +130,50 @@ describe('AlphaSliderComponent', () => {
         expect(updateAlphaSpy).not.toHaveBeenCalled();
     });
 
-    it('#onMouseUp should set isLeftMouseButtonDown to false if left button is up', () => {
+    it('#onMouseUp should set isLeftMouseButtonDown to false', () => {
         component['isLeftMouseButtonDown'] = true;
         component.onMouseUp({ button: MouseButton.Left } as MouseEvent);
         expect(component['isLeftMouseButtonDown']).toEqual(false);
+    });
+
+    it('#onMouseUp should not set isLeftMouseButtonDown to false if the button pressed is not the left mouse button', () => {
+        component['isLeftMouseButtonDown'] = true;
+        component.onMouseUp({ button: MouseButton.Right } as MouseEvent);
+        expect(component['isLeftMouseButtonDown']).toEqual(true);
+    });
+
+    it("#onTouchMove should call #onMouseMove using TouchService's getMouseEventFromTouchEvent", () => {
+        const onMouseMoveSpy = spyOn(component, 'onMouseMove');
+        const expectedParam = {} as MouseEvent;
+        const touchServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent').and.returnValue(expectedParam);
+        const event = {} as TouchEvent;
+        component.onTouchMove(event);
+        expect(touchServiceSpy).toHaveBeenCalledWith(event);
+        expect(onMouseMoveSpy).toHaveBeenCalledWith(expectedParam);
+    });
+
+    it("#onTouchStart should call #onMouseEnter and #onMouseDown using TouchService's getMouseEventFromTouchEvent", () => {
+        const onMouseEnterSpy = spyOn(component, 'onMouseEnter');
+        const onMouseDownSpy = spyOn(component, 'onMouseDown');
+        const expectedParam = {} as MouseEvent;
+        const touchServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent').and.returnValue(expectedParam);
+        const event = {} as TouchEvent;
+        component.onTouchStart(event);
+        expect(onMouseEnterSpy).toHaveBeenCalled();
+        expect(touchServiceSpy).toHaveBeenCalledWith(event);
+        expect(onMouseDownSpy).toHaveBeenCalledWith(expectedParam);
+    });
+
+    it("#onTouchEnd should call #onMouseLeave and onMouseUp using TouchService's getMouseEventFromTouchEvent", () => {
+        const onMouseLeaveSpy = spyOn(component, 'onMouseLeave');
+        const onMouseUpSpy = spyOn(component, 'onMouseUp');
+        const expectedParam = {} as MouseEvent;
+        const touchServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent').and.returnValue(expectedParam);
+        const event = {} as TouchEvent;
+        component.onTouchEnd(event);
+        expect(onMouseLeaveSpy).toHaveBeenCalled();
+        expect(touchServiceSpy).toHaveBeenCalledWith(event);
+        expect(onMouseUpSpy).toHaveBeenCalledWith(expectedParam);
     });
 
     it('#onMouseEnter should set isMouseInside to true', () => {

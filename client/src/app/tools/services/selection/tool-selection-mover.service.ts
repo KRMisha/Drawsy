@@ -72,13 +72,17 @@ export class ToolSelectionMoverService {
 
     moveSelection(moveOffset: Vec2): void {
         for (const element of this.toolSelectionStateService.selectedElements) {
-            const translateTransformIndex = 0;
-            const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-            element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
+            this.moveElement(element, moveOffset);
         }
         this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
+    }
+
+    moveElement(element: SVGGraphicsElement, moveOffset: Vec2): void {
+        const translateTransformIndex = 0;
+        const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+        element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
     }
 
     stopMovingSelection(): void {
