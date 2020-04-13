@@ -112,7 +112,13 @@
             <button mat-icon-button class="command-item" matTooltip="Couper" [disabled]="!canModifySelection" (click)="cutCommand()">
                 <mat-icon svgIcon="content-cut"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Dupliquer" [disabled]="!canModifySelection" (click)="duplicateCommand()">
+            <button
+                mat-icon-button
+                class="command-item"
+                matTooltip="Dupliquer"
+                [disabled]="!canModifySelection"
+                (click)="duplicateCommand()"
+            >
                 <mat-icon svgIcon="content-duplicate"></mat-icon>
             </button>
             <button mat-icon-button class="command-item" matTooltip="Supprimer" [disabled]="!canModifySelection" (click)="deleteCommand()">
