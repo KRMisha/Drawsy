@@ -229,28 +229,28 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     resetCurrentControls(): void {
         if (this.currentToolSettings.lineWidth !== undefined) {
-            this.lineWidthFormControl.reset(this.currentToolSettings.lineWidth, { emitEvent: false });
+            this.lineWidthFormControl.reset(this.currentToolSettings.lineWidth);
         }
         if (this.currentToolSettings.junctionSettings !== undefined) {
-            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled, { emitEvent: false });
+            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled);
         }
         if (this.currentToolSettings.junctionSettings !== undefined) {
-            this.junctionDiameterFormControl.reset(this.currentToolSettings.junctionSettings.diameter, { emitEvent: false });
+            this.junctionDiameterFormControl.reset(this.currentToolSettings.junctionSettings.diameter);
         }
         if (this.currentToolSettings.sprayDiameter !== undefined) {
-            this.sprayDiameterFormControl.reset(this.currentToolSettings.sprayDiameter, { emitEvent: false });
+            this.sprayDiameterFormControl.reset(this.currentToolSettings.sprayDiameter);
         }
         if (this.currentToolSettings.sprayRate !== undefined) {
-            this.sprayRateFormControl.reset(this.currentToolSettings.sprayRate, { emitEvent: false });
+            this.sprayRateFormControl.reset(this.currentToolSettings.sprayRate);
         }
         if (this.currentToolSettings.shapeBorderWidth !== undefined) {
-            this.shapeBorderWidthFormControl.reset(this.currentToolSettings.shapeBorderWidth, { emitEvent: false });
+            this.shapeBorderWidthFormControl.reset(this.currentToolSettings.shapeBorderWidth);
         }
         if (this.currentToolSettings.polygonSideCount !== undefined) {
-            this.polygonSideCountFormControl.reset(this.currentToolSettings.polygonSideCount, { emitEvent: false });
+            this.polygonSideCountFormControl.reset(this.currentToolSettings.polygonSideCount);
         }
         if (this.currentToolSettings.eraserSize !== undefined) {
-            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize, { emitEvent: false });
+            this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
     }
 
