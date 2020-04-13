@@ -145,8 +145,8 @@ export class ClipboardService implements OnDestroy {
         const areSomeElementsStillInDrawing = originalElements.some((element: SVGGraphicsElement) => elementsInDrawing.has(element));
 
         if (!areSomeElementsStillInDrawing) {
-            this.clipboardBuffer = copiedElementsToPlace;
-            this.duplicationBuffer = copiedElementsToPlace;
+            this.clipboardOriginalElements = copiedElementsToPlace;
+            this.duplicationOriginalElements = copiedElementsToPlace;
         }
 
         const clipboardOffsetBefore = this.getOffset(PlacementType.Clipboard);
