@@ -1,10 +1,9 @@
-import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
-import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
 const defaultTitle = 'Sans titre';
@@ -14,7 +13,7 @@ const localStorageDrawingAutosaveIdKey = 'drawingAutosaveId';
 @Injectable({
     providedIn: 'root',
 })
-export class DrawingService implements OnDestroy {
+export class DrawingService {
     drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
@@ -32,8 +31,6 @@ export class DrawingService implements OnDestroy {
     private _elements: SVGGraphicsElement[] = [];
     // tslint:enable: variable-name
 
-    private drawingHistoryChangedSubscription: Subscription;
-
     private drawingLoadedSource = new Subject<void>();
     private forceDetectChangesSource = new Subject<void>();
 
@@ -45,18 +42,11 @@ export class DrawingService implements OnDestroy {
 
     constructor(
         rendererFactory: RendererFactory2,
-        private historyService: HistoryService,
         private drawingSerializerService: DrawingSerializerService
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
-        this.drawingHistoryChangedSubscription = historyService.drawingHistoryChanged$.subscribe(this.saveDrawingToStorage.bind(this));
-
         this.loadDrawingFromStorage();
-    }
-
-    ngOnDestroy(): void {
-        this.drawingHistoryChangedSubscription.unsubscribe();
     }
 
     addElement(element: SVGGraphicsElement): void {
@@ -238,7 +228,6 @@ export class DrawingService implements OnDestroy {
             this._labels = [];
         }
 
-        this.historyService.onDrawingLoad();
         this.saveDrawingToStorage();
         this.drawingLoadedSource.next();
     }
