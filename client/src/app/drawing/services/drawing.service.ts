@@ -29,7 +29,7 @@ export class DrawingService implements OnDestroy {
     private _dimensions: Vec2 = defaultDimensions;
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
-    private _svgElements: SVGGraphicsElement[] = [];
+    private _elements: SVGGraphicsElement[] = [];
     // tslint:enable: variable-name
 
     private drawingHistoryChangedSubscription: Subscription;
@@ -60,16 +60,16 @@ export class DrawingService implements OnDestroy {
     }
 
     addElement(element: SVGGraphicsElement): void {
-        this._svgElements.push(element);
+        this._elements.push(element);
         if (this.svgDrawingContent !== undefined) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
     }
 
     addElementBefore(element: SVGGraphicsElement, elementAfter: SVGGraphicsElement): void {
-        const insertionIndex = this._svgElements.indexOf(elementAfter);
+        const insertionIndex = this._elements.indexOf(elementAfter);
         if (insertionIndex !== -1) {
-            this._svgElements.splice(insertionIndex, 0, element);
+            this._elements.splice(insertionIndex, 0, element);
             if (this.svgDrawingContent !== undefined) {
                 this.renderer.insertBefore(this.svgDrawingContent, element, elementAfter);
             }
@@ -77,9 +77,9 @@ export class DrawingService implements OnDestroy {
     }
 
     removeElement(element: SVGGraphicsElement): void {
-        const elementToRemoveIndex = this._svgElements.indexOf(element);
+        const elementToRemoveIndex = this._elements.indexOf(element);
         if (elementToRemoveIndex !== -1) {
-            this._svgElements.splice(elementToRemoveIndex, 1);
+            this._elements.splice(elementToRemoveIndex, 1);
             if (this.svgDrawingContent !== undefined) {
                 this.renderer.removeChild(this.svgDrawingContent, element);
             }
@@ -87,7 +87,7 @@ export class DrawingService implements OnDestroy {
     }
 
     reappendStoredElements(): void {
-        for (const element of this._svgElements) {
+        for (const element of this._elements) {
             this.renderer.appendChild(this.svgDrawingContent, element);
         }
     }
@@ -112,7 +112,7 @@ export class DrawingService implements OnDestroy {
         const confirmationMessage =
             'Attention! Un dessin non-vide est déjà présent sur la zone de travail. ' +
             'Désirez-vous continuer et abandonner vos changements?';
-        if (this._svgElements.length > 0 && !confirm(confirmationMessage)) {
+        if (this._elements.length > 0 && !confirm(confirmationMessage)) {
             return false;
         }
 
@@ -213,8 +213,8 @@ export class DrawingService implements OnDestroy {
         this.saveDrawingToStorage();
     }
 
-    get svgElements(): SVGGraphicsElement[] {
-        return this._svgElements;
+    get elements(): SVGGraphicsElement[] {
+        return this._elements;
     }
 
     private loadDrawing(drawingLoadOptions: DrawingLoadOptions): void {
@@ -244,8 +244,8 @@ export class DrawingService implements OnDestroy {
     }
 
     private clearElements(): void {
-        for (let i = this._svgElements.length - 1; i >= 0; i--) {
-            this.removeElement(this._svgElements[i]);
+        for (let i = this._elements.length - 1; i >= 0; i--) {
+            this.removeElement(this._elements[i]);
         }
     }
 }

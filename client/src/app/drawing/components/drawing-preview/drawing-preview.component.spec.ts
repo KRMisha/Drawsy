@@ -39,7 +39,7 @@ describe('DrawingPreviewComponent', () => {
 
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             drawingRoot: drawingRootSpyObj,
-            svgElements: svgSpyObjElementArray,
+            elements: svgSpyObjElementArray,
             dimensions: initialDimensions,
             backgroundColor: colorSpyObj,
             labels: drawingLabels,
@@ -66,7 +66,7 @@ describe('DrawingPreviewComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("#ngAfterViewInit should clone every filter and svgElements of the drawingService's root", () => {
+    it("#ngAfterViewInit should clone every filter and element of the drawingService's root", () => {
         // No need to call the ngAfterViewInit manually since it is already called by jasmine during component creation
         expect(filterSpyObj.cloneNode).toHaveBeenCalledTimes(svgFilterSpyObjArray.length);
         expect(svgElementSpyObj.cloneNode).toHaveBeenCalledTimes(svgSpyObjElementArray.length);
