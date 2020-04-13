@@ -115,7 +115,6 @@ export class ClipboardService implements OnDestroy {
     }
 
     private placeElements(elements: SVGGraphicsElement[], placementType: PlacementType): void {
-        console.log('a');
         this.selectionChangedSubscription.unsubscribe();
 
         const elementCopies: SVGGraphicsElement[] = [];
@@ -136,7 +135,14 @@ export class ClipboardService implements OnDestroy {
         this.offsetSelectedElements(areSomeElementsStillInDrawing, placementType);
 
         if (!areSomeElementsStillInDrawing) {
-            elements = elementCopies;
+            switch (placementType) {
+                case PlacementType.Clipboard:
+                    this.clipboardBuffer = elementCopies;
+                    break;
+                case PlacementType.Duplication:
+                    this.duplicationBuffer = elementCopies;
+                    break;
+            }
         }
 
         this.historyService.addCommand(
@@ -156,8 +162,8 @@ export class ClipboardService implements OnDestroy {
 
     private offsetSelectedElements(areSomeElementsStillInDrawing: boolean, placementType: PlacementType): void {
         let offset = this.getOffset(placementType);
-
         if (this.isNextPlacementOutOfDrawing(placementType) || !areSomeElementsStillInDrawing) {
+            console.log('wtf');
             this.setOffset(placementType, 0);
         } else {
             offset += placementPositionOffsetIncrement;
@@ -173,8 +179,9 @@ export class ClipboardService implements OnDestroy {
     }
 
     private isNextPlacementOutOfDrawing(placementType: PlacementType): boolean {
-        const elements = placementType === PlacementType.Clipboard ? this.clipboardBuffer : this.duplicationBuffer;
-        const elementsToPlaceRect = this.toolSelectionCollisionService.getElementListBounds(elements) as Rect;
+        const elementsToPlaceRect =
+            this.toolSelectionCollisionService.getElementListBounds(this.toolSelectionStateService.selectedElements) as Rect;
+        console.log(elementsToPlaceRect.x);
         return (
             elementsToPlaceRect.x + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.x ||
             elementsToPlaceRect.y + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.y
@@ -184,9 +191,6 @@ export class ClipboardService implements OnDestroy {
     private subscribeToSelectionChanged(): void {
         this.selectionChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
             (elements: SVGGraphicsElement[]) => {
-                // if (elements.length === 0) {
-                //     return;
-                // }
                 this.duplicationBuffer = [...elements];
                 this.setOffset(PlacementType.Duplication, 0);
             }
