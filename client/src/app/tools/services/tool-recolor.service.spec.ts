@@ -1,5 +1,6 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { RecolorCommand } from '@app/drawing/classes/commands/recolor-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -169,5 +170,29 @@ describe('ToolRecolorService', () => {
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(svgGraphicsElementSpyObj);
         service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#onMouseDown should add a new RecolorCommand when the stroke or the fill has changed', () => {
+        const svgGraphicsElementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute'], { nodeName: 'g' });
+        let firstCheck = true;
+        svgGraphicsElementSpyObj.getAttribute.and.callFake((attribute: string) => {
+            switch (attribute) {
+                case 'stroke':
+                    if (firstCheck) {
+                        firstCheck = false;
+                        return '10';
+                    }
+                    return '20';
+                case 'fill':
+                    return 'none';
+                default:
+                    return undefined;
+            }
+        });
+        drawingServiceSpyObj.findDrawingChildElement.and.returnValue(svgGraphicsElementSpyObj);
+        service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(
+            new RecolorCommand(svgGraphicsElementSpyObj, '10', 'none', '20', 'none')
+        );
     });
 });
