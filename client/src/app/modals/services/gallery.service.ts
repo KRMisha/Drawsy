@@ -20,10 +20,10 @@ export class GalleryService {
     private _isLoadingComplete = false; // tslint:disable-line: variable-name
 
     constructor(
-        private serverService: ServerService,
         private router: Router,
-        private drawingSerializerService: DrawingSerializerService,
         private snackBar: MatSnackBar,
+        private serverService: ServerService,
+        private drawingSerializerService: DrawingSerializerService,
         private drawingService: DrawingService
     ) {}
 
@@ -56,7 +56,9 @@ export class GalleryService {
                         this._drawings.splice(drawingToRemoveIndex, 1);
                     }
 
-                    this.drawingService.id = undefined;
+                    if (this.drawingService.id === drawing.id) {
+                        this.drawingService.id = undefined;
+                    }
                 },
                 (error: HttpErrorResponse): void => {
                     if (error.status === HttpStatusCode.NotFound) {
