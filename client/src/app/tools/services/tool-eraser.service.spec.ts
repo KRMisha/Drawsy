@@ -241,7 +241,7 @@ describe('ToolEraserService', () => {
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke-width', '3');
     });
 
-    it('#addRedBorderToElement should put default border width to 3 if object doesn not have a border initially', () => {
+    it('#addRedBorderToElement should put default border width to 3 if object does not have a border initially', () => {
         spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
         const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
         elementToSendSpy.getAttribute.and.returnValue(undefined);
