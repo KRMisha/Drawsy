@@ -59,7 +59,9 @@ export class ToolSelectionMoverService {
     }
 
     onToolDeselection(): void {
-        this.stopMovingSelectionWithArrows();
+        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
+            this.stopMovingSelectionWithArrows();
+        }
         this.arrowKeysHeldStates.fill(false);
     }
 
