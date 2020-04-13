@@ -177,7 +177,7 @@ describe('CurrentToolService', () => {
         }
     );
 
-    it('#onScroll should call currentTool\'s onScroll function', () => {
+    it("#onScroll should call currentTool's onScroll function", () => {
         const event = {} as WheelEvent;
         service.onScroll(event);
         expect(currentToolSpyObj.onScroll).toHaveBeenCalledWith(event);
