@@ -20,7 +20,7 @@ export class ToolRecolorService extends Tool {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Recolor);
     }
 
-    // Impertinent warning because of null to undefined stylistic conversions
+    // Disable cyclomatic complexity lint error because of null to undefined stylistic conversions
     // tslint:disable-next-line: cyclomatic-complexity
     onMouseDown(event: MouseEvent): void {
         if (event.button !== MouseButton.Left && event.button !== MouseButton.Right) {
