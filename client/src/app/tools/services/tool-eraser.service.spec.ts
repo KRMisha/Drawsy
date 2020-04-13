@@ -271,7 +271,6 @@ describe('ToolEraserService', () => {
     });
 
     it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
-        // spyOn(document, 'elementFromPoint').and.returnValue(null);
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
         const returnValue = service['getElementUnderAreaPixelPerfect']({ width: 1, height: 1, x: 0, y: 0 } as Rect);
         expect(returnValue).toBeUndefined();
