@@ -34,10 +34,14 @@ describe('ToolEraserService', () => {
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingRootSpyObj.getBoundingClientRect.and.returnValue({ x: 69, y: 911, width: 420, height: 666 } as DOMRect);
 
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'], {
-            drawingRoot: drawingRootSpyObj,
-            elements: initialElementsArray,
-        });
+        drawingServiceSpyObj = jasmine.createSpyObj(
+            'DrawingService',
+            ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
+            {
+                drawingRoot: drawingRootSpyObj,
+                elements: initialElementsArray,
+            }
+        );
 
         historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
 
