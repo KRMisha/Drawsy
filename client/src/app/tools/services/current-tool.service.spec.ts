@@ -212,26 +212,21 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onKeyUp).toHaveBeenCalledWith(keyboardEvent);
     });
 
-    it(
-        '#onMouseEnter should set Tool.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter',
-        () => {
-            const mouseEvent = {} as MouseEvent;
-            const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
-            const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
-            getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
+    it('#onMouseEnter should set Tool.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseEnter', () => {
+        const mouseEvent = {} as MouseEvent;
+        const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
+        const getMousePositionSpy = spyOn<any>(service, 'getMousePosition');
+        getMousePositionSpy.and.returnValue(mousePositionExpectedValue);
 
-            service.onMouseEnter(mouseEvent);
+        service.onMouseEnter(mouseEvent);
 
-            expect(Tool.isMouseInsideDrawing).toEqual(true);
-            expect(getMousePositionSpy).toHaveBeenCalled();
-            expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
-            expect(currentToolSpyObj.onMouseEnter).toHaveBeenCalledWith(mouseEvent);
-        }
-    );
+        expect(Tool.isMouseInsideDrawing).toEqual(true);
+        expect(getMousePositionSpy).toHaveBeenCalled();
+        expect(Tool.mousePosition).toEqual(mousePositionExpectedValue);
+        expect(currentToolSpyObj.onMouseEnter).toHaveBeenCalledWith(mouseEvent);
+    });
 
-    it(
-        '#onMouseLeave should set Tool.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseLeave',
-        () => {
+    it('#onMouseLeave should set Tool.isMouseInsideDrawing to true, update the mouse position and call the currentTool onMouseLeave', () => {
         Tool.isMouseInsideDrawing = true;
         const mouseEvent = {} as MouseEvent;
         const mousePositionExpectedValue = { x: 0, y: 0 } as Vec2;
