@@ -11,6 +11,7 @@ import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 
 // tslint:disable: no-string-literal
 
@@ -44,11 +45,11 @@ describe('GalleryService', () => {
 
         routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
         drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', [
-            'loadDrawing',
-            'makeSvgFileContainerFromSavedFile',
+            'getDrawingLoadOptions',
+            'deserializeDrawing',
         ]);
         snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], { id: 12 });
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['loadDrawingWithConfirmation'], { id: 12 });
 
         TestBed.configureTestingModule({
             providers: [
@@ -67,10 +68,13 @@ describe('GalleryService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#loadDrawing should use the open method of snackBar to display a message if the drawingSerializer returns true', () => {
-        drawingSerializerServiceSpyObj.loadDrawing.and.returnValue(true);
+    it('#loadDrawing should use the open method of snackBar to display a message if the drawingService returns true', () => {
+        const drawingLoadOptionsMock = {} as DrawingLoadOptions;
+        drawingSerializerServiceSpyObj.getDrawingLoadOptions.and.returnValue(drawingLoadOptionsMock);
+        drawingServiceSpyObj.loadDrawingWithConfirmation.and.returnValue(true);
         service.loadDrawing(svgFileContainer);
-        expect(drawingSerializerServiceSpyObj.loadDrawing).toHaveBeenCalledWith(svgFileContainer);
+        expect(drawingSerializerServiceSpyObj.getDrawingLoadOptions).toHaveBeenCalledWith(svgFileContainer);
+        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith(drawingLoadOptionsMock);
         expect(snackBarSpyObj.open).toHaveBeenCalledWith('Dessin chargé : ' + svgFileContainer.title, undefined, {
             duration: snackBarDuration,
         });
@@ -78,9 +82,12 @@ describe('GalleryService', () => {
     });
 
     it('#loadDrawing should not display a message if the drawingSerializer returns false', () => {
-        drawingSerializerServiceSpyObj.loadDrawing.and.returnValue(false);
+        const drawingLoadOptionsMock = {} as DrawingLoadOptions;
+        drawingSerializerServiceSpyObj.getDrawingLoadOptions.and.returnValue(drawingLoadOptionsMock);
+        drawingServiceSpyObj.loadDrawingWithConfirmation.and.returnValue(false);
         service.loadDrawing(svgFileContainer);
-        expect(drawingSerializerServiceSpyObj.loadDrawing).toHaveBeenCalledWith(svgFileContainer);
+        expect(drawingSerializerServiceSpyObj.getDrawingLoadOptions).toHaveBeenCalledWith(svgFileContainer);
+        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith(drawingLoadOptionsMock);
         expect(snackBarSpyObj.open).not.toHaveBeenCalled();
         expect(routerSpyObj.navigate).not.toHaveBeenCalled();
     });
@@ -173,16 +180,16 @@ describe('GalleryService', () => {
             service.getAllDrawings();
 
             const svgFileContainerMock = {} as SvgFileContainer;
-            drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile.and.returnValue(svgFileContainerMock);
+            drawingSerializerServiceSpyObj.deserializeDrawing.and.returnValue(svgFileContainerMock);
 
             getAllDrawingsSubject.next(savedFiles);
             expect(service['_isLoadingComplete']).toEqual(false);
             expect(serverServiceSpyObj.getAllDrawings).toHaveBeenCalled();
 
             getAllDrawingsSubject.complete();
-            expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile1);
-            expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile2);
-            expect(drawingSerializerServiceSpyObj.makeSvgFileContainerFromSavedFile).toHaveBeenCalledWith(savedFile3);
+            expect(drawingSerializerServiceSpyObj.deserializeDrawing).toHaveBeenCalledWith(savedFile1.content, savedFile1.id);
+            expect(drawingSerializerServiceSpyObj.deserializeDrawing).toHaveBeenCalledWith(savedFile2.content, savedFile2.id);
+            expect(drawingSerializerServiceSpyObj.deserializeDrawing).toHaveBeenCalledWith(savedFile3.content, savedFile3.id);
             expect(service['_drawings']).toEqual([svgFileContainerMock, svgFileContainerMock, svgFileContainerMock]);
             expect(service['_isLoadingComplete']).toEqual(true);
         }

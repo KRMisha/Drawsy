@@ -105,7 +105,7 @@ describe('NewDrawingComponent', () => {
         const color = {} as Color;
         component.backgroundColor = color;
         component.onSubmit();
-        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith({ x: 18, y: 18 }, color);
+        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith({ dimensions: { x: 18, y: 18 }, backgroundColor: color});
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
     });
 
