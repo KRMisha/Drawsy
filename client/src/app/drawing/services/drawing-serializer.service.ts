@@ -66,24 +66,24 @@ export class DrawingSerializerService {
 
     async exportAsBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
         const blob =
-            (await fileType) === FileType.Svg
+            fileType === FileType.Svg
                 ? this.convertVectorDrawingToBlob(drawingRoot)
-                : this.convertRasterDrawingToBlob(drawingRoot, fileType);
+                : await this.convertRasterDrawingToBlob(drawingRoot, fileType);
         return blob;
     }
 
     private convertVectorDrawingToBlob(drawingRoot: SVGSVGElement): Blob {
-        const content = this.serializeDrawing(drawingRoot);
-        return new Blob([content], { type: 'image/svg+xml' });
+        const serializedDrawing = this.serializeDrawing(drawingRoot);
+        return new Blob([serializedDrawing], { type: 'image/svg+xml' });
     }
 
     private async convertRasterDrawingToBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
-        const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
+        const mimeType = 'image/' + fileType;
 
         return new Promise<Blob>((resolve: (blob: Blob) => void): void => {
             canvas.toBlob((blob: Blob) => {
-                resolve(new Blob([blob], { type: mimeType }));
+                resolve(blob);
             }, mimeType);
         });
     }
