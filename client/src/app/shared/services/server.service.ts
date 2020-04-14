@@ -10,8 +10,7 @@ import { environment } from '@env/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-const serverUrl = environment.apiUrl;
-const httpOptions = {
+const httpJsonOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
     }),
@@ -26,27 +25,29 @@ export class ServerService {
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .post<NewFileId>(serverUrl + '/create', newFileContent, httpOptions)
+            .post<NewFileId>(environment.apiUrl + '/create', newFileContent, httpJsonOptions)
             .pipe(catchError(this.alertRequestError('create')));
     }
 
     updateDrawing(fileId: string, fileContent: string): Observable<void> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .put<void>(serverUrl + '/update/' + fileId, newFileContent, httpOptions)
+            .put<void>(environment.apiUrl + '/update/' + fileId, newFileContent, httpJsonOptions)
             .pipe(catchError(this.alertRequestError('update/' + fileId)));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.alertRequestError('delete/' + fileId)));
+        return this.httpService
+            .delete<void>(environment.apiUrl + '/delete/' + fileId)
+            .pipe(catchError(this.alertRequestError('delete/' + fileId)));
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
+        return this.httpService.get<SavedFile[]>(environment.apiUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
     sendEmail(form: FormData): Observable<void> {
-        return this.httpService.post<void>(serverUrl + '/send-email', form).pipe(catchError(this.alertRequestError('send-email')));
+        return this.httpService.post<void>(environment.apiUrl + '/send-email', form).pipe(catchError(this.alertRequestError('send-email')));
     }
 
     private alertRequestError(request: string): (error: HttpErrorResponse) => Observable<never> {
