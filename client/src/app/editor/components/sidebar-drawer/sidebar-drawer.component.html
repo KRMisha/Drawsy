@@ -121,7 +121,13 @@
             >
                 <mat-icon svgIcon="content-duplicate"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Supprimer" [disabled]="!isSelectionAvailable" (click)="deleteCommand()">
+            <button
+                mat-icon-button
+                class="command-item"
+                matTooltip="Supprimer"
+                [disabled]="!isSelectionAvailable"
+                (click)="deleteCommand()"
+            >
                 <mat-icon svgIcon="delete-outline"></mat-icon>
             </button>
         </div>
