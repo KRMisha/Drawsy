@@ -180,7 +180,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     update(): void {
-        const elements = new Set(this.drawingService.svgElements);
+        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
         this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
             (element: SVGGraphicsElement) => elements.has(element)
         );
@@ -188,7 +188,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolSelection(): void {
         this.selectAllShortcutSubscription = this.shortcutService.selectAllShortcut$.subscribe(() => {
-            this.toolSelectionStateService.selectedElements = [...this.drawingService.svgElements];
+            this.toolSelectionStateService.selectedElements = [...this.drawingService.elements];
         });
     }
 
@@ -207,8 +207,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.drawingService.svgElements.length; i++) {
-            elementIndices.set(this.drawingService.svgElements[i], i);
+        for (let i = 0; i < this.drawingService.elements.length; i++) {
+            elementIndices.set(this.drawingService.elements[i], i);
         }
 
         this.toolSelectionStateService.selectedElements.sort((element1: SVGGraphicsElement, element2: SVGGraphicsElement) => {

@@ -337,10 +337,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     get isUndoAvailable(): boolean {
-        return this.historyService.hasUndoCommands();
+        return this.historyService.canUndo();
     }
 
     get isRedoAvailable(): boolean {
-        return this.historyService.hasRedoCommands();
+        return this.historyService.canRedo();
     }
 }

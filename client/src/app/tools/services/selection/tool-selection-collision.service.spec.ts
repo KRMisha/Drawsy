@@ -14,7 +14,7 @@ describe('ToolSelectionCollisionService', () => {
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getBoundingClientRect']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             drawingRoot: drawingRootSpyObj,
-            svgElements: [{} as SVGGraphicsElement, {} as SVGGraphicsElement],
+            elements: [{} as SVGGraphicsElement, {} as SVGGraphicsElement],
         });
         TestBed.configureTestingModule({
             providers: [{ provide: DrawingService, useValue: drawingServiceSpyObj }],
@@ -29,7 +29,7 @@ describe('ToolSelectionCollisionService', () => {
     it('#getElementsUnderArea should filter out the elements not in the area', () => {
         const areRectsIntersectingSpy = spyOn(service, 'areRectsIntersecting');
         const getElementsBoundSpy = spyOn(service, 'getElementBounds');
-        const filterSpy = spyOn(drawingServiceSpyObj.svgElements, 'filter').and.callThrough();
+        const filterSpy = spyOn(drawingServiceSpyObj.elements, 'filter').and.callThrough();
 
         service.getElementsUnderArea({} as Rect);
 

@@ -7,92 +7,92 @@ import { HistoryService } from '@app/drawing/services/history.service';
 describe('HistoryService', () => {
     let service: HistoryService;
     let commandSpyObj: jasmine.SpyObj<Command>;
-    let undoCommandsPopSpy: jasmine.Spy;
-    let redoCommandsPopSpy: jasmine.Spy;
-    let undoCommandsPushSpy: jasmine.Spy;
-    let redoCommandsPushSpy: jasmine.Spy;
+    let undoStackPopSpy: jasmine.Spy;
+    let redoStackPopSpy: jasmine.Spy;
+    let undoStackPushSpy: jasmine.Spy;
+    let redoStackPushSpy: jasmine.Spy;
 
     beforeEach(() => {
         service = TestBed.inject(HistoryService);
         commandSpyObj = jasmine.createSpyObj('Command', ['undo', 'redo']);
-        undoCommandsPopSpy = spyOn(service['undoCommands'], 'pop').and.callThrough();
-        redoCommandsPopSpy = spyOn(service['redoCommands'], 'pop').and.callThrough();
-        undoCommandsPushSpy = spyOn(service['undoCommands'], 'push');
-        redoCommandsPushSpy = spyOn(service['redoCommands'], 'push');
+        undoStackPopSpy = spyOn(service['undoStack'], 'pop').and.callThrough();
+        redoStackPopSpy = spyOn(service['redoStack'], 'pop').and.callThrough();
+        undoStackPushSpy = spyOn(service['undoStack'], 'push');
+        redoStackPushSpy = spyOn(service['redoStack'], 'push');
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#undo should do nothing if undoCommands is empty', () => {
-        service['undoCommands'] = [];
+    it('#undo should do nothing if undoStack is empty', () => {
+        service['undoStack'] = [];
         service.undo();
 
-        expect(undoCommandsPopSpy).not.toHaveBeenCalled();
-        expect(redoCommandsPopSpy).not.toHaveBeenCalled();
-        expect(undoCommandsPushSpy).not.toHaveBeenCalled();
-        expect(redoCommandsPushSpy).not.toHaveBeenCalled();
+        expect(undoStackPopSpy).not.toHaveBeenCalled();
+        expect(redoStackPopSpy).not.toHaveBeenCalled();
+        expect(undoStackPushSpy).not.toHaveBeenCalled();
+        expect(redoStackPushSpy).not.toHaveBeenCalled();
     });
 
-    it('#undo should undo the last command and put it in redoCommands if undoCommands is not empty', () => {
-        service['undoCommands'] = [commandSpyObj];
+    it('#undo should undo the last command and put it in redoStack if undoStack is not empty', () => {
+        service['undoStack'] = [commandSpyObj];
         service.undo();
         expect(commandSpyObj.undo).toHaveBeenCalled();
-        expect(redoCommandsPushSpy).toHaveBeenCalled();
+        expect(redoStackPushSpy).toHaveBeenCalled();
     });
 
-    it('#redo should do nothing if redoCommands is empty', () => {
+    it('#redo should do nothing if redoStack is empty', () => {
         service.redo();
-        expect(undoCommandsPushSpy).not.toHaveBeenCalled();
+        expect(undoStackPushSpy).not.toHaveBeenCalled();
         expect(commandSpyObj.undo).not.toHaveBeenCalled();
     });
 
-    it('#redo should redo the last command and put it in undoCommands if redoCommands is not empty', () => {
-        service['redoCommands'] = [commandSpyObj];
+    it('#redo should redo the last command and put it in undoStack if redoStack is not empty', () => {
+        service['redoStack'] = [commandSpyObj];
         service.redo();
         expect(commandSpyObj.redo).toHaveBeenCalled();
-        expect(undoCommandsPushSpy).toHaveBeenCalledWith(commandSpyObj);
+        expect(undoStackPushSpy).toHaveBeenCalledWith(commandSpyObj);
     });
 
-    it('#hasUndoCommands should return true if it is not empty', () => {
-        service['undoCommands'] = [commandSpyObj];
-        const returnedValue = service.hasUndoCommands();
+    it('#canUndo should return true if undoStack is not empty', () => {
+        service['undoStack'] = [commandSpyObj];
+        const returnedValue = service.canUndo();
         expect(returnedValue).toEqual(true);
     });
 
-    it('#hasUndoCommands should return false if it is empty', () => {
-        const returnedValue = service.hasUndoCommands();
+    it('#canUndo should return false if undoStack is empty', () => {
+        const returnedValue = service.canUndo();
         expect(returnedValue).toEqual(false);
     });
 
-    it('#hasRedoCommands should return true if it is not empty', () => {
-        service['redoCommands'] = [commandSpyObj];
-        const returnedValue = service.hasRedoCommands();
+    it('#canRedo should return true if redoStack is not empty', () => {
+        service['redoStack'] = [commandSpyObj];
+        const returnedValue = service.canRedo();
         expect(returnedValue).toEqual(true);
     });
 
-    it('#hasRedoCommands should return false if it is empty', () => {
-        const returnedValue = service.hasRedoCommands();
+    it('#canRedo should return false if redoStack is empty', () => {
+        const returnedValue = service.canRedo();
         expect(returnedValue).toEqual(false);
     });
 
-    it('#addCommand should add a command to undoCommands and empty redoCommands', () => {
-        service['redoCommands'] = [commandSpyObj];
+    it('#addCommand should add a command to undoStack and empty redoStack', () => {
+        service['redoStack'] = [commandSpyObj];
 
         service.addCommand(commandSpyObj);
 
-        expect(undoCommandsPushSpy).toHaveBeenCalledWith(commandSpyObj);
-        expect(service['redoCommands'].length).toEqual(0);
+        expect(undoStackPushSpy).toHaveBeenCalledWith(commandSpyObj);
+        expect(service['redoStack'].length).toEqual(0);
     });
 
-    it('#clearCommands should empty undoCommands and redoCommands', () => {
-        service['undoCommands'] = [commandSpyObj];
-        service['redoCommands'] = [commandSpyObj];
+    it('#onDrawingLoad should empty undoStack and redoStack', () => {
+        service['undoStack'] = [commandSpyObj];
+        service['redoStack'] = [commandSpyObj];
 
-        service.clearCommands();
+        service.onDrawingLoad();
 
-        expect(service['undoCommands'].length).toEqual(0);
-        expect(service['redoCommands'].length).toEqual(0);
+        expect(service['undoStack'].length).toEqual(0);
+        expect(service['redoStack'].length).toEqual(0);
     });
 });

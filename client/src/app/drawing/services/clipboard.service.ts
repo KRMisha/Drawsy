@@ -141,7 +141,7 @@ export class ClipboardService implements OnDestroy {
 
         this.toolSelectionStateService.selectedElements = copiedElementsToPlace;
 
-        const elementsInDrawing = new Set<SVGGraphicsElement>(this.drawingService.svgElements);
+        const elementsInDrawing = new Set<SVGGraphicsElement>(this.drawingService.elements);
         const areSomeElementsStillInDrawing = originalElements.some((element: SVGGraphicsElement) => elementsInDrawing.has(element));
 
         if (!areSomeElementsStillInDrawing) {

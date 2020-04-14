@@ -7,9 +7,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class GalleryPreviewPipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {}
 
-    transform(svgRoot: SVGSVGElement): SafeHtml {
-        svgRoot.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    transform(drawingRoot: SVGSVGElement): SafeHtml {
+        drawingRoot.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 
-        return this.sanitizer.bypassSecurityTrustHtml(svgRoot.outerHTML);
+        return this.sanitizer.bypassSecurityTrustHtml(drawingRoot.outerHTML);
     }
 }

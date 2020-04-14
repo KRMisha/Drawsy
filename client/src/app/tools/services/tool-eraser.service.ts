@@ -23,7 +23,7 @@ export class ToolEraserService extends Tool {
 
     private isLeftMouseButtonDownInsideDrawing = false;
     private drawingElementsCopy: SVGGraphicsElement[] = [];
-    private svgElementsDeletedDuringDrag: ElementSiblingPair[] = [];
+    private elementsDeletedDuringDrag: ElementSiblingPair[] = [];
 
     private eraserRect: Rect;
 
@@ -55,24 +55,24 @@ export class ToolEraserService extends Tool {
             return;
         }
         this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
-        this.drawingElementsCopy = [...this.drawingService.svgElements];
+        this.drawingElementsCopy = [...this.drawingService.elements];
         this.update();
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button !== MouseButton.Left || this.svgElementsDeletedDuringDrag.length === 0) {
+        if (event.button !== MouseButton.Left || this.elementsDeletedDuringDrag.length === 0) {
             return;
         }
         const elementIndices = new Map<SVGGraphicsElement, number>();
         for (let i = 0; i < this.drawingElementsCopy.length; i++) {
             elementIndices.set(this.drawingElementsCopy[i], i);
         }
-        this.svgElementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
+        this.elementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
             return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
         });
 
-        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.svgElementsDeletedDuringDrag));
-        this.svgElementsDeletedDuringDrag = [];
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.elementsDeletedDuringDrag));
+        this.elementsDeletedDuringDrag = [];
     }
 
     onMouseEnter(event: MouseEvent): void {
@@ -99,7 +99,7 @@ export class ToolEraserService extends Tool {
             this.restoreElementUnderCursorAttributes();
             const elementIndex = this.drawingElementsCopy.indexOf(this.svgElementUnderCursor);
             if (elementIndex !== -1) {
-                this.svgElementsDeletedDuringDrag.push({
+                this.elementsDeletedDuringDrag.push({
                     element: this.svgElementUnderCursor,
                     sibling: this.drawingElementsCopy[elementIndex + 1],
                 });

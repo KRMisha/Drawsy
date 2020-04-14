@@ -16,7 +16,7 @@ const pointsPerCoordinates = 2;
     providedIn: 'root',
 })
 export class ToolLineService extends Tool {
-    private groupElement: SVGGElement;
+    private group: SVGGElement;
     private polyline: SVGPolylineElement;
     private previewLine: SVGLineElement;
 
@@ -74,7 +74,7 @@ export class ToolLineService extends Tool {
             const circle = this.createNewJunction();
             this.renderer.setAttribute(circle, 'cx', this.nextPoint.x.toString());
             this.renderer.setAttribute(circle, 'cy', this.nextPoint.y.toString());
-            this.renderer.appendChild(this.groupElement, circle);
+            this.renderer.appendChild(this.group, circle);
         }
 
         this.lastPoint = this.nextPoint;
@@ -84,7 +84,7 @@ export class ToolLineService extends Tool {
     onMouseDoubleClick(event: MouseEvent): void {
         const removedJunctionPoint = this.junctionPoints.pop();
         if (removedJunctionPoint !== undefined) {
-            this.renderer.removeChild(this.groupElement, removedJunctionPoint);
+            this.renderer.removeChild(this.group, removedJunctionPoint);
         }
         this.points.length -= pointsPerCoordinates;
 
@@ -102,7 +102,7 @@ export class ToolLineService extends Tool {
             if (deltaPosition.x <= lineClosingPixelTolerance && deltaPosition.y <= lineClosingPixelTolerance) {
                 const removedLastJunctionPoint = this.junctionPoints.pop();
                 if (removedLastJunctionPoint !== undefined) {
-                    this.renderer.removeChild(this.groupElement, removedLastJunctionPoint);
+                    this.renderer.removeChild(this.group, removedLastJunctionPoint);
                 }
                 this.points[lastXIndex] = this.points[firstXIndex];
                 this.points[lastYIndex] = this.points[firstYIndex];
@@ -117,7 +117,7 @@ export class ToolLineService extends Tool {
         switch (event.key) {
             case 'Escape':
                 if (this.isCurrentlyDrawing) {
-                    this.drawingService.removeElement(this.groupElement);
+                    this.drawingService.removeElement(this.group);
                     this.stopDrawing();
                     this.junctionPoints.length = 0;
                 }
@@ -143,7 +143,7 @@ export class ToolLineService extends Tool {
         if (!this.isCurrentlyDrawing) {
             return;
         }
-        this.renderer.setAttribute(this.groupElement, 'stroke', color.toRgbaString());
+        this.renderer.setAttribute(this.group, 'stroke', color.toRgbaString());
 
         const previewColor = this.colorService.primaryColor.clone();
         previewColor.alpha /= 2;
@@ -164,16 +164,16 @@ export class ToolLineService extends Tool {
         const junctionDiameterActualValue = this.isJunctionEnabled ? this.junctionDiameter : 0;
         const padding = Math.max(0, this.settings.lineWidth! / 2 - junctionDiameterActualValue);
 
-        this.groupElement = this.renderer.createElement('g', 'svg');
-        this.renderer.setAttribute(this.groupElement, 'fill', this.colorService.primaryColor.toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke', this.colorService.primaryColor.toRgbaString());
-        this.renderer.setAttribute(this.groupElement, 'stroke-width', this.settings.lineWidth!.toString());
-        this.renderer.setAttribute(this.groupElement, 'data-padding', padding.toString());
+        this.group = this.renderer.createElement('g', 'svg');
+        this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
+        this.renderer.setAttribute(this.group, 'stroke', this.colorService.primaryColor.toRgbaString());
+        this.renderer.setAttribute(this.group, 'stroke-width', this.settings.lineWidth!.toString());
+        this.renderer.setAttribute(this.group, 'data-padding', padding.toString());
 
-        this.drawingService.addElement(this.groupElement);
+        this.drawingService.addElement(this.group);
 
         this.polyline = this.createNewPolyline();
-        this.renderer.appendChild(this.groupElement, this.polyline);
+        this.renderer.appendChild(this.group, this.polyline);
 
         this.previewLine = this.renderer.createElement('line', 'svg');
         this.drawingService.addUiElement(this.previewLine);
@@ -196,9 +196,9 @@ export class ToolLineService extends Tool {
         this.isCurrentlyDrawing = false;
         this.drawingService.removeUiElement(this.previewLine);
         if (this.points.length > pointsPerCoordinates) {
-            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.groupElement));
+            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
         } else {
-            this.drawingService.removeElement(this.groupElement);
+            this.drawingService.removeElement(this.group);
         }
         this.points.length = 0;
     }
@@ -216,7 +216,7 @@ export class ToolLineService extends Tool {
 
             const removedJunctionPoint = this.junctionPoints.pop();
             if (removedJunctionPoint !== undefined) {
-                this.renderer.removeChild(this.groupElement, removedJunctionPoint);
+                this.renderer.removeChild(this.group, removedJunctionPoint);
             }
         }
     }
