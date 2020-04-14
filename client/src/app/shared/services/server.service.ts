@@ -46,7 +46,7 @@ export class ServerService {
         return this.httpService.get<SavedFile[]>(environment.apiUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
-    sendEmail(form: FormData): Observable<void> {
+    emailDrawing(form: FormData): Observable<void> {
         return this.httpService.post<void>(environment.apiUrl + '/send-email', form).pipe(catchError(this.alertRequestError('send-email')));
     }
 
@@ -91,7 +91,7 @@ export class ServerService {
                     errorMessage = 'Erreur : une authentification est nécessaire.';
                     break;
                 default:
-                    errorMessage = 'Erreur : erreur inconnue';
+                    errorMessage = 'Erreur : erreur inconnue.';
                     break;
             }
 

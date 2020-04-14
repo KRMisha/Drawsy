@@ -33,8 +33,7 @@ export class SaveDrawingService {
                     });
                 },
                 // No error handling needs to be done but the error must be caught
-                // tslint:disable-next-line: no-empty
-                (error: HttpErrorResponse): void => {}
+                (error: HttpErrorResponse): void => {} // tslint:disable-line: no-empty
             );
     }
 

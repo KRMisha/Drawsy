@@ -25,34 +25,35 @@ export class ExportDrawingService {
         this.drawingSerializerService.downloadDrawing(drawingRoot, this.drawingService.title, fileType);
     }
 
-    async sendEmail(drawingRoot: SVGSVGElement, emailAddress: string, fileType: FileType): Promise<void> {
+    async emailDrawing(drawingRoot: SVGSVGElement, emailAddress: string, fileType: FileType): Promise<void> {
         const formData = new FormData();
         formData.append('to', emailAddress);
         const blob = await this.drawingSerializerService.exportAsBlob(drawingRoot, fileType);
         formData.append('payload', blob, this.drawingService.title + '.' + fileType);
 
         this.serverService
-            .sendEmail(formData)
-            .pipe(catchError(this.alertSendEmailError()))
+            .emailDrawing(formData)
+            .pipe(catchError(this.alertEmailDrawingError()))
             .subscribe(
                 () => {
-                    this.snackBar.open('Votre courriel a été envoyé à ' + emailAddress, undefined, {
+                    this.snackBar.open('Votre dessin a été envoyé par courriel à ' + emailAddress, undefined, {
                         duration: snackBarDuration,
                     });
                 },
+                // No error handling needs to be done but the error must be caught
                 (error: HttpErrorResponse) => {} // tslint:disable-line: no-empty
             );
     }
 
-    private alertSendEmailError(): (error: HttpErrorResponse) => Observable<never> {
+    private alertEmailDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             let errorMessage = '';
             switch (error.status) {
-                case HttpStatusCode.TooManyRequests:
-                    errorMessage = "Erreur : Vous avez dépasser votre limite de d'envois de couriels.";
-                    break;
                 case HttpStatusCode.BadRequest:
-                    errorMessage = "Erreur : Le courriel que vous avez entré n'existe pas";
+                    errorMessage = "Erreur : l'adresse courriel que vous avez entrée n'existe pas.";
+                    break;
+                case HttpStatusCode.TooManyRequests:
+                    errorMessage = "Erreur : vous avez dépassé votre limite horaire d'envois de courriels.";
                     break;
             }
 
