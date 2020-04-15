@@ -11,24 +11,24 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./grid-settings.component.scss'],
 })
 export class GridSettingsComponent implements OnInit, OnDestroy {
-    private displayEnabledSubscription: Subscription;
-    private sizeSubscription: Subscription;
-    private opacitySubscription: Subscription;
+    private gridDisplayEnabledChangedSubscription: Subscription;
+    private gridSizeChangedSubscription: Subscription;
+    private gridOpacityChangedSubscription: Subscription;
 
     constructor(private settingsService: SettingsService, private gridService: GridService) {}
 
     ngOnInit(): void {
-        this.displayEnabledSubscription = this.formGroup.controls.gridDisplayEnabled.valueChanges.subscribe(() => {
+        this.gridDisplayEnabledChangedSubscription = this.formGroup.controls.gridDisplayEnabled.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridDisplayEnabled.valid) {
                 this.isGridDisplayEnabled = this.formGroup.controls.gridDisplayEnabled.value;
             }
         });
-        this.sizeSubscription = this.formGroup.controls.gridSize.valueChanges.subscribe(() => {
+        this.gridSizeChangedSubscription = this.formGroup.controls.gridSize.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridSize.valid) {
                 this.gridService.size = this.formGroup.controls.gridSize.value;
             }
         });
-        this.opacitySubscription = this.formGroup.controls.gridOpacity.valueChanges.subscribe(() => {
+        this.gridOpacityChangedSubscription = this.formGroup.controls.gridOpacity.valueChanges.subscribe(() => {
             if (this.formGroup.controls.gridOpacity.valid) {
                 this.gridService.opacity = this.formGroup.controls.gridOpacity.value;
             }
@@ -36,9 +36,9 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.displayEnabledSubscription.unsubscribe();
-        this.sizeSubscription.unsubscribe();
-        this.opacitySubscription.unsubscribe();
+        this.gridDisplayEnabledChangedSubscription.unsubscribe();
+        this.gridSizeChangedSubscription.unsubscribe();
+        this.gridOpacityChangedSubscription.unsubscribe();
     }
 
     getErrorMessage(formControl: AbstractControl, humanFriendlyPattern?: string): string {

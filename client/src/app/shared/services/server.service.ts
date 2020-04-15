@@ -6,11 +6,11 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileContent } from '@common/communication/new-file-content';
 import { NewFileId } from '@common/communication/new-file-id';
 import { SavedFile } from '@common/communication/saved-file';
+import { environment } from '@env/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-const serverUrl = 'http://localhost:3000/api';
-const httpOptions = {
+const httpJsonOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
     }),
@@ -25,23 +25,35 @@ export class ServerService {
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .post<NewFileId>(serverUrl + '/create', newFileContent, httpOptions)
+            .post<NewFileId>(environment.apiUrl + '/create', newFileContent, httpJsonOptions)
             .pipe(catchError(this.alertRequestError('create')));
     }
 
     updateDrawing(fileId: string, fileContent: string): Observable<void> {
         const newFileContent: NewFileContent = { content: fileContent };
         return this.httpService
-            .put<void>(serverUrl + '/update/' + fileId, newFileContent, httpOptions)
+            .put<void>(environment.apiUrl + '/update/' + fileId, newFileContent, httpJsonOptions)
             .pipe(catchError(this.alertRequestError('update/' + fileId)));
     }
 
     deleteDrawing(fileId: string): Observable<void> {
-        return this.httpService.delete<void>(serverUrl + '/delete/' + fileId).pipe(catchError(this.alertRequestError('delete/' + fileId)));
+        return this.httpService
+            .delete<void>(environment.apiUrl + '/delete/' + fileId)
+            .pipe(catchError(this.alertRequestError('delete/' + fileId)));
     }
 
     getAllDrawings(): Observable<SavedFile[]> {
-        return this.httpService.get<SavedFile[]>(serverUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
+        return this.httpService.get<SavedFile[]>(environment.apiUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
+    }
+
+    emailDrawing(emailAddress: string, drawingBlob: Blob, filename: string): Observable<void> {
+        const formData = new FormData();
+        formData.append('to', emailAddress);
+        formData.append('payload', drawingBlob, filename);
+
+        return this.httpService
+            .post<void>(environment.apiUrl + '/send-email', formData)
+            .pipe(catchError(this.alertRequestError('send-email')));
     }
 
     private alertRequestError(request: string): (error: HttpErrorResponse) => Observable<never> {
@@ -85,7 +97,7 @@ export class ServerService {
                     errorMessage = 'Erreur : une authentification est nécessaire.';
                     break;
                 default:
-                    errorMessage = 'Erreur : erreur inconnue';
+                    errorMessage = 'Erreur : erreur inconnue.';
                     break;
             }
 
