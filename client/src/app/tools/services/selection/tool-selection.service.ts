@@ -209,8 +209,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     private reset(): void {
-        this.toolSelectionUiService.hideUserSelectionRect();
-        this.toolSelectionUiService.resetUserSelectionRectCursor();
+        this.toolSelectionUiService.reset();
         this.toolSelectionStateService.selectedElements = [];
     }
 

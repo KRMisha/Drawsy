@@ -56,15 +56,23 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     updateUserSelectionRectCursor(state: SelectionState): void {
-        if (state === SelectionState.MovingSelectionWithMouse) {
-            this.renderer.setStyle(this.drawingService.drawingRoot, 'cursor', 'move');
-        } else {
-            this.resetUserSelectionRectCursor();
+        switch (state) {
+            case SelectionState.SelectionChangeStartClick:
+            case SelectionState.ChangingSelection:
+                this.renderer.setStyle(document.body, 'cursor', 'crosshair');
+                break;
+            case SelectionState.MovingSelectionWithMouse:
+                this.renderer.setStyle(document.body, 'cursor', 'move');
+                break;
+            default:
+                this.renderer.removeStyle(document.body, 'cursor');
+                break;
         }
     }
 
-    resetUserSelectionRectCursor(): void {
-        this.renderer.removeStyle(this.drawingService.drawingRoot, 'cursor');
+    reset(): void {
+        this.hideUserSelectionRect();
+        this.renderer.removeStyle(document.body, 'cursor');
     }
 
     private createUiElements(): void {

@@ -44,6 +44,10 @@ export class ToolSprayCanService extends Tool {
         this.stopSpraying();
     }
 
+    onFocusOut(): void {
+        this.stopSpraying();
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (this.group !== undefined) {
             this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
@@ -51,10 +55,6 @@ export class ToolSprayCanService extends Tool {
     }
 
     onToolDeselection(): void {
-        this.stopSpraying();
-    }
-
-    onFocusOut(): void {
         this.stopSpraying();
     }
 
