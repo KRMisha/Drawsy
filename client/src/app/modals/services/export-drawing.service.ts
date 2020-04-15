@@ -26,13 +26,9 @@ export class ExportDrawingService {
     }
 
     async emailDrawing(drawingRoot: SVGSVGElement, emailAddress: string, fileType: FileType): Promise<void> {
-        const formData = new FormData();
-        formData.append('to', emailAddress);
-        const blob = await this.drawingSerializerService.exportAsBlob(drawingRoot, fileType);
-        formData.append('payload', blob, this.drawingService.title + '.' + fileType);
-
+        const drawingBlob = await this.drawingSerializerService.exportAsBlob(drawingRoot, fileType);
         this.serverService
-            .emailDrawing(formData)
+            .emailDrawing(emailAddress, drawingBlob, this.drawingService.title + '.' + fileType)
             .pipe(catchError(this.alertEmailDrawingError()))
             .subscribe(
                 () => {

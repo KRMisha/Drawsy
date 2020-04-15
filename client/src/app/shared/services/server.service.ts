@@ -46,8 +46,14 @@ export class ServerService {
         return this.httpService.get<SavedFile[]>(environment.apiUrl + '/get-all').pipe(catchError(this.alertRequestError('get-all')));
     }
 
-    emailDrawing(form: FormData): Observable<void> {
-        return this.httpService.post<void>(environment.apiUrl + '/send-email', form).pipe(catchError(this.alertRequestError('send-email')));
+    emailDrawing(emailAddress: string, drawingBlob: Blob, filename: string): Observable<void> {
+        const formData = new FormData();
+        formData.append('to', emailAddress);
+        formData.append('payload', drawingBlob, filename);
+
+        return this.httpService
+            .post<void>(environment.apiUrl + '/send-email', formData)
+            .pipe(catchError(this.alertRequestError('send-email')));
     }
 
     private alertRequestError(request: string): (error: HttpErrorResponse) => Observable<never> {
