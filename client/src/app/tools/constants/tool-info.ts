@@ -1,16 +1,16 @@
 import { ToolData } from '@app/tools/classes/tool-data';
 
 export default {
-    Pencil: { name: 'Crayon', icon: 'pencil' } as ToolData,
-    Paintbrush: { name: 'Pinceau', icon: 'brush' } as ToolData,
-    Line: { name: 'Ligne', icon: 'chart-timeline-variant' } as ToolData,
-    SprayCan: { name: 'Aérosol', icon: 'spray' } as ToolData,
-    Rectangle: { name: 'Rectangle', icon: 'crop-square' } as ToolData,
-    Ellipse: { name: 'Ellipse', icon: 'ellipse-outline' } as ToolData,
-    Polygon: { name: 'Polygone', icon: 'hexagon-outline' } as ToolData,
-    Eyedropper: { name: 'Pipette', icon: 'eyedropper-variant' } as ToolData,
-    Fill: { name: 'Sceau de peinture', icon: 'format-color-fill' } as ToolData,
-    Recolor: { name: 'Applicateur de couleur', icon: 'format-paint' } as ToolData,
-    Selection: { name: 'Sélection', icon: 'selection' } as ToolData,
-    Eraser: { name: 'Efface', icon: 'eraser' } as ToolData,
+    Pencil: { name: 'Crayon', shortcut: 'C', icon: 'pencil' } as ToolData,
+    Paintbrush: { name: 'Pinceau', shortcut: 'W', icon: 'brush' } as ToolData,
+    Line: { name: 'Ligne', shortcut: 'L', icon: 'chart-timeline-variant' } as ToolData,
+    SprayCan: { name: 'Aérosol', shortcut: 'A', icon: 'spray' } as ToolData,
+    Rectangle: { name: 'Rectangle', shortcut: '1', icon: 'crop-square' } as ToolData,
+    Ellipse: { name: 'Ellipse', shortcut: '2', icon: 'ellipse-outline' } as ToolData,
+    Polygon: { name: 'Polygone', shortcut: '3', icon: 'hexagon-outline' } as ToolData,
+    Fill: { name: 'Sceau de peinture', shortcut: 'B', icon: 'format-color-fill' } as ToolData,
+    Eyedropper: { name: 'Pipette', shortcut: 'I', icon: 'eyedropper-variant' } as ToolData,
+    Recolor: { name: 'Applicateur de couleur', shortcut: 'R', icon: 'format-paint' } as ToolData,
+    Selection: { name: 'Sélection', shortcut: 'S', icon: 'selection' } as ToolData,
+    Eraser: { name: 'Efface', shortcut: 'E', icon: 'eraser' } as ToolData,
 };

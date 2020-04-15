@@ -14,10 +14,10 @@
                     class="button"
                     [class.theme-selected-button]="tool === currentTool"
                     (click)="currentTool = tool"
-                    [matTooltip]="tool.name"
+                    [matTooltip]="tool.info.name + ' (' + tool.info.shortcut + ')'"
                     matTooltipPosition="right"
                 >
-                    <mat-icon [svgIcon]="tool.icon"></mat-icon>
+                    <mat-icon [svgIcon]="tool.info.icon"></mat-icon>
                 </button>
             </mat-action-list>
             <mat-action-list dense>

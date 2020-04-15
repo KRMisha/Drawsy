@@ -29,7 +29,7 @@ describe('ExportDrawingService', () => {
     it("#exportDrawing should forward the drawing's exporting call to the the DrawingSerializerService", () => {
         const drawingRootStub = {} as SVGSVGElement;
         const fileType = FileType.Jpeg;
-        service.exportDrawing(drawingRootStub, fileType);
-        expect(drawingSerializerServiceSpyObj.exportDrawing).toHaveBeenCalledWith(drawingRootStub, drawingServiceSpyObj.title, fileType);
+        service.downloadDrawing(drawingRootStub, fileType);
+        expect(drawingSerializerServiceSpyObj.downloadDrawing).toHaveBeenCalledWith(drawingRootStub, drawingServiceSpyObj.title, fileType);
     });
 });
