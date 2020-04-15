@@ -6,7 +6,7 @@
     display: grid;
     grid-template-areas:
         'title filter file'
-        'email email .'
+        'email email email'
         'preview preview preview';
     grid-auto-columns: 1fr;
     align-content: center;
@@ -21,35 +21,29 @@
     grid-area: filter;
 }
 
-.file-item {
+.file-type-container {
     grid-area: file;
     display: flex;
     justify-self: right;
 }
 
-.toggle-group {
-    height: 48px;
-}
-
-.file-type,
-.email-title {
+.file-type-title-item {
     align-self: center;
     margin-bottom: 0;
     margin-right: 12px;
 }
 
-.email-item {
+.toggle-group-item {
+    height: 48px;
+}
+
+.email-container {
     grid-area: email;
     display: flex;
-}
-
-.email-checkbox {
-    display: flex;
     align-items: center;
-    white-space: nowrap;
 }
 
-.email-input {
+.form-field-item {
     width: 100%;
     padding-left: 16px;
 }

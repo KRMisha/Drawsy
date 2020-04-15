@@ -1,11 +1,13 @@
 <h1 mat-dialog-title class="title">Exporter le dessin</h1>
-<form (ngSubmit)="onSubmit()">
+<form [formGroup]="exportDrawingFormGroup" (ngSubmit)="onSubmit()" autocomplete="off">
     <mat-dialog-content>
         <div class="container">
             <mat-form-field class="title-item">
                 <mat-label>Titre</mat-label>
-                <input matInput [formControl]="titleFormControl" />
-                <mat-error *ngIf="titleFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+                <input matInput formControlName="title" />
+                <mat-error *ngIf="exportDrawingFormGroup.controls.title.invalid">
+                    {{ getErrorMessage(exportDrawingFormGroup.controls.title, 'A-Z, a-z, 0-9') }}
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field class="filter-item">
@@ -20,9 +22,9 @@
                 </mat-select>
             </mat-form-field>
 
-            <div class="file-item">
-                <h4 class="file-type">Type de fichier&nbsp;:</h4>
-                <mat-button-toggle-group class="toggle-group" [(ngModel)]="fileType" [ngModelOptions]="{ standalone: true }">
+            <div class="file-type-container">
+                <h4 class="file-type-title-item">Type de fichier&nbsp;:</h4>
+                <mat-button-toggle-group class="toggle-group-item" [(ngModel)]="fileType" [ngModelOptions]="{ standalone: true }">
                     <mat-button-toggle [class.theme-selected-button]="fileType === FileType.Svg" [value]="FileType.Svg">
                         SVG
                     </mat-button-toggle>
@@ -35,16 +37,15 @@
                 </mat-button-toggle-group>
             </div>
 
-            <div class="email-item">
-                <div class="email-checkbox">
-                    <h4 class="email-title">Envoi par courriel&nbsp;</h4>
-                    <mat-checkbox [(ngModel)]="isSentByEmail" [ngModelOptions]="{ standalone: true }"></mat-checkbox>
-                </div>
+            <div class="email-container">
+                <mat-checkbox formControlName="emailEnabled">Envoyer par courriel</mat-checkbox>
 
-                <mat-form-field class="email-input">
+                <mat-form-field class="form-field-item">
                     <mat-label>Adresse courriel</mat-label>
-                    <input matInput [formControl]="emailFormControl" />
-                    <mat-error *ngIf="emailFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+                    <input matInput formControlName="emailAddress" />
+                    <mat-error *ngIf="exportDrawingFormGroup.controls.emailAddress.invalid">
+                        {{ getErrorMessage(exportDrawingFormGroup.controls.emailAddress, 'Adresse courriel') }}
+                    </mat-error>
                 </mat-form-field>
             </div>
 
@@ -57,8 +58,8 @@
 
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close class="button">Annuler</button>
-        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="!isInformationValid" cdkFocusInitial>
-            {{ isSentByEmail ? 'Envoyer par courriel' : 'Télécharger' }}
+        <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="exportDrawingFormGroup.invalid" cdkFocusInitial>
+            {{ exportDrawingFormGroup.controls.emailEnabled.value ? 'Envoyer par courriel' : 'Télécharger' }}
         </button>
     </mat-dialog-actions>
 </form>
