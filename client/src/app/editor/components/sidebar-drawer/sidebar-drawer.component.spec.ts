@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: max-line-length
 // tslint:disable: max-file-line-count
 
-describe('SidebarDrawerComponent', () => {
+fdescribe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;
     let fixture: ComponentFixture<SidebarDrawerComponent>;
 
@@ -51,12 +51,14 @@ describe('SidebarDrawerComponent', () => {
     let eraserSizeChangedSubject: Subject<any>;
 
     const toolName = 'Pinceau';
+    const toolShortcut = 'W';
+    const toolIcon = 'brush';
     const toolSettings = {} as ToolSettings;
     const initialFormControlValue = 10;
 
     beforeEach(async(() => {
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', ['update'], {
-            currentTool: { name: toolName, settings: toolSettings } as Tool,
+            currentTool: { info: { name: toolName, shortcut: toolShortcut, icon: toolIcon }, settings: toolSettings } as Tool,
         });
         undoShortcutSubject = new Subject<void>();
         redoShortcutSubject = new Subject<void>();
