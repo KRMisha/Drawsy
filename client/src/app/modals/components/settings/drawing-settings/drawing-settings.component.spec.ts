@@ -90,8 +90,8 @@ describe('DrawingDimensionsSettingsComponent', () => {
     }));
 
     it('#ngOnDestroy should unsubscribe from width and height change subscription', () => {
-        const widthSubscriptionSpy = spyOn(component['widthSubscription'], 'unsubscribe');
-        const heightSubscriptionSpy = spyOn(component['heightSubscription'], 'unsubscribe');
+        const widthSubscriptionSpy = spyOn(component['drawingWidthChangedSubscription'], 'unsubscribe');
+        const heightSubscriptionSpy = spyOn(component['drawingHeightChangedSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
 
