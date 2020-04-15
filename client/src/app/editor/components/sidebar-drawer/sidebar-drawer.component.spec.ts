@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: max-line-length
 // tslint:disable: max-file-line-count
 
-fdescribe('SidebarDrawerComponent', () => {
+describe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;
     let fixture: ComponentFixture<SidebarDrawerComponent>;
 
