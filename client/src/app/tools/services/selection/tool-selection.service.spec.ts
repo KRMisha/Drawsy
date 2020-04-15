@@ -1,6 +1,8 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -12,6 +14,7 @@ import { ToolSelectionStateService } from '@app/tools/services/selection/tool-se
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
+import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-any
@@ -20,37 +23,34 @@ import { Subject } from 'rxjs';
 
 describe('ToolSelectionService', () => {
     let service: ToolSelectionService;
-    let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionMoverServiceSpyObj: jasmine.SpyObj<ToolSelectionMoverService>;
     let toolSelectionUiServiceSpyObj: jasmine.SpyObj<ToolSelectionUiService>;
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
-
+    let toolSelectionRotatorServiceSpyObj: jasmine.SpyObj<ToolSelectionRotatorService>;
     let selectAllSubject: Subject<void>;
 
     let selectionStateServiceStub: ToolSelectionStateService;
 
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
-        rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
+        rendererFactory2SpyObj.createRenderer.and.returnValue({} as Renderer2);
 
-        drawingServiceSpyObj = jasmine.createSpyObj(
-            'DrawingService',
-            ['appendNewMatrixToElements', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
-            {
-                elements: [],
-            }
-        );
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['findDrawingChildElement'], {
+            elements: [],
+        });
 
-        toolSelectionMoverServiceSpyObj = jasmine.createSpyObj(
-            'ToolSelectionMoverService',
-            ['moveSelection', 'startMovingSelection', 'stopMovingSelection', 'onKeyDown', 'onKeyUp', 'onToolDeselection'],
-            {
-                totalSelectionMoveOffset: { x: 0, y: 0 },
-            }
-        );
+        toolSelectionMoverServiceSpyObj = jasmine.createSpyObj('ToolSelectionMoverService', [
+            'moveSelection',
+            'startMovingSelection',
+            'stopMovingSelection',
+            'onKeyDown',
+            'onKeyUp',
+            'onToolDeselection',
+        ]);
+
+        toolSelectionRotatorServiceSpyObj = jasmine.createSpyObj('ToolSelectionRotatorService', ['onScroll']);
 
         toolSelectionUiServiceSpyObj = jasmine.createSpyObj(
             'ToolSelectionUiService',
@@ -89,8 +89,11 @@ describe('ToolSelectionService', () => {
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
-                { provide: ToolSelectionMoverService, useValue: toolSelectionMoverServiceSpyObj },
+                { provide: ColorService, useValue: {} as ColorService },
+                { provide: HistoryService, useValue: {} as HistoryService },
                 { provide: ToolSelectionStateService, useValue: selectionStateServiceStub },
+                { provide: ToolSelectionMoverService, useValue: toolSelectionMoverServiceSpyObj },
+                { provide: ToolSelectionRotatorService, useValue: toolSelectionRotatorServiceSpyObj },
                 { provide: ToolSelectionUiService, useValue: toolSelectionUiServiceSpyObj },
                 { provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
@@ -125,6 +128,7 @@ describe('ToolSelectionService', () => {
 
     it('#onMouseMove should change its state to MovingSelectionWithMouse in mouse move if its state was SelectionMoveStartClick', () => {
         selectionStateServiceStub.state = SelectionState.SelectionMoveStartClick;
+        service['previousMousePosition'] = { x: 420, y: 69 };
         service.onMouseMove({} as MouseEvent);
         expect(selectionStateServiceStub.state.toString()).toEqual(SelectionState.MovingSelectionWithMouse.toString());
         expect(toolSelectionMoverServiceSpyObj.moveSelection).toHaveBeenCalled();
@@ -187,8 +191,7 @@ describe('ToolSelectionService', () => {
     it('#onMouseUp should do nothing if mouse up is not the same as the current mouse button down', () => {
         service['currentMouseButtonDown'] = MouseButton.Right;
         service.onMouseUp({ button: MouseButton.Left } as MouseEvent);
-        expect(drawingServiceSpyObj.removeUiElement).not.toHaveBeenCalled();
-        expect(toolSelectionMoverServiceSpyObj.stopMovingSelection).not.toHaveBeenCalled();
+        expect(toolSelectionUiServiceSpyObj.hideUserSelectionRect).not.toHaveBeenCalled();
     });
 
     it('#onMouseUp should remove Ui element if mouse up button is valid', () => {
@@ -280,6 +283,12 @@ describe('ToolSelectionService', () => {
         service.onMouseUp({ button: MouseButton.Right } as MouseEvent);
 
         expect(selectionStateServiceStub.selectedElements).toEqual([elementStub]);
+    });
+
+    it('#onScroll should forward event to toolSelectionRoratorService', () => {
+        const eventStub = {} as WheelEvent;
+        service.onScroll(eventStub);
+        expect(toolSelectionRotatorServiceSpyObj.onScroll).toHaveBeenCalledWith(eventStub);
     });
 
     it('#onKeyDown should forward event toolSelectionMoverService', () => {

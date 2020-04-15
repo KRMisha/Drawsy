@@ -158,9 +158,9 @@ describe('GridSettingsComponent', () => {
     }));
 
     it('#ngOnDestroy should unsubscribe from gridDisplay, gridSize and gridOpacity change subscriptions', () => {
-        const displayEnabledSubscriptionSpy = spyOn(component['displayEnabledSubscription'], 'unsubscribe');
-        const sizeSubscriptionSpy = spyOn(component['sizeSubscription'], 'unsubscribe');
-        const opacitySubscriptionSpy = spyOn(component['opacitySubscription'], 'unsubscribe');
+        const displayEnabledSubscriptionSpy = spyOn(component['gridDisplayEnabledChangedSubscription'], 'unsubscribe');
+        const sizeSubscriptionSpy = spyOn(component['gridSizeChangedSubscription'], 'unsubscribe');
+        const opacitySubscriptionSpy = spyOn(component['gridOpacityChangedSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
 

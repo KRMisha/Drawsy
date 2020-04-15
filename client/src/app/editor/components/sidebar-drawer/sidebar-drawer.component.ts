@@ -271,7 +271,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     get currentToolName(): string {
-        return this.currentToolService.currentTool.name;
+        return this.currentToolService.currentTool.info.name;
     }
 
     get currentToolSettings(): ToolSettings {

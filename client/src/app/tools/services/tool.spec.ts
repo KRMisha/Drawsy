@@ -24,7 +24,7 @@ describe('Tool', () => {
     let tool: ToolMock;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
 
-    const toolInfo: ToolData = { name: 'TestName', icon: 'test_icon' };
+    const toolInfo: ToolData = { name: 'TestName', shortcut: 'TestShortcut', icon: 'test_icon' };
 
     beforeEach(() => {
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
@@ -41,11 +41,9 @@ describe('Tool', () => {
         expect(tool).toBeTruthy();
     });
 
-    it('#constructor should create its renderer and set its name and icon', () => {
+    it('#constructor should create its renderer', () => {
         expect(rendererFactory2SpyObj.createRenderer).toHaveBeenCalledWith(null, null);
         expect(tool['renderer']).toBeTruthy(); // tslint:disable-line: no-string-literal
-        expect(tool.name).toEqual(toolInfo.name);
-        expect(tool.icon).toEqual(toolInfo.icon);
     });
 
     it('#onMouseMove should be called when called', () => {
