@@ -124,13 +124,13 @@ describe('ColorHexSelectorComponent', () => {
         expect(hexBlueChangedSpy).toHaveBeenCalled();
     });
 
-    it('colorService subscriptions should call #updateAll', () => {
+    it('colorPickerService subscriptions should only call #updateAll once', () => {
         const updateAllSpy = spyOn<any>(component, 'updateAll').and.callThrough();
         hueChangedSubject.next();
         saturationChangedSubject.next();
         valueChangedSubject.next();
         alphaChangedSubject.next();
-        expect(updateAllSpy).toHaveBeenCalledTimes(4);
+        expect(updateAllSpy).toHaveBeenCalledTimes(1);
     });
 
     it('hexCombinedRgb valueChanges subscription should call #updateHexRgbComponents and #updateColorPicker', () => {
