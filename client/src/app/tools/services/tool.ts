@@ -42,11 +42,14 @@ export abstract class Tool {
     onKeyUp(event: KeyboardEvent): void {}
     onMouseEnter(event: MouseEvent): void {}
     onMouseLeave(event: MouseEvent): void {}
+    onFocusIn(event: FocusEvent): void {}
+    onFocusOut(event: FocusEvent): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
-    update(): void {}
     onToolSelection(): void {}
     onToolDeselection(): void {}
+    onHistoryChange(): void {}
+    onDrawingLoad(): void {}
     // tslint:enable: no-empty
 }
 

@@ -54,6 +54,10 @@ export class ToolSprayCanService extends Tool {
         this.stopSpraying();
     }
 
+    onFocusOut(event: FocusEvent): void {
+        this.stopSpraying();
+    }
+
     private startSpraying(): void {
         this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
         this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());

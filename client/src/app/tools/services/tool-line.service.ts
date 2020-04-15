@@ -49,7 +49,6 @@ export class ToolLineService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (!Tool.isMouseInsideDrawing) {
-            this.stopDrawing();
             return;
         }
 
@@ -139,6 +138,10 @@ export class ToolLineService extends Tool {
         }
     }
 
+    onFocusOut(event: FocusEvent): void {
+        this.stopDrawing();
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (!this.isCurrentlyDrawing) {
             return;
@@ -148,6 +151,10 @@ export class ToolLineService extends Tool {
         const previewColor = this.colorService.primaryColor.clone();
         previewColor.alpha /= 2;
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
+    }
+
+    onToolSelection(): void {
+        this.isShiftDown = false;
     }
 
     onToolDeselection(): void {

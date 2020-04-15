@@ -74,7 +74,7 @@ describe('ToolEraserService', () => {
     it('#onMouseMove should call #update after an interval when the timerId is undefined', () => {
         jasmine.clock().install();
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
-        const updateSpy = spyOn(service, 'update');
+        const updateSpy = spyOn<any>(service, 'update');
 
         service.onMouseMove({} as MouseEvent);
         expect(updateEraserRectSpy).toHaveBeenCalled();
@@ -88,14 +88,14 @@ describe('ToolEraserService', () => {
     });
 
     it("#onMouseDown should make a copy of the drawingService's elements and call #update", () => {
-        const updateSpy = spyOn(service, 'update');
+        const updateSpy = spyOn<any>(service, 'update');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(service['drawingElementsCopy']).toEqual(initialElementsArray);
         expect(updateSpy).toHaveBeenCalled();
     });
 
     it('#onMouseDown should return early if the button is not the left mouse button', () => {
-        const updateSpy = spyOn(service, 'update');
+        const updateSpy = spyOn<any>(service, 'update');
         service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
         expect(updateSpy).not.toHaveBeenCalled();
     });
@@ -140,7 +140,7 @@ describe('ToolEraserService', () => {
     it('#update should call #restoreElementUndorCursorAttributes and set svgElementUnderCursor to undefined if the elementToConsider is undefined', () => {
         getElementUnderAreaPixelPerfectSpy.and.returnValue(undefined);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
-        service.update();
+        service['update']();
         expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
         expect(service['svgElementUnderCursor']).toBeUndefined();
     });
@@ -151,7 +151,7 @@ describe('ToolEraserService', () => {
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
-        service.update();
+        service['update']();
         expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
         expect(addRedBorderSpy).toHaveBeenCalledWith(testElement);
         expect(service['svgElementUnderCursor']).toBe(testElement);
@@ -163,7 +163,7 @@ describe('ToolEraserService', () => {
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
         service['svgElementUnderCursor'] = testElement;
-        service.update();
+        service['update']();
         expect(restoreElementUnderCursorAttributesSpy).not.toHaveBeenCalled();
         expect(addRedBorderSpy).not.toHaveBeenCalled();
     });
@@ -178,7 +178,7 @@ describe('ToolEraserService', () => {
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         service['svgElementUnderCursor'] = testElement;
         service['drawingElementsCopy'] = drawingElementsCopy;
-        service.update();
+        service['update']();
         expect(pushSpy).toHaveBeenCalled();
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(testElement);
         expect(service['svgElementUnderCursor']).toBeUndefined();
@@ -194,7 +194,7 @@ describe('ToolEraserService', () => {
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         service['svgElementUnderCursor'] = testElement;
         service['drawingElementsCopy'] = drawingElementsCopy;
-        service.update();
+        service['update']();
         expect(pushSpy).not.toHaveBeenCalled();
         expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
         expect(service['svgElementUnderCursor']).toBeUndefined();

@@ -79,7 +79,26 @@ export class ToolEraserService extends Tool {
         this.updateEraserRect();
     }
 
-    update(): void {
+    onToolSelection(): void {
+        this.svgEraserElement = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgEraserElement, 'fill', 'rgb(255, 255, 255)');
+        this.renderer.setAttribute(this.svgEraserElement, 'stroke-width', '1');
+        this.renderer.addClass(this.svgEraserElement, 'theme-eraser');
+        this.drawingService.addUiElement(this.svgEraserElement);
+        this.updateEraserRect();
+    }
+
+    onToolDeselection(): void {
+        this.drawingService.removeUiElement(this.svgEraserElement);
+        this.restoreElementUnderCursorAttributes();
+        this.svgElementUnderCursor = undefined;
+    }
+
+    onHistoryChange(): void {
+        this.update();
+    }
+
+    private update(): void {
         this.timerId = undefined;
         const elementToConsider = this.getElementUnderAreaPixelPerfect(this.eraserRect);
 
@@ -107,21 +126,6 @@ export class ToolEraserService extends Tool {
             }
             this.svgElementUnderCursor = undefined;
         }
-    }
-
-    onToolSelection(): void {
-        this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgEraserElement, 'fill', 'rgb(255, 255, 255)');
-        this.renderer.setAttribute(this.svgEraserElement, 'stroke-width', '1');
-        this.renderer.addClass(this.svgEraserElement, 'theme-eraser');
-        this.drawingService.addUiElement(this.svgEraserElement);
-        this.updateEraserRect();
-    }
-
-    onToolDeselection(): void {
-        this.drawingService.removeUiElement(this.svgEraserElement);
-        this.restoreElementUnderCursorAttributes();
-        this.svgElementUnderCursor = undefined;
     }
 
     private updateEraserRect(): void {

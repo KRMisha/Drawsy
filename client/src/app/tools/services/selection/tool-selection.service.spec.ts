@@ -292,7 +292,7 @@ describe('ToolSelectionService', () => {
         expect(toolSelectionMoverServiceSpyObj.onKeyUp).toHaveBeenCalled();
     });
 
-    it('#update should remove from selection elements no longer in drawing', () => {
+    it('#onHystoryChange should remove from selection elements no longer in drawing', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
         const drawingServiceMock = ({ elements: [element1] } as unknown) as DrawingService;
@@ -300,7 +300,7 @@ describe('ToolSelectionService', () => {
 
         service['drawingService'] = drawingServiceMock;
 
-        service.update();
+        service.onHistoryChange();
 
         expect(selectionStateServiceStub.selectedElements.length).toEqual(1);
         expect(selectionStateServiceStub.selectedElements[0]).toBe(element1);

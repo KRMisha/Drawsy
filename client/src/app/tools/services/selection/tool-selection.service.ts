@@ -62,7 +62,6 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 };
                 this.toolSelectionMoverService.moveSelection(mouseMovement);
                 break;
-
             case SelectionState.SelectionChangeStartClick:
                 this.toolSelectionStateService.state = SelectionState.ChangingSelection;
             case SelectionState.ChangingSelection:
@@ -128,6 +127,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
         switch (this.toolSelectionStateService.state) {
             case SelectionState.ChangingSelection:
+                this.drawingService.drawingRoot.style.cursor = 'auto';
                 if (event.button === MouseButton.Right) {
                     this.toolSelectionStateService.selectedElements = this.selectedElementsAfterInversion;
                 }
@@ -174,14 +174,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onKeyUp(event);
     }
 
-    update(): void {
-        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
-        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
-            (element: SVGGraphicsElement) => elements.has(element)
-        );
-    }
-
     onToolSelection(): void {
+        this.toolSelectionStateService.state = SelectionState.None;
+        this.currentMouseButtonDown = undefined;
+        this.toolSelectionMoverService.onToolSelection();
         this.selectAllShortcutSubscription = this.shortcutService.selectAllShortcut$.subscribe(() => {
             this.toolSelectionStateService.selectedElements = [...this.drawingService.elements];
         });
@@ -189,11 +185,29 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
-        this.toolSelectionStateService.state = SelectionState.None;
-        this.toolSelectionStateService.selectedElements = [];
         this.toolSelectionMoverService.onToolDeselection();
+        this.reset();
+    }
+
+    onFocusOut(event: FocusEvent): void {
+        this.toolSelectionMoverService.onFocusOut(event);
+    }
+
+    onHistoryChange(): void {
+        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
+        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
+            (element: SVGGraphicsElement) => elements.has(element)
+        );
+    }
+
+    onDrawingLoad(): void {
+        this.reset();
+    }
+
+    private reset(): void {
         this.toolSelectionUiService.hideUserSelectionRect();
         this.toolSelectionUiService.resetUserSelectionRectCursor();
+        this.toolSelectionStateService.selectedElements = [];
     }
 
     private isMouseInsideSelectedElementsRect(): boolean {
