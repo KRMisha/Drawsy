@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: max-line-length
 // tslint:disable: max-file-line-count
 
-fdescribe('SidebarDrawerComponent', () => {
+describe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;
     let fixture: ComponentFixture<SidebarDrawerComponent>;
 
@@ -594,6 +594,6 @@ fdescribe('SidebarDrawerComponent', () => {
     it('#getProperty should return undefined if the setting does not exist', () => {
         const object = { settings: {} as ToolSettings };
         const actualValue = component.getProperty(object.settings, ToolSetting.EraserSize);
-        expect(actualValue).toEqual(undefined);
+        expect(actualValue).toBeUndefined();
     });
 });
