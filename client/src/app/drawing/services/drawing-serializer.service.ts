@@ -53,33 +53,38 @@ export class DrawingSerializerService {
         return drawingLoadOptions;
     }
 
-    exportDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): void {
-        fileType === FileType.Svg
-            ? this.exportVectorDrawing(drawingRoot, filename)
-            : this.exportRasterDrawing(drawingRoot, filename, fileType);
+    async downloadDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): Promise<void> {
+        const blob = await this.exportAsBlob(drawingRoot, fileType);
+
+        const link = this.renderer.createElement('a');
+        link.download = filename + '.' + fileType;
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.click();
+        window.URL.revokeObjectURL(url);
     }
 
-    private exportVectorDrawing(drawingRoot: SVGSVGElement, filename: string): void {
-        const fileExtension = '.svg';
+    async exportAsBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
+        const blob =
+            fileType === FileType.Svg
+                ? this.convertVectorDrawingToBlob(drawingRoot)
+                : await this.convertRasterDrawingToBlob(drawingRoot, fileType);
+        return blob;
+    }
 
+    private convertVectorDrawingToBlob(drawingRoot: SVGSVGElement): Blob {
         const serializedDrawing = this.serializeDrawing(drawingRoot);
-        const blob = new Blob([serializedDrawing], { type: 'image/svg+xml' });
-
-        const link = this.renderer.createElement('a');
-        link.download = filename + fileExtension;
-        link.href = window.URL.createObjectURL(blob);
-        link.click();
+        return new Blob([serializedDrawing], { type: 'image/svg+xml' });
     }
 
-    private async exportRasterDrawing(drawingRoot: SVGSVGElement, filename: string, fileType: FileType): Promise<void> {
-        const fileExtension = fileType === FileType.Png ? '.png' : '.jpeg';
-        const mimeType = fileType === FileType.Png ? 'image/png' : 'image/jpeg';
-
+    private async convertRasterDrawingToBlob(drawingRoot: SVGSVGElement, fileType: FileType): Promise<Blob> {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
+        const mimeType = 'image/' + fileType;
 
-        const link = this.renderer.createElement('a');
-        link.download = filename + fileExtension;
-        link.href = canvas.toDataURL(mimeType);
-        link.click();
+        return new Promise<Blob>((resolve: (blob: Blob) => void) => {
+            canvas.toBlob((blob: Blob) => {
+                resolve(blob);
+            }, mimeType);
+        });
     }
 }

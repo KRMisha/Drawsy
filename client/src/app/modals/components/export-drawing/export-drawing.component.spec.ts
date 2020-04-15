@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { AbstractControl } from '@angular/forms';
 import { DrawingPreviewComponent } from '@app/drawing/components/drawing-preview/drawing-preview.component';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -57,11 +58,11 @@ describe('ExportDrawingComponent', () => {
         component['drawingService'] = drawingServiceMock;
         component.fileType = FileType.Jpeg;
         const newTitle = 'bonjours';
-        component.titleFormControl.setValue(newTitle);
+        component.exportDrawingFormGroup.controls.title.setValue(newTitle);
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(newTitle);
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
-        expect(exportDrawingServiceSpyObj.exportDrawing).toHaveBeenCalledWith(
+        expect(exportDrawingServiceSpyObj.downloadDrawing).toHaveBeenCalledWith(
             drawingPreviewComponentSpyObj.drawingRoot.nativeElement,
             FileType.Jpeg
         );
@@ -69,27 +70,29 @@ describe('ExportDrawingComponent', () => {
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
         const errorMessageSpy = spyOn(ErrorMessageService, 'getErrorMessage');
-        component.getErrorMessage();
-        expect(errorMessageSpy).toHaveBeenCalledWith(component.titleFormControl, 'A-Z, a-z, 0-9');
+        const formControlStub = {} as AbstractControl;
+        const humanFriendlyPattern = 'Penis';
+        component.getErrorMessage(formControlStub, humanFriendlyPattern);
+        expect(errorMessageSpy).toHaveBeenCalledWith(formControlStub, humanFriendlyPattern);
     });
 
     it('titleForm should not be valid when empty', () => {
-        component.titleFormControl.setValue('');
-        expect(component.titleFormControl.valid).toEqual(false);
+        component.exportDrawingFormGroup.controls.title.setValue('');
+        expect(component.exportDrawingFormGroup.controls.title.valid).toEqual(false);
     });
 
     it('titleForm should not be valid when input is not an appropriate string', () => {
-        component.titleFormControl.setValue('!@#$%^bonjour');
-        expect(component.titleFormControl.valid).toEqual(false);
+        component.exportDrawingFormGroup.controls.title.setValue('!@#$%^bonjour');
+        expect(component.exportDrawingFormGroup.controls.title.valid).toEqual(false);
     });
 
     it('titleForm should not be valid when the string length exceeds the limit (25)', () => {
-        component.titleFormControl.setValue('123456789012345678901234567');
-        expect(component.titleFormControl.valid).toEqual(false);
+        component.exportDrawingFormGroup.controls.title.setValue('123456789012345678901234567');
+        expect(component.exportDrawingFormGroup.controls.title.valid).toEqual(false);
     });
 
     it('titleForm should be valid when the title follows the restrictions', () => {
-        component.titleFormControl.setValue('bonjour');
-        expect(component.titleFormControl.valid).toEqual(true);
+        component.exportDrawingFormGroup.controls.title.setValue('bonjour');
+        expect(component.exportDrawingFormGroup.controls.title.valid).toEqual(true);
     });
 });

@@ -26,15 +26,14 @@ export class SaveDrawingService {
             .createDrawing(drawingRoot.outerHTML)
             .pipe(catchError(this.alertCreateDrawingError()))
             .subscribe(
-                (newFileId: NewFileId): void => {
+                (newFileId: NewFileId) => {
                     this.drawingService.id = newFileId.id;
                     this.snackBar.open('Dessin sauvegardé : ' + this.drawingService.title, undefined, {
                         duration: snackBarDuration,
                     });
                 },
                 // No error handling needs to be done but the error must be caught
-                // tslint:disable-next-line: no-empty
-                (error: HttpErrorResponse): void => {}
+                (error: HttpErrorResponse) => {} // tslint:disable-line: no-empty
             );
     }
 
@@ -45,12 +44,12 @@ export class SaveDrawingService {
             .updateDrawing(this.drawingService.id!, drawingRoot.outerHTML)
             .pipe(catchError(this.alertUpdateDrawingError()))
             .subscribe(
-                (): void => {
+                () => {
                     this.snackBar.open('Dessin mis à jour : ' + this.drawingService.title, undefined, {
                         duration: snackBarDuration,
                     });
                 },
-                (error: HttpErrorResponse): void => {
+                (error: HttpErrorResponse) => {
                     if (error.status === HttpStatusCode.NotFound) {
                         this.drawingService.id = undefined;
                     }
