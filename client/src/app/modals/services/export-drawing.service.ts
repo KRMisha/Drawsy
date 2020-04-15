@@ -26,7 +26,7 @@ export class ExportDrawingService {
     }
 
     async emailDrawing(drawingRoot: SVGSVGElement, emailAddress: string, fileType: FileType): Promise<void> {
-        this.snackBar.open("Votre courriel est en cours d'envoi à " + emailAddress);
+        this.snackBar.open("Votre courriel est en cours d'envoi à " + emailAddress, 'Cacher');
         const drawingBlob = await this.drawingSerializerService.exportAsBlob(drawingRoot, fileType);
         this.serverService
             .emailDrawing(emailAddress, drawingBlob, this.drawingService.title + '.' + fileType)
