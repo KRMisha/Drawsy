@@ -3,8 +3,6 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
-import { Color } from '@app/shared/classes/color';
-import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
@@ -30,25 +28,16 @@ export class ToolEyedropperService extends Tool {
     }
 
     private async updateColorServiceColor(mouseButton: MouseButton): Promise<void> {
-        const colorUnderCursor = await this.getPixelColor({ x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) });
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        const colorUnderCursor = await this.rasterizationService.getPixelColor(data, canvas.width, {
+            x: Math.round(Tool.mousePosition.x),
+            y: Math.round(Tool.mousePosition.y),
+        });
         mouseButton === MouseButton.Left
             ? (this.colorService.primaryColor = colorUnderCursor)
             : (this.colorService.secondaryColor = colorUnderCursor);
-    }
-
-    private async getPixelColor(pixelPosition: Vec2): Promise<Color> {
-        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
-        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
-
-        const colorValuesCount = 4;
-        const colorIndex = pixelPosition.y * (canvas.width * colorValuesCount) + pixelPosition.x * colorValuesCount;
-
-        const rgbaComponents: number[] = [];
-        for (let i = 0; i < colorValuesCount; i++) {
-            rgbaComponents.push(data[colorIndex + i]);
-        }
-        const [red, green, blue, alpha] = rgbaComponents;
-        return Color.fromRgba(red, green, blue, alpha / Color.maxRgb);
     }
 }

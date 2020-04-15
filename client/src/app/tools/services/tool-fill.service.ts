@@ -50,7 +50,7 @@ export class ToolFillService extends Tool {
 
         await this.initializeCanvas();
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
-        this.selectedColor = this.getPixelColor(startPixel);
+        this.selectedColor = this.rasterizationService.getPixelColor(this.data, this.canvasWidth, startPixel);
         this.breadthFirstSearch(startPixel);
 
         // this.group will not be undefined if this method is called (defined in onMouseDown)
@@ -68,18 +68,6 @@ export class ToolFillService extends Tool {
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         this.data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
         this.canvasWidth = canvas.width;
-    }
-
-    private getPixelColor(pixelPosition: Vec2): Color {
-        const colorValuesCount = 4;
-        const colorIndex = pixelPosition.y * (this.canvasWidth * colorValuesCount) + pixelPosition.x * colorValuesCount;
-
-        const rgbaComponents: number[] = [];
-        for (let i = 0; i < colorValuesCount; i++) {
-            rgbaComponents.push(this.data[colorIndex + i]);
-        }
-        const [red, green, blue, alpha] = rgbaComponents;
-        return Color.fromRgba(red, green, blue, alpha / Color.maxRgb);
     }
 
     private breadthFirstSearch(startPixel: Vec2): void {
@@ -106,7 +94,11 @@ export class ToolFillService extends Tool {
         const isPixelInDrawing =
             pixel.x >= 0 && pixel.x < this.drawingService.dimensions.x && pixel.y >= 0 && pixel.y < this.drawingService.dimensions.y;
 
-        if (isPixelInDrawing && !this.visitedPixels.has(`${pixel.x} ${pixel.y}`) && this.isSelectedColor(this.getPixelColor(pixel))) {
+        if (
+            isPixelInDrawing &&
+            !this.visitedPixels.has(`${pixel.x} ${pixel.y}`) &&
+            this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasWidth, pixel))
+        ) {
             this.pixelQueue.enqueue(pixel);
         }
 
