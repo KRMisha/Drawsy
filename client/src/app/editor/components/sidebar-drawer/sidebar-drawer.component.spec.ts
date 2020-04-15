@@ -594,6 +594,6 @@ fdescribe('SidebarDrawerComponent', () => {
     it('#getProperty should return undefined if the setting does not exist', () => {
         const object = { settings: {} as ToolSettings };
         const actualValue = component.getProperty(object.settings, ToolSetting.EraserSize);
-        expect(actualValue).toEqual(undefined);
+        expect(actualValue).toBeUndefined();
     });
 });

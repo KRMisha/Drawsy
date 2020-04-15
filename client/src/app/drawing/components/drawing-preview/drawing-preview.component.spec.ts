@@ -76,7 +76,7 @@ describe('DrawingPreviewComponent', () => {
     it('getDrawingFilter should return null if the drawingFilter is None', () => {
         component.drawingFilter = DrawingFilter.None;
         const actualValue = component.getDrawingFilter();
-        expect(actualValue).toEqual(null);
+        expect(actualValue).toBeNull();
     });
 
     it('getDrawingFilter should return the drawingFilter attribute string if the drawingFilter is not None', () => {
