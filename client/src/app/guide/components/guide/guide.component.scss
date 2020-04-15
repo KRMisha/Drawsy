@@ -20,7 +20,6 @@
 .exit-button-item {
     grid-area: exit;
     justify-self: end;
-    cursor: pointer;
 }
 
 .guide-content-item {
@@ -34,14 +33,10 @@
 
 .buttons-item {
     grid-area: buttons;
-    padding-bottom: 30px;
 }
 
 .navigation-button {
-    width: 175px;
-    height: 50px;
-    font-size: 18px;
-    cursor: pointer;
+    width: 125px;
 }
 
 .previous {
