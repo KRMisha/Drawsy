@@ -35,8 +35,8 @@ describe('SidebarDrawerComponent', () => {
     let junctionDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let sprayDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let sprayRateFormControlSpyObj: jasmine.SpyObj<FormControl>;
-    let polygonSideCountFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let shapeBorderWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let polygonSideCountFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let fillDeviationFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let eraserSizeFormControlSpyObj: jasmine.SpyObj<FormControl>;
 
@@ -153,8 +153,8 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.fillDeviationFormControl = fillDeviationFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
@@ -541,8 +541,8 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.fillDeviationFormControl = fillDeviationFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
@@ -583,8 +583,8 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.fillDeviationFormControl = shapeBorderWidthFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
