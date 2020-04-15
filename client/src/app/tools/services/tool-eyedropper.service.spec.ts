@@ -46,8 +46,9 @@ describe('ToolEyedropperService', () => {
         });
         canvasSpyObj.getContext.and.returnValue(canvasContextSpyObj);
 
-        rasterizationServiceSpyObj = jasmine.createSpyObj('RasterizationService', ['getCanvasFromSvgRoot']);
+        rasterizationServiceSpyObj = jasmine.createSpyObj('RasterizationService', ['getCanvasFromSvgRoot', 'getPixelColor']);
         rasterizationServiceSpyObj.getCanvasFromSvgRoot.and.returnValue(Promise.resolve(canvasSpyObj));
+        rasterizationServiceSpyObj.getPixelColor.and.returnValue(expectedColor);
 
         TestBed.configureTestingModule({
             providers: [

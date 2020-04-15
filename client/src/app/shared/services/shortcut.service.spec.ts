@@ -184,6 +184,16 @@ describe('ShortcutService', () => {
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
     }));
 
+    it("#onKeyDown should emit selectToolFillShortcut$ when selected shorcut is 'b'", async(() => {
+        service.selectToolFillShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNotNeedingCtrlPressed();
+        });
+        const keyboardEvent = { key: 'b', ctrlKey: false } as KeyboardEvent;
+        service.onKeyDown(keyboardEvent);
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
+    }));
+
     it("#onKeyDown should emit selectToolPencilShortcut$ when selected shorcut is 'c'", async(() => {
         service.selectToolPencilShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();

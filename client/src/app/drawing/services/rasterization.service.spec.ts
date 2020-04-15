@@ -5,6 +5,7 @@ import { RasterizationService } from '@app/drawing/services/rasterization.servic
 import { Vec2 } from '@app/shared/classes/vec2';
 
 // tslint:disable: no-string-literal
+// tslint:disable: no-magic-numbers
 
 describe('RasterizationService', () => {
     let service: RasterizationService;
@@ -35,6 +36,19 @@ describe('RasterizationService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('#getPixelColor should return the color of the specified pixel', () => {
+        const pixelPosition: Vec2 = { x: 0, y: 0 };
+        const rgbValue = 12;
+        const alphaValue = 0;
+        const dataStub = ([rgbValue, rgbValue, rgbValue, alphaValue] as unknown) as Uint8ClampedArray;
+        const actualValue = service.getPixelColor(dataStub, 0, pixelPosition);
+
+        expect(actualValue.red).toEqual(rgbValue);
+        expect(actualValue.green).toEqual(rgbValue);
+        expect(actualValue.blue).toEqual(rgbValue);
+        expect(actualValue.alpha).toEqual(alphaValue);
     });
 
     it('#getCanvasFromSvgRoot should return a new canvas created from a source svg', async () => {

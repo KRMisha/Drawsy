@@ -17,7 +17,7 @@ import { ToolFillService } from '@app/tools/services/tool-fill.service';
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
 
-fdescribe('ToolFillService', () => {
+describe('ToolFillService', () => {
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactorySpyObj: jasmine.SpyObj<RendererFactory2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -62,8 +62,9 @@ fdescribe('ToolFillService', () => {
         canvasSpyObj.getContext.and.returnValue(canvasContextSpyObj);
 
         historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['addCommand']);
-        rasterizationServiceSpyObj = jasmine.createSpyObj('SvgUtilitySpyObj', ['getCanvasFromSvgRoot']);
+        rasterizationServiceSpyObj = jasmine.createSpyObj('SvgUtilitySpyObj', ['getCanvasFromSvgRoot', 'getPixelColor']);
         rasterizationServiceSpyObj.getCanvasFromSvgRoot.and.returnValue(Promise.resolve(canvasSpyObj));
+        rasterizationServiceSpyObj.getPixelColor.and.returnValue(colorSpyObj);
 
         pixelQueueSpyObj = jasmine.createSpyObj('Queue<Vec2>', ['isEmpty', 'enqueue', 'dequeue']);
 
@@ -117,13 +118,14 @@ fdescribe('ToolFillService', () => {
         Tool.mousePosition.y = 0;
         const mousePosition: Vec2 = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
         const initializeCanvasSpy = spyOn<any>(service, 'initializeCanvas');
-        const dataMock = ([12] as unknown) as Uint8ClampedArray;
-        service['data'] = dataMock;
-        const getPixelColorSpy = spyOn<any>(service, 'getPixelColor').and.callThrough();
+        const expectedData = ([12] as unknown) as Uint8ClampedArray;
+        const expectedCanvasWidth = 10;
+        service['data'] = expectedData;
+        service['canvasWidth'] = expectedCanvasWidth;
         service['fillWithColor']();
         tick();
         expect(initializeCanvasSpy).toHaveBeenCalled();
-        expect(getPixelColorSpy).toHaveBeenCalledWith(mousePosition);
+        expect(rasterizationServiceSpyObj.getPixelColor).toHaveBeenCalledWith(expectedData, expectedCanvasWidth, mousePosition);
     }));
 
     it('#fillWithColor should start the Breadth-First search, ', fakeAsync(() => {
@@ -248,7 +250,6 @@ fdescribe('ToolFillService', () => {
             const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
             visitedPixelsSpyObj.has.and.returnValue(false);
             service['visitedPixels'] = visitedPixelsSpyObj;
-            spyOn<any>(service, 'getPixelColor').and.returnValue(colorSpyObj);
             spyOn<any>(service, 'isSelectedColor').and.returnValue(false);
             service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
 
@@ -261,7 +262,6 @@ fdescribe('ToolFillService', () => {
         const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
         visitedPixelsSpyObj.has.and.returnValue(false);
         service['visitedPixels'] = visitedPixelsSpyObj;
-        spyOn<any>(service, 'getPixelColor').and.returnValue(colorSpyObj);
         spyOn<any>(service, 'isSelectedColor').and.returnValue(true);
         service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
 
