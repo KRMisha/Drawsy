@@ -24,7 +24,7 @@ export class RasterizationService {
     private async getImageFromSvgRoot(drawingRoot: SVGSVGElement): Promise<HTMLImageElement> {
         const svg64 = btoa(drawingRoot.outerHTML);
         const image = new Image();
-        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void): void => {
+        return new Promise<HTMLImageElement>((resolve: (image: HTMLImageElement) => void) => {
             image.onload = () => {
                 resolve(image);
             };

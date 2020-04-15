@@ -81,7 +81,7 @@ export class DrawingSerializerService {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRoot);
         const mimeType = 'image/' + fileType;
 
-        return new Promise<Blob>((resolve: (blob: Blob) => void): void => {
+        return new Promise<Blob>((resolve: (blob: Blob) => void) => {
             canvas.toBlob((blob: Blob) => {
                 resolve(blob);
             }, mimeType);
