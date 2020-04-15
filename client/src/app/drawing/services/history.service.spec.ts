@@ -90,7 +90,7 @@ describe('HistoryService', () => {
         service['undoStack'] = [commandSpyObj];
         service['redoStack'] = [commandSpyObj];
 
-        service.onDrawingLoad();
+        service['onDrawingLoad']();
 
         expect(service['undoStack'].length).toEqual(0);
         expect(service['redoStack'].length).toEqual(0);
