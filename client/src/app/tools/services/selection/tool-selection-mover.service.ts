@@ -62,14 +62,6 @@ export class ToolSelectionMoverService {
         this.arrowKeysHeldStates.fill(false);
     }
 
-    onToolDeselection(): void {
-        this.stopMovingSelection();
-    }
-
-    onFocusOut(): void {
-        this.stopMovingSelection();
-    }
-
     startMovingSelection(): void {
         this.selectedElementTransformsBeforeMove = this.toolSelectionTransformService.getElementListTransformsCopy(
             this.toolSelectionStateService.selectedElements
@@ -94,11 +86,12 @@ export class ToolSelectionMoverService {
 
     stopMovingSelection(): void {
         if (
-            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows &&
-            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithMouse
+            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithMouse &&
+            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows
         ) {
             return;
         }
+
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
         this.historyService.addCommand(
             new TransformElementsCommand(

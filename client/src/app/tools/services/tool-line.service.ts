@@ -48,11 +48,7 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInsideDrawing) {
-            return;
-        }
-
-        if (event.button !== MouseButton.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
 

@@ -81,6 +81,10 @@ export abstract class ToolShape extends Tool {
         }
     }
 
+    onToolSelection(): void {
+        this.isShiftDown = false;
+    }
+
     protected abstract getShapeString(): string;
 
     protected abstract updateShape(shapeArea: Rect, scale: Vec2, shape: SVGGraphicsElement): void;

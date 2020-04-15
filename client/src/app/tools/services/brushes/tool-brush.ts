@@ -60,6 +60,10 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
+    onToolDeselection(): void {
+        this.stopDrawing();
+    }
+
     protected createPath(): SVGPathElement {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
 
