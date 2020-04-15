@@ -50,6 +50,10 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
+    onFocusOut(event: FocusEvent): void {
+        this.stopDrawing();
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (this.path !== undefined) {
             this.renderer.setAttribute(this.path, 'stroke', color.toRgbaString());

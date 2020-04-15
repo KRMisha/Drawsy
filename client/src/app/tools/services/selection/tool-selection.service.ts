@@ -191,6 +191,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onFocusOut(event: FocusEvent): void {
         this.toolSelectionMoverService.onFocusOut(event);
+        this.reset();
+        this.toolSelectionStateService.state = SelectionState.None;
     }
 
     onHistoryChange(): void {

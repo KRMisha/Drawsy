@@ -65,6 +65,10 @@ export abstract class ToolShape extends Tool {
         }
     }
 
+    onFocusOut(event: FocusEvent): void {
+        this.stopDrawing();
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (this.shape !== undefined) {
             this.renderer.setAttribute(this.shape, 'fill', color.toRgbaString());
