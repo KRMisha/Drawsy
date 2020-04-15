@@ -77,14 +77,14 @@ describe('AlphaSliderComponent', () => {
         expect(alphaSpy).toHaveBeenCalled();
     });
 
-    it('subscriptions should call #draw and update the slider position', async(() => {
+    it('subscriptions should only call #draw once and update the slider position', async(() => {
         component['sliderPosition'] = 0;
         const drawSpy = spyOn<any>(component, 'draw').and.callThrough();
         hueSubject.next();
         saturationSubject.next();
         valueSubject.next();
         alphaSubject.next();
-        expect(drawSpy).toHaveBeenCalledTimes(4);
+        expect(drawSpy).toHaveBeenCalledTimes(1);
         expect(component['sliderPosition']).not.toEqual(0);
     }));
 

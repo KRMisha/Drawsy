@@ -1,5 +1,5 @@
 <h1 mat-dialog-title class="title">Création de dessin</h1>
-<form [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()">
+<form [formGroup]="drawingFormGroup" (ngSubmit)="onSubmit()" autocomplete="off">
     <mat-dialog-content class="container">
         <div class="size-container">
             <mat-form-field class="form-field-item">

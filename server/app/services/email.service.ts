@@ -14,7 +14,7 @@ export class EmailService {
         }
 
         if (!EmailValidation.emailRegex.test(emailRequest.to)) {
-            throw new HttpException(HttpStatusCode.BadRequest, 'Invalid email');
+            throw new HttpException(HttpStatusCode.BadRequest, 'Invalid email address');
         }
 
         await this.sendEmailValidationRequest(emailRequest);
@@ -26,7 +26,7 @@ export class EmailService {
             await this.sendRequest(emailRequest, true);
         } catch (error) {
             if (error.status === HttpStatusCode.BadRequest) {
-                throw new HttpException(HttpStatusCode.BadRequest, 'Email not found');
+                throw new HttpException(HttpStatusCode.BadRequest, 'Email address not found');
             } else {
                 throw new HttpException(HttpStatusCode.InternalServerError, error.message);
             }

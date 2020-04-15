@@ -4,30 +4,33 @@ import { ColorPickerComponent } from '@app/color-picker/components/color-picker/
 import { ColorPickerService } from '@app/color-picker/services/color-picker.service';
 import { ColorService } from '@app/drawing/services/color.service';
 import { Color } from '@app/shared/classes/color';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 // tslint:disable: no-string-literal
 
 describe('ColorPickerComponent', () => {
     let component: ColorPickerComponent;
     let fixture: ComponentFixture<ColorPickerComponent>;
-    let hueChangedSubject: Subject<number>;
-    let saturationChangedSubject: Subject<number>;
-    let valueChangedSubject: Subject<number>;
-    let alphaChangedSubject: Subject<number>;
+    let hueChangedSubject: BehaviorSubject<number>;
+    let saturationChangedSubject: BehaviorSubject<number>;
+    let valueChangedSubject: BehaviorSubject<number>;
+    let alphaChangedSubject: BehaviorSubject<number>;
     let colorPickerServiceSpyObj: jasmine.SpyObj<ColorPickerService>;
 
+    const initialValue = 1;
+    const colorStub = {} as Color;
     beforeEach(async(() => {
-        hueChangedSubject = new Subject<number>();
-        saturationChangedSubject = new Subject<number>();
-        valueChangedSubject = new Subject<number>();
-        alphaChangedSubject = new Subject<number>();
+        hueChangedSubject = new BehaviorSubject<number>(initialValue);
+        saturationChangedSubject = new BehaviorSubject<number>(initialValue);
+        valueChangedSubject = new BehaviorSubject<number>(initialValue);
+        alphaChangedSubject = new BehaviorSubject<number>(initialValue);
         colorPickerServiceSpyObj = jasmine.createSpyObj('ColorPickerService', ['getColor', 'setColor'], {
             hueChanged$: hueChangedSubject,
             saturationChanged$: saturationChangedSubject,
             valueChanged$: valueChangedSubject,
             alphaChanged$: alphaChangedSubject,
         });
+        colorPickerServiceSpyObj.getColor.and.returnValue(colorStub);
 
         TestBed.configureTestingModule({
             declarations: [ColorPickerComponent],
@@ -68,31 +71,31 @@ describe('ColorPickerComponent', () => {
     }));
 
     it('hueChanged subscription should make colorModelChange emit', async(() => {
-        const emitSpy = spyOn(component['colorModelChange'], 'emit');
         component.ngOnInit();
-        hueChangedSubject.next();
-        expect(emitSpy).toHaveBeenCalled();
+        const emitSpy = spyOn(component.colorModelChange, 'emit');
+        hueChangedSubject.next(initialValue);
+        expect(emitSpy).toHaveBeenCalledWith(colorStub);
     }));
 
     it('saturationChanged subscription should make colorModelChange emit', async(() => {
-        const emitSpy = spyOn(component['colorModelChange'], 'emit');
         component.ngOnInit();
-        saturationChangedSubject.next();
-        expect(emitSpy).toHaveBeenCalled();
+        const emitSpy = spyOn(component.colorModelChange, 'emit');
+        saturationChangedSubject.next(initialValue);
+        expect(emitSpy).toHaveBeenCalledWith(colorStub);
     }));
 
     it('valueChanged subscription should make colorModelChange emit', async(() => {
-        const emitSpy = spyOn(component['colorModelChange'], 'emit');
         component.ngOnInit();
-        valueChangedSubject.next();
-        expect(emitSpy).toHaveBeenCalled();
+        const emitSpy = spyOn(component.colorModelChange, 'emit');
+        valueChangedSubject.next(initialValue);
+        expect(emitSpy).toHaveBeenCalledWith(colorStub);
     }));
 
     it('alphaChanged subscription should make colorModelChange emit', async(() => {
-        const emitSpy = spyOn(component['colorModelChange'], 'emit');
         component.ngOnInit();
-        alphaChangedSubject.next();
-        expect(emitSpy).toHaveBeenCalled();
+        const emitSpy = spyOn(component.colorModelChange, 'emit');
+        valueChangedSubject.next(initialValue);
+        expect(emitSpy).toHaveBeenCalledWith(colorStub);
     }));
 
     it('#ngOnDestroy should unsubscribe from colorChangedSubscription', async(() => {
