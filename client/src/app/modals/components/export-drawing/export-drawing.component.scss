@@ -6,6 +6,7 @@
     display: grid;
     grid-template-areas:
         'title filter file'
+        'email email email'
         'preview preview preview';
     grid-auto-columns: 1fr;
     align-content: center;
@@ -20,17 +21,31 @@
     grid-area: filter;
 }
 
-.file-item {
+.file-type-container {
     grid-area: file;
     display: flex;
     justify-self: right;
-    margin-bottom: 16px;
 }
 
-.file-type {
+.file-type-title-item {
     align-self: center;
     margin-bottom: 0;
     margin-right: 12px;
+}
+
+.toggle-group-item {
+    height: 48px;
+}
+
+.email-container {
+    grid-area: email;
+    display: flex;
+    align-items: center;
+}
+
+.form-field-item {
+    width: 100%;
+    padding-left: 16px;
 }
 
 .preview-item {
@@ -45,6 +60,6 @@
 }
 
 .button {
-    width: 150px;
+    width: 175px;
     margin-right: 4px;
 }

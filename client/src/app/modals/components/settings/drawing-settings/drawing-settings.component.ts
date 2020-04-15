@@ -12,13 +12,13 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./drawing-settings.component.scss'],
 })
 export class DrawingSettingsComponent implements OnInit, OnDestroy {
-    private widthSubscription: Subscription;
-    private heightSubscription: Subscription;
+    private drawingWidthChangedSubscription: Subscription;
+    private drawingHeightChangedSubscription: Subscription;
 
     constructor(private settingsService: SettingsService, private drawingService: DrawingService) {}
 
     ngOnInit(): void {
-        this.widthSubscription = this.formGroup.controls.drawingWidth.valueChanges.subscribe(() => {
+        this.drawingWidthChangedSubscription = this.formGroup.controls.drawingWidth.valueChanges.subscribe(() => {
             if (this.formGroup.controls.drawingWidth.valid) {
                 this.drawingService.dimensions = {
                     x: this.formGroup.controls.drawingWidth.value,
@@ -26,7 +26,7 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
                 };
             }
         });
-        this.heightSubscription = this.formGroup.controls.drawingHeight.valueChanges.subscribe(() => {
+        this.drawingHeightChangedSubscription = this.formGroup.controls.drawingHeight.valueChanges.subscribe(() => {
             if (this.formGroup.controls.drawingHeight.valid) {
                 this.drawingService.dimensions = {
                     x: this.drawingService.dimensions.x,
@@ -37,8 +37,8 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.widthSubscription.unsubscribe();
-        this.heightSubscription.unsubscribe();
+        this.drawingWidthChangedSubscription.unsubscribe();
+        this.drawingHeightChangedSubscription.unsubscribe();
     }
 
     getErrorMessage(formControl: AbstractControl): string {

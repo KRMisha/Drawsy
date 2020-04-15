@@ -31,7 +31,7 @@ describe('DatabaseService', () => {
             const originalConnectFunction = MongoClient.connect;
             sinon
                 .stub(MongoClient, 'connect')
-                .callsFake((uri: string, options: MongoClientOptions, callback: MongoCallback<MongoClient>): void => {
+                .callsFake((uri: string, options: MongoClientOptions, callback: MongoCallback<MongoClient>) => {
                     originalConnectFunction(inMemoryServerUrl, options, (error: MongoError, client: MongoClient) => {
                         callback(error, client);
                         done();

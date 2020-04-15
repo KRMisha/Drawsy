@@ -61,7 +61,7 @@ describe('ExportDrawingComponent', () => {
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(newTitle);
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
-        expect(exportDrawingServiceSpyObj.exportDrawing).toHaveBeenCalledWith(
+        expect(exportDrawingServiceSpyObj.downloadDrawing).toHaveBeenCalledWith(
             drawingPreviewComponentSpyObj.drawingRoot.nativeElement,
             FileType.Jpeg
         );

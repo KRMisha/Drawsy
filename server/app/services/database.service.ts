@@ -22,7 +22,7 @@ export class DatabaseService {
             useUnifiedTopology: true,
         };
 
-        MongoClient.connect(connectionUrl, options, (error: MongoError, client: MongoClient): void => {
+        MongoClient.connect(connectionUrl, options, (error: MongoError, client: MongoClient) => {
             if (error) {
                 throw error;
             }
