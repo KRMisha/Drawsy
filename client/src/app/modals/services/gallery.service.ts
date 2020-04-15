@@ -61,7 +61,7 @@ export class GalleryService {
                         this.drawingService.id = undefined;
                     }
                 },
-                (error: HttpErrorResponse): void => {
+                (error: HttpErrorResponse) => {
                     if (error.status === HttpStatusCode.NotFound) {
                         this.getAllDrawings();
                     }
@@ -85,7 +85,7 @@ export class GalleryService {
                         this.drawingSerializerService.deserializeDrawing(savedFile.content, savedFile.id)
                     );
                 },
-                (error: HttpErrorResponse): void => {
+                (error: HttpErrorResponse) => {
                     this._drawings = [];
                 }
             );

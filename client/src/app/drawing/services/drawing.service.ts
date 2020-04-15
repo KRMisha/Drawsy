@@ -125,6 +125,8 @@ export class DrawingService {
             return;
         }
 
+        this.forceDetectChangesSource.next();
+
         const titleElement = this.drawingRoot.getElementsByTagName('title')[0];
         titleElement.innerHTML = this._title;
 
@@ -176,7 +178,6 @@ export class DrawingService {
 
     set labels(labels: string[]) {
         this._labels = labels;
-        this.forceDetectChangesSource.next();
         this.saveDrawingToStorage();
     }
 
@@ -186,7 +187,6 @@ export class DrawingService {
 
     set dimensions(dimensions: Vec2) {
         this._dimensions = dimensions;
-        this.forceDetectChangesSource.next();
         this.saveDrawingToStorage();
     }
 
@@ -196,7 +196,6 @@ export class DrawingService {
 
     set backgroundColor(color: Color) {
         this._backgroundColor = color;
-        this.forceDetectChangesSource.next();
         this.saveDrawingToStorage();
     }
 

@@ -1,5 +1,5 @@
 export enum FileType {
-    Svg,
-    Png,
-    Jpeg,
+    Svg = 'svg',
+    Png = 'png',
+    Jpeg = 'jpeg',
 }
