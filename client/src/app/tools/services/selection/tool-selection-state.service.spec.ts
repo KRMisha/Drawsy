@@ -38,13 +38,13 @@ describe('ToolSelectionStateService', () => {
         const expectedValue = [] as SVGGraphicsElement[];
         service.selectedElements = expectedValue;
         expect(service['_selectedElements']).toBe(expectedValue);
-        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalled();
+        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalledWith(expectedValue);
     });
 
     it('#set selectedElements should notify its subcribers that its value has changed', () => {
         const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
         service.selectedElements = [];
-        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalled();
+        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalledWith(elementListBounds);
     });
 
     it("#get selectedElementsRect should return the selected elements' bounding rectangle", () => {
@@ -62,7 +62,8 @@ describe('ToolSelectionStateService', () => {
 
     it('#set selectedElementsRect should notify its subcribers that its value has changed', () => {
         const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
-        service.selectedElementsRect = {} as Rect;
-        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalled();
+        const rectStub = {} as Rect;
+        service.selectedElementsRect = rectStub;
+        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalledWith(rectStub);
     });
 });
