@@ -138,7 +138,7 @@ export class ToolLineService extends Tool {
         }
     }
 
-    onFocusOut(event: FocusEvent): void {
+    onFocusOut(): void {
         this.stopDrawing();
     }
 

@@ -66,7 +66,7 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
-        this.currentToolService.currentTool.onToolDeselection();
+        this.currentToolService.currentTool.onFocusOut();
 
         this.forceDetectChangesSubscription.unsubscribe();
         this.toggleGridSubscription.unsubscribe();
@@ -156,15 +156,14 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         this.currentToolService.onMouseLeave(event);
     }
 
-    @HostListener('focus', ['$event'])
-    onFocusIn(event: FocusEvent): void {
-        this.currentToolService.onFocusIn(event);
+    @HostListener('focus')
+    onFocusIn(): void {
+        this.currentToolService.onFocusIn();
     }
 
-    @HostListener('blur', ['$event'])
-    onFocusOut(event: FocusEvent): void {
-        console.log('penis');
-        this.currentToolService.onFocusOut(event);
+    @HostListener('blur')
+    onFocusOut(): void {
+        this.currentToolService.onFocusOut();
     }
 
     get width(): number {

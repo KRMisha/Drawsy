@@ -50,7 +50,7 @@ export abstract class ToolBrush extends Tool {
         }
     }
 
-    onFocusOut(event: FocusEvent): void {
+    onFocusOut(): void {
         this.stopDrawing();
     }
 

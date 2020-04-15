@@ -54,7 +54,7 @@ export class ToolSprayCanService extends Tool {
         this.stopSpraying();
     }
 
-    onFocusOut(event: FocusEvent): void {
+    onFocusOut(): void {
         this.stopSpraying();
     }
 

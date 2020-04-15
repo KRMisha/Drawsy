@@ -65,7 +65,7 @@ export abstract class ToolShape extends Tool {
         }
     }
 
-    onFocusOut(event: FocusEvent): void {
+    onFocusOut(): void {
         this.stopDrawing();
     }
 

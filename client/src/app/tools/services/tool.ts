@@ -42,8 +42,8 @@ export abstract class Tool {
     onKeyUp(event: KeyboardEvent): void {}
     onMouseEnter(event: MouseEvent): void {}
     onMouseLeave(event: MouseEvent): void {}
-    onFocusIn(event: FocusEvent): void {}
-    onFocusOut(event: FocusEvent): void {}
+    onFocusIn(): void {}
+    onFocusOut(): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
     onToolSelection(): void {}

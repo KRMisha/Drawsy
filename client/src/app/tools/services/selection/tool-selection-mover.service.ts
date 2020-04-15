@@ -66,7 +66,7 @@ export class ToolSelectionMoverService {
         this.stopMovingSelection();
     }
 
-    onFocusOut(event: FocusEvent): void {
+    onFocusOut(): void {
         this.stopMovingSelection();
     }
 

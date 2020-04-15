@@ -93,12 +93,12 @@ export class CurrentToolService implements OnDestroy {
         this.currentTool.onMouseLeave(event);
     }
 
-    onFocusIn(event: FocusEvent): void {
-        this.currentTool.onFocusIn(event);
+    onFocusIn(): void {
+        this.currentTool.onFocusIn();
     }
 
-    onFocusOut(event: FocusEvent): void {
-        this.currentTool.onFocusOut(event);
+    onFocusOut(): void {
+        this.currentTool.onFocusOut();
     }
 
     get currentTool(): Tool {
