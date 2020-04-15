@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 export class SidebarComponent implements OnInit, OnDestroy {
     readonly actionButtons: ActionButton[] = [
         { name: 'Nouveau dessin (Ctrl+O)', icon: 'card-plus-outline', action: this.openNewDrawingModal.bind(this) },
-        { name: 'Exporter le dessin localement (Ctrl+E)', icon: 'download', action: this.openExportDrawingModal.bind(this) },
+        { name: 'Exporter le dessin (Ctrl+E)', icon: 'download', action: this.openExportDrawingModal.bind(this) },
         {
             name: 'Sauvegarder le dessin sur le serveur (Ctrl+S)',
             icon: 'cloud-upload-outline',
