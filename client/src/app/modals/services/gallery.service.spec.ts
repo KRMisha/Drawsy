@@ -135,6 +135,15 @@ describe('GalleryService', () => {
         })
     );
 
+    it("#deleteDrawing should set drawingService's id to undefined if it matches the drawing's id", async(() => {
+        spyOn(window, 'confirm').and.returnValue(true);
+        service.deleteDrawing(svgFileContainer);
+        const drawingServiceMock = { id: svgFileContainer.id } as DrawingService;
+        service['drawingService'] = drawingServiceMock;
+        deleteDrawingSubject.next();
+        expect(drawingServiceMock.id).toBeUndefined();
+    }));
+
     it(
         '#deleteDrawing should call #getAllDrawings and use the open method of snackbar to display a message' +
             'if the error status is NotFound',
