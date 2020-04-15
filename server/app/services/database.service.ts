@@ -75,7 +75,7 @@ export class DatabaseService {
     }
 
     private sanitizeFileContent(fileContent: string): string {
-        const window = new JSDOM(''). window;
+        const window = new JSDOM('').window;
         const domPurify = createDomPurify(window);
         return domPurify.sanitize(fileContent);
     }

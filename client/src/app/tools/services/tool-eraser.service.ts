@@ -17,7 +17,7 @@ import { Tool } from '@app/tools/services/tool';
 export class ToolEraserService extends Tool {
     private svgEraserElement: SVGRectElement;
 
-    private svgElementUnderCursor?: SVGGraphicsElement = undefined;
+    private svgElementUnderCursor?: SVGGraphicsElement;
     private elementUnderCursorStrokeWidth: string;
     private elementUnderCursorStrokeColor: string;
 

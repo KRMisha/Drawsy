@@ -137,7 +137,7 @@ describe('SaveDrawingService', () => {
             expect(snackBarSpyObj.open).toHaveBeenCalledWith(notFoundErrorMessage, undefined, {
                 duration: snackBarDuration,
             });
-            expect(drawingServiceMock.id).toEqual(undefined);
+            expect(drawingServiceMock.id).toBeUndefined();
         })
     );
 
