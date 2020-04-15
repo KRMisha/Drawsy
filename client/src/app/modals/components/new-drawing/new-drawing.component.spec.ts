@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { Color } from '@app/shared/classes/color';
@@ -24,13 +25,14 @@ describe('NewDrawingComponent', () => {
     let valueChangesSubject: Subject<any>;
 
     const sidebarWidth = 337;
-
+    const initialWidth = 18;
+    const initialHeight = 18;
     beforeEach(async(() => {
         routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['loadDrawing']);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['loadDrawingWithConfirmation']);
         valueChangesSubject = new Subject<any>();
-        widthSpyObj = jasmine.createSpyObj('FormControl', ['setValue'], { value: 18 });
-        heightSpyObj = jasmine.createSpyObj('FormControl', ['setValue'], { value: 18 });
+        widthSpyObj = jasmine.createSpyObj('FormControl', ['setValue'], { value: initialWidth });
+        heightSpyObj = jasmine.createSpyObj('FormControl', ['setValue'], { value: initialHeight });
         validFormGroupSpyObj = jasmine.createSpyObj('FormGroup', [], {
             valid: true,
             valueChanges: valueChangesSubject,
@@ -102,10 +104,14 @@ describe('NewDrawingComponent', () => {
     it('#onSubmit should forward navigate call to the router if the drawing form is valid and drawingService.loadDrawing returns succesfully', () => {
         component.drawingFormGroup = validFormGroupSpyObj;
         drawingServiceSpyObj.loadDrawingWithConfirmation.and.returnValue(true);
-        const color = {} as Color;
-        component.backgroundColor = color;
+        const colorStub = {} as Color;
+        component.backgroundColor = colorStub;
         component.onSubmit();
-        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith({ dimensions: { x: 18, y: 18 }, backgroundColor: color});
+        const expectedDrawingLoadOptions: DrawingLoadOptions = {
+            dimensions: { x: initialWidth, y: initialHeight },
+            backgroundColor: colorStub,
+        };
+        expect(drawingServiceSpyObj.loadDrawingWithConfirmation).toHaveBeenCalledWith(expectedDrawingLoadOptions);
         expect(routerSpyObj.navigate).toHaveBeenCalledWith(['/editor']);
     });
 

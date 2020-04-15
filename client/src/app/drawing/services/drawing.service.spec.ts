@@ -10,7 +10,7 @@ import { DrawingSerializerService } from './drawing-serializer.service';
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 // tslint:disable: max-line-length
-// tslint:disable-next-line: max-file-line-count
+// tslint:disable: max-file-line-count
 
 describe('DrawingService', () => {
     let service: DrawingService;
@@ -22,7 +22,11 @@ describe('DrawingService', () => {
         renderer2SpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
-        drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', ['deserializeDrawing', 'getDrawingLoadOptions', 'serializeDrawing']);
+        drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', [
+            'deserializeDrawing',
+            'getDrawingLoadOptions',
+            'serializeDrawing',
+        ]);
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
@@ -83,7 +87,7 @@ describe('DrawingService', () => {
         expect(renderer2SpyObj.insertBefore).not.toHaveBeenCalled();
     });
 
-    it("#addElementsBefore should not call renderer's insertBefore if the elementAfter is not found in _elements", () => {
+    it("#addElementBefore should not call renderer's insertBefore if the elementAfter is not found in _elements", () => {
         const svgGraphicsElement = {} as SVGGraphicsElement;
         const elementAfter = {} as SVGGraphicsElement;
         const testElement = {} as SVGGraphicsElement;
@@ -216,7 +220,7 @@ describe('DrawingService', () => {
     it('#loadDrawingFromStorage should call loadDrawing with the right drawingLoadOptions', () => {
         const expectedSerializedDrawing = 'bonjour';
         const expectedId = 'expectedId';
-        spyOn(localStorage, 'getItem').and.callFake( (key: string) => {
+        spyOn(localStorage, 'getItem').and.callFake((key: string) => {
             switch (key) {
                 case 'drawingAutosaveContent':
                     return expectedSerializedDrawing;
@@ -238,7 +242,7 @@ describe('DrawingService', () => {
 
     it('#loadDrawingFromStorage should set the id to undefined if it is not found in the storage', () => {
         const expectedSerializedDrawing = 'bonjour';
-        spyOn(localStorage, 'getItem').and.callFake( (key: string) => {
+        spyOn(localStorage, 'getItem').and.callFake((key: string) => {
             switch (key) {
                 case 'drawingAutosaveContent':
                     return expectedSerializedDrawing;
@@ -357,7 +361,7 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(expectedLabels);
     });
 
-    it('#set labels should set the labels, update forceDetectChangesSource\'s subscribers and call #saveDrawingToStorage', () => {
+    it("#set labels should set the labels, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
         const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedLabels = ['label'];
@@ -375,7 +379,7 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(expectedDimensions);
     });
 
-    it('#set dimensions should set the dimensions, update forceDetectChangesSource\'s subscribers and call #saveDrawingToStorage', () => {
+    it("#set dimensions should set the dimensions, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
         const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedDimensions = { x: 0, y: 0 } as Vec2;
@@ -393,7 +397,7 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(expectedColor);
     });
 
-    it('#set backgroundColor should set the backgroundColor, update forceDetectChangesSource\'s subscribers and call #saveDrawingToStorage', () => {
+    it("#set backgroundColor should set the backgroundColor, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
         const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedColor = {} as Color;
@@ -431,8 +435,17 @@ describe('DrawingService', () => {
         service['_title'] = 'titre';
         service['_labels'] = ['label'];
         const elementMock = {} as SVGGraphicsElement;
-        const drawingDataMock = { id: 'expectedId', title: 'expectedTitle', labels: ['expectedLabel'], elements: [elementMock, elementMock] };
-        const drawingLoadOptionsMock = { dimensions: {} as Vec2, backgroundColor: {} as Color, drawingData: drawingDataMock } as DrawingLoadOptions;
+        const drawingDataMock = {
+            id: 'expectedId',
+            title: 'expectedTitle',
+            labels: ['expectedLabel'],
+            elements: [elementMock, elementMock],
+        };
+        const drawingLoadOptionsMock = {
+            dimensions: {} as Vec2,
+            backgroundColor: {} as Color,
+            drawingData: drawingDataMock,
+        } as DrawingLoadOptions;
         service['loadDrawing'](drawingLoadOptionsMock);
         expect(service['_id']).toEqual('expectedId');
         expect(service['_title']).toEqual('expectedTitle');

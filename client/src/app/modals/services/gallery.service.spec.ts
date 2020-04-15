@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { async, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { GalleryService } from '@app/modals/services/gallery.service';
@@ -11,7 +12,6 @@ import { ServerService } from '@app/shared/services/server.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Subject } from 'rxjs';
-import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 
 // tslint:disable: no-string-literal
 
@@ -44,10 +44,7 @@ describe('GalleryService', () => {
         serverServiceSpyObj.getAllDrawings.and.returnValue(getAllDrawingsSubject);
 
         routerSpyObj = jasmine.createSpyObj('Router', ['navigate']);
-        drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', [
-            'getDrawingLoadOptions',
-            'deserializeDrawing',
-        ]);
+        drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', ['getDrawingLoadOptions', 'deserializeDrawing']);
         snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['loadDrawingWithConfirmation'], { id: 12 });
 
