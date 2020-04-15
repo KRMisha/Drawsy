@@ -49,5 +49,4 @@ describe('TransformElementsCommand', () => {
         expect(baseValSpyObj.clear).toHaveBeenCalledTimes(elementsArray.length);
         expect(baseValSpyObj.appendItem).toHaveBeenCalledTimes(elementsArray.length * numberOfTransforms);
     });
-
 });

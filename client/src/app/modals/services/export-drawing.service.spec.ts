@@ -117,20 +117,20 @@ describe('ExportDrawingService', () => {
         });
     }));
 
-    it('#emailDrawing should not display an error message if the statusCode is different from TooManyRequest or BadRequest',
-        fakeAsync(() => {
-            const fileType = FileType.Jpeg;
-            const emailAddress = 'hein@hotmail.ca';
-            const blobStub = {} as Blob;
-            drawingSerializerServiceSpyObj.exportAsBlob.and.returnValue(Promise.resolve(blobStub));
-            service.emailDrawing({} as SVGSVGElement, emailAddress, fileType);
-            tick();
+    // tslint:disable-next-line: max-line-length
+    it('#emailDrawing should not display an error message if the statusCode is different from TooManyRequest or BadRequest', fakeAsync(() => {
+        const fileType = FileType.Jpeg;
+        const emailAddress = 'hein@hotmail.ca';
+        const blobStub = {} as Blob;
+        drawingSerializerServiceSpyObj.exportAsBlob.and.returnValue(Promise.resolve(blobStub));
+        service.emailDrawing({} as SVGSVGElement, emailAddress, fileType);
+        tick();
 
-            const error = { status: HttpStatusCode.ImATeapot } as HttpErrorResponse;
+        const error = { status: HttpStatusCode.ImATeapot } as HttpErrorResponse;
 
-            emailDrawingSubject.error(error);
-            const expectedTitle = drawingTitle + '.' + fileType;
-            expect(serverServiceSpyObj.emailDrawing).toHaveBeenCalledWith(emailAddress, blobStub, expectedTitle);
-            expect(snackBarSpyObj.open).toHaveBeenCalledTimes(1);
+        emailDrawingSubject.error(error);
+        const expectedTitle = drawingTitle + '.' + fileType;
+        expect(serverServiceSpyObj.emailDrawing).toHaveBeenCalledWith(emailAddress, blobStub, expectedTitle);
+        expect(snackBarSpyObj.open).toHaveBeenCalledTimes(1);
     }));
 });
