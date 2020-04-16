@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
+// tslint:disable: max-file-line-count
 
 describe('CurrentToolService', () => {
     let service: CurrentToolService;
@@ -23,12 +24,14 @@ describe('CurrentToolService', () => {
 
     let primaryColorChangedSubject: Subject<Color>;
     let secondaryColorChangedSubject: Subject<Color>;
-    let drawingHostiryChangedSubject: Subject<void>;
+    let drawingHistoryChangedSubject: Subject<void>;
+
+    let drawingLoadedSubject: Subject<void>;
 
     beforeEach(() => {
-        drawingHostiryChangedSubject = new Subject<void>();
+        drawingHistoryChangedSubject = new Subject<void>();
         historyServiceSpyObj = jasmine.createSpyObj('HistoryService', [], {
-            drawingHistoryChanged$: drawingHostiryChangedSubject,
+            drawingHistoryChanged$: drawingHistoryChangedSubject,
         });
 
         primaryColorChangedSubject = new Subject<Color>();
@@ -39,7 +42,9 @@ describe('CurrentToolService', () => {
         });
 
         drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getScreenCTM']);
+        drawingLoadedSubject = new Subject<void>();
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'removeElement'], {
+            drawingLoaded$: drawingLoadedSubject,
             drawingRoot: drawingRootSpyObj,
         });
 
@@ -62,6 +67,7 @@ describe('CurrentToolService', () => {
             'onToolSelection',
             'onToolDeselection',
             'onHistoryChange',
+            'onDrawingLoad',
         ]);
 
         TestBed.configureTestingModule({
@@ -93,9 +99,14 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onSecondaryColorChange).toHaveBeenCalledWith(colorStub);
     }));
 
-    it('#constructor should subscribe to currentTool historyChanges', () => {
-        drawingHostiryChangedSubject.next();
+    it('#constructor should subscribe to historyChanges observable', () => {
+        drawingHistoryChangedSubject.next();
         expect(currentToolSpyObj.onHistoryChange).toHaveBeenCalled();
+    });
+
+    it('#constructor should subscribe to drawingLoaded observable', () => {
+        drawingLoadedSubject.next();
+        expect(currentToolSpyObj.onDrawingLoad).toHaveBeenCalled();
     });
 
     it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
