@@ -74,12 +74,6 @@ export class ToolSelectionMoverService {
         );
     }
 
-    moveElement(element: SVGGraphicsElement, moveOffset: Vec2): void {
-        const translateTransformIndex = 0;
-        const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-        element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
-    }
-
     stopMovingSelection(): void {
         if (
             this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithMouse &&
@@ -125,6 +119,12 @@ export class ToolSelectionMoverService {
                 this.arrowKeysHeldStates[ArrowKey.Right] = isKeyDown;
                 break;
         }
+    }
+
+    private moveElement(element: SVGGraphicsElement, moveOffset: Vec2): void {
+        const translateTransformIndex = 0;
+        const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+        element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
     }
 
     private startMovingSelectionWithArrows(): void {

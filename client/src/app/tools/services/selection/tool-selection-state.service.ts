@@ -24,7 +24,7 @@ export class ToolSelectionStateService implements OnDestroy {
 
     constructor(private toolSelectionCollisionService: ToolSelectionCollisionService) {
         this.selectedElementsChangedSubscription = this.selectedElementsChanged$.subscribe((elements: SVGGraphicsElement[]) => {
-            this.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(this.selectedElements);
+            this.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(elements);
         });
     }
 
