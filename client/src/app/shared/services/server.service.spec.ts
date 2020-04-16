@@ -200,7 +200,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : la communication avec le serveur a échoué.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : la communication avec le serveur a échoué', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -216,7 +216,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une erreur interne est survenue sur le serveur.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une erreur interne est survenue sur le serveur', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -232,7 +232,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : cette requête n'est pas encore implémentée.", undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : cette requête n'est pas encore implémentée", undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -248,7 +248,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : la réponse reçue depuis le serveur est invalide.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : la réponse reçue depuis le serveur est invalide', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -264,7 +264,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : ce service est temporairement indisponible.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : ce service est temporairement indisponible', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -280,7 +280,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : le temps d'attente de la réponse du serveur est écoulé.", undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : le temps d'attente de la réponse du serveur est écoulé", undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -296,7 +296,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : cette version HTTP n'est pas supportée.", undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : cette version HTTP n'est pas supportée", undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -312,7 +312,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : problème de négociation.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : problème de négociation', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -328,7 +328,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : l'espace pour effectuer cette requête est insuffisant.", undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith("Erreur : l'espace pour effectuer cette requête est insuffisant", undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -344,7 +344,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une boucle infinie a été détectée lors de la requête.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une boucle infinie a été détectée lors de la requête', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -361,7 +361,7 @@ describe('ServerService', () => {
         );
         getAllDrawingsSubject.error(returnedError);
         expect(snackBarSpyObj.open).toHaveBeenCalledWith(
-            'Erreur : des extensions sont nécessaires pour satisfaire la requête.',
+            'Erreur : des extensions sont nécessaires pour satisfaire la requête',
             undefined,
             { duration: snackBarDuration }
         );
@@ -378,7 +378,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une authentification est nécessaire.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : une authentification est nécessaire', undefined, {
             duration: snackBarDuration,
         });
     }));
@@ -394,7 +394,7 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : erreur inconnue.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : erreur inconnue', undefined, {
             duration: snackBarDuration,
         });
     }));
