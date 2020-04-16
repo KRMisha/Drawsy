@@ -90,7 +90,7 @@ describe('ToolEraserService', () => {
     it("#onMouseDown should make a copy of the drawingService's elements and call #update", () => {
         const updateSpy = spyOn<any>(service, 'update');
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
-        expect(service['drawingElementsCopy']).toEqual(initialElementsArray);
+        expect(service['initialDrawingElements']).toEqual(initialElementsArray);
         expect(updateSpy).toHaveBeenCalled();
     });
 
@@ -105,7 +105,7 @@ describe('ToolEraserService', () => {
         const svgElementStub2 = {} as SVGGraphicsElement;
         const svgElementStub3 = {} as SVGGraphicsElement;
 
-        service['drawingElementsCopy'] = [svgElementStub1, svgElementStub2, svgElementStub3];
+        service['initialDrawingElements'] = [svgElementStub1, svgElementStub2, svgElementStub3];
 
         const firstSiblingPair = { element: svgElementStub1, sibling: svgElementStub2 } as ElementSiblingPair;
         const secondSiblingPair = { element: svgElementStub2, sibling: svgElementStub3 } as ElementSiblingPair;
@@ -137,67 +137,67 @@ describe('ToolEraserService', () => {
         expect(updateEraserRectSpy).toHaveBeenCalled();
     });
 
-    it('#update should call #restoreElementUndorCursorAttributes and set svgElementUnderCursor to undefined if the elementToConsider is undefined', () => {
+    it('#update should call #restoreElementUndorCursorAttributes and set elementUnderCursor to undefined if the elementToConsider is undefined', () => {
         getElementUnderAreaPixelPerfectSpy.and.returnValue(undefined);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
         service['update']();
         expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
-        expect(service['svgElementUnderCursor']).toBeUndefined();
+        expect(service['elementUnderCursor']).toBeUndefined();
     });
 
-    it('#update should call #restoreElementUndorCursorAttributes, change svgElementUnderCursor and call #addRedBorderToElement if the elementToConsider is not the svgElementUnderCursor', () => {
+    it('#update should call #restoreElementUndorCursorAttributes, change elementUnderCursor and call #addRedBorderToElement if the elementToConsider is not the elementUnderCursor', () => {
         const testElement = {} as SVGGraphicsElement;
-        service['svgElementUnderCursor'] = {} as SVGGraphicsElement;
+        service['elementUnderCursor'] = {} as SVGGraphicsElement;
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
         service['update']();
         expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
         expect(addRedBorderSpy).toHaveBeenCalledWith(testElement);
-        expect(service['svgElementUnderCursor']).toBe(testElement);
+        expect(service['elementUnderCursor']).toBe(testElement);
     });
 
-    it('#update should not call #restoreElementUndorCursorAttributes, should not change svgElementUnderCursor and should not call #addRedBorderToElement if the elementToConsider is the svgElementUnderCursor', () => {
+    it('#update should not call #restoreElementUndorCursorAttributes, should not change elementUnderCursor and should not call #addRedBorderToElement if the elementToConsider is the elementUnderCursor', () => {
         const testElement = {} as SVGGraphicsElement;
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
         const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
         const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
-        service['svgElementUnderCursor'] = testElement;
+        service['elementUnderCursor'] = testElement;
         service['update']();
         expect(restoreElementUnderCursorAttributesSpy).not.toHaveBeenCalled();
         expect(addRedBorderSpy).not.toHaveBeenCalled();
     });
 
-    it("#update should add the svgElementUnderCursor to the elementsDeletedDuringDrag and call drawingService's removeElement if the svgElementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the drawingElementsCopy", () => {
+    it("#update should add the elementUnderCursor to the elementsDeletedDuringDrag and call drawingService's removeElement if the elementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the initialDrawingElements", () => {
         const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
-        const drawingElementsCopy = [fillElement, fillElement, fillElement, testElement];
+        const initialDrawingElements = [fillElement, fillElement, fillElement, testElement];
         Tool.isLeftMouseButtonDown = true;
-        service['isLeftMouseButtonDownInsideDrawing'] = true;
+        service['isErasing'] = true;
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-        service['svgElementUnderCursor'] = testElement;
-        service['drawingElementsCopy'] = drawingElementsCopy;
+        service['elementUnderCursor'] = testElement;
+        service['initialDrawingElements'] = initialDrawingElements;
         service['update']();
         expect(pushSpy).toHaveBeenCalled();
         expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(testElement);
-        expect(service['svgElementUnderCursor']).toBeUndefined();
+        expect(service['elementUnderCursor']).toBeUndefined();
     });
 
-    it("#update should not add the svgElementUnderCursor to the elementsDeletedDuringDrag, should not call drawingService's removeElement and should set svgElementUnderCursor to undefined if the svgElementUnderCursor not in drawingElementsCopy", () => {
+    it("#update should not add the elementUnderCursor to the elementsDeletedDuringDrag, should not call drawingService's removeElement and should set elementUnderCursor to undefined if the elementUnderCursor not in initialDrawingElements", () => {
         const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
         const testElement = {} as SVGGraphicsElement;
         const fillElement = {} as SVGGraphicsElement;
-        const drawingElementsCopy = [fillElement, fillElement, fillElement];
+        const initialDrawingElements = [fillElement, fillElement, fillElement];
         Tool.isLeftMouseButtonDown = true;
-        service['isLeftMouseButtonDownInsideDrawing'] = true;
+        service['isErasing'] = true;
         getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-        service['svgElementUnderCursor'] = testElement;
-        service['drawingElementsCopy'] = drawingElementsCopy;
+        service['elementUnderCursor'] = testElement;
+        service['initialDrawingElements'] = initialDrawingElements;
         service['update']();
         expect(pushSpy).not.toHaveBeenCalled();
         expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
-        expect(service['svgElementUnderCursor']).toBeUndefined();
+        expect(service['elementUnderCursor']).toBeUndefined();
     });
 
     it("#onToolSelection should create the eraser's rect, add it to the ui elements of drawingService and call #updateEraserRect", () => {
@@ -215,13 +215,13 @@ describe('ToolEraserService', () => {
         expect(updateEraserRectSpy);
     });
 
-    it("onToolDeselection should call drawingService's removeUiElement, call #restoreElementUnderCursorAttributes and set svgElementUnderCursor to undefined", () => {
-        service['svgElementUnderCursor'] = {} as SVGGraphicsElement;
+    it("onToolDeselection should call drawingService's removeUiElement, call #restoreElementUnderCursorAttributes and set elementUnderCursor to undefined", () => {
+        service['elementUnderCursor'] = {} as SVGGraphicsElement;
         const restoreSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
         service.onToolDeselection();
         expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalled();
         expect(restoreSpy).toHaveBeenCalled();
-        expect(service['svgElementUnderCursor']).toBeUndefined();
+        expect(service['elementUnderCursor']).toBeUndefined();
     });
 
     it('#updateEraserRect should update the eraserRect with the new value', () => {
