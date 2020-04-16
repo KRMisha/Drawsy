@@ -7,8 +7,8 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { Tool } from '@app/tools/services/tool';
 import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
-import { Tool } from './tool';
 
 // tslint:disable: no-any
 // tslint:disable: no-string-literal

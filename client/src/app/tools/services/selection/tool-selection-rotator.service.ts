@@ -62,34 +62,34 @@ export class ToolSelectionRotatorService {
     }
 
     private rotateSelectionAroundCenter(angle: number): void {
-        if (this.toolSelectionStateService.selectedElementsRect === undefined) {
+        if (this.toolSelectionStateService.selectedElementsBounds === undefined) {
             return;
         }
 
-        const selectedElementsRectCenterBeforeRotation: Vec2 = {
-            x: this.toolSelectionStateService.selectedElementsRect.x + this.toolSelectionStateService.selectedElementsRect.width / 2,
-            y: this.toolSelectionStateService.selectedElementsRect.y + this.toolSelectionStateService.selectedElementsRect.height / 2,
+        const selectedElementsBoundsCenterBeforeRotation: Vec2 = {
+            x: this.toolSelectionStateService.selectedElementsBounds.x + this.toolSelectionStateService.selectedElementsBounds.width / 2,
+            y: this.toolSelectionStateService.selectedElementsBounds.y + this.toolSelectionStateService.selectedElementsBounds.height / 2,
         };
 
         for (const element of this.toolSelectionStateService.selectedElements) {
-            this.rotateElementAroundPoint(element, selectedElementsRectCenterBeforeRotation, angle);
+            this.rotateElementAroundPoint(element, selectedElementsBoundsCenterBeforeRotation, angle);
         }
 
-        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+        this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
 
-        // Disable non-null assertion lint error because the selectedElementsRect will always be defined since a selection exists
+        // Disable non-null assertion lint error because the selectedElementsBounds will always be defined since a selection exists
         // tslint:disable: no-non-null-assertion
-        const selectedElementsRectCenterAfterRotation: Vec2 = {
-            x: this.toolSelectionStateService.selectedElementsRect!.x + this.toolSelectionStateService.selectedElementsRect!.width / 2,
-            y: this.toolSelectionStateService.selectedElementsRect!.y + this.toolSelectionStateService.selectedElementsRect!.height / 2,
+        const selectedElementsBoundsCenterAfterRotation: Vec2 = {
+            x: this.toolSelectionStateService.selectedElementsBounds!.x + this.toolSelectionStateService.selectedElementsBounds!.width / 2,
+            y: this.toolSelectionStateService.selectedElementsBounds!.y + this.toolSelectionStateService.selectedElementsBounds!.height / 2,
         };
         // tslint:enable: no-non-null-assertion
 
         const rotationMovementToCorrect: Vec2 = {
-            x: selectedElementsRectCenterBeforeRotation.x - selectedElementsRectCenterAfterRotation.x,
-            y: selectedElementsRectCenterBeforeRotation.y - selectedElementsRectCenterAfterRotation.y,
+            x: selectedElementsBoundsCenterBeforeRotation.x - selectedElementsBoundsCenterAfterRotation.x,
+            y: selectedElementsBoundsCenterBeforeRotation.y - selectedElementsBoundsCenterAfterRotation.y,
         };
 
         this.toolSelectionMoverService.moveSelection(rotationMovementToCorrect);
@@ -103,7 +103,7 @@ export class ToolSelectionRotatorService {
             rotationPoint.y = elementBounds.y + elementBounds.height / 2;
             this.rotateElementAroundPoint(element, rotationPoint, angle);
         }
-        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+        this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
     }

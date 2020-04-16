@@ -46,11 +46,11 @@ export class ToolSelectionMoverService {
     }
 
     onKeyUp(event: KeyboardEvent): void {
+        this.setArrowStateFromEvent(event, false);
+
         if (this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows) {
             return;
         }
-
-        this.setArrowStateFromEvent(event, false);
 
         const hasStoppedMovingWithKeys = this.arrowKeysHeldStates.every((value: boolean) => !value);
         if (hasStoppedMovingWithKeys) {
@@ -69,15 +69,9 @@ export class ToolSelectionMoverService {
         for (const element of this.toolSelectionStateService.selectedElements) {
             this.moveElement(element, moveOffset);
         }
-        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+        this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
-    }
-
-    moveElement(element: SVGGraphicsElement, moveOffset: Vec2): void {
-        const translateTransformIndex = 0;
-        const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
-        element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
     }
 
     stopMovingSelection(): void {
@@ -125,6 +119,12 @@ export class ToolSelectionMoverService {
                 this.arrowKeysHeldStates[ArrowKey.Right] = isKeyDown;
                 break;
         }
+    }
+
+    private moveElement(element: SVGGraphicsElement, moveOffset: Vec2): void {
+        const translateTransformIndex = 0;
+        const newMatrix = element.transform.baseVal.getItem(translateTransformIndex).matrix.translate(moveOffset.x, moveOffset.y);
+        element.transform.baseVal.getItem(translateTransformIndex).setMatrix(newMatrix);
     }
 
     private startMovingSelectionWithArrows(): void {

@@ -351,7 +351,7 @@ describe('ToolSelectionService', () => {
     });
 
     it('#isMouseInsideSelectedElementsRect should return value of isPointInRect if selection rect is not undefined', () => {
-        selectionStateServiceStub.selectedElementsRect = {} as Rect;
+        selectionStateServiceStub.selectedElementsBounds = {} as Rect;
         service['isMouseInsideSelectedElementsRect']();
         expect(toolSelectionCollisionServiceSpyObj.isPointInRect).toHaveBeenCalled();
     });
