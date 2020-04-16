@@ -167,11 +167,18 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        this.toolSelectionMoverService.onKeyDown(event);
-        if (event.key === 'Delete') {
-            this.deleteSelection();
-        } else if (event.key === 'Escape') {
-            this.toolSelectionStateService.selectedElements = [];
+        switch (event.key) {
+            case 'Backspace':
+            case 'Delete':
+                this.deleteSelection();
+                break;
+            case 'Escape':
+                this.toolSelectionStateService.selectedElements = [];
+                this.reset();
+                break;
+            default:
+                this.toolSelectionMoverService.onKeyDown(event);
+                break;
         }
     }
 

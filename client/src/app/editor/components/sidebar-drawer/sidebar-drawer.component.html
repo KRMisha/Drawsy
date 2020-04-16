@@ -133,22 +133,10 @@
         </div>
         <mat-divider></mat-divider>
         <div class="undo-redo-container">
-            <button
-                mat-icon-button
-                class="command-item"
-                matTooltip="Annuler (Ctrl+Z)"
-                [disabled]="!isUndoAvailable"
-                (click)="undo()"
-            >
+            <button mat-icon-button class="command-item" matTooltip="Annuler (Ctrl+Z)" [disabled]="!isUndoAvailable" (click)="undo()">
                 <mat-icon svgIcon="undo-variant"></mat-icon>
             </button>
-            <button
-                mat-icon-button
-                class="command-item"
-                matTooltip="Refaire (Ctrl+Shift+Z)"
-                [disabled]="!isRedoAvailable"
-                (click)="redo()"
-            >
+            <button mat-icon-button class="command-item" matTooltip="Refaire (Ctrl+Shift+Z)" [disabled]="!isRedoAvailable" (click)="redo()">
                 <mat-icon svgIcon="redo-variant"></mat-icon>
             </button>
         </div>
