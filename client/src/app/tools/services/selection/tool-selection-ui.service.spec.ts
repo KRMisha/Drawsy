@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
+import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Subject } from 'rxjs';
@@ -14,7 +14,6 @@ import { Subject } from 'rxjs';
 describe('ToolSelectionUiService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
-    let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
 
@@ -22,14 +21,22 @@ describe('ToolSelectionUiService', () => {
 
     let service: ToolSelectionUiService;
 
+    const drawingRootMock = {} as SVGSVGElement;
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'appendChild', 'addClass']);
+        renderer2SpyObj = jasmine.createSpyObj('Renderer2', [
+            'setAttribute',
+            'createElement',
+            'appendChild',
+            'addClass',
+            'setStyle',
+            'removeStyle',
+        ]);
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
-        toolSelectionCollisionServiceSpyObj = jasmine.createSpyObj('ToolSelectionCollisionService', ['getElementListBounds']);
-
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addUiElement', 'removeUiElement']);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addUiElement', 'removeUiElement'], {
+            drawingRoot: drawingRootMock,
+        });
 
         selectedElementsRectChangedSubject = new Subject<SVGGraphicsElement[]>();
         toolSelectionStateServiceSpyObj = jasmine.createSpyObj('ToolSelectionStateService', ['updateSelectionRect'], {
@@ -39,7 +46,6 @@ describe('ToolSelectionUiService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
-                { provide: ToolSelectionCollisionService, useValue: toolSelectionCollisionServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
                 { provide: ToolSelectionStateService, useValue: toolSelectionStateServiceSpyObj },
             ],
@@ -72,15 +78,80 @@ describe('ToolSelectionUiService', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
     });
 
+    it('#setUserSelectionRect should call #updateSvgRectFromRect', () => {
+        const rect = {} as Rect;
+        const svgRectElementMock = {} as SVGRectElement;
+        service['svgUserSelectionRect'] = svgRectElementMock;
+        const updateSvgRectFromRectSpy = spyOn<any>(service, 'updateSvgRectFromRect');
+        service.setUserSelectionRect(rect);
+        expect(updateSvgRectFromRectSpy).toHaveBeenCalledWith(svgRectElementMock, rect);
+    });
+
+    it("#showUserSelectionRect should call drawingService's addUiElement", () => {
+        const svgRectElementMock = {} as SVGRectElement;
+        service['svgUserSelectionRect'] = svgRectElementMock;
+        service.showUserSelectionRect();
+        expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalledWith(svgRectElementMock);
+    });
+
+    it("#hideUserSelectionRect should call drawingService's removeUiElement", () => {
+        const svgRectElementMock = {} as SVGRectElement;
+        service['svgUserSelectionRect'] = svgRectElementMock;
+        service.hideUserSelectionRect();
+        expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalledWith(svgRectElementMock);
+    });
+
     it('#setSelectedElementsRect should hide selected shapes rect if the elements bounds is undefined', () => {
         service['isSelectedElementsRectDisplayed'] = true;
         service['setSelectedElementsRect'](undefined);
         expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalledWith(service['svgSelectedElementsRectGroup']);
     });
 
-    it('#setSelectedElementsRect should change the position of the box around selected elements', () => {
-        const selectionRect = { x: 69, y: 12, width: 420, height: 666 } as Rect;
-        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue(selectionRect);
+    it("#updateUserSelectionRectCursor should call renderer's setStyle if the selection is moving with the mouse", () => {
+        const state = SelectionState.MovingSelectionWithMouse;
+        service.updateUserSelectionRectCursor(state);
+        expect(renderer2SpyObj.setStyle).toHaveBeenCalledWith(drawingRootMock, 'cursor', 'move');
+    });
+
+    it('#updateUserSelectionRectCursor should call #resetUserSelectionRectCursor if the selection is not being moved by the mouse', () => {
+        const resetUserSelectionRectCursorSpy = spyOn(service, 'resetUserSelectionRectCursor');
+        const state = SelectionState.ChangingSelection;
+        service.updateUserSelectionRectCursor(state);
+        expect(resetUserSelectionRectCursorSpy).toHaveBeenCalled();
+    });
+
+    it("#resetUserSelectionRectCursor should call renderer's removeStyle", () => {
+        service.resetUserSelectionRectCursor();
+        expect(renderer2SpyObj.removeStyle).toHaveBeenCalledWith(drawingRootMock, 'cursor');
+    });
+
+    it('#createUiElements should create a svg rect element and set its color according to the one passed by parameter', () => {
+        const svgRectStub = {} as SVGRectElement;
+        renderer2SpyObj.createElement.and.returnValue(svgRectStub);
+
+        service['createUiElements']();
+
+        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-dasharray', '5, 3');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-width', '1.5');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-linecap', 'round');
+        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgRectStub, 'theme-selected-elements-rect');
+    });
+
+    it('#setSelectedElementsRect should hide selected shapes rect if the elements bounds is undefined', () => {
+        service['isSelectedElementsRectDisplayed'] = true;
+        service['setSelectedElementsRect'](undefined);
+        expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalledWith(service['svgSelectedElementsRectGroup']);
+    });
+
+    it("#setSelectedElementsRect should update the selection rect and show the selectedElements' rect", () => {
+        const updateSvgRectFromRectSpy = spyOn<any>(service, 'updateSvgRectFromRect');
+        const showSelectedElementsRectSpy = spyOn<any>(service, 'showSelectedElementsRect');
+
+        const svgSelectedElementRectMock = {} as SVGRectElement;
+        service['svgSelectedElementsRect'] = svgSelectedElementRectMock;
+
+        const selectionRect = { x: 0, y: 0, width: 4, height: 4 } as Rect;
         const expectedPositions = [
             { x: selectionRect.x, y: selectionRect.y + selectionRect.height / 2 } as Vec2,
             { x: selectionRect.x + selectionRect.width / 2, y: selectionRect.y } as Vec2,
@@ -94,6 +165,9 @@ describe('ToolSelectionUiService', () => {
             expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'cx', `${expectedPositions[i].x}`);
             expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(service['svgControlPoints'][i], 'cy', `${expectedPositions[i].y}`);
         }
+
+        expect(updateSvgRectFromRectSpy).toHaveBeenCalledWith(svgSelectedElementRectMock, selectionRect);
+        expect(showSelectedElementsRectSpy).toHaveBeenCalled();
     });
 
     it('#showSelectedElementsRect should do nothing if selection is already being displayed', () => {
@@ -118,19 +192,6 @@ describe('ToolSelectionUiService', () => {
         service['isSelectedElementsRectDisplayed'] = true;
         service['hideSelectedElementsRect']();
         expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalled();
-    });
-
-    it('#createUiElements should create a svg rect element and set its color according to the one passed by parameter', () => {
-        const svgRectStub = {} as SVGRectElement;
-        renderer2SpyObj.createElement.and.returnValue(svgRectStub);
-
-        service['createUiElements']();
-
-        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-dasharray', '5, 3');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-width', '1.5');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-linecap', 'round');
-        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgRectStub, 'theme-selected-elements-rect');
     });
 
     it("#updateSvgRectFromRect should use renderer2 to set the svgRect's attributes", () => {
