@@ -247,11 +247,6 @@ describe('CurrentToolService', () => {
         }
     );
 
-    it('#update should update the current tool', () => {
-        service.update();
-        expect(currentToolSpyObj.update).toHaveBeenCalled();
-    });
-
     it('#get currentTool should return the current tool', () => {
         const toolStub = {} as Tool;
         service['_currentTool'] = toolStub;

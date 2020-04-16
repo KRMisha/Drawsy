@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2 } from '@angular/core';
+import { ApplicationRef, Injectable, RendererFactory2 } from '@angular/core';
 import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
 import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
@@ -15,17 +15,15 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolEraserService extends Tool {
-    private svgEraserElement: SVGRectElement;
-
-    private svgElementUnderCursor?: SVGGraphicsElement;
-    private elementUnderCursorStrokeWidth: string;
-    private elementUnderCursorStrokeColor: string;
-
-    private isLeftMouseButtonDownInsideDrawing = false;
-    private drawingElementsCopy: SVGGraphicsElement[] = [];
-    private elementsDeletedDuringDrag: ElementSiblingPair[] = [];
-
+    private svgEraserRect: SVGRectElement;
     private eraserRect: Rect;
+
+    private elementUnderCursor?: SVGGraphicsElement;
+    private elementUnderCursorClone?: SVGGraphicsElement;
+
+    private isErasing = false;
+    private initialDrawingElements: SVGGraphicsElement[] = [];
+    private elementsDeletedDuringDrag: ElementSiblingPair[] = [];
 
     private timerId?: number;
 
@@ -33,10 +31,16 @@ export class ToolEraserService extends Tool {
         rendererFactory: RendererFactory2,
         drawingService: DrawingService,
         colorService: ColorService,
-        historyService: HistoryService
+        historyService: HistoryService,
+        private applicationRef: ApplicationRef
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Eraser);
         this.settings.eraserSize = ToolDefaults.defaultEraserSize;
+
+        this.svgEraserRect = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svgEraserRect, 'fill', 'rgb(255, 255, 255)');
+        this.renderer.setAttribute(this.svgEraserRect, 'stroke-width', '1');
+        this.renderer.addClass(this.svgEraserRect, 'theme-eraser');
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -44,84 +48,41 @@ export class ToolEraserService extends Tool {
         this.updateEraserRect();
         if (this.timerId === undefined) {
             this.timerId = window.setTimeout(() => {
-                this.update();
+                this.update(false);
                 this.timerId = undefined;
             }, msDelayBetweenCalls);
         }
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (event.button !== MouseButton.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
-        this.isLeftMouseButtonDownInsideDrawing = Tool.isMouseInsideDrawing;
-        this.drawingElementsCopy = [...this.drawingService.elements];
-        this.update();
+
+        this.isErasing = true;
+        this.initialDrawingElements = [...this.drawingService.elements];
+        this.update(false);
     }
 
     onMouseUp(event: MouseEvent): void {
-        if (event.button !== MouseButton.Left || this.elementsDeletedDuringDrag.length === 0) {
-            return;
-        }
-        const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.drawingElementsCopy.length; i++) {
-            elementIndices.set(this.drawingElementsCopy[i], i);
-        }
-        this.elementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
-            return (elementIndices.get(element2.element) as number) - (elementIndices.get(element1.element) as number);
-        });
-
-        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.elementsDeletedDuringDrag));
-        this.elementsDeletedDuringDrag = [];
-    }
-
-    onMouseEnter(event: MouseEvent): void {
-        this.updateEraserRect();
-    }
-
-    update(): void {
-        this.timerId = undefined;
-        const elementToConsider = this.getElementUnderAreaPixelPerfect(this.eraserRect);
-
-        if (elementToConsider === undefined) {
-            this.restoreElementUnderCursorAttributes();
-            this.svgElementUnderCursor = undefined;
-            return;
-        }
-
-        if (elementToConsider !== this.svgElementUnderCursor) {
-            this.restoreElementUnderCursorAttributes();
-            this.svgElementUnderCursor = elementToConsider;
-            this.addRedBorderToElement(elementToConsider);
-        }
-
-        if (this.svgElementUnderCursor !== undefined && Tool.isLeftMouseButtonDown && this.isLeftMouseButtonDownInsideDrawing) {
-            this.restoreElementUnderCursorAttributes();
-            const elementIndex = this.drawingElementsCopy.indexOf(this.svgElementUnderCursor);
-            if (elementIndex !== -1) {
-                this.elementsDeletedDuringDrag.push({
-                    element: this.svgElementUnderCursor,
-                    sibling: this.drawingElementsCopy[elementIndex + 1],
-                });
-                this.drawingService.removeElement(this.svgElementUnderCursor);
-            }
-            this.svgElementUnderCursor = undefined;
+        if (event.button === MouseButton.Left) {
+            this.stopErasing();
         }
     }
 
     onToolSelection(): void {
-        this.svgEraserElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svgEraserElement, 'fill', 'rgb(255, 255, 255)');
-        this.renderer.setAttribute(this.svgEraserElement, 'stroke-width', '1');
-        this.renderer.addClass(this.svgEraserElement, 'theme-eraser');
-        this.drawingService.addUiElement(this.svgEraserElement);
+        this.drawingService.addUiElement(this.svgEraserRect);
         this.updateEraserRect();
+        this.update(false);
     }
 
     onToolDeselection(): void {
-        this.drawingService.removeUiElement(this.svgEraserElement);
-        this.restoreElementUnderCursorAttributes();
-        this.svgElementUnderCursor = undefined;
+        this.reset();
+    }
+
+    onHistoryChange(): void {
+        this.applicationRef.tick();
+        this.update(true);
     }
 
     private updateEraserRect(): void {
@@ -134,46 +95,38 @@ export class ToolEraserService extends Tool {
         };
         // tslint:enable: no-non-null-assertion
 
-        this.renderer.setAttribute(this.svgEraserElement, 'x', this.eraserRect.x.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'y', this.eraserRect.y.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'width', this.eraserRect.width.toString());
-        this.renderer.setAttribute(this.svgEraserElement, 'height', this.eraserRect.height.toString());
+        this.renderer.setAttribute(this.svgEraserRect, 'x', this.eraserRect.x.toString());
+        this.renderer.setAttribute(this.svgEraserRect, 'y', this.eraserRect.y.toString());
+        this.renderer.setAttribute(this.svgEraserRect, 'width', this.eraserRect.width.toString());
+        this.renderer.setAttribute(this.svgEraserRect, 'height', this.eraserRect.height.toString());
     }
 
-    private addRedBorderToElement(element: SVGGraphicsElement): void {
-        const elementStrokeColor = element.getAttribute('stroke');
-        const elementStrokeWidth = element.getAttribute('stroke-width');
+    private update(mustRerenderRedElementClone: boolean): void {
+        const hoveredElement = this.getElementUnderAreaPixelPerfect(this.eraserRect);
 
-        this.elementUnderCursorStrokeColor = elementStrokeColor === null ? 'none' : elementStrokeColor;
-        this.elementUnderCursorStrokeWidth = elementStrokeWidth === null ? 'none' : elementStrokeWidth;
+        if (hoveredElement === undefined) {
+            this.hideRedElementClone();
+            this.elementUnderCursor = undefined;
+            return;
+        }
 
-        let borderColor = 'rgb(255, 0, 0)';
-        if (this.elementUnderCursorStrokeColor !== 'none') {
-            const elementColor = Color.fromRgbaString(this.elementUnderCursorStrokeColor);
-            const distanceFromRed = Math.sqrt(
-                Math.pow(elementColor.red - Color.maxRgb, 2) + Math.pow(elementColor.green, 2) + Math.pow(elementColor.blue, 2)
-            );
-            const maxDistanceFromRed = 100;
-            if (distanceFromRed <= maxDistanceFromRed) {
-                borderColor = 'rgb(117, 30, 33)';
+        if (hoveredElement !== this.elementUnderCursor || mustRerenderRedElementClone) {
+            this.hideRedElementClone();
+            this.elementUnderCursor = hoveredElement;
+            this.showRedElementClone();
+        }
+
+        if (this.elementUnderCursor !== undefined && this.isErasing) {
+            const elementIndex = this.initialDrawingElements.indexOf(this.elementUnderCursor);
+            if (elementIndex !== -1) {
+                this.elementsDeletedDuringDrag.push({
+                    element: this.elementUnderCursor,
+                    sibling: this.initialDrawingElements[elementIndex + 1],
+                });
+                this.drawingService.removeElement(this.elementUnderCursor);
             }
-        }
-
-        const defaultBorderWidth = 3;
-        let borderWidth = defaultBorderWidth;
-        if (this.elementUnderCursorStrokeWidth !== 'none') {
-            const borderIncreaseFactor = 1.08;
-            borderWidth += +this.elementUnderCursorStrokeWidth * borderIncreaseFactor;
-        }
-
-        this.renderer.setAttribute(element, 'stroke', borderColor);
-        this.renderer.setAttribute(element, 'stroke-width', borderWidth.toString());
-    }
-
-    private restoreElementUnderCursorAttributes(): void {
-        if (this.svgElementUnderCursor !== undefined) {
-            this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke', this.elementUnderCursorStrokeColor);
-            this.renderer.setAttribute(this.svgElementUnderCursor, 'stroke-width', this.elementUnderCursorStrokeWidth);
+            this.hideRedElementClone();
+            this.elementUnderCursor = undefined;
         }
     }
 
@@ -188,22 +141,87 @@ export class ToolEraserService extends Tool {
                     document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j)
                 );
 
-                if (elementUnderPoint === undefined || elementUnderPoint === topmostElement) {
-                    continue;
-                }
-
-                // API requires use of bit mask
-                // tslint:disable: no-bitwise
-                const isElementAboveTopmostElement =
-                    topmostElement === undefined ||
-                    elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING;
-                // tslint:enable: no-bitwise
-                if (isElementAboveTopmostElement) {
-                    topmostElement = elementUnderPoint;
+                if (elementUnderPoint !== undefined && elementUnderPoint !== topmostElement) {
+                    // API requires use of bit mask
+                    // tslint:disable: no-bitwise
+                    const isElementAboveTopmostElement =
+                        topmostElement === undefined ||
+                        elementUnderPoint.compareDocumentPosition(topmostElement) & Node.DOCUMENT_POSITION_PRECEDING;
+                    // tslint:enable: no-bitwise
+                    if (isElementAboveTopmostElement) {
+                        topmostElement = elementUnderPoint;
+                    }
                 }
             }
         }
 
         return topmostElement;
+    }
+
+    private showRedElementClone(): void {
+        if (this.elementUnderCursor === undefined) {
+            return;
+        }
+
+        const elementStrokeColor = this.elementUnderCursor.getAttribute('stroke') ?? 'none';
+        const elementStrokeWidth = this.elementUnderCursor.getAttribute('stroke-width') ?? 'none';
+
+        let borderColor = 'rgb(255, 0, 0)';
+        if (elementStrokeColor !== 'none') {
+            const elementColor = Color.fromRgbaString(elementStrokeColor);
+            const distanceFromRed = Math.sqrt((elementColor.red - Color.maxRgb) ** 2 + elementColor.green ** 2 + elementColor.blue ** 2);
+            const maxDistanceFromRed = 100;
+            if (distanceFromRed <= maxDistanceFromRed) {
+                borderColor = 'rgb(117, 30, 33)';
+            }
+        }
+
+        const minimumBorderWidth = 3;
+        const borderIncreaseFactor = 1.08;
+        const borderWidth = minimumBorderWidth + (elementStrokeWidth === 'none' ? 0 : +elementStrokeWidth * borderIncreaseFactor);
+
+        this.elementUnderCursorClone = this.elementUnderCursor.cloneNode(true) as SVGGraphicsElement;
+        this.renderer.setAttribute(this.elementUnderCursorClone, 'stroke', borderColor);
+        this.renderer.setAttribute(this.elementUnderCursorClone, 'stroke-width', borderWidth.toString());
+        this.drawingService.addUiElementBefore(this.elementUnderCursorClone, this.svgEraserRect);
+    }
+
+    private hideRedElementClone(): void {
+        if (this.elementUnderCursorClone !== undefined) {
+            this.drawingService.removeUiElement(this.elementUnderCursorClone);
+            this.elementUnderCursorClone = undefined;
+        }
+    }
+
+    private stopErasing(): void {
+        this.isErasing = false;
+
+        if (this.elementsDeletedDuringDrag.length === 0) {
+            return;
+        }
+
+        const elementIndices = new Map<SVGGraphicsElement, number>();
+        for (let i = 0; i < this.initialDrawingElements.length; i++) {
+            elementIndices.set(this.initialDrawingElements[i], i);
+        }
+        this.elementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
+            // Map will always have indices for elements since their insertion is guaranteed just prior
+            // tslint:disable-next-line: no-non-null-assertion
+            return elementIndices.get(element2.element)! - elementIndices.get(element1.element)!;
+        });
+
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, this.elementsDeletedDuringDrag));
+        this.elementsDeletedDuringDrag = [];
+    }
+
+    private reset(): void {
+        this.drawingService.removeUiElement(this.svgEraserRect);
+        this.hideRedElementClone();
+        this.elementUnderCursor = undefined;
+
+        this.stopErasing();
+
+        window.clearTimeout(this.timerId);
+        this.timerId = undefined;
     }
 }
