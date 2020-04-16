@@ -67,6 +67,7 @@ export abstract class ToolShape extends Tool {
 
     onFocusOut(): void {
         this.stopDrawing();
+        this.isShiftDown = false;
     }
 
     onPrimaryColorChange(color: Color): void {
@@ -81,7 +82,8 @@ export abstract class ToolShape extends Tool {
         }
     }
 
-    onToolSelection(): void {
+    onToolDeselection(): void {
+        this.stopDrawing();
         this.isShiftDown = false;
     }
 

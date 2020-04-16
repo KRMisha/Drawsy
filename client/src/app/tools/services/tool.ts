@@ -46,7 +46,6 @@ export abstract class Tool {
     onToolSelection(): void {}
     onToolDeselection(): void {}
     onHistoryChange(): void {}
-    onDrawingLoad(): void {}
     // tslint:enable: no-empty
 }
 

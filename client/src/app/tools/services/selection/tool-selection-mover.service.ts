@@ -58,10 +58,6 @@ export class ToolSelectionMoverService {
         }
     }
 
-    onToolSelection(): void {
-        this.arrowKeysHeldStates.fill(false);
-    }
-
     startMovingSelection(): void {
         this.selectedElementTransformsBeforeMove = this.toolSelectionTransformService.getElementListTransformsCopy(
             this.toolSelectionStateService.selectedElements
@@ -107,6 +103,11 @@ export class ToolSelectionMoverService {
         }
 
         this.toolSelectionStateService.state = SelectionState.None;
+    }
+
+    reset(): void {
+        this.arrowKeysHeldStates.fill(false);
+        this.stopMovingSelection();
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {

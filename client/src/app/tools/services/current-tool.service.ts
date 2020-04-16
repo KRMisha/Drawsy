@@ -17,7 +17,6 @@ export class CurrentToolService implements OnDestroy {
     private primaryColorChangedSubscription: Subscription;
     private secondaryColorChangedSubscription: Subscription;
     private historyChangedSubscription: Subscription;
-    private drawingLoadedSubscription: Subscription;
 
     constructor(private colorService: ColorService, private drawingService: DrawingService, private historyService: HistoryService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
@@ -29,16 +28,12 @@ export class CurrentToolService implements OnDestroy {
         this.historyChangedSubscription = this.historyService.drawingHistoryChanged$.subscribe(() => {
             this.currentTool.onHistoryChange();
         });
-        this.drawingLoadedSubscription = this.drawingService.drawingLoaded$.subscribe(() => {
-            this.currentTool.onDrawingLoad();
-        });
     }
 
     ngOnDestroy(): void {
         this.primaryColorChangedSubscription.unsubscribe();
         this.secondaryColorChangedSubscription.unsubscribe();
         this.historyChangedSubscription.unsubscribe();
-        this.drawingLoadedSubscription.unsubscribe();
     }
 
     onMouseMove(event: MouseEvent): void {

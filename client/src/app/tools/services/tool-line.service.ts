@@ -104,7 +104,6 @@ export class ToolLineService extends Tool {
             }
         }
         this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-        this.junctionPoints = [];
         this.stopDrawing();
     }
 
@@ -136,6 +135,7 @@ export class ToolLineService extends Tool {
 
     onFocusOut(): void {
         this.stopDrawing();
+        this.isShiftDown = false;
     }
 
     onPrimaryColorChange(color: Color): void {
@@ -149,12 +149,9 @@ export class ToolLineService extends Tool {
         this.renderer.setAttribute(this.previewLine, 'stroke', previewColor.toRgbaString());
     }
 
-    onToolSelection(): void {
-        this.isShiftDown = false;
-    }
-
     onToolDeselection(): void {
         this.stopDrawing();
+        this.isShiftDown = false;
     }
 
     private startDrawing(): void {
@@ -205,6 +202,7 @@ export class ToolLineService extends Tool {
             this.drawingService.removeElement(this.group);
         }
         this.points = [];
+        this.junctionPoints = [];
     }
 
     private removeLastPointFromLine(): void {

@@ -174,27 +174,19 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onKeyUp(event);
     }
 
+    onFocusOut(): void {
+        this.reset();
+    }
+
     onToolSelection(): void {
         this.selectAllShortcutSubscription = this.shortcutService.selectAllShortcut$.subscribe(() => {
             this.toolSelectionStateService.selectedElements = [...this.drawingService.elements];
         });
-
-        this.currentMouseButtonDown = undefined;
-        this.toolSelectionMoverService.onToolSelection();
-        this.toolSelectionStateService.state = SelectionState.None;
     }
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
-
         this.reset();
-        this.toolSelectionMoverService.stopMovingSelection();
-    }
-
-    onFocusOut(): void {
-        this.reset();
-        this.toolSelectionMoverService.stopMovingSelection();
-        this.toolSelectionStateService.state = SelectionState.None;
     }
 
     onHistoryChange(): void {
@@ -202,15 +194,6 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
             (element: SVGGraphicsElement) => elements.has(element)
         );
-    }
-
-    onDrawingLoad(): void {
-        this.reset();
-    }
-
-    private reset(): void {
-        this.toolSelectionUiService.reset();
-        this.toolSelectionStateService.selectedElements = [];
     }
 
     private isMouseInsideSelectedElementsRect(): boolean {
@@ -229,5 +212,13 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 selectedElements.push(element);
             }
         }
+    }
+
+    private reset(): void {
+        this.currentMouseButtonDown = undefined;
+        this.toolSelectionStateService.selectedElements = [];
+        this.toolSelectionMoverService.reset();
+        this.toolSelectionUiService.reset();
+        this.toolSelectionStateService.state = SelectionState.None;
     }
 }
