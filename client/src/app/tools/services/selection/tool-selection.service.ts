@@ -10,11 +10,11 @@ import ToolInfo from '@app/tools/constants/tool-info';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionRotatorService } from '@app/tools/services/selection/tool-selection-rotator.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionUiService } from '@app/tools/services/selection/tool-selection-ui.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subscription } from 'rxjs';
-import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -174,11 +174,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onKeyUp(event);
     }
 
-    update(): void {
-        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
-        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
-            (element: SVGGraphicsElement) => elements.has(element)
-        );
+    onFocusOut(): void {
+        this.reset();
     }
 
     onToolSelection(): void {
@@ -189,11 +186,14 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
-        this.toolSelectionStateService.state = SelectionState.None;
-        this.toolSelectionStateService.selectedElements = [];
-        this.toolSelectionMoverService.onToolDeselection();
-        this.toolSelectionUiService.hideUserSelectionRect();
-        this.toolSelectionUiService.resetUserSelectionRectCursor();
+        this.reset();
+    }
+
+    onHistoryChange(): void {
+        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
+        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
+            (element: SVGGraphicsElement) => elements.has(element)
+        );
     }
 
     private isMouseInsideSelectedElementsRect(): boolean {
@@ -212,5 +212,13 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 selectedElements.push(element);
             }
         }
+    }
+
+    private reset(): void {
+        this.currentMouseButtonDown = undefined;
+        this.toolSelectionStateService.selectedElements = [];
+        this.toolSelectionMoverService.reset();
+        this.toolSelectionUiService.reset();
+        this.toolSelectionStateService.state = SelectionState.None;
     }
 }
