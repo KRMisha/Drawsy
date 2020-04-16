@@ -56,9 +56,14 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
             this.gridService.decreaseSize();
         });
 
-        document.addEventListener('wheel', (event: WheelEvent) => {
-            this.onScroll(event);
-        }, { passive: false });
+        // @HostListener does not support setting the passive option needed to call event.preventDefault on a passive event.
+        document.addEventListener(
+            'wheel',
+            (event: WheelEvent) => {
+                this.onScroll(event);
+            },
+            { passive: false }
+        );
     }
 
     ngAfterViewInit(): void {
