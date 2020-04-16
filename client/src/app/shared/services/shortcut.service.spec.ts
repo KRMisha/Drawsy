@@ -44,6 +44,48 @@ describe('ShortcutService', () => {
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
     }));
 
+    it("#onKeyDown should emit selectAllShortcut$ when selected shortcut is 'ctrl + a'", async(() => {
+        service.selectAllShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNeedingCtrlPressed();
+        });
+        const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
+            key: 'a',
+            ctrlKey: true,
+        });
+        service.onKeyDown(keyboardEventSpyObj);
+        expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
+    }));
+
+    it("#onKeyDown should emit copySelectionShortcut$ when selected shortcut is 'ctrl + c'", async(() => {
+        service.copySelectionShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNeedingCtrlPressed();
+        });
+        const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
+            key: 'c',
+            ctrlKey: true,
+        });
+        service.onKeyDown(keyboardEventSpyObj);
+        expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
+    }));
+
+    it("#onKeyDown should emit duplicateSelectionShortcut$ when selected shortcut is 'ctrl + d'", async(() => {
+        service.duplicateSelectionShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNeedingCtrlPressed();
+        });
+        const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
+            key: 'd',
+            ctrlKey: true,
+        });
+        service.onKeyDown(keyboardEventSpyObj);
+        expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
+    }));
+
     it("#onKeyDown should emit openExportDrawingShortcut$ when selected shortcut is 'ctrl + e'", async(() => {
         service.openExportDrawingShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
@@ -100,12 +142,26 @@ describe('ShortcutService', () => {
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
     }));
 
-    it("#onKeyDown should emit selectAllShortcut$ when selected shortcut is 'ctrl + s'", async(() => {
-        service.selectAllShortcut$.subscribe(() => {
+    it("#onKeyDown should emit pasteSelectionShortcut$ when selected shortcut is 'ctrl + v'", async(() => {
+        service.pasteSelectionShortcut$.subscribe(() => {
             subscriberSpyobj.shortcutNeedingCtrlPressed();
         });
         const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
-            key: 'a',
+            key: 'v',
+            ctrlKey: true,
+        });
+        service.onKeyDown(keyboardEventSpyObj);
+        expect(keyboardEventSpyObj.preventDefault).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).not.toHaveBeenCalled();
+    }));
+
+    it("#onKeyDown should emit cutSelectionShortcut$ when selected shortcut is 'ctrl + x'", async(() => {
+        service.cutSelectionShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNeedingCtrlPressed();
+        });
+        const keyboardEventSpyObj = jasmine.createSpyObj('KeyboardEvent', ['preventDefault'], {
+            key: 'x',
             ctrlKey: true,
         });
         service.onKeyDown(keyboardEventSpyObj);
