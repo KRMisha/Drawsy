@@ -56,7 +56,7 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
             this.gridService.decreaseSize();
         });
 
-        // @HostListener does not support setting the passive option needed to call event.preventDefault on a passive event.
+        // @HostListener does not support setting the passive option needed to call event.preventDefault() on a passive event
         document.addEventListener(
             'wheel',
             (event: WheelEvent) => {
