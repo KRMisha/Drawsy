@@ -232,7 +232,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         for (const selectedElement of this.toolSelectionStateService.selectedElements) {
             elementSiblingPairs.push({
                 element: selectedElement,
-                sibling: selectedElement.nextSibling as SVGGraphicsElement ?? undefined,
+                sibling: (selectedElement.nextSibling as SVGGraphicsElement) ?? undefined,
             });
             this.drawingService.removeElement(selectedElement);
         }

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppendElementsClipboardCommand } from '@app/drawing/classes/commands/append-elements-clipboard-command';
+import { AddElementsClipboardCommand } from '@app/drawing/classes/commands/add-elements-clipboard-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
@@ -157,7 +157,7 @@ export class ClipboardService implements OnDestroy {
         this.offsetSelectedElements(areSomeElementsStillInDrawing, placementType);
 
         this.historyService.addCommand(
-            new AppendElementsClipboardCommand(
+            new AddElementsClipboardCommand(
                 this,
                 this.drawingService,
                 [...copiedElementsToPlace],

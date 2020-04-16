@@ -13,9 +13,9 @@ export class ToolSelectionStateService implements OnDestroy {
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
     private _selectedElementsRect?: Rect; // tslint:disable-line: variable-name
 
-    private selectedElementsRectChangedSource = new Subject<Rect | undefined>();
-
     private selectedElementsChangedSubscription: Subscription;
+
+    private selectedElementsRectChangedSource = new Subject<Rect | undefined>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
     selectedElementsRectChanged$ = this.selectedElementsRectChangedSource.asObservable(); // tslint:disable-line: member-ordering
