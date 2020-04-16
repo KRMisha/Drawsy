@@ -7,6 +7,9 @@ import { injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
 import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 
+// Disable require import lint errors because DOMPurify does not work without it
+const createDomPurify = require('dompurify'); // tslint:disable-line: no-require-imports no-var-requires
+
 const connectionUrl = 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD + '@' + process.env.DB_HOST;
 const databaseName = 'database';
 const collectionName = 'drawings';
@@ -37,16 +40,18 @@ export class DatabaseService {
     }
 
     async createFile(fileContent: string): Promise<string> {
-        if (this.isFileValid(fileContent)) {
-            const result = await this.collection.insertOne({ content: fileContent } as FileSchema);
+        const sanitizedFileContent = this.sanitizeFileContent(fileContent);
+        if (this.isFileValid(sanitizedFileContent)) {
+            const result = await this.collection.insertOne({ content: sanitizedFileContent } as FileSchema);
             return result.insertedId.toHexString();
         }
         throw new HttpException(HttpStatusCode.BadRequest, 'Invalid file');
     }
 
     async updateFile(fileId: string, fileContent: string): Promise<void> {
-        if (this.isFileValid(fileContent)) {
-            const result = await this.collection.replaceOne({ _id: new ObjectId(fileId) }, { content: fileContent } as FileSchema);
+        const sanitizedFileContent = this.sanitizeFileContent(fileContent);
+        if (this.isFileValid(sanitizedFileContent)) {
+            const result = await this.collection.replaceOne({ _id: new ObjectId(fileId) }, { content: sanitizedFileContent } as FileSchema);
             if (result.matchedCount === 0) {
                 throw new HttpException(HttpStatusCode.NotFound, 'File not found');
             }
@@ -67,6 +72,12 @@ export class DatabaseService {
         const convertSchemaToSavedFile = (element: FileSchema & { _id: ObjectId }) =>
             ({ id: element._id.toString(), content: element.content } as SavedFile);
         return collection.map(convertSchemaToSavedFile);
+    }
+
+    private sanitizeFileContent(fileContent: string): string {
+        const window = new JSDOM('').window;
+        const domPurify = createDomPurify(window);
+        return domPurify.sanitize(fileContent);
     }
 
     private isFileValid(fileContent: string): boolean {

@@ -13,8 +13,6 @@ export abstract class Tool {
     static isLeftMouseButtonDown = false;
     static isMouseInsideDrawing = false;
 
-    name: string;
-    icon: string;
     settings: ToolSettings = {};
 
     protected renderer: Renderer2;
@@ -24,10 +22,9 @@ export abstract class Tool {
         protected drawingService: DrawingService,
         protected colorService: ColorService,
         protected historyService: HistoryService,
-        toolInfo: ToolData
+        public info: ToolData
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
-        ({ name: this.name, icon: this.icon } = toolInfo);
     }
 
     // Disable lint error for method stubs below because not all derived service classes
@@ -42,11 +39,13 @@ export abstract class Tool {
     onKeyUp(event: KeyboardEvent): void {}
     onMouseEnter(event: MouseEvent): void {}
     onMouseLeave(event: MouseEvent): void {}
+    onFocusIn(): void {}
+    onFocusOut(): void {}
     onPrimaryColorChange(color: Color): void {}
     onSecondaryColorChange(color: Color): void {}
-    update(): void {}
     onToolSelection(): void {}
     onToolDeselection(): void {}
+    onHistoryChange(): void {}
     // tslint:enable: no-empty
 }
 

@@ -179,11 +179,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionMoverService.onKeyUp(event);
     }
 
-    update(): void {
-        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
-        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
-            (element: SVGGraphicsElement) => elements.has(element)
-        );
+    onFocusOut(): void {
+        this.reset();
     }
 
     onToolSelection(): void {
@@ -194,11 +191,14 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
-        this.toolSelectionStateService.state = SelectionState.None;
-        this.toolSelectionStateService.selectedElements = [];
-        this.toolSelectionMoverService.onToolDeselection();
-        this.toolSelectionUiService.hideUserSelectionRect();
-        this.toolSelectionUiService.resetUserSelectionRectCursor();
+        this.reset();
+    }
+
+    onHistoryChange(): void {
+        const elements = new Set<SVGGraphicsElement>(this.drawingService.elements);
+        this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
+            (element: SVGGraphicsElement) => elements.has(element)
+        );
     }
 
     deleteSelection(): void {
@@ -243,5 +243,13 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 selectedElements.push(element);
             }
         }
+    }
+
+    private reset(): void {
+        this.currentMouseButtonDown = undefined;
+        this.toolSelectionStateService.selectedElements = [];
+        this.toolSelectionMoverService.reset();
+        this.toolSelectionUiService.reset();
+        this.toolSelectionStateService.state = SelectionState.None;
     }
 }

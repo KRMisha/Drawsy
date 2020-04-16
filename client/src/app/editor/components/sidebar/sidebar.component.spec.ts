@@ -5,6 +5,7 @@ import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/si
 import { SidebarComponent } from '@app/editor/components/sidebar/sidebar.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+import ToolData from '@app/tools/constants/tool-info';
 import { ToolPaintbrushService } from '@app/tools/services/brushes/tool-paintbrush.service';
 import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -36,17 +37,17 @@ describe('SidebarComponent', () => {
     let sidebarDrawerSpyObj: jasmine.SpyObj<SidebarDrawerComponent>;
 
     const initialTool = ({} as unknown) as Tool;
-    const toolPencilServiceStub = {} as ToolPencilService;
-    const toolPaintbrushServiceStub = {} as ToolPaintbrushService;
-    const toolLineServiceStub = {} as ToolLineService;
-    const toolSprayCanServiceStub = {} as ToolSprayCanService;
-    const toolRectangleServiceStub = {} as ToolRectangleService;
-    const toolEllipseServiceStub = {} as ToolEllipseService;
-    const toolPolygonServiceStub = {} as ToolPolygonService;
-    const toolEyedropperServiceStub = {} as ToolEyedropperService;
-    const toolRecolorServiceStub = {} as ToolRecolorService;
-    const toolSelectionServiceStub = {} as ToolSelectionService;
-    const toolEraserServiceStub = {} as ToolEraserService;
+    const toolPencilServiceStub = { info: ToolData.Pencil } as ToolPencilService;
+    const toolPaintbrushServiceStub = { info: ToolData.Paintbrush } as ToolPaintbrushService;
+    const toolLineServiceStub = { info: ToolData.Line } as ToolLineService;
+    const toolSprayCanServiceStub = { info: ToolData.SprayCan } as ToolSprayCanService;
+    const toolRectangleServiceStub = { info: ToolData.Rectangle } as ToolRectangleService;
+    const toolEllipseServiceStub = { info: ToolData.Ellipse } as ToolEllipseService;
+    const toolPolygonServiceStub = { info: ToolData.Polygon } as ToolPolygonService;
+    const toolEyedropperServiceStub = { info: ToolData.Eyedropper } as ToolEyedropperService;
+    const toolRecolorServiceStub = { info: ToolData.Recolor } as ToolRecolorService;
+    const toolSelectionServiceStub = { info: ToolData.Selection } as ToolSelectionService;
+    const toolEraserServiceStub = { info: ToolData.Eraser } as ToolEraserService;
     const initialTools = [toolPaintbrushServiceStub, toolEllipseServiceStub];
 
     let selectToolPencilShortcutSubject: Subject<void>;
@@ -270,7 +271,8 @@ describe('SidebarComponent', () => {
     });
 
     it("#set CurrentTool should change the current tool of currentToolService and reset the sidebarDrawer's controls", () => {
-        const currentToolServiceMock = { currentTool: initialTool };
+        const currentToolServiceMock = { currentTool: initialTool } as CurrentToolService;
+        component['currentToolService'] = currentToolServiceMock;
         component.currentTool = toolEyedropperServiceStub;
         expect(currentToolServiceMock.currentTool).toEqual(toolEyedropperServiceStub);
         expect(sidebarDrawerSpyObj.resetCurrentControls).toHaveBeenCalled();

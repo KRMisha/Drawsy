@@ -85,6 +85,12 @@ export class DrawingService {
         }
     }
 
+    addUiElementBefore(element: SVGGraphicsElement, elementAfter: SVGGraphicsElement): void {
+        if (this.svgUserInterfaceContent !== undefined) {
+            this.renderer.insertBefore(this.svgUserInterfaceContent, element, elementAfter);
+        }
+    }
+
     removeUiElement(element: SVGGraphicsElement): void {
         if (this.svgUserInterfaceContent !== undefined) {
             this.renderer.removeChild(this.svgUserInterfaceContent, element);

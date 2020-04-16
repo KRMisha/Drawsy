@@ -103,19 +103,19 @@
     <div class="command-container">
         <mat-divider></mat-divider>
         <div class="clipboard-container">
-            <button mat-icon-button class="command-item" matTooltip="Copier" [disabled]="!isSelectionAvailable" (click)="copyCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Copier (Ctrl+C)" [disabled]="!isSelectionAvailable" (click)="copyCommand()">
                 <mat-icon svgIcon="content-copy"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Coller" [disabled]="!isPastingAvailable" (click)="pasteCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Coller (Ctrl+V" [disabled]="!isPastingAvailable" (click)="pasteCommand()">
                 <mat-icon svgIcon="content-paste"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Couper" [disabled]="!isSelectionAvailable" (click)="cutCommand()">
+            <button mat-icon-button class="command-item" matTooltip="Couper (Ctrl+X)" [disabled]="!isSelectionAvailable" (click)="cutCommand()">
                 <mat-icon svgIcon="content-cut"></mat-icon>
             </button>
             <button
                 mat-icon-button
                 class="command-item"
-                matTooltip="Dupliquer"
+                matTooltip="Dupliquer (Ctrl+D)"
                 [disabled]="!isSelectionAvailable"
                 (click)="duplicateCommand()"
             >
@@ -124,7 +124,7 @@
             <button
                 mat-icon-button
                 class="command-item"
-                matTooltip="Supprimer"
+                matTooltip="Supprimer (Backspace)"
                 [disabled]="!isSelectionAvailable"
                 (click)="deleteCommand()"
             >
@@ -133,10 +133,22 @@
         </div>
         <mat-divider></mat-divider>
         <div class="undo-redo-container">
-            <button mat-icon-button class="command-item" matTooltip="Annuler" [disabled]="!isUndoAvailable" (click)="undoCommand()">
+            <button
+                mat-icon-button
+                class="command-item"
+                matTooltip="Annuler (Ctrl+Z)"
+                [disabled]="!isUndoAvailable"
+                (click)="undoCommand()"
+            >
                 <mat-icon svgIcon="undo-variant"></mat-icon>
             </button>
-            <button mat-icon-button class="command-item" matTooltip="Refaire" [disabled]="!isRedoAvailable" (click)="redoCommand()">
+            <button
+                mat-icon-button
+                class="command-item"
+                matTooltip="Refaire (Ctrl+Shift+Z)"
+                [disabled]="!isRedoAvailable"
+                (click)="redoCommand()"
+            >
                 <mat-icon svgIcon="redo-variant"></mat-icon>
             </button>
         </div>

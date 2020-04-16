@@ -304,12 +304,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     undoCommand(): void {
         this.historyService.undo();
-        this.currentToolService.update();
     }
 
     redoCommand(): void {
         this.historyService.redo();
-        this.currentToolService.update();
     }
 
     getErrorMessage(formControl: AbstractControl): string {
@@ -321,7 +319,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     }
 
     get currentToolName(): string {
-        return this.currentToolService.currentTool.name;
+        return this.currentToolService.currentTool.info.name;
     }
 
     get currentToolSettings(): ToolSettings {

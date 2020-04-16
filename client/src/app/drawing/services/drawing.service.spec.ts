@@ -1,11 +1,11 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
+import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { DrawingLoadOptions } from '../classes/drawing-load-options';
-import { DrawingSerializerService } from './drawing-serializer.service';
 
 // tslint:disable: no-string-literal
 // tslint:disable: no-any

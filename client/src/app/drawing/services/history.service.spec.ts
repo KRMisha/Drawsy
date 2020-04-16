@@ -25,6 +25,12 @@ describe('HistoryService', () => {
         expect(service).toBeTruthy();
     });
 
+    it('#ngOnDestroy should unsubscribe from the drawingLoaded subscription', () => {
+        const unsubscribeSpy = spyOn(service['drawingLoadedSubscription'], 'unsubscribe');
+        service.ngOnDestroy();
+        expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+
     it('#undo should do nothing if undoStack is empty', () => {
         service['undoStack'] = [];
         service.undo();

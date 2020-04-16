@@ -19,15 +19,16 @@ describe('ExportDrawingComponent', () => {
     let drawingPreviewComponentSpyObj: jasmine.SpyObj<DrawingPreviewComponent>;
     const initialTitle = 'initialTitle';
 
+    const drawingPreviewRootStub = {} as SVGSVGElement;
     beforeEach(async(() => {
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
             title: initialTitle,
         });
-        exportDrawingServiceSpyObj = jasmine.createSpyObj('ExportDrawingService', ['exportDrawing']);
+        exportDrawingServiceSpyObj = jasmine.createSpyObj('ExportDrawingService', ['emailDrawing', 'downloadDrawing']);
         changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         drawingPreviewComponentSpyObj = jasmine.createSpyObj('DrawingPreviewComponent', [], {
             drawingRoot: {
-                nativeElement: {},
+                nativeElement: drawingPreviewRootStub,
             },
         });
         TestBed.configureTestingModule({
@@ -53,7 +54,23 @@ describe('ExportDrawingComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it("#onSubmit should update the title with the form's title, call finalizePreview and export the drawing", () => {
+    it('#onInit should subscribe to changes to email option and toggle the emailAddress form', () => {
+        const enableSpy = spyOn(component.exportDrawingFormGroup.controls.emailAddress, 'enable');
+        const disableSpy = spyOn(component.exportDrawingFormGroup.controls.emailAddress, 'disable');
+        component.exportDrawingFormGroup.controls.emailEnabled.setValue(true);
+        expect(enableSpy).toHaveBeenCalled();
+        component.exportDrawingFormGroup.controls.emailEnabled.setValue(false);
+        expect(disableSpy).toHaveBeenCalled();
+    });
+
+    it('#ngOnDestroy should unsubscribe from email option changes', () => {
+        // tslint:disable-next-line: no-any
+        const emailEnabledChangedSubscriptionSpy = spyOn<any>(component['emailEnabledChangedSubscription'], 'unsubscribe');
+        component.ngOnDestroy();
+        expect(emailEnabledChangedSubscriptionSpy).toHaveBeenCalled();
+    });
+
+    it("#onSubmit should set drawingService's title and force change detection on the component's template", () => {
         const drawingServiceMock = { title: initialTitle } as DrawingService;
         component['drawingService'] = drawingServiceMock;
         component.fileType = FileType.Jpeg;
@@ -62,10 +79,20 @@ describe('ExportDrawingComponent', () => {
         component.onSubmit();
         expect(drawingServiceMock.title).toEqual(newTitle);
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
-        expect(exportDrawingServiceSpyObj.downloadDrawing).toHaveBeenCalledWith(
-            drawingPreviewComponentSpyObj.drawingRoot.nativeElement,
-            FileType.Jpeg
-        );
+    });
+
+    it('#onSubmit should forward email sending to the exportDrawingService if the email option is selected', () => {
+        const emailAddress = 'mmmmmkkkkkkkkkkk@caca.pipi';
+        component.exportDrawingFormGroup.controls.emailAddress.setValue(emailAddress);
+        component.exportDrawingFormGroup.controls.emailEnabled.setValue(true);
+        component.onSubmit();
+        expect(exportDrawingServiceSpyObj.emailDrawing).toHaveBeenCalledWith(drawingPreviewRootStub, emailAddress, component.fileType);
+    });
+
+    it("#onSubmit should forward the drawing's download to the exportDrawingService if the email option is not selected", () => {
+        component.exportDrawingFormGroup.controls.emailEnabled.setValue(false);
+        component.onSubmit();
+        expect(exportDrawingServiceSpyObj.downloadDrawing).toHaveBeenCalledWith(drawingPreviewRootStub, component.fileType);
     });
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
