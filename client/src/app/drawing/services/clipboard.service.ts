@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AddElementsClipboardCommand } from '@app/drawing/classes/commands/add-elements-clipboard-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
-import { Rect } from '@app/shared/classes/rect';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
@@ -25,30 +24,35 @@ export class ClipboardService implements OnDestroy {
     clipboardPositionOffset = 0;
     duplicationPositionOffset = 0;
 
+    private initialClipboardElements: SVGGraphicsElement[] = [];
+    private clipboardBuffer: SVGGraphicsElement[] = [];
+
+    private initialDuplicationElements: SVGGraphicsElement[] = [];
+    private duplicationBuffer: SVGGraphicsElement[] = [];
+
     private selectionChangedSubscription: Subscription;
     private drawingHistoryChangedSubscription: Subscription;
 
-    private clipboardOriginalElements: SVGGraphicsElement[] = [];
-    private clipboardBuffer: SVGGraphicsElement[] = [];
-
-    private duplicationOriginalElements: SVGGraphicsElement[] = [];
-    private duplicationBuffer: SVGGraphicsElement[] = [];
-
     constructor(
+        private drawingService: DrawingService,
         private historyService: HistoryService,
+        private toolSelectionService: ToolSelectionService,
         private toolSelectionStateService: ToolSelectionStateService,
         private toolSelectionMoverService: ToolSelectionMoverService,
         private toolSelectionCollisionService: ToolSelectionCollisionService,
-        private toolSelectionTransformService: ToolSelectionTransformService,
-        private drawingService: DrawingService,
-        private toolSelectionService: ToolSelectionService
+        private toolSelectionTransformService: ToolSelectionTransformService
     ) {
-        this.subscribeToSelectionChanged();
-        this.subscribeToDrawingHistoryChanged();
+        this.selectionChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
+            this.onSelectionChange.bind(this)
+        );
+        this.drawingHistoryChangedSubscription = this.historyService.drawingHistoryChanged$.subscribe(
+            this.onDrawingHistoryChange.bind(this)
+        );
     }
 
     ngOnDestroy(): void {
         this.selectionChangedSubscription.unsubscribe();
+        this.drawingHistoryChangedSubscription.unsubscribe();
     }
 
     copy(): void {
@@ -59,8 +63,8 @@ export class ClipboardService implements OnDestroy {
         this.setOffset(PlacementType.Clipboard, 0);
         this.setOffset(PlacementType.Duplication, 0);
 
-        this.clipboardOriginalElements = [...this.toolSelectionStateService.selectedElements];
-        this.duplicationOriginalElements = this.clipboardOriginalElements;
+        this.initialClipboardElements = [...this.toolSelectionStateService.selectedElements];
+        this.initialDuplicationElements = this.initialClipboardElements;
 
         this.clipboardBuffer = this.getElementsCopy(this.toolSelectionStateService.selectedElements);
         this.duplicationBuffer = this.toolSelectionStateService.selectedElements;
@@ -71,7 +75,7 @@ export class ClipboardService implements OnDestroy {
             return;
         }
 
-        this.duplicationOriginalElements = this.clipboardOriginalElements;
+        this.initialDuplicationElements = this.initialClipboardElements;
         this.duplicationBuffer = this.clipboardBuffer;
 
         this.placeElements(PlacementType.Clipboard);
@@ -90,23 +94,20 @@ export class ClipboardService implements OnDestroy {
         if (!this.isSelectionAvailable()) {
             return;
         }
-        this.placeElements(PlacementType.Duplication);
-    }
 
-    isPastingAvailable(): boolean {
-        return this.clipboardBuffer.length > 0 && this.toolSelectionStateService.state === SelectionState.None;
+        this.placeElements(PlacementType.Duplication);
     }
 
     isSelectionAvailable(): boolean {
         return this.toolSelectionStateService.selectedElements.length > 0 && this.toolSelectionStateService.state === SelectionState.None;
     }
 
+    isPastingAvailable(): boolean {
+        return this.clipboardBuffer.length > 0 && this.toolSelectionStateService.state === SelectionState.None;
+    }
+
     private getElementsCopy(elements: SVGGraphicsElement[]): SVGGraphicsElement[] {
-        const elementCopies: SVGGraphicsElement[] = [];
-        for (const element of elements) {
-            elementCopies.push(element.cloneNode(true) as SVGGraphicsElement);
-        }
-        return elementCopies;
+        return elements.map((element: SVGGraphicsElement) => element.cloneNode(true) as SVGGraphicsElement);
     }
 
     private getOffset(placementType: PlacementType): number {
@@ -125,6 +126,7 @@ export class ClipboardService implements OnDestroy {
                 break;
             case PlacementType.Duplication:
                 this.duplicationPositionOffset = offset;
+                break;
         }
     }
 
@@ -132,35 +134,34 @@ export class ClipboardService implements OnDestroy {
         this.selectionChangedSubscription.unsubscribe();
         this.drawingHistoryChangedSubscription.unsubscribe();
 
-        const isClipboard = placementType === PlacementType.Clipboard;
-        const originalElements = isClipboard ? this.clipboardOriginalElements : this.duplicationOriginalElements;
-        const bufferedElements = isClipboard ? this.clipboardBuffer : this.duplicationBuffer;
+        const initialElements = placementType === PlacementType.Clipboard ? this.initialClipboardElements : this.initialDuplicationElements;
+        const buffer = placementType === PlacementType.Clipboard ? this.clipboardBuffer : this.duplicationBuffer;
 
-        const copiedElementsToPlace = this.getElementsCopy(bufferedElements);
-        for (const element of copiedElementsToPlace) {
+        const bufferCopyToPlace = this.getElementsCopy(buffer);
+        for (const element of bufferCopyToPlace) {
             this.drawingService.addElement(element);
         }
 
-        this.toolSelectionStateService.selectedElements = copiedElementsToPlace;
+        this.toolSelectionStateService.selectedElements = bufferCopyToPlace; // todo move to end
 
         const elementsInDrawing = new Set<SVGGraphicsElement>(this.drawingService.elements);
-        const areSomeElementsStillInDrawing = originalElements.some((element: SVGGraphicsElement) => elementsInDrawing.has(element));
+        const areNoInitialElementsRemaining = initialElements.every((element: SVGGraphicsElement) => !elementsInDrawing.has(element));
 
-        if (!areSomeElementsStillInDrawing) {
-            this.clipboardOriginalElements = copiedElementsToPlace;
-            this.duplicationOriginalElements = copiedElementsToPlace;
+        if (areNoInitialElementsRemaining) {
+            this.initialClipboardElements = bufferCopyToPlace;
+            this.initialDuplicationElements = bufferCopyToPlace; // todo check offset 0???
         }
 
         const clipboardOffsetBefore = this.getOffset(PlacementType.Clipboard);
         const duplicationOffsetBefore = this.getOffset(PlacementType.Duplication);
 
-        this.offsetSelectedElements(areSomeElementsStillInDrawing, placementType);
+        this.offsetSelectedElements(areNoInitialElementsRemaining, placementType);
 
         this.historyService.addCommand(
             new AddElementsClipboardCommand(
                 this,
                 this.drawingService,
-                [...copiedElementsToPlace],
+                [...bufferCopyToPlace],
                 clipboardOffsetBefore,
                 duplicationOffsetBefore,
                 this.getOffset(PlacementType.Clipboard),
@@ -168,21 +169,25 @@ export class ClipboardService implements OnDestroy {
             )
         );
 
-        this.subscribeToSelectionChanged();
-        this.subscribeToDrawingHistoryChanged();
+        this.selectionChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
+            this.onSelectionChange.bind(this)
+        );
+        this.drawingHistoryChangedSubscription = this.historyService.drawingHistoryChanged$.subscribe(
+            this.onDrawingHistoryChange.bind(this)
+        );
     }
 
-    private offsetSelectedElements(areSomeElementsStillInDrawing: boolean, placementType: PlacementType): void {
-        let offset = this.getOffset(placementType);
-        if (this.isNextPlacementOutOfDrawing(placementType) || !areSomeElementsStillInDrawing) {
-            offset = 0;
-        } else {
-            offset += placementPositionOffsetIncrement;
+    private offsetSelectedElements(mustResetOffset: boolean, placementType: PlacementType): void {
+        const offset = mustResetOffset
+            ? 0
+            : this.getNextOffset(this.toolSelectionStateService.selectedElements, this.getOffset(placementType));
+
+        if (offset !== 0) {
             this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
             this.toolSelectionMoverService.moveSelection({ x: offset, y: offset });
         }
 
-        if (this.clipboardOriginalElements === this.duplicationOriginalElements) {
+        if (this.initialClipboardElements === this.initialDuplicationElements) {
             this.setOffset(PlacementType.Clipboard, offset);
             this.setOffset(PlacementType.Duplication, offset);
         } else {
@@ -190,31 +195,32 @@ export class ClipboardService implements OnDestroy {
         }
     }
 
-    private isNextPlacementOutOfDrawing(placementType: PlacementType): boolean {
-        const elementsToPlaceRect = this.toolSelectionCollisionService.getElementListBounds(
-            this.toolSelectionStateService.selectedElements
-        ) as Rect;
-        return (
-            elementsToPlaceRect.x + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.x ||
-            elementsToPlaceRect.y + this.getOffset(placementType) + placementPositionOffsetIncrement >= this.drawingService.dimensions.y
-        );
+    private getNextOffset(elements: SVGGraphicsElement[], currentOffset: number): number {
+        const elementsToPlaceBounds = this.toolSelectionCollisionService.getElementListBounds(elements);
+        if (elementsToPlaceBounds === undefined) {
+            return 0;
+        }
+
+        const nextOffset = currentOffset + placementPositionOffsetIncrement;
+
+        const isOutsideDrawingHorizontally = elementsToPlaceBounds.x + nextOffset >= this.drawingService.dimensions.x;
+        const isOutsideDrawingVertically = elementsToPlaceBounds.y + nextOffset >= this.drawingService.dimensions.y;
+        if (isOutsideDrawingHorizontally || isOutsideDrawingVertically) {
+            return 0;
+        }
+
+        return nextOffset;
     }
 
-    private subscribeToSelectionChanged(): void {
-        this.selectionChangedSubscription = this.toolSelectionStateService.selectedElementsChanged$.subscribe(
-            (elements: SVGGraphicsElement[]) => {
-                this.duplicationBuffer = this.getElementsCopy(elements);
-                this.duplicationOriginalElements = [...elements];
-                this.setOffset(PlacementType.Duplication, 0);
-            }
-        );
+    private onSelectionChange(elements: SVGGraphicsElement[]): void {
+        this.initialDuplicationElements = [...elements];
+        this.duplicationBuffer = this.getElementsCopy(elements);
+        this.setOffset(PlacementType.Duplication, 0);
     }
 
-    private subscribeToDrawingHistoryChanged(): void {
-        this.drawingHistoryChangedSubscription = this.historyService.drawingHistoryChanged$.subscribe(() => {
-            this.duplicationBuffer = this.getElementsCopy(this.toolSelectionStateService.selectedElements);
-            this.duplicationOriginalElements = [...this.toolSelectionStateService.selectedElements];
-            this.setOffset(PlacementType.Duplication, 0);
-        });
+    private onDrawingHistoryChange(): void {
+        this.initialDuplicationElements = [...this.toolSelectionStateService.selectedElements];
+        this.duplicationBuffer = this.getElementsCopy(this.toolSelectionStateService.selectedElements);
+        this.setOffset(PlacementType.Duplication, 0);
     }
 }

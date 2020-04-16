@@ -8,9 +8,9 @@ export class AddElementsClipboardCommand implements Command {
         private drawingService: DrawingService,
         private elements: SVGGraphicsElement[],
         private clipboardPositionOffsetBefore: number,
-        private duplicatePositionOffsetBefore: number,
+        private duplicationPositionOffsetBefore: number,
         private clipboardPositionOffsetAfter: number,
-        private duplicatePositionOffsetAfter: number
+        private duplicationPositionOffsetAfter: number
     ) {}
 
     undo(): void {
@@ -18,7 +18,7 @@ export class AddElementsClipboardCommand implements Command {
             this.drawingService.removeElement(element);
         }
         this.clipboardService.clipboardPositionOffset = this.clipboardPositionOffsetBefore;
-        this.clipboardService.duplicationPositionOffset = this.duplicatePositionOffsetBefore;
+        this.clipboardService.duplicationPositionOffset = this.duplicationPositionOffsetBefore;
     }
 
     redo(): void {
@@ -26,6 +26,6 @@ export class AddElementsClipboardCommand implements Command {
             this.drawingService.addElement(element);
         }
         this.clipboardService.clipboardPositionOffset = this.clipboardPositionOffsetAfter;
-        this.clipboardService.duplicationPositionOffset = this.duplicatePositionOffsetAfter;
+        this.clipboardService.duplicationPositionOffset = this.duplicationPositionOffsetAfter;
     }
 }
