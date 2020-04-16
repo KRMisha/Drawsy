@@ -5,6 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ClipboardService } from '@app/drawing/services/clipboard.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
@@ -30,6 +31,7 @@ describe('SidebarDrawerComponent', () => {
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
+    let clipboardServiceSpyObj: jasmine.SpyObj<ClipboardService>;
     let lineWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionEnabledFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
@@ -39,6 +41,10 @@ describe('SidebarDrawerComponent', () => {
     let shapeBorderWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let eraserSizeFormControlSpyObj: jasmine.SpyObj<FormControl>;
 
+    let copyShortcutSubject: Subject<void>;
+    let pasteShortcutSubject: Subject<void>;
+    let cutShortcutSubject: Subject<void>;
+    let duplicateShortcutSubject: Subject<void>;
     let undoShortcutSubject: Subject<void>;
     let redoShortcutSubject: Subject<void>;
     let lineWidthChangedSubject: Subject<any>;
@@ -60,13 +66,31 @@ describe('SidebarDrawerComponent', () => {
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', ['update'], {
             currentTool: { info: { name: toolName, shortcut: toolShortcut, icon: toolIcon }, settings: toolSettings } as Tool,
         });
+
         undoShortcutSubject = new Subject<void>();
         redoShortcutSubject = new Subject<void>();
+        copyShortcutSubject = new Subject<void>();
+        pasteShortcutSubject = new Subject<void>();
+        cutShortcutSubject = new Subject<void>();
+        duplicateShortcutSubject = new Subject<void>();
         shortcutServiceSpyObj = jasmine.createSpyObj('ShortcutService', [], {
             undoShortcut$: undoShortcutSubject,
             redoShortcut$: redoShortcutSubject,
+            copySelectionShortcut$: copyShortcutSubject,
+            pasteSelectionShortcut$: pasteShortcutSubject,
+            cutSelectionShortcut$: cutShortcutSubject,
+            duplicateSelectionShortcut$: duplicateShortcutSubject,
         });
         historyServiceSpyObj = jasmine.createSpyObj('HistoryService', ['undo', 'redo', 'canUndo', 'canRedo']);
+
+        clipboardServiceSpyObj = jasmine.createSpyObj('ClipboardService', [
+            'copy',
+            'paste',
+            'cut',
+            'duplicate',
+            'isSelectionAvailable',
+            'isPastingAvailable',
+        ]);
 
         lineWidthChangedSubject = new Subject<any>();
         junctionEnabledChangedSubject = new Subject<any>();
@@ -124,6 +148,7 @@ describe('SidebarDrawerComponent', () => {
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
                 { provide: HistoryService, useValue: historyServiceSpyObj },
+                { provide: ClipboardService, useValue: clipboardServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -446,15 +471,13 @@ describe('SidebarDrawerComponent', () => {
     }));
 
     it('undoShortcutSubscription should call #undo', async(() => {
-        const undoSpy = spyOn(component, 'undo');
         undoShortcutSubject.next();
-        expect(undoSpy).toHaveBeenCalled();
+        expect(historyServiceSpyObj.undo).toHaveBeenCalled();
     }));
 
     it('redoShortcutSubscription should call #redo', async(() => {
-        const redoSpy = spyOn(component, 'redo');
         redoShortcutSubject.next();
-        expect(redoSpy).toHaveBeenCalled();
+        expect(historyServiceSpyObj.redo).toHaveBeenCalled();
     }));
 
     it("#ngOnDestroy should unsubscribe from the formControls' valueChanges", async(() => {
