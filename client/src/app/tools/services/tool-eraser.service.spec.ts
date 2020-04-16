@@ -4,9 +4,11 @@ import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elem
 import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
+import { Color } from '@app/shared/classes/color';
 import { Rect } from '@app/shared/classes/rect';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
+import { Tool } from './tool';
 
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
@@ -21,11 +23,12 @@ describe('ToolEraserService', () => {
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
     // let getElementUnderAreaPixelPerfectSpy: any;
-
+    const initialSvgEraserRect = {} as SVGRectElement;
     const svgGraphicsElementStub = {} as SVGGraphicsElement;
     const initialElementsArray = [svgGraphicsElementStub, svgGraphicsElementStub, svgGraphicsElementStub];
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'addClass']);
+        renderer2SpyObj.createElement.and.returnValue(initialSvgEraserRect);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
 
@@ -34,7 +37,7 @@ describe('ToolEraserService', () => {
 
         drawingServiceSpyObj = jasmine.createSpyObj(
             'DrawingService',
-            ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement'],
+            ['removeElement', 'addUiElement', 'removeUiElement', 'findDrawingChildElement', 'addUiElementBefore'],
             {
                 drawingRoot: drawingRootSpyObj,
                 elements: initialElementsArray,
@@ -51,12 +54,18 @@ describe('ToolEraserService', () => {
             ],
         });
         service = TestBed.inject(ToolEraserService);
-
-        // getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('#constructor should initialise the svgEraserRect using Renderer2', () => {
+        service = TestBed.inject(ToolEraserService);
+        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(initialSvgEraserRect, 'fill', 'rgb(255, 255, 255)');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(initialSvgEraserRect, 'stroke-width', '1');
+        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(initialSvgEraserRect, 'theme-eraser');
     });
 
     it('#onMouseMove should only call #updateEraserRect if the timerId is not undefined', () => {
@@ -87,6 +96,7 @@ describe('ToolEraserService', () => {
 
     it("#onMouseDown should make a copy of the drawingService's elements and call #update", () => {
         const updateSpy = spyOn<any>(service, 'update');
+        Tool.isMouseInsideDrawing = true;
         service.onMouseDown({ button: MouseButton.Left } as MouseEvent);
         expect(service['initialDrawingElements']).toEqual(initialElementsArray);
         expect(updateSpy).toHaveBeenCalled();
@@ -129,97 +139,31 @@ describe('ToolEraserService', () => {
         expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
     });
 
-    it('#onMouseEnter should call #updateEraserRect', () => {
+    it('#onToolSelection should call #update and #updateEraserRect and add the UiElement with drawingService', () => {
+        const svgEraserRectStub = {} as SVGRectElement;
+        service['svgEraserRect'] = svgEraserRectStub;
         const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
-        service.onMouseEnter({} as MouseEvent);
-        expect(updateEraserRectSpy).toHaveBeenCalled();
-    });
-
-    // it('#update should call #restoreElementUndorCursorAttributes and set elementUnderCursor to undefined if the elementToConsider is undefined', () => {
-    //     getElementUnderAreaPixelPerfectSpy.and.returnValue(undefined);
-    //     const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
-    //     service['update']();
-    //     expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
-    //     expect(service['elementUnderCursor']).toBeUndefined();
-    // });
-
-    // it('#update should call #restoreElementUndorCursorAttributes, change elementUnderCursor and call #addRedBorderToElement if the elementToConsider is not the elementUnderCursor', () => {
-    //     const testElement = {} as SVGGraphicsElement;
-    //     service['elementUnderCursor'] = {} as SVGGraphicsElement;
-    //     getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-    //     const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes').and.callThrough();
-    //     const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
-    //     service['update']();
-    //     expect(restoreElementUnderCursorAttributesSpy).toHaveBeenCalled();
-    //     expect(addRedBorderSpy).toHaveBeenCalledWith(testElement);
-    //     expect(service['elementUnderCursor']).toBe(testElement);
-    // });
-
-    // it('#update should not call #restoreElementUndorCursorAttributes, should not change elementUnderCursor and should not call #addRedBorderToElement if the elementToConsider is the elementUnderCursor', () => {
-    //     const testElement = {} as SVGGraphicsElement;
-    //     getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-    //     const restoreElementUnderCursorAttributesSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
-    //     const addRedBorderSpy = spyOn<any>(service, 'addRedBorderToElement');
-    //     service['elementUnderCursor'] = testElement;
-    //     service['update']();
-    //     expect(restoreElementUnderCursorAttributesSpy).not.toHaveBeenCalled();
-    //     expect(addRedBorderSpy).not.toHaveBeenCalled();
-    // });
-
-    // it("#update should add the elementUnderCursor to the elementsDeletedDuringDrag and call drawingService's removeElement if the elementUnderCursor is not undefined, the left mouse button is pressed inside the drawing and the element is in the initialDrawingElements", () => {
-    //     const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
-    //     const testElement = {} as SVGGraphicsElement;
-    //     const fillElement = {} as SVGGraphicsElement;
-    //     const initialDrawingElements = [fillElement, fillElement, fillElement, testElement];
-    //     Tool.isLeftMouseButtonDown = true;
-    //     service['isErasing'] = true;
-    //     getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-    //     service['elementUnderCursor'] = testElement;
-    //     service['initialDrawingElements'] = initialDrawingElements;
-    //     service['update']();
-    //     expect(pushSpy).toHaveBeenCalled();
-    //     expect(drawingServiceSpyObj.removeElement).toHaveBeenCalledWith(testElement);
-    //     expect(service['elementUnderCursor']).toBeUndefined();
-    // });
-
-    // it("#update should not add the elementUnderCursor to the elementsDeletedDuringDrag, should not call drawingService's removeElement and should set elementUnderCursor to undefined if the elementUnderCursor not in initialDrawingElements", () => {
-    //     const pushSpy = spyOn(service['elementsDeletedDuringDrag'], 'push');
-    //     const testElement = {} as SVGGraphicsElement;
-    //     const fillElement = {} as SVGGraphicsElement;
-    //     const initialDrawingElements = [fillElement, fillElement, fillElement];
-    //     Tool.isLeftMouseButtonDown = true;
-    //     service['isErasing'] = true;
-    //     getElementUnderAreaPixelPerfectSpy.and.returnValue(testElement);
-    //     service['elementUnderCursor'] = testElement;
-    //     service['initialDrawingElements'] = initialDrawingElements;
-    //     service['update']();
-    //     expect(pushSpy).not.toHaveBeenCalled();
-    //     expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
-    //     expect(service['elementUnderCursor']).toBeUndefined();
-    // });
-
-    it("#onToolSelection should create the eraser's rect, add it to the ui elements of drawingService and call #updateEraserRect", () => {
-        const updateEraserRectSpy = spyOn<any>(service, 'updateEraserRect');
-        const svgEraserElementStub = {} as SVGRectElement;
-        renderer2SpyObj.createElement.and.returnValue(svgEraserElementStub);
+        const updateSpy = spyOn<any>(service, 'update');
 
         service.onToolSelection();
-
-        expect(renderer2SpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'fill', 'rgb(255, 255, 255)');
-        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgEraserElementStub, 'stroke-width', '1');
-        expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgEraserElementStub, 'theme-eraser');
-        expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalledWith(svgEraserElementStub);
-        expect(updateEraserRectSpy);
+        expect(drawingServiceSpyObj.addUiElement).toHaveBeenCalledWith(svgEraserRectStub);
+        expect(updateEraserRectSpy).toHaveBeenCalled();
+        expect(updateSpy).toHaveBeenCalledWith(false);
     });
 
-    it("onToolDeselection should call drawingService's removeUiElement, call #restoreElementUnderCursorAttributes and set elementUnderCursor to undefined", () => {
-        service['elementUnderCursor'] = {} as SVGGraphicsElement;
-        const restoreSpy = spyOn<any>(service, 'restoreElementUnderCursorAttributes');
+    it('#onToolDeselection should call #reset', () => {
+        const resetSpy = spyOn<any>(service, 'reset').and.callThrough();
         service.onToolDeselection();
-        expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalled();
-        expect(restoreSpy).toHaveBeenCalled();
-        expect(service['elementUnderCursor']).toBeUndefined();
+        expect(resetSpy).toHaveBeenCalled();
+    });
+
+    it('#onHistoryChange should call a tick on the applicationRef and call #update', () => {
+        const applicationRefTickSpy = spyOn<any>(service['applicationRef'], 'tick');
+        const updateSpy = spyOn<any>(service, 'update');
+
+        service.onHistoryChange();
+        expect(applicationRefTickSpy).toHaveBeenCalled();
+        expect(updateSpy).toHaveBeenCalled();
     });
 
     it('#updateEraserRect should update the eraserRect with the new value', () => {
@@ -229,44 +173,80 @@ describe('ToolEraserService', () => {
         expect(service['eraserRect']).not.toEqual(unwantedEraserRect);
     });
 
-    // it("#addRedBorderToElement should use default values to call renderer's setAttribute when the attributs of the element are none", () => {
-    //     spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
-    //     const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-    //     elementToSendSpy.getAttribute.and.returnValue('none');
-    //     service['addRedBorderToElement'](elementToSendSpy);
+    it('#update should call #hideRedElementClone and set elementUnderCursor to undefined if the elementToConsider is undefined', () => {
+        const getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(undefined);
+        const hideRedElementCloneSpy = spyOn<any>(service, 'hideRedElementClone');
+        service['update'](false);
+        expect(hideRedElementCloneSpy).toHaveBeenCalled();
+        expect(service['elementUnderCursor']).toBeUndefined();
+    });
 
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(255, 0, 0)');
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke-width', '3');
-    // });
+    it('#update should update the RedElementClone if the hoveredElement is different', () => {
+        const hoveredElement = {} as SVGGraphicsElement;
+        service['elementUnderCursor'] = {} as SVGGraphicsElement;
+        const getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(hoveredElement);
+        const hideRedElementCloneSpy = spyOn<any>(service, 'hideRedElementClone');
+        const showRedElementCloneSpy = spyOn<any>(service, 'showRedElementClone');
+        service['update'](false);
+        expect(hideRedElementCloneSpy).toHaveBeenCalled();
+        expect(service['elementUnderCursor']).toBe(hoveredElement);
+        expect(showRedElementCloneSpy).toHaveBeenCalled();
+    });
 
-    // it('#addRedBorderToElement should put default border width to 3 if object does not have a border initially', () => {
-    //     spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
-    //     const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-    //     elementToSendSpy.getAttribute.and.returnValue(null);
-    //     service['addRedBorderToElement'](elementToSendSpy);
+    it('#update should update the RedElementClone if called with true', () => {
+        const previousHoveredElement = {} as SVGGraphicsElement;
+        service['elementUnderCursor'] = previousHoveredElement;
+        const getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(previousHoveredElement);
+        const hideRedElementCloneSpy = spyOn<any>(service, 'hideRedElementClone');
+        const showRedElementCloneSpy = spyOn<any>(service, 'showRedElementClone');
+        service['update'](true);
+        expect(hideRedElementCloneSpy).toHaveBeenCalled();
+        expect(service['elementUnderCursor']).toBe(previousHoveredElement);
+        expect(showRedElementCloneSpy).toHaveBeenCalled();
+    });
 
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(255, 0, 0)');
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke-width', '3');
-    // });
+    it('#update should update the elements deleted during the drag if the element is not undefined and the tool is currently erasing', () => {
+        const previousHoveredElement = {} as SVGGraphicsElement;
+        service['elementUnderCursor'] = previousHoveredElement;
+        const getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(previousHoveredElement);
 
-    // it('#addRedBorderToElement should put a bigger stroke width when object is selected with eraser', () => {
-    //     spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 255, blue: 255, alpha: 1 } as Color);
-    //     const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-    //     elementToSendSpy.getAttribute.and.returnValue('123');
-    //     service['addRedBorderToElement'](elementToSendSpy);
+        const elementStub = {} as SVGGraphicsElement;
+        const initialStubElementsArray = [elementStub, previousHoveredElement, elementStub];
+        service['initialDrawingElements'] = initialStubElementsArray;
 
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(255, 0, 0)');
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke-width', '135.84');
-    // });
+        service['isErasing'] = true;
+        const hideRedElementCloneSpy = spyOn<any>(service, 'hideRedElementClone');
 
-    // it('#addRedBorderToElement should put a dark red border if color of object is red', () => {
-    //     spyOn(Color, 'fromRgbaString').and.returnValue({ red: 255, green: 0, blue: 0, alpha: 1 } as Color);
-    //     const elementToSendSpy = jasmine.createSpyObj('SVGCircleElement', ['getAttribute']);
-    //     elementToSendSpy.getAttribute.and.returnValue('123');
-    //     service['addRedBorderToElement'](elementToSendSpy);
+        service['update'](false);
 
-    //     expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(elementToSendSpy, 'stroke', 'rgb(117, 30, 33)');
-    // });
+        expect(drawingServiceSpyObj.removeElement).toHaveBeenCalled();
+        expect(hideRedElementCloneSpy).toHaveBeenCalled();
+        expect(service['elementUnderCursor']).toBeUndefined();
+    });
+
+    it('#update should not remove the element from the drawing service if the element was not initially there', () => {
+        const previousHoveredElement = {} as SVGGraphicsElement;
+        service['elementUnderCursor'] = previousHoveredElement;
+        const getElementUnderAreaPixelPerfectSpy = spyOn<any>(service, 'getElementUnderAreaPixelPerfect').and.callThrough();
+        getElementUnderAreaPixelPerfectSpy.and.returnValue(previousHoveredElement);
+
+        const elementStub = {} as SVGGraphicsElement;
+        const initialStubElementsArray = [elementStub, elementStub];
+        service['initialDrawingElements'] = initialStubElementsArray;
+
+        service['isErasing'] = true;
+        const hideRedElementCloneSpy = spyOn<any>(service, 'hideRedElementClone');
+
+        service['update'](false);
+
+        expect(drawingServiceSpyObj.removeElement).not.toHaveBeenCalled();
+        expect(hideRedElementCloneSpy).toHaveBeenCalled();
+        expect(service['elementUnderCursor']).toBeUndefined();
+    });
 
     it('#getElementUnderAreaPixelPerfect should return undefined if no shape is under cursor', () => {
         drawingServiceSpyObj.findDrawingChildElement.and.returnValue(undefined);
@@ -296,5 +276,51 @@ describe('ToolEraserService', () => {
 
         const returnValue = service['getElementUnderAreaPixelPerfect']({ width: 1, height: 3, x: 0, y: 0 } as Rect);
         expect(returnValue).toBe(topmostElement);
+    });
+
+    it('#showRedElementClone should return early if the elementUnderCursor is undefined', () => {
+        service['elementUnderCursor'] = undefined;
+        service['showRedElementClone']();
+        expect(drawingServiceSpyObj.addUiElementBefore).not.toHaveBeenCalled();
+    });
+
+    it('#showRedElementClone should clone the elementUnderCursor and add it to the Ui elements of the drawing service', () => {
+        const elementUnderCursorSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute', 'cloneNode']);
+        elementUnderCursorSpyObj.cloneNode.and.returnValue({});
+        service['elementUnderCursor'] = elementUnderCursorSpyObj;
+        service['showRedElementClone']();
+        expect(drawingServiceSpyObj.addUiElementBefore).toHaveBeenCalled();
+    });
+
+    it('#showRedElementClone should clone the elementUnderCursor and add it to the Ui elements of the drawing service', () => {
+        const elementUnderCursorSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute', 'cloneNode']);
+        elementUnderCursorSpyObj.getAttribute.and.returnValue('3');
+        const rgbValue = 10;
+        const colorStub = { red: rgbValue, green: rgbValue, blue: rgbValue } as Color;
+        spyOn(Color, 'fromRgbaString').and.returnValue(colorStub);
+        elementUnderCursorSpyObj.cloneNode.and.returnValue({});
+        service['elementUnderCursor'] = elementUnderCursorSpyObj;
+        service['showRedElementClone']();
+        expect(drawingServiceSpyObj.addUiElementBefore).toHaveBeenCalled();
+    });
+
+    it('#showRedElementClone should change use different color if the current border is already red', () => {
+        const elementUnderCursorSpyObj = jasmine.createSpyObj('SVGGraphicsElement', ['getAttribute', 'cloneNode']);
+        elementUnderCursorSpyObj.getAttribute.and.returnValue('3');
+        const rgbValue = 10;
+        const colorStub = { red: 255, green: rgbValue, blue: rgbValue } as Color;
+        spyOn(Color, 'fromRgbaString').and.returnValue(colorStub);
+        elementUnderCursorSpyObj.cloneNode.and.returnValue({});
+        service['elementUnderCursor'] = elementUnderCursorSpyObj;
+        service['showRedElementClone']();
+        expect(drawingServiceSpyObj.addUiElementBefore).toHaveBeenCalled();
+    });
+
+    it('#hideRedElementClone should remove the element from the drawing and set it undefined', () => {
+        const elementUnderCursorStub = {} as SVGGraphicsElement;
+        service['elementUnderCursorClone'] = elementUnderCursorStub;
+        service['hideRedElementClone']();
+        expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalledWith(elementUnderCursorStub);
+        expect(service['elementUnderCursorClone']).toBeUndefined();
     });
 });

@@ -73,13 +73,6 @@ describe('ToolLineService', () => {
         expect(updateNextPointPositionSpy).toHaveBeenCalled();
     });
 
-    it('#onMouseDown should stop drawing if mouse is outside drawing', () => {
-        Tool.isMouseInsideDrawing = false;
-        const stopDrawingSpy = spyOn<any>(service, 'stopDrawing');
-        service.onMouseDown({} as MouseEvent);
-        expect(stopDrawingSpy).toHaveBeenCalled();
-    });
-
     it('#onMouseDown should do nothing if mouse button is not left', () => {
         service.onMouseDown({ button: MouseButton.Right } as MouseEvent);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
@@ -170,6 +163,14 @@ describe('ToolLineService', () => {
         const updateNextPointPositionSpy = spyOn<any>(service, 'updateNextPointPosition');
         service.onKeyUp({ key: 'a' } as KeyboardEvent);
         expect(updateNextPointPositionSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onFocusOut should call #stopDrawing and set isShiftDown to false', () => {
+        const stopDrawingSpy = spyOn<any>(service, 'stopDrawing');
+        service['isShiftDown'] = true;
+        service.onFocusOut();
+        expect(stopDrawingSpy).toHaveBeenCalled();
+        expect(service['isShiftDown']).toEqual(false);
     });
 
     it('#onPrimaryColorChange should do nothing if nothing is being drawn', () => {

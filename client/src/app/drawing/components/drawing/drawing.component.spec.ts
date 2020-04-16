@@ -9,7 +9,6 @@ import { Vec2 } from '@app/shared/classes/vec2';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { TouchService } from '@app/shared/services/touch.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
-import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-line-length
@@ -22,7 +21,6 @@ describe('DrawingComponent', () => {
     let colorSpyObj: jasmine.SpyObj<Color>;
     let drawingServiceMock: DrawingService;
     let changeDetectorRefSpyObj: jasmine.SpyObj<ChangeDetectorRef>;
-    let currentToolSpyObj: jasmine.SpyObj<Tool>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let gridServiceSpyObj: jasmine.SpyObj<GridService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
@@ -54,24 +52,19 @@ describe('DrawingComponent', () => {
 
         changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
-        currentToolSpyObj = jasmine.createSpyObj('Tool', ['onToolDeselection']);
-        currentToolServiceSpyObj = jasmine.createSpyObj(
-            'CurrentToolService',
-            [
-                'onMouseMove',
-                'onMouseDown',
-                'onMouseUp',
-                'onScroll',
-                'onMouseDoubleClick',
-                'onKeyDown',
-                'onKeyUp',
-                'onMouseEnter',
-                'onMouseLeave',
-            ],
-            {
-                currentTool: currentToolSpyObj,
-            }
-        );
+        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [
+            'onMouseMove',
+            'onMouseDown',
+            'onMouseUp',
+            'onScroll',
+            'onMouseDoubleClick',
+            'onKeyDown',
+            'onKeyUp',
+            'onFocusIn',
+            'onFocusOut',
+            'onMouseEnter',
+            'onMouseLeave',
+        ]);
 
         gridServiceSpyObj = jasmine.createSpyObj('GridService', ['toggleDisplay', 'increaseSize', 'decreaseSize'], {
             isDisplayEnabled: true,
@@ -165,14 +158,6 @@ describe('DrawingComponent', () => {
         expect(increaseGridSizeSubscriptionSpy).toHaveBeenCalled();
         expect(decreaseGridSizeSubscriptionSpy).toHaveBeenCalled();
     }));
-
-    it('#ngOnDestroy should delete the svg attributes of drawingService and call onToolDeselection of the currentTool', () => {
-        component.ngOnDestroy();
-        expect(currentToolSpyObj.onToolDeselection).toHaveBeenCalled();
-        expect(component['drawingService'].drawingRoot).toBeUndefined();
-        expect(component['drawingService'].svgDrawingContent).toBeUndefined();
-        expect(component['drawingService'].svgUserInterfaceContent).toBeUndefined();
-    });
 
     it("#onMouseMove should forward HostListener events to CurrentToolService's onMouseMove if isModalPresent in modalService is false", () => {
         component.onMouseMove({} as MouseEvent);
@@ -308,5 +293,15 @@ describe('DrawingComponent', () => {
     it("#onMouseLeave should forward HostListener events to CurrentToolService's onMouseLeave", () => {
         component.onMouseLeave({} as MouseEvent);
         expect(currentToolServiceSpyObj.onMouseLeave).toHaveBeenCalled();
+    });
+
+    it("#onFocusIn should forward the call to CurrentToolService's onFocusIn", () => {
+        component.onFocusIn();
+        expect(currentToolServiceSpyObj.onFocusIn).toHaveBeenCalled();
+    });
+
+    it("#onFocusOut should forward the call to CurrentToolService's onFocusOut", () => {
+        component.onFocusOut();
+        expect(currentToolServiceSpyObj.onFocusOut).toHaveBeenCalled();
     });
 });

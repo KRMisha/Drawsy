@@ -100,6 +100,18 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
+    it('#onFocusIn should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onFocusIn').and.callThrough();
+        tool.onFocusIn();
+        expect(methodStubSpy).toHaveBeenCalled();
+    });
+
+    it('#onFocusOut should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onFocusOut').and.callThrough();
+        tool.onFocusOut();
+        expect(methodStubSpy).toHaveBeenCalled();
+    });
+
     it('#onPrimaryColorChange should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onPrimaryColorChange').and.callThrough();
         tool.onPrimaryColorChange({} as Color);
@@ -121,6 +133,12 @@ describe('Tool', () => {
     it('#onToolDeselection should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onToolDeselection').and.callThrough();
         tool.onToolDeselection();
+        expect(methodStubSpy).toHaveBeenCalled();
+    });
+
+    it('#onHistoryChange should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onHistoryChange').and.callThrough();
+        tool.onHistoryChange();
         expect(methodStubSpy).toHaveBeenCalled();
     });
 });

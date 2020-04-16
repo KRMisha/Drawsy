@@ -155,6 +155,25 @@ describe('DrawingService', () => {
         expect(renderer2SpyObj.appendChild).not.toHaveBeenCalled();
     });
 
+    it('#addUiElementBefore should not call renderer2 to append before if the unserInterfaceContent is undefined', () => {
+        delete service['svgUserInterfaceContent'];
+        const svgGraphicsElementStub = {} as SVGGraphicsElement;
+        service.addUiElementBefore(svgGraphicsElementStub, svgGraphicsElementStub);
+        expect(renderer2SpyObj.insertBefore).not.toHaveBeenCalled();
+    });
+
+    it('#addUiElementBefore should use renderer2 to append the elements if the userInterfaceContent is not undefined', () => {
+        const svgUserInterfaceContentStub = {} as SVGGElement;
+        service['svgUserInterfaceContent'] = svgUserInterfaceContentStub;
+        const svgGraphicsElementStub = {} as SVGGraphicsElement;
+        service.addUiElementBefore(svgGraphicsElementStub, svgGraphicsElementStub);
+        expect(renderer2SpyObj.insertBefore).toHaveBeenCalledWith(
+            svgUserInterfaceContentStub,
+            svgGraphicsElementStub,
+            svgGraphicsElementStub
+        );
+    });
+
     it("#removeUiElement should call renderer's removeChild if svgUserInterfaceContent is not undefined", () => {
         const svgUserInterfaceContentStub = {} as SVGGElement;
         service['svgUserInterfaceContent'] = svgUserInterfaceContentStub;
@@ -361,14 +380,12 @@ describe('DrawingService', () => {
         expect(actualValue).toEqual(expectedLabels);
     });
 
-    it("#set labels should set the labels, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
+    it('#set labels should set the labels and saveDrawingsToStorage', () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
-        const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedLabels = ['label'];
         service.labels = expectedLabels;
         const actualValue = service['_labels'];
         expect(actualValue).toEqual(expectedLabels);
-        expect(nextSpy).toHaveBeenCalled();
         expect(saveDrawingToStorageSpy).toHaveBeenCalled();
     });
 
@@ -381,12 +398,10 @@ describe('DrawingService', () => {
 
     it("#set dimensions should set the dimensions, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
-        const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedDimensions = { x: 0, y: 0 } as Vec2;
         service.dimensions = expectedDimensions;
         const actualValue = service['_dimensions'];
         expect(actualValue).toEqual(expectedDimensions);
-        expect(nextSpy).toHaveBeenCalled();
         expect(saveDrawingToStorageSpy).toHaveBeenCalled();
     });
 
@@ -399,12 +414,10 @@ describe('DrawingService', () => {
 
     it("#set backgroundColor should set the backgroundColor, update forceDetectChangesSource's subscribers and call #saveDrawingToStorage", () => {
         const saveDrawingToStorageSpy = spyOn(service, 'saveDrawingToStorage');
-        const nextSpy = spyOn(service['forceDetectChangesSource'], 'next');
         const expectedColor = {} as Color;
         service.backgroundColor = expectedColor;
         const actualValue = service['_backgroundColor'];
         expect(actualValue).toEqual(expectedColor);
-        expect(nextSpy).toHaveBeenCalled();
         expect(saveDrawingToStorageSpy).toHaveBeenCalled();
     });
 
