@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 // tslint:disable: no-any
 // tslint:disable: no-string-literal
 
-fdescribe('ToolSelectionUiService', () => {
+describe('ToolSelectionUiService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
@@ -140,6 +140,8 @@ fdescribe('ToolSelectionUiService', () => {
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-dasharray', '5, 3');
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-width', '1.5');
         expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-linecap', 'round');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'fill', 'none');
+        expect(renderer2SpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'stroke-width', '1.5');
         expect(renderer2SpyObj.addClass).toHaveBeenCalledWith(svgRectStub, 'theme-selected-elements-rect');
     });
 
