@@ -69,7 +69,7 @@ export class ToolSelectionMoverService {
         for (const element of this.toolSelectionStateService.selectedElements) {
             this.moveElement(element, moveOffset);
         }
-        this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+        this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
             this.toolSelectionStateService.selectedElements
         );
     }

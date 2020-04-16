@@ -19,7 +19,7 @@ export class ToolSelectionUiService implements OnDestroy {
     private svgSelectedElementsRect: SVGRectElement;
     private svgControlPoints: SVGGraphicsElement[] = [];
 
-    private selectedElementsRectChangedSubscription: Subscription;
+    private selectedElementsBoundsChangedSubscription: Subscription;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -28,9 +28,9 @@ export class ToolSelectionUiService implements OnDestroy {
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
-        this.selectedElementsRectChangedSubscription = this.toolSelectionStateService.selectedElementsRectChanged$.subscribe(
-            (rect: Rect | undefined) => {
-                this.setSelectedElementsRect(rect);
+        this.selectedElementsBoundsChangedSubscription = this.toolSelectionStateService.selectedElementsBoundsChanged$.subscribe(
+            (bounds: Rect | undefined) => {
+                this.setSelectedElementsRect(bounds);
             }
         );
 
@@ -38,7 +38,7 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.selectedElementsRectChangedSubscription.unsubscribe();
+        this.selectedElementsBoundsChangedSubscription.unsubscribe();
     }
 
     setUserSelectionRect(rect: Rect): void {

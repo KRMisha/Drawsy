@@ -50,20 +50,20 @@ describe('ToolSelectionStateService', () => {
     it("#get selectedElementsRect should return the selected elements' bounding rectangle", () => {
         const expectedValue = {} as Rect;
         service['_selectedElementsRect'] = expectedValue;
-        const actualValue = service.selectedElementsRect;
+        const actualValue = service.selectedElementsBounds;
         expect(actualValue).toBe(expectedValue);
     });
 
-    it('#set selectedElementRect should update the selected elements bounding rect', () => {
+    it('#set selectedElementsRect should update the selected elements bounding rect', () => {
         const expectedValue = {} as Rect;
-        service.selectedElementsRect = expectedValue;
+        service.selectedElementsBounds = expectedValue;
         expect(service['_selectedElementsRect']).toBe(expectedValue);
     });
 
     it('#set selectedElementsRect should notify its subcribers that its value has changed', () => {
         const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
         const rectStub = {} as Rect;
-        service.selectedElementsRect = rectStub;
+        service.selectedElementsBounds = rectStub;
         expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalledWith(rectStub);
     });
 });

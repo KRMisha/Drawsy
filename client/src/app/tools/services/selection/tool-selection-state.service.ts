@@ -11,20 +11,20 @@ export class ToolSelectionStateService implements OnDestroy {
     state = SelectionState.None;
 
     private _selectedElements: SVGGraphicsElement[] = []; // tslint:disable-line: variable-name
-    private _selectedElementsRect?: Rect; // tslint:disable-line: variable-name
+    private _selectedElementsBounds?: Rect; // tslint:disable-line: variable-name
 
     private selectedElementsChangedSubscription: Subscription;
 
-    private selectedElementsRectChangedSource = new Subject<Rect | undefined>();
+    private selectedElementsBoundsChangedSource = new Subject<Rect | undefined>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
-    selectedElementsRectChanged$ = this.selectedElementsRectChangedSource.asObservable(); // tslint:disable-line: member-ordering
+    selectedElementsBoundsChanged$ = this.selectedElementsBoundsChangedSource.asObservable(); // tslint:disable-line: member-ordering
     // Disable member ordering lint error for order consistency between observables
     selectedElementsChanged$ = new Subject<SVGGraphicsElement[]>(); // tslint:disable-line: member-ordering
 
     constructor(private toolSelectionCollisionService: ToolSelectionCollisionService) {
         this.selectedElementsChangedSubscription = this.selectedElementsChanged$.subscribe((elements: SVGGraphicsElement[]) => {
-            this.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(elements);
+            this.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(elements);
         });
     }
 
@@ -41,12 +41,12 @@ export class ToolSelectionStateService implements OnDestroy {
         this.selectedElementsChanged$.next(selectedElements);
     }
 
-    get selectedElementsRect(): Rect | undefined {
-        return this._selectedElementsRect;
+    get selectedElementsBounds(): Rect | undefined {
+        return this._selectedElementsBounds;
     }
 
-    set selectedElementsRect(rect: Rect | undefined) {
-        this._selectedElementsRect = rect;
-        this.selectedElementsRectChangedSource.next(this._selectedElementsRect);
+    set selectedElementsBounds(rect: Rect | undefined) {
+        this._selectedElementsBounds = rect;
+        this.selectedElementsBoundsChangedSource.next(this._selectedElementsBounds);
     }
 }

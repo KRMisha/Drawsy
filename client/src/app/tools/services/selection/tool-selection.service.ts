@@ -78,7 +78,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                     this.selectedElementsAfterInversion = [...this.toolSelectionStateService.selectedElements];
                     const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(userSelectionRect);
                     this.invertElementsSelection(elementsToInvert, this.selectedElementsAfterInversion);
-                    this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+                    this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
                         this.selectedElementsAfterInversion
                     );
                 }
@@ -108,7 +108,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.currentMouseButtonDown = event.button;
         this.selectionOrigin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
 
-        if (this.isMouseInsideSelectedElementsRect() && event.button === MouseButton.Left) {
+        if (this.isMouseInsideSelectedElementBounds() && event.button === MouseButton.Left) {
             this.toolSelectionStateService.state = SelectionState.SelectionMoveStartClick;
             this.toolSelectionMoverService.startMovingSelection();
         } else {
@@ -241,11 +241,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, elementSiblingPairs));
     }
 
-    private isMouseInsideSelectedElementsRect(): boolean {
-        if (this.toolSelectionStateService.selectedElementsRect === undefined) {
+    private isMouseInsideSelectedElementBounds(): boolean {
+        if (this.toolSelectionStateService.selectedElementsBounds === undefined) {
             return false;
         }
-        return this.toolSelectionCollisionService.isPointInRect(Tool.mousePosition, this.toolSelectionStateService.selectedElementsRect);
+        return this.toolSelectionCollisionService.isPointInRect(Tool.mousePosition, this.toolSelectionStateService.selectedElementsBounds);
     }
 
     private invertElementsSelection(elementsToInvert: SVGGraphicsElement[], selectedElements: SVGGraphicsElement[]): void {
