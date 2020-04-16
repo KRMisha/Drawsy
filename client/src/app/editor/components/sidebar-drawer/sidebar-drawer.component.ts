@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { ClipboardService } from '@app/drawing/services/clipboard.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
@@ -11,6 +12,7 @@ import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Subscription } from 'rxjs';
 
 const minimumLineWidth = 1;
@@ -153,12 +155,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private polygonSideCountChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
 
+    private copySelectionShortcutSubscription: Subscription;
+    private pasteSelectionShortcutSubscription: Subscription;
+    private cutSelectionShortcutSubscription: Subscription;
+    private duplicateSelectionShortcutSubscription: Subscription;
     private undoShortcutSubscription: Subscription;
     private redoShortcutSubscription: Subscription;
 
     constructor(
         private currentToolService: CurrentToolService,
         private shortcutService: ShortcutService,
+        private clipboardService: ClipboardService,
+        private toolSelectionService: ToolSelectionService,
         private historyService: HistoryService
     ) {}
 
@@ -205,11 +213,23 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
+            this.copy();
+        });
+        this.pasteSelectionShortcutSubscription = this.shortcutService.pasteSelectionShortcut$.subscribe(() => {
+            this.paste();
+        });
+        this.cutSelectionShortcutSubscription = this.shortcutService.cutSelectionShortcut$.subscribe(() => {
+            this.cut();
+        });
+        this.duplicateSelectionShortcutSubscription = this.shortcutService.duplicateSelectionShortcut$.subscribe(() => {
+            this.duplicate();
+        });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
-            this.undoCommand();
+            this.undo();
         });
         this.redoShortcutSubscription = this.shortcutService.redoShortcut$.subscribe(() => {
-            this.redoCommand();
+            this.redo();
         });
     }
 
@@ -223,6 +243,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
 
+        this.copySelectionShortcutSubscription.unsubscribe();
+        this.pasteSelectionShortcutSubscription.unsubscribe();
+        this.cutSelectionShortcutSubscription.unsubscribe();
+        this.duplicateSelectionShortcutSubscription.unsubscribe();
         this.undoShortcutSubscription.unsubscribe();
         this.redoShortcutSubscription.unsubscribe();
     }
@@ -254,11 +278,35 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
-    undoCommand(): void {
+    copy(): void {
+        this.clipboardService.copy();
+    }
+
+    paste(): void {
+        if (this.isPastingAvailable) {
+            this.currentToolService.currentTool = this.toolSelectionService;
+            this.resetCurrentControls();
+            this.clipboardService.paste();
+        }
+    }
+
+    cut(): void {
+        this.clipboardService.cut();
+    }
+
+    duplicate(): void {
+        this.clipboardService.duplicate();
+    }
+
+    delete(): void {
+        this.toolSelectionService.deleteSelection();
+    }
+
+    undo(): void {
         this.historyService.undo();
     }
 
-    redoCommand(): void {
+    redo(): void {
         this.historyService.redo();
     }
 
@@ -276,6 +324,14 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     get currentToolSettings(): ToolSettings {
         return this.currentToolService.currentTool.settings;
+    }
+
+    get isSelectionAvailable(): boolean {
+        return this.clipboardService.isSelectionAvailable();
+    }
+
+    get isPastingAvailable(): boolean {
+        return this.clipboardService.isPastingAvailable();
     }
 
     get isUndoAvailable(): boolean {
