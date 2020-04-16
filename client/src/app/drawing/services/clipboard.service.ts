@@ -119,19 +119,18 @@ export class ClipboardService implements OnDestroy {
             this.drawingService.addElement(element);
         }
 
-        this.toolSelectionStateService.selectedElements = bufferCopyToPlace; // todo move to end
-
         const elementsInDrawing = new Set<SVGGraphicsElement>(this.drawingService.elements);
         const areNoInitialElementsRemaining = initialElements.every((element: SVGGraphicsElement) => !elementsInDrawing.has(element));
 
         if (areNoInitialElementsRemaining) {
             this.initialClipboardElements = bufferCopyToPlace;
-            this.initialDuplicationElements = bufferCopyToPlace; // todo check offset 0???
+            this.initialDuplicationElements = bufferCopyToPlace;
         }
 
         const clipboardOffsetBefore = this.clipboardPositionOffset;
         const duplicationOffsetBefore = this.duplicationPositionOffset;
 
+        this.toolSelectionStateService.selectedElements = bufferCopyToPlace;
         this.offsetSelectedElements(areNoInitialElementsRemaining, placementType);
 
         this.historyService.addCommand(
