@@ -17,7 +17,7 @@ describe('ToolSelectionUiService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
 
-    let selectedElementsRectChangedSubject: Subject<SVGGraphicsElement[]>;
+    let selectedElementsBoundsChangedSubject: Subject<SVGGraphicsElement[]>;
 
     let service: ToolSelectionUiService;
 
@@ -38,9 +38,9 @@ describe('ToolSelectionUiService', () => {
             drawingRoot: drawingRootMock,
         });
 
-        selectedElementsRectChangedSubject = new Subject<SVGGraphicsElement[]>();
+        selectedElementsBoundsChangedSubject = new Subject<SVGGraphicsElement[]>();
         toolSelectionStateServiceSpyObj = jasmine.createSpyObj('ToolSelectionStateService', ['updateSelectionRect'], {
-            selectedElementsRectChanged$: selectedElementsRectChangedSubject,
+            selectedElementsBoundsChanged$: selectedElementsBoundsChangedSubject,
         });
 
         TestBed.configureTestingModule({
@@ -58,7 +58,7 @@ describe('ToolSelectionUiService', () => {
     });
 
     it("#constructor should instanciate the renderer, subscribe to toolSelectionStateService's selectedElementsRectChanged and call #createUiElements", () => {
-        const subscribeSpy = spyOn(selectedElementsRectChangedSubject, 'subscribe');
+        const subscribeSpy = spyOn(selectedElementsBoundsChangedSubject, 'subscribe');
         const createUiElementsSpy = spyOn<any>(ToolSelectionUiService.prototype, 'createUiElements');
         service = new ToolSelectionUiService(rendererFactory2SpyObj, drawingServiceSpyObj, toolSelectionStateServiceSpyObj);
         expect(service['renderer']).not.toBeUndefined();
@@ -68,7 +68,7 @@ describe('ToolSelectionUiService', () => {
 
     it('#selectedElementsBoundsChangedSubscription should update svg rect', () => {
         const setSelectedElementsRectSpy = spyOn<any>(service, 'setSelectedElementsRect');
-        selectedElementsRectChangedSubject.next([{} as SVGGraphicsElement]);
+        selectedElementsBoundsChangedSubject.next([{} as SVGGraphicsElement]);
         expect(setSelectedElementsRectSpy).toHaveBeenCalled();
     });
 
