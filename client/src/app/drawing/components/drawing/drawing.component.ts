@@ -55,6 +55,15 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         this.decreaseGridSizeSubscription = this.shortcutService.decreaseGridSize$.subscribe(() => {
             this.gridService.decreaseSize();
         });
+
+        // @HostListener does not support setting the passive option needed to call event.preventDefault() on a passive event
+        document.addEventListener(
+            'wheel',
+            (event: WheelEvent) => {
+                this.onScroll(event);
+            },
+            { passive: false }
+        );
     }
 
     ngAfterViewInit(): void {
@@ -99,7 +108,6 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
         }
     }
 
-    @HostListener('document:wheel', ['$event'])
     onScroll(event: WheelEvent): void {
         if (!this.modalService.isModalPresent) {
             this.currentToolService.onScroll(event);
