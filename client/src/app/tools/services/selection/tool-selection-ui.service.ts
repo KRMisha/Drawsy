@@ -55,7 +55,6 @@ export class ToolSelectionUiService implements OnDestroy {
 
     updateUserSelectionRectCursor(state: SelectionState): void {
         switch (state) {
-            case SelectionState.SelectionChangeStartClick:
             case SelectionState.ChangingSelection:
                 this.renderer.setStyle(document.body, 'cursor', 'crosshair');
                 break;
