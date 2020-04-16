@@ -140,13 +140,19 @@ describe('ToolBrush', () => {
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#oMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
+    it('#onMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = false;
         toolBrush.onMouseLeave({ button: MouseButton.Right } as MouseEvent);
 
         expect(updatePathSpy).not.toHaveBeenCalled();
         expect(stopDrawingSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onFocusOut should call #stopDrawing', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing');
+        toolBrush.onFocusOut();
+        expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
     it("#onPrimaryColorChange should set the path's stroke color with the parameter's color if the path is not undefined", () => {
@@ -163,6 +169,12 @@ describe('ToolBrush', () => {
         toolBrush.onPrimaryColorChange(colorSpyObj);
 
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#onToolDeselection should call #stopDrawing', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing');
+        toolBrush.onToolDeselection();
+        expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
     it('#updatePath should not do anything if the path is undefined', () => {

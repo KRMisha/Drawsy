@@ -200,10 +200,9 @@ export class ToolEraserService extends Tool {
             return;
         }
 
-        const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.initialDrawingElements.length; i++) {
-            elementIndices.set(this.initialDrawingElements[i], i);
-        }
+        const elementIndices = new Map<SVGGraphicsElement, number>(
+            this.initialDrawingElements.map((element: SVGGraphicsElement, index: number) => [element, index])
+        );
         this.elementsDeletedDuringDrag.sort((element1: ElementSiblingPair, element2: ElementSiblingPair) => {
             // Map will always have indices for elements since their insertion is guaranteed just prior
             // tslint:disable-next-line: no-non-null-assertion

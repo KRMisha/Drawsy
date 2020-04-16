@@ -66,7 +66,7 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
-        this.currentToolService.currentTool.onFocusOut();
+        this.currentToolService.onFocusOut();
 
         this.forceDetectChangesSubscription.unsubscribe();
         this.toggleGridSubscription.unsubscribe();
