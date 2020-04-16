@@ -34,7 +34,7 @@ class ToolShapeMock extends ToolShape {
     }
 }
 
-describe('ToolShape', () => {
+fdescribe('ToolShape', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
@@ -147,6 +147,14 @@ describe('ToolShape', () => {
         expect(updateShapeAreaSpy).not.toHaveBeenCalled();
     });
 
+    it('#onFocusOut should call stopDrawing and set isShiftDown to false', () => {
+        const stopDrawingSpy = spyOn<any>(toolShape, 'stopDrawing');
+        toolShape['isShiftDown'] = true;
+        toolShape.onFocusOut();
+        expect(stopDrawingSpy).toHaveBeenCalled();
+        expect(toolShape['isShiftDown']).toEqual(false);
+    });
+
     it("#onPrimaryColorChange should set the shape's fill color with the parameter's color if the shape is not undefined", () => {
         const shape = {} as SVGGraphicsElement;
         toolShape['shape'] = shape;
@@ -173,6 +181,14 @@ describe('ToolShape', () => {
         toolShape['shape'] = undefined;
         toolShape.onSecondaryColorChange(colorSpyObj);
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#onToolDeselection should call stopDrawing and set isShiftDown to false', () => {
+        const stopDrawingSpy = spyOn<any>(toolShape, 'stopDrawing');
+        toolShape['isShiftDown'] = true;
+        toolShape.onToolDeselection();
+        expect(stopDrawingSpy).toHaveBeenCalled();
+        expect(toolShape['isShiftDown']).toEqual(false);
     });
 
     it('#createShape should not fill the shape if it is BorderOnly', () => {
