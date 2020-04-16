@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawingComponent } from '@app/drawing/components/drawing/drawing.component';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -7,58 +7,71 @@ import { ModalService } from '@app/modals/services/modal.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { TouchService } from '@app/shared/services/touch.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
 
 // tslint:disable: max-line-length
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
 
-class ColorMock {
-    toRgbaString = () => 'rgba(69, 69, 69, 1)';
-}
-
 describe('DrawingComponent', () => {
     let component: DrawingComponent;
     let fixture: ComponentFixture<DrawingComponent>;
-    let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    let colorSpyObj: jasmine.SpyObj<Color>;
+    let drawingServiceMock: DrawingService;
+    let changeDetectorRefSpyObj: jasmine.SpyObj<ChangeDetectorRef>;
+    let currentToolSpyObj: jasmine.SpyObj<Tool>;
     let currentToolServiceSpyObj: jasmine.SpyObj<CurrentToolService>;
     let gridServiceSpyObj: jasmine.SpyObj<GridService>;
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
     let modalServiceSpyObj: jasmine.SpyObj<ModalService>;
-    let colorSpyObj: jasmine.SpyObj<Color>;
 
-    const toggleGridSubject = new Subject<void>();
-    const increaseGridSizeSubject = new Subject<void>();
-    const decreaseGridSizeSubject = new Subject<void>();
+    let toggleGridSubject: Subject<void>;
+    let increaseGridSizeSubject: Subject<void>;
+    let decreaseGridSizeSubject: Subject<void>;
+    let forceDetectChangesSubject: Subject<void>;
 
     const returnedDimensions: Vec2 = { x: 10, y: 10 };
+    const drawingLabels = ['Please', 'Fix', 'This'];
+    const colorString = 'CanaDank';
     beforeEach(async(() => {
         colorSpyObj = jasmine.createSpyObj('Color', ['toRgbaString']);
-        colorSpyObj.toRgbaString.and.returnValue('rgba(1, 1, 1, 1)');
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['reappendStoredElements'], {
+        colorSpyObj.toRgbaString.and.returnValue(colorString);
+        forceDetectChangesSubject = new Subject<void>();
+        drawingServiceMock = ({
+            forceDetectChanges$: forceDetectChangesSubject,
             drawingRoot: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
             dimensions: returnedDimensions,
+            labels: drawingLabels,
             backgroundColor: colorSpyObj,
-        });
-        drawingServiceSpyObj.backgroundColor = new ColorMock() as Color;
+            reappendStoredElements(): void {}, // tslint:disable-line: no-empty
+            saveDrawingToStorage(): void {}, // tslint:disable-line: no-empty
+        } as unknown) as DrawingService;
 
-        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [
-            'afterDrawingInit',
-            'setRenderer',
-            'onMouseMove',
-            'onMouseDown',
-            'onMouseUp',
-            'onMouseDoubleClick',
-            'onKeyDown',
-            'onKeyUp',
-            'onMouseEnter',
-            'onMouseLeave',
-            'setMouseDown',
-            'setMouseInsideDrawing',
-        ]);
+        changeDetectorRefSpyObj = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+
+        currentToolSpyObj = jasmine.createSpyObj('Tool', ['onToolDeselection']);
+        currentToolServiceSpyObj = jasmine.createSpyObj(
+            'CurrentToolService',
+            [
+                'onMouseMove',
+                'onMouseDown',
+                'onMouseUp',
+                'onScroll',
+                'onMouseDoubleClick',
+                'onKeyDown',
+                'onKeyUp',
+                'onMouseEnter',
+                'onMouseLeave',
+            ],
+            {
+                currentTool: currentToolSpyObj,
+            }
+        );
 
         gridServiceSpyObj = jasmine.createSpyObj('GridService', ['toggleDisplay', 'increaseSize', 'decreaseSize'], {
             isDisplayEnabled: true,
@@ -66,20 +79,24 @@ describe('DrawingComponent', () => {
             opacity: 1,
         });
 
-        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], {
-            isModalPresent: false,
-        });
-
+        toggleGridSubject = new Subject<void>();
+        increaseGridSizeSubject = new Subject<void>();
+        decreaseGridSizeSubject = new Subject<void>();
         shortcutServiceSpyObj = jasmine.createSpyObj('ShortcutService', [], {
             toggleGrid$: toggleGridSubject,
             increaseGridSize$: increaseGridSizeSubject,
             decreaseGridSize$: decreaseGridSizeSubject,
         });
 
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], {
+            isModalPresent: false,
+        });
+
         TestBed.configureTestingModule({
             declarations: [DrawingComponent],
             providers: [
-                { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: ChangeDetectorRef, useValue: changeDetectorRefSpyObj },
+                { provide: DrawingService, useValue: drawingServiceMock },
                 { provide: CurrentToolService, useValue: currentToolServiceSpyObj },
                 { provide: GridService, useValue: gridServiceSpyObj },
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
@@ -89,27 +106,18 @@ describe('DrawingComponent', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(DrawingComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-    afterEach(() => {
-        component['drawingService'] = {
-            drawingRoot: document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
-            svgDrawingContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-            svgUserInterfaceContent: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
-        } as DrawingService;
-        fixture.destroy();
-    });
+        component['changeDetectorRef'] = changeDetectorRefSpyObj;
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
     it("#ngOnInit should subscribe to shortcutService's toggleGrid, increaseGridSize and decreaseGridSize", async(() => {
-        component.ngOnInit();
         toggleGridSubject.next();
         increaseGridSizeSubject.next();
         decreaseGridSizeSubject.next();
@@ -119,6 +127,12 @@ describe('DrawingComponent', () => {
         expect(gridServiceSpyObj.decreaseSize).toHaveBeenCalled();
     }));
 
+    it("#ngOnInit should subscribe to drawingService's forceDetectChanges", () => {
+        forceDetectChangesSubject.next();
+
+        expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
+    });
+
     it("#ngAfterViewInit should set DrawingService's rootElement and call reappendStoredElements", () => {
         const expectedDrawingRoot = {} as SVGSVGElement;
         const expectedSvgDrawingContent = {} as SVGGElement;
@@ -127,43 +141,38 @@ describe('DrawingComponent', () => {
         component['drawingRoot'].nativeElement = expectedDrawingRoot;
         component['svgDrawingContent'].nativeElement = expectedSvgDrawingContent;
         component['svgUserInterfaceContent'].nativeElement = expectedSvgUserInterfaceContent;
-        const drawingServiceMock = {
-            drawingRoot: {} as SVGSVGElement,
-            svgDrawingContent: {} as SVGGElement,
-            svgUserInterfaceContent: {} as SVGGElement,
-            reappendStoredElements(): void {}, // tslint:disable-line: no-empty
-        } as DrawingService;
-        component['drawingService'] = drawingServiceMock;
 
         const reappendStoredElementsSpy = spyOn(drawingServiceMock, 'reappendStoredElements');
+        const saveDrawingToStorageSpy = spyOn(drawingServiceMock, 'saveDrawingToStorage');
 
         component.ngAfterViewInit();
-
         expect(component['drawingService'].drawingRoot).toBe(expectedDrawingRoot);
         expect(component['drawingService'].svgDrawingContent).toBe(expectedSvgDrawingContent);
         expect(component['drawingService'].svgUserInterfaceContent).toBe(expectedSvgUserInterfaceContent);
         expect(reappendStoredElementsSpy).toHaveBeenCalled();
+        expect(saveDrawingToStorageSpy).toHaveBeenCalled();
     });
 
-    it('#ngOnDestroy should unsubscribe from its subscriptions and set the svg attributes of drawingService to undefined', async(() => {
+    it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
+        const forceDetectChangesSubscriptionSpy = spyOn<any>(component['forceDetectChangesSubscription'], 'unsubscribe');
         const toggleGridSubscriptionSpy = spyOn<any>(component['toggleGridSubscription'], 'unsubscribe');
         const increaseGridSizeSubscriptionSpy = spyOn<any>(component['increaseGridSizeSubscription'], 'unsubscribe');
         const decreaseGridSizeSubscriptionSpy = spyOn<any>(component['decreaseGridSizeSubscription'], 'unsubscribe');
-        const drawingServiceMock = {
-            drawingRoot: {} as SVGSVGElement,
-            svgDrawingContent: {} as SVGGElement,
-            svgUserInterfaceContent: {} as SVGGElement,
-        } as DrawingService;
-        component['drawingService'] = drawingServiceMock;
+
         component.ngOnDestroy();
+        expect(forceDetectChangesSubscriptionSpy).toHaveBeenCalled();
         expect(toggleGridSubscriptionSpy).toHaveBeenCalled();
         expect(increaseGridSizeSubscriptionSpy).toHaveBeenCalled();
         expect(decreaseGridSizeSubscriptionSpy).toHaveBeenCalled();
+    }));
 
+    it('#ngOnDestroy should delete the svg attributes of drawingService and call onToolDeselection of the currentTool', () => {
+        component.ngOnDestroy();
+        expect(currentToolSpyObj.onToolDeselection).toHaveBeenCalled();
         expect(component['drawingService'].drawingRoot).toBeUndefined();
         expect(component['drawingService'].svgDrawingContent).toBeUndefined();
         expect(component['drawingService'].svgUserInterfaceContent).toBeUndefined();
-    }));
+    });
 
     it("#onMouseMove should forward HostListener events to CurrentToolService's onMouseMove if isModalPresent in modalService is false", () => {
         component.onMouseMove({} as MouseEvent);
@@ -205,6 +214,48 @@ describe('DrawingComponent', () => {
         component['modalService'] = modalServiceSpyObj;
         component.onMouseUp({} as MouseEvent);
         expect(currentToolServiceSpyObj.onMouseUp).not.toHaveBeenCalled();
+    });
+
+    it("#onScroll should forward HostListener events to CurrentToolService's onScroll if isModalPresent in modalService is false", () => {
+        component.onScroll({} as WheelEvent);
+        expect(currentToolServiceSpyObj.onScroll).toHaveBeenCalled();
+    });
+
+    it("#onScroll should not forward HostListener events to CurrentToolService's onScroll if isModalPresent in modalService is true", () => {
+        modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], {
+            isModalPresent: true,
+        });
+        component['modalService'] = modalServiceSpyObj;
+        component.onScroll({} as WheelEvent);
+        expect(currentToolServiceSpyObj.onScroll).not.toHaveBeenCalled();
+    });
+
+    it('#onTouchMove should convert the event using TouchService and forward it to #onMouseMove', () => {
+        const onMouseMoveSpy = spyOn(component, 'onMouseMove');
+        const toucheServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent');
+        component.onTouchMove({} as TouchEvent);
+        expect(onMouseMoveSpy).toHaveBeenCalled();
+        expect(toucheServiceSpy).toHaveBeenCalled();
+    });
+
+    it('#onTouchStart should convert the event using TouchService and forward it to #onMouseDown and #onMouseEnter', () => {
+        const onMouseDownSpy = spyOn(component, 'onMouseDown');
+        const onMouseEnterSpy = spyOn(component, 'onMouseEnter');
+        const toucheServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent');
+        component.onTouchStart({} as TouchEvent);
+        expect(onMouseDownSpy).toHaveBeenCalled();
+        expect(onMouseEnterSpy).toHaveBeenCalled();
+        expect(toucheServiceSpy).toHaveBeenCalled();
+    });
+
+    it('#onTouchEnd should convert the event using TouchService and forward it to #onMouseUp and #onMouseLeave', () => {
+        const onMouseUpSpy = spyOn(component, 'onMouseUp');
+        const onMouseLeaveSpy = spyOn(component, 'onMouseLeave');
+        const toucheServiceSpy = spyOn(TouchService, 'getMouseEventFromTouchEvent');
+        component.onTouchEnd({} as TouchEvent);
+        expect(onMouseUpSpy).toHaveBeenCalled();
+        expect(onMouseLeaveSpy).toHaveBeenCalled();
+        expect(toucheServiceSpy).toHaveBeenCalled();
     });
 
     it("#onMouseDoubleClick should forward HostListener events to CurrentToolService's onMouseDoubleClick if isModalPresent in modalService is false", () => {
