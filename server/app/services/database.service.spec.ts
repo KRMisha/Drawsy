@@ -7,12 +7,14 @@ import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import { JSDOM } from 'jsdom';
 import { MongoCallback, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
 
 // tslint:disable: no-string-literal
 
+const createDomPurify = require('dompurify'); // tslint:disable-line: no-require-imports no-var-requires
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -149,11 +151,12 @@ describe('DatabaseService', () => {
             const newFileContent =
                 '<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800">' +
                 '<title>NewTitle</title><desc>NewLabel1,NewLabel2</desc></svg>';
+            const purifiedContent = createDomPurify(new JSDOM('').window).sanitize(newFileContent);
             await databaseService.updateFile(fileId, newFileContent);
 
             const file = await databaseService['collection'].findOne({ _id: new ObjectId(fileId) });
             expect(file).to.be.not.null;
-            expect(file!.content).to.equal(newFileContent); // tslint:disable-line: no-non-null-assertion
+            expect(file!.content).to.equal(purifiedContent); // tslint:disable-line: no-non-null-assertion
         });
 
         it('#deleteFile should throw a 404 error for an ID with no associated file', async () => {
