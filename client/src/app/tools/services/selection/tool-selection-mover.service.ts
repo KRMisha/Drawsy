@@ -46,11 +46,11 @@ export class ToolSelectionMoverService {
     }
 
     onKeyUp(event: KeyboardEvent): void {
+        this.setArrowStateFromEvent(event, false);
+
         if (this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows) {
             return;
         }
-
-        this.setArrowStateFromEvent(event, false);
 
         const hasStoppedMovingWithKeys = this.arrowKeysHeldStates.every((value: boolean) => !value);
         if (hasStoppedMovingWithKeys) {
