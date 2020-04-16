@@ -54,15 +54,8 @@ export class ToolSelectionMoverService {
 
         const hasStoppedMovingWithKeys = this.arrowKeysHeldStates.every((value: boolean) => !value);
         if (hasStoppedMovingWithKeys) {
-            this.stopMovingSelectionWithArrows();
+            this.stopMovingSelection();
         }
-    }
-
-    onToolDeselection(): void {
-        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
-            this.stopMovingSelectionWithArrows();
-        }
-        this.arrowKeysHeldStates.fill(false);
     }
 
     startMovingSelection(): void {
@@ -88,7 +81,12 @@ export class ToolSelectionMoverService {
     }
 
     stopMovingSelection(): void {
-        this.toolSelectionStateService.state = SelectionState.None;
+        if (
+            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithMouse &&
+            this.toolSelectionStateService.state !== SelectionState.MovingSelectionWithArrows
+        ) {
+            return;
+        }
 
         const selectedElementsCopy = [...this.toolSelectionStateService.selectedElements];
         this.historyService.addCommand(
@@ -98,6 +96,18 @@ export class ToolSelectionMoverService {
                 this.toolSelectionTransformService.getElementListTransformsCopy(this.toolSelectionStateService.selectedElements)
             )
         );
+
+        if (this.toolSelectionStateService.state === SelectionState.MovingSelectionWithArrows) {
+            window.clearTimeout(this.movingTimeoutId);
+            window.clearInterval(this.movingIntervalId);
+        }
+
+        this.toolSelectionStateService.state = SelectionState.None;
+    }
+
+    reset(): void {
+        this.arrowKeysHeldStates.fill(false);
+        this.stopMovingSelection();
     }
 
     private setArrowStateFromEvent(event: KeyboardEvent, isKeyDown: boolean): void {
@@ -144,12 +154,5 @@ export class ToolSelectionMoverService {
         }
 
         this.moveSelection(moveOffset);
-    }
-
-    private stopMovingSelectionWithArrows(): void {
-        this.stopMovingSelection();
-
-        window.clearTimeout(this.movingTimeoutId);
-        window.clearInterval(this.movingIntervalId);
     }
 }

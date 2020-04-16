@@ -112,12 +112,6 @@ describe('Tool', () => {
         expect(methodStubSpy).toHaveBeenCalled();
     });
 
-    it('#update should be called when called', () => {
-        const methodStubSpy = spyOn(tool, 'update').and.callThrough();
-        tool.update();
-        expect(methodStubSpy).toHaveBeenCalled();
-    });
-
     it('#onToolSelection should be called when called', () => {
         const methodStubSpy = spyOn(tool, 'onToolSelection').and.callThrough();
         tool.onToolSelection();
