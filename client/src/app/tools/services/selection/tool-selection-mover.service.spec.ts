@@ -1,5 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
+import { TransformElementsCommand } from '@app/drawing/classes/commands/transform-elements-command';
 import { HistoryService } from '@app/drawing/services/history.service';
+import { Vec2 } from '@app/shared/classes/vec2';
+import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -9,18 +12,17 @@ import { ToolSelectionTransformService } from './tool-selection-transform.servic
 // tslint:disable: no-any
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal
+// tslint:disable: max-line-length
 
-fdescribe('ToolSelectionMoverService', () => {
-    // const moveOffset = 3;
+describe('ToolSelectionMoverService', () => {
     let service: ToolSelectionMoverService;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let toolSelectionTransformServiceSpyObj: jasmine.SpyObj<ToolSelectionTransformService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
-    let setArrowStateFromEventSpy: any;
-
-    const initialSelectedElements = [{} as SVGGraphicsElement];
+    const initialElement = {} as SVGGraphicsElement;
+    const initialSelectedElements = [initialElement, initialElement];
 
     beforeEach(() => {
         toolSelectionStateServiceSpyObj = jasmine.createSpyObj('ToolSelectionStateService', ['updateSelectionRect'], {
@@ -49,8 +51,6 @@ fdescribe('ToolSelectionMoverService', () => {
         });
 
         service = TestBed.inject(ToolSelectionMoverService);
-
-        setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
     });
 
     it('should be created', () => {
@@ -58,11 +58,13 @@ fdescribe('ToolSelectionMoverService', () => {
     });
 
     it('#onKeyDown should early return if the key is not an arrow key', () => {
+        const setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
         service.onKeyDown({ key: 'K' } as KeyboardEvent);
         expect(setArrowStateFromEventSpy).not.toHaveBeenCalled();
     });
 
     it('#onKeyDown should set arrow state', () => {
+        const setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
         service.onKeyDown({ key: 'ArrowUp' } as KeyboardEvent);
         expect(setArrowStateFromEventSpy).toHaveBeenCalled();
     });
@@ -89,6 +91,7 @@ fdescribe('ToolSelectionMoverService', () => {
     });
 
     it('#onKeyUp should set arrow state and, if the arrow buttons are released, call #stopMovingSelection', () => {
+        const setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
         const stopMovingSelectionSpy = spyOn(service, 'stopMovingSelection');
         const toolSelectionStateServiceMock = { state: SelectionState.MovingSelectionWithArrows } as ToolSelectionStateService;
         service['toolSelectionStateService'] = toolSelectionStateServiceMock;
@@ -99,6 +102,7 @@ fdescribe('ToolSelectionMoverService', () => {
     });
 
     it('#onKeyUp should return early if the selection is not being moved with arrows', () => {
+        const setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
         const toolSelectionStateServiceMock = { state: SelectionState.None } as ToolSelectionStateService;
         service['toolSelectionStateService'] = toolSelectionStateServiceMock;
         const event = {} as KeyboardEvent;
@@ -136,81 +140,172 @@ fdescribe('ToolSelectionMoverService', () => {
         );
     });
 
-    // it('#setArrowStateFromEvent should set the correct state depeding on the event', () => {
-    //     service['setArrowStateFromEvent']({ key: 'ArrowUp' } as KeyboardEvent, true);
-    //     expect(service['isArrowUpHeld']).toEqual(true);
+    it("#moveElement should apply a translation to the element's transform matrix", () => {
+        const expectedMatrix = {} as DOMMatrix;
+        const matrixSpyObj = jasmine.createSpyObj('DOMMatrix', ['translate']);
+        matrixSpyObj.translate.and.returnValue(expectedMatrix);
+        const transformSpyObj = jasmine.createSpyObj('SVGTransform', ['setMatrix'], { matrix: matrixSpyObj });
+        const svgTransformListSpyObj = jasmine.createSpyObj('SVGTransformList', ['getItem']);
+        svgTransformListSpyObj.getItem.and.returnValue(transformSpyObj);
+        const animatedTransformListMock = { baseVal: svgTransformListSpyObj } as SVGAnimatedTransformList;
+        const elementMock = { transform: animatedTransformListMock } as SVGGraphicsElement;
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowDown' } as KeyboardEvent, true);
-    //     expect(service['isArrowDownHeld']).toEqual(true);
+        const offset = { x: 2, y: 2 } as Vec2;
+        service.moveElement(elementMock, offset);
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowLeft' } as KeyboardEvent, true);
-    //     expect(service['isArrowLeftHeld']).toEqual(true);
+        expect(matrixSpyObj.translate).toHaveBeenCalledWith(offset.x, offset.y);
+        expect(transformSpyObj.setMatrix).toHaveBeenCalledWith(expectedMatrix);
+    });
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowRight' } as KeyboardEvent, true);
-    //     expect(service['isArrowRightHeld']).toEqual(true);
+    it('#stopMovingSelection should return early if the selection is not being moved', () => {
+        const toolSelectionStateServiceMock = { state: SelectionState.None } as ToolSelectionStateService;
+        service['toolSelectionStateService'] = toolSelectionStateServiceMock;
+        service.stopMovingSelection();
+        expect(historyServiceSpyObj.addCommand).not.toHaveBeenCalled();
+    });
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowUp' } as KeyboardEvent, false);
-    //     expect(service['isArrowUpHeld']).toEqual(false);
+    it('#stopMovingSelection should add a new transform element command to the historyService and set the selection state to None', () => {
+        const toolSelectionStateServiceMock = {
+            state: SelectionState.MovingSelectionWithMouse,
+            selectedElements: initialSelectedElements,
+        } as ToolSelectionStateService;
+        service['toolSelectionStateService'] = toolSelectionStateServiceMock;
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowDown' } as KeyboardEvent, false);
-    //     expect(service['isArrowDownHeld']).toEqual(false);
+        const selectedElementsTransformsBeforeMoveMock = [[]] as SVGTransform[][];
+        service['selectedElementTransformsBeforeMove'] = selectedElementsTransformsBeforeMoveMock;
+        const expectedTranformsCopy = [[]] as SVGTransform[][];
+        toolSelectionTransformServiceSpyObj.getElementListTransformsCopy.and.returnValue(expectedTranformsCopy);
+        service.stopMovingSelection();
+        expect(toolSelectionTransformServiceSpyObj.getElementListTransformsCopy).toHaveBeenCalledWith(initialSelectedElements);
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(
+            new TransformElementsCommand(initialSelectedElements, selectedElementsTransformsBeforeMoveMock, expectedTranformsCopy)
+        );
+        expect(toolSelectionStateServiceMock.state).toEqual(SelectionState.None);
+    });
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowLeft' } as KeyboardEvent, false);
-    //     expect(service['isArrowLeftHeld']).toEqual(false);
+    it("#stopMovingSelection should call window's clearTimeout and clearInterval when the selection was moved with the arrow keys", () => {
+        const toolSelectionStateServiceMock = {
+            state: SelectionState.MovingSelectionWithArrows,
+            selectedElements: initialSelectedElements,
+        } as ToolSelectionStateService;
+        service['toolSelectionStateService'] = toolSelectionStateServiceMock;
 
-    //     service['setArrowStateFromEvent']({ key: 'ArrowRight' } as KeyboardEvent, false);
-    //     expect(service['isArrowRightHeld']).toEqual(false);
-    // });
+        const clearTimeoutSpy = spyOn(window, 'clearTimeout');
+        const clearIntervalSpy = spyOn(window, 'clearInterval');
+        service.stopMovingSelection();
+        expect(clearTimeoutSpy).toHaveBeenCalled();
+        expect(clearIntervalSpy).toHaveBeenCalled();
+    });
 
-    // it('#moveElementList should tranlate matrix of elements sent', () => {
-    //     const matrixSpyObj = jasmine.createSpyObj('DOMMatrix', ['translate']);
-    //     const svgTransformListSpyObj = jasmine.createSpyObj('SVGTransformList', ['setMatrix'], {
-    //         matrix: matrixSpyObj,
-    //     });
-    //     const baseValSpyObj = jasmine.createSpyObj('SVGTransformList', ['getItem']);
-    //     baseValSpyObj.getItem.and.returnValue(svgTransformListSpyObj);
-    //     const elementSpyObj = jasmine.createSpyObj('SVGGraphicsElement', [], {
-    //         transform: { baseVal: baseValSpyObj },
-    //     });
-    //     service['moveElementList']([elementSpyObj], { x: 69, y: 420 });
-    //     expect(matrixSpyObj.translate).toHaveBeenCalled();
-    // });
+    it('#reset should call #stopMovingSelection and set the arrow keys held state to false', () => {
+        const stopMovingSelectionSpy = spyOn(service, 'stopMovingSelection');
+        service.reset();
+        expect(service['arrowKeysHeldStates']).toEqual([false, false, false, false]);
+        expect(stopMovingSelectionSpy).toHaveBeenCalled();
+    });
 
-    // it('#moveSelectionInArrowDirection should not move horizontaly if right and left key are held', () => {
-    //     service['isArrowLeftHeld'] = true;
-    //     service['isArrowRightHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].x).toEqual(0);
-    // });
+    it('#setArrowStateFromEvent should set the correct state depeding on the event', () => {
+        service['arrowKeysHeldStates'] = [false, false, false, false];
 
-    // it('#moveSelectionInArrowDirection should not move vertically if up and down key are held', () => {
-    //     service['isArrowUpHeld'] = true;
-    //     service['isArrowDownHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].y).toEqual(0);
-    // });
+        const event = { key: 'ArrowUp' } as KeyboardEvent;
+        service['setArrowStateFromEvent'](event, true);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Up]).toEqual(true);
 
-    // it('#moveSelectionInArrowDirection should move horizontaly if left key is held', () => {
-    //     service['isArrowLeftHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].x).toEqual(-moveOffset);
-    // });
+        service['setArrowStateFromEvent']({ key: 'ArrowDown' } as KeyboardEvent, true);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Down]).toEqual(true);
 
-    // it('#moveSelectionInArrowDirection should move vertically if up key is held', () => {
-    //     service['isArrowUpHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].y).toEqual(-moveOffset);
-    // });
+        service['setArrowStateFromEvent']({ key: 'ArrowLeft' } as KeyboardEvent, true);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Left]).toEqual(true);
 
-    // it('#moveSelectionInArrowDirection should move horizontaly if right key is held', () => {
-    //     service['isArrowRightHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].x).toEqual(moveOffset);
-    // });
+        service['setArrowStateFromEvent']({ key: 'ArrowRight' } as KeyboardEvent, true);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Right]).toEqual(true);
 
-    // it('#moveSelectionInArrowDirection should move vertically if up down is held', () => {
-    //     service['isArrowDownHeld'] = true;
-    //     service['moveSelectionInArrowDirection']();
-    //     expect(service['totalSelectionMoveOffset'].y).toEqual(moveOffset);
-    // });
+        service['setArrowStateFromEvent']({ key: 'ArrowUp' } as KeyboardEvent, false);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Up]).toEqual(false);
+
+        service['setArrowStateFromEvent']({ key: 'ArrowDown' } as KeyboardEvent, false);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Down]).toEqual(false);
+
+        service['setArrowStateFromEvent']({ key: 'ArrowLeft' } as KeyboardEvent, false);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Left]).toEqual(false);
+
+        service['setArrowStateFromEvent']({ key: 'ArrowRight' } as KeyboardEvent, false);
+        expect(service['arrowKeysHeldStates'][ArrowKey.Right]).toEqual(false);
+    });
+
+    it('#startMovingSelectionWithArrows should set the selection state to MovingSelectionWithArrows and call #startMovingSelection and #moveSelectionWithArrows', async(() => {
+        const toolSelectionStateServiceMock = {
+            state: SelectionState.None,
+            selectedElements: initialSelectedElements,
+        } as ToolSelectionStateService;
+        service['toolSelectionStateService'] = toolSelectionStateServiceMock;
+        const startMovingSelectionSpy = spyOn<any>(service, 'startMovingSelection');
+        const moveSelectionWithArrowsSpy = spyOn<any>(service, 'moveSelectionWithArrows').and.stub();
+        service['startMovingSelectionWithArrows']();
+        expect(toolSelectionStateServiceMock.state).toEqual(SelectionState.MovingSelectionWithArrows);
+        expect(startMovingSelectionSpy).toHaveBeenCalled();
+        expect(moveSelectionWithArrowsSpy).toHaveBeenCalled();
+
+        window.clearTimeout(service['movingTimeoutId']);
+        window.clearInterval(service['movingIntervalId']);
+    }));
+
+    it('#startMovingSelectionWithArrows should call moveSelectionWithArrows after 500 ms', async(() => {
+        jasmine.clock().install();
+
+        const moveSelectionWithArrowsSpy = spyOn<any>(service, 'moveSelectionWithArrows').and.stub();
+        const timeoutDuration = 500;
+        const intervalDuration = 100;
+        service['startMovingSelectionWithArrows']();
+        let callcount = 1;
+        jasmine.clock().tick(timeoutDuration);
+        expect(moveSelectionWithArrowsSpy).toHaveBeenCalledTimes(callcount++);
+        jasmine.clock().tick(intervalDuration);
+        expect(moveSelectionWithArrowsSpy).toHaveBeenCalledTimes(callcount++);
+
+        window.clearTimeout(service['movingTimeoutId']);
+        window.clearInterval(service['movingIntervalId']);
+
+        jasmine.clock().uninstall();
+    }));
+
+    it('#moveSelectionInArrowDirection should not move horizontaly if right and left keys are held and should not move vertically if the up and down keys are held', () => {
+        const moveSelectionSpy = spyOn(service, 'moveSelection');
+        service['arrowKeysHeldStates'][ArrowKey.Left] = true;
+        service['arrowKeysHeldStates'][ArrowKey.Right] = true;
+        service['moveSelectionWithArrows']();
+        expect(moveSelectionSpy).toHaveBeenCalledWith({ x: 0, y: 0 });
+    });
+
+    it('#moveSelectionInArrowDirection should move horizontaly if left key is held', () => {
+        const moveSelectionSpy = spyOn(service, 'moveSelection');
+        const moveOffset = 3;
+        service['arrowKeysHeldStates'][ArrowKey.Left] = true;
+        service['moveSelectionWithArrows']();
+        expect(moveSelectionSpy).toHaveBeenCalledWith({ x: -moveOffset, y: 0 });
+    });
+
+    it('#moveSelectionInArrowDirection should move vertically if up key is held', () => {
+        const moveSelectionSpy = spyOn(service, 'moveSelection');
+        const moveOffset = 3;
+        service['arrowKeysHeldStates'][ArrowKey.Up] = true;
+        service['moveSelectionWithArrows']();
+        expect(moveSelectionSpy).toHaveBeenCalledWith({ x: 0, y: -moveOffset });
+    });
+
+    it('#moveSelectionInArrowDirection should move horizontaly if right key is held', () => {
+        const moveSelectionSpy = spyOn(service, 'moveSelection');
+        const moveOffset = 3;
+        service['arrowKeysHeldStates'][ArrowKey.Right] = true;
+        service['moveSelectionWithArrows']();
+        expect(moveSelectionSpy).toHaveBeenCalledWith({ x: moveOffset, y: 0 });
+    });
+
+    it('#moveSelectionInArrowDirection should move vertically if up down is held', () => {
+        const moveSelectionSpy = spyOn(service, 'moveSelection');
+        const moveOffset = 3;
+        service['arrowKeysHeldStates'][ArrowKey.Down] = true;
+        service['moveSelectionWithArrows']();
+        expect(moveSelectionSpy).toHaveBeenCalledWith({ x: 0, y: moveOffset });
+    });
 });
