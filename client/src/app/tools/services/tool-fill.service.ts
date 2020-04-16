@@ -1,4 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -30,7 +31,8 @@ export class ToolFillService extends Tool {
         drawingService: DrawingService,
         colorService: ColorService,
         historyService: HistoryService,
-        private rasterizationService: RasterizationService
+        private rasterizationService: RasterizationService,
+        private snackBar: MatSnackBar
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Fill);
         this.settings.fillDeviation = ToolDefaults.defaultFillDeviation;
@@ -38,6 +40,11 @@ export class ToolFillService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
+            const snackBarDuration = 500;
+            this.snackBar.open('Le remplissage est en cours', undefined, {
+                duration: snackBarDuration,
+            });
+
             this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
             this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
             this.fillWithColor();
@@ -107,10 +114,11 @@ export class ToolFillService extends Tool {
 
     private addRectangleOnPixel(pixel: Vec2): void {
         const rectangle: SVGPathElement = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(rectangle, 'x', `${pixel.x}`);
-        this.renderer.setAttribute(rectangle, 'y', `${pixel.y}`);
-        this.renderer.setAttribute(rectangle, 'width', '1');
-        this.renderer.setAttribute(rectangle, 'height', '1');
+        const pixelOffset = 0.25;
+        this.renderer.setAttribute(rectangle, 'x', `${pixel.x - pixelOffset}`);
+        this.renderer.setAttribute(rectangle, 'y', `${pixel.y - pixelOffset}`);
+        this.renderer.setAttribute(rectangle, 'width', '1.5');
+        this.renderer.setAttribute(rectangle, 'height', '1.5');
         this.renderer.appendChild(this.group, rectangle);
     }
 

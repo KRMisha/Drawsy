@@ -1,5 +1,6 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -27,6 +28,7 @@ describe('ToolFillService', () => {
     let canvasContextSpyObj: jasmine.SpyObj<CanvasRenderingContext2D>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let rasterizationServiceSpyObj: jasmine.SpyObj<RasterizationService>;
+    let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
     let service: ToolFillService;
 
     let pixelQueueSpyObj: jasmine.SpyObj<Queue<Vec2>>;
@@ -66,6 +68,8 @@ describe('ToolFillService', () => {
         rasterizationServiceSpyObj.getCanvasFromSvgRoot.and.returnValue(Promise.resolve(canvasSpyObj));
         rasterizationServiceSpyObj.getPixelColor.and.returnValue(colorSpyObj);
 
+        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
+
         pixelQueueSpyObj = jasmine.createSpyObj('Queue<Vec2>', ['isEmpty', 'enqueue', 'dequeue']);
 
         TestBed.configureTestingModule({
@@ -76,6 +80,7 @@ describe('ToolFillService', () => {
                 { provide: ColorService, useValue: colorServiceSpyObj },
                 { provide: HistoryService, useValue: historyServiceSpyObj },
                 { provide: RasterizationService, useValue: rasterizationServiceSpyObj },
+                { provide: MatSnackBar, useValue: snackBarSpyObj },
             ],
         });
         service = TestBed.inject(ToolFillService);
@@ -100,7 +105,7 @@ describe('ToolFillService', () => {
         expect(rendererSpyObj.createElement).not.toHaveBeenCalled();
     });
 
-    it('#onMouseDown should fill the determined area with the selected color', () => {
+    it('#onMouseDown should fill the determined area with the selected color and open a snackbar', () => {
         const fillWithColorSpy = spyOn<any>(service, 'fillWithColor');
         const event = { button: MouseButton.Left } as MouseEvent;
         Tool.isMouseInsideDrawing = true;
@@ -108,6 +113,7 @@ describe('ToolFillService', () => {
 
         service.onMouseDown(event);
 
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Le remplissage est en cours', undefined, { duration: 500 });
         expect(rendererSpyObj.createElement).toHaveBeenCalledWith('g', 'svg');
         expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(service['group'], 'fill', expectedColor);
         expect(fillWithColorSpy).toHaveBeenCalled();
@@ -214,10 +220,10 @@ describe('ToolFillService', () => {
         service['addRectangleOnPixel'](point);
 
         expect(rendererSpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', `${point.x}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', `${point.y}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', '1');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', '1');
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', `${point.x - 0.25}`);
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', `${point.y - 0.25}`);
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', '1.5');
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', '1.5');
         expect(rendererSpyObj.appendChild).toHaveBeenCalledWith(service['group'], svgRectStub);
     });
 
