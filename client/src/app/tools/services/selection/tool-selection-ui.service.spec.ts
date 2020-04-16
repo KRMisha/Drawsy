@@ -101,7 +101,7 @@ describe('ToolSelectionUiService', () => {
         expect(drawingServiceSpyObj.removeUiElement).toHaveBeenCalledWith(svgRectElementMock);
     });
 
-    it('#updateUserSelectionRectCursor should call renderer\'s setStyle if the selection starts or is changing', () => {
+    it("#updateUserSelectionRectCursor should call renderer's setStyle if the selection starts or is changing", () => {
         const state1 = SelectionState.ChangingSelection;
         service.updateUserSelectionRectCursor(state1);
         expect(renderer2SpyObj.setStyle).toHaveBeenCalledWith(document.body, 'cursor', 'crosshair');
@@ -117,13 +117,13 @@ describe('ToolSelectionUiService', () => {
         expect(renderer2SpyObj.setStyle).toHaveBeenCalledWith(document.body, 'cursor', 'move');
     });
 
-    it('#updateUserSelectionRectCursor should call renderer\'s removeStyle in all other cases', () => {
+    it("#updateUserSelectionRectCursor should call renderer's removeStyle in all other cases", () => {
         const state = SelectionState.None;
         service.updateUserSelectionRectCursor(state);
         expect(renderer2SpyObj.removeStyle).toHaveBeenCalledWith(document.body, 'cursor');
     });
 
-    it('#reset should call #hideUserSelectionRect and call renderer\'s removeStyle', () => {
+    it("#reset should call #hideUserSelectionRect and call renderer's removeStyle", () => {
         const hideUserSelectionRectSpy = spyOn(service, 'hideUserSelectionRect');
         service.reset();
         expect(hideUserSelectionRectSpy).toHaveBeenCalled();
