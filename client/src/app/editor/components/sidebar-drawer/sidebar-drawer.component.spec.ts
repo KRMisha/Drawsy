@@ -445,16 +445,16 @@ describe('SidebarDrawerComponent', () => {
         expect(settingsMock.eraserSize).toEqual(0);
     }));
 
-    it('undoShortcutSubscription should call #undoCommand', async(() => {
-        const undoCommandSpy = spyOn(component, 'undoCommand');
+    it('undoShortcutSubscription should call #undo', async(() => {
+        const undoSpy = spyOn(component, 'undo');
         undoShortcutSubject.next();
-        expect(undoCommandSpy).toHaveBeenCalled();
+        expect(undoSpy).toHaveBeenCalled();
     }));
 
-    it('redoShortcutSubscription should call #redoCommand', async(() => {
-        const redoCommandSpy = spyOn(component, 'redoCommand');
+    it('redoShortcutSubscription should call #redo', async(() => {
+        const redoSpy = spyOn(component, 'redo');
         redoShortcutSubject.next();
-        expect(redoCommandSpy).toHaveBeenCalled();
+        expect(redoSpy).toHaveBeenCalled();
     }));
 
     it("#ngOnDestroy should unsubscribe from the formControls' valueChanges", async(() => {
@@ -565,13 +565,13 @@ describe('SidebarDrawerComponent', () => {
         expect(eraserSizeFormControlSpyObj.reset).not.toHaveBeenCalled();
     });
 
-    it('#undoCommand should forward the call to historyService and currentToolService', () => {
-        component.undoCommand();
+    it('#undo should forward the call to historyService and currentToolService', () => {
+        component.undo();
         expect(historyServiceSpyObj.undo).toHaveBeenCalled();
     });
 
-    it('#redoCommand should forward the call to historyService and currentToolService', () => {
-        component.redoCommand();
+    it('#redo should forward the call to historyService and currentToolService', () => {
+        component.redo();
         expect(historyServiceSpyObj.redo).toHaveBeenCalled();
     });
 

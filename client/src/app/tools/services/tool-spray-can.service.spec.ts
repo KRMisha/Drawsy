@@ -107,6 +107,12 @@ describe('ToolSprayCanService', () => {
         expect(stopSprayingSpy).toHaveBeenCalled();
     });
 
+    it('#onFocusOut should call #stopSpraying', () => {
+        const stopSprayingSpy = spyOn<any>(service, 'stopSpraying');
+        service.onFocusOut();
+        expect(stopSprayingSpy).toHaveBeenCalled();
+    });
+
     it("#onPrimaryColorChange should set the group's fill value if it is not undefined", () => {
         const groupStub = {} as SVGGElement;
         service['group'] = groupStub;

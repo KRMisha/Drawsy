@@ -35,10 +35,9 @@ export class DrawingSerializerService {
         const backgroundRectFill = Color.fromRgbaString(backgroundRectFillString ?? 'rgb(255, 255, 255)');
 
         const svgDrawingContent = svgFileContainer.drawingRoot.getElementsByTagName('g')[0];
-        const elements: SVGGraphicsElement[] = [];
-        for (const element of Array.from(svgDrawingContent.children)) {
-            elements.push(element.cloneNode(true) as SVGGraphicsElement);
-        }
+        const elements = Array.from(svgDrawingContent.children).map(
+            (element: SVGGraphicsElement) => element.cloneNode(true) as SVGGraphicsElement
+        );
 
         const drawingLoadOptions: DrawingLoadOptions = {
             dimensions: { x: svgFileContainer.drawingRoot.viewBox.baseVal.width, y: svgFileContainer.drawingRoot.viewBox.baseVal.height },

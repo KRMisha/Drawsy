@@ -1,4 +1,6 @@
 import { Injectable, OnDestroy, RendererFactory2 } from '@angular/core';
+import { RemoveElementsCommand } from '@app/drawing/classes/commands/remove-elements-command';
+import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -76,7 +78,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                     this.selectedElementsAfterInversion = [...this.toolSelectionStateService.selectedElements];
                     const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(userSelectionRect);
                     this.invertElementsSelection(elementsToInvert, this.selectedElementsAfterInversion);
-                    this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
+                    this.toolSelectionStateService.selectedElementsBounds = this.toolSelectionCollisionService.getElementListBounds(
                         this.selectedElementsAfterInversion
                     );
                 }
@@ -106,7 +108,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.currentMouseButtonDown = event.button;
         this.selectionOrigin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
 
-        if (this.isMouseInsideSelectedElementsRect() && event.button === MouseButton.Left) {
+        if (this.isMouseInsideSelectedElementBounds() && event.button === MouseButton.Left) {
             this.toolSelectionStateService.state = SelectionState.SelectionMoveStartClick;
             this.toolSelectionMoverService.startMovingSelection();
         } else {
@@ -148,9 +150,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                     }
                 } else if (element !== undefined) {
                     this.invertElementsSelection([element], this.toolSelectionStateService.selectedElements);
-                    this.toolSelectionStateService.selectedElementsRect = this.toolSelectionCollisionService.getElementListBounds(
-                        this.toolSelectionStateService.selectedElements
-                    );
+                    this.toolSelectionStateService.selectedElementsChanged$.next(this.toolSelectionStateService.selectedElements);
                 }
                 break;
             default:
@@ -167,7 +167,19 @@ export class ToolSelectionService extends Tool implements OnDestroy {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        this.toolSelectionMoverService.onKeyDown(event);
+        switch (event.key) {
+            case 'Backspace':
+            case 'Delete':
+                this.deleteSelection();
+                break;
+            case 'Escape':
+                this.toolSelectionStateService.selectedElements = [];
+                this.reset();
+                break;
+            default:
+                this.toolSelectionMoverService.onKeyDown(event);
+                break;
+        }
     }
 
     onKeyUp(event: KeyboardEvent): void {
@@ -186,6 +198,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
+        this.toolSelectionStateService.selectedElements = [];
         this.reset();
     }
 
@@ -196,11 +209,43 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         );
     }
 
-    private isMouseInsideSelectedElementsRect(): boolean {
-        if (this.toolSelectionStateService.selectedElementsRect === undefined) {
+    onDrawingLoad(): void {
+        this.toolSelectionStateService.selectedElements = [];
+        this.reset();
+    }
+
+    deleteSelection(): void {
+        if (this.toolSelectionStateService.selectedElements.length === 0) {
+            return;
+        }
+
+        const elementIndices = new Map<SVGGraphicsElement, number>(
+            this.drawingService.elements.map((element: SVGGraphicsElement, index: number) => [element, index])
+        );
+        this.toolSelectionStateService.selectedElements.sort((element1: SVGGraphicsElement, element2: SVGGraphicsElement) => {
+            // Map will always have indices for elements since their insertion is guaranteed just prior
+            // tslint:disable-next-line: no-non-null-assertion
+            return elementIndices.get(element2)! - elementIndices.get(element1)!;
+        });
+
+        const elementSiblingPairs: ElementSiblingPair[] = [];
+        for (const selectedElement of this.toolSelectionStateService.selectedElements) {
+            elementSiblingPairs.push({
+                element: selectedElement,
+                sibling: (selectedElement.nextSibling as SVGGraphicsElement) ?? undefined,
+            });
+            this.drawingService.removeElement(selectedElement);
+        }
+        this.toolSelectionStateService.selectedElements = [];
+
+        this.historyService.addCommand(new RemoveElementsCommand(this.drawingService, elementSiblingPairs));
+    }
+
+    private isMouseInsideSelectedElementBounds(): boolean {
+        if (this.toolSelectionStateService.selectedElementsBounds === undefined) {
             return false;
         }
-        return this.toolSelectionCollisionService.isPointInRect(Tool.mousePosition, this.toolSelectionStateService.selectedElementsRect);
+        return this.toolSelectionCollisionService.isPointInRect(Tool.mousePosition, this.toolSelectionStateService.selectedElementsBounds);
     }
 
     private invertElementsSelection(elementsToInvert: SVGGraphicsElement[], selectedElements: SVGGraphicsElement[]): void {
@@ -216,7 +261,6 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     private reset(): void {
         this.currentMouseButtonDown = undefined;
-        this.toolSelectionStateService.selectedElements = [];
         this.toolSelectionMoverService.reset();
         this.toolSelectionUiService.reset();
         this.toolSelectionStateService.state = SelectionState.None;
