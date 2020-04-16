@@ -1,5 +1,5 @@
 import { RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -142,7 +142,7 @@ export abstract class ToolShape extends Tool {
         const isValidNonRegular =
             !isShapeRegular && this.shapeOrigin.x !== Tool.mousePosition.x && this.shapeOrigin.y !== Tool.mousePosition.y;
         if (isValidRegular || isValidNonRegular) {
-            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            this.historyService.addCommand(new AddElementCommand(this.drawingService, this.shape));
         } else {
             this.drawingService.removeElement(this.shape);
         }

@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -197,7 +197,7 @@ export class ToolLineService extends Tool {
         this.isCurrentlyDrawing = false;
         this.drawingService.removeUiElement(this.previewLine);
         if (this.points.length > coordsPerPoint) {
-            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
+            this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
         } else {
             this.drawingService.removeElement(this.group);
         }
