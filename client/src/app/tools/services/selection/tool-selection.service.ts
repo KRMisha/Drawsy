@@ -191,6 +191,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     onToolDeselection(): void {
         this.selectAllShortcutSubscription.unsubscribe();
+        this.toolSelectionStateService.selectedElements = [];
         this.reset();
     }
 
@@ -199,6 +200,11 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         this.toolSelectionStateService.selectedElements = this.toolSelectionStateService.selectedElements.filter(
             (element: SVGGraphicsElement) => elements.has(element)
         );
+    }
+
+    onDrawingLoad(): void {
+        this.toolSelectionStateService.selectedElements = [];
+        this.reset();
     }
 
     deleteSelection(): void {
@@ -247,7 +253,6 @@ export class ToolSelectionService extends Tool implements OnDestroy {
 
     private reset(): void {
         this.currentMouseButtonDown = undefined;
-        this.toolSelectionStateService.selectedElements = [];
         this.toolSelectionMoverService.reset();
         this.toolSelectionUiService.reset();
         this.toolSelectionStateService.state = SelectionState.None;
