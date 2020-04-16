@@ -19,9 +19,7 @@ export class ToolSelectionUiService implements OnDestroy {
     private svgSelectedElementsRect: SVGRectElement;
     private svgControlPoints: SVGGraphicsElement[] = [];
 
-    private isSelectedElementsRectDisplayed = false;
-
-    private selectedElementsRectChangedSubscription: Subscription;
+    private selectedElementsBoundsChangedSubscription: Subscription;
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -30,9 +28,9 @@ export class ToolSelectionUiService implements OnDestroy {
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
-        this.selectedElementsRectChangedSubscription = this.toolSelectionStateService.selectedElementsRectChanged$.subscribe(
-            (rect: Rect | undefined) => {
-                this.setSelectedElementsRect(rect);
+        this.selectedElementsBoundsChangedSubscription = this.toolSelectionStateService.selectedElementsBoundsChanged$.subscribe(
+            (bounds: Rect | undefined) => {
+                this.setSelectedElementsRect(bounds);
             }
         );
 
@@ -40,7 +38,7 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.selectedElementsRectChangedSubscription.unsubscribe();
+        this.selectedElementsBoundsChangedSubscription.unsubscribe();
     }
 
     setUserSelectionRect(rect: Rect): void {
@@ -56,15 +54,22 @@ export class ToolSelectionUiService implements OnDestroy {
     }
 
     updateUserSelectionRectCursor(state: SelectionState): void {
-        if (state === SelectionState.MovingSelectionWithMouse) {
-            this.renderer.setStyle(this.drawingService.drawingRoot, 'cursor', 'move');
-        } else {
-            this.resetUserSelectionRectCursor();
+        switch (state) {
+            case SelectionState.ChangingSelection:
+                this.renderer.setStyle(document.body, 'cursor', 'crosshair');
+                break;
+            case SelectionState.MovingSelectionWithMouse:
+                this.renderer.setStyle(document.body, 'cursor', 'move');
+                break;
+            default:
+                this.renderer.removeStyle(document.body, 'cursor');
+                break;
         }
     }
 
-    resetUserSelectionRectCursor(): void {
-        this.renderer.removeStyle(this.drawingService.drawingRoot, 'cursor');
+    reset(): void {
+        this.hideUserSelectionRect();
+        this.renderer.removeStyle(document.body, 'cursor');
     }
 
     private createUiElements(): void {
@@ -95,7 +100,7 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private setSelectedElementsRect(rect: Rect | undefined): void {
         if (rect === undefined) {
-            this.hideSelectedElementsRect();
+            this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
             return;
         }
 
@@ -111,23 +116,7 @@ export class ToolSelectionUiService implements OnDestroy {
             this.renderer.setAttribute(this.svgControlPoints[i], 'cx', controlPointPositions[i].x.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'cy', controlPointPositions[i].y.toString());
         }
-        this.showSelectedElementsRect();
-    }
-
-    private showSelectedElementsRect(): void {
-        if (this.isSelectedElementsRectDisplayed) {
-            return;
-        }
-        this.isSelectedElementsRectDisplayed = true;
         this.drawingService.addUiElement(this.svgSelectedElementsRectGroup);
-    }
-
-    private hideSelectedElementsRect(): void {
-        if (!this.isSelectedElementsRectDisplayed) {
-            return;
-        }
-        this.isSelectedElementsRectDisplayed = false;
-        this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
     }
 
     private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {

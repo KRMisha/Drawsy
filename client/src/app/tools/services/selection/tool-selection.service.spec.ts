@@ -10,11 +10,11 @@ import { SelectionState } from '@app/tools/enums/selection-state.enum';
 import { ToolSelectionUiService } from '@app/tools/services/selection//tool-selection-ui.service';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
+import { ToolSelectionRotatorService } from '@app/tools/services/selection/tool-selection-rotator.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
-import { ToolSelectionRotatorService } from './tool-selection-rotator.service';
 
 // tslint:disable: max-file-line-count
 // tslint:disable: no-any
@@ -301,7 +301,7 @@ describe('ToolSelectionService', () => {
         expect(toolSelectionMoverServiceSpyObj.onKeyUp).toHaveBeenCalled();
     });
 
-    it('#update should remove from selection elements no longer in drawing', () => {
+    it('#onHystoryChange should remove from selection elements no longer in drawing', () => {
         const element1 = {} as SVGGraphicsElement;
         const element2 = {} as SVGGraphicsElement;
         const drawingServiceMock = ({ elements: [element1] } as unknown) as DrawingService;
@@ -309,7 +309,7 @@ describe('ToolSelectionService', () => {
 
         service['drawingService'] = drawingServiceMock;
 
-        service.update();
+        service.onHistoryChange();
 
         expect(selectionStateServiceStub.selectedElements.length).toEqual(1);
         expect(selectionStateServiceStub.selectedElements[0]).toBe(element1);
@@ -346,13 +346,13 @@ describe('ToolSelectionService', () => {
     it('#isMouseInsideSelectedElementsRect should return false if selection rect is undefined', () => {
         const toolSelectionStateServiceMock = ({ selectionRect: undefined } as unknown) as ToolSelectionStateService;
         selectionStateServiceStub = toolSelectionStateServiceMock;
-        const isMouseInsideSelectedElementsRect = service['isMouseInsideSelectedElementsRect']();
+        const isMouseInsideSelectedElementsRect = service['isMouseInsideSelectedElementBounds']();
         expect(isMouseInsideSelectedElementsRect).toEqual(false);
     });
 
     it('#isMouseInsideSelectedElementsRect should return value of isPointInRect if selection rect is not undefined', () => {
-        selectionStateServiceStub.selectedElementsRect = {} as Rect;
-        service['isMouseInsideSelectedElementsRect']();
+        selectionStateServiceStub.selectedElementsBounds = {} as Rect;
+        service['isMouseInsideSelectedElementBounds']();
         expect(toolSelectionCollisionServiceSpyObj.isPointInRect).toHaveBeenCalled();
     });
 });

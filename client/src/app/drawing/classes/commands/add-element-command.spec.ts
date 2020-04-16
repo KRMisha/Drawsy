@@ -1,15 +1,15 @@
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
-describe('AppendElementCommand', () => {
-    let command: AppendElementCommand;
+describe('AddElementCommand', () => {
+    let command: AddElementCommand;
     let drawingService: jasmine.SpyObj<DrawingService>;
     let element: SVGGraphicsElement;
 
     beforeEach(() => {
         element = ({} as unknown) as SVGGraphicsElement;
         drawingService = jasmine.createSpyObj('DrawingService', ['removeElement', 'addElement']);
-        command = new AppendElementCommand(drawingService, element);
+        command = new AddElementCommand(drawingService, element);
     });
 
     it('should create an instance', () => {

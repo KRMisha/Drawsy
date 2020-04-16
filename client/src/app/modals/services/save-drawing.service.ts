@@ -9,7 +9,7 @@ import { NewFileId } from '@common/communication/new-file-id';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides.';
+const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides';
 
 @Injectable({
     providedIn: 'root',

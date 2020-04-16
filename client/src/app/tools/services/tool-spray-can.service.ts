@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -41,6 +41,10 @@ export class ToolSprayCanService extends Tool {
     }
 
     onMouseLeave(event: MouseEvent): void {
+        this.stopSpraying();
+    }
+
+    onFocusOut(): void {
         this.stopSpraying();
     }
 
@@ -93,7 +97,7 @@ export class ToolSprayCanService extends Tool {
             return;
         }
         window.clearInterval(this.intervalId);
-        this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
+        this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
         this.group = undefined;
     }
 }

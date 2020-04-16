@@ -1,5 +1,5 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -140,13 +140,19 @@ describe('ToolBrush', () => {
         expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
-    it('#oMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
+    it('#onMouseLeave should not call #updatePath and #stopDrawing if left click is not held', () => {
         const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing').and.callThrough();
         Tool.isLeftMouseButtonDown = false;
         toolBrush.onMouseLeave({ button: MouseButton.Right } as MouseEvent);
 
         expect(updatePathSpy).not.toHaveBeenCalled();
         expect(stopDrawingSpy).not.toHaveBeenCalled();
+    });
+
+    it('#onFocusOut should call #stopDrawing', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing');
+        toolBrush.onFocusOut();
+        expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
     it("#onPrimaryColorChange should set the path's stroke color with the parameter's color if the path is not undefined", () => {
@@ -163,6 +169,12 @@ describe('ToolBrush', () => {
         toolBrush.onPrimaryColorChange(colorSpyObj);
 
         expect(renderer2SpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#onToolDeselection should call #stopDrawing', () => {
+        const stopDrawingSpy = spyOn<any>(toolBrush, 'stopDrawing');
+        toolBrush.onToolDeselection();
+        expect(stopDrawingSpy).toHaveBeenCalled();
     });
 
     it('#updatePath should not do anything if the path is undefined', () => {
@@ -203,7 +215,7 @@ describe('ToolBrush', () => {
 
         toolBrush['stopDrawing']();
 
-        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AppendElementCommand(drawingServiceSpyObj, pathMock));
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AddElementCommand(drawingServiceSpyObj, pathMock));
         expect(toolBrush['path']).not.toBeTruthy();
     });
 });
