@@ -19,8 +19,6 @@ export class ToolSelectionUiService implements OnDestroy {
     private svgSelectedElementsRect: SVGRectElement;
     private svgControlPoints: SVGGraphicsElement[] = [];
 
-    private isSelectedElementsRectDisplayed = false;
-
     private selectedElementsRectChangedSubscription: Subscription;
 
     constructor(
@@ -103,7 +101,7 @@ export class ToolSelectionUiService implements OnDestroy {
 
     private setSelectedElementsRect(rect: Rect | undefined): void {
         if (rect === undefined) {
-            this.hideSelectedElementsRect();
+            this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
             return;
         }
 
@@ -119,23 +117,7 @@ export class ToolSelectionUiService implements OnDestroy {
             this.renderer.setAttribute(this.svgControlPoints[i], 'cx', controlPointPositions[i].x.toString());
             this.renderer.setAttribute(this.svgControlPoints[i], 'cy', controlPointPositions[i].y.toString());
         }
-        this.showSelectedElementsRect();
-    }
-
-    private showSelectedElementsRect(): void {
-        if (this.isSelectedElementsRectDisplayed) {
-            return;
-        }
-        this.isSelectedElementsRectDisplayed = true;
         this.drawingService.addUiElement(this.svgSelectedElementsRectGroup);
-    }
-
-    private hideSelectedElementsRect(): void {
-        if (!this.isSelectedElementsRectDisplayed) {
-            return;
-        }
-        this.isSelectedElementsRectDisplayed = false;
-        this.drawingService.removeUiElement(this.svgSelectedElementsRectGroup);
     }
 
     private updateSvgRectFromRect(svgRect: SVGRectElement, rect: Rect): void {
