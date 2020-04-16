@@ -1,6 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -18,11 +19,18 @@ describe('CurrentToolService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let currentToolSpyObj: jasmine.SpyObj<Tool>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
-    let primaryColorChangedSubject = new Subject<Color>();
-    let secondaryColorChangedSubject = new Subject<Color>();
+    let primaryColorChangedSubject: Subject<Color>;
+    let secondaryColorChangedSubject: Subject<Color>;
+    let drawingHostiryChangedSubject: Subject<void>;
 
     beforeEach(() => {
+        drawingHostiryChangedSubject = new Subject<void>();
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', [], {
+            drawingHistoryChanged$: drawingHostiryChangedSubject,
+        });
+
         primaryColorChangedSubject = new Subject<Color>();
         secondaryColorChangedSubject = new Subject<Color>();
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
@@ -45,18 +53,22 @@ describe('CurrentToolService', () => {
             'onKeyUp',
             'onMouseEnter',
             'onMouseLeave',
+            'onFocusIn',
+            'onFocusOut',
             'onPrimaryColorChange',
             'onSecondaryColorChange',
             'onElementClick',
             'update',
             'onToolSelection',
             'onToolDeselection',
+            'onHistoryChange',
         ]);
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: ColorService, useValue: colorServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
 
@@ -80,6 +92,11 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onPrimaryColorChange).toHaveBeenCalledWith(colorStub);
         expect(currentToolSpyObj.onSecondaryColorChange).toHaveBeenCalledWith(colorStub);
     }));
+
+    it('#constructor should subscribe to currentTool historyChanges', () => {
+        drawingHostiryChangedSubject.next();
+        expect(currentToolSpyObj.onHistoryChange).toHaveBeenCalled();
+    });
 
     it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
         const primaryColorChangedSubscriptionSpy = spyOn<any>(service['primaryColorChangedSubscription'], 'unsubscribe');
@@ -246,6 +263,16 @@ describe('CurrentToolService', () => {
             expect(currentToolSpyObj.onMouseLeave).toHaveBeenCalledWith(mouseEvent);
         }
     );
+
+    it("#onFocusIn should call the currentTool's onFocusIn", () => {
+        service.onFocusIn();
+        expect(currentToolSpyObj.onFocusIn).toHaveBeenCalled();
+    });
+
+    it("#onFocusOut should call the currentTool's onFocusOut", () => {
+        service.onFocusOut();
+        expect(currentToolSpyObj.onFocusOut).toHaveBeenCalled();
+    });
 
     it('#get currentTool should return the current tool', () => {
         const toolStub = {} as Tool;
