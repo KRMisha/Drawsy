@@ -53,12 +53,15 @@ describe('CurrentToolService', () => {
             'onKeyUp',
             'onMouseEnter',
             'onMouseLeave',
+            'onFocusIn',
+            'onFocusOut',
             'onPrimaryColorChange',
             'onSecondaryColorChange',
             'onElementClick',
             'update',
             'onToolSelection',
             'onToolDeselection',
+            'onHistoryChange',
         ]);
 
         TestBed.configureTestingModule({
@@ -89,6 +92,11 @@ describe('CurrentToolService', () => {
         expect(currentToolSpyObj.onPrimaryColorChange).toHaveBeenCalledWith(colorStub);
         expect(currentToolSpyObj.onSecondaryColorChange).toHaveBeenCalledWith(colorStub);
     }));
+
+    it('#constructor should subscribe to currentTool historyChanges', () => {
+        drawingHostiryChangedSubject.next();
+        expect(currentToolSpyObj.onHistoryChange).toHaveBeenCalled();
+    });
 
     it('#ngOnDestroy should unsubscribe from its subscriptions', async(() => {
         const primaryColorChangedSubscriptionSpy = spyOn<any>(service['primaryColorChangedSubscription'], 'unsubscribe');
@@ -255,6 +263,16 @@ describe('CurrentToolService', () => {
             expect(currentToolSpyObj.onMouseLeave).toHaveBeenCalledWith(mouseEvent);
         }
     );
+
+    it("#onFocusIn should call the currentTool's onFocusIn", () => {
+        service.onFocusIn();
+        expect(currentToolSpyObj.onFocusIn).toHaveBeenCalled();
+    });
+
+    it("#onFocusOut should call the currentTool's onFocusOut", () => {
+        service.onFocusOut();
+        expect(currentToolSpyObj.onFocusOut).toHaveBeenCalled();
+    });
 
     it('#get currentTool should return the current tool', () => {
         const toolStub = {} as Tool;
