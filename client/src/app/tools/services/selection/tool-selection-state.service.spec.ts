@@ -34,36 +34,26 @@ describe('ToolSelectionStateService', () => {
         expect(actualValue).toBe(expectedValue);
     });
 
-    it('#set selectedElements should update the selection rect and the selected elements', () => {
+    it('#set selectedElements should update the selectedElements and emit selectedElementsChanged', () => {
+        const selectedElementsChanged$Spy = spyOn<any>(service['selectedElementsChanged$'], 'next');
         const expectedValue = [] as SVGGraphicsElement[];
         service.selectedElements = expectedValue;
         expect(service['_selectedElements']).toBe(expectedValue);
-        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalledWith(expectedValue);
+        expect(selectedElementsChanged$Spy).toHaveBeenCalledWith(expectedValue);
     });
 
-    it('#set selectedElements should notify its subcribers that its value has changed', () => {
-        const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
-        service.selectedElements = [];
-        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalledWith(elementListBounds);
-    });
-
-    it("#get selectedElementsRect should return the selected elements' bounding rectangle", () => {
+    it("#get selectedElementsBounds should return the selected elements' bounding rectangle", () => {
         const expectedValue = {} as Rect;
-        service['_selectedElementsRect'] = expectedValue;
+        service['_selectedElementsBounds'] = expectedValue;
         const actualValue = service.selectedElementsBounds;
         expect(actualValue).toBe(expectedValue);
     });
 
     it('#set selectedElementsRect should update the selected elements bounding rect', () => {
+        const selectedElementsBoundsChangedSourceSpy = spyOn<any>(service['selectedElementsBoundsChangedSource'], 'next');
         const expectedValue = {} as Rect;
         service.selectedElementsBounds = expectedValue;
-        expect(service['_selectedElementsRect']).toBe(expectedValue);
-    });
-
-    it('#set selectedElementsRect should notify its subcribers that its value has changed', () => {
-        const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
-        const rectStub = {} as Rect;
-        service.selectedElementsBounds = rectStub;
-        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalledWith(rectStub);
+        expect(service['_selectedElementsBounds']).toBe(expectedValue);
+        expect(selectedElementsBoundsChangedSourceSpy).toHaveBeenCalledWith(expectedValue);
     });
 });

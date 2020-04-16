@@ -346,13 +346,13 @@ describe('ToolSelectionService', () => {
     it('#isMouseInsideSelectedElementsRect should return false if selection rect is undefined', () => {
         const toolSelectionStateServiceMock = ({ selectionRect: undefined } as unknown) as ToolSelectionStateService;
         selectionStateServiceStub = toolSelectionStateServiceMock;
-        const isMouseInsideSelectedElementsRect = service['isMouseInsideSelectedElementsRect']();
+        const isMouseInsideSelectedElementsRect = service['isMouseInsideSelectedElementBounds']();
         expect(isMouseInsideSelectedElementsRect).toEqual(false);
     });
 
     it('#isMouseInsideSelectedElementsRect should return value of isPointInRect if selection rect is not undefined', () => {
         selectionStateServiceStub.selectedElementsBounds = {} as Rect;
-        service['isMouseInsideSelectedElementsRect']();
+        service['isMouseInsideSelectedElementBounds']();
         expect(toolSelectionCollisionServiceSpyObj.isPointInRect).toHaveBeenCalled();
     });
 });

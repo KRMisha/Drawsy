@@ -66,14 +66,14 @@ describe('ToolSelectionUiService', () => {
         expect(createUiElementsSpy).toHaveBeenCalled();
     });
 
-    it('#selectedElementsRectChangedSubscription should update svg rect', () => {
+    it('#selectedElementsBoundsChangedSubscription should update svg rect', () => {
         const setSelectedElementsRectSpy = spyOn<any>(service, 'setSelectedElementsRect');
         selectedElementsRectChangedSubject.next([{} as SVGGraphicsElement]);
         expect(setSelectedElementsRectSpy).toHaveBeenCalled();
     });
 
     it('#ngOnDestroy should unsubscribe from selectedElementsRectChanged event', () => {
-        const unsubscribeSpy = spyOn<any>(service['selectedElementsRectChangedSubscription'], 'unsubscribe');
+        const unsubscribeSpy = spyOn<any>(service['selectedElementsBoundsChangedSubscription'], 'unsubscribe');
         service.ngOnDestroy();
         expect(unsubscribeSpy).toHaveBeenCalled();
     });
