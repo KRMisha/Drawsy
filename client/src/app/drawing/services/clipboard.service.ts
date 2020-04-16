@@ -60,8 +60,8 @@ export class ClipboardService implements OnDestroy {
             return;
         }
 
-        this.setOffset(PlacementType.Clipboard, 0);
-        this.setOffset(PlacementType.Duplication, 0);
+        this.clipboardPositionOffset = 0;
+        this.duplicationPositionOffset = 0;
 
         this.initialClipboardElements = [...this.toolSelectionStateService.selectedElements];
         this.initialDuplicationElements = this.initialClipboardElements;
@@ -110,26 +110,6 @@ export class ClipboardService implements OnDestroy {
         return elements.map((element: SVGGraphicsElement) => element.cloneNode(true) as SVGGraphicsElement);
     }
 
-    private getOffset(placementType: PlacementType): number {
-        switch (placementType) {
-            case PlacementType.Clipboard:
-                return this.clipboardPositionOffset;
-            case PlacementType.Duplication:
-                return this.duplicationPositionOffset;
-        }
-    }
-
-    private setOffset(placementType: PlacementType, offset: number): void {
-        switch (placementType) {
-            case PlacementType.Clipboard:
-                this.clipboardPositionOffset = offset;
-                break;
-            case PlacementType.Duplication:
-                this.duplicationPositionOffset = offset;
-                break;
-        }
-    }
-
     private placeElements(placementType: PlacementType): void {
         this.selectionChangedSubscription.unsubscribe();
         this.drawingHistoryChangedSubscription.unsubscribe();
@@ -152,8 +132,8 @@ export class ClipboardService implements OnDestroy {
             this.initialDuplicationElements = bufferCopyToPlace; // todo check offset 0???
         }
 
-        const clipboardOffsetBefore = this.getOffset(PlacementType.Clipboard);
-        const duplicationOffsetBefore = this.getOffset(PlacementType.Duplication);
+        const clipboardOffsetBefore = this.clipboardPositionOffset;
+        const duplicationOffsetBefore = this.duplicationPositionOffset;
 
         this.offsetSelectedElements(areNoInitialElementsRemaining, placementType);
 
@@ -164,8 +144,8 @@ export class ClipboardService implements OnDestroy {
                 [...bufferCopyToPlace],
                 clipboardOffsetBefore,
                 duplicationOffsetBefore,
-                this.getOffset(PlacementType.Clipboard),
-                this.getOffset(PlacementType.Duplication)
+                this.clipboardPositionOffset,
+                this.duplicationPositionOffset
             )
         );
 
@@ -178,20 +158,23 @@ export class ClipboardService implements OnDestroy {
     }
 
     private offsetSelectedElements(mustResetOffset: boolean, placementType: PlacementType): void {
-        const offset = mustResetOffset
+        const currentOffset = placementType === PlacementType.Clipboard ? this.clipboardPositionOffset : this.duplicationPositionOffset;
+        const nextOffset = mustResetOffset
             ? 0
-            : this.getNextOffset(this.toolSelectionStateService.selectedElements, this.getOffset(placementType));
+            : this.getNextOffset(this.toolSelectionStateService.selectedElements, currentOffset);
 
-        if (offset !== 0) {
+        if (nextOffset !== 0) {
             this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
-            this.toolSelectionMoverService.moveSelection({ x: offset, y: offset });
+            this.toolSelectionMoverService.moveSelection({ x: nextOffset, y: nextOffset });
         }
 
         if (this.initialClipboardElements === this.initialDuplicationElements) {
-            this.setOffset(PlacementType.Clipboard, offset);
-            this.setOffset(PlacementType.Duplication, offset);
+            this.clipboardPositionOffset = nextOffset;
+            this.duplicationPositionOffset = nextOffset;
         } else {
-            this.setOffset(placementType, offset);
+            placementType === PlacementType.Clipboard
+                ? this.clipboardPositionOffset = nextOffset
+                : this.duplicationPositionOffset = nextOffset;
         }
     }
 
@@ -215,12 +198,12 @@ export class ClipboardService implements OnDestroy {
     private onSelectionChange(elements: SVGGraphicsElement[]): void {
         this.initialDuplicationElements = [...elements];
         this.duplicationBuffer = this.getElementsCopy(elements);
-        this.setOffset(PlacementType.Duplication, 0);
+        this.duplicationPositionOffset = 0;
     }
 
     private onDrawingHistoryChange(): void {
         this.initialDuplicationElements = [...this.toolSelectionStateService.selectedElements];
         this.duplicationBuffer = this.getElementsCopy(this.toolSelectionStateService.selectedElements);
-        this.setOffset(PlacementType.Duplication, 0);
+        this.duplicationPositionOffset = 0;
     }
 }
