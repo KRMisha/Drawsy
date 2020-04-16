@@ -101,13 +101,15 @@ describe('ToolSelectionMoverService', () => {
         expect(stopMovingSelectionSpy).toHaveBeenCalled();
     });
 
-    it('#onKeyUp should return early if the selection is not being moved with arrows', () => {
+    it('#onKeyUp should return early after setting arrow state if the selection is not being moved with arrows', () => {
         const setArrowStateFromEventSpy = spyOn<any>(service, 'setArrowStateFromEvent');
+        const everySpy = spyOn<any>(service['arrowKeysHeldStates'], 'every');
         const toolSelectionStateServiceMock = { state: SelectionState.None } as ToolSelectionStateService;
         service['toolSelectionStateService'] = toolSelectionStateServiceMock;
         const event = {} as KeyboardEvent;
         service.onKeyUp(event);
-        expect(setArrowStateFromEventSpy).not.toHaveBeenCalled();
+        expect(setArrowStateFromEventSpy).toHaveBeenCalled();
+        expect(everySpy).not.toHaveBeenCalled();
     });
 
     it('#onKeyUp should not stop moving the selection if the arrow buttons are held', () => {
@@ -131,7 +133,7 @@ describe('ToolSelectionMoverService', () => {
     });
 
     it('#moveSelection should move each element of the selection and update the selected elements bounding rect', () => {
-        const moveElementSpy = spyOn(service, 'moveElement');
+        const moveElementSpy = spyOn<any>(service, 'moveElement');
         const moveOffset = { x: 2, y: 2 };
         service.moveSelection(moveOffset);
         expect(moveElementSpy).toHaveBeenCalledWith(initialSelectedElements[0], moveOffset);
@@ -151,7 +153,7 @@ describe('ToolSelectionMoverService', () => {
         const elementMock = { transform: animatedTransformListMock } as SVGGraphicsElement;
 
         const offset = { x: 2, y: 2 } as Vec2;
-        service.moveElement(elementMock, offset);
+        service['moveElement'](elementMock, offset);
 
         expect(matrixSpyObj.translate).toHaveBeenCalledWith(offset.x, offset.y);
         expect(transformSpyObj.setMatrix).toHaveBeenCalledWith(expectedMatrix);
