@@ -34,7 +34,7 @@ class ToolShapeMock extends ToolShape {
     }
 }
 
-fdescribe('ToolShape', () => {
+describe('ToolShape', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
