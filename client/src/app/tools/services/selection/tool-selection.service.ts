@@ -219,19 +219,20 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             return;
         }
 
-        const elementIndices = new Map<SVGGraphicsElement, number>();
-        for (let i = 0; i < this.drawingService.elements.length; i++) {
-            elementIndices.set(this.drawingService.elements[i], i);
-        }
-
+        const elementIndices = new Map<SVGGraphicsElement, number>(
+            this.drawingService.elements.map((element: SVGGraphicsElement, index: number) => [element, index])
+        );
         this.toolSelectionStateService.selectedElements.sort((element1: SVGGraphicsElement, element2: SVGGraphicsElement) => {
-            return elementIndices.get(element2)! - elementIndices.get(element1)!; // tslint:disable-line: no-non-null-assertion
+            // Map will always have indices for elements since their insertion is guaranteed just prior
+            // tslint:disable-next-line: no-non-null-assertion
+            return elementIndices.get(element2)! - elementIndices.get(element1)!;
         });
+
         const elementSiblingPairs: ElementSiblingPair[] = [];
         for (const selectedElement of this.toolSelectionStateService.selectedElements) {
             elementSiblingPairs.push({
                 element: selectedElement,
-                sibling: (selectedElement.nextSibling as SVGGraphicsElement) || undefined,
+                sibling: selectedElement.nextSibling as SVGGraphicsElement ?? undefined,
             });
             this.drawingService.removeElement(selectedElement);
         }
