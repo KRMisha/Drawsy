@@ -214,22 +214,22 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         });
 
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
-            this.copyCommand();
+            this.copy();
         });
         this.pasteSelectionShortcutSubscription = this.shortcutService.pasteSelectionShortcut$.subscribe(() => {
-            this.pasteCommand();
+            this.paste();
         });
         this.cutSelectionShortcutSubscription = this.shortcutService.cutSelectionShortcut$.subscribe(() => {
-            this.cutCommand();
+            this.cut();
         });
         this.duplicateSelectionShortcutSubscription = this.shortcutService.duplicateSelectionShortcut$.subscribe(() => {
-            this.duplicateCommand();
+            this.duplicate();
         });
         this.undoShortcutSubscription = this.shortcutService.undoShortcut$.subscribe(() => {
-            this.undoCommand();
+            this.undo();
         });
         this.redoShortcutSubscription = this.shortcutService.redoShortcut$.subscribe(() => {
-            this.redoCommand();
+            this.redo();
         });
     }
 
@@ -278,11 +278,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
-    copyCommand(): void {
+    copy(): void {
         this.clipboardService.copy();
     }
 
-    pasteCommand(): void {
+    paste(): void {
         if (this.isPastingAvailable) {
             this.currentToolService.currentTool = this.toolSelectionService;
             this.resetCurrentControls();
@@ -290,23 +290,23 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
     }
 
-    cutCommand(): void {
+    cut(): void {
         this.clipboardService.cut();
     }
 
-    duplicateCommand(): void {
+    duplicate(): void {
         this.clipboardService.duplicate();
     }
 
-    deleteCommand(): void {
+    delete(): void {
         this.toolSelectionService.deleteSelection();
     }
 
-    undoCommand(): void {
+    undo(): void {
         this.historyService.undo();
     }
 
-    redoCommand(): void {
+    redo(): void {
         this.historyService.redo();
     }
 
