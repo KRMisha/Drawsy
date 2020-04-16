@@ -150,7 +150,7 @@ describe('SaveDrawingService', () => {
         expect(serverServiceSpyObj.updateDrawing).toHaveBeenCalledWith(initialId, drawingRootMock.outerHTML);
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
         updateDrawingSubject.error(error);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : titre ou étiquettes invalides', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : titre ou étiquettes invalides.', undefined, {
             duration: snackBarDuration,
         });
         expect(drawingServiceMock.id).toEqual(initialId);
