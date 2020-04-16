@@ -88,7 +88,7 @@ describe('ExportDrawingService', () => {
         tick();
 
         const error = { status: HttpStatusCode.BadRequest } as HttpErrorResponse;
-        const errorMessage = "Erreur : l'adresse courriel que vous avez entrée n'existe pas.";
+        const errorMessage = "Erreur : l'adresse courriel que vous avez entrée n'existe pas";
 
         emailDrawingSubject.error(error);
         const expectedTitle = drawingTitle + '.' + fileType;
@@ -107,7 +107,7 @@ describe('ExportDrawingService', () => {
         tick();
 
         const error = { status: HttpStatusCode.TooManyRequests } as HttpErrorResponse;
-        const errorMessage = "Erreur : vous avez dépassé votre limite horaire d'envois de courriels.";
+        const errorMessage = "Erreur : vous avez dépassé votre limite horaire d'envois de courriels";
 
         emailDrawingSubject.error(error);
         const expectedTitle = drawingTitle + '.' + fileType;

@@ -47,10 +47,10 @@ export class ExportDrawingService {
             let errorMessage = '';
             switch (error.status) {
                 case HttpStatusCode.BadRequest:
-                    errorMessage = "Erreur : l'adresse courriel que vous avez entrée n'existe pas.";
+                    errorMessage = "Erreur : l'adresse courriel que vous avez entrée n'existe pas";
                     break;
                 case HttpStatusCode.TooManyRequests:
-                    errorMessage = "Erreur : vous avez dépassé votre limite horaire d'envois de courriels.";
+                    errorMessage = "Erreur : vous avez dépassé votre limite horaire d'envois de courriels";
                     break;
             }
 
