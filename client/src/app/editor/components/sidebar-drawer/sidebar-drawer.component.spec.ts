@@ -568,13 +568,11 @@ describe('SidebarDrawerComponent', () => {
     it('#undoCommand should forward the call to historyService and currentToolService', () => {
         component.undoCommand();
         expect(historyServiceSpyObj.undo).toHaveBeenCalled();
-        expect(currentToolServiceSpyObj.update).toHaveBeenCalled();
     });
 
     it('#redoCommand should forward the call to historyService and currentToolService', () => {
         component.redoCommand();
         expect(historyServiceSpyObj.redo).toHaveBeenCalled();
-        expect(currentToolServiceSpyObj.update).toHaveBeenCalled();
     });
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {

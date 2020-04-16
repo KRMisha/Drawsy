@@ -1,6 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -18,11 +19,18 @@ describe('CurrentToolService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let currentToolSpyObj: jasmine.SpyObj<Tool>;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
+    let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
 
-    let primaryColorChangedSubject = new Subject<Color>();
-    let secondaryColorChangedSubject = new Subject<Color>();
+    let primaryColorChangedSubject: Subject<Color>;
+    let secondaryColorChangedSubject: Subject<Color>;
+    let drawingHostiryChangedSubject: Subject<void>;
 
     beforeEach(() => {
+        drawingHostiryChangedSubject = new Subject<void>();
+        historyServiceSpyObj = jasmine.createSpyObj('HistoryService', [], {
+            drawingHistoryChanged$: drawingHostiryChangedSubject,
+        });
+
         primaryColorChangedSubject = new Subject<Color>();
         secondaryColorChangedSubject = new Subject<Color>();
         colorServiceSpyObj = jasmine.createSpyObj('ColorService', [], {
@@ -57,6 +65,7 @@ describe('CurrentToolService', () => {
             providers: [
                 { provide: ColorService, useValue: colorServiceSpyObj },
                 { provide: DrawingService, useValue: drawingServiceSpyObj },
+                { provide: HistoryService, useValue: historyServiceSpyObj },
             ],
         });
 
