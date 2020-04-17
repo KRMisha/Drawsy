@@ -28,6 +28,7 @@ export class ClipboardService implements OnDestroy {
     private clipboardBuffer: SVGGraphicsElement[] = [];
 
     private initialDuplicationElements: SVGGraphicsElement[] = [];
+    private duplicationBuffer: SVGGraphicsElement[] = [];
 
     private selectionChangedSubscription: Subscription;
     private drawingHistoryChangedSubscription: Subscription;
@@ -66,6 +67,7 @@ export class ClipboardService implements OnDestroy {
         this.initialDuplicationElements = this.initialClipboardElements;
 
         this.clipboardBuffer = this.getElementsCopy(this.toolSelectionStateService.selectedElements);
+        this.duplicationBuffer = this.clipboardBuffer;
     }
 
     paste(): void {
@@ -74,6 +76,7 @@ export class ClipboardService implements OnDestroy {
         }
 
         this.initialDuplicationElements = this.initialClipboardElements;
+        this.duplicationBuffer = this.clipboardBuffer;
 
         this.placeElements(PlacementType.Clipboard);
     }
@@ -112,7 +115,7 @@ export class ClipboardService implements OnDestroy {
         this.drawingHistoryChangedSubscription.unsubscribe();
 
         const initialElements = placementType === PlacementType.Clipboard ? this.initialClipboardElements : this.initialDuplicationElements;
-        const buffer = placementType === PlacementType.Clipboard ? this.clipboardBuffer : this.initialDuplicationElements;
+        const buffer = placementType === PlacementType.Clipboard ? this.clipboardBuffer : this.duplicationBuffer;
 
         const bufferCopyToPlace = this.getElementsCopy(buffer);
         for (const element of bufferCopyToPlace) {
@@ -190,12 +193,16 @@ export class ClipboardService implements OnDestroy {
     }
 
     private onSelectionChange(elements: SVGGraphicsElement[]): void {
-        this.initialDuplicationElements = [...elements];
-        this.duplicationPositionOffset = 0;
+        this.resetDuplicationElements(elements);
     }
 
     private onDrawingHistoryChange(): void {
-        this.initialDuplicationElements = [...this.toolSelectionStateService.selectedElements];
+        this.resetDuplicationElements(this.toolSelectionStateService.selectedElements);
+    }
+
+    private resetDuplicationElements(elements: SVGGraphicsElement[]): void {
+        this.initialDuplicationElements = [...elements];
+        this.duplicationBuffer = this.getElementsCopy(elements);
         this.duplicationPositionOffset = 0;
     }
 }
