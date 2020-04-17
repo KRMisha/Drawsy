@@ -17,7 +17,7 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolFillService extends Tool {
-    private group: SVGGElement;
+    private group?: SVGGElement;
 
     private data: Uint8ClampedArray;
     private canvasDimensions: Vec2;
@@ -71,6 +71,7 @@ export class ToolFillService extends Tool {
 
         this.drawingService.addElement(this.group);
         this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
+        this.group = undefined;
 
         delete this.fillPixelsToVisit;
         delete this.visitedFillPixels;
