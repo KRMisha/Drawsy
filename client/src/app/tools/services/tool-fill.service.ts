@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -112,7 +112,14 @@ export class ToolFillService extends Tool {
             return;
         }
 
-        this.findContour(pixel, absoluteDirection);
+        const isRearPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.Down);
+        const isLeftPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.Left);
+        const isRearLeftPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.DownLeft);
+
+        const isValidStartingPixel = !isRearPixelContour && !(!isRearPixelContour && !isLeftPixelContour && isRearLeftPixelContour);
+        if (isValidStartingPixel) {
+            this.findContour(pixel, absoluteDirection);
+        }
     }
 
     // private enqueuePixelIfUnvisited(pixelDirectionPair: [Vec2, Direction]): void {
@@ -234,7 +241,7 @@ export class ToolFillService extends Tool {
         this.renderer.setAttribute(path, 'd', this.pathString);
         // tslint:disable: no-non-null-assertion
         this.drawingService.addElement(path);
-        this.historyService.addCommand(new AppendElementCommand(this.drawingService, path));
+        this.historyService.addCommand(new AddElementCommand(this.drawingService, path));
         // tslint:enable: no-non-null-assertion
     }
 }
