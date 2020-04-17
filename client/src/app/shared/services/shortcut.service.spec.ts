@@ -2,6 +2,8 @@ import { async, TestBed } from '@angular/core/testing';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 
+// tslint:disable: max-file-line-count
+
 describe('ShortcutService', () => {
     let service: ShortcutService;
     const modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], { isModalPresent: false });
