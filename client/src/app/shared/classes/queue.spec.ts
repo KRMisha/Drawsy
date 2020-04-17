@@ -6,13 +6,13 @@ import { Queue } from './queue';
 describe('Queue', () => {
     let queue: Queue<number>;
     const initialCount = 0;
-    const initialLowestCount = 0;
+    const initialFirstIndex = 0;
+    const storedValue = 2;
 
     beforeEach(() => {
         queue = new Queue();
-        queue['count'] = initialCount;
-        queue['lowestCount'] = initialLowestCount;
-        queue['storage'] = [];
+        queue['firstIndex'] = initialFirstIndex;
+        queue['elements'] = [];
     });
 
     it('should create an instance', () => {
@@ -22,62 +22,58 @@ describe('Queue', () => {
     it('#enqueue should early return if the specified value is undefined', () => {
         queue.enqueue((undefined as unknown) as number);
 
-        expect(queue['count']).toEqual(initialCount);
-        expect(queue['storage'][initialCount]).toBeUndefined();
+        expect(queue['elements'].length).toEqual(initialCount);
+        expect(queue['elements'][initialCount]).toBeUndefined();
     });
 
-    it('#enqueue should add the specified value to storage and increment the count if the value is valid', () => {
+    it('#enqueue should add the specified value to elements and increment the count if the value is valid', () => {
         const expectedValue = 1;
         queue.enqueue(expectedValue);
 
-        expect(queue['count']).toEqual(initialCount + 1);
-        expect(queue['storage'][initialCount]).toEqual(expectedValue);
+        expect(queue['elements'].length).toEqual(initialCount + 1);
+        expect(queue['elements'][initialCount]).toEqual(expectedValue);
     });
 
-    it('#dequeue should return undefined if the count is equal to the lowestCount', () => {
+    it('#dequeue should return undefined if the count is equal to the firstIndex', () => {
         const result = queue.dequeue();
 
         expect(result).toBeUndefined();
     });
 
-    it('#dequeue should return and delete the value stored at the lowestCount index if the queue is not empty', () => {
-        queue['count'] = 1;
-        const storedValue = 2;
-        queue['storage'] = [storedValue];
+    it('#dequeue should return and delete the value stored at the firstIndex index if the queue is not empty', () => {
+        queue['elements'] = [storedValue];
         const result = queue.dequeue();
 
-        expect(queue['storage'][initialLowestCount]).toBeUndefined();
+        expect(queue['elements'][initialFirstIndex]).toBeUndefined();
         expect(result).toEqual(storedValue);
     });
 
-    it('#peek should early return undefined if the count is equal to the lowestCount', () => {
+    it('#peek should early return undefined if the count is equal to the firstIndex', () => {
         const result = queue.peek();
 
         expect(result).toBeUndefined();
     });
 
-    it('#peek should return the value stored at the lowestCount index if the queue is not empty', () => {
-        queue['count'] = 1;
-        const storedValue = 2;
-        queue['storage'] = [storedValue];
+    it('#peek should return the value stored at the firstIndex index if the queue is not empty', () => {
+        queue['elements'] = [storedValue];
         const result = queue.peek();
 
-        expect(queue['storage'][initialLowestCount]).toEqual(storedValue);
+        expect(queue['elements'][initialFirstIndex]).toEqual(storedValue);
         expect(result).toEqual(storedValue);
     });
 
-    it('#isEmpty should return true if the count is equal to the lowestCount', () => {
+    it('#isEmpty should return true if the count is equal to the firstIndex', () => {
         const result = queue.isEmpty();
 
         expect(result).toEqual(true);
     });
 
     it('#size should return the size of the queue', () => {
-        const count = 10;
-        queue['count'] = count;
-        const lowestCount = 4;
-        queue['lowestCount'] = lowestCount;
-        const expectedSize = count - lowestCount;
+        queue['elements'] = [storedValue, storedValue, storedValue, storedValue, storedValue];
+        const elementsLength = queue['elements'].length;
+        const firstIndex = 1;
+        queue['firstIndex'] = firstIndex;
+        const expectedSize = elementsLength - firstIndex;
         const result = queue.size();
 
         expect(result).toEqual(expectedSize);

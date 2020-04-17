@@ -116,7 +116,9 @@ export class ToolFillService extends Tool {
 
     private enqueuePixelIfValid(pixel: Vec2): void {
         const isPixelInDrawing = pixel.x >= 0 && pixel.x < this.canvasDimensions.x && pixel.y >= 0 && pixel.y < this.canvasDimensions.y;
-        const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, pixel));
+        const isPixelFillColor = this.isSelectedColor(
+            this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, pixel)
+        );
         if (!isPixelInDrawing || !isPixelFillColor) {
             return;
         }

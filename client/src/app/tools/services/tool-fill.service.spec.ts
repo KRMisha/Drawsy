@@ -1,7 +1,7 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -31,11 +31,12 @@ describe('ToolFillService', () => {
     let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
     let service: ToolFillService;
 
-    let pixelQueueSpyObj: jasmine.SpyObj<Queue<Vec2>>;
+    let fillPixelsToVisitSpyObj: jasmine.SpyObj<Queue<Vec2>>;
 
     const drawingDimensions: Vec2 = { x: 100, y: 100 };
     const rgbaComponents = [32, 64, 128, 128];
     const expectedColor = 'rgba(255, 255, 255, 1)';
+    const initialCanvasDimensions: Vec2 = { x: 10, y: 10 };
 
     beforeEach(() => {
         rendererSpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'appendChild']);
@@ -70,7 +71,7 @@ describe('ToolFillService', () => {
 
         snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
 
-        pixelQueueSpyObj = jasmine.createSpyObj('Queue<Vec2>', ['isEmpty', 'enqueue', 'dequeue']);
+        fillPixelsToVisitSpyObj = jasmine.createSpyObj('Queue<Vec2>', ['isEmpty', 'enqueue', 'dequeue']);
 
         TestBed.configureTestingModule({
             providers: [
@@ -84,7 +85,8 @@ describe('ToolFillService', () => {
             ],
         });
         service = TestBed.inject(ToolFillService);
-        service['pixelQueue'] = pixelQueueSpyObj;
+        service['fillPixelsToVisit'] = fillPixelsToVisitSpyObj;
+        service['canvasDimensions'] = initialCanvasDimensions;
     });
 
     it('should be created', () => {
@@ -114,35 +116,42 @@ describe('ToolFillService', () => {
         service.onMouseDown(event);
 
         expect(snackBarSpyObj.open).toHaveBeenCalledWith('Le remplissage est en cours', undefined, { duration: 500 });
-        expect(rendererSpyObj.createElement).toHaveBeenCalledWith('g', 'svg');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(service['group'], 'fill', expectedColor);
         expect(fillWithColorSpy).toHaveBeenCalled();
     });
+
+    it('#onPrimaryColorChange should not change the fill color if the group is undefined', () => {
+        service['group'] = undefined;
+        service.onPrimaryColorChange(colorSpyObj);
+
+        expect(rendererSpyObj.setAttribute).not.toHaveBeenCalled();
+    });
+
+    it('#onPrimaryColorChange should change the fill color if the group is defined', () => {
+        const expectedGroup = {} as SVGGElement;
+        service['group'] = expectedGroup;
+        service.onPrimaryColorChange(colorSpyObj);
+
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(expectedGroup, 'fill', expectedColor);
+    });
+
+    it('#fillWithColor should create the SVGGElement and set the fill color, ', fakeAsync(() => {
+        service['fillWithColor']();
+
+        expect(rendererSpyObj.createElement).toHaveBeenCalledWith('g', 'svg');
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(service['group'], 'fill', expectedColor);
+    }));
 
     it('#fillWithColor should initialize the canvas and set the selectedColor', fakeAsync(() => {
         Tool.mousePosition.x = 0;
         Tool.mousePosition.y = 0;
         const mousePosition: Vec2 = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
         const initializeCanvasSpy = spyOn<any>(service, 'initializeCanvas');
-        const expectedData = ([12] as unknown) as Uint8ClampedArray;
-        const expectedCanvasWidth = 10;
-        service['data'] = expectedData;
-        service['canvasWidth'] = expectedCanvasWidth;
+        const expectedCanvasData = ([12] as unknown) as Uint8ClampedArray;
+        service['canvasData'] = expectedCanvasData;
         service['fillWithColor']();
         tick();
         expect(initializeCanvasSpy).toHaveBeenCalled();
-        expect(rasterizationServiceSpyObj.getPixelColor).toHaveBeenCalledWith(expectedData, expectedCanvasWidth, mousePosition);
-    }));
-
-    it('#fillWithColor should start the Breadth-First search, ', fakeAsync(() => {
-        Tool.mousePosition.x = 0;
-        Tool.mousePosition.y = 0;
-        const mousePosition: Vec2 = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
-        const breadthFirstSearchSpy = spyOn<any>(service, 'breadthFirstSearch');
-        service['fillWithColor']();
-        tick();
-
-        expect(breadthFirstSearchSpy).toHaveBeenCalledWith(mousePosition);
+        expect(rasterizationServiceSpyObj.getPixelColor).toHaveBeenCalledWith(expectedCanvasData, initialCanvasDimensions.x, mousePosition);
     }));
 
     it('#fillWithColor should start the Breadth-First search, ', fakeAsync(() => {
@@ -158,33 +167,35 @@ describe('ToolFillService', () => {
 
     it('#fillWithColor should add the group to the drawing and add a command to history service', fakeAsync(() => {
         const expectedGroup = {} as SVGGElement;
-        service['group'] = expectedGroup;
+        rendererSpyObj.createElement.and.returnValue(expectedGroup);
         service['fillWithColor']();
         tick();
         // tslint:disable: no-non-null-assertion
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(expectedGroup);
-        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AppendElementCommand(drawingServiceSpyObj, expectedGroup));
+        expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AddElementCommand(drawingServiceSpyObj, expectedGroup));
+        expect(service['group']).toBeUndefined();
         // tslint:enable: no-non-null-assertion
     }));
 
-    it('#initializeCanvas should initialize the data and the canvasWidth from the canvas and the context', fakeAsync(() => {
+    it('#initializeCanvas should initialize the canvasData and the canvasDimensions from the canvas and the context', fakeAsync(() => {
         service['initializeCanvas']();
         tick();
         expect(rasterizationServiceSpyObj.getCanvasFromSvgRoot).toHaveBeenCalledWith(drawingServiceSpyObj.drawingRoot);
         expect(canvasSpyObj.getContext).toHaveBeenCalledWith('2d');
         expect(canvasContextSpyObj.getImageData).toHaveBeenCalled();
-        expect(service['data']).toEqual([0, 0, 0, 0, ...rgbaComponents, 0, 0, 0, 0, 0, 0, 0, 0]);
-        expect(service['canvasWidth']).toEqual(canvasSpyObj.width);
+        expect(service['canvasData']).toEqual([0, 0, 0, 0, ...rgbaComponents, 0, 0, 0, 0, 0, 0, 0, 0]);
+        expect(service['canvasDimensions'].x).toEqual(canvasSpyObj.width);
+        expect(service['canvasDimensions'].y).toEqual(canvasSpyObj.height);
     }));
 
     it(
-        '#breadthFirstSearch should enqueue the startPixel, dequeue a pixel, call addRectangleOnPixel and call enqueuePixelIfValid ' +
+        '#breadthFirstSearch should enqueue the startPixel, dequeue a pixel, call addSquareOnPixel and call enqueuePixelIfValid ' +
             'with four neighbour pixels',
         () => {
             const expectedPoint = { x: 10, y: 10 } as Vec2;
             const enqueuePixelIfValidSpy = spyOn<any>(service, 'enqueuePixelIfValid');
             let firstIteration = true;
-            pixelQueueSpyObj.isEmpty.and.callFake(() => {
+            fillPixelsToVisitSpyObj.isEmpty.and.callFake(() => {
                 if (firstIteration) {
                     firstIteration = false;
                     return false;
@@ -192,14 +203,14 @@ describe('ToolFillService', () => {
                     return true;
                 }
             });
-            pixelQueueSpyObj.dequeue.and.returnValue(expectedPoint);
-            const addRectangleOnPixelSpy = spyOn<any>(service, 'addRectangleOnPixel');
+            fillPixelsToVisitSpyObj.dequeue.and.returnValue(expectedPoint);
+            const addSquareOnPixelSpy = spyOn<any>(service, 'addSquareOnPixel');
 
             service['breadthFirstSearch'](expectedPoint);
 
-            expect(pixelQueueSpyObj.enqueue).toHaveBeenCalledWith(expectedPoint);
-            expect(pixelQueueSpyObj.dequeue).toHaveBeenCalled();
-            expect(addRectangleOnPixelSpy).toHaveBeenCalledWith(expectedPoint);
+            expect(fillPixelsToVisitSpyObj.enqueue).toHaveBeenCalledWith(expectedPoint);
+            expect(fillPixelsToVisitSpyObj.dequeue).toHaveBeenCalled();
+            expect(addSquareOnPixelSpy).toHaveBeenCalledWith(expectedPoint);
             expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x + 1, y: expectedPoint.y } as Vec2);
             expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x - 1, y: expectedPoint.y } as Vec2);
             expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x, y: expectedPoint.y + 1 } as Vec2);
@@ -208,71 +219,68 @@ describe('ToolFillService', () => {
     );
 
     it('#breadthFirstSearch should stop when the queue is empty', () => {
-        pixelQueueSpyObj.isEmpty.and.returnValue(true);
+        fillPixelsToVisitSpyObj.isEmpty.and.returnValue(true);
         service['breadthFirstSearch']({ x: 10, y: 10 } as Vec2);
         expect(rendererSpyObj.createElement).not.toHaveBeenCalled();
     });
 
-    it('#addRectangleOnPixel should create a rectangle on the pixel', () => {
+    it('#addSquareOnPixel should create a rectangle on the pixel', () => {
+        const squareSideSize = 1.8;
         const svgRectStub = {} as SVGRect;
         rendererSpyObj.createElement.and.returnValue(svgRectStub);
         const point = { x: 1, y: 1 } as Vec2;
-        service['addRectangleOnPixel'](point);
+        service['addSquareOnPixel'](point);
 
         expect(rendererSpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', `${point.x - 0.25}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', `${point.y - 0.25}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', '1.5');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', '1.5');
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', `${point.x - (squareSideSize - 1) / 2}`);
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', `${point.y - (squareSideSize - 1) / 2}`);
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', squareSideSize.toString());
+        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', squareSideSize.toString());
         expect(rendererSpyObj.appendChild).toHaveBeenCalledWith(service['group'], svgRectStub);
     });
 
-    it('#enqueuePixelIfValid should not call pixelQueue.enqueue if the point is not in the drawing and should add the pixel to visitedPixels', () => {
-        const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
-        visitedPixelsSpyObj.has.and.returnValue(false);
-        service['visitedPixels'] = visitedPixelsSpyObj;
+    it('#enqueuePixelIfValid should not call fillPixelsToVisit.enqueue if the point is not in the drawing', () => {
+        const visitedFillPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
+        visitedFillPixelsSpyObj.has.and.returnValue(false);
+        service['visitedFillPixels'] = visitedFillPixelsSpyObj;
         spyOn<any>(service, 'isSelectedColor').and.returnValue(true);
         service['enqueuePixelIfValid']({ x: -1, y: -1 } as Vec2);
 
-        expect(pixelQueueSpyObj.enqueue).not.toHaveBeenCalled();
-        expect(visitedPixelsSpyObj.add).toHaveBeenCalled();
+        expect(fillPixelsToVisitSpyObj.enqueue).not.toHaveBeenCalled();
+        expect(visitedFillPixelsSpyObj.add).not.toHaveBeenCalled();
     });
 
-    it('#enqueuePixelIfValid should not call pixelQueue.enqueue if the point has already been visited and should add the pixel to visitedPixels', () => {
-        const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
-        visitedPixelsSpyObj.has.and.returnValue(true);
-        service['visitedPixels'] = visitedPixelsSpyObj;
+    it('#enqueuePixelIfValid should not call fillPixelsToVisit.enqueue if the point has already been visited', () => {
+        const visitedFillPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
+        visitedFillPixelsSpyObj.has.and.returnValue(true);
+        service['visitedFillPixels'] = visitedFillPixelsSpyObj;
         spyOn<any>(service, 'isSelectedColor').and.returnValue(true);
         service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
 
-        expect(pixelQueueSpyObj.enqueue).not.toHaveBeenCalled();
-        expect(visitedPixelsSpyObj.add).toHaveBeenCalled();
+        expect(fillPixelsToVisitSpyObj.enqueue).not.toHaveBeenCalled();
+        expect(visitedFillPixelsSpyObj.add).not.toHaveBeenCalled();
     });
 
-    it(
-        '#enqueuePixelIfValid should not call pixelQueue.enqueue if the color of the pixel is not the selected color and should add ' +
-            'the pixel to visitedPixels',
-        () => {
-            const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
-            visitedPixelsSpyObj.has.and.returnValue(false);
-            service['visitedPixels'] = visitedPixelsSpyObj;
-            spyOn<any>(service, 'isSelectedColor').and.returnValue(false);
-            service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
+    it('#enqueuePixelIfValid should not call fillPixelsToVisit.enqueue if the color of the pixel is not the selected color', () => {
+        const visitedFillPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
+        visitedFillPixelsSpyObj.has.and.returnValue(false);
+        service['visitedFillPixels'] = visitedFillPixelsSpyObj;
+        spyOn<any>(service, 'isSelectedColor').and.returnValue(false);
+        service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
 
-            expect(pixelQueueSpyObj.enqueue).not.toHaveBeenCalled();
-            expect(visitedPixelsSpyObj.add).toHaveBeenCalled();
-        }
-    );
+        expect(fillPixelsToVisitSpyObj.enqueue).not.toHaveBeenCalled();
+        expect(visitedFillPixelsSpyObj.add).not.toHaveBeenCalled();
+    });
 
-    it('#enqueuePixelIfValid should call pixelQueue.enqueue if the pixel is valid and should add the pixel to visitedPixels', () => {
-        const visitedPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
-        visitedPixelsSpyObj.has.and.returnValue(false);
-        service['visitedPixels'] = visitedPixelsSpyObj;
+    it('#enqueuePixelIfValid should call fillPixelsToVisit.enqueue if the pixel is valid and should add the pixel to visitedFillPixels', () => {
+        const visitedFillPixelsSpyObj = jasmine.createSpyObj('Set<string>', ['add', 'has']);
+        visitedFillPixelsSpyObj.has.and.returnValue(false);
+        service['visitedFillPixels'] = visitedFillPixelsSpyObj;
         spyOn<any>(service, 'isSelectedColor').and.returnValue(true);
         service['enqueuePixelIfValid']({ x: 1, y: 1 } as Vec2);
 
-        expect(pixelQueueSpyObj.enqueue).toHaveBeenCalled();
-        expect(visitedPixelsSpyObj.add).toHaveBeenCalled();
+        expect(fillPixelsToVisitSpyObj.enqueue).toHaveBeenCalled();
+        expect(visitedFillPixelsSpyObj.add).toHaveBeenCalled();
     });
 
     it('#isSelectedColor should return true if the compared color is within the set deviation', () => {
