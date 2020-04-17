@@ -27,6 +27,8 @@ export class EmailService {
         } catch (error) {
             if (error.status === HttpStatusCode.BadRequest) {
                 throw new HttpException(HttpStatusCode.BadRequest, 'Email address not found');
+            } else if (error.status === HttpStatusCode.TooManyRequests) {
+                throw new HttpException(HttpStatusCode.TooManyRequests, 'Email limit reached');
             } else {
                 throw new HttpException(HttpStatusCode.InternalServerError, error.message);
             }
@@ -37,11 +39,7 @@ export class EmailService {
         try {
             await this.sendRequest(emailRequest, false);
         } catch (error) {
-            if (error.status === HttpStatusCode.TooManyRequests) {
-                throw new HttpException(HttpStatusCode.TooManyRequests, 'Email limit reached');
-            } else {
-                throw new HttpException(HttpStatusCode.InternalServerError, error.message);
-            }
+            throw new HttpException(HttpStatusCode.InternalServerError, error.message);
         }
     }
 

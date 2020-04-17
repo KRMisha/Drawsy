@@ -68,6 +68,23 @@ describe('EmailService', () => {
             .and.to.have.property('status', HttpStatusCode.BadRequest);
     });
 
+    it('#sendEmail should throw TooManyRequest if the API response is TooManyRequests', async () => {
+        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
+        const errorMessage = 'Email limit reached';
+        const errorStub = {
+            response: {
+                status: HttpStatusCode.TooManyRequests,
+                data:{
+                    error: errorMessage,
+                },
+            },
+        };
+        sinon.stub(axios.default, 'post').throws(errorStub);
+        await expect(emailService.sendEmail(emailRequest))
+            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .and.to.have.property('status', HttpStatusCode.TooManyRequests);
+    });
+
     it("#sendEmail should throw InternalServerError if the validation's response is different from BadRequest", async () => {
         const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
         const errorMessage = 'Penis';
@@ -85,29 +102,12 @@ describe('EmailService', () => {
             .and.to.have.property('status', HttpStatusCode.InternalServerError);
     });
 
-    it('#sendEmail should throw TooManyRequest if the API response is TooManyRequests', async () => {
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Email limit reached';
-        const errorStub = {
-            response: {
-                status: HttpStatusCode.TooManyRequests,
-                data:{
-                    error: errorMessage,
-                },
-            },
-        };
-        sinon.stub(axios.default, 'post').onSecondCall().throws(errorStub);
-        await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
-            .and.to.have.property('status', HttpStatusCode.TooManyRequests);
-    });
-
-    it('#sendEmail should throw InternalServerError if the API response is different from TooManyRequest', async () => {
+    it('#sendEmail should throw InternalServerError if the API returns an error on sendEmailRequest', async () => {
         const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
         const errorMessage = 'Email API error';
         const errorStub = {
             response: {
-                status: HttpStatusCode.InternalServerError,
+                status: HttpStatusCode.ImATeapot,
                 data: {
                     error: undefined,
                 },
@@ -119,7 +119,7 @@ describe('EmailService', () => {
             .and.to.have.property('status', HttpStatusCode.InternalServerError);
     });
 
-    it('#sendEmail should throw InternalServerError if the API response is different from TooManyRequest', async () => {
+    it('#sendEmail should throw InternalServerError of the EMAIL_API_URL environnement variable is undefined', async () => {
         delete process.env.EMAIL_API_URL;
         const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
         const errorMessage = 'Invalid email endpoint';
