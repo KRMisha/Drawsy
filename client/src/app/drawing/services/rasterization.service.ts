@@ -1,4 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 
 @Injectable({
     providedIn: 'root',
@@ -19,6 +21,18 @@ export class RasterizationService {
         const image = await this.getImageFromSvgRoot(drawingRoot);
         context.drawImage(image, 0, 0);
         return canvas;
+    }
+
+    getPixelColor(data: Uint8ClampedArray, canvasWidth: number, pixelPosition: Vec2): Color {
+        const colorValuesCount = 4;
+        const colorIndex = pixelPosition.y * (canvasWidth * colorValuesCount) + pixelPosition.x * colorValuesCount;
+
+        const rgbaComponents: number[] = [];
+        for (let i = 0; i < colorValuesCount; i++) {
+            rgbaComponents.push(data[colorIndex + i]);
+        }
+        const [red, green, blue, alpha] = rgbaComponents;
+        return Color.fromRgba(red, green, blue, alpha / Color.maxRgb);
     }
 
     private async getImageFromSvgRoot(drawingRoot: SVGSVGElement): Promise<HTMLImageElement> {

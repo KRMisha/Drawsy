@@ -44,6 +44,7 @@ describe('SidebarComponent', () => {
     const toolRectangleServiceStub = { info: ToolData.Rectangle } as ToolRectangleService;
     const toolEllipseServiceStub = { info: ToolData.Ellipse } as ToolEllipseService;
     const toolPolygonServiceStub = { info: ToolData.Polygon } as ToolPolygonService;
+    const toolFillServiceStub = { info: ToolData.Fill } as ToolSelectionService;
     const toolEyedropperServiceStub = { info: ToolData.Eyedropper } as ToolEyedropperService;
     const toolRecolorServiceStub = { info: ToolData.Recolor } as ToolRecolorService;
     const toolSelectionServiceStub = { info: ToolData.Selection } as ToolSelectionService;
@@ -57,6 +58,7 @@ describe('SidebarComponent', () => {
     let selectToolRectangleShortcutSubject: Subject<void>;
     let selectToolEllipseShortcutSubject: Subject<void>;
     let selectToolPolygonShortcutSubject: Subject<void>;
+    let selectToolFillShortcutSubject: Subject<void>;
     let selectToolEyedropperShortcutSubject: Subject<void>;
     let selectToolRecolorShortcutSubject: Subject<void>;
     let selectToolSelectionShortcutSubject: Subject<void>;
@@ -79,6 +81,7 @@ describe('SidebarComponent', () => {
             toolRectangleService: toolRectangleServiceStub,
             toolEllipseService: toolEllipseServiceStub,
             toolPolygonService: toolPolygonServiceStub,
+            toolFillService: toolFillServiceStub,
             toolEyedropperService: toolEyedropperServiceStub,
             toolRecolorService: toolRecolorServiceStub,
             toolSelectionService: toolSelectionServiceStub,
@@ -102,6 +105,7 @@ describe('SidebarComponent', () => {
         selectToolRectangleShortcutSubject = new Subject<void>();
         selectToolEllipseShortcutSubject = new Subject<void>();
         selectToolPolygonShortcutSubject = new Subject<void>();
+        selectToolFillShortcutSubject = new Subject<void>();
         selectToolEyedropperShortcutSubject = new Subject<void>();
         selectToolRecolorShortcutSubject = new Subject<void>();
         selectToolSelectionShortcutSubject = new Subject<void>();
@@ -116,6 +120,7 @@ describe('SidebarComponent', () => {
             selectToolRectangleShortcut$: selectToolRectangleShortcutSubject,
             selectToolEllipseShortcut$: selectToolEllipseShortcutSubject,
             selectToolPolygonShortcut$: selectToolPolygonShortcutSubject,
+            selectToolFillShortcut$: selectToolFillShortcutSubject,
             selectToolEyedropperShortcut$: selectToolEyedropperShortcutSubject,
             selectToolRecolorShortcut$: selectToolRecolorShortcutSubject,
             selectToolSelectionShortcut$: selectToolSelectionShortcutSubject,
@@ -168,6 +173,8 @@ describe('SidebarComponent', () => {
         expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEllipseService);
         selectToolPolygonShortcutSubject.next();
         expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolPolygonService);
+        selectToolFillShortcutSubject.next();
+        expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolFillService);
         selectToolEyedropperShortcutSubject.next();
         expect(currentToolServiceMock.currentTool).toEqual(toolHolderServiceSpyObj.toolEyedropperService);
         selectToolRecolorShortcutSubject.next();
@@ -197,6 +204,7 @@ describe('SidebarComponent', () => {
         const rectangleSubscriptionSpy = spyOn(component['selectToolRectangleShortcutSubscription'], 'unsubscribe');
         const ellipseSubscriptionSpy = spyOn(component['selectToolEllipseShortcutSubscription'], 'unsubscribe');
         const polygonSubscriptionSpy = spyOn(component['selectToolPolygonShortcutSubscription'], 'unsubscribe');
+        const fillSubscriptionSpy = spyOn(component['selectToolFillShortcutSubscription'], 'unsubscribe');
         const eyedropperSubscriptionSpy = spyOn(component['selectToolEyedropperShortcutSubscription'], 'unsubscribe');
         const recolorSubscriptionSpy = spyOn(component['selectToolRecolorShortcutSubscription'], 'unsubscribe');
         const selectionSubscriptionSpy = spyOn(component['selectToolSelectionShortcutSubscription'], 'unsubscribe');
@@ -210,6 +218,7 @@ describe('SidebarComponent', () => {
         expect(rectangleSubscriptionSpy).toHaveBeenCalled();
         expect(ellipseSubscriptionSpy).toHaveBeenCalled();
         expect(polygonSubscriptionSpy).toHaveBeenCalled();
+        expect(fillSubscriptionSpy).toHaveBeenCalled();
         expect(eyedropperSubscriptionSpy).toHaveBeenCalled();
         expect(recolorSubscriptionSpy).toHaveBeenCalled();
         expect(selectionSubscriptionSpy).toHaveBeenCalled();
