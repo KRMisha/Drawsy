@@ -35,6 +35,8 @@ export class ToolSelectionRotatorService {
             return;
         }
 
+        event.preventDefault();
+
         const selectedElementTransformsBeforeRotate = this.toolSelectionTransformService.getElementListTransformsCopy(
             this.toolSelectionStateService.selectedElements
         );
