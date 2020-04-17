@@ -15,6 +15,7 @@ export class ShortcutService {
     private selectToolRectangleShortcutSource = new Subject<void>();
     private selectToolEllipseShortcutSource = new Subject<void>();
     private selectToolPolygonShortcutSource = new Subject<void>();
+    private selectToolFillShortcutSource = new Subject<void>();
     private selectToolEyedropperShortcutSource = new Subject<void>();
     private selectToolRecolorShortcutSource = new Subject<void>();
     private selectToolSelectionShortcutSource = new Subject<void>();
@@ -43,6 +44,7 @@ export class ShortcutService {
     selectToolRectangleShortcut$ = this.selectToolRectangleShortcutSource.asObservable();
     selectToolEllipseShortcut$ = this.selectToolEllipseShortcutSource.asObservable();
     selectToolPolygonShortcut$ = this.selectToolPolygonShortcutSource.asObservable();
+    selectToolFillShortcut$ = this.selectToolFillShortcutSource.asObservable();
     selectToolEyedropperShortcut$ = this.selectToolEyedropperShortcutSource.asObservable();
     selectToolRecolorShortcut$ = this.selectToolRecolorShortcutSource.asObservable();
     selectToolSelectionShortcut$ = this.selectToolSelectionShortcutSource.asObservable();
@@ -130,6 +132,8 @@ export class ShortcutService {
         }
     }
 
+    // Disable cyclomatic complexity lint error because the switch statement acts as a specialized lookup map
+    // tslint:disable-next-line: cyclomatic-complexity
     private handleNonCtrlShortcuts(event: KeyboardEvent): void {
         switch (event.key) {
             case '1':
@@ -144,6 +148,10 @@ export class ShortcutService {
             case 'a':
             case 'A':
                 this.selectToolSprayCanShortcutSource.next();
+                break;
+            case 'b':
+            case 'B':
+                this.selectToolFillShortcutSource.next();
                 break;
             case 'c':
             case 'C':

@@ -7,5 +7,6 @@ export enum ToolSetting {
     ShapeType = 'shapeType',
     ShapeBorderWidth = 'shapeBorderWidth',
     PolygonSideCount = 'polygonSideCount',
+    FillDeviation = 'fillDeviation',
     EraserSize = 'eraserSize',
 }

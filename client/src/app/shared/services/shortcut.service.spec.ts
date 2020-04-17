@@ -2,6 +2,8 @@ import { async, TestBed } from '@angular/core/testing';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 
+// tslint:disable: max-file-line-count
+
 describe('ShortcutService', () => {
     let service: ShortcutService;
     const modalServiceSpyObj = jasmine.createSpyObj('ModalService', [], { isModalPresent: false });
@@ -235,6 +237,16 @@ describe('ShortcutService', () => {
             subscriberSpyobj.shortcutNotNeedingCtrlPressed();
         });
         const keyboardEvent = { key: 'a', ctrlKey: false } as KeyboardEvent;
+        service.onKeyDown(keyboardEvent);
+        expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
+        expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();
+    }));
+
+    it("#onKeyDown should emit selectToolFillShortcut$ when selected shorcut is 'b'", async(() => {
+        service.selectToolFillShortcut$.subscribe(() => {
+            subscriberSpyobj.shortcutNotNeedingCtrlPressed();
+        });
+        const keyboardEvent = { key: 'b', ctrlKey: false } as KeyboardEvent;
         service.onKeyDown(keyboardEvent);
         expect(subscriberSpyobj.shortcutNeedingCtrlPressed).not.toHaveBeenCalled();
         expect(subscriberSpyobj.shortcutNotNeedingCtrlPressed).toHaveBeenCalled();

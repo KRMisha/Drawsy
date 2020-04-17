@@ -8,6 +8,7 @@ import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.
 import { Tool } from '@app/tools/services/tool';
 import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
 import { ToolEyedropperService } from '@app/tools/services/tool-eyedropper.service';
+import { ToolFillService } from '@app/tools/services/tool-fill.service';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
 import { ToolRecolorService } from '@app/tools/services/tool-recolor.service';
 import { ToolSprayCanService } from '@app/tools/services/tool-spray-can.service';
@@ -26,6 +27,7 @@ export class ToolHolderService {
         public toolRectangleService: ToolRectangleService,
         public toolEllipseService: ToolEllipseService,
         public toolPolygonService: ToolPolygonService,
+        public toolFillService: ToolFillService,
         public toolEyedropperService: ToolEyedropperService,
         public toolRecolorService: ToolRecolorService,
         public toolSelectionService: ToolSelectionService,
@@ -39,6 +41,7 @@ export class ToolHolderService {
             this.toolRectangleService,
             this.toolEllipseService,
             this.toolPolygonService,
+            this.toolFillService,
             this.toolEyedropperService,
             this.toolRecolorService,
             this.toolSelectionService,

@@ -1,0 +1,18 @@
+export default {
+    minimumLineWidth: 1,
+    maximumLineWidth: 500,
+    minimumJunctionDiameter: 5,
+    maximumJunctionDiameter: 500,
+    minimumSprayDiameter: 20,
+    maximumSprayDiameter: 500,
+    minimumSprayRate: 10,
+    maximumSprayRate: 100,
+    minimumShapeBorderWidth: 1,
+    maximumShapeBorderWidth: 100,
+    minimumPolygonSideCount: 3,
+    maximumPolygonSideCount: 12,
+    minimumFillDeviation: 0,
+    maximumFillDeviation: 100,
+    minimumEraserSize: 3,
+    maximumEraserSize: 25,
+};
