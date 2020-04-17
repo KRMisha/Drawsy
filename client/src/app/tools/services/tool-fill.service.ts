@@ -53,6 +53,7 @@ export class ToolFillService extends Tool {
         }
     }
 
+    // TODO: Make work (important!)
     // onPrimaryColorChange(color: Color): void {
     //     if (this.group !== undefined) {
     //         this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
@@ -67,6 +68,7 @@ export class ToolFillService extends Tool {
         await this.initializeCanvas();
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
         this.selectedColor = this.rasterizationService.getPixelColor(this.data, this.canvasWidth, startPixel);
+
         this.breadthFirstSearch(startPixel);
         this.addFillElement();
 
@@ -83,85 +85,73 @@ export class ToolFillService extends Tool {
     }
 
     private breadthFirstSearch(startPixel: Vec2): void {
-        this.pixelQueue.enqueue([startPixel, Direction.Up]);
-        this.pathString = `M${startPixel.x} ${startPixel.y} L${startPixel.x} ${startPixel.y} `;
+        // this.pathString = `M${startPixel.x} ${startPixel.y} L${startPixel.x} ${startPixel.y} `;
 
+        this.enqueuePixelIfUnvisited([startPixel, Direction.Up]);
         while (!this.pixelQueue.isEmpty()) {
-            // The pixel will always be defined since it can only be added to the queue if it is valid
-            const pixelDirectionPair = this.pixelQueue.dequeue()!; // tslint:disable-line: no-non-null-assertion
-            // this.visitPixel(pixelDirectionPair[0], pixelDirectionPair[1]);
+            const [pixel, direction] = this.pixelQueue.dequeue()!; // tslint:disable-line: no-non-null-assertion
+            this.visitPixel(pixel, direction);
 
-            this.verifyStartingPixel({ x: pixelDirectionPair[0].x, y: pixelDirectionPair[0].y + 1 }, Direction.Up);
-            this.verifyStartingPixel({ x: pixelDirectionPair[0].x + 1, y: pixelDirectionPair[0].y }, Direction.Right);
-            this.verifyStartingPixel({ x: pixelDirectionPair[0].x, y: pixelDirectionPair[0].y - 1 }, Direction.Down);
-            this.verifyStartingPixel({ x: pixelDirectionPair[0].x - 1, y: pixelDirectionPair[0].y }, Direction.Left);
+            const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasWidth, pixel));
+            if (isPixelFillColor) {
+                const adjacentPixelDirectionPairs: [Vec2, Direction][] = [
+                    [{ x: pixel.x, y: pixel.y - 1 }, Direction.Up],
+                    [{ x: pixel.x + 1, y: pixel.y }, Direction.Right],
+                    [{ x: pixel.x, y: pixel.y + 1 }, Direction.Down],
+                    [{ x: pixel.x - 1, y: pixel.y }, Direction.Left],
+                ];
+                for (const pixelDirectionPair of adjacentPixelDirectionPairs) {
+                    this.enqueuePixelIfUnvisited(pixelDirectionPair);
+                }
+            }
         }
     }
 
-    private verifyStartingPixel(pixel: Vec2, absoluteDirection: Direction): void {
-        const isInDrawing =
+    private enqueuePixelIfUnvisited(pixelDirectionPair: [Vec2, Direction]): void {
+        const pixel = pixelDirectionPair[0];
+
+        const isPixelInDrawing =
             pixel.x >= 0 && pixel.x < this.drawingService.dimensions.x && pixel.y >= 0 && pixel.y < this.drawingService.dimensions.y;
 
-        if (!isInDrawing || this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
-            return;
+        if (isPixelInDrawing && !this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
+            this.visitedPixels.add(`${pixel.x} ${pixel.y}`);
+            this.pixelQueue.enqueue(pixelDirectionPair);
         }
+    }
 
-        this.visitedPixels.add(`${pixel.x} ${pixel.y}`);
+    private visitPixel(pixel: Vec2, direction: Direction): void {
         if (this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasWidth, pixel))) {
-            this.pixelQueue.enqueue([pixel, absoluteDirection]);
             return;
         }
 
-        const isRearPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.Down);
-        const isLeftPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.Left);
-        const isRearLeftPixelContour = this.isAdjacentPixelContour(pixel, absoluteDirection, Direction.DownLeft);
+        const isRearPixelContour = this.isAdjacentPixelContour(pixel, direction, Direction.Down);
+        const isLeftPixelContour = this.isAdjacentPixelContour(pixel, direction, Direction.Left);
+        const isRearLeftPixelContour = this.isAdjacentPixelContour(pixel, direction, Direction.DownLeft);
 
         const isValidStartingPixel = !isRearPixelContour && !(!isRearPixelContour && !isLeftPixelContour && isRearLeftPixelContour);
         if (isValidStartingPixel) {
-            this.findContour(pixel, absoluteDirection);
+            this.findContour(pixel, direction);
         }
     }
-
-    // private enqueuePixelIfUnvisited(pixelDirectionPair: [Vec2, Direction]): void {
-    //     const pixel = pixelDirectionPair[0];
-    //     const direction = pixelDirectionPair[1];
-
-    //     const isPixelInDrawing =
-    //         pixel.x >= 0 && pixel.x < this.drawingService.dimensions.x && pixel.y >= 0 && pixel.y < this.drawingService.dimensions.y;
-
-    //     if (isPixelInDrawing && !this.visitedPixels.has(`${pixel.x} ${pixel.y}`)) {
-    //         this.pixelQueue.enqueue([pixel, direction]);
-    //     }
-    // }
-
-    // private visitPixel(pixel: Vec2, direction: Direction): void {
-    //     this.visitedPixels.add(`${pixel.x} ${pixel.y}`);
-
-    //     if (this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasWidth, pixel))) {
-    //         return;
-    //     }
-
-    //     this.findContour(pixel, direction);
-    // }
 
     private getAdjacentPixel(pixel: Vec2, absoluteDirection: Direction): Vec2 {
         switch (absoluteDirection) {
             case Direction.Up:
-                return { x: pixel.x, y: pixel.y + 1 };
+                return { x: pixel.x, y: pixel.y - 1 };
             case Direction.UpRight:
-                return { x: pixel.x + 1, y: pixel.y + 1 };
+                return { x: pixel.x + 1, y: pixel.y - 1 };
             case Direction.Right:
                 return { x: pixel.x + 1, y: pixel.y };
             case Direction.DownRight:
-                return { x: pixel.x + 1, y: pixel.y - 1 };
+                return { x: pixel.x + 1, y: pixel.y + 1 };
             case Direction.Down:
-                return { x: pixel.x, y: pixel.y - 1 };
+                return { x: pixel.x, y: pixel.y + 1 };
             case Direction.DownLeft:
-                return { x: pixel.x - 1, y: pixel.y - 1 };
+                return { x: pixel.x - 1, y: pixel.y + 1 };
             case Direction.Left:
                 return { x: pixel.x - 1, y: pixel.y };
             case Direction.UpLeft:
-                return { x: pixel.x - 1, y: pixel.y + 1 };
+                return { x: pixel.x - 1, y: pixel.y - 1 };
         }
     }
 
@@ -235,13 +225,12 @@ export class ToolFillService extends Tool {
     }
 
     private addFillElement(): void {
-        const path = this.renderer.createElement('path', 'svg') as SVGPathElement;
+        const path: SVGPathElement = this.renderer.createElement('path', 'svg');
+        this.renderer.setAttribute(path, 'stroke', this.colorService.secondaryColor.toRgbaString());
         this.renderer.setAttribute(path, 'fill', this.colorService.primaryColor.toRgbaString());
-        this.renderer.setAttribute(path, 'fill-rule', 'nonzero');
+        this.renderer.setAttribute(path, 'fill-rule', 'evenodd');
         this.renderer.setAttribute(path, 'd', this.pathString);
-        // tslint:disable: no-non-null-assertion
         this.drawingService.addElement(path);
         this.historyService.addCommand(new AddElementCommand(this.drawingService, path));
-        // tslint:enable: no-non-null-assertion
     }
 }
