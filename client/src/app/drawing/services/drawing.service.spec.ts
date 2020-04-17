@@ -19,7 +19,14 @@ describe('DrawingService', () => {
     let drawingSerializerServiceSpyObj: jasmine.SpyObj<DrawingSerializerService>;
 
     beforeEach(() => {
-        renderer2SpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
+        renderer2SpyObj = jasmine.createSpyObj('renderer2', [
+            'appendChild',
+            'removeChild',
+            'insertBefore',
+            'listen',
+            'setStyle',
+            'removeStyle',
+        ]);
         rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactory2SpyObj.createRenderer.and.returnValue(renderer2SpyObj);
         drawingSerializerServiceSpyObj = jasmine.createSpyObj('DrawingSerializerService', [
@@ -186,6 +193,16 @@ describe('DrawingService', () => {
         const svgGraphicsElementStub = {} as SVGGraphicsElement;
         service.removeUiElement(svgGraphicsElementStub);
         expect(renderer2SpyObj.removeChild).not.toHaveBeenCalled();
+    });
+
+    it('#showUiElements should use renderer2 to show the svgUserInterfaceContent', () => {
+        service.showUiElements();
+        expect(renderer2SpyObj.removeStyle).toHaveBeenCalledWith(service.svgUserInterfaceContent, 'display');
+    });
+
+    it('#hideUiElements should use renderer2 to hide the svgUserInterfaceContent', () => {
+        service.hideUiElements();
+        expect(renderer2SpyObj.setStyle).toHaveBeenCalledWith(service.svgUserInterfaceContent, 'display', 'none');
     });
 
     it('#isDrawingStarted should return true if there is an item in the localStorage', () => {

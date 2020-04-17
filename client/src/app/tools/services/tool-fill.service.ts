@@ -63,8 +63,8 @@ export class ToolFillService extends Tool {
         this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
         this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
 
-        await this.initializeCanvas();
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
+        await this.initializeCanvas();
         this.selectedColor = this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, startPixel);
 
         this.breadthFirstSearch(startPixel);
@@ -78,7 +78,11 @@ export class ToolFillService extends Tool {
     }
 
     private async initializeCanvas(): Promise<void> {
-        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        this.drawingService.hideUiElements();
+        const drawingRootCopy = this.drawingService.drawingRoot.cloneNode(true) as SVGSVGElement;
+        this.drawingService.showUiElements();
+
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRootCopy);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         this.canvasData = context.getImageData(0, 0, canvas.width, canvas.height).data;
         this.canvasDimensions = { x: canvas.width, y: canvas.height };

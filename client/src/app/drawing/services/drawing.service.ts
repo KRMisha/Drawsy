@@ -97,6 +97,14 @@ export class DrawingService {
         }
     }
 
+    showUiElements(): void {
+        this.renderer.removeStyle(this.svgUserInterfaceContent, 'display');
+    }
+
+    hideUiElements(): void {
+        this.renderer.setStyle(this.svgUserInterfaceContent, 'display', 'none');
+    }
+
     isDrawingStarted(): boolean {
         return localStorage.getItem(localStorageDrawingAutosaveContentKey) !== null;
     }

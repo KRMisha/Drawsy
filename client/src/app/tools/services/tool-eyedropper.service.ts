@@ -28,7 +28,11 @@ export class ToolEyedropperService extends Tool {
     }
 
     private async updateColorServiceColor(mouseButton: MouseButton): Promise<void> {
-        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        this.drawingService.hideUiElements();
+        const drawingRootCopy = this.drawingService.drawingRoot.cloneNode(true) as SVGSVGElement;
+        this.drawingService.showUiElements();
+
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRootCopy);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
 
