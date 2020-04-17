@@ -155,8 +155,8 @@ describe('ServerService', () => {
         httpClientSpyObj.post.and.returnValue(emailDrawingSubject);
         const emailAddress = 'oups';
         const blob = new Blob([emailAddress]);
-        const fileName = 'oupsyy';
-        service.emailDrawing(emailAddress, blob, fileName).subscribe(
+        const filename = 'oupsyy';
+        service.emailDrawing(emailAddress, blob, filename).subscribe(
             () => {
                 subscriberSpyObj.successChannel();
             },
@@ -175,8 +175,8 @@ describe('ServerService', () => {
         httpClientSpyObj.post.and.returnValue(emailDrawingSubject);
         const emailAddress = 'oups';
         const blob = new Blob([emailAddress]);
-        const fileName = 'oupsyy';
-        service.emailDrawing(emailAddress, blob, fileName).subscribe(
+        const filename = 'oupsyy';
+        service.emailDrawing(emailAddress, blob, filename).subscribe(
             () => {
                 subscriberSpyObj.successChannel();
             },
