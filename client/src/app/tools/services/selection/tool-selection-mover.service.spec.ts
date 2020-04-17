@@ -24,6 +24,7 @@ describe('ToolSelectionMoverService', () => {
     const initialElement = {} as SVGGraphicsElement;
     const initialSelectedElements = [initialElement, initialElement];
 
+    const moveOffset = 3;
     beforeEach(() => {
         toolSelectionStateServiceSpyObj = jasmine.createSpyObj('ToolSelectionStateService', ['updateSelectionRect'], {
             isMovingSelectionWithMouse: false,
@@ -83,8 +84,7 @@ describe('ToolSelectionMoverService', () => {
         const toolSelectionStateServiceMock = { state: SelectionState.MovingSelectionWithArrows } as ToolSelectionStateService;
         service['toolSelectionStateService'] = toolSelectionStateServiceMock;
 
-        // tslint:disable-next-line: typedef
-        const event = { key: 'ArrowUp', preventDefault() {} } as KeyboardEvent;
+        const event = { key: 'ArrowUp', preventDefault(): void {} } as KeyboardEvent;
         const preventDefaultSpy = spyOn(event, 'preventDefault');
         service.onKeyDown(event);
         expect(preventDefaultSpy).toHaveBeenCalled();
@@ -134,29 +134,12 @@ describe('ToolSelectionMoverService', () => {
 
     it('#moveSelection should move each element of the selection and update the selected elements bounding rect', () => {
         const moveElementSpy = spyOn<any>(service, 'moveElement');
-        const moveOffset = { x: 2, y: 2 };
-        service.moveSelection(moveOffset);
-        expect(moveElementSpy).toHaveBeenCalledWith(initialSelectedElements[0], moveOffset);
+        const expectedMoveOffset = { x: 2, y: 2 };
+        service.moveSelection(expectedMoveOffset);
+        expect(moveElementSpy).toHaveBeenCalledWith(initialSelectedElements[0], expectedMoveOffset);
         expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalledWith(
             toolSelectionStateServiceSpyObj.selectedElements
         );
-    });
-
-    it("#moveElement should apply a translation to the element's transform matrix", () => {
-        const expectedMatrix = {} as DOMMatrix;
-        const matrixSpyObj = jasmine.createSpyObj('DOMMatrix', ['translate']);
-        matrixSpyObj.translate.and.returnValue(expectedMatrix);
-        const transformSpyObj = jasmine.createSpyObj('SVGTransform', ['setMatrix'], { matrix: matrixSpyObj });
-        const svgTransformListSpyObj = jasmine.createSpyObj('SVGTransformList', ['getItem']);
-        svgTransformListSpyObj.getItem.and.returnValue(transformSpyObj);
-        const animatedTransformListMock = { baseVal: svgTransformListSpyObj } as SVGAnimatedTransformList;
-        const elementMock = { transform: animatedTransformListMock } as SVGGraphicsElement;
-
-        const offset = { x: 2, y: 2 } as Vec2;
-        service['moveElement'](elementMock, offset);
-
-        expect(matrixSpyObj.translate).toHaveBeenCalledWith(offset.x, offset.y);
-        expect(transformSpyObj.setMatrix).toHaveBeenCalledWith(expectedMatrix);
     });
 
     it('#stopMovingSelection should return early if the selection is not being moved', () => {
@@ -235,6 +218,23 @@ describe('ToolSelectionMoverService', () => {
         expect(service['arrowKeysHeldStates'][ArrowKey.Right]).toEqual(false);
     });
 
+    it("#moveElement should apply a translation to the element's transform matrix", () => {
+        const expectedMatrix = {} as DOMMatrix;
+        const matrixSpyObj = jasmine.createSpyObj('DOMMatrix', ['translate']);
+        matrixSpyObj.translate.and.returnValue(expectedMatrix);
+        const transformSpyObj = jasmine.createSpyObj('SVGTransform', ['setMatrix'], { matrix: matrixSpyObj });
+        const svgTransformListSpyObj = jasmine.createSpyObj('SVGTransformList', ['getItem']);
+        svgTransformListSpyObj.getItem.and.returnValue(transformSpyObj);
+        const animatedTransformListMock = { baseVal: svgTransformListSpyObj } as SVGAnimatedTransformList;
+        const elementMock = { transform: animatedTransformListMock } as SVGGraphicsElement;
+
+        const offset = { x: 2, y: 2 } as Vec2;
+        service['moveElement'](elementMock, offset);
+
+        expect(matrixSpyObj.translate).toHaveBeenCalledWith(offset.x, offset.y);
+        expect(transformSpyObj.setMatrix).toHaveBeenCalledWith(expectedMatrix);
+    });
+
     it('#startMovingSelectionWithArrows should set the selection state to MovingSelectionWithArrows and call #startMovingSelection and #moveSelectionWithArrows', async(() => {
         const toolSelectionStateServiceMock = {
             state: SelectionState.None,
@@ -281,7 +281,6 @@ describe('ToolSelectionMoverService', () => {
 
     it('#moveSelectionInArrowDirection should move horizontaly if left key is held', () => {
         const moveSelectionSpy = spyOn(service, 'moveSelection');
-        const moveOffset = 3;
         service['arrowKeysHeldStates'][ArrowKey.Left] = true;
         service['moveSelectionWithArrows']();
         expect(moveSelectionSpy).toHaveBeenCalledWith({ x: -moveOffset, y: 0 });
@@ -289,7 +288,6 @@ describe('ToolSelectionMoverService', () => {
 
     it('#moveSelectionInArrowDirection should move vertically if up key is held', () => {
         const moveSelectionSpy = spyOn(service, 'moveSelection');
-        const moveOffset = 3;
         service['arrowKeysHeldStates'][ArrowKey.Up] = true;
         service['moveSelectionWithArrows']();
         expect(moveSelectionSpy).toHaveBeenCalledWith({ x: 0, y: -moveOffset });
@@ -297,7 +295,6 @@ describe('ToolSelectionMoverService', () => {
 
     it('#moveSelectionInArrowDirection should move horizontaly if right key is held', () => {
         const moveSelectionSpy = spyOn(service, 'moveSelection');
-        const moveOffset = 3;
         service['arrowKeysHeldStates'][ArrowKey.Right] = true;
         service['moveSelectionWithArrows']();
         expect(moveSelectionSpy).toHaveBeenCalledWith({ x: moveOffset, y: 0 });
@@ -305,7 +302,6 @@ describe('ToolSelectionMoverService', () => {
 
     it('#moveSelectionInArrowDirection should move vertically if up down is held', () => {
         const moveSelectionSpy = spyOn(service, 'moveSelection');
-        const moveOffset = 3;
         service['arrowKeysHeldStates'][ArrowKey.Down] = true;
         service['moveSelectionWithArrows']();
         expect(moveSelectionSpy).toHaveBeenCalledWith({ x: 0, y: moveOffset });
