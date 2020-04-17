@@ -141,4 +141,10 @@ describe('Tool', () => {
         tool.onHistoryChange();
         expect(methodStubSpy).toHaveBeenCalled();
     });
+
+    it('#onHistoryChange should be called when called', () => {
+        const methodStubSpy = spyOn(tool, 'onDrawingLoad').and.callThrough();
+        tool.onDrawingLoad();
+        expect(methodStubSpy).toHaveBeenCalled();
+    });
 });

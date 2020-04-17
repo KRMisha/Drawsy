@@ -126,6 +126,14 @@ describe('DrawingComponent', () => {
         expect(changeDetectorRefSpyObj.detectChanges).toHaveBeenCalled();
     });
 
+    it('#ngOnInit should set a hostListener on wheelEvents to prevent default behaviour and call #onScroll', () => {
+        const onScrollSpy = spyOn(component, 'onScroll');
+        const event = document.createEvent('WheelEvent');
+        event.initEvent('wheel');
+        document.dispatchEvent(event);
+        expect(onScrollSpy).toHaveBeenCalledWith(event);
+    });
+
     it("#ngAfterViewInit should set DrawingService's rootElement and call reappendStoredElements", () => {
         const expectedDrawingRoot = {} as SVGSVGElement;
         const expectedSvgDrawingContent = {} as SVGGElement;
