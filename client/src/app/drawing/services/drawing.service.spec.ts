@@ -1,11 +1,13 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
@@ -17,6 +19,7 @@ describe('DrawingService', () => {
     let renderer2SpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactory2SpyObj: jasmine.SpyObj<RendererFactory2>;
     let drawingSerializerServiceSpyObj: jasmine.SpyObj<DrawingSerializerService>;
+    let snackBarSpyObj: jasmine.SpyObj<MatSnackBar>;
 
     beforeEach(() => {
         renderer2SpyObj = jasmine.createSpyObj('renderer2', ['appendChild', 'removeChild', 'insertBefore', 'listen']);
@@ -27,10 +30,13 @@ describe('DrawingService', () => {
             'getDrawingLoadOptions',
             'serializeDrawing',
         ]);
+
+        snackBarSpyObj = jasmine.createSpyObj('MatSnackBar', ['open']);
         TestBed.configureTestingModule({
             providers: [
                 { provide: RendererFactory2, useValue: rendererFactory2SpyObj },
                 { provide: DrawingSerializerService, useValue: drawingSerializerServiceSpyObj },
+                { provide: MatSnackBar, useValue: snackBarSpyObj },
             ],
         });
         service = TestBed.inject(DrawingService);
@@ -314,6 +320,22 @@ describe('DrawingService', () => {
         service.saveDrawingToStorage();
         expect(setItemSpy).toHaveBeenCalledWith('drawingAutosaveContent', serializedDrawing);
         expect(removeItemSpy).toHaveBeenCalledWith('drawingAutosaveId');
+    });
+
+    it('saveDrawingtoStorage should display error message if the localStorage quota is exeeded', () => {
+        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['getElementsByTagName']);
+        const titleElementMock = { innerHTML: '' } as HTMLTitleElement;
+        drawingRootSpyObj.getElementsByTagName.and.returnValue([titleElementMock]);
+        service['drawingRoot'] = drawingRootSpyObj;
+        spyOn(localStorage, 'setItem').and.throwError(new Error());
+        service.saveDrawingToStorage();
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith(
+            "La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé",
+            undefined,
+            {
+                duration: snackBarDuration,
+            }
+        );
     });
 
     it("#findDrawingChildElement should return undefined if the element'parent node is undefined", () => {
