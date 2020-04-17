@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { Rect } from '@app/shared/classes/rect';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
 
 // tslint:disable: no-any
+// tslint:disable: no-string-literal
 
 describe('ToolSelectionStateService', () => {
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
@@ -25,18 +27,33 @@ describe('ToolSelectionStateService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#selectedElements should update the selection rect', () => {
-        // tslint:disable-next-line: no-string-literal
-        const selectedElementChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
-        service.selectedElements = [];
-        expect(selectedElementChangedSourceSpy).toHaveBeenCalled();
-        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalled();
+    it('#get selectedElements should return the selected elements', () => {
+        const expectedValue = [] as SVGGraphicsElement[];
+        service['_selectedElements'] = expectedValue;
+        const actualValue = service.selectedElements;
+        expect(actualValue).toBe(expectedValue);
     });
 
-    it('#selectedElements should notify its subcribers that its value has changed', () => {
-        // tslint:disable-next-line: no-string-literal
-        const selectedElementsRectChangedSourceSpy = spyOn<any>(service['selectedElementsRectChangedSource'], 'next');
-        service.selectedElements = [];
-        expect(selectedElementsRectChangedSourceSpy).toHaveBeenCalled();
+    it('#set selectedElements should update the selectedElements and emit selectedElementsChanged', () => {
+        const selectedElementsChanged$Spy = spyOn<any>(service['selectedElementsChanged$'], 'next');
+        const expectedValue = [] as SVGGraphicsElement[];
+        service.selectedElements = expectedValue;
+        expect(service['_selectedElements']).toBe(expectedValue);
+        expect(selectedElementsChanged$Spy).toHaveBeenCalledWith(expectedValue);
+    });
+
+    it("#get selectedElementsBounds should return the selected elements' bounding rectangle", () => {
+        const expectedValue = {} as Rect;
+        service['_selectedElementsBounds'] = expectedValue;
+        const actualValue = service.selectedElementsBounds;
+        expect(actualValue).toBe(expectedValue);
+    });
+
+    it('#set selectedElementsRect should update the selected elements bounding rect', () => {
+        const selectedElementsBoundsChangedSourceSpy = spyOn<any>(service['selectedElementsBoundsChangedSource'], 'next');
+        const expectedValue = {} as Rect;
+        service.selectedElementsBounds = expectedValue;
+        expect(service['_selectedElementsBounds']).toBe(expectedValue);
+        expect(selectedElementsBoundsChangedSourceSpy).toHaveBeenCalledWith(expectedValue);
     });
 });

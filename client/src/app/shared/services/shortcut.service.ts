@@ -25,6 +25,10 @@ export class ShortcutService {
     private openSaveDrawingShortcutSource = new Subject<void>();
     private openGalleryShortcutSource = new Subject<void>();
     private selectAllShortcutSource = new Subject<void>();
+    private copySelectionShortcutSource = new Subject<void>();
+    private pasteSelectionShortcutSource = new Subject<void>();
+    private cutSelectionShortcutSource = new Subject<void>();
+    private duplicateSelectionShortcutSource = new Subject<void>();
     private undoShortcutSource = new Subject<void>();
     private redoShortcutSource = new Subject<void>();
     private toggleGridSource = new Subject<void>();
@@ -50,6 +54,10 @@ export class ShortcutService {
     openSaveDrawingShortcut$ = this.openSaveDrawingShortcutSource.asObservable();
     openGalleryShortcut$ = this.openGalleryShortcutSource.asObservable();
     selectAllShortcut$ = this.selectAllShortcutSource.asObservable();
+    copySelectionShortcut$ = this.copySelectionShortcutSource.asObservable();
+    pasteSelectionShortcut$ = this.pasteSelectionShortcutSource.asObservable();
+    cutSelectionShortcut$ = this.cutSelectionShortcutSource.asObservable();
+    duplicateSelectionShortcut$ = this.duplicateSelectionShortcutSource.asObservable();
     undoShortcut$ = this.undoShortcutSource.asObservable();
     redoShortcut$ = this.redoShortcutSource.asObservable();
     toggleGrid$ = this.toggleGridSource.asObservable();
@@ -76,6 +84,16 @@ export class ShortcutService {
                 event.preventDefault();
                 this.selectAllShortcutSource.next();
                 break;
+            case 'c':
+            case 'C':
+                event.preventDefault();
+                this.copySelectionShortcutSource.next();
+                break;
+            case 'd':
+            case 'D':
+                event.preventDefault();
+                this.duplicateSelectionShortcutSource.next();
+                break;
             case 'e':
             case 'E':
                 event.preventDefault();
@@ -95,6 +113,16 @@ export class ShortcutService {
             case 'S':
                 event.preventDefault();
                 this.openSaveDrawingShortcutSource.next();
+                break;
+            case 'v':
+            case 'V':
+                event.preventDefault();
+                this.pasteSelectionShortcutSource.next();
+                break;
+            case 'x':
+            case 'X':
+                event.preventDefault();
+                this.cutSelectionShortcutSource.next();
                 break;
             case 'z':
             case 'Z':

@@ -1,5 +1,5 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -10,7 +10,7 @@ import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
 
-const pointsPerCoordinates = 2;
+const coordsPerPoint = 2;
 
 @Injectable({
     providedIn: 'root',
@@ -48,12 +48,7 @@ export class ToolLineService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        if (!Tool.isMouseInsideDrawing) {
-            this.stopDrawing();
-            return;
-        }
-
-        if (event.button !== MouseButton.Left) {
+        if (!Tool.isMouseInsideDrawing || event.button !== MouseButton.Left) {
             return;
         }
 
@@ -86,7 +81,7 @@ export class ToolLineService extends Tool {
         if (removedJunctionPoint !== undefined) {
             this.renderer.removeChild(this.group, removedJunctionPoint);
         }
-        this.points.length -= pointsPerCoordinates;
+        this.points.length -= coordsPerPoint;
 
         if (!this.isShiftDown) {
             const firstXIndex = 0;
@@ -109,7 +104,6 @@ export class ToolLineService extends Tool {
             }
         }
         this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
-        this.junctionPoints.length = 0;
         this.stopDrawing();
     }
 
@@ -119,7 +113,7 @@ export class ToolLineService extends Tool {
                 if (this.isCurrentlyDrawing) {
                     this.drawingService.removeElement(this.group);
                     this.stopDrawing();
-                    this.junctionPoints.length = 0;
+                    this.junctionPoints = [];
                 }
                 break;
             case 'Shift':
@@ -139,6 +133,11 @@ export class ToolLineService extends Tool {
         }
     }
 
+    onFocusOut(): void {
+        this.stopDrawing();
+        this.isShiftDown = false;
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (!this.isCurrentlyDrawing) {
             return;
@@ -152,6 +151,7 @@ export class ToolLineService extends Tool {
 
     onToolDeselection(): void {
         this.stopDrawing();
+        this.isShiftDown = false;
     }
 
     private startDrawing(): void {
@@ -193,23 +193,25 @@ export class ToolLineService extends Tool {
         if (!this.isCurrentlyDrawing) {
             return;
         }
+
         this.isCurrentlyDrawing = false;
         this.drawingService.removeUiElement(this.previewLine);
-        if (this.points.length > pointsPerCoordinates) {
-            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.group));
+        if (this.points.length > coordsPerPoint) {
+            this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
         } else {
             this.drawingService.removeElement(this.group);
         }
-        this.points.length = 0;
+        this.points = [];
+        this.junctionPoints = [];
     }
 
     private removeLastPointFromLine(): void {
-        const minimumPointsToEnableBackspace = 2 * pointsPerCoordinates;
+        const minimumPointsToEnableBackspace = 2 * coordsPerPoint;
         if (this.points.length >= minimumPointsToEnableBackspace) {
-            this.points.length -= pointsPerCoordinates;
+            this.points.length -= coordsPerPoint;
             this.renderer.setAttribute(this.polyline, 'points', this.points.join(' '));
 
-            this.lastPoint.x = this.points[this.points.length - pointsPerCoordinates];
+            this.lastPoint.x = this.points[this.points.length - coordsPerPoint];
             this.lastPoint.y = this.points[this.points.length - 1];
             this.renderer.setAttribute(this.previewLine, 'x1', this.lastPoint.x.toString());
             this.renderer.setAttribute(this.previewLine, 'y1', this.lastPoint.y.toString());

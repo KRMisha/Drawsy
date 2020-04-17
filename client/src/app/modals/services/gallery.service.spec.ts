@@ -163,7 +163,7 @@ describe('GalleryService', () => {
             service.deleteDrawing(svgFileContainer);
 
             const error = { status: HttpStatusCode.NotFound } as HttpErrorResponse;
-            const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
+            const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé";
 
             deleteDrawingSubject.error(error);
             expect(service.getAllDrawings).toHaveBeenCalled();
@@ -174,7 +174,7 @@ describe('GalleryService', () => {
         }
     );
 
-    it('#deleteDrawing should not call #getAllDrawings and not display a message if the error status is different of NotFound', () => {
+    it('#deleteDrawing should not call #getAllDrawings and not display a message if the error status other than NotFound', () => {
         spyOn(window, 'confirm').and.returnValue(true);
         spyOn(service, 'getAllDrawings');
         service.deleteDrawing(svgFileContainer);
