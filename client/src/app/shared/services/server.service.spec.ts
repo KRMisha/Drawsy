@@ -360,11 +360,9 @@ describe('ServerService', () => {
             }
         );
         getAllDrawingsSubject.error(returnedError);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith(
-            'Erreur : des extensions sont nécessaires pour satisfaire la requête',
-            undefined,
-            { duration: snackBarDuration }
-        );
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : des extensions sont nécessaires pour satisfaire la requête', undefined, {
+            duration: snackBarDuration,
+        });
     }));
 
     it('#alertRequestError should display appropriate message when error is HttpStatusCode.NetworkAuthenticationRequired', async(() => {

@@ -48,9 +48,7 @@ import { GuideExportDrawingComponent } from '@app/guide/components/guide-content
 import { GuideGalleryComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-gallery/guide-gallery.component';
 import { GuideSaveDrawingComponent } from '@app/guide/components/guide-content/guide-drawing-management/guide-save-drawing/guide-save-drawing.component';
 import { GuideGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-grid/guide-grid.component';
-import { GuideSnapToGridComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-snap-to-grid/guide-snap-to-grid.component';
 import { GuideUndoRedoComponent } from '@app/guide/components/guide-content/guide-drawing-surface/guide-undo-redo/guide-undo-redo.component';
-import { GuideCalligraphyComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-calligraphy/guide-calligraphy.component';
 import { GuidePaintbrushComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-paintbrush/guide-paintbrush.component';
 import { GuidePencilComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-pencil/guide-pencil.component';
 import { GuideSprayCanComponent } from '@app/guide/components/guide-content/guide-tools/guide-brushes/guide-spray-can/guide-spray-can.component';
@@ -65,8 +63,6 @@ import { GuideSelectionComponent } from '@app/guide/components/guide-content/gui
 import { GuideEllipseComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-ellipse/guide-ellipse.component';
 import { GuidePolygonComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-polygon/guide-polygon.component';
 import { GuideRectangleComponent } from '@app/guide/components/guide-content/guide-tools/guide-shapes/guide-rectangle/guide-rectangle.component';
-import { GuideStampComponent } from '@app/guide/components/guide-content/guide-tools/guide-stamp/guide-stamp.component';
-import { GuideTextComponent } from '@app/guide/components/guide-content/guide-tools/guide-text/guide-text.component';
 import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide-welcome/guide-welcome.component';
 import { GuideSidebarComponent } from '@app/guide/components/guide-sidebar/guide-sidebar.component';
 import { GuideComponent } from '@app/guide/components/guide/guide.component';
@@ -100,8 +96,6 @@ import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
         GalleryComponent,
         GalleryPreviewPipe,
         GridSettingsComponent,
-        GuideCalligraphyComponent,
-        GuideCalligraphyComponent,
         GuideClipboardComponent,
         GuideColorComponent,
         GuideColorPickerComponent,
@@ -121,10 +115,7 @@ import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
         GuideSaveDrawingComponent,
         GuideSelectionComponent,
         GuideSidebarComponent,
-        GuideSnapToGridComponent,
         GuideSprayCanComponent,
-        GuideStampComponent,
-        GuideTextComponent,
         GuideUndoRedoComponent,
         GuideWelcomeComponent,
         HomeComponent,
