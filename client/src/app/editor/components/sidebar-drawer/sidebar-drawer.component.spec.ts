@@ -40,8 +40,9 @@ describe('SidebarDrawerComponent', () => {
     let junctionDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let sprayDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let sprayRateFormControlSpyObj: jasmine.SpyObj<FormControl>;
-    let polygonSideCountFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let shapeBorderWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let polygonSideCountFormControlSpyObj: jasmine.SpyObj<FormControl>;
+    let fillDeviationFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let eraserSizeFormControlSpyObj: jasmine.SpyObj<FormControl>;
 
     let copyShortcutSubject: Subject<void>;
@@ -57,6 +58,7 @@ describe('SidebarDrawerComponent', () => {
     let sprayRateChangedSubject: Subject<any>;
     let shapeBorderWidthChangedSubject: Subject<any>;
     let polygonSideCountChangedSubject: Subject<any>;
+    let fillDeviationChangedSubject: Subject<any>;
     let eraserSizeChangedSubject: Subject<any>;
 
     const toolName = 'Pinceau';
@@ -104,6 +106,7 @@ describe('SidebarDrawerComponent', () => {
         sprayRateChangedSubject = new Subject<any>();
         shapeBorderWidthChangedSubject = new Subject<any>();
         polygonSideCountChangedSubject = new Subject<any>();
+        fillDeviationChangedSubject = new Subject<any>();
         eraserSizeChangedSubject = new Subject<any>();
 
         lineWidthFormControlSpyObj = jasmine.createSpyObj('FormControl', ['reset'], {
@@ -138,6 +141,11 @@ describe('SidebarDrawerComponent', () => {
         polygonSideCountFormControlSpyObj = jasmine.createSpyObj('FormControl', ['reset'], {
             valid: true,
             valueChanges: polygonSideCountChangedSubject,
+            value: initialFormControlValue,
+        });
+        fillDeviationFormControlSpyObj = jasmine.createSpyObj('FormControl', ['reset'], {
+            valid: true,
+            valueChanges: fillDeviationChangedSubject,
             value: initialFormControlValue,
         });
         eraserSizeFormControlSpyObj = jasmine.createSpyObj('FormControl', ['reset'], {
@@ -176,8 +184,9 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
+        component.fillDeviationFormControl = fillDeviationFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
         const lineWidthChangedSpy = spyOn(lineWidthChangedSubject, 'subscribe').and.callThrough();
@@ -187,6 +196,7 @@ describe('SidebarDrawerComponent', () => {
         const sprayRateChangedSpy = spyOn(sprayRateChangedSubject, 'subscribe').and.callThrough();
         const shapeBorderWidthChangedSpy = spyOn(shapeBorderWidthChangedSubject, 'subscribe').and.callThrough();
         const polygonSideCountChangedSpy = spyOn(polygonSideCountChangedSubject, 'subscribe').and.callThrough();
+        const fillDeviationChangedSpy = spyOn(fillDeviationChangedSubject, 'subscribe').and.callThrough();
         const eraserSizeChangedSpy = spyOn(eraserSizeChangedSubject, 'subscribe').and.callThrough();
 
         component.ngOnInit();
@@ -198,6 +208,7 @@ describe('SidebarDrawerComponent', () => {
         expect(sprayRateChangedSpy).toHaveBeenCalled();
         expect(shapeBorderWidthChangedSpy).toHaveBeenCalled();
         expect(polygonSideCountChangedSpy).toHaveBeenCalled();
+        expect(fillDeviationChangedSpy).toHaveBeenCalled();
         expect(eraserSizeChangedSpy).toHaveBeenCalled();
     }));
 
@@ -443,6 +454,39 @@ describe('SidebarDrawerComponent', () => {
         expect(settingsMock.polygonSideCount).toEqual(0);
     }));
 
+    it("fillDeviationSubscription should change the fillDeviation of the currentTool's settings if the formControl is valid", async(() => {
+        component['fillDeviationFormControl'] = fillDeviationFormControlSpyObj;
+        const settingsMock = { fillDeviation: 0 } as ToolSettings;
+        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [], {
+            currentTool: {
+                settings: settingsMock,
+            },
+        });
+        component['currentToolService'] = currentToolServiceSpyObj;
+        component.ngOnInit();
+        fillDeviationChangedSubject.next();
+        expect(settingsMock.fillDeviation).toEqual(initialFormControlValue);
+    }));
+
+    it("fillDeviationSubscription should not change the fillDeviation of the currentTool's settings if the formControl is invalid", async(() => {
+        fillDeviationFormControlSpyObj = jasmine.createSpyObj('FormControl', ['reset'], {
+            valid: false,
+            valueChanges: fillDeviationChangedSubject,
+            value: initialFormControlValue,
+        });
+        component['fillDeviationFormControl'] = fillDeviationFormControlSpyObj;
+        const settingsMock = { fillDeviation: 0 } as ToolSettings;
+        currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [], {
+            currentTool: {
+                settings: settingsMock,
+            },
+        });
+        component['currentToolService'] = currentToolServiceSpyObj;
+        component.ngOnInit();
+        fillDeviationChangedSubject.next();
+        expect(settingsMock.fillDeviation).toEqual(0);
+    }));
+
     it("eraserSizeSubscription should change the eraserSize of the currentTool's settings if the formControl is valid", async(() => {
         component['eraserSizeFormControl'] = eraserSizeFormControlSpyObj;
         const settingsMock = { eraserSize: 0 } as ToolSettings;
@@ -523,6 +567,7 @@ describe('SidebarDrawerComponent', () => {
         const sprayRateSubscriptionSpy = spyOn(component['sprayRateChangedSubscription'], 'unsubscribe');
         const shapeBorderWidthSubscriptionSpy = spyOn(component['shapeBorderWidthChangedSubscription'], 'unsubscribe');
         const polygonSideCountSubscriptionSpy = spyOn(component['polygonSideCountChangedSubscription'], 'unsubscribe');
+        const fillDeviationSubscriptionSpy = spyOn(component['fillDeviationChangedSubscription'], 'unsubscribe');
         const eraserSizeSubscriptionSpy = spyOn(component['eraserSizeChangedSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
@@ -534,6 +579,7 @@ describe('SidebarDrawerComponent', () => {
         expect(sprayRateSubscriptionSpy).toHaveBeenCalled();
         expect(shapeBorderWidthSubscriptionSpy).toHaveBeenCalled();
         expect(polygonSideCountSubscriptionSpy).toHaveBeenCalled();
+        expect(fillDeviationSubscriptionSpy).toHaveBeenCalled();
         expect(eraserSizeSubscriptionSpy).toHaveBeenCalled();
     }));
 
@@ -561,8 +607,9 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
+        component.fillDeviationFormControl = fillDeviationFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
         const junctionSettingsMock = {} as JunctionSettings;
@@ -573,6 +620,7 @@ describe('SidebarDrawerComponent', () => {
             sprayRate: 0,
             shapeBorderWidth: 0,
             polygonSideCount: 0,
+            fillDeviation: 0,
             eraserSize: 0,
         } as ToolSettings;
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [], {
@@ -591,6 +639,7 @@ describe('SidebarDrawerComponent', () => {
         expect(sprayRateFormControlSpyObj.reset).toHaveBeenCalled();
         expect(shapeBorderWidthFormControlSpyObj.reset).toHaveBeenCalled();
         expect(polygonSideCountFormControlSpyObj.reset).toHaveBeenCalled();
+        expect(fillDeviationFormControlSpyObj.reset).toHaveBeenCalled();
         expect(eraserSizeFormControlSpyObj.reset).toHaveBeenCalled();
     });
 
@@ -600,8 +649,9 @@ describe('SidebarDrawerComponent', () => {
         component.junctionDiameterFormControl = junctionDiameterFormControlSpyObj;
         component.sprayDiameterFormControl = sprayDiameterFormControlSpyObj;
         component.sprayRateFormControl = sprayRateFormControlSpyObj;
-        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
         component.shapeBorderWidthFormControl = shapeBorderWidthFormControlSpyObj;
+        component.polygonSideCountFormControl = polygonSideCountFormControlSpyObj;
+        component.fillDeviationFormControl = shapeBorderWidthFormControlSpyObj;
         component.eraserSizeFormControl = eraserSizeFormControlSpyObj;
 
         const settingsMock = {
@@ -611,6 +661,7 @@ describe('SidebarDrawerComponent', () => {
             sprayRate: undefined,
             shapeBorderWidth: undefined,
             polygonSideCount: undefined,
+            fillDeviation: undefined,
             eraserSize: undefined,
         } as ToolSettings;
         currentToolServiceSpyObj = jasmine.createSpyObj('CurrentToolService', [], {
@@ -628,6 +679,7 @@ describe('SidebarDrawerComponent', () => {
         expect(sprayRateFormControlSpyObj.reset).not.toHaveBeenCalled();
         expect(shapeBorderWidthFormControlSpyObj.reset).not.toHaveBeenCalled();
         expect(polygonSideCountFormControlSpyObj.reset).not.toHaveBeenCalled();
+        expect(fillDeviationFormControlSpyObj.reset).not.toHaveBeenCalled();
         expect(eraserSizeFormControlSpyObj.reset).not.toHaveBeenCalled();
     });
 

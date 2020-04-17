@@ -38,6 +38,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private selectToolRectangleShortcutSubscription: Subscription;
     private selectToolEllipseShortcutSubscription: Subscription;
     private selectToolPolygonShortcutSubscription: Subscription;
+    private selectToolFillShortcutSubscription: Subscription;
     private selectToolEyedropperShortcutSubscription: Subscription;
     private selectToolRecolorShortcutSubscription: Subscription;
     private selectToolSelectionShortcutSubscription: Subscription;
@@ -77,6 +78,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolPolygonShortcutSubscription = this.shortcutService.selectToolPolygonShortcut$.subscribe(() => {
             this.currentTool = this.toolHolderService.toolPolygonService;
         });
+        this.selectToolFillShortcutSubscription = this.shortcutService.selectToolFillShortcut$.subscribe(() => {
+            this.currentTool = this.toolHolderService.toolFillService;
+        });
         this.selectToolEyedropperShortcutSubscription = this.shortcutService.selectToolEyedropperShortcut$.subscribe(() => {
             this.currentTool = this.toolHolderService.toolEyedropperService;
         });
@@ -105,6 +109,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.selectToolRectangleShortcutSubscription.unsubscribe();
         this.selectToolEllipseShortcutSubscription.unsubscribe();
         this.selectToolPolygonShortcutSubscription.unsubscribe();
+        this.selectToolFillShortcutSubscription.unsubscribe();
         this.selectToolEyedropperShortcutSubscription.unsubscribe();
         this.selectToolRecolorShortcutSubscription.unsubscribe();
         this.selectToolSelectionShortcutSubscription.unsubscribe();

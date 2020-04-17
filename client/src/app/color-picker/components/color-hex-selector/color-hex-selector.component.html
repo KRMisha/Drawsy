@@ -2,23 +2,23 @@
     <mat-form-field *ngIf="isCombinedHex" class="combined-item">
         <mat-label>Hex # </mat-label>
         <input matInput formControlName="hexCombinedRgb" />
-        <mat-error *ngIf="hexSelectorFormGroup.controls.hexCombinedRgb.invalid">Invalide</mat-error>
+        <mat-error *ngIf="hexSelectorFormGroup.controls.hexCombinedRgb.invalid">Hex invalide</mat-error>
     </mat-form-field>
     <div *ngIf="!isCombinedHex" class="rgb-container">
         <mat-form-field class="rgb-item">
             <mat-label>Rouge</mat-label>
             <input matInput formControlName="hexRed" />
-            <mat-error *ngIf="hexSelectorFormGroup.controls.hexRed.invalid">Invalide</mat-error>
+            <mat-error *ngIf="hexSelectorFormGroup.controls.hexRed.invalid">Hex invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="rgb-item">
             <mat-label>Vert</mat-label>
             <input matInput formControlName="hexGreen" />
-            <mat-error *ngIf="hexSelectorFormGroup.controls.hexGreen.invalid">Invalide</mat-error>
+            <mat-error *ngIf="hexSelectorFormGroup.controls.hexGreen.invalid">Hex invalide</mat-error>
         </mat-form-field>
         <mat-form-field class="rgb-item">
             <mat-label>Bleu</mat-label>
             <input matInput formControlName="hexBlue" />
-            <mat-error *ngIf="hexSelectorFormGroup.controls.hexBlue.invalid">Invalide</mat-error>
+            <mat-error *ngIf="hexSelectorFormGroup.controls.hexBlue.invalid">Hex invalide</mat-error>
         </mat-form-field>
     </div>
     <button

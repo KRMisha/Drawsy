@@ -60,8 +60,8 @@
             <mat-slider
                 class="slider-item"
                 [disabled]="!junctionEnabledFormControl.value"
-                [min]="minimumJunctionDiameter"
-                [max]="maximumJunctionDiameter"
+                [min]="ToolValidation.minimumJunctionDiameter"
+                [max]="ToolValidation.maximumJunctionDiameter"
                 [value]="junctionDiameterFormControl.value"
                 (input)="junctionDiameterFormControl.setValue($event.value)"
             >

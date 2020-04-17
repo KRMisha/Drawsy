@@ -155,7 +155,7 @@ describe('GalleryService', () => {
     }));
 
     it(
-        '#deleteDrawing should call #getAllDrawings and use the open method of snackbar to display a message' +
+        '#deleteDrawing should call #getAllDrawings and use the open method of snackBar to display a message' +
             'if the error status is NotFound',
         () => {
             spyOn(window, 'confirm').and.returnValue(true);
