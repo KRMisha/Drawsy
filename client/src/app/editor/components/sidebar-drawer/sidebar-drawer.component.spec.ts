@@ -14,6 +14,7 @@ import { JunctionSettings } from '@app/tools/classes/junction-settings';
 import { ToolSettings } from '@app/tools/classes/tool-settings';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
+import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
 
@@ -32,6 +33,8 @@ describe('SidebarDrawerComponent', () => {
     let shortcutServiceSpyObj: jasmine.SpyObj<ShortcutService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let clipboardServiceSpyObj: jasmine.SpyObj<ClipboardService>;
+    let toolSelectionServiceSpyObj: jasmine.SpyObj<ToolSelectionService>;
+
     let lineWidthFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionEnabledFormControlSpyObj: jasmine.SpyObj<FormControl>;
     let junctionDiameterFormControlSpyObj: jasmine.SpyObj<FormControl>;
@@ -92,6 +95,8 @@ describe('SidebarDrawerComponent', () => {
             'isPastingAvailable',
         ]);
 
+        toolSelectionServiceSpyObj = jasmine.createSpyObj('ToolSelectionService', ['deleteSelection']);
+
         lineWidthChangedSubject = new Subject<any>();
         junctionEnabledChangedSubject = new Subject<any>();
         junctionDiameterChangedSubject = new Subject<any>();
@@ -149,6 +154,7 @@ describe('SidebarDrawerComponent', () => {
                 { provide: ShortcutService, useValue: shortcutServiceSpyObj },
                 { provide: HistoryService, useValue: historyServiceSpyObj },
                 { provide: ClipboardService, useValue: clipboardServiceSpyObj },
+                { provide: ToolSelectionService, useValue: toolSelectionServiceSpyObj },
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
@@ -470,6 +476,35 @@ describe('SidebarDrawerComponent', () => {
         expect(settingsMock.eraserSize).toEqual(0);
     }));
 
+    it('#copySelectionShortcutSubscription should call #copy', () => {
+        copyShortcutSubject.next();
+        expect(clipboardServiceSpyObj.copy).toHaveBeenCalled();
+    });
+
+    it('#pasteSelectionShortcutSubscription should call not #paste if pasting is not available', () => {
+        clipboardServiceSpyObj.isPastingAvailable.and.returnValue(false);
+        pasteShortcutSubject.next();
+        expect(clipboardServiceSpyObj.paste).not.toHaveBeenCalled();
+    });
+
+    it('#pasteSelectionShortcutSubscription should call #paste and #resetCurrentControls if pasting is available', () => {
+        const resetCurrentControlsSpy = spyOn<any>(component, 'resetCurrentControls');
+        clipboardServiceSpyObj.isPastingAvailable.and.returnValue(true);
+        pasteShortcutSubject.next();
+        expect(resetCurrentControlsSpy).toHaveBeenCalled();
+        expect(clipboardServiceSpyObj.paste).toHaveBeenCalled();
+    });
+
+    it('#cutSelectionShortcutSubscription should call #cut', () => {
+        cutShortcutSubject.next();
+        expect(clipboardServiceSpyObj.cut).toHaveBeenCalled();
+    });
+
+    it('#duplicateSelectionShortcutSubscription should call #duplicate', () => {
+        duplicateShortcutSubject.next();
+        expect(clipboardServiceSpyObj.duplicate).toHaveBeenCalled();
+    });
+
     it('undoShortcutSubscription should call #undo', async(() => {
         undoShortcutSubject.next();
         expect(historyServiceSpyObj.undo).toHaveBeenCalled();
@@ -505,11 +540,19 @@ describe('SidebarDrawerComponent', () => {
     it("#ngOnDestroy should unsubscribe from shortcutService's undoShortcut and redoShortcut", async(() => {
         const undoShortcutSubscriptionSpy = spyOn(component['undoShortcutSubscription'], 'unsubscribe');
         const redoShortcutSubscriptionSpy = spyOn(component['redoShortcutSubscription'], 'unsubscribe');
+        const copyShortcutSubscriptionSpy = spyOn(component['copySelectionShortcutSubscription'], 'unsubscribe');
+        const pasteShortcutSubscriptionSpy = spyOn(component['pasteSelectionShortcutSubscription'], 'unsubscribe');
+        const cutShortcutSubscriptionSpy = spyOn(component['cutSelectionShortcutSubscription'], 'unsubscribe');
+        const duplicateShortcutSubscriptionSpy = spyOn(component['duplicateSelectionShortcutSubscription'], 'unsubscribe');
 
         component.ngOnDestroy();
 
         expect(undoShortcutSubscriptionSpy).toHaveBeenCalled();
         expect(redoShortcutSubscriptionSpy).toHaveBeenCalled();
+        expect(copyShortcutSubscriptionSpy).toHaveBeenCalled();
+        expect(pasteShortcutSubscriptionSpy).toHaveBeenCalled();
+        expect(cutShortcutSubscriptionSpy).toHaveBeenCalled();
+        expect(duplicateShortcutSubscriptionSpy).toHaveBeenCalled();
     }));
 
     it("#resetCurrentControls should reset all the formControls for which the currentTool's setting is not undefined", () => {
@@ -596,6 +639,11 @@ describe('SidebarDrawerComponent', () => {
     it('#redo should forward the call to historyService and currentToolService', () => {
         component.redo();
         expect(historyServiceSpyObj.redo).toHaveBeenCalled();
+    });
+
+    it("#delete should call toolSelectionService's deleteSelection", () => {
+        component.delete();
+        expect(toolSelectionServiceSpyObj.deleteSelection).toHaveBeenCalled();
     });
 
     it('#getErrorMessage should forward the call to ErrorMessageService', () => {
