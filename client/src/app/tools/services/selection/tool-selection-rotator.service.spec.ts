@@ -12,8 +12,10 @@ import { ToolSelectionTransformService } from './tool-selection-transform.servic
 
 // tslint:disable: no-string-literal
 // tslint:disable: no-any
+// tslint:disable: typedef
+// tslint:disable: no-empty
 
-describe('ToolSelectionRotatorService', () => {
+fdescribe('ToolSelectionRotatorService', () => {
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let toolSelectionMoverServiceSpyObj: jasmine.SpyObj<ToolSelectionMoverService>;
@@ -85,9 +87,11 @@ describe('ToolSelectionRotatorService', () => {
         expect(toolSelectionTransformServiceSpyObj.getElementListTransformsCopy).not.toHaveBeenCalled();
     });
 
-    it('#onScroll should copy the elements transforms before the rotation and initialize new tranforms on the selected elements', () => {
-        const event = { ctrlKey: false, deltaY: 2 } as WheelEvent;
+    it('#onScroll should prevent the default behavior, copy the elements transforms before the rotation and initialize new tranforms on the selected elements', () => {
+        const event = { ctrlKey: false, deltaY: 2, preventDefault() {} } as WheelEvent;
+        const preventDefaultSpy = spyOn(event, 'preventDefault');
         service.onScroll(event);
+        expect(preventDefaultSpy).toHaveBeenCalled();
         expect(toolSelectionTransformServiceSpyObj.getElementListTransformsCopy).toHaveBeenCalledWith(initialElementsList);
         expect(toolSelectionTransformServiceSpyObj.initializeElementTransforms).toHaveBeenCalledWith(initialElementsList);
     });
@@ -109,7 +113,7 @@ describe('ToolSelectionRotatorService', () => {
             }
         });
 
-        const event = { ctrlKey: false, deltaY: 2, shiftKey: true, altKey: false } as WheelEvent;
+        const event = { ctrlKey: false, deltaY: 2, shiftKey: true, altKey: false, preventDefault() {} } as WheelEvent;
         service.onScroll(event);
         expect(getAngleSpy).toHaveBeenCalledWith(event.deltaY, event.altKey);
         expect(rotateSelectedElementsIndividuallySpy).toHaveBeenCalledWith(expectedAngle);
@@ -135,7 +139,7 @@ describe('ToolSelectionRotatorService', () => {
             }
         });
 
-        const event = { ctrlKey: false, deltaY: 2, shiftKey: false, altKey: false } as WheelEvent;
+        const event = { ctrlKey: false, deltaY: 2, shiftKey: false, altKey: false, preventDefault() {} } as WheelEvent;
         service.onScroll(event);
         expect(getAngleSpy).toHaveBeenCalledWith(event.deltaY, event.altKey);
         expect(rotateSelectionAroundCenterSpy).toHaveBeenCalledWith(expectedAngle);
