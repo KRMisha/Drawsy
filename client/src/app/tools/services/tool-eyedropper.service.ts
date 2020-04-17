@@ -37,7 +37,12 @@ export class ToolEyedropperService extends Tool {
     }
 
     private async getPixelColor(pixelPosition: Vec2): Promise<Color> {
-        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
+        this.drawingService.hideUiElements();
+        const drawingRootCopy = this.drawingService.drawingRoot.cloneNode(true) as SVGSVGElement;
+        this.drawingService.showUiElements();
+
+        const canvas = await this.rasterizationService.getCanvasFromSvgRoot(drawingRootCopy);
+
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
 
