@@ -19,7 +19,7 @@ import { Tool } from '@app/tools/services/tool';
 export class ToolFillService extends Tool {
     private group?: SVGGElement;
 
-    private data: Uint8ClampedArray;
+    private canvasData: Uint8ClampedArray;
     private canvasDimensions: Vec2;
 
     private selectedColor: Color;
@@ -65,7 +65,7 @@ export class ToolFillService extends Tool {
 
         await this.initializeCanvas();
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
-        this.selectedColor = this.rasterizationService.getPixelColor(this.data, this.canvasDimensions.x, startPixel);
+        this.selectedColor = this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, startPixel);
 
         this.breadthFirstSearch(startPixel);
 
@@ -80,7 +80,7 @@ export class ToolFillService extends Tool {
     private async initializeCanvas(): Promise<void> {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        this.data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        this.canvasData = context.getImageData(0, 0, canvas.width, canvas.height).data;
         this.canvasDimensions = { x: canvas.width, y: canvas.height };
     }
 
@@ -116,7 +116,7 @@ export class ToolFillService extends Tool {
 
     private enqueuePixelIfValid(pixel: Vec2): void {
         const isPixelInDrawing = pixel.x >= 0 && pixel.x < this.canvasDimensions.x && pixel.y >= 0 && pixel.y < this.canvasDimensions.y;
-        const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasDimensions.x, pixel));
+        const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, pixel));
         if (!isPixelInDrawing || !isPixelFillColor) {
             return;
         }
