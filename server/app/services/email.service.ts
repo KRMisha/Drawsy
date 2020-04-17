@@ -25,12 +25,13 @@ export class EmailService {
         try {
             await this.sendRequest(emailRequest, true);
         } catch (error) {
-            if (error.status === HttpStatusCode.BadRequest) {
-                throw new HttpException(HttpStatusCode.BadRequest, 'Email address not found');
-            } else if (error.status === HttpStatusCode.TooManyRequests) {
-                throw new HttpException(HttpStatusCode.TooManyRequests, 'Email limit reached');
-            } else {
-                throw new HttpException(HttpStatusCode.InternalServerError, error.message);
+            switch (error.status) {
+                case HttpStatusCode.BadRequest:
+                    throw new HttpException(HttpStatusCode.BadRequest, 'Email address not found');
+                case HttpStatusCode.TooManyRequests:
+                    throw new HttpException(HttpStatusCode.TooManyRequests, 'Email limit reached');
+                default:
+                    throw new HttpException(HttpStatusCode.InternalServerError, error.message);
             }
         }
     }

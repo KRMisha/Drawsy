@@ -11,10 +11,10 @@ import { JSDOM } from 'jsdom';
 import { MongoCallback, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as sinon from 'sinon';
+const createDomPurify = require('dompurify'); // tslint:disable-line: no-require-imports no-var-requires
 
 // tslint:disable: no-string-literal
 
-const createDomPurify = require('dompurify'); // tslint:disable-line: no-require-imports no-var-requires
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
