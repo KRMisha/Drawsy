@@ -95,7 +95,7 @@ describe('SaveDrawingService', () => {
         expect(serverServiceSpyObj.createDrawing).toHaveBeenCalledWith(drawingRootMock.outerHTML);
         const error = new HttpErrorResponse({ status: HttpStatusCode.BadRequest });
         createDrawingSubject.error(error);
-        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : titre ou étiquettes invalides.', undefined, {
+        expect(snackBarSpyObj.open).toHaveBeenCalledWith('Erreur : titre ou étiquettes invalides', undefined, {
             duration: snackBarDuration,
         });
     }));
