@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { Rect } from '@app/shared/classes/rect';
 import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
@@ -25,6 +25,19 @@ describe('ToolSelectionStateService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it("should call toolSelectionCollisionService's getElementListBounds when selectedElementsChanged observable is emited", async(() => {
+        const svgGraphicsElementStub = {} as SVGGraphicsElement;
+        const svgGraphicsElementsArray = [svgGraphicsElementStub, svgGraphicsElementStub, svgGraphicsElementStub];
+        service.selectedElementsChanged$.next(svgGraphicsElementsArray);
+        expect(toolSelectionCollisionServiceSpyObj.getElementListBounds).toHaveBeenCalledWith(svgGraphicsElementsArray);
+    }));
+
+    it('#ngOnDestroy should unsubscribe from selectedElements changes', () => {
+        const selectedElementsChangedSubscriptionSpy = spyOn<any>(service['selectedElementsChangedSubscription'], 'unsubscribe');
+        service.ngOnDestroy();
+        expect(selectedElementsChangedSubscriptionSpy).toHaveBeenCalled();
     });
 
     it('#get selectedElements should return the selected elements', () => {
