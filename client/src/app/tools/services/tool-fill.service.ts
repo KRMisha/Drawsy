@@ -17,10 +17,11 @@ import { Tool } from '@app/tools/services/tool';
     providedIn: 'root',
 })
 export class ToolFillService extends Tool {
-    private group?: SVGGElement;
+    private group: SVGGElement;
 
     private data: Uint8ClampedArray;
-    private canvasWidth: number;
+    private canvasDimensions: Vec2;
+
     private selectedColor: Color;
 
     private fillPixelsToVisit: Queue<Vec2>;
@@ -49,12 +50,11 @@ export class ToolFillService extends Tool {
         }
     }
 
-    // TODO: Make work (important!)
-    // onPrimaryColorChange(color: Color): void {
-    //     if (this.group !== undefined) {
-    //         this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
-    //     }
-    // }
+    onPrimaryColorChange(color: Color): void {
+        if (this.group !== undefined) {
+            this.renderer.setAttribute(this.group, 'fill', color.toRgbaString());
+        }
+    }
 
     private async fillWithColor(): Promise<void> {
         this.fillPixelsToVisit = new Queue<Vec2>();
@@ -65,15 +65,12 @@ export class ToolFillService extends Tool {
 
         await this.initializeCanvas();
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
-        this.selectedColor = this.rasterizationService.getPixelColor(this.data, this.canvasWidth, startPixel);
+        this.selectedColor = this.rasterizationService.getPixelColor(this.data, this.canvasDimensions.x, startPixel);
 
         this.breadthFirstSearch(startPixel);
 
-        // this.group will not be undefined if this method is called (defined in onMouseDown)
-        // tslint:disable: no-non-null-assertion
-        this.drawingService.addElement(this.group!);
-        this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group!));
-        // tslint:enable: no-non-null-assertion
+        this.drawingService.addElement(this.group);
+        this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
 
         delete this.fillPixelsToVisit;
         delete this.visitedFillPixels;
@@ -83,7 +80,7 @@ export class ToolFillService extends Tool {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         this.data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
-        this.canvasWidth = canvas.width;
+        this.canvasDimensions = { x: canvas.width, y: canvas.height };
     }
 
     private breadthFirstSearch(startPixel: Vec2): void {
@@ -106,21 +103,19 @@ export class ToolFillService extends Tool {
         }
     }
 
-    // todo: move up
     private addSquareOnPixel(pixel: Vec2): void {
         const square: SVGPathElement = this.renderer.createElement('rect', 'svg');
-        const squareSideSize = 1.5;
-        this.renderer.setAttribute(square, 'x', `${pixel.x - squareSideSize / 2}`); // todo test
-        this.renderer.setAttribute(square, 'y', `${pixel.y - squareSideSize / 2}`);
+        const squareSideSize = 1.8;
+        this.renderer.setAttribute(square, 'x', `${pixel.x - (squareSideSize - 1) / 2}`);
+        this.renderer.setAttribute(square, 'y', `${pixel.y - (squareSideSize - 1) / 2}`);
         this.renderer.setAttribute(square, 'width', squareSideSize.toString());
         this.renderer.setAttribute(square, 'height', squareSideSize.toString());
         this.renderer.appendChild(this.group, square);
     }
 
     private enqueuePixelIfValid(pixel: Vec2): void {
-        const isPixelInDrawing =
-            pixel.x >= 0 && pixel.x < this.drawingService.dimensions.x && pixel.y >= 0 && pixel.y < this.drawingService.dimensions.y;
-        const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasWidth, pixel));
+        const isPixelInDrawing = pixel.x >= 0 && pixel.x < this.canvasDimensions.x && pixel.y >= 0 && pixel.y < this.canvasDimensions.y;
+        const isPixelFillColor = this.isSelectedColor(this.rasterizationService.getPixelColor(this.data, this.canvasDimensions.x, pixel));
         if (!isPixelInDrawing || !isPixelFillColor) {
             return;
         }
