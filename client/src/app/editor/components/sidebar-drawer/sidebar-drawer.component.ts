@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 const minimumLineWidth = 1;
 const maximumLineWidth = 500;
 const minimumSprayDiameter = 20;
-const maximumSprayDiameter = 350;
+const maximumSprayDiameter = 500;
 const minimumSprayRate = 10;
 const maximumSprayRate = 100;
 const minimumShapeBorderWidth = 1;
