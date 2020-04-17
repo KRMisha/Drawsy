@@ -42,6 +42,7 @@ describe('EmailController', () => {
 
     it('#post /api/send-email should return valid status code when the service succeeds', async () => {
         const emailRequest = ({ to: 'samer', payload: undefined } as unknown) as EmailRequest;
+
         await supertest(app).post('/api/send-email').send(emailRequest).expect(HttpStatusCode.Ok);
         expect(emailService.sendEmail).to.have.been.calledWith(emailRequest);
     });
