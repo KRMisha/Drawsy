@@ -4,8 +4,8 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 
-// tslint:disable: no-string-literal
 // tslint:disable: no-magic-numbers
+// tslint:disable: no-string-literal
 
 describe('RasterizationService', () => {
     let service: RasterizationService;

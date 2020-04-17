@@ -8,6 +8,7 @@ import { ErrorMessageService } from '@app/shared/services/error-message.service'
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { ToolSettings } from '@app/tools/classes/tool-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
+import ToolValidation from '@app/tools/constants/tool-validation';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
@@ -15,93 +16,68 @@ import { CurrentToolService } from '@app/tools/services/current-tool.service';
 import { ToolSelectionService } from '@app/tools/services/selection/tool-selection.service';
 import { Subscription } from 'rxjs';
 
-const minimumLineWidth = 1;
-const maximumLineWidth = 500;
-const minimumSprayDiameter = 20;
-const maximumSprayDiameter = 500;
-const minimumSprayRate = 10;
-const maximumSprayRate = 100;
-const minimumShapeBorderWidth = 1;
-const maximumShapeBorderWidth = 100;
-const minimumPolygonSideCount = 3;
-const maximumPolygonSideCount = 12;
-const minimumFillDeviation = 0;
-const maximumFillDeviation = 100;
-const minimumEraserSize = 3;
-const maximumEraserSize = 25;
-
 @Component({
     selector: 'app-sidebar-drawer',
     templateUrl: './sidebar-drawer.component.html',
     styleUrls: ['./sidebar-drawer.component.scss'],
 })
 export class SidebarDrawerComponent implements OnInit, OnDestroy {
-    // Make enums available to template
+    // Make enums and constants available to template
     BrushTexture = BrushTexture;
     ShapeType = ShapeType;
-
-    readonly minimumJunctionDiameter = 5;
-    readonly maximumJunctionDiameter = 500;
+    ToolValidation = ToolValidation;
 
     lineWidthFormControl = new FormControl(ToolDefaults.defaultLineWidth, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumLineWidth),
-        Validators.max(maximumLineWidth),
+        Validators.min(ToolValidation.minimumLineWidth),
+        Validators.max(ToolValidation.maximumLineWidth),
     ]);
-
     junctionEnabledFormControl = new FormControl(ToolDefaults.defaultJunctionSettings.isEnabled);
-
     junctionDiameterFormControl = new FormControl(
         { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
         [
             Validators.required,
             Validators.pattern(Regexes.integerRegex),
-            Validators.min(this.minimumJunctionDiameter),
-            Validators.max(this.maximumJunctionDiameter),
+            Validators.min(ToolValidation.minimumJunctionDiameter),
+            Validators.max(ToolValidation.maximumJunctionDiameter),
         ]
     );
-
     sprayDiameterFormControl = new FormControl(ToolDefaults.defaultSprayDiameter, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumSprayDiameter),
-        Validators.max(maximumSprayDiameter),
+        Validators.min(ToolValidation.minimumSprayDiameter),
+        Validators.max(ToolValidation.maximumSprayDiameter),
     ]);
-
     sprayRateFormControl = new FormControl(ToolDefaults.defaultSprayRate, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumSprayRate),
-        Validators.max(maximumSprayRate),
+        Validators.min(ToolValidation.minimumSprayRate),
+        Validators.max(ToolValidation.maximumSprayRate),
     ]);
-
     shapeBorderWidthFormControl = new FormControl(ToolDefaults.defaultShapeBorderWidth, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumShapeBorderWidth),
-        Validators.max(maximumShapeBorderWidth),
+        Validators.min(ToolValidation.minimumShapeBorderWidth),
+        Validators.max(ToolValidation.maximumShapeBorderWidth),
     ]);
-
     polygonSideCountFormControl = new FormControl(ToolDefaults.defaultPolygonSideCount, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumPolygonSideCount),
-        Validators.max(maximumPolygonSideCount),
+        Validators.min(ToolValidation.minimumPolygonSideCount),
+        Validators.max(ToolValidation.maximumPolygonSideCount),
     ]);
-
     fillDeviationFormControl = new FormControl(ToolDefaults.defaultFillDeviation, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumFillDeviation),
-        Validators.max(maximumFillDeviation),
+        Validators.min(ToolValidation.minimumFillDeviation),
+        Validators.max(ToolValidation.maximumFillDeviation),
     ]);
-
     eraserSizeFormControl = new FormControl(ToolDefaults.defaultEraserSize, [
         Validators.required,
         Validators.pattern(Regexes.integerRegex),
-        Validators.min(minimumEraserSize),
-        Validators.max(maximumEraserSize),
+        Validators.min(ToolValidation.minimumEraserSize),
+        Validators.max(ToolValidation.maximumEraserSize),
     ]);
 
     readonly sizeFormControls: SizeFormControlContainer[] = [
@@ -110,56 +86,56 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             toolSetting: ToolSetting.LineWidth,
             title: 'Largeur du trait',
             suffix: 'px',
-            minimum: minimumLineWidth,
-            maximum: maximumLineWidth,
+            minimum: ToolValidation.minimumLineWidth,
+            maximum: ToolValidation.maximumLineWidth,
         },
         {
             formControl: this.sprayDiameterFormControl,
             toolSetting: ToolSetting.SprayDiameter,
             title: 'Diamètre du jet',
             suffix: 'px',
-            minimum: minimumSprayDiameter,
-            maximum: maximumSprayDiameter,
+            minimum: ToolValidation.minimumSprayDiameter,
+            maximum: ToolValidation.maximumSprayDiameter,
         },
         {
             formControl: this.sprayRateFormControl,
             toolSetting: ToolSetting.SprayRate,
             title: 'Vitesse du jet',
             suffix: 'jets/s',
-            minimum: minimumSprayRate,
-            maximum: maximumSprayRate,
+            minimum: ToolValidation.minimumSprayRate,
+            maximum: ToolValidation.maximumSprayRate,
         },
         {
             formControl: this.shapeBorderWidthFormControl,
             toolSetting: ToolSetting.ShapeBorderWidth,
             title: 'Largeur de la bordure',
             suffix: 'px',
-            minimum: minimumShapeBorderWidth,
-            maximum: maximumShapeBorderWidth,
+            minimum: ToolValidation.minimumShapeBorderWidth,
+            maximum: ToolValidation.maximumShapeBorderWidth,
         },
         {
             formControl: this.polygonSideCountFormControl,
             toolSetting: ToolSetting.PolygonSideCount,
             title: 'Nombre de faces',
             suffix: '',
-            minimum: minimumPolygonSideCount,
-            maximum: maximumPolygonSideCount,
+            minimum: ToolValidation.minimumPolygonSideCount,
+            maximum: ToolValidation.maximumPolygonSideCount,
         },
         {
             formControl: this.fillDeviationFormControl,
             toolSetting: ToolSetting.FillDeviation,
             title: "Pourcentage d'écart ",
             suffix: '%',
-            minimum: minimumFillDeviation,
-            maximum: maximumFillDeviation,
+            minimum: ToolValidation.minimumFillDeviation,
+            maximum: ToolValidation.maximumFillDeviation,
         },
         {
             formControl: this.eraserSizeFormControl,
             toolSetting: ToolSetting.EraserSize,
             title: "Taille de l'efface",
             suffix: 'px',
-            minimum: minimumEraserSize,
-            maximum: maximumEraserSize,
+            minimum: ToolValidation.minimumEraserSize,
+            maximum: ToolValidation.maximumEraserSize,
         },
     ];
 
