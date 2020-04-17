@@ -110,8 +110,8 @@ export class ToolFillService extends Tool {
     private addSquareOnPixel(pixel: Vec2): void {
         const square: SVGPathElement = this.renderer.createElement('rect', 'svg');
         const squareSideSize = 1.5;
-        this.renderer.setAttribute(square, 'x', `${pixel.x - (squareSideSize / 2)}`); // todo test
-        this.renderer.setAttribute(square, 'y', `${pixel.y - (squareSideSize / 2)}`);
+        this.renderer.setAttribute(square, 'x', `${pixel.x - squareSideSize / 2}`); // todo test
+        this.renderer.setAttribute(square, 'y', `${pixel.y - squareSideSize / 2}`);
         this.renderer.setAttribute(square, 'width', squareSideSize.toString());
         this.renderer.setAttribute(square, 'height', squareSideSize.toString());
         this.renderer.appendChild(this.group, square);
@@ -132,7 +132,6 @@ export class ToolFillService extends Tool {
         this.visitedFillPixels.add(`${pixel.x} ${pixel.y}`);
         this.fillPixelsToVisit.enqueue(pixel);
     }
-
 
     private isSelectedColor(color: Color): boolean {
         const distanceFromSelectedColor = Math.sqrt(
