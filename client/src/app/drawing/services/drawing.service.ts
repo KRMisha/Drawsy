@@ -1,8 +1,10 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
+import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
@@ -40,7 +42,11 @@ export class DrawingService {
     forceDetectChanges$ = this.forceDetectChangesSource.asObservable();
     // tslint:enable: member-ordering
 
-    constructor(rendererFactory: RendererFactory2, private drawingSerializerService: DrawingSerializerService) {
+    constructor(
+        rendererFactory: RendererFactory2,
+        private drawingSerializerService: DrawingSerializerService,
+        private snackBar: MatSnackBar
+    ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
         this.loadDrawingFromStorage();
@@ -137,7 +143,14 @@ export class DrawingService {
         titleElement.innerHTML = this._title;
 
         const serializedDrawing = this.drawingSerializerService.serializeDrawing(this.drawingRoot);
-        localStorage.setItem(localStorageDrawingAutosaveContentKey, serializedDrawing);
+
+        try {
+            localStorage.setItem(localStorageDrawingAutosaveContentKey, serializedDrawing);
+        } catch (error) {
+            this.snackBar.open("La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé", undefined, {
+                duration: snackBarDuration,
+            });
+        }
 
         titleElement.innerHTML = '';
 
