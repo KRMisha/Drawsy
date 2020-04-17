@@ -150,6 +150,8 @@ export class ToolFillService extends Tool {
         let currentPixel = startPixel;
         let currentDirection = startDirection;
 
+        const maxStartPixelVisitCount = 3;
+        let startPixelVisitCount = 0;
         do {
             if (this.isAdjacentPixelContour(currentPixel, currentDirection, Direction.Left)) {
                 currentPixel = this.getNextPixel(currentPixel, currentDirection, Direction.Left);
@@ -177,7 +179,14 @@ export class ToolFillService extends Tool {
                     }
                 }
             }
-        } while (currentPixel.x !== startPixel.x || currentPixel.y !== startPixel.y || currentDirection !== startDirection);
+
+            if (currentPixel.x === startPixel.x && currentPixel.y === startPixel.y) {
+                startPixelVisitCount++;
+            }
+        } while (
+            !this.isJacobStartingCriterionSatisfied(currentPixel, startPixel, currentDirection, startDirection) &&
+            startPixelVisitCount < maxStartPixelVisitCount
+        );
     }
 
     private isAdjacentPixelContour(pixel: Vec2, currentDirection: Direction, relativeDirection: Direction): boolean {
@@ -199,6 +208,15 @@ export class ToolFillService extends Tool {
         return nextPixel;
     }
 
+    private isJacobStartingCriterionSatisfied(
+        currentPixel: Vec2,
+        startPixel: Vec2,
+        currentDirection: Direction,
+        startDirection: Direction
+    ): boolean {
+        return currentPixel.x === startPixel.x && currentPixel.y === startPixel.y && currentDirection === startDirection;
+    }
+
     private isSelectedColor(color: Color): boolean {
         const distanceFromSelectedColor = Math.sqrt(
             (color.red - this.selectedColor.red) ** 2 +
@@ -216,7 +234,10 @@ export class ToolFillService extends Tool {
 
     private addFillElement(): void {
         const path: SVGPathElement = this.renderer.createElement('path', 'svg');
-        // this.renderer.setAttribute(path, 'stroke', this.colorService.secondaryColor.toRgbaString());
+        this.renderer.setAttribute(path, 'stroke', this.colorService.primaryColor.toRgbaString());
+        this.renderer.setAttribute(path, 'stroke-width', '1.75');
+        this.renderer.setAttribute(path, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(path, 'fill', this.colorService.primaryColor.toRgbaString());
         this.renderer.setAttribute(path, 'fill-rule', 'evenodd');
         this.renderer.setAttribute(path, 'd', this.pathString);
