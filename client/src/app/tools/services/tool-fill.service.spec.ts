@@ -105,7 +105,7 @@ describe('ToolFillService', () => {
         expect(rendererSpyObj.createElement).not.toHaveBeenCalled();
     });
 
-    it('#onMouseDown should fill the determined area with the selected color and open a snackbar', () => {
+    it('#onMouseDown should fill the determined area with the selected color and open a snackBar', () => {
         const fillWithColorSpy = spyOn<any>(service, 'fillWithColor');
         const event = { button: MouseButton.Left } as MouseEvent;
         Tool.isMouseInsideDrawing = true;
