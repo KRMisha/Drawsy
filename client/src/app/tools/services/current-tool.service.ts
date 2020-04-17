@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -15,19 +16,29 @@ export class CurrentToolService implements OnDestroy {
 
     private primaryColorChangedSubscription: Subscription;
     private secondaryColorChangedSubscription: Subscription;
+    private historyChangedSubscription: Subscription;
+    private drawingLoadedSubscription: Subscription;
 
-    constructor(private colorService: ColorService, private drawingService: DrawingService) {
+    constructor(private colorService: ColorService, private drawingService: DrawingService, private historyService: HistoryService) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });
         this.secondaryColorChangedSubscription = this.colorService.secondaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onSecondaryColorChange(color);
         });
+        this.historyChangedSubscription = this.historyService.drawingHistoryChanged$.subscribe(() => {
+            this.currentTool.onHistoryChange();
+        });
+        this.drawingLoadedSubscription = this.drawingService.drawingLoaded$.subscribe(() => {
+            this.currentTool.onDrawingLoad();
+        });
     }
 
     ngOnDestroy(): void {
         this.primaryColorChangedSubscription.unsubscribe();
         this.secondaryColorChangedSubscription.unsubscribe();
+        this.historyChangedSubscription.unsubscribe();
+        this.drawingLoadedSubscription.unsubscribe();
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -82,8 +93,12 @@ export class CurrentToolService implements OnDestroy {
         this.currentTool.onMouseLeave(event);
     }
 
-    update(): void {
-        this.currentTool.update();
+    onFocusIn(): void {
+        this.currentTool.onFocusIn();
+    }
+
+    onFocusOut(): void {
+        this.currentTool.onFocusOut();
     }
 
     get currentTool(): Tool {

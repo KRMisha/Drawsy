@@ -102,7 +102,7 @@ export class GalleryService {
     private alertDeleteDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             if (error.status === HttpStatusCode.NotFound) {
-                const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé.";
+                const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé";
                 this.snackBar.open(errorMessage, undefined, {
                     duration: snackBarDuration,
                 });

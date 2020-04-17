@@ -30,10 +30,9 @@ export class HistoryService implements OnDestroy {
         if (command !== undefined) {
             command.undo();
             this.redoStack.push(command);
+            this.drawingHistoryChangedSource.next();
+            this.drawingService.saveDrawingToStorage();
         }
-
-        this.drawingHistoryChangedSource.next();
-        this.drawingService.saveDrawingToStorage();
     }
 
     redo(): void {
@@ -41,10 +40,9 @@ export class HistoryService implements OnDestroy {
         if (command !== undefined) {
             command.redo();
             this.undoStack.push(command);
+            this.drawingHistoryChangedSource.next();
+            this.drawingService.saveDrawingToStorage();
         }
-
-        this.drawingHistoryChangedSource.next();
-        this.drawingService.saveDrawingToStorage();
     }
 
     addCommand(command: Command): void {

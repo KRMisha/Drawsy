@@ -1,5 +1,5 @@
 import { RendererFactory2 } from '@angular/core';
-import { AppendElementCommand } from '@app/drawing/classes/commands/append-element-command';
+import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
@@ -65,6 +65,11 @@ export abstract class ToolShape extends Tool {
         }
     }
 
+    onFocusOut(): void {
+        this.stopDrawing();
+        this.isShiftDown = false;
+    }
+
     onPrimaryColorChange(color: Color): void {
         if (this.shape !== undefined) {
             this.renderer.setAttribute(this.shape, 'fill', color.toRgbaString());
@@ -75,6 +80,11 @@ export abstract class ToolShape extends Tool {
         if (this.shape !== undefined) {
             this.renderer.setAttribute(this.shape, 'stroke', color.toRgbaString());
         }
+    }
+
+    onToolDeselection(): void {
+        this.stopDrawing();
+        this.isShiftDown = false;
     }
 
     protected abstract getShapeString(): string;
@@ -132,7 +142,7 @@ export abstract class ToolShape extends Tool {
         const isValidNonRegular =
             !isShapeRegular && this.shapeOrigin.x !== Tool.mousePosition.x && this.shapeOrigin.y !== Tool.mousePosition.y;
         if (isValidRegular || isValidNonRegular) {
-            this.historyService.addCommand(new AppendElementCommand(this.drawingService, this.shape));
+            this.historyService.addCommand(new AddElementCommand(this.drawingService, this.shape));
         } else {
             this.drawingService.removeElement(this.shape);
         }
