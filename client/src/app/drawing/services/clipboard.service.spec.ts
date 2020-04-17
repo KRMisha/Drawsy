@@ -24,14 +24,13 @@ describe('ClipboardService', () => {
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let historyServiceSpyObj: jasmine.SpyObj<HistoryService>;
     let toolSelectionServiceSpyObj: jasmine.SpyObj<ToolSelectionService>;
-    let elementStub: jasmine.SpyObj<SVGGraphicsElement>;;
+    let elementStub: jasmine.SpyObj<SVGGraphicsElement>;
     let toolSelectionStateServiceSpyObj: jasmine.SpyObj<ToolSelectionStateService>;
     let toolSelectionMoverServiceSpyObj: jasmine.SpyObj<ToolSelectionMoverService>;
     let toolSelectionCollisionServiceSpyObj: jasmine.SpyObj<ToolSelectionCollisionService>;
     let toolSelectionTransformServiceSpyObj: jasmine.SpyObj<ToolSelectionTransformService>;
     let drawingHistoryChangedSubject: Subject<void>;
     let selectedElementsChangedSubject: Subject<SVGGraphicsElement[]>;
-
 
     let isSelectionAvailableSpy: any;
 
@@ -85,19 +84,19 @@ describe('ClipboardService', () => {
         expect(service).toBeTruthy();
     });
 
-    it("#constructor should subscribe to toolSelectionStateService's selectedElementsChanged and historyService's drawingHistoryChanged",
-        () => {
-            service['duplicationPositionOffset'] = 1;
-            drawingHistoryChangedSubject.next();
-            expect(service['duplicationPositionOffset']).toEqual(0);
+    // tslint:disable-next-line: max-line-length
+    it("#constructor should subscribe to toolSelectionStateService's selectedElementsChanged and historyService's drawingHistoryChanged", () => {
+        service['duplicationPositionOffset'] = 1;
+        drawingHistoryChangedSubject.next();
+        expect(service['duplicationPositionOffset']).toEqual(0);
     });
 
-    it("#constructor should subscribe to toolSelectionStateService's selectedElementsChanged and historyService's drawingHistoryChanged",
-        () => {
-            const elementsStub = [] as SVGGraphicsElement[];
-            service['duplicationPositionOffset'] = 1;
-            selectedElementsChangedSubject.next(elementsStub);
-            expect(service['duplicationPositionOffset']).toEqual(0);
+    // tslint:disable-next-line: max-line-length
+    it("#constructor should subscribe to toolSelectionStateService's selectedElementsChanged and historyService's drawingHistoryChanged", () => {
+        const elementsStub = [] as SVGGraphicsElement[];
+        service['duplicationPositionOffset'] = 1;
+        selectedElementsChangedSubject.next(elementsStub);
+        expect(service['duplicationPositionOffset']).toEqual(0);
     });
 
     it('#ngOnDestroy should unsubscribe from selectionChangedSubscription and drawingHistoryChangedSubscription', async(() => {
@@ -191,8 +190,10 @@ describe('ClipboardService', () => {
     });
 
     it('#isSelectionAvailable should return false if there are selected elements and selection state is not none', () => {
-        service['toolSelectionStateService'] =
-            { state: SelectionState.ChangingSelection, selectedElements: [{}] } as ToolSelectionStateService;
+        service['toolSelectionStateService'] = {
+            state: SelectionState.ChangingSelection,
+            selectedElements: [{}],
+        } as ToolSelectionStateService;
         expect(service.isSelectionAvailable()).toEqual(false);
     });
 
