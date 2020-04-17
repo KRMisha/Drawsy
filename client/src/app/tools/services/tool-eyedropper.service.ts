@@ -36,6 +36,7 @@ export class ToolEyedropperService extends Tool {
             x: Math.round(Tool.mousePosition.x),
             y: Math.round(Tool.mousePosition.y),
         });
+
         mouseButton === MouseButton.Left
             ? (this.colorService.primaryColor = colorUnderCursor)
             : (this.colorService.secondaryColor = colorUnderCursor);

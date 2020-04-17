@@ -132,7 +132,7 @@ export class ShortcutService {
         }
     }
 
-    // Disable cyclomatic complexity lint error because the non ctrl shortcuts need to be handled individually in the same function
+    // Disable cyclomatic complexity lint error because the switch statement acts as a specialized lookup map
     // tslint:disable-next-line: cyclomatic-complexity
     private handleNonCtrlShortcuts(event: KeyboardEvent): void {
         switch (event.key) {

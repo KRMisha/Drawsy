@@ -80,7 +80,7 @@ export class ToolFillService extends Tool {
     private async initializeCanvas(): Promise<void> {
         const canvas = await this.rasterizationService.getCanvasFromSvgRoot(this.drawingService.drawingRoot);
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        this.data = context.getImageData(0, 0, this.drawingService.dimensions.x, this.drawingService.dimensions.y).data;
+        this.data = context.getImageData(0, 0, canvas.width, canvas.height).data;
         this.canvasDimensions = { x: canvas.width, y: canvas.height };
     }
 
