@@ -4,7 +4,7 @@ import { container } from '@app/inversify.config';
 import { EmailService } from '@app/services/email.service';
 import Types from '@app/types';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
-import * as axios from 'axios';
+import axios from 'axios';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as sinon from 'sinon';
@@ -12,13 +12,13 @@ import * as sinon from 'sinon';
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const payloadStub = {
-    buffer: 'lool',
-    originalname: 'mishaWithoutFilters',
-    mimetype: 'xml/Xd',
-};
-
 describe('EmailService', () => {
+    const payloadStub = ({
+        buffer: 'lool',
+        originalname: 'mishaWithoutFilters',
+        mimetype: 'xd/xml',
+    } as unknown) as Express.Multer.File;
+
     let emailService: EmailService;
 
     before(() => {
@@ -44,7 +44,7 @@ describe('EmailService', () => {
             .and.to.have.property('status', HttpStatusCode.BadRequest);
     });
 
-    it('#sendEmail should throw BadRequest if emailAdress is invalid', async () => {
+    it('#sendEmail should throw BadRequest if the email address is invalid', async () => {
         const emailRequest = ({ to: 'undefined', payload: undefined } as unknown) as EmailRequest;
         await expect(emailService.sendEmail(emailRequest))
             .to.eventually.be.rejectedWith(HttpException, 'Invalid email address')
@@ -52,59 +52,59 @@ describe('EmailService', () => {
     });
 
     it('#sendEmail should throw BadRequest if the API response is BadRequest', async () => {
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Email address not found';
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        const expectedErrorMessage = 'Email address not found';
         const errorStub = {
             response: {
                 status: HttpStatusCode.BadRequest,
-                data:{
-                    error: errorMessage,
+                data: {
+                    error: expectedErrorMessage,
                 },
             },
         };
-        sinon.stub(axios.default, 'post').throws(errorStub);
+        sinon.stub(axios, 'post').throws(errorStub);
         await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .to.eventually.be.rejectedWith(HttpException, expectedErrorMessage)
             .and.to.have.property('status', HttpStatusCode.BadRequest);
     });
 
     it('#sendEmail should throw TooManyRequest if the API response is TooManyRequests', async () => {
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Email limit reached';
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        const expectedErrorMessage = 'Email limit reached';
         const errorStub = {
             response: {
                 status: HttpStatusCode.TooManyRequests,
-                data:{
-                    error: errorMessage,
+                data: {
+                    error: expectedErrorMessage,
                 },
             },
         };
-        sinon.stub(axios.default, 'post').throws(errorStub);
+        sinon.stub(axios, 'post').throws(errorStub);
         await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .to.eventually.be.rejectedWith(HttpException, expectedErrorMessage)
             .and.to.have.property('status', HttpStatusCode.TooManyRequests);
     });
 
-    it("#sendEmail should throw InternalServerError if the validation's response is different from BadRequest", async () => {
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Penis';
+    it("#sendEmail should throw InternalServerError if the validation's response is other than BadRequest or TooManyRequests", async () => {
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        const expectedErrorMessage = 'Je suis une théière';
         const errorStub = {
             response: {
                 status: HttpStatusCode.ImATeapot,
-                data:{
-                    error: errorMessage,
+                data: {
+                    error: expectedErrorMessage,
                 },
             },
         };
-        sinon.stub(axios.default, 'post').throws(errorStub);
+        sinon.stub(axios, 'post').throws(errorStub);
         await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .to.eventually.be.rejectedWith(HttpException, expectedErrorMessage)
             .and.to.have.property('status', HttpStatusCode.InternalServerError);
     });
 
     it('#sendEmail should throw InternalServerError if the API returns an error on sendEmailRequest', async () => {
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Email API error';
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        const expectedErrorMessage = 'Email API error';
         const errorStub = {
             response: {
                 status: HttpStatusCode.ImATeapot,
@@ -113,27 +113,33 @@ describe('EmailService', () => {
                 },
             },
         };
-        sinon.stub(axios.default, 'post').onSecondCall().throws(errorStub);
+        sinon.stub(axios, 'post').onSecondCall().throws(errorStub);
         await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .to.eventually.be.rejectedWith(HttpException, expectedErrorMessage)
             .and.to.have.property('status', HttpStatusCode.InternalServerError);
     });
 
-    it('#sendEmail should throw InternalServerError of the EMAIL_API_URL environnement variable is undefined', async () => {
+    it('#sendEmail should throw InternalServerError if the EMAIL_API_URL environnement variable is undefined', async () => {
         delete process.env.EMAIL_API_URL;
-        const emailRequest = ({ to: 'drawsy.io@hosted.com', payload: payloadStub } as unknown) as EmailRequest;
-        const errorMessage = 'Invalid email endpoint';
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        const expectedErrorMessage = 'Invalid email endpoint';
         const errorStub = {
             response: {
                 status: HttpStatusCode.InternalServerError,
-                data:{
-                    error: errorMessage,
+                data: {
+                    error: expectedErrorMessage,
                 },
             },
         };
-        sinon.stub(axios.default, 'post').onSecondCall().throws(errorStub);
+        sinon.stub(axios, 'post').onSecondCall().throws(errorStub);
         await expect(emailService.sendEmail(emailRequest))
-            .to.eventually.be.rejectedWith(HttpException, errorMessage)
+            .to.eventually.be.rejectedWith(HttpException, expectedErrorMessage)
             .and.to.have.property('status', HttpStatusCode.InternalServerError);
+    });
+
+    it('#sendEmail should return without throwing errors if the request was successfully completed', async () => {
+        const emailRequest: EmailRequest = { to: 'drawsy.io@hosted.com', payload: payloadStub };
+        sinon.stub(axios, 'post').resolves();
+        await expect(emailService.sendEmail(emailRequest)).to.not.throw;
     });
 });

@@ -2,7 +2,7 @@ import { EmailRequest } from '@app/classes/email-request';
 import { HttpException } from '@app/classes/http-exception';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import EmailValidation from '@common/validation/email-validation';
-import * as axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as FormData from 'form-data';
 import { injectable } from 'inversify';
 
@@ -44,7 +44,7 @@ export class EmailService {
         }
     }
 
-    private async sendRequest(emailRequest: EmailRequest, isAddressValidation: boolean): Promise<axios.AxiosResponse> {
+    private async sendRequest(emailRequest: EmailRequest, isAddressValidation: boolean): Promise<AxiosResponse> {
         const form = new FormData();
         form.append('to', emailRequest.to);
         form.append('payload', emailRequest.payload.buffer, {
@@ -52,7 +52,7 @@ export class EmailService {
             contentType: emailRequest.payload.mimetype,
         });
 
-        const config: axios.AxiosRequestConfig = {
+        const config: AxiosRequestConfig = {
             headers: {
                 ...form.getHeaders(),
                 'X-Team-Key': process.env.EMAIL_API_KEY,
@@ -66,7 +66,7 @@ export class EmailService {
 
         if (process.env.EMAIL_API_URL !== undefined) {
             try {
-                return await axios.default.post(process.env.EMAIL_API_URL, form, config);
+                return await axios.post(process.env.EMAIL_API_URL, form, config);
             } catch (error) {
                 throw new HttpException(error.response.status, error.response.data.error ?? 'Email API error');
             }
