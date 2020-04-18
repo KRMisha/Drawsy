@@ -176,11 +176,9 @@ describe('ToolFillService', () => {
         rendererSpyObj.createElement.and.returnValue(expectedGroup);
         service['fillWithColor']();
         tick();
-        // tslint:disable: no-non-null-assertion
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(expectedGroup);
         expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AddElementCommand(drawingServiceSpyObj, expectedGroup));
         expect(service['group']).toBeUndefined();
-        // tslint:enable: no-non-null-assertion
     }));
 
     it('#initializeCanvas should initialize the canvasData and the canvasDimensions from the canvas and the context', fakeAsync(() => {
