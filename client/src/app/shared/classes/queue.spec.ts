@@ -1,4 +1,4 @@
-import { Queue } from './queue';
+import { Queue } from '@app/shared/classes/queue';
 
 // tslint:disable: no-any
 // tslint:disable: no-string-literal

@@ -18,12 +18,12 @@ import { ToolSelectionService } from '@app/tools/services/selection/tool-selecti
 import { Tool } from '@app/tools/services/tool';
 import { Subject } from 'rxjs';
 
+// tslint:disable: max-file-line-count
+// tslint:disable: max-line-length
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
-// tslint:disable: no-string-literal
 // tslint:disable: no-non-null-assertion
-// tslint:disable: max-line-length
-// tslint:disable: max-file-line-count
+// tslint:disable: no-string-literal
 
 describe('SidebarDrawerComponent', () => {
     let component: SidebarDrawerComponent;

@@ -1,13 +1,13 @@
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
+import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { SavedFile } from '@common/communication/saved-file';
-import { DrawingLoadOptions } from '../classes/drawing-load-options';
-import { FileType } from '../enums/file-type.enum';
 
 // tslint:disable: no-any
 // tslint:disable: no-empty
