@@ -12,7 +12,7 @@ import { ToolEyedropperService } from '@app/tools/services/tool-eyedropper.servi
 
 // tslint:disable: no-magic-numbers
 
-fdescribe('ToolEyedropperService', () => {
+describe('ToolEyedropperService', () => {
     let service: ToolEyedropperService;
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
