@@ -132,27 +132,19 @@ describe('ClipboardService', () => {
     });
 
     it('#paste should do nothing if pasting is not available', () => {
+        const placeElementSpy = spyOn<any>(service, 'placeElements');
         spyOn<any>(service, 'isPastingAvailable').and.returnValue(false);
         service.paste();
-        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+        expect(placeElementSpy).not.toHaveBeenCalled();
     });
 
-    it('#paste should place elements if pasting is not available', () => {
+    it('#paste should place elements if pasting is available', () => {
+        const placeElementSpy = spyOn<any>(service, 'placeElements').and.callThrough();
         service['clipboardBuffer'] = [elementStub];
-        service['initialClipboardElements'] = [elementStub];
-        spyOn<any>(service, 'isPastingAvailable').and.returnValue(true);
-        service.paste();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
-    });
-
-    it('#paste should change clipboard initial elements if not in drawing anymore elements if pasting is not available', () => {
-        service['clipboardBuffer'] = [elementStub];
-        service['initialClipboardElements'] = [{} as SVGGraphicsElement];
         spyOn<any>(service, 'isPastingAvailable').and.returnValue(true);
         spyOn<any>(service, 'getElementsCopy').and.returnValue([elementStub]);
         service.paste();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
-        expect(service['initialClipboardElements']).toEqual([elementStub]);
+        expect(placeElementSpy).toHaveBeenCalled();
     });
 
     it('#cut should do nothing if selection is not available', () => {
@@ -172,17 +164,19 @@ describe('ClipboardService', () => {
     });
 
     it('#duplicate should not place elements if selection is not available', () => {
+        const placeElementSpy = spyOn<any>(service, 'placeElements');
         isSelectionAvailableSpy.and.returnValue(false);
         service['initialDuplicationElements'] = [elementStub];
         service.duplicate();
-        expect(drawingServiceSpyObj.addElement).not.toHaveBeenCalled();
+        expect(placeElementSpy).not.toHaveBeenCalled();
     });
 
     it('#duplicate should  place elements if selection is available', () => {
+        const placeElementSpy = spyOn<any>(service, 'placeElements').and.callThrough();
         isSelectionAvailableSpy.and.returnValue(true);
         service['initialDuplicationElements'] = [elementStub];
         service.duplicate();
-        expect(drawingServiceSpyObj.addElement).toHaveBeenCalled();
+        expect(placeElementSpy).toHaveBeenCalledWith(PlacementType.Duplication);
     });
 
     it('#isSelectionAvailable should return true if there are selected elements and selection state is none', () => {
@@ -213,12 +207,6 @@ describe('ClipboardService', () => {
         spyOn<any>(service, 'getNextOffset').and.returnValue(offset);
         service['offsetSelectedElements'](false, PlacementType.Clipboard);
         expect(toolSelectionMoverServiceSpyObj.moveSelection).toHaveBeenCalledWith({ x: offset, y: offset });
-    });
-
-    it('#getNextOffset should return xdd', () => {
-        const offset = 25;
-        toolSelectionCollisionServiceSpyObj.getElementListBounds.and.returnValue({ x: 69, y: 420, width: 911, height: 666 });
-        expect(service['getNextOffset']([] as SVGGraphicsElement[], 0)).toEqual(offset);
     });
 
     it('#getNextOffset should return an incremented offset if next placement is not out of bounds', () => {
