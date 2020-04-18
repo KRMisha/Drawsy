@@ -61,20 +61,13 @@ export class ToolFillService extends Tool {
         this.fillPixelsToVisit = new Queue<Vec2>();
         this.visitedFillPixels = new Set<string>();
 
-        this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
-        this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
-
         const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
         await this.initializeCanvas();
         this.selectedColor = this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, startPixel);
 
         const bitmap = this.breadthFirstSearch(startPixel);
         const rectangles = this.getRectanglesFromBitmap(bitmap);
-        this.appendRectangles(rectangles);
-
-        this.drawingService.addElement(this.group);
-        this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
-        this.group = undefined;
+        this.addRectangles(rectangles);
 
         delete this.fillPixelsToVisit;
         delete this.visitedFillPixels;
@@ -111,62 +104,8 @@ export class ToolFillService extends Tool {
                 this.enqueuePixelIfValid(adjacentPixel);
             }
         }
+
         return bitmap;
-    }
-
-    private appendRectangles(rectangles: Rect[]): void {
-        for (const rectangle of rectangles) {
-            const padding = 0.5;
-            const svgRectangle = this.renderer.createElement('rect', 'svg');
-            this.renderer.setAttribute(svgRectangle, 'x', `${rectangle.x - padding}`);
-            this.renderer.setAttribute(svgRectangle, 'y', `${rectangle.y - padding}`);
-            this.renderer.setAttribute(svgRectangle, 'width', `${rectangle.width + 2 * padding}`);
-            this.renderer.setAttribute(svgRectangle, 'height', `${rectangle.height + 2 * padding}`);
-            this.renderer.appendChild(this.group, svgRectangle);
-        }
-    }
-
-    private getRectanglesFromBitmap(bitmap: boolean[][]): Rect[] {
-        const rectangles: Rect[] = [];
-        for (let i = 0; i < bitmap.length; i++) {
-            rectangles.push(...this.getRowRectangles(i, bitmap));
-        }
-        return rectangles;
-    }
-
-    private getRowRectangles(row: number, bitmap: boolean[][]): Rect[] {
-        const rectangles: Rect[] = [];
-        let currentRectangle: Rect | undefined;
-        for (let j = 0; j < bitmap[row].length; j++) {
-            if (!bitmap[row][j] && currentRectangle !== undefined) {
-                rectangles.push(this.copyRectangle(currentRectangle));
-                currentRectangle = undefined;
-            }
-
-            if (!bitmap[row][j]) {
-                continue;
-            }
-
-            if (currentRectangle === undefined) {
-                currentRectangle = { x: j, y: row, width: 1, height: 1 } as Rect;
-            } else {
-                currentRectangle.width++;
-                if (j === bitmap[row].length - 1) {
-                    rectangles.push(this.copyRectangle(currentRectangle));
-                    currentRectangle = undefined;
-                }
-            }
-        }
-        return rectangles;
-    }
-
-    private copyRectangle(rectangle: Rect): Rect {
-        return {
-            x: rectangle.x,
-            y: rectangle.y,
-            width: rectangle.width,
-            height: rectangle.height,
-        } as Rect;
     }
 
     private enqueuePixelIfValid(pixel: Vec2): void {
@@ -199,5 +138,55 @@ export class ToolFillService extends Tool {
         const percentageDifference = (distanceFromSelectedColor / maxDistance) * percentageMultiplier;
 
         return percentageDifference <= this.settings.fillDeviation!; // tslint:disable-line: no-non-null-assertion
+    }
+
+    private addRectangles(rectangles: Rect[]): void {
+        this.group = this.renderer.createElement('g', 'svg') as SVGGElement;
+        this.renderer.setAttribute(this.group, 'fill', this.colorService.primaryColor.toRgbaString());
+
+        for (const rectangle of rectangles) {
+            const padding = 0.5;
+            const svgRectangle = this.renderer.createElement('rect', 'svg');
+            this.renderer.setAttribute(svgRectangle, 'x', `${rectangle.x - padding}`);
+            this.renderer.setAttribute(svgRectangle, 'y', `${rectangle.y - padding}`);
+            this.renderer.setAttribute(svgRectangle, 'width', `${rectangle.width + 2 * padding}`);
+            this.renderer.setAttribute(svgRectangle, 'height', `${rectangle.height + 2 * padding}`);
+            this.renderer.appendChild(this.group, svgRectangle);
+        }
+
+        this.drawingService.addElement(this.group);
+        this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
+        this.group = undefined;
+    }
+
+    private getRectanglesFromBitmap(bitmap: boolean[][]): Rect[] {
+        const rectangles: Rect[] = [];
+        for (let i = 0; i < bitmap.length; i++) {
+            rectangles.push(...this.getRowRectangles(i, bitmap));
+        }
+        return rectangles;
+    }
+
+    private getRowRectangles(rowIndex: number, bitmap: boolean[][]): Rect[] {
+        const rectangles: Rect[] = [];
+
+        let currentRectangle: Rect | undefined;
+        for (let i = 0; i < bitmap[rowIndex].length; i++) {
+            if (currentRectangle !== undefined) {
+                if (bitmap[rowIndex][i]) {
+                    currentRectangle.width++;
+                }
+
+                const hasReachedRectangleEnd = !bitmap[rowIndex][i] || i === bitmap[rowIndex].length - 1;
+                if (hasReachedRectangleEnd) {
+                    rectangles.push(currentRectangle);
+                    currentRectangle = undefined;
+                }
+            } else if (bitmap[rowIndex][i]) {
+                currentRectangle = { x: i, y: rowIndex, width: 1, height: 1 } as Rect;
+            }
+        }
+
+        return rectangles;
     }
 }
