@@ -6,7 +6,6 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { ToolPencilService } from '@app/tools/services/brushes/tool-pencil.service';
 
 describe('ToolPencilService', () => {
-
     beforeEach(() => {
         const rendererSpyObj = jasmine.createSpyObj('Renderer2', ['']);
         const rendererFactory2SpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);

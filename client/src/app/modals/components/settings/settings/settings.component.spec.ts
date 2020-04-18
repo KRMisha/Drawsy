@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { SettingsService } from '@app/modals/services/settings.service';
 
@@ -14,9 +15,13 @@ describe('SettingsComponent', () => {
         settingsServiceSpyObj = jasmine.createSpyObj('SettingsService', ['resetInitialSettings'], {
             settingsFormGroup: settingsFormGroupStub,
         });
+
         TestBed.configureTestingModule({
             declarations: [SettingsComponent],
-            providers: [{ provide: SettingsService, useValue: settingsServiceSpyObj }],
+            providers: [
+                { provide: SettingsService, useValue: settingsServiceSpyObj },
+                { provide: MatSnackBar, useValue: {} as MatSnackBar },
+            ],
             schemas: [NO_ERRORS_SCHEMA],
         }).compileComponents();
     }));
