@@ -42,8 +42,10 @@ describe('ToolFillService', () => {
         rendererSpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'appendChild']);
         rendererFactorySpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactorySpyObj.createRenderer.and.returnValue(rendererSpyObj);
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement'], {
-            drawingRoot: {} as SVGSVGElement,
+        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['cloneNode']);
+        drawingRootSpyObj.cloneNode.and.returnValue(drawingRootSpyObj);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'hideUiElements', 'showUiElements'], {
+            drawingRoot: drawingRootSpyObj,
             dimensions: drawingDimensions,
         });
 
