@@ -8,6 +8,7 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { Queue } from '@app/shared/classes/queue';
+import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { Tool } from '@app/tools/services/tool';
@@ -22,6 +23,7 @@ describe('ToolFillService', () => {
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;
     let rendererFactorySpyObj: jasmine.SpyObj<RendererFactory2>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
+    let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let colorSpyObj: jasmine.SpyObj<Color>;
     let colorServiceSpyObj: jasmine.SpyObj<ColorService>;
     let canvasSpyObj: jasmine.SpyObj<HTMLCanvasElement>;
@@ -42,7 +44,7 @@ describe('ToolFillService', () => {
         rendererSpyObj = jasmine.createSpyObj('Renderer2', ['setAttribute', 'createElement', 'appendChild']);
         rendererFactorySpyObj = jasmine.createSpyObj('RendererFactory2', ['createRenderer']);
         rendererFactorySpyObj.createRenderer.and.returnValue(rendererSpyObj);
-        const drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['cloneNode']);
+        drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['cloneNode']);
         drawingRootSpyObj.cloneNode.and.returnValue(drawingRootSpyObj);
         drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['addElement', 'hideUiElements', 'showUiElements'], {
             drawingRoot: drawingRootSpyObj,
@@ -87,6 +89,7 @@ describe('ToolFillService', () => {
             ],
         });
         service = TestBed.inject(ToolFillService);
+
         service['fillPixelsToVisit'] = fillPixelsToVisitSpyObj;
         service['canvasDimensions'] = initialCanvasDimensions;
     });
@@ -136,13 +139,6 @@ describe('ToolFillService', () => {
         expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(expectedGroup, 'fill', expectedColor);
     });
 
-    it('#fillWithColor should create the SVGGElement and set the fill color, ', fakeAsync(() => {
-        service['fillWithColor']();
-
-        expect(rendererSpyObj.createElement).toHaveBeenCalledWith('g', 'svg');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(service['group'], 'fill', expectedColor);
-    }));
-
     it('#fillWithColor should initialize the canvas and set the selectedColor', fakeAsync(() => {
         Tool.mousePosition.x = 0;
         Tool.mousePosition.y = 0;
@@ -156,15 +152,22 @@ describe('ToolFillService', () => {
         expect(rasterizationServiceSpyObj.getPixelColor).toHaveBeenCalledWith(expectedCanvasData, initialCanvasDimensions.x, mousePosition);
     }));
 
-    it('#fillWithColor should start the Breadth-First search, ', fakeAsync(() => {
+    it('#fillWithColor should start the Breadth-First search and get rectangles from bitmap ', fakeAsync(() => {
         Tool.mousePosition.x = 0;
         Tool.mousePosition.y = 0;
         const mousePosition: Vec2 = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
+        const expectedBitMap: boolean[][] = [[true]];
+        const expectedRectangles: Rect[] = [{} as Rect];
         const breadthFirstSearchSpy = spyOn<any>(service, 'breadthFirstSearch');
+        breadthFirstSearchSpy.and.returnValue(expectedBitMap);
+        const getRectanglesFromBitmapSpy = spyOn<any>(service, 'getRectanglesFromBitmap').and.returnValue(expectedRectangles);
+        const addRectanglesSpy = spyOn<any>(service, 'addRectangles');
         service['fillWithColor']();
         tick();
 
         expect(breadthFirstSearchSpy).toHaveBeenCalledWith(mousePosition);
+        expect(getRectanglesFromBitmapSpy).toHaveBeenCalledWith(expectedBitMap);
+        expect(addRectanglesSpy).toHaveBeenCalledWith(expectedRectangles);
     }));
 
     it('#fillWithColor should add the group to the drawing and add a command to history service', fakeAsync(() => {
@@ -172,17 +175,19 @@ describe('ToolFillService', () => {
         rendererSpyObj.createElement.and.returnValue(expectedGroup);
         service['fillWithColor']();
         tick();
-        // tslint:disable: no-non-null-assertion
         expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(expectedGroup);
         expect(historyServiceSpyObj.addCommand).toHaveBeenCalledWith(new AddElementCommand(drawingServiceSpyObj, expectedGroup));
         expect(service['group']).toBeUndefined();
-        // tslint:enable: no-non-null-assertion
     }));
 
     it('#initializeCanvas should initialize the canvasData and the canvasDimensions from the canvas and the context', fakeAsync(() => {
         service['initializeCanvas']();
         tick();
-        expect(rasterizationServiceSpyObj.getCanvasFromSvgRoot).toHaveBeenCalledWith(drawingServiceSpyObj.drawingRoot);
+        expect(drawingServiceSpyObj.hideUiElements).toHaveBeenCalled();
+        expect(drawingRootSpyObj.cloneNode).toHaveBeenCalledWith(true);
+        expect(drawingServiceSpyObj.showUiElements).toHaveBeenCalled();
+        expect(canvasSpyObj.getContext).toHaveBeenCalledWith('2d');
+        expect(rasterizationServiceSpyObj.getCanvasFromSvgRoot).toHaveBeenCalledWith(drawingRootSpyObj);
         expect(canvasSpyObj.getContext).toHaveBeenCalledWith('2d');
         expect(canvasContextSpyObj.getImageData).toHaveBeenCalled();
         expect(service['canvasData']).toEqual([0, 0, 0, 0, ...rgbaComponents, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -190,55 +195,34 @@ describe('ToolFillService', () => {
         expect(service['canvasDimensions'].y).toEqual(canvasSpyObj.height);
     }));
 
-    it(
-        '#breadthFirstSearch should enqueue the startPixel, dequeue a pixel, call addSquareOnPixel and call enqueuePixelIfValid ' +
-            'with four neighbour pixels',
-        () => {
-            const expectedPoint = { x: 10, y: 10 } as Vec2;
-            const enqueuePixelIfValidSpy = spyOn<any>(service, 'enqueuePixelIfValid');
-            let firstIteration = true;
-            fillPixelsToVisitSpyObj.isEmpty.and.callFake(() => {
-                if (firstIteration) {
-                    firstIteration = false;
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-            fillPixelsToVisitSpyObj.dequeue.and.returnValue(expectedPoint);
-            const addSquareOnPixelSpy = spyOn<any>(service, 'addSquareOnPixel');
+    it('#breadthFirstSearch should enqueue the startPixel, dequeue a pixel, and call enqueuePixelIfValid with four neighbor pixels', () => {
+        const expectedPoint = { x: 1, y: 1 } as Vec2;
+        const enqueuePixelIfValidSpy = spyOn<any>(service, 'enqueuePixelIfValid');
+        let firstIteration = true;
+        fillPixelsToVisitSpyObj.isEmpty.and.callFake(() => {
+            if (firstIteration) {
+                firstIteration = false;
+                return false;
+            } else {
+                return true;
+            }
+        });
+        fillPixelsToVisitSpyObj.dequeue.and.returnValue(expectedPoint);
 
-            service['breadthFirstSearch'](expectedPoint);
+        service['breadthFirstSearch'](expectedPoint);
 
-            expect(fillPixelsToVisitSpyObj.enqueue).toHaveBeenCalledWith(expectedPoint);
-            expect(fillPixelsToVisitSpyObj.dequeue).toHaveBeenCalled();
-            expect(addSquareOnPixelSpy).toHaveBeenCalledWith(expectedPoint);
-            expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x + 1, y: expectedPoint.y } as Vec2);
-            expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x - 1, y: expectedPoint.y } as Vec2);
-            expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x, y: expectedPoint.y + 1 } as Vec2);
-            expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x, y: expectedPoint.y - 1 } as Vec2);
-        }
-    );
+        expect(fillPixelsToVisitSpyObj.enqueue).toHaveBeenCalledWith(expectedPoint);
+        expect(fillPixelsToVisitSpyObj.dequeue).toHaveBeenCalled();
+        expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x + 1, y: expectedPoint.y } as Vec2);
+        expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x - 1, y: expectedPoint.y } as Vec2);
+        expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x, y: expectedPoint.y + 1 } as Vec2);
+        expect(enqueuePixelIfValidSpy).toHaveBeenCalledWith({ x: expectedPoint.x, y: expectedPoint.y - 1 } as Vec2);
+    });
 
     it('#breadthFirstSearch should stop when the queue is empty', () => {
         fillPixelsToVisitSpyObj.isEmpty.and.returnValue(true);
         service['breadthFirstSearch']({ x: 10, y: 10 } as Vec2);
         expect(rendererSpyObj.createElement).not.toHaveBeenCalled();
-    });
-
-    it('#addSquareOnPixel should create a rectangle on the pixel', () => {
-        const squareSideSize = 1.8;
-        const svgRectStub = {} as SVGRect;
-        rendererSpyObj.createElement.and.returnValue(svgRectStub);
-        const point = { x: 1, y: 1 } as Vec2;
-        service['addSquareOnPixel'](point);
-
-        expect(rendererSpyObj.createElement).toHaveBeenCalledWith('rect', 'svg');
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'x', `${point.x - (squareSideSize - 1) / 2}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'y', `${point.y - (squareSideSize - 1) / 2}`);
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'width', squareSideSize.toString());
-        expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(svgRectStub, 'height', squareSideSize.toString());
-        expect(rendererSpyObj.appendChild).toHaveBeenCalledWith(service['group'], svgRectStub);
     });
 
     it('#enqueuePixelIfValid should not call fillPixelsToVisit.enqueue if the point is not in the drawing', () => {
@@ -302,5 +286,56 @@ describe('ToolFillService', () => {
         const returnValue = service['isSelectedColor'](comparedColor);
 
         expect(returnValue).toEqual(false);
+    });
+
+    it('#addRectangles should create the SVGGElement and append the rectangles', () => {
+        const rendererElementStub = {} as SVGGElement;
+        rendererSpyObj.createElement.and.returnValue(rendererElementStub);
+        const rects = [
+            { x: 69, y: 420, width: 666, height: 911 },
+            { x: 1, y: 5, width: 9, height: 13 },
+            { x: 2, y: 6, width: 10, height: 14 },
+            { x: 3, y: 7, width: 11, height: 15 },
+            { x: 4, y: 8, width: 12, height: 16 },
+        ];
+        service['addRectangles'](rects);
+
+        const padding = 0.5;
+        for (const rect of rects) {
+            expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(rendererElementStub, 'x', `${rect.x - padding}`);
+            expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(rendererElementStub, 'y', `${rect.y - padding}`);
+            expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(rendererElementStub, 'width', `${rect.width + 2 * padding}`);
+            expect(rendererSpyObj.setAttribute).toHaveBeenCalledWith(rendererElementStub, 'height', `${rect.height + 2 * padding}`);
+        }
+        expect(drawingServiceSpyObj.addElement).toHaveBeenCalledWith(rendererElementStub);
+    });
+
+    it('#getRectanglesFromBitmap should generate correct rectangles from bitmap', () => {
+        const input: boolean[][] = [
+            [false, false, false, false, false, false, true, false, true],
+            [true, true, true, true, true, true, true, true, true],
+            [true, true, true, true, true, true, true, true, true],
+            [false, false, false, false, false, false, true, false, true],
+            [true, false, true, true, true, false, true, false, true],
+            [true, false, false, false, false, false, true, false, true],
+            [true, false, false, false, false, false, true, false, true],
+            [false, false, false, false, false, false, true, false, true],
+        ];
+        const actualOutput = service['getRectanglesFromBitmap'](input);
+        const expectedOutput = [
+            { x: 6, y: 0, width: 1, height: 1 } as Rect,
+            { x: 0, y: 1, width: 9, height: 1 } as Rect,
+            { x: 0, y: 2, width: 9, height: 1 } as Rect,
+            { x: 6, y: 3, width: 1, height: 1 } as Rect,
+            { x: 0, y: 4, width: 1, height: 1 } as Rect,
+            { x: 2, y: 4, width: 3, height: 1 } as Rect,
+            { x: 6, y: 4, width: 1, height: 1 } as Rect,
+            { x: 0, y: 5, width: 1, height: 1 } as Rect,
+            { x: 6, y: 5, width: 1, height: 1 } as Rect,
+            { x: 0, y: 6, width: 1, height: 1 } as Rect,
+            { x: 6, y: 6, width: 1, height: 1 } as Rect,
+            { x: 6, y: 7, width: 1, height: 1 } as Rect,
+        ];
+        expect(actualOutput).toEqual(expectedOutput);
     });
 });
