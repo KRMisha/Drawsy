@@ -4,15 +4,15 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Rect } from '@app/shared/classes/rect';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
+import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionRotatorService } from '@app/tools/services/selection/tool-selection-rotator.service';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
-import { ToolSelectionMoverService } from './tool-selection-mover.service';
-import { ToolSelectionStateService } from './tool-selection-state.service';
-import { ToolSelectionTransformService } from './tool-selection-transform.service';
+import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
-// tslint:disable: no-string-literal
 // tslint:disable: no-any
 // tslint:disable: no-empty
+// tslint:disable: no-string-literal
 
 describe('ToolSelectionRotatorService', () => {
     let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
