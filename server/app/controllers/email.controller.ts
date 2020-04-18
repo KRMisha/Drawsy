@@ -10,7 +10,7 @@ import * as multer from 'multer';
 const upload = multer({
     limits: {
         fields: 1,
-        fileSize: 16777216,
+        fileSize: 8388608,
         files: 1,
     },
 }).single('payload');

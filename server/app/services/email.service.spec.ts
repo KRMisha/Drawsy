@@ -21,12 +21,9 @@ describe('EmailService', () => {
 
     let emailService: EmailService;
 
-    before(() => {
-        process.env.EMAIL_API_URL = 'drawsy.io';
-    });
-
     beforeEach(() => {
         emailService = container.get<EmailService>(Types.EmailService);
+        process.env.EMAIL_API_URL = 'drawsy.io';
     });
 
     afterEach(() => {
