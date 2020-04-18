@@ -14,6 +14,7 @@ import { ToolEyedropperService } from '@app/tools/services/tool-eyedropper.servi
 
 describe('ToolEyedropperService', () => {
     let service: ToolEyedropperService;
+    let drawingRootSpyObj: jasmine.SpyObj<SVGSVGElement>;
     let drawingServiceSpyObj: jasmine.SpyObj<DrawingService>;
     let colorServiceMock: ColorService;
     let canvasSpyObj: jasmine.SpyObj<HTMLCanvasElement>;
@@ -25,8 +26,10 @@ describe('ToolEyedropperService', () => {
     const expectedColor = Color.fromRgba(rgbaComponents[0], rgbaComponents[1], rgbaComponents[2], rgbaComponents[3] / Color.maxRgb);
 
     beforeEach(() => {
-        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', [], {
-            drawingRoot: '',
+        drawingRootSpyObj = jasmine.createSpyObj('SVGSVGElement', ['cloneNode']);
+        drawingRootSpyObj.cloneNode.and.returnValue(drawingRootSpyObj);
+        drawingServiceSpyObj = jasmine.createSpyObj('DrawingService', ['hideUiElements', 'showUiElements'], {
+            drawingRoot: drawingRootSpyObj,
             dimensions: drawingDimensions,
         });
 
