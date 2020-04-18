@@ -4,15 +4,15 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { ArrowKey } from '@app/shared/enums/arrow-key.enum';
 import { SelectionState } from '@app/tools/enums/selection-state.enum';
+import { ToolSelectionCollisionService } from '@app/tools/services/selection/tool-selection-collision.service';
 import { ToolSelectionMoverService } from '@app/tools/services/selection/tool-selection-mover.service';
 import { ToolSelectionStateService } from '@app/tools/services/selection/tool-selection-state.service';
-import { ToolSelectionCollisionService } from './tool-selection-collision.service';
-import { ToolSelectionTransformService } from './tool-selection-transform.service';
+import { ToolSelectionTransformService } from '@app/tools/services/selection/tool-selection-transform.service';
 
+// tslint:disable: max-line-length
 // tslint:disable: no-any
 // tslint:disable: no-empty
 // tslint:disable: no-string-literal
-// tslint:disable: max-line-length
 
 describe('ToolSelectionMoverService', () => {
     let service: ToolSelectionMoverService;
