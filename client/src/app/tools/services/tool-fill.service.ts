@@ -7,6 +7,7 @@ import { HistoryService } from '@app/drawing/services/history.service';
 import { RasterizationService } from '@app/drawing/services/rasterization.service';
 import { Color } from '@app/shared/classes/color';
 import { Queue } from '@app/shared/classes/queue';
+import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
@@ -67,7 +68,9 @@ export class ToolFillService extends Tool {
         await this.initializeCanvas();
         this.selectedColor = this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, startPixel);
 
-        this.breadthFirstSearch(startPixel);
+        const bitmap = this.breadthFirstSearch(startPixel);
+        const rectangles = this.getRectanglesFromBitmap(bitmap);
+        this.appendRectangles(rectangles);
 
         this.drawingService.addElement(this.group);
         this.historyService.addCommand(new AddElementCommand(this.drawingService, this.group));
@@ -88,13 +91,15 @@ export class ToolFillService extends Tool {
         this.canvasDimensions = { x: canvas.width, y: canvas.height };
     }
 
-    private breadthFirstSearch(startPixel: Vec2): void {
+    private breadthFirstSearch(startPixel: Vec2): boolean[][] {
         this.fillPixelsToVisit.enqueue(startPixel);
+
+        const bitmap: boolean[][] = Array.from(Array(this.canvasDimensions.y), (_: boolean) => Array(this.canvasDimensions.x).fill(false));
 
         while (!this.fillPixelsToVisit.isEmpty()) {
             // The pixel will always be defined since it can only be added to the queue if it is valid
             const pixel = this.fillPixelsToVisit.dequeue()!; // tslint:disable-line: no-non-null-assertion
-            this.addSquareOnPixel(pixel);
+            bitmap[pixel.y][pixel.x] = true;
 
             const adjacentPixels: Vec2[] = [
                 { x: pixel.x, y: pixel.y - 1 },
@@ -106,16 +111,53 @@ export class ToolFillService extends Tool {
                 this.enqueuePixelIfValid(adjacentPixel);
             }
         }
+        return bitmap;
     }
 
-    private addSquareOnPixel(pixel: Vec2): void {
-        const square: SVGPathElement = this.renderer.createElement('rect', 'svg');
-        const squareSideSize = 1.8;
-        this.renderer.setAttribute(square, 'x', `${pixel.x - (squareSideSize - 1) / 2}`);
-        this.renderer.setAttribute(square, 'y', `${pixel.y - (squareSideSize - 1) / 2}`);
-        this.renderer.setAttribute(square, 'width', squareSideSize.toString());
-        this.renderer.setAttribute(square, 'height', squareSideSize.toString());
-        this.renderer.appendChild(this.group, square);
+    private appendRectangles(rectangles: Rect[]): void {
+        for (const rectangle of rectangles) {
+            const padding = 0.5;
+            const svgRectangle = this.renderer.createElement('rect', 'svg');
+            this.renderer.setAttribute(svgRectangle, 'x', `${rectangle.x - padding}`);
+            this.renderer.setAttribute(svgRectangle, 'y', `${rectangle.y - padding}`);
+            this.renderer.setAttribute(svgRectangle, 'width', `${rectangle.width + 2 * padding}`);
+            this.renderer.setAttribute(svgRectangle, 'height', `${rectangle.height + 2 * padding}`);
+            this.renderer.appendChild(this.group, svgRectangle);
+        }
+    }
+
+    private getRectanglesFromBitmap(bitmap: boolean[][]): Rect[] {
+        const rectangles: Rect[] = [];
+        for (let i = 0; i < bitmap.length; i++) {
+            let currentRectangle: Rect | undefined;
+            for (let j = 0; j < bitmap[i].length; j++) {
+                if (bitmap[i][j] === true) {
+                    if (currentRectangle === undefined) {
+                        currentRectangle = { x: j, y: i, width: 1, height: 1 } as Rect;
+                    } else {
+                        currentRectangle.width++;
+                        if (j === bitmap[i].length - 1) {
+                            rectangles.push({
+                                x: currentRectangle.x,
+                                y: currentRectangle.y,
+                                width: currentRectangle.width,
+                                height: currentRectangle.height,
+                            });
+                            currentRectangle = undefined;
+                        }
+                    }
+                } else if (currentRectangle !== undefined) {
+                    rectangles.push({
+                        x: currentRectangle.x,
+                        y: currentRectangle.y,
+                        width: currentRectangle.width,
+                        height: currentRectangle.height,
+                    });
+                    currentRectangle = undefined;
+                }
+            }
+        }
+        return rectangles;
     }
 
     private enqueuePixelIfValid(pixel: Vec2): void {
