@@ -7,6 +7,7 @@ import { ToolPolygonService } from '@app/tools/services/shapes/tool-polygon.serv
 import { ToolRectangleService } from '@app/tools/services/shapes/tool-rectangle.service';
 import { ToolEraserService } from '@app/tools/services/tool-eraser.service';
 import { ToolEyedropperService } from '@app/tools/services/tool-eyedropper.service';
+import { ToolFillService } from '@app/tools/services/tool-fill.service';
 import { ToolHolderService } from '@app/tools/services/tool-holder.service';
 import { ToolLineService } from '@app/tools/services/tool-line.service';
 import { ToolRecolorService } from '@app/tools/services/tool-recolor.service';
@@ -20,6 +21,7 @@ describe('ToolHolderService', () => {
     const toolRectangleServiceMock = {} as ToolRectangleService;
     const toolEllipseServiceMock = {} as ToolEllipseService;
     const toolPolygonServiceMock = {} as ToolPolygonService;
+    const toolFillServiceMock = {} as ToolFillService;
     const toolEyedropperServiceMock = {} as ToolEyedropperService;
     const toolRecolorServiceMock = {} as ToolRecolorService;
     const toolSelectionServiceMock = {} as ToolSelectionService;
@@ -35,6 +37,7 @@ describe('ToolHolderService', () => {
                 { provide: ToolRectangleService, useValue: toolRectangleServiceMock },
                 { provide: ToolEllipseService, useValue: toolEllipseServiceMock },
                 { provide: ToolPolygonService, useValue: toolPolygonServiceMock },
+                { provide: ToolFillService, useValue: toolFillServiceMock },
                 { provide: ToolEyedropperService, useValue: toolEyedropperServiceMock },
                 { provide: ToolRecolorService, useValue: toolRecolorServiceMock },
                 { provide: ToolSelectionService, useValue: toolSelectionServiceMock },
