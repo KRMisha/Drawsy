@@ -18,7 +18,6 @@ import { ToolFillService } from '@app/tools/services/tool-fill.service';
 // tslint:disable: no-any
 // tslint:disable: no-magic-numbers
 // tslint:disable: no-string-literal
-// tslint:disable: max-file-line-count
 
 describe('ToolFillService', () => {
     let rendererSpyObj: jasmine.SpyObj<Renderer2>;
