@@ -129,35 +129,44 @@ export class ToolFillService extends Tool {
     private getRectanglesFromBitmap(bitmap: boolean[][]): Rect[] {
         const rectangles: Rect[] = [];
         for (let i = 0; i < bitmap.length; i++) {
-            let currentRectangle: Rect | undefined;
-            for (let j = 0; j < bitmap[i].length; j++) {
-                if (bitmap[i][j] === true) {
-                    if (currentRectangle === undefined) {
-                        currentRectangle = { x: j, y: i, width: 1, height: 1 } as Rect;
-                    } else {
-                        currentRectangle.width++;
-                        if (j === bitmap[i].length - 1) {
-                            rectangles.push({
-                                x: currentRectangle.x,
-                                y: currentRectangle.y,
-                                width: currentRectangle.width,
-                                height: currentRectangle.height,
-                            });
-                            currentRectangle = undefined;
-                        }
-                    }
-                } else if (currentRectangle !== undefined) {
-                    rectangles.push({
-                        x: currentRectangle.x,
-                        y: currentRectangle.y,
-                        width: currentRectangle.width,
-                        height: currentRectangle.height,
-                    });
+            rectangles.push(...this.getRowRectangles(i, bitmap));
+        }
+        return rectangles;
+    }
+
+    private getRowRectangles(row: number, bitmap: boolean[][]): Rect[] {
+        const rectangles: Rect[] = [];
+        let currentRectangle: Rect | undefined;
+        for (let j = 0; j < bitmap[row].length; j++) {
+            if (!bitmap[row][j] && currentRectangle !== undefined) {
+                rectangles.push(this.copyRectangle(currentRectangle));
+                currentRectangle = undefined;
+            }
+
+            if (!bitmap[row][j]) {
+                continue;
+            }
+
+            if (currentRectangle === undefined) {
+                currentRectangle = { x: j, y: row, width: 1, height: 1 } as Rect;
+            } else {
+                currentRectangle.width++;
+                if (j === bitmap[row].length - 1) {
+                    rectangles.push(this.copyRectangle(currentRectangle));
                     currentRectangle = undefined;
                 }
             }
         }
         return rectangles;
+    }
+
+    private copyRectangle(rectangle: Rect): Rect {
+        return {
+            x: rectangle.x,
+            y: rectangle.y,
+            width: rectangle.width,
+            height: rectangle.height,
+        } as Rect;
     }
 
     private enqueuePixelIfValid(pixel: Vec2): void {
