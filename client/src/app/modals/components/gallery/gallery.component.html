@@ -39,7 +39,10 @@
                     </mat-card-content>
                     <mat-card-actions align="center" class="card-actions-container" [class.remove-top-margin]="drawing.labels.length === 0">
                         <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">Effacer</button>
-                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing)">Charger</button>
+                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, false)">Charger</button>
+                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, true)">
+                            Dupliquer
+                        </button>
                     </mat-card-actions>
                 </div>
             </mat-card>

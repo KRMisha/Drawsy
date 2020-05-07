@@ -44,12 +44,12 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    loadDrawing(drawing: SvgFileContainer): void {
-        this.galleryService.loadDrawing(drawing);
-    }
-
     deleteDrawing(drawing: SvgFileContainer): void {
         this.galleryService.deleteDrawing(drawing);
+    }
+
+    loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
+        this.galleryService.loadDrawing(drawing, isDuplication);
     }
 
     getErrorMessage(): string {

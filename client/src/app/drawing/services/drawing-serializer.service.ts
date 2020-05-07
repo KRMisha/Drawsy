@@ -30,7 +30,7 @@ export class DrawingSerializerService {
         return { id, title, labels, drawingRoot } as SvgFileContainer;
     }
 
-    getDrawingLoadOptions(svgFileContainer: SvgFileContainer): DrawingLoadOptions {
+    getDrawingLoadOptions(svgFileContainer: SvgFileContainer, isDuplication: boolean): DrawingLoadOptions {
         const backgroundRectFillString = svgFileContainer.drawingRoot.getElementsByTagName('rect')[0].getAttribute('fill');
         const backgroundRectFill = Color.fromRgbaString(backgroundRectFillString ?? 'rgb(255, 255, 255)');
 
@@ -43,7 +43,7 @@ export class DrawingSerializerService {
             dimensions: { x: svgFileContainer.drawingRoot.viewBox.baseVal.width, y: svgFileContainer.drawingRoot.viewBox.baseVal.height },
             backgroundColor: backgroundRectFill,
             drawingData: {
-                id: svgFileContainer.id,
+                id: isDuplication ? undefined : svgFileContainer.id,
                 title: svgFileContainer.title,
                 labels: svgFileContainer.labels,
                 elements,

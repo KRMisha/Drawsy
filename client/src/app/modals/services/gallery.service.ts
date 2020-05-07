@@ -27,16 +27,6 @@ export class GalleryService {
         private drawingService: DrawingService
     ) {}
 
-    loadDrawing(drawing: SvgFileContainer): void {
-        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
-        if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
-            this.snackBar.open('Dessin chargé : ' + drawing.title, undefined, {
-                duration: snackBarDuration,
-            });
-            this.router.navigate(['/editor']);
-        }
-    }
-
     deleteDrawing(drawing: SvgFileContainer): void {
         const confirmationMessage = 'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
         if (!confirm(confirmationMessage)) {
@@ -67,6 +57,17 @@ export class GalleryService {
                     }
                 }
             );
+    }
+
+    loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
+        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing, isDuplication);
+        if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
+            const loadingMessage = isDuplication ? 'Dessin dupliqué : ' : 'Dessin chargé : ';
+            this.snackBar.open(loadingMessage + drawing.title, undefined, {
+                duration: snackBarDuration,
+            });
+            this.router.navigate(['/editor']);
+        }
     }
 
     getAllDrawings(): void {

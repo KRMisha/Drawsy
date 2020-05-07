@@ -136,7 +136,7 @@ export class DrawingService {
         const id = localStorage.getItem(localStorageDrawingAutosaveIdKey) ?? undefined;
 
         const svgFileContainer = this.drawingSerializerService.deserializeDrawing(serializedDrawing, id);
-        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(svgFileContainer);
+        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(svgFileContainer, false);
         this.loadDrawing(drawingLoadOptions);
     }
 
