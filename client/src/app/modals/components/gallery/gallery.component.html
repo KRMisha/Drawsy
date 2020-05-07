@@ -39,7 +39,7 @@
     <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
             <mat-card
-                *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | drawingsSorting: currentSorting"
+                *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | drawingsSorting: currentSortingType"
                 class="card-item"
             >
                 <mat-card-header class="card-header-container">
