@@ -60,13 +60,17 @@ export class GalleryService {
     }
 
     loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
-        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing, isDuplication);
+        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
         if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
             const loadingMessage = isDuplication ? 'Dessin dupliqué : ' : 'Dessin chargé : ';
             this.snackBar.open(loadingMessage + drawing.title, undefined, {
                 duration: snackBarDuration,
             });
             this.router.navigate(['/editor']);
+        }
+
+        if (isDuplication) {
+            this.drawingService.id = undefined;
         }
     }
 
