@@ -76,6 +76,7 @@ import { DrawingSettingsComponent } from '@app/modals/components/settings/drawin
 import { GridSettingsComponent } from '@app/modals/components/settings/grid-settings/grid-settings.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
+import { DrawingsSortingPipe } from '@app/modals/pipes/drawings-sorting.pipe';
 import { DrawingsWithLabelsPipe } from '@app/modals/pipes/drawings-with-labels.pipe';
 import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
 import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
@@ -90,6 +91,7 @@ import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
         DrawingComponent,
         DrawingPreviewComponent,
         DrawingSettingsComponent,
+        DrawingsSortingPipe,
         DrawingsWithLabelsPipe,
         EditorComponent,
         ExportDrawingComponent,

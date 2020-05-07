@@ -7,9 +7,19 @@
     margin-bottom: 0;
 }
 
-.chip-list-item {
+.searching-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.chip-list-item,
+.sorting-type {
     width: 100%;
     font-size: 14px;
+}
+
+.sorting-item {
+    margin: 0 10px 0 16px;
 }
 
 .spinner-container {

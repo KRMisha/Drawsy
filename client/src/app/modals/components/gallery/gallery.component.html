@@ -1,23 +1,35 @@
 <div mat-dialog-title class="title-container">
     <h1 class="title-item">Galerie de dessins</h1>
-    <mat-form-field class="chip-list-item">
-        <mat-chip-list #chipList aria-label="Sélection des étiquettes">
-            <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
-                {{ label }}
-                <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-            <input
-                [formControl]="labelsFormControl"
-                placeholder="Rercherche par étiquettes"
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                matChipInputAddOnBlur="true"
-                (matChipInputTokenEnd)="addLabel($event)"
-                autocomplete="off"
-            />
-            <mat-error *ngIf="labelsFormControl.invalid">{{ getErrorMessage() }}</mat-error>
-        </mat-chip-list>
-    </mat-form-field>
+    <div class="searching-container">
+        <mat-form-field class="chip-list-item">
+            <mat-chip-list #chipList aria-label="Sélection des étiquettes">
+                <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
+                    {{ label }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                    [formControl]="labelsFormControl"
+                    placeholder="Rercherche par étiquettes"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    matChipInputAddOnBlur="true"
+                    (matChipInputTokenEnd)="addLabel($event)"
+                    autocomplete="off"
+                />
+                <mat-error *ngIf="labelsFormControl.invalid">{{ getErrorMessage() }}</mat-error>
+            </mat-chip-list>
+        </mat-form-field>
+        <div class="sorting-item">
+            <mat-form-field class="sorting-type">
+                <mat-label>Filtrer par</mat-label>
+                <mat-select [(value)]="currentSortingType">
+                    <mat-option [value]="DrawingsSortingType.Newest">Date la plus récente</mat-option>
+                    <mat-option [value]="DrawingsSortingType.Oldest">Date la plus ancienne</mat-option>
+                    <mat-option [value]="DrawingsSortingType.Alphabetical">Ordre alphabétique</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 </div>
 <mat-dialog-content>
     <div *ngIf="!isLoadingComplete" class="spinner-container">
@@ -26,7 +38,10 @@
 
     <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
-            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels" class="card-item">
+            <mat-card
+                *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | drawingsSorting: currentSorting"
+                class="card-item"
+            >
                 <mat-card-header class="card-header-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
