@@ -1,5 +1,4 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddElementCommand } from '@app/drawing/classes/commands/add-element-command';
 import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
@@ -10,6 +9,7 @@ import { Queue } from '@app/shared/classes/queue';
 import { Rect } from '@app/shared/classes/rect';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolInfo from '@app/tools/constants/tool-info';
 import { Tool } from '@app/tools/services/tool';
@@ -34,7 +34,7 @@ export class ToolFillService extends Tool {
         colorService: ColorService,
         historyService: HistoryService,
         private rasterizationService: RasterizationService,
-        private snackBar: MatSnackBar
+        private snackbarService: SnackbarService
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Fill);
         this.settings.fillDeviation = ToolDefaults.defaultFillDeviation;
@@ -43,9 +43,7 @@ export class ToolFillService extends Tool {
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
             const snackBarDuration = 500;
-            this.snackBar.open('Le remplissage est en cours', undefined, {
-                duration: snackBarDuration,
-            });
+            this.snackbarService.displayMessage('Le remplissage est en cours', snackBarDuration);
 
             this.fillWithColor();
         }
