@@ -7,22 +7,22 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                  "style": "scss",
-                  "skipTests": true
+                    "style": "scss",
+                    "skipTests": true
                 },
                 "@schematics/angular:class": {
-                  "skipTests": true
+                    "skipTests": true
                 },
                 "@schematics/angular:directive": {
-                  "skipTests": true
+                    "skipTests": true
                 },
                 "@schematics/angular:pipe": {
-                  "skipTests": true
+                    "skipTests": true
                 },
                 "@schematics/angular:service": {
-                  "skipTests": true
+                    "skipTests": true
                 }
-              },
+            },
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",
