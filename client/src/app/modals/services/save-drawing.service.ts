@@ -1,9 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileId } from '@common/communication/new-file-id';
 import { Observable, throwError } from 'rxjs';
@@ -15,7 +14,7 @@ const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides';
     providedIn: 'root',
 })
 export class SaveDrawingService {
-    constructor(private drawingService: DrawingService, private serverService: ServerService, private snackBar: MatSnackBar) {}
+    constructor(private drawingService: DrawingService, private serverService: ServerService, private snackbarService: SnackbarService) {}
 
     saveDrawing(drawingRoot: SVGSVGElement): void {
         this.drawingService.id === undefined ? this.createDrawing(drawingRoot) : this.updateDrawing(drawingRoot);
@@ -28,9 +27,7 @@ export class SaveDrawingService {
             .subscribe(
                 (newFileId: NewFileId) => {
                     this.drawingService.id = newFileId.id;
-                    this.snackBar.open('Dessin sauvegardé : ' + this.drawingService.title, undefined, {
-                        duration: snackBarDuration,
-                    });
+                    this.snackbarService.displayMessage('Dessin sauvegardé : ' + this.drawingService.title);
                 },
                 // No error handling needs to be done but the error must be caught
                 (error: HttpErrorResponse) => {} // tslint:disable-line: no-empty
@@ -45,9 +42,7 @@ export class SaveDrawingService {
             .pipe(catchError(this.alertUpdateDrawingError()))
             .subscribe(
                 () => {
-                    this.snackBar.open('Dessin mis à jour : ' + this.drawingService.title, undefined, {
-                        duration: snackBarDuration,
-                    });
+                    this.snackbarService.displayMessage('Dessin mis à jour : ' + this.drawingService.title);
                 },
                 (error: HttpErrorResponse) => {
                     if (error.status === HttpStatusCode.NotFound) {
@@ -60,9 +55,7 @@ export class SaveDrawingService {
     private alertCreateDrawingError(): (error: HttpErrorResponse) => Observable<never> {
         return (error: HttpErrorResponse): Observable<never> => {
             if (error.status === HttpStatusCode.BadRequest) {
-                this.snackBar.open(badRequestErrorMessage, undefined, {
-                    duration: snackBarDuration,
-                });
+                this.snackbarService.displayMessage(badRequestErrorMessage);
             }
 
             return throwError(error);
@@ -77,9 +70,7 @@ export class SaveDrawingService {
                     'Réessayez pour le sauvegarder en tant que nouveau dessin.';
                 const errorMessage = error.status === HttpStatusCode.NotFound ? notFoundErrorMessage : badRequestErrorMessage;
 
-                this.snackBar.open(errorMessage, undefined, {
-                    duration: snackBarDuration,
-                });
+                this.snackbarService.displayMessage(errorMessage);
             }
 
             return throwError(error);

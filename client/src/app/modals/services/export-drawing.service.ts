@@ -1,11 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileType } from '@app/drawing/enums/file-type.enum';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -18,7 +17,7 @@ export class ExportDrawingService {
         private drawingSerializerService: DrawingSerializerService,
         private drawingService: DrawingService,
         private serverService: ServerService,
-        private snackBar: MatSnackBar
+        private snackbarService: SnackbarService
     ) {}
 
     downloadDrawing(drawingRoot: SVGSVGElement, fileType: FileType): void {
@@ -26,16 +25,14 @@ export class ExportDrawingService {
     }
 
     async emailDrawing(drawingRoot: SVGSVGElement, emailAddress: string, fileType: FileType): Promise<void> {
-        this.snackBar.open("Votre courriel est en cours d'envoi à " + emailAddress, 'Cacher');
+        this.snackbarService.displayDismissableMessage("Votre courriel est en cours d'envoi à " + emailAddress, 'Cacher');
         const drawingBlob = await this.drawingSerializerService.exportAsBlob(drawingRoot, fileType);
         this.serverService
             .emailDrawing(emailAddress, drawingBlob, this.drawingService.title + '.' + fileType)
             .pipe(catchError(this.alertEmailDrawingError()))
             .subscribe(
                 () => {
-                    this.snackBar.open('Votre dessin a été envoyé par courriel à ' + emailAddress, undefined, {
-                        duration: snackBarDuration,
-                    });
+                    this.snackbarService.displayMessage('Votre dessin a été envoyé par courriel à ' + emailAddress);
                 },
                 // No error handling needs to be done but the error must be caught
                 (error: HttpErrorResponse) => {} // tslint:disable-line: no-empty
@@ -55,9 +52,7 @@ export class ExportDrawingService {
             }
 
             if (errorMessage !== '') {
-                this.snackBar.open(errorMessage, undefined, {
-                    duration: snackBarDuration,
-                });
+                this.snackbarService.displayMessage(errorMessage);
             }
 
             return throwError(error);
