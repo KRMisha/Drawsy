@@ -44,7 +44,7 @@ export class DrawingService {
     constructor(
         rendererFactory: RendererFactory2,
         private drawingSerializerService: DrawingSerializerService,
-        private snackBarService: SnackbarService
+        private snackbarService: SnackbarService
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
@@ -154,7 +154,7 @@ export class DrawingService {
         try {
             localStorage.setItem(localStorageDrawingAutosaveContentKey, serializedDrawing);
         } catch (error) {
-            this.snackBarService.displayMessage("La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé");
+            this.snackbarService.displayMessage("La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé");
         }
 
         titleElement.innerHTML = '';

@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileContent } from '@common/communication/new-file-content';
 import { NewFileId } from '@common/communication/new-file-id';
@@ -7,7 +8,6 @@ import { SavedFile } from '@common/communication/saved-file';
 import { environment } from '@env/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { SnackbarService } from './snackbar.service';
 
 const httpJsonOptions = {
     headers: new HttpHeaders({

@@ -42,8 +42,8 @@ export class ToolFillService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
-            const snackBarDuration = 500;
-            this.snackbarService.displayMessage('Le remplissage est en cours', snackBarDuration);
+            const snackbarDuration = 500;
+            this.snackbarService.displayMessage('Le remplissage est en cours', snackbarDuration);
 
             this.fillWithColor();
         }
