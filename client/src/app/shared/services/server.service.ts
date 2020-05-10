@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileContent } from '@common/communication/new-file-content';
 import { NewFileId } from '@common/communication/new-file-id';
@@ -20,7 +19,7 @@ const httpJsonOptions = {
     providedIn: 'root',
 })
 export class ServerService {
-    constructor(private httpService: HttpClient, private snackBar: MatSnackBar) {}
+    constructor(private httpService: HttpClient, private snackbarService: SnackbarService) {}
 
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };
@@ -101,9 +100,7 @@ export class ServerService {
                     break;
             }
 
-            this.snackBar.open(errorMessage, undefined, {
-                duration: snackBarDuration,
-            });
+            this.snackbarService.displayMessage(errorMessage);
 
             console.error('Failed request: ' + request);
 

@@ -1,12 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
-import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
 import { ServerService } from '@app/shared/services/server.service';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
@@ -21,7 +20,7 @@ export class GalleryService {
 
     constructor(
         private router: Router,
-        private snackBar: MatSnackBar,
+        private snackbarService: SnackbarService,
         private serverService: ServerService,
         private drawingSerializerService: DrawingSerializerService,
         private drawingService: DrawingService
@@ -38,9 +37,7 @@ export class GalleryService {
             .pipe(catchError(this.alertDeleteDrawingError()))
             .subscribe(
                 () => {
-                    this.snackBar.open('Dessin supprimé : ' + drawing.title, undefined, {
-                        duration: snackBarDuration,
-                    });
+                    this.snackbarService.displayMessage('Dessin supprimé : ' + drawing.title);
 
                     const drawingToRemoveIndex = this._drawings.indexOf(drawing, 0);
                     if (drawingToRemoveIndex !== -1) {
@@ -62,10 +59,7 @@ export class GalleryService {
     loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
         const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
         if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
-            const loadingMessage = isDuplication ? 'Dessin dupliqué : ' : 'Dessin chargé : ';
-            this.snackBar.open(loadingMessage + drawing.title, undefined, {
-                duration: snackBarDuration,
-            });
+            this.snackbarService.displayMessage('Dessin chargé : ' + drawing.title);
             this.router.navigate(['/editor']);
         }
 
@@ -108,9 +102,7 @@ export class GalleryService {
         return (error: HttpErrorResponse): Observable<never> => {
             if (error.status === HttpStatusCode.NotFound) {
                 const errorMessage = "Erreur : le dessin à supprimer n'a pas pu être trouvé";
-                this.snackBar.open(errorMessage, undefined, {
-                    duration: snackBarDuration,
-                });
+                this.snackbarService.displayMessage(errorMessage);
             }
 
             return throwError(error);

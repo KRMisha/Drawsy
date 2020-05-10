@@ -1,10 +1,9 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
-import { snackBarDuration } from '@app/shared/constants/snack-bar-duration';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
@@ -45,7 +44,7 @@ export class DrawingService {
     constructor(
         rendererFactory: RendererFactory2,
         private drawingSerializerService: DrawingSerializerService,
-        private snackBar: MatSnackBar
+        private snackbarService: SnackbarService
     ) {
         this.renderer = rendererFactory.createRenderer(null, null);
 
@@ -136,7 +135,7 @@ export class DrawingService {
         const id = localStorage.getItem(localStorageDrawingAutosaveIdKey) ?? undefined;
 
         const svgFileContainer = this.drawingSerializerService.deserializeDrawing(serializedDrawing, id);
-        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(svgFileContainer, false);
+        const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(svgFileContainer);
         this.loadDrawing(drawingLoadOptions);
     }
 
@@ -155,9 +154,7 @@ export class DrawingService {
         try {
             localStorage.setItem(localStorageDrawingAutosaveContentKey, serializedDrawing);
         } catch (error) {
-            this.snackBar.open("La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé", undefined, {
-                duration: snackBarDuration,
-            });
+            this.snackbarService.displayMessage("La sauvegarde automatique a échoué puisque l'espace maximal pour un dessin a été dépassé");
         }
 
         titleElement.innerHTML = '';
