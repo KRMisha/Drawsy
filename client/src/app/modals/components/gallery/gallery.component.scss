@@ -7,9 +7,22 @@
     margin-bottom: 0;
 }
 
+.search-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.chip-list-item,
+.sort-item {
+    font-size: 14px;
+}
+
 .chip-list-item {
     width: 100%;
-    font-size: 14px;
+}
+
+.sort-item {
+    margin: 0 10px 0 16px;
 }
 
 .spinner-container {

@@ -26,10 +26,15 @@ export class GalleryService {
         private drawingService: DrawingService
     ) {}
 
-    loadDrawing(drawing: SvgFileContainer): void {
+    loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
         const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
         if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
             this.snackbarService.displayMessage('Dessin chargé : ' + drawing.title);
+
+            if (isDuplication) {
+                this.drawingService.id = undefined;
+            }
+
             this.router.navigate(['/editor']);
         }
     }

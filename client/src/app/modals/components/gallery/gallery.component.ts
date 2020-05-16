@@ -2,6 +2,7 @@ import { COMMA as Comma, ENTER as Enter } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DrawingSortType } from '@app/modals/enums/drawing-sort-type.enum';
 import { GalleryService } from '@app/modals/services/gallery.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
@@ -13,9 +14,13 @@ import MetadataValidation from '@common/validation/metadata-validation';
     styleUrls: ['./gallery.component.scss'],
 })
 export class GalleryComponent implements OnInit {
+    // Make enums available to template
+    DrawingSortType = DrawingSortType;
+
     readonly separatorKeysCodes: number[] = [Comma, Enter];
 
     searchLabels: string[] = [];
+    sortType: DrawingSortType = DrawingSortType.Newest;
 
     labelsFormControl = new FormControl('', [
         Validators.pattern(MetadataValidation.contentRegex),
@@ -44,8 +49,8 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    loadDrawing(drawing: SvgFileContainer): void {
-        this.galleryService.loadDrawing(drawing);
+    loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
+        this.galleryService.loadDrawing(drawing, isDuplication);
     }
 
     deleteDrawing(drawing: SvgFileContainer): void {

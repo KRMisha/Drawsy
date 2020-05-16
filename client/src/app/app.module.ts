@@ -79,6 +79,7 @@ import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-se
 import { DrawingsWithLabelsPipe } from '@app/modals/pipes/drawings-with-labels.pipe';
 import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
 import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
+import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
 
 @NgModule({
     declarations: [
@@ -127,6 +128,7 @@ import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        SortDrawingsPipe,
         ThemeSettingsComponent,
     ],
     imports: [
