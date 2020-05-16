@@ -1,4 +1,4 @@
-export enum DrawingsSortingType {
+export enum DrawingSortType {
     Newest,
     Oldest,
     Alphabetical,

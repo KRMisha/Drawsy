@@ -60,11 +60,12 @@ export class GalleryService {
         const drawingLoadOptions = this.drawingSerializerService.getDrawingLoadOptions(drawing);
         if (this.drawingService.loadDrawingWithConfirmation(drawingLoadOptions)) {
             this.snackbarService.displayMessage('Dessin chargé : ' + drawing.title);
-            this.router.navigate(['/editor']);
-        }
 
-        if (isDuplication) {
-            this.drawingService.id = undefined;
+            if (isDuplication) {
+                this.drawingService.id = undefined;
+            }
+
+            this.router.navigate(['/editor']);
         }
     }
 

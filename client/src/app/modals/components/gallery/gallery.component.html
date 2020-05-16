@@ -19,13 +19,13 @@
                 <mat-error *ngIf="labelsFormControl.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-chip-list>
         </mat-form-field>
-        <div class="sorting-item">
-            <mat-form-field class="sorting-type">
+        <div class="sort-item">
+            <mat-form-field class="sort-type">
                 <mat-label>Filtrer par</mat-label>
-                <mat-select [(value)]="currentSortingType">
-                    <mat-option [value]="DrawingsSortingType.Newest">Date la plus récente</mat-option>
-                    <mat-option [value]="DrawingsSortingType.Oldest">Date la plus ancienne</mat-option>
-                    <mat-option [value]="DrawingsSortingType.Alphabetical">Ordre alphabétique</mat-option>
+                <mat-select [(value)]="currentSortType">
+                    <mat-option [value]="DrawingSortType.Newest">Date la plus récente</mat-option>
+                    <mat-option [value]="DrawingSortType.Oldest">Date la plus ancienne</mat-option>
+                    <mat-option [value]="DrawingSortType.Alphabetical">Ordre alphabétique</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -38,10 +38,7 @@
 
     <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
-            <mat-card
-                *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | drawingsSorting: currentSortingType"
-                class="card-item"
-            >
+            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | sortDrawings: currentSortType" class="card-item">
                 <mat-card-header class="card-header-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
