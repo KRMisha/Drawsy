@@ -1,6 +1,6 @@
 <div mat-dialog-title class="title-container">
     <h1 class="title-item">Galerie de dessins</h1>
-    <div class="searching-container">
+    <div class="search-container">
         <mat-form-field class="chip-list-item">
             <mat-chip-list #chipList aria-label="Sélection des étiquettes">
                 <mat-chip *ngFor="let label of searchLabels" selectable="true" removable="true" (removed)="removeLabel(label)">
@@ -19,16 +19,14 @@
                 <mat-error *ngIf="labelsFormControl.invalid">{{ getErrorMessage() }}</mat-error>
             </mat-chip-list>
         </mat-form-field>
-        <div class="sort-item">
-            <mat-form-field class="sort-type">
-                <mat-label>Filtrer par</mat-label>
-                <mat-select [(value)]="currentSortType">
-                    <mat-option [value]="DrawingSortType.Newest">Date la plus récente</mat-option>
-                    <mat-option [value]="DrawingSortType.Oldest">Date la plus ancienne</mat-option>
-                    <mat-option [value]="DrawingSortType.Alphabetical">Ordre alphabétique</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field class="sort-item">
+            <mat-label>Filtrer par</mat-label>
+            <mat-select [(value)]="sortType">
+                <mat-option [value]="DrawingSortType.Newest">Date la plus récente</mat-option>
+                <mat-option [value]="DrawingSortType.Oldest">Date la plus ancienne</mat-option>
+                <mat-option [value]="DrawingSortType.Alphabetical">Ordre alphabétique</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>
 <mat-dialog-content>
@@ -38,7 +36,7 @@
 
     <ng-container *ngIf="isLoadingComplete">
         <div *ngIf="!(drawings | isEmpty)" class="gallery-container">
-            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | sortDrawings: currentSortType" class="card-item">
+            <mat-card *ngFor="let drawing of drawings | drawingsWithLabels: searchLabels | sortDrawings: sortType" class="card-item">
                 <mat-card-header class="card-header-container">
                     <mat-card-title>{{ drawing.title }}</mat-card-title>
                 </mat-card-header>
@@ -50,8 +48,12 @@
                         </mat-chip-list>
                     </mat-card-content>
                     <mat-card-actions align="center" class="card-actions-container" [class.remove-top-margin]="drawing.labels.length === 0">
-                        <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">Effacer</button>
-                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, false)">Charger</button>
+                        <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">
+                            Effacer
+                        </button>
+                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, false)">
+                            Charger
+                        </button>
                         <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, true)">
                             Dupliquer
                         </button>

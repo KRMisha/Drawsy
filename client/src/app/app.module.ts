@@ -91,7 +91,6 @@ import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
         DrawingComponent,
         DrawingPreviewComponent,
         DrawingSettingsComponent,
-        SortDrawingsPipe,
         DrawingsWithLabelsPipe,
         EditorComponent,
         ExportDrawingComponent,
@@ -129,6 +128,7 @@ import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
         SidebarColorPickerComponent,
         SidebarComponent,
         SidebarDrawerComponent,
+        SortDrawingsPipe,
         ThemeSettingsComponent,
     ],
     imports: [

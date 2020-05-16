@@ -7,15 +7,18 @@
     margin-bottom: 0;
 }
 
-.searching-container {
+.search-container {
     display: flex;
     flex-direction: row;
 }
 
 .chip-list-item,
-.sort-type {
-    width: 100%;
+.sort-item {
     font-size: 14px;
+}
+
+.chip-list-item {
+    width: 100%;
 }
 
 .sort-item {

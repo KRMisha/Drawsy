@@ -18,8 +18,9 @@ export class GalleryComponent implements OnInit {
     DrawingSortType = DrawingSortType;
 
     readonly separatorKeysCodes: number[] = [Comma, Enter];
+
     searchLabels: string[] = [];
-    currentSortType: DrawingSortType = DrawingSortType.Newest;
+    sortType: DrawingSortType = DrawingSortType.Newest;
 
     labelsFormControl = new FormControl('', [
         Validators.pattern(MetadataValidation.contentRegex),
@@ -48,12 +49,12 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    deleteDrawing(drawing: SvgFileContainer): void {
-        this.galleryService.deleteDrawing(drawing);
-    }
-
     loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
         this.galleryService.loadDrawing(drawing, isDuplication);
+    }
+
+    deleteDrawing(drawing: SvgFileContainer): void {
+        this.galleryService.deleteDrawing(drawing);
     }
 
     getErrorMessage(): string {

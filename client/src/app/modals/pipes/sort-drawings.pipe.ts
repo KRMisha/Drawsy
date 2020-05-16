@@ -12,9 +12,9 @@ export class SortDrawingsPipe implements PipeTransform {
             case DrawingSortType.Newest:
                 return [...drawings].reverse();
             case DrawingSortType.Oldest:
-                return [...drawings];
+                return drawings;
             case DrawingSortType.Alphabetical:
-                return drawings.sort((firstDrawing: SvgFileContainer, secondDrawing: SvgFileContainer) =>
+                return [...drawings].sort((firstDrawing: SvgFileContainer, secondDrawing: SvgFileContainer) =>
                     firstDrawing.title.localeCompare(secondDrawing.title)
                 );
         }
