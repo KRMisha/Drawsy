@@ -24,7 +24,7 @@ export class Application {
     }
 
     private setupMiddleware(): void {
-        this.app.use(logger('dev'));
+        this.app.use(logger(this.app.get('env') === 'development' ? 'dev' : 'tiny'));
         this.app.use(express.json({ limit: '16mb' }));
         this.app.use(express.urlencoded({ limit: '16mb', extended: true }));
         this.app.use(cookieParser());
@@ -43,9 +43,7 @@ export class Application {
         });
 
         this.app.use((err: HttpException, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (this.app.get('env') === 'development') {
-                console.error(err.stack);
-            }
+            console.error(err.stack);
             res.status(err.status || HttpStatusCode.InternalServerError).send({ message: err.message });
         });
     }
