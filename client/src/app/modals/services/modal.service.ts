@@ -1,11 +1,14 @@
 import { Injectable, Type } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { GuideComponent } from '@app/guide/components/guide/guide.component';
-import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
-import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
-import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
-import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
-import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
+const dialogConfigs = new Map<string, MatDialogConfig>([
+    ['NewDrawingComponent', { width: '325px', height: 'auto' } as MatDialogConfig],
+    ['ExportDrawingComponent', { width: '920px', height: 'auto' } as MatDialogConfig],
+    ['SaveDrawingComponent', { width: '920px', height: 'auto' } as MatDialogConfig],
+    ['GalleryComponent', { width: '1920px', height: 'auto' } as MatDialogConfig],
+    ['SettingsComponent', { width: '325px', height: 'auto' } as MatDialogConfig],
+    ['GuideComponent', { width: '1550px', height: '100%' } as MatDialogConfig],
+]);
 
 @Injectable({
     providedIn: 'root',
@@ -13,51 +16,22 @@ import { SettingsComponent } from '@app/modals/components/settings/settings/sett
 export class ModalService {
     constructor(private dialog: MatDialog) {}
 
-    openNewDrawingModal(): void {
-        const width = 325;
-        this.openDialog(NewDrawingComponent, width, false);
-    }
-
-    openExportDrawingModal(): void {
-        const width = 920;
-        this.openDialog(ExportDrawingComponent, width, false);
-    }
-
-    openSaveDrawingModal(): void {
-        const width = 920;
-        this.openDialog(SaveDrawingComponent, width, false);
-    }
-
-    openGalleryModal(): void {
-        const width = 1920;
-        this.openDialog(GalleryComponent, width, false);
-    }
-
-    openSettingsModal(): void {
-        const width = 325;
-        this.openDialog(SettingsComponent, width, false);
-    }
-
-    openGuideModal(): void {
-        const width = 1550;
-        this.openDialog(GuideComponent, width, true);
-    }
-
-    get isModalPresent(): boolean {
-        return this.dialog.openDialogs.length > 0;
-    }
-
-    private openDialog<T>(component: Type<T>, width: number, shouldFillHeight: boolean): void {
+    openDialog<T>(component: Type<T>): void {
         if (this.isModalPresent) {
             return;
         }
 
+        const config = dialogConfigs.get(component.name);
         this.dialog.open(component, {
-            width: `${width}px`,
-            height: shouldFillHeight ? '100%' : 'auto',
+            width: config?.width,
+            height: config?.height,
             maxWidth: '90vw',
             maxHeight: '95vh',
             panelClass: 'theme-dialog',
         });
+    }
+
+    get isModalPresent(): boolean {
+        return this.dialog.openDialogs.length > 0;
     }
 }
