@@ -6,6 +6,7 @@ import { DrawingService } from '@app/drawing/services/drawing.service';
 import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 import { ServerService } from '@app/shared/services/server.service';
 import { SnackbarService } from '@app/shared/services/snackbar.service';
+import { SudoModeService } from '@app/shared/services/sudo-mode.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import { Observable, throwError } from 'rxjs';
@@ -23,7 +24,8 @@ export class GalleryService {
         private snackbarService: SnackbarService,
         private serverService: ServerService,
         private drawingSerializerService: DrawingSerializerService,
-        private drawingService: DrawingService
+        private drawingService: DrawingService,
+        private sudoModeService: SudoModeService
     ) {}
 
     loadDrawing(drawing: SvgFileContainer, isDuplication: boolean): void {
@@ -40,6 +42,10 @@ export class GalleryService {
     }
 
     deleteDrawing(drawing: SvgFileContainer): void {
+        if (!this.sudoModeService.authenticateSudo()) {
+            return;
+        }
+
         const confirmationMessage = 'Attention! La suppression du dessin est irréversible. Désirez-vous quand même supprimer le dessin?';
         if (!confirm(confirmationMessage)) {
             return;

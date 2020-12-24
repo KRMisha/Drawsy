@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 })
 export class ShortcutService {
     areShortcutsEnabled = true;
+    pressedKeys = new Set<string>();
 
     private selectToolPencilShortcutSource = new Subject<void>();
     private selectToolPaintbrushShortcutSource = new Subject<void>();
@@ -34,6 +35,7 @@ export class ShortcutService {
     private toggleGridSource = new Subject<void>();
     private increaseGridSizeSource = new Subject<void>();
     private decreaseGridSizeSource = new Subject<void>();
+    private toggleSudoModeSource = new Subject<void>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
     // tslint:disable: member-ordering
@@ -63,6 +65,7 @@ export class ShortcutService {
     toggleGrid$ = this.toggleGridSource.asObservable();
     increaseGridSize$ = this.increaseGridSizeSource.asObservable();
     decreaseGridSize$ = this.decreaseGridSizeSource.asObservable();
+    toggleSudoMode$ = this.toggleSudoModeSource.asObservable();
     // tslint:enable: member-ordering
 
     constructor(private modalService: ModalService) {}
@@ -74,6 +77,21 @@ export class ShortcutService {
             } else {
                 this.handleNonCtrlShortcuts(event);
             }
+
+            this.pressedKeys.add(event.key);
+
+            const sudoModeKeys = ['d', 'r', 'a', 'w', 's', 'y'];
+            const isSudoModePatternPressed =
+                this.pressedKeys.size === sudoModeKeys.length && sudoModeKeys.every((key: string) => this.pressedKeys.has(key));
+            if (!event.repeat && isSudoModePatternPressed) {
+                this.toggleSudoModeSource.next();
+            }
+        }
+    }
+
+    onKeyUp(event: KeyboardEvent): void {
+        if (!this.modalService.isModalPresent && this.areShortcutsEnabled) {
+            this.pressedKeys.delete(event.key);
         }
     }
 

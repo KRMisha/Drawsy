@@ -85,6 +85,11 @@ export class AppComponent implements OnInit, OnDestroy {
         this.shortcutService.onKeyDown(event);
     }
 
+    @HostListener('document:keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        this.shortcutService.onKeyUp(event);
+    }
+
     @HostListener('document:focusin', ['$event'])
     onFocusIn(event: FocusEvent): void {
         if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
