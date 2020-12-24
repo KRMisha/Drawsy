@@ -1,37 +1,110 @@
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     height: 100%;
+    width: 100%;
+    overflow: auto;
 }
 
 .header-item {
     justify-content: center;
-    text-align: center;
+    height: 64px;
+    min-height: 48px;
+    font-size: 24px;
 }
 
-.title-item {
+.slideshow-item {
+    width: 100%;
+    height: 55%;
+    max-height: 500px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-width: 5px;
+    overflow: hidden;
+}
+
+@keyframes slideshow {
+    from {
+        right: 0px;
+    }
+    to {
+        right: 2110.66px;
+    }
+}
+
+.images-container {
+    display: flex;
+    align-items: center;
+    justify-self: flex-start;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    animation: slideshow 20s infinite linear;
+}
+
+.home-drawing {
+    width: auto;
+    height: 100%;
+    border-left-style: solid;
+    border-right-style: solid;
+}
+
+.toolbar-item {
     justify-content: center;
-    width: 20%;
-    min-width: min-content;
+    height: 32px;
+    min-height: 24px;
 }
 
 .buttons-container {
-    display: grid;
-    width: max-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 40%;
+    max-width: 1000px;
 }
 
-.button {
-    margin-top: 10px;
+.button-item {
+    width: 200px;
+    height: 200px;
+    min-height: unset;
+    min-width: unset;
+    max-height: 60%;
     text-align: center;
+    margin: 4px;
+}
+
+.button-item:hover {
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+    0 6px 30px 5px rgba(0, 0, 0, 0.12),
+    0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-text {
+    white-space: normal;
+}
+
+.button-icon {
+    width: 72px;
+    height: 72px;
+    opacity: 0.9;
+}
+
+.reverse-elevation {
+    box-shadow: 0 -4px 5px 0 rgba(0,0,0,0.14),
+    0 -1px 10px 0 rgba(0,0,0,0.12),
+    0 -2px 4px -1px rgba(0,0,0,0.20);
 }
 
 .footer-item {
-    text-align: center;
-}
-
-.team-name {
-    margin-top: 0.5em;
-    margin-bottom: 0.25em;
+    height: 100%;
+    font-size: 12px;
 }

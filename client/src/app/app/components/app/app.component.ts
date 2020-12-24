@@ -45,6 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
             'eyedropper-variant',
             'format-color-fill',
             'format-paint',
+            'forward',
             'help-circle-outline',
             'hexagon-outline',
             'home',
