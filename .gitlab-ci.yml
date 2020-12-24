@@ -1,4 +1,4 @@
-image: xwiillz/node-yarn-firefox-chromium:latest
+image: node:latest
 cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
@@ -14,10 +14,10 @@ install:
     stage: install
     script:
         - pushd client
-        - yarn
+        - npm ci
         - popd
         - pushd server
-        - yarn
+        - npm ci
         - popd
     cache:
         key: "$CI_COMMIT_REF_NAME"
@@ -29,19 +29,19 @@ lint:client:
     stage: lint
     script:
         - pushd client
-        - yarn lint
+        - npm run lint
         - popd
 # lint:server:
 #     stage: lint
 #     script:
 #        - pushd server
-#        - yarn lint
+#        - npm run lint
 #        - popd
 build:client:
     stage: build
     script:
         - pushd client
-        - yarn build
+        - npm run build
         - popd
     artifacts:
         paths:
@@ -50,7 +50,7 @@ build:client:
 #     stage: build
 #     script:
 #         - pushd server
-#         - yarn tsc
+#         - npx tsc
 #         - popd
 #     artifacts:
 #         paths:
@@ -62,7 +62,7 @@ build:client:
 #     script:
 #         - Xvfb :99 -ac -screen 0 1920x1080x24 &
 #         - pushd client
-#         - yarn coverage --browsers ChromeHeadlessNoSandbox
+#         - npm run coverage --browsers ChromeHeadlessNoSandbox
 #         - popd
 #     dependencies:
 #         - build:client
@@ -75,7 +75,7 @@ build:client:
 #    stage: test
 #    script:
 #        - pushd server
-#        - yarn coverage
+#        - npm run coverage
 #        - popd
 #    dependencies:
 #        - build:server
