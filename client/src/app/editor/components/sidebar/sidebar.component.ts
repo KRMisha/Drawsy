@@ -2,6 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionButton } from '@app/editor/classes/action-button';
 import { SidebarDrawerComponent } from '@app/editor/components/sidebar-drawer/sidebar-drawer.component';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { ExportDrawingComponent } from '@app/modals/components/export-drawing/export-drawing.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
+import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { CurrentToolService } from '@app/tools/services/current-tool.service';
@@ -119,27 +125,27 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     openNewDrawingModal(): void {
-        this.modalService.openNewDrawingModal();
+        this.modalService.openDialog(NewDrawingComponent);
     }
 
     openExportDrawingModal(): void {
-        this.modalService.openExportDrawingModal();
+        this.modalService.openDialog(ExportDrawingComponent);
     }
 
     openSaveDrawingModal(): void {
-        this.modalService.openSaveDrawingModal();
+        this.modalService.openDialog(SaveDrawingComponent);
     }
 
     openGalleryModal(): void {
-        this.modalService.openGalleryModal();
+        this.modalService.openDialog(GalleryComponent);
     }
 
     openSettingsModal(): void {
-        this.modalService.openSettingsModal();
+        this.modalService.openDialog(SettingsComponent);
     }
 
     openGuideModal(): void {
-        this.modalService.openGuideModal();
+        this.modalService.openDialog(GuideComponent);
     }
 
     navigateToHome(): void {
