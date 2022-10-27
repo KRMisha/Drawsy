@@ -1,11 +1,12 @@
 <div class="container">
     <mat-toolbar class="header-item" color="primary">Drawsy</mat-toolbar>
+    <mat-toolbar class="toolbar-item mat-elevation-z4" ></mat-toolbar>
     <div class="slideshow-item">
         <div class="images-container">
             <img class="home-drawing" *ngFor="let drawing of drawings" [src]="drawing" />
         </div>
     </div>
-    <mat-toolbar class="toolbar-item mat-elevation-z4" color="primary"></mat-toolbar>
+    <mat-toolbar class="toolbar-item mat-elevation-z4" ></mat-toolbar>
     <div class="buttons-container">
         <button mat-raised-button class="button-item" color="primary" (click)="openNewDrawingModal()">
             <div class="button-content">
@@ -32,9 +33,9 @@
             </div>
         </button>
     </div>
-    <mat-toolbar class="toolbar-item reverse-elevation" color="primary">
+    <mat-toolbar class="toolbar-item reverse-elevation">
         <span align="center" class="footer-item">
-            Francis Pepin • Justin van den Hanenberg • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin
+            Francis Pepin • Misha Krieger-Raynauld • Samer Massaad • Simon Gauvin
         </span>
     </mat-toolbar>
 </div>

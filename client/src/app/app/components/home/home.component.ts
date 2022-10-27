@@ -34,6 +34,6 @@ export class HomeComponent {
     }
 
     get drawings(): string[] {
-        return drawings.concat(drawings);
+        return drawings.concat(drawings).concat(drawings).concat(drawings);
     }
 }
