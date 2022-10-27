@@ -1,4 +1,5 @@
 <h1 mat-dialog-title class="title">Paramètres</h1>
+<mat-divider></mat-divider>
 <form [formGroup]="formGroup" autocomplete="off">
     <mat-dialog-content>
         <app-drawing-settings></app-drawing-settings>
@@ -8,6 +9,7 @@
         <app-theme-settings></app-theme-settings>
     </mat-dialog-content>
 
+    <mat-divider></mat-divider>
     <mat-dialog-actions align="center">
         <button mat-raised-button class="button" (click)="resetInitialSettings()">Réinitialiser</button>
         <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="formGroup.invalid">Confirmer</button>

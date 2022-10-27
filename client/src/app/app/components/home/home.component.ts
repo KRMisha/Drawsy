@@ -29,6 +29,10 @@ export class HomeComponent {
         this.modalService.openGuideModal();
     }
 
+    openLightSettingsModal(): void {
+        this.modalService.openLightSettingsModal();
+    }
+
     get isDrawingStarted(): boolean {
         return this.drawingService.isDrawingStarted();
     }

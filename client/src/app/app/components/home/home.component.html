@@ -1,5 +1,7 @@
 <div class="container">
-    <mat-toolbar class="header-item" color="primary">Drawsy</mat-toolbar>
+    <mat-toolbar class="header-item" color="primary">
+        <span>Drawsy</span>
+    </mat-toolbar>
     <mat-toolbar class="toolbar-item mat-elevation-z4" ></mat-toolbar>
     <div class="slideshow-item">
         <div class="images-container">
@@ -30,6 +32,12 @@
             <div class="button-content">
                 <mat-icon class="button-icon" svgIcon="help-circle-outline"></mat-icon>
                 <span class="button-text">Guide d'utilisation</span>
+            </div>
+        </button>
+        <button mat-raised-button class="button-item" color="primary" (click)="openLightSettingsModal()">
+            <div class="button-content">
+                <mat-icon class="button-icon" svgIcon="cog"></mat-icon>
+                <span class="button-text">Paramètres</span>
             </div>
         </button>
     </div>

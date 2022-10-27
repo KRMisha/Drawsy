@@ -6,6 +6,7 @@ import { GalleryComponent } from '@app/modals/components/gallery/gallery.compone
 import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { SaveDrawingComponent } from '@app/modals/components/save-drawing/save-drawing.component';
 import { SettingsComponent } from '@app/modals/components/settings/settings/settings.component';
+import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 
 @Injectable({
     providedIn: 'root',
@@ -41,6 +42,11 @@ export class ModalService {
     openGuideModal(): void {
         const width = 1550;
         this.openDialog(GuideComponent, width, true);
+    }
+
+    openLightSettingsModal(): void {
+        const width = 320;
+        this.openDialog(ThemeSettingsComponent, width, false);
     }
 
     get isModalPresent(): boolean {
