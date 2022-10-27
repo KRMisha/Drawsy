@@ -4,11 +4,11 @@ import { ColorService } from '@app/drawing/services/color.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { Color } from '@app/shared/classes/color';
+import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { Tool } from '@app/tools/services/tool';
-import { Vec2 } from '@app/shared/classes/vec2';
 
 export abstract class ToolBrush extends Tool {
     private path?: SVGPathElement;
@@ -80,7 +80,7 @@ export abstract class ToolBrush extends Tool {
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(path, 'd', `M${Tool.mousePosition.x} ${Tool.mousePosition.y}`);
-        this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
+        this.points.push({ x: Tool.mousePosition.x, y: Tool.mousePosition.y });
 
         return path;
     }
@@ -90,16 +90,17 @@ export abstract class ToolBrush extends Tool {
             return;
         }
 
-        this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
+        this.points.push({ x: Tool.mousePosition.x, y: Tool.mousePosition.y });
 
         // tslint:disable: no-non-null-assertion
         if (this.settings.simplificationSettings!.isEnabled) {
             this.simplifyPath(this.settings.simplificationSettings!.threshold);
         }
 
+        const divisionFactor = 100;
         const pathString = this.settings.smoothingSettings!.isEnabled
-        ? this.redrawBezierCurve(this.settings.smoothingSettings!.factor / 100)
-        : this.drawSimplePath(this.settings.simplificationSettings!.isEnabled);
+            ? this.redrawBezierCurve(this.settings.smoothingSettings!.factor / divisionFactor)
+            : this.drawSimplePath(this.settings.simplificationSettings!.isEnabled);
         // tslint:enable: no-non-null-assertion
 
         this.renderer.setAttribute(this.path, 'd', pathString);
@@ -108,20 +109,20 @@ export abstract class ToolBrush extends Tool {
     // Distance simplification based on: https://github.com/mourner/simplify-js
     private simplifyPath(threshold: number): void {
         let previousPoint = this.points[0];
-        let simplifiedPath = [previousPoint];
-    
+        const simplifiedPath = [previousPoint];
+
         for (let i = 1; i < this.points.length; i++) {
             if (Vec2.distance(this.points[i], previousPoint) > threshold) {
                 simplifiedPath.push(this.points[i]);
                 previousPoint = this.points[i];
             }
         }
-    
+
         const lastPoint = this.points[this.points.length - 1];
         if (previousPoint !== lastPoint) {
             simplifiedPath.push(lastPoint);
         }
-    
+
         this.points = simplifiedPath;
     }
 
@@ -134,9 +135,9 @@ export abstract class ToolBrush extends Tool {
         }
 
         let path = `M${this.points[0].x} ${this.points[0].y}`;
-        this.points.forEach((point, index) => {
+        this.points.forEach((point: Vec2, index: number) => {
             if (index > 0) {
-                path += ` L${point.x} ${point.y}`
+                path += ` L${point.x} ${point.y}`;
             }
         });
         return path;
@@ -154,16 +155,22 @@ export abstract class ToolBrush extends Tool {
         return newPath;
     }
 
-    private createControlPoints(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean, smoothingFactor: number): Vec2 {
-        const previous = previousPoint || currentPoint
-        const next = nextPoint || currentPoint
+    private createControlPoints(
+        currentPoint: Vec2,
+        previousPoint: Vec2,
+        nextPoint: Vec2,
+        isReverse: boolean,
+        smoothingFactor: number
+    ): Vec2 {
+        const previous = previousPoint || currentPoint;
+        const next = nextPoint || currentPoint;
 
         const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
         const length = Vec2.distance(previous, next) * smoothingFactor;
-        
+
         return {
             x: currentPoint.x + Math.cos(angle) * length,
-            y: currentPoint.y + Math.sin(angle) * length
+            y: currentPoint.y + Math.sin(angle) * length,
         };
     }
 

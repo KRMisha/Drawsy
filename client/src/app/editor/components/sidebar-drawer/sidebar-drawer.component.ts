@@ -1,3 +1,4 @@
+// tslint:disable: max-file-line-count
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { ClipboardService } from '@app/drawing/services/clipboard.service';
@@ -249,7 +250,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.simplificationEnabledChangedSubscription = this.simplificationEnabledFormControl.valueChanges.subscribe(() => {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.simplificationSettings!.isEnabled = this.simplificationEnabledFormControl.value;
-            this.simplificationEnabledFormControl.value ? this.simplificationThresholdFormControl.enable() : this.simplificationThresholdFormControl.disable();
+            this.simplificationEnabledFormControl.value
+                ? this.simplificationThresholdFormControl.enable()
+                : this.simplificationThresholdFormControl.disable();
         });
         this.simplificationThresholdChangedSubscription = this.simplificationThresholdFormControl.valueChanges.subscribe(() => {
             if (this.simplificationThresholdFormControl.valid) {
