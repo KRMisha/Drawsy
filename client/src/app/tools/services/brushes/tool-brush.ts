@@ -91,13 +91,55 @@ export abstract class ToolBrush extends Tool {
 
         this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
 
+        if (true) {
+            this.simplifyPath(10);
+        }
+
         const pathString = this.settings.smoothingSetting
-            ? this.redrawBezierCurve()
-            : this.path.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+        ? this.redrawBezierCurve()
+        : this.drawSimplePath(true);
 
         this.renderer.setAttribute(this.path, 'd', pathString);
     }
 
+    // Distance simplification based on: https://github.com/mourner/simplify-js
+    private simplifyPath(threshold: number): void {
+        let previousPoint = this.points[0];
+        let simplifiedPath = [previousPoint];
+    
+        for (let i = 1; i < this.points.length; i++) {
+            if (Vec2.distance(this.points[i], previousPoint) > threshold) {
+                simplifiedPath.push(this.points[i]);
+                previousPoint = this.points[i];
+            }
+        }
+    
+        const lastPoint = this.points[this.points.length - 1];
+        if (previousPoint !== lastPoint) {
+            simplifiedPath.push(lastPoint);
+        }
+    
+        this.points = simplifiedPath;
+    }
+
+    private drawSimplePath(isUsingSimpliedPath: boolean): string {
+        if (!isUsingSimpliedPath) {
+            // If no line simplification is done, appending is faster than redrawing the whole line
+            // tslint:disable: no-non-null-assertion
+            return this.path!.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+            // tslint:enable: no-non-null-assertion
+        }
+
+        let path = `M${this.points[0].x} ${this.points[0].y}`;
+        this.points.forEach((point, index) => {
+            if (index > 0) {
+                path += ` L${point.x} ${point.y}`
+            }
+        });
+        return path;
+    }
+
+    // Based on: https://francoisromain.medium.com/smooth-a-svg-path-with-cubic-bezier-curves-e37b49d46c74
     private redrawBezierCurve(): string {
         let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
         for (let i = 1; i < this.points.length; i++) {
@@ -109,22 +151,13 @@ export abstract class ToolBrush extends Tool {
         return newPath;
     }
 
-    // Based on: https://francoisromain.medium.com/smooth-a-svg-path-with-cubic-bezier-curves-e37b49d46c74
     private createControlPoints(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean): Vec2 {
         const previous = previousPoint || currentPoint
         const next = nextPoint || currentPoint
 
-        const dx = next.x - previous.x;
-        const dy = next.y - previous.y;
-
-        const line = {
-            length: Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)),
-            angle: Math.atan2(dy, dx)
-        }
-
         const smoothing = 0.2
-        const angle = line.angle + (isReverse ? Math.PI : 0);
-        const length = line.length * smoothing;
+        const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
+        const length = Vec2.distance(previous, next) * smoothing;
         
         return {
             x: currentPoint.x + Math.cos(angle) * length,
