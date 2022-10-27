@@ -2,6 +2,8 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThemeService } from '@app/app/services/theme.service';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
 import { ModalService } from '@app/modals/services/modal.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
 import { Subscription } from 'rxjs';
@@ -62,10 +64,10 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         this.newDrawingShortcutSubscription = this.shortcutService.openNewDrawingShortcut$.subscribe(() => {
-            this.modalService.openNewDrawingModal();
+            this.modalService.openDialog(NewDrawingComponent);
         });
         this.galleryShortcutSubscription = this.shortcutService.openGalleryShortcut$.subscribe(() => {
-            this.modalService.openGalleryModal();
+            this.modalService.openDialog(GalleryComponent);
         });
     }
 
@@ -82,6 +84,11 @@ export class AppComponent implements OnInit, OnDestroy {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
         this.shortcutService.onKeyDown(event);
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent): void {
+        this.shortcutService.onKeyUp(event);
     }
 
     @HostListener('document:focusin', ['$event'])

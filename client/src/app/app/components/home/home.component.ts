@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
+import { GuideComponent } from '@app/guide/components/guide/guide.component';
+import { GalleryComponent } from '@app/modals/components/gallery/gallery.component';
+import { NewDrawingComponent } from '@app/modals/components/new-drawing/new-drawing.component';
+import { ThemeSettingsComponent } from '@app/modals/components/settings/theme-settings/theme-settings.component';
 import { ModalService } from '@app/modals/services/modal.service';
 
 const drawings = [
@@ -18,19 +22,19 @@ export class HomeComponent {
     constructor(private drawingService: DrawingService, private modalService: ModalService) {}
 
     openNewDrawingModal(): void {
-        this.modalService.openNewDrawingModal();
+        this.modalService.openDialog(NewDrawingComponent);
     }
 
     openGalleryModal(): void {
-        this.modalService.openGalleryModal();
+        this.modalService.openDialog(GalleryComponent);
     }
 
     openGuideModal(): void {
-        this.modalService.openGuideModal();
+        this.modalService.openDialog(GuideComponent);
     }
 
-    openLightSettingsModal(): void {
-        this.modalService.openLightSettingsModal();
+    openThemeSettingsModal(): void {
+        this.modalService.openDialog(ThemeSettingsComponent);
     }
 
     get isDrawingStarted(): boolean {

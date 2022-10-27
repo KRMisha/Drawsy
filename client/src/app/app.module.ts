@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -80,6 +80,9 @@ import { DrawingsWithLabelsPipe } from '@app/modals/pipes/drawings-with-labels.p
 import { GalleryPreviewPipe } from '@app/modals/pipes/gallery-preview.pipe';
 import { IsEmptyPipe } from '@app/modals/pipes/is-empty.pipe';
 import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
+import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { SnackbarService } from '@app/shared/services/snackbar.service';
+import { SudoModeService } from '@app/shared/services/sudo-mode.service';
 
 @NgModule({
     declarations: [
@@ -133,8 +136,6 @@ import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
     ],
     imports: [
         AppRoutingModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
         BrowserAnimationsModule,
         BrowserModule,
         FormsModule,
@@ -144,10 +145,7 @@ import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
         MatCardModule,
         MatCheckboxModule,
         MatChipsModule,
-        MatChipsModule,
         MatDialogModule,
-        MatDialogModule,
-        MatExpansionModule,
         MatExpansionModule,
         MatFormFieldModule,
         MatIconModule,
@@ -166,7 +164,16 @@ import { SortDrawingsPipe } from '@app/modals/pipes/sort-drawings.pipe';
         MatTreeModule,
         ReactiveFormsModule,
     ],
-    providers: [],
+    providers: [
+        // Workaround to initialize SudoModeService early enough to be used from startup
+        SudoModeService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: () => () => {}, // tslint:disable-line: no-empty
+            deps: [SudoModeService, ShortcutService, SnackbarService],
+            multi: true,
+        },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
