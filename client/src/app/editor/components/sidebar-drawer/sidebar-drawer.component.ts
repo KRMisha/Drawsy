@@ -79,7 +79,26 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.min(ToolValidation.minimumEraserSize),
         Validators.max(ToolValidation.maximumEraserSize),
     ]);
-    smoothingEnabledFormControl = new FormControl(ToolDefaults.defaultSmoothingSetting);
+    smoothingEnabledFormControl = new FormControl(ToolDefaults.defaultSmoothingSettings.isEnabled);
+    smoothingFactorFormControl = new FormControl(
+        { value: ToolDefaults.defaultSmoothingSettings.factor, disabled: !ToolDefaults.defaultSmoothingSettings.isEnabled },
+        [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(ToolValidation.minimumSmoothingFactor),
+            Validators.max(ToolValidation.maximumSmoothingFactor),
+        ]
+    );
+    simplificationEnabledFormControl = new FormControl(ToolDefaults.defaultSimplificationSettings.isEnabled);
+    simplificationThresholdFormControl = new FormControl(
+        { value: ToolDefaults.defaultSimplificationSettings.threshold, disabled: !ToolDefaults.defaultSimplificationSettings.isEnabled },
+        [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(ToolValidation.minimumSimplificationThreshold),
+            Validators.max(ToolValidation.maximumSimplificationThreshold),
+        ]
+    );
 
     readonly sizeFormControls: SizeFormControlContainer[] = [
         {
@@ -150,6 +169,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private fillDeviationChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
     private smoothingEnabledChangedSubscription: Subscription;
+    private smoothingFactorChangedSubscription: Subscription;
+    private simplificationEnabledChangedSubscription: Subscription;
+    private simplificationThresholdChangedSubscription: Subscription;
 
     private copySelectionShortcutSubscription: Subscription;
     private pasteSelectionShortcutSubscription: Subscription;
@@ -214,7 +236,26 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             }
         });
         this.smoothingEnabledChangedSubscription = this.smoothingEnabledFormControl.valueChanges.subscribe(() => {
-            this.currentToolSettings.smoothingSetting = this.smoothingEnabledFormControl.value;
+            // tslint:disable-next-line: no-non-null-assertion
+            this.currentToolSettings.smoothingSettings!.isEnabled = this.smoothingEnabledFormControl.value;
+            this.smoothingEnabledFormControl.value ? this.smoothingFactorFormControl.enable() : this.smoothingFactorFormControl.disable();
+        });
+        this.smoothingFactorChangedSubscription = this.smoothingFactorFormControl.valueChanges.subscribe(() => {
+            if (this.smoothingFactorFormControl.valid) {
+                // tslint:disable-next-line: no-non-null-assertion
+                this.currentToolSettings.smoothingSettings!.factor = this.smoothingFactorFormControl.value;
+            }
+        });
+        this.simplificationEnabledChangedSubscription = this.simplificationEnabledFormControl.valueChanges.subscribe(() => {
+            // tslint:disable-next-line: no-non-null-assertion
+            this.currentToolSettings.simplificationSettings!.isEnabled = this.simplificationEnabledFormControl.value;
+            this.simplificationEnabledFormControl.value ? this.simplificationThresholdFormControl.enable() : this.simplificationThresholdFormControl.disable();
+        });
+        this.simplificationThresholdChangedSubscription = this.simplificationThresholdFormControl.valueChanges.subscribe(() => {
+            if (this.simplificationThresholdFormControl.valid) {
+                // tslint:disable-next-line: no-non-null-assertion
+                this.currentToolSettings.simplificationSettings!.threshold = this.simplificationThresholdFormControl.value;
+            }
         });
 
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
@@ -248,6 +289,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.fillDeviationChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
         this.smoothingEnabledChangedSubscription.unsubscribe();
+        this.smoothingFactorChangedSubscription.unsubscribe();
+        this.simplificationEnabledChangedSubscription.unsubscribe();
+        this.simplificationThresholdChangedSubscription.unsubscribe();
 
         this.copySelectionShortcutSubscription.unsubscribe();
         this.pasteSelectionShortcutSubscription.unsubscribe();
@@ -285,8 +329,17 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolSettings.eraserSize !== undefined) {
             this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
-        if (this.currentToolSettings.smoothingSetting !== undefined) {
-            this.smoothingEnabledFormControl.reset(this.currentToolSettings.smoothingSetting);
+        if (this.currentToolSettings.smoothingSettings !== undefined) {
+            this.smoothingEnabledFormControl.reset(this.currentToolSettings.smoothingSettings.isEnabled);
+        }
+        if (this.currentToolSettings.smoothingSettings !== undefined) {
+            this.smoothingFactorFormControl.reset(this.currentToolSettings.smoothingSettings.factor);
+        }
+        if (this.currentToolSettings.simplificationSettings !== undefined) {
+            this.simplificationEnabledFormControl.reset(this.currentToolSettings.simplificationSettings.isEnabled);
+        }
+        if (this.currentToolSettings.simplificationSettings !== undefined) {
+            this.simplificationThresholdFormControl.reset(this.currentToolSettings.simplificationSettings.threshold);
         }
     }
 

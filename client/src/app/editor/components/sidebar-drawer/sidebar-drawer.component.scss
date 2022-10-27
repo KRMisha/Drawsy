@@ -66,7 +66,7 @@
     width: 100%;
 }
 
-.junction-container {
+.toggle-slider-container {
     display: grid;
     grid-template-areas:
         'setting-name toggle input-field'
@@ -102,12 +102,8 @@
     }
 }
 
-.smoothing-container {
-    display: grid;
-    grid-template-areas:
-        'setting-name toggle input-field'
-        'slider slider slider'
-        'divider divider divider';
+.smoothing-padding {
+    margin-right: 40px;
 }
 
 .command-container {

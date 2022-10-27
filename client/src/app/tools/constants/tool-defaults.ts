@@ -1,4 +1,6 @@
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
+import { SimplificationSettings } from '@app/tools/classes/simplification-settings';
+import { SmoothingSettings } from '@app/tools/classes/smoothing-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 
@@ -13,5 +15,6 @@ export default {
     defaultPolygonSideCount: 6,
     defaultFillDeviation: 5,
     defaultEraserSize: 5,
-    defaultSmoothingSetting: true,
+    defaultSmoothingSettings: { isEnabled: true, factor: 20 } as SmoothingSettings,
+    defaultSimplificationSettings: { isEnabled: true, threshold: 3} as SimplificationSettings,
 };

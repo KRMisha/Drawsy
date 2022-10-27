@@ -15,4 +15,8 @@ export default {
     maximumFillDeviation: 100,
     minimumEraserSize: 3,
     maximumEraserSize: 25,
+    minimumSmoothingFactor: 0,
+    maximumSmoothingFactor: 100,
+    minimumSimplificationThreshold: 1,
+    maximumSimplificationThreshold: 500,
 };

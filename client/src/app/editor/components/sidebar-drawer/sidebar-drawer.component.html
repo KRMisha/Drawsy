@@ -45,7 +45,7 @@
             <mat-divider class="divider-item"></mat-divider>
         </div>
 
-        <div *ngIf="currentToolSettings.junctionSettings !== undefined" class="junction-container">
+        <div *ngIf="currentToolSettings.junctionSettings !== undefined" class="toggle-slider-container">
             <h3 class="setting-title-item">Taille jonction</h3>
             <mat-form-field
                 class="form-field-item"
@@ -99,9 +99,53 @@
             <mat-divider class="divider-item"></mat-divider>
         </div>
 
-        <div *ngIf="currentToolSettings.smoothingSetting !== undefined" class="smoothing-container">
-            <h3 class="setting-title-item">Lisser les traits</h3>
+        <div *ngIf="currentToolSettings.smoothingSettings !== undefined" class="toggle-slider-container">
+            <h3 class="setting-title-item">
+                <span class="smoothing-padding">Lissage</span>
+            </h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(smoothingFactorFormControl)"
+                [matTooltipDisabled]="smoothingFactorFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="smoothingFactorFormControl" />
+                <span matSuffix>%</span>
+            </mat-form-field>
             <mat-slide-toggle class="toggle-item" [formControl]="smoothingEnabledFormControl"></mat-slide-toggle>
+            <mat-slider
+                class="slider-item"
+                [disabled]="!smoothingEnabledFormControl.value"
+                [min]="ToolValidation.minimumSmoothingFactor"
+                [max]="ToolValidation.maximumSmoothingFactor"
+                [value]="smoothingFactorFormControl.value"
+                (input)="smoothingFactorFormControl.setValue($event.value)"
+            >
+            </mat-slider>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
+
+        <div *ngIf="currentToolSettings.simplificationSettings !== undefined" class="toggle-slider-container">
+            <h3 class="setting-title-item">Simplification</h3>
+            <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(simplificationThresholdFormControl)"
+                [matTooltipDisabled]="simplificationThresholdFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+            >
+                <input matInput [formControl]="simplificationThresholdFormControl" />
+                <span matSuffix>px</span>
+            </mat-form-field>
+            <mat-slide-toggle class="toggle-item" [formControl]="simplificationEnabledFormControl"></mat-slide-toggle>
+            <mat-slider
+                class="slider-item"
+                [disabled]="!simplificationEnabledFormControl.value"
+                [min]="ToolValidation.minimumSimplificationThreshold"
+                [max]="ToolValidation.maximumSimplificationThreshold"
+                [value]="simplificationThresholdFormControl.value"
+                (input)="simplificationThresholdFormControl.setValue($event.value)"
+            >
+            </mat-slider>
             <mat-divider class="divider-item"></mat-divider>
         </div>
     </div>

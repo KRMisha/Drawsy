@@ -23,7 +23,8 @@ export abstract class ToolBrush extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
-        this.settings.smoothingSetting = ToolDefaults.defaultSmoothingSetting;
+        this.settings.smoothingSettings = ToolDefaults.defaultSmoothingSettings;
+        this.settings.simplificationSettings = ToolDefaults.defaultSimplificationSettings;
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -91,13 +92,15 @@ export abstract class ToolBrush extends Tool {
 
         this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
 
-        if (true) {
-            this.simplifyPath(10);
+        // tslint:disable: no-non-null-assertion
+        if (this.settings.simplificationSettings!.isEnabled) {
+            this.simplifyPath(this.settings.simplificationSettings!.threshold);
         }
 
-        const pathString = this.settings.smoothingSetting
-        ? this.redrawBezierCurve()
-        : this.drawSimplePath(true);
+        const pathString = this.settings.smoothingSettings!.isEnabled
+        ? this.redrawBezierCurve(this.settings.smoothingSettings!.factor / 100)
+        : this.drawSimplePath(this.settings.simplificationSettings!.isEnabled);
+        // tslint:enable: no-non-null-assertion
 
         this.renderer.setAttribute(this.path, 'd', pathString);
     }
@@ -140,24 +143,23 @@ export abstract class ToolBrush extends Tool {
     }
 
     // Based on: https://francoisromain.medium.com/smooth-a-svg-path-with-cubic-bezier-curves-e37b49d46c74
-    private redrawBezierCurve(): string {
+    private redrawBezierCurve(factor: number): string {
         let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
         for (let i = 1; i < this.points.length; i++) {
-            const cp1 = this.createControlPoints(this.points[i - 1], this.points[i - 2], this.points[i], false);
-            const cp2 = this.createControlPoints(this.points[i], this.points[i - 1], this.points[i + 1], true);
+            const cp1 = this.createControlPoints(this.points[i - 1], this.points[i - 2], this.points[i], false, factor);
+            const cp2 = this.createControlPoints(this.points[i], this.points[i - 1], this.points[i + 1], true, factor);
 
             newPath += `C ${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${this.points[i].x} ${this.points[i].y} `;
         }
         return newPath;
     }
 
-    private createControlPoints(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean): Vec2 {
+    private createControlPoints(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean, smoothingFactor: number): Vec2 {
         const previous = previousPoint || currentPoint
         const next = nextPoint || currentPoint
 
-        const smoothing = 0.2
         const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
-        const length = Vec2.distance(previous, next) * smoothing;
+        const length = Vec2.distance(previous, next) * smoothingFactor;
         
         return {
             x: currentPoint.x + Math.cos(angle) * length,
