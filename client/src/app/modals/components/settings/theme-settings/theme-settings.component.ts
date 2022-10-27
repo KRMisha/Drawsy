@@ -7,7 +7,7 @@ import { ThemeService } from '@app/app/services/theme.service';
     styleUrls: ['./theme-settings.component.scss'],
 })
 export class ThemeSettingsComponent {
-    readonly themeColors = ['pink', 'purple', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'];
+    readonly themeColors = ['pink', 'purple', 'teal', 'blue', 'green', 'lime', 'yellow', 'orange', 'red', 'brown'];
 
     constructor(private themeService: ThemeService) {}
 

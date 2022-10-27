@@ -35,7 +35,7 @@ export class ModalService {
     }
 
     openSettingsModal(): void {
-        const width = 325;
+        const width = 350;
         this.openDialog(SettingsComponent, width, false);
     }
 
@@ -45,7 +45,7 @@ export class ModalService {
     }
 
     openLightSettingsModal(): void {
-        const width = 320;
+        const width = 350;
         this.openDialog(ThemeSettingsComponent, width, false);
     }
 

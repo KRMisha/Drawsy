@@ -5,12 +5,14 @@
 $theme-colors: (
     pink: mat-palette($mat-pink, 300),
     purple: mat-palette($mat-purple, A400),
-    indigo: mat-palette($mat-indigo, 200),
+    teal: mat-palette($mat-teal, A200),
     blue: mat-palette($mat-light-blue, 500),
     green: mat-palette($mat-light-green, 500),
+    lime: mat-palette($mat-lime, A400),
     yellow: mat-palette($mat-yellow, A700),
     orange: mat-palette($mat-orange, 500),
     red: mat-palette($mat-red, A700),
+    brown: mat-palette($mat-brown, A400),
 );
 
 @mixin theme-mixin($theme) {

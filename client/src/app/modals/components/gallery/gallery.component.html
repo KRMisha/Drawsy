@@ -48,12 +48,8 @@
                         </mat-chip-list>
                     </mat-card-content>
                     <mat-card-actions align="center" class="card-actions-container" [class.remove-top-margin]="drawing.labels.length === 0">
-                        <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">
-                            Effacer
-                        </button>
-                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, false)">
-                            Charger
-                        </button>
+                        <button mat-button class="card-actions-item" (click)="deleteDrawing(drawing)">Effacer</button>
+                        <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, false)">Charger</button>
                         <button mat-button mat-dialog-close class="card-actions-item" (click)="loadDrawing(drawing, true)">
                             Dupliquer
                         </button>
@@ -62,9 +58,7 @@
             </mat-card>
         </div>
 
-        <h2 *ngIf="drawings | isEmpty" class="title-item">
-            La galerie ne contient aucun dessin.
-        </h2>
+        <h2 *ngIf="drawings | isEmpty" class="title-item">La galerie ne contient aucun dessin.</h2>
 
         <h2 *ngIf="!(drawings | isEmpty) && (drawings | drawingsWithLabels: searchLabels | isEmpty)" class="title-item">
             Aucun dessin ne contient les étiquettes choisies. Veuillez essayer avec de nouvelles étiquettes.
