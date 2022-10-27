@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { ServerService } from '@app/shared/services/server.service';
 import { SnackbarService } from '@app/shared/services/snackbar.service';
+import { SudoModeService } from '@app/shared/services/sudo-mode.service';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { NewFileId } from '@common/communication/new-file-id';
 import { Observable, throwError } from 'rxjs';
@@ -14,7 +15,12 @@ const badRequestErrorMessage = 'Erreur : titre ou étiquettes invalides';
     providedIn: 'root',
 })
 export class SaveDrawingService {
-    constructor(private drawingService: DrawingService, private serverService: ServerService, private snackbarService: SnackbarService) {}
+    constructor(
+        private drawingService: DrawingService,
+        private serverService: ServerService,
+        private snackbarService: SnackbarService,
+        private sudoModeService: SudoModeService
+    ) {}
 
     saveDrawing(drawingRoot: SVGSVGElement): void {
         this.drawingService.id === undefined ? this.createDrawing(drawingRoot) : this.updateDrawing(drawingRoot);
@@ -35,6 +41,10 @@ export class SaveDrawingService {
     }
 
     private updateDrawing(drawingRoot: SVGSVGElement): void {
+        if (!this.sudoModeService.authenticateSudo()) {
+            return;
+        }
+
         this.serverService
             // ID will not be undefined if this method is called
             // tslint:disable-next-line: no-non-null-assertion

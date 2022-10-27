@@ -8,7 +8,7 @@ export default {
     Rectangle: { name: 'Rectangle', shortcut: '1', icon: 'crop-square' } as ToolData,
     Ellipse: { name: 'Ellipse', shortcut: '2', icon: 'ellipse-outline' } as ToolData,
     Polygon: { name: 'Polygone', shortcut: '3', icon: 'hexagon-outline' } as ToolData,
-    Fill: { name: 'Sceau de peinture', shortcut: 'B', icon: 'format-color-fill' } as ToolData,
+    Fill: { name: 'Seau de peinture', shortcut: 'B', icon: 'format-color-fill' } as ToolData,
     Eyedropper: { name: 'Pipette', shortcut: 'I', icon: 'eyedropper-variant' } as ToolData,
     Recolor: { name: 'Applicateur de couleur', shortcut: 'R', icon: 'format-paint' } as ToolData,
     Selection: { name: 'Sélection', shortcut: 'S', icon: 'selection' } as ToolData,
