@@ -16,5 +16,5 @@ export default {
     defaultFillDeviation: 5,
     defaultEraserSize: 5,
     defaultSmoothingSettings: { isEnabled: true, factor: 20 } as SmoothingSettings,
-    defaultSimplificationSettings: { isEnabled: true, threshold: 3 } as SimplificationSettings,
+    defaultSimplificationSettings: { isEnabled: true, threshold: 5 } as SimplificationSettings,
 };

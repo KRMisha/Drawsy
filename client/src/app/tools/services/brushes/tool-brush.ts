@@ -12,7 +12,7 @@ import { Tool } from '@app/tools/services/tool';
 
 export abstract class ToolBrush extends Tool {
     private path?: SVGPathElement;
-    private points: Vec2[] = [];
+    private points: Vec2[];
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -25,6 +25,7 @@ export abstract class ToolBrush extends Tool {
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
         this.settings.smoothingSettings = ToolDefaults.defaultSmoothingSettings;
         this.settings.simplificationSettings = ToolDefaults.defaultSimplificationSettings;
+        this.points = [];
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -147,15 +148,15 @@ export abstract class ToolBrush extends Tool {
     private redrawBezierCurve(factor: number): string {
         let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
         for (let i = 1; i < this.points.length; i++) {
-            const cp1 = this.createControlPoints(this.points[i - 1], this.points[i - 2], this.points[i], false, factor);
-            const cp2 = this.createControlPoints(this.points[i], this.points[i - 1], this.points[i + 1], true, factor);
+            const cp1 = this.createControlPoint(this.points[i - 1], this.points[i - 2], this.points[i], false, factor);
+            const cp2 = this.createControlPoint(this.points[i], this.points[i - 1], this.points[i + 1], true, factor);
 
             newPath += `C ${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${this.points[i].x} ${this.points[i].y} `;
         }
         return newPath;
     }
 
-    private createControlPoints(
+    private createControlPoint(
         currentPoint: Vec2,
         previousPoint: Vec2,
         nextPoint: Vec2,
@@ -166,11 +167,11 @@ export abstract class ToolBrush extends Tool {
         const next = nextPoint || currentPoint;
 
         const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
-        const length = Vec2.distance(previous, next) * smoothingFactor;
+        const distance = Vec2.distance(previous, next) * smoothingFactor;
 
         return {
-            x: currentPoint.x + Math.cos(angle) * length,
-            y: currentPoint.y + Math.sin(angle) * length,
+            x: currentPoint.x + Math.cos(angle) * distance,
+            y: currentPoint.y + Math.sin(angle) * distance,
         };
     }
 
@@ -180,6 +181,7 @@ export abstract class ToolBrush extends Tool {
         }
 
         this.historyService.addCommand(new AddElementCommand(this.drawingService, this.path));
+        this.path = undefined;
         this.points = [];
     }
 }
