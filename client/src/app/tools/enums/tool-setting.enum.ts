@@ -9,4 +9,5 @@ export enum ToolSetting {
     PolygonSideCount = 'polygonSideCount',
     FillDeviation = 'fillDeviation',
     EraserSize = 'eraserSize',
+    SmoothingSetting = 'smoothingSetting'
 }

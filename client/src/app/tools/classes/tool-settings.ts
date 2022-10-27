@@ -23,6 +23,8 @@ type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.Li
     ? number
     : T extends ToolSetting.EraserSize
     ? number
+    : T extends ToolSetting.SmoothingSetting
+    ? boolean
     : never;
 
 export type ToolSettings = {

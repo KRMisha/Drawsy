@@ -98,6 +98,12 @@
             </div>
             <mat-divider class="divider-item"></mat-divider>
         </div>
+
+        <div *ngIf="currentToolSettings.smoothingSetting !== undefined" class="smoothing-container">
+            <h3 class="setting-title-item">Lisser les traits</h3>
+            <mat-slide-toggle class="toggle-item" [formControl]="smoothingEnabledFormControl"></mat-slide-toggle>
+            <mat-divider class="divider-item"></mat-divider>
+        </div>
     </div>
 
     <div class="command-container">

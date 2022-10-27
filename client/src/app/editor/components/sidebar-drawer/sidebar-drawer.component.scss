@@ -102,6 +102,14 @@
     }
 }
 
+.smoothing-container {
+    display: grid;
+    grid-template-areas:
+        'setting-name toggle input-field'
+        'slider slider slider'
+        'divider divider divider';
+}
+
 .command-container {
     justify-self: end;
     display: flex;

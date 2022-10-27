@@ -8,9 +8,11 @@ import { MouseButton } from '@app/shared/enums/mouse-button.enum';
 import { ToolData } from '@app/tools/classes/tool-data';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import { Tool } from '@app/tools/services/tool';
+import { Vec2 } from '@app/shared/classes/vec2';
 
 export abstract class ToolBrush extends Tool {
     private path?: SVGPathElement;
+    private points: Vec2[] = [];
 
     constructor(
         rendererFactory: RendererFactory2,
@@ -21,6 +23,7 @@ export abstract class ToolBrush extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
+        this.settings.smoothingSetting = ToolDefaults.defaultSmoothingSetting;
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -76,6 +79,7 @@ export abstract class ToolBrush extends Tool {
         this.renderer.setAttribute(path, 'stroke-linecap', 'round');
         this.renderer.setAttribute(path, 'stroke-linejoin', 'round');
         this.renderer.setAttribute(path, 'd', `M${Tool.mousePosition.x} ${Tool.mousePosition.y}`);
+        this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
 
         return path;
     }
@@ -85,8 +89,47 @@ export abstract class ToolBrush extends Tool {
             return;
         }
 
-        const pathString = this.path.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+        this.points.push({x: Tool.mousePosition.x, y: Tool.mousePosition.y})
+
+        const pathString = this.settings.smoothingSetting
+            ? this.redrawBezierCurve()
+            : this.path.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+
         this.renderer.setAttribute(this.path, 'd', pathString);
+    }
+
+    private redrawBezierCurve(): string {
+        let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
+        for (let i = 1; i < this.points.length; i++) {
+            const cp1 = this.createControlPoints(this.points[i - 1], this.points[i - 2], this.points[i], false);
+            const cp2 = this.createControlPoints(this.points[i], this.points[i - 1], this.points[i + 1], true);
+
+            newPath += `C ${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${this.points[i].x} ${this.points[i].y} `;
+        }
+        return newPath;
+    }
+
+    // Based on: https://francoisromain.medium.com/smooth-a-svg-path-with-cubic-bezier-curves-e37b49d46c74
+    private createControlPoints(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean): Vec2 {
+        const previous = previousPoint || currentPoint
+        const next = nextPoint || currentPoint
+
+        const dx = next.x - previous.x;
+        const dy = next.y - previous.y;
+
+        const line = {
+            length: Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)),
+            angle: Math.atan2(dy, dx)
+        }
+
+        const smoothing = 0.2
+        const angle = line.angle + (isReverse ? Math.PI : 0);
+        const length = line.length * smoothing;
+        
+        return {
+            x: currentPoint.x + Math.cos(angle) * length,
+            y: currentPoint.y + Math.sin(angle) * length
+        };
     }
 
     private stopDrawing(): void {
@@ -95,6 +138,6 @@ export abstract class ToolBrush extends Tool {
         }
 
         this.historyService.addCommand(new AddElementCommand(this.drawingService, this.path));
-        this.path = undefined;
+        this.points = [];
     }
 }

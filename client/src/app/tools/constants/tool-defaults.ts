@@ -13,4 +13,5 @@ export default {
     defaultPolygonSideCount: 6,
     defaultFillDeviation: 5,
     defaultEraserSize: 5,
+    defaultSmoothingSetting: true,
 };

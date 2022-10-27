@@ -79,6 +79,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.min(ToolValidation.minimumEraserSize),
         Validators.max(ToolValidation.maximumEraserSize),
     ]);
+    smoothingEnabledFormControl = new FormControl(ToolDefaults.defaultSmoothingSetting);
 
     readonly sizeFormControls: SizeFormControlContainer[] = [
         {
@@ -148,6 +149,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private polygonSideCountChangedSubscription: Subscription;
     private fillDeviationChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
+    private smoothingEnabledChangedSubscription: Subscription;
 
     private copySelectionShortcutSubscription: Subscription;
     private pasteSelectionShortcutSubscription: Subscription;
@@ -211,6 +213,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
             }
         });
+        this.smoothingEnabledChangedSubscription = this.smoothingEnabledFormControl.valueChanges.subscribe(() => {
+            this.currentToolSettings.smoothingSetting = this.smoothingEnabledFormControl.value;
+        });
 
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
             this.copy();
@@ -242,6 +247,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.fillDeviationChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
+        this.smoothingEnabledChangedSubscription.unsubscribe();
 
         this.copySelectionShortcutSubscription.unsubscribe();
         this.pasteSelectionShortcutSubscription.unsubscribe();
@@ -278,6 +284,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         }
         if (this.currentToolSettings.eraserSize !== undefined) {
             this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
+        }
+        if (this.currentToolSettings.smoothingSetting !== undefined) {
+            this.smoothingEnabledFormControl.reset(this.currentToolSettings.smoothingSetting);
         }
     }
 
