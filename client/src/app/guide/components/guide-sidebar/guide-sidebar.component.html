@@ -19,7 +19,9 @@
                         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
                     </mat-icon>
                 </button>
-                {{ node.name }}
+                <button mat-button class="menu-item" matTreeNodeToggle [attr.aria-label]="'Détailler ' + node.name">
+                    <span>{{ node.name }}</span>
+                </button>
             </div>
             <ul [class.guide-tree-invisible]="!treeControl.isExpanded(node)">
                 <ng-container matTreeNodeOutlet></ng-container>
