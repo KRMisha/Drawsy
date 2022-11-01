@@ -24,7 +24,6 @@ export abstract class ToolBrush extends Tool {
         super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
         this.settings.smoothingSettings = ToolDefaults.defaultSmoothingSettings;
-        this.settings.simplificationSettings = ToolDefaults.defaultSimplificationSettings;
         this.points = [];
     }
 
@@ -94,14 +93,12 @@ export abstract class ToolBrush extends Tool {
         this.points.push({ x: Tool.mousePosition.x, y: Tool.mousePosition.y });
 
         // tslint:disable: no-non-null-assertion
-        if (this.settings.simplificationSettings!.isEnabled) {
-            this.simplifyPath(this.settings.simplificationSettings!.threshold);
+        let pathString = this.path!.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
+        if (this.settings.smoothingSettings!.isEnabled) {
+            const divisionFactor = 2;
+            this.simplifyPath(this.settings.smoothingSettings!.factor / divisionFactor);
+            pathString = this.redrawBezierCurve();
         }
-
-        const divisionFactor = 100;
-        const pathString = this.settings.smoothingSettings!.isEnabled
-            ? this.redrawBezierCurve(this.settings.smoothingSettings!.factor / divisionFactor)
-            : this.drawSimplePath(this.settings.simplificationSettings!.isEnabled);
         // tslint:enable: no-non-null-assertion
 
         this.renderer.setAttribute(this.path, 'd', pathString);
@@ -127,29 +124,12 @@ export abstract class ToolBrush extends Tool {
         this.points = simplifiedPath;
     }
 
-    private drawSimplePath(isUsingSimpliedPath: boolean): string {
-        if (!isUsingSimpliedPath) {
-            // If no line simplification is done, appending is faster than redrawing the whole line
-            // tslint:disable: no-non-null-assertion
-            return this.path!.getAttribute('d') + ` L${Tool.mousePosition.x} ${Tool.mousePosition.y}`;
-            // tslint:enable: no-non-null-assertion
-        }
-
-        let path = `M${this.points[0].x} ${this.points[0].y}`;
-        this.points.forEach((point: Vec2, index: number) => {
-            if (index > 0) {
-                path += ` L${point.x} ${point.y}`;
-            }
-        });
-        return path;
-    }
-
     // Based on: https://francoisromain.medium.com/smooth-a-svg-path-with-cubic-bezier-curves-e37b49d46c74
-    private redrawBezierCurve(factor: number): string {
+    private redrawBezierCurve(): string {
         let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
         for (let i = 1; i < this.points.length; i++) {
-            const cp1 = this.createControlPoint(this.points[i - 1], this.points[i - 2], this.points[i], false, factor);
-            const cp2 = this.createControlPoint(this.points[i], this.points[i - 1], this.points[i + 1], true, factor);
+            const cp1 = this.createControlPoint(this.points[i - 1], this.points[i - 2], this.points[i], false);
+            const cp2 = this.createControlPoint(this.points[i], this.points[i - 1], this.points[i + 1], true);
 
             newPath += `C ${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${this.points[i].x} ${this.points[i].y} `;
         }
@@ -161,13 +141,13 @@ export abstract class ToolBrush extends Tool {
         previousPoint: Vec2,
         nextPoint: Vec2,
         isReverse: boolean,
-        smoothingFactor: number
     ): Vec2 {
         const previous = previousPoint || currentPoint;
         const next = nextPoint || currentPoint;
 
+        const strengthFactor = 0.2;
         const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
-        const distance = Vec2.distance(previous, next) * smoothingFactor;
+        const distance = Vec2.distance(previous, next) * strengthFactor;
 
         return {
             x: currentPoint.x + Math.cos(angle) * distance,

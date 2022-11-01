@@ -124,30 +124,6 @@
             </mat-slider>
             <mat-divider class="divider-item"></mat-divider>
         </div>
-
-        <div *ngIf="currentToolSettings.simplificationSettings !== undefined" class="toggle-slider-container">
-            <h3 class="setting-title-item">Simplification</h3>
-            <mat-form-field
-                class="form-field-item"
-                [matTooltip]="getErrorMessage(simplificationThresholdFormControl)"
-                [matTooltipDisabled]="simplificationThresholdFormControl.valid"
-                matTooltipClass="theme-error-tooltip"
-            >
-                <input matInput [formControl]="simplificationThresholdFormControl" />
-                <span matSuffix>px</span>
-            </mat-form-field>
-            <mat-slide-toggle class="toggle-item" [formControl]="simplificationEnabledFormControl"></mat-slide-toggle>
-            <mat-slider
-                class="slider-item"
-                [disabled]="!simplificationEnabledFormControl.value"
-                [min]="ToolValidation.minimumSimplificationThreshold"
-                [max]="ToolValidation.maximumSimplificationThreshold"
-                [value]="simplificationThresholdFormControl.value"
-                (input)="simplificationThresholdFormControl.setValue($event.value)"
-            >
-            </mat-slider>
-            <mat-divider class="divider-item"></mat-divider>
-        </div>
     </div>
 
     <div class="command-container">

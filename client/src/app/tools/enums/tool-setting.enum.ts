@@ -10,5 +10,4 @@ export enum ToolSetting {
     FillDeviation = 'fillDeviation',
     EraserSize = 'eraserSize',
     SmoothingSettings = 'smoothingSettings',
-    SimplificationSettings = 'simplificationSettings',
 }

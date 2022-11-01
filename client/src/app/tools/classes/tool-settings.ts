@@ -1,5 +1,4 @@
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
-import { SimplificationSettings } from '@app/tools/classes/simplification-settings';
 import { SmoothingSettings } from '@app/tools/classes/smoothing-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
@@ -27,8 +26,6 @@ type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.Li
     ? number
     : T extends ToolSetting.SmoothingSettings
     ? SmoothingSettings
-    : T extends ToolSetting.SimplificationSettings
-    ? SimplificationSettings
     : never;
 
 export type ToolSettings = {
