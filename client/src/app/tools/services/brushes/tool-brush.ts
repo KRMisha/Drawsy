@@ -136,12 +136,7 @@ export abstract class ToolBrush extends Tool {
         return newPath;
     }
 
-    private createControlPoint(
-        currentPoint: Vec2,
-        previousPoint: Vec2,
-        nextPoint: Vec2,
-        isReverse: boolean,
-    ): Vec2 {
+    private createControlPoint(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean): Vec2 {
         const previous = previousPoint || currentPoint;
         const next = nextPoint || currentPoint;
 
