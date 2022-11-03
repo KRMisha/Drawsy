@@ -30,6 +30,32 @@
             </div>
         </ng-container>
 
+        <ng-container *ngFor="let formControlContainer of toggleSliderFormControls">
+            <div *ngIf="getProperty(this.currentToolSettings, formControlContainer.toolSetting) !== undefined" class="toggle-slider-container">
+                <h3 class="setting-title-item">{{ formControlContainer.title }}</h3>
+                <mat-form-field
+                class="form-field-item"
+                [matTooltip]="getErrorMessage(formControlContainer.sliderFormControl)"
+                [matTooltipDisabled]="formControlContainer.sliderFormControl.valid"
+                matTooltipClass="theme-error-tooltip"
+                >
+                    <input matInput [formControl]="formControlContainer.sliderFormControl" />
+                    <span matSuffix>{{ formControlContainer.suffix }}</span>
+                </mat-form-field>
+                <mat-slide-toggle class="toggle-item" [formControl]="formControlContainer.toggleFormControl"></mat-slide-toggle>
+                <mat-slider
+                    class="slider-item"
+                    [disabled]="!formControlContainer.toggleFormControl.value"
+                    [min]="formControlContainer.minimum"
+                    [max]="formControlContainer.maximum"
+                    [value]="formControlContainer.sliderFormControl.value"
+                    (input)="formControlContainer.sliderFormControl.setValue($event.value)"
+                >
+                </mat-slider>
+                <mat-divider class="divider-item"></mat-divider>
+            </div>
+        </ng-container>
+
         <div *ngIf="currentToolSettings.brushTexture !== undefined">
             <h3 class="brush-texture-title-item">Type de texture</h3>
             <mat-form-field class="dropdown-item">
@@ -42,30 +68,6 @@
                     <mat-option [value]="BrushTexture.Fabric">Innocence juvénile</mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-divider class="divider-item"></mat-divider>
-        </div>
-
-        <div *ngIf="currentToolSettings.junctionSettings !== undefined" class="toggle-slider-container">
-            <h3 class="setting-title-item">Taille jonction</h3>
-            <mat-form-field
-                class="form-field-item"
-                [matTooltip]="getErrorMessage(junctionDiameterFormControl)"
-                [matTooltipDisabled]="junctionDiameterFormControl.valid"
-                matTooltipClass="theme-error-tooltip"
-            >
-                <input matInput [formControl]="junctionDiameterFormControl" />
-                <span matSuffix>px</span>
-            </mat-form-field>
-            <mat-slide-toggle class="toggle-item" [formControl]="junctionEnabledFormControl"></mat-slide-toggle>
-            <mat-slider
-                class="slider-item"
-                [disabled]="!junctionEnabledFormControl.value"
-                [min]="ToolValidation.minimumJunctionDiameter"
-                [max]="ToolValidation.maximumJunctionDiameter"
-                [value]="junctionDiameterFormControl.value"
-                (input)="junctionDiameterFormControl.setValue($event.value)"
-            >
-            </mat-slider>
             <mat-divider class="divider-item"></mat-divider>
         </div>
 
@@ -96,32 +98,6 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
-            <mat-divider class="divider-item"></mat-divider>
-        </div>
-
-        <div *ngIf="currentToolSettings.smoothingSettings !== undefined" class="toggle-slider-container">
-            <h3 class="setting-title-item">
-                <span class="smoothing-padding">Lissage</span>
-            </h3>
-            <mat-form-field
-                class="form-field-item"
-                [matTooltip]="getErrorMessage(smoothingFactorFormControl)"
-                [matTooltipDisabled]="smoothingFactorFormControl.valid"
-                matTooltipClass="theme-error-tooltip"
-            >
-                <input matInput [formControl]="smoothingFactorFormControl" />
-                <span matSuffix>%</span>
-            </mat-form-field>
-            <mat-slide-toggle class="toggle-item" [formControl]="smoothingEnabledFormControl"></mat-slide-toggle>
-            <mat-slider
-                class="slider-item"
-                [disabled]="!smoothingEnabledFormControl.value"
-                [min]="ToolValidation.minimumSmoothingFactor"
-                [max]="ToolValidation.maximumSmoothingFactor"
-                [value]="smoothingFactorFormControl.value"
-                (input)="smoothingFactorFormControl.setValue($event.value)"
-            >
-            </mat-slider>
             <mat-divider class="divider-item"></mat-divider>
         </div>
     </div>

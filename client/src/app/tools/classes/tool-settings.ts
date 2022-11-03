@@ -6,6 +6,8 @@ import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.LineWidth
     ? number
+    : T extends ToolSetting.SmoothingSettings
+    ? SmoothingSettings
     : T extends ToolSetting.BrushTexture
     ? BrushTexture
     : T extends ToolSetting.JunctionSettings
@@ -24,8 +26,6 @@ type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.Li
     ? number
     : T extends ToolSetting.EraserSize
     ? number
-    : T extends ToolSetting.SmoothingSettings
-    ? SmoothingSettings
     : never;
 
 export type ToolSettings = {

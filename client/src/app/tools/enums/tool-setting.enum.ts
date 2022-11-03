@@ -1,5 +1,6 @@
 export enum ToolSetting {
     LineWidth = 'lineWidth',
+    SmoothingSettings = 'smoothingSettings',
     BrushTexture = 'brushTexture',
     JunctionSettings = 'junctionSettings',
     SprayDiameter = 'sprayDiameter',
@@ -9,5 +10,4 @@ export enum ToolSetting {
     PolygonSideCount = 'polygonSideCount',
     FillDeviation = 'fillDeviation',
     EraserSize = 'eraserSize',
-    SmoothingSettings = 'smoothingSettings',
 }

@@ -1,6 +1,8 @@
 export default {
     minimumLineWidth: 1,
     maximumLineWidth: 500,
+    minimumSmoothingFactor: 0,
+    maximumSmoothingFactor: 100,
     minimumJunctionDiameter: 5,
     maximumJunctionDiameter: 500,
     minimumSprayDiameter: 20,
@@ -15,6 +17,4 @@ export default {
     maximumFillDeviation: 100,
     minimumEraserSize: 3,
     maximumEraserSize: 25,
-    minimumSmoothingFactor: 0,
-    maximumSmoothingFactor: 100,
 };

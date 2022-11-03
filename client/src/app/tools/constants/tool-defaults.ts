@@ -5,6 +5,7 @@ import { ShapeType } from '@app/tools/enums/shape-type.enum';
 
 export default {
     defaultLineWidth: 5,
+    defaultSmoothingSettings: { isEnabled: true, factor: 10 } as SmoothingSettings,
     defaultBrushTexture: BrushTexture.Graffiti,
     defaultJunctionSettings: { isEnabled: false, diameter: 10 } as JunctionSettings,
     defaultSprayDiameter: 50,
@@ -14,5 +15,4 @@ export default {
     defaultPolygonSideCount: 6,
     defaultFillDeviation: 5,
     defaultEraserSize: 5,
-    defaultSmoothingSettings: { isEnabled: true, factor: 10 } as SmoothingSettings,
 };
