@@ -31,13 +31,16 @@
         </ng-container>
 
         <ng-container *ngFor="let formControlContainer of toggleSliderFormControls">
-            <div *ngIf="getProperty(this.currentToolSettings, formControlContainer.toolSetting) !== undefined" class="toggle-slider-container">
+            <div
+                *ngIf="getProperty(this.currentToolSettings, formControlContainer.toolSetting) !== undefined"
+                class="toggle-slider-container"
+            >
                 <h3 class="setting-title-item">{{ formControlContainer.title }}</h3>
                 <mat-form-field
-                class="form-field-item"
-                [matTooltip]="getErrorMessage(formControlContainer.sliderFormControl)"
-                [matTooltipDisabled]="formControlContainer.sliderFormControl.valid"
-                matTooltipClass="theme-error-tooltip"
+                    class="form-field-item"
+                    [matTooltip]="getErrorMessage(formControlContainer.sliderFormControl)"
+                    [matTooltipDisabled]="formControlContainer.sliderFormControl.valid"
+                    matTooltipClass="theme-error-tooltip"
                 >
                     <input matInput [formControl]="formControlContainer.sliderFormControl" />
                     <span matSuffix>{{ formControlContainer.suffix }}</span>
