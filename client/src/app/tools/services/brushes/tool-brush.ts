@@ -128,17 +128,17 @@ export abstract class ToolBrush extends Tool {
     private redrawBezierCurve(): string {
         let newPath = `M ${this.points[0].x} ${this.points[0].y}`;
         for (let i = 1; i < this.points.length; i++) {
-            const controlPoint1 = this.createControlPoint(this.points[i - 1], this.points[i - 2], this.points[i], false);
-            const controlPoint2 = this.createControlPoint(this.points[i], this.points[i - 1], this.points[i + 1], true);
+            const controlPoint1 = this.createControlPoint(false, this.points[i - 1], this.points[i - 2], this.points[i]);
+            const controlPoint2 = this.createControlPoint(true, this.points[i], this.points[i - 1], this.points[i + 1]);
 
             newPath += `C ${controlPoint1.x},${controlPoint1.y} ${controlPoint2.x},${controlPoint2.y} ${this.points[i].x} ${this.points[i].y} `;
         }
         return newPath;
     }
 
-    private createControlPoint(currentPoint: Vec2, previousPoint: Vec2, nextPoint: Vec2, isReverse: boolean): Vec2 {
-        const previous = previousPoint || currentPoint;
-        const next = nextPoint || currentPoint;
+    private createControlPoint(isReverse: boolean, currentPoint: Vec2, previousPoint?: Vec2, nextPoint?: Vec2): Vec2 {
+        const previous = previousPoint ?? currentPoint;
+        const next = nextPoint ?? currentPoint;
 
         const strengthFactor = 0.2;
         const angle = Vec2.angle(previous, next) + (isReverse ? Math.PI : 0);
