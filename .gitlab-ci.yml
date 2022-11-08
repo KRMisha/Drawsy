@@ -1,4 +1,4 @@
-image: node:16-alpine
+image: node:16
 cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
