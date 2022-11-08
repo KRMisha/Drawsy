@@ -56,16 +56,6 @@
     width: 100%;
 }
 
-.brush-texture-title-item {
-    margin-top: 0.5em;
-    margin-bottom: 0;
-}
-
-.dropdown-item {
-    margin-top: 10px;
-    width: 100%;
-}
-
 .toggle-slider-container {
     display: grid;
     grid-template-areas:
@@ -79,6 +69,16 @@
     justify-self: center;
     align-self: center;
     margin-top: 12px;
+}
+
+.brush-texture-title-item {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+}
+
+.dropdown-item {
+    margin-top: 10px;
+    width: 100%;
 }
 
 .shape-type-container {
@@ -100,10 +100,6 @@
         width: 22px;
         transform: scale(1.2);
     }
-}
-
-.smoothing-padding {
-    margin-right: 40px;
 }
 
 .command-container {
