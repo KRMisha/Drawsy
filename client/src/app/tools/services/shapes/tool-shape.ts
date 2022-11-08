@@ -117,10 +117,7 @@ export abstract class ToolShape extends Tool {
 
         const mousePositionCopy = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
-            const dimensions: Vec2 = {
-                x: Math.abs(Tool.mousePosition.x - this.shapeOrigin.x),
-                y: Math.abs(Tool.mousePosition.y - this.shapeOrigin.y),
-            };
+            const dimensions = Vec2.subtract(Tool.mousePosition, this.shapeOrigin);
             const desiredSideSize = Math.max(dimensions.x, dimensions.y);
             mousePositionCopy.x = this.shapeOrigin.x + (isCurrentMouseRightOfOrigin ? desiredSideSize : -desiredSideSize);
             mousePositionCopy.y = this.shapeOrigin.y + (isCurrentMouseBelowOrigin ? desiredSideSize : -desiredSideSize);
