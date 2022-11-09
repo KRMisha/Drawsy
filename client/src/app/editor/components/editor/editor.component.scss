@@ -4,18 +4,21 @@
 }
 
 .drawing-container {
-    width: 100%;
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+}
+
+.drawing-container-mobile {
+    overflow: auto;
+    flex: 1 1 auto;
 }
 
 .drawing {
     display: grid;
     width: min-content;
     outline: none;
-    margin: 100px;
 
     ::ng-deep svg {
         background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%),
