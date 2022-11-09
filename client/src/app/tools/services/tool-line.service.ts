@@ -40,7 +40,7 @@ export class ToolLineService extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Line);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
-        this.settings.junctionSettings = ToolDefaults.defaultJunctionSettings;
+        this.settings.junctionSettings = { ...ToolDefaults.defaultJunctionSettings };
     }
 
     onMouseMove(event: MouseEvent): void {
@@ -251,7 +251,7 @@ export class ToolLineService extends Tool {
         }
 
         const maxAngle = 360;
-        let angle = (Math.atan2(mousePosition.y - lastPoint.y, mousePosition.x - lastPoint.x) * maxAngle) / 2 / Math.PI;
+        let angle = (Vec2.angle(lastPoint, mousePosition) * maxAngle) / 2 / Math.PI;
         const snapAngle = 45;
         angle = Math.round(angle / snapAngle) * snapAngle;
         if (angle <= 0) {

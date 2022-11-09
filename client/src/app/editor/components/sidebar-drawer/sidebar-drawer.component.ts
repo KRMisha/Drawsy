@@ -1,8 +1,10 @@
+// tslint:disable: max-file-line-count
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { ClipboardService } from '@app/drawing/services/clipboard.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
+import { ToggleSliderFormControlContainer } from '@app/editor/classes/toggle-slider-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
@@ -33,6 +35,16 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.min(ToolValidation.minimumLineWidth),
         Validators.max(ToolValidation.maximumLineWidth),
     ]);
+    smoothingEnabledFormControl = new FormControl(ToolDefaults.defaultSmoothingSettings.isEnabled);
+    smoothingFactorFormControl = new FormControl(
+        { value: ToolDefaults.defaultSmoothingSettings.factor, disabled: !ToolDefaults.defaultSmoothingSettings.isEnabled },
+        [
+            Validators.required,
+            Validators.pattern(Regexes.integerRegex),
+            Validators.min(ToolValidation.minimumSmoothingFactor),
+            Validators.max(ToolValidation.maximumSmoothingFactor),
+        ]
+    );
     junctionEnabledFormControl = new FormControl(ToolDefaults.defaultJunctionSettings.isEnabled);
     junctionDiameterFormControl = new FormControl(
         { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
@@ -139,7 +151,30 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         },
     ];
 
+    readonly toggleSliderFormControls: ToggleSliderFormControlContainer[] = [
+        {
+            toggleFormControl: this.smoothingEnabledFormControl,
+            sliderFormControl: this.smoothingFactorFormControl,
+            toolSetting: ToolSetting.SmoothingSettings,
+            title: 'Lissage',
+            suffix: '%',
+            minimum: ToolValidation.minimumSmoothingFactor,
+            maximum: ToolValidation.maximumSmoothingFactor,
+        },
+        {
+            toggleFormControl: this.junctionEnabledFormControl,
+            sliderFormControl: this.junctionDiameterFormControl,
+            toolSetting: ToolSetting.JunctionSettings,
+            title: 'Taille jonction',
+            suffix: 'px',
+            minimum: ToolValidation.minimumJunctionDiameter,
+            maximum: ToolValidation.maximumJunctionDiameter,
+        },
+    ];
+
     private lineWidthChangedSubscription: Subscription;
+    private smoothingEnabledChangedSubscription: Subscription;
+    private smoothingFactorChangedSubscription: Subscription;
     private junctionEnabledChangedSubscription: Subscription;
     private junctionDiameterChangedSubscription: Subscription;
     private sprayDiameterChangedSubscription: Subscription;
@@ -170,10 +205,25 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.lineWidth = this.lineWidthFormControl.value;
             }
         });
+        this.smoothingEnabledChangedSubscription = this.smoothingEnabledFormControl.valueChanges.subscribe(() => {
+            // tslint:disable-next-line: no-non-null-assertion
+            this.currentToolSettings.smoothingSettings!.isEnabled = this.smoothingEnabledFormControl.value;
+            this.smoothingEnabledFormControl.value
+                ? this.smoothingFactorFormControl.enable({ emitEvent: false })
+                : this.smoothingFactorFormControl.disable({ emitEvent: false });
+        });
+        this.smoothingFactorChangedSubscription = this.smoothingFactorFormControl.valueChanges.subscribe(() => {
+            if (this.smoothingFactorFormControl.valid) {
+                // tslint:disable-next-line: no-non-null-assertion
+                this.currentToolSettings.smoothingSettings!.factor = this.smoothingFactorFormControl.value;
+            }
+        });
         this.junctionEnabledChangedSubscription = this.junctionEnabledFormControl.valueChanges.subscribe(() => {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.junctionSettings!.isEnabled = this.junctionEnabledFormControl.value;
-            this.junctionEnabledFormControl.value ? this.junctionDiameterFormControl.enable() : this.junctionDiameterFormControl.disable();
+            this.junctionEnabledFormControl.value
+                ? this.junctionDiameterFormControl.enable({ emitEvent: false })
+                : this.junctionDiameterFormControl.disable({ emitEvent: false });
         });
         this.junctionDiameterChangedSubscription = this.junctionDiameterFormControl.valueChanges.subscribe(() => {
             if (this.junctionDiameterFormControl.valid) {
@@ -211,7 +261,6 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
             }
         });
-
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
             this.copy();
         });
@@ -234,6 +283,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.lineWidthChangedSubscription.unsubscribe();
+        this.smoothingEnabledChangedSubscription.unsubscribe();
+        this.smoothingFactorChangedSubscription.unsubscribe();
         this.junctionEnabledChangedSubscription.unsubscribe();
         this.junctionDiameterChangedSubscription.unsubscribe();
         this.sprayDiameterChangedSubscription.unsubscribe();
@@ -255,10 +306,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolSettings.lineWidth !== undefined) {
             this.lineWidthFormControl.reset(this.currentToolSettings.lineWidth);
         }
-        if (this.currentToolSettings.junctionSettings !== undefined) {
-            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled);
+        if (this.currentToolSettings.smoothingSettings !== undefined) {
+            this.smoothingEnabledFormControl.reset(this.currentToolSettings.smoothingSettings.isEnabled);
+            this.smoothingFactorFormControl.reset(this.currentToolSettings.smoothingSettings.factor);
         }
         if (this.currentToolSettings.junctionSettings !== undefined) {
+            this.junctionEnabledFormControl.reset(this.currentToolSettings.junctionSettings.isEnabled);
             this.junctionDiameterFormControl.reset(this.currentToolSettings.junctionSettings.diameter);
         }
         if (this.currentToolSettings.sprayDiameter !== undefined) {
