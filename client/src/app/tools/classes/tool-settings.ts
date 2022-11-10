@@ -1,10 +1,13 @@
 import { JunctionSettings } from '@app/tools/classes/junction-settings';
+import { SmoothingSettings } from '@app/tools/classes/smoothing-settings';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
 
 type RestrictedToolSettingType<T extends ToolSetting> = T extends ToolSetting.LineWidth
     ? number
+    : T extends ToolSetting.SmoothingSettings
+    ? SmoothingSettings
     : T extends ToolSetting.BrushTexture
     ? BrushTexture
     : T extends ToolSetting.JunctionSettings

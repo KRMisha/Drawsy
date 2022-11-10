@@ -1,5 +1,6 @@
 export enum ToolSetting {
     LineWidth = 'lineWidth',
+    SmoothingSettings = 'smoothingSettings',
     BrushTexture = 'brushTexture',
     JunctionSettings = 'junctionSettings',
     SprayDiameter = 'sprayDiameter',

@@ -89,10 +89,10 @@ export class ToolSelectionRotatorService {
         };
         // tslint:enable: no-non-null-assertion
 
-        const rotationMovementToCorrect: Vec2 = {
-            x: selectedElementsBoundsCenterBeforeRotation.x - selectedElementsBoundsCenterAfterRotation.x,
-            y: selectedElementsBoundsCenterBeforeRotation.y - selectedElementsBoundsCenterAfterRotation.y,
-        };
+        const rotationMovementToCorrect = Vec2.subtract(
+            selectedElementsBoundsCenterBeforeRotation,
+            selectedElementsBoundsCenterAfterRotation
+        );
 
         this.toolSelectionMoverService.moveSelection(rotationMovementToCorrect);
     }

@@ -58,10 +58,7 @@ export class ToolSelectionService extends Tool implements OnDestroy {
             case SelectionState.SelectionMoveStartClick:
                 this.toolSelectionStateService.state = SelectionState.MovingSelectionWithMouse;
             case SelectionState.MovingSelectionWithMouse:
-                const mouseMovement: Vec2 = {
-                    x: Tool.mousePosition.x - this.previousMousePosition.x,
-                    y: Tool.mousePosition.y - this.previousMousePosition.y,
-                };
+                const mouseMovement = Vec2.subtract(Tool.mousePosition, this.previousMousePosition);
                 this.toolSelectionMoverService.moveSelection(mouseMovement);
                 break;
 
