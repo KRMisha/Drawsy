@@ -34,11 +34,12 @@ export class ToolSelectionCollisionService {
         const paddingString = element.getAttribute('data-padding');
         const padding = paddingString === null ? 0 : +paddingString;
 
+        const ratio = this.drawingService.zoomRatio;
         return {
-            x: elementBounds.x - drawingRootBounds.x - padding,
-            y: elementBounds.y - drawingRootBounds.y - padding,
-            width: elementBounds.width + 2 * padding,
-            height: elementBounds.height + 2 * padding,
+            x: (elementBounds.x - drawingRootBounds.x) / ratio - padding,
+            y: (elementBounds.y - drawingRootBounds.y) / ratio - padding,
+            width: (elementBounds.width) / ratio + 2 * padding,
+            height: (elementBounds.height)  / ratio + 2 * padding,
         } as Rect;
     }
 
