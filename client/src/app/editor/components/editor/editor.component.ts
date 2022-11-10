@@ -76,16 +76,13 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private applyClampedCanvasTranslation(event: MouseEvent): void {
-        const translation = this.translation;
-        this.translation.x = Math.min(
-            Math.max(translation.x + event.movementX, -this.drawingService.dimensions.x / 2),
-            this.drawingService.dimensions.x / 2
-        );
-        this.translation.y = Math.min(
-            Math.max(translation.y + event.movementY, -this.drawingService.dimensions.y / 2),
-            this.drawingService.dimensions.y / 2
-        );
-        this.translation = translation;
+        const ratio = this.drawingService.zoomRatio;
+        const marginDivider = 2;
+        const canvasMargins = Vec2.scale(ratio / marginDivider, this.drawingService.dimensions);
+        this.translation = {
+            x: Math.min(Math.max(this.translation.x + event.movementX, -canvasMargins.x), canvasMargins.x),
+            y: Math.min(Math.max(this.translation.y + event.movementY, -canvasMargins.y), canvasMargins.y),
+        };
     }
 
     get isRightMouseButtonHeld(): boolean {
