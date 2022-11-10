@@ -132,13 +132,17 @@ export class ToolEraserService extends Tool {
 
     private getElementUnderAreaPixelPerfect(area: Rect): SVGGraphicsElement | undefined {
         const drawingRect = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
-
         let topmostElement: SVGGraphicsElement | undefined;
+        const ratio = this.drawingService.zoomRatio;
+
         for (let i = 0; i < area.width; i++) {
             for (let j = 0; j < area.height; j++) {
                 // Function does not exist in Renderer2
                 const elementUnderPoint = this.drawingService.findDrawingChildElement(
-                    document.elementFromPoint(drawingRect.x + area.x + i, drawingRect.y + area.y + j)
+                    document.elementFromPoint(
+                        drawingRect.x + ratio * area.x + (1 / ratio) * i,
+                        drawingRect.y + ratio * area.y + (1 / ratio) * i
+                    )
                 );
 
                 if (elementUnderPoint !== undefined && elementUnderPoint !== topmostElement) {
