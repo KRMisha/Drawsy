@@ -17,7 +17,7 @@ const localStorageDrawingAutosaveIdKey = 'drawingAutosaveId';
 })
 export class DrawingService {
     drawingRoot: SVGSVGElement;
-    drawingContainer: ElementRef;
+    drawingContainer: ElementRef<HTMLDivElement>;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
 
@@ -41,12 +41,14 @@ export class DrawingService {
     private drawingLoadedSource = new Subject<void>();
     private forceDetectChangesSource = new Subject<void>();
     private zoomPercentChangedSource = new Subject<void>();
+    private translationChangedSource = new Subject<void>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
     // tslint:disable: member-ordering
     drawingLoaded$ = this.drawingLoadedSource.asObservable();
     forceDetectChanges$ = this.forceDetectChangesSource.asObservable();
     zoomPercentChanged$ = this.zoomPercentChangedSource.asObservable();
+    translationChanged$ = this.translationChangedSource.asObservable();
     // tslint:enable: member-ordering
 
     constructor(
@@ -263,6 +265,7 @@ export class DrawingService {
     set translation(translation: Vec2) {
         this._translation = translation;
         this.drawingContainer.nativeElement.setAttribute('style', `transform: translate(${translation.x}px, ${translation.y}px);`);
+        this.translationChangedSource.next();
     }
 
     get zoomRatio(): number {

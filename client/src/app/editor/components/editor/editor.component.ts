@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('drawingContainer') drawingContainer: ElementRef;
+    @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
 
     private forceDetectChangesSubscription: Subscription;
     private drawingLoadedSubscription: Subscription;
