@@ -28,6 +28,7 @@ export class ShortcutService {
     private selectAllShortcutSource = new Subject<void>();
     private zoomInShortcutSource = new Subject<void>();
     private zoomOutShortcutSource = new Subject<void>();
+    private resetCanvasViewShortcutSource = new Subject<void>();
     private copySelectionShortcutSource = new Subject<void>();
     private pasteSelectionShortcutSource = new Subject<void>();
     private cutSelectionShortcutSource = new Subject<void>();
@@ -60,6 +61,7 @@ export class ShortcutService {
     selectAllShortcut$ = this.selectAllShortcutSource.asObservable();
     zoomInShortcut$ = this.zoomInShortcutSource.asObservable();
     zoomOutShortcut$ = this.zoomOutShortcutSource.asObservable();
+    resetCanvasViewShortcut$ = this.resetCanvasViewShortcutSource.asObservable();
     copySelectionShortcut$ = this.copySelectionShortcutSource.asObservable();
     pasteSelectionShortcut$ = this.pasteSelectionShortcutSource.asObservable();
     cutSelectionShortcut$ = this.cutSelectionShortcutSource.asObservable();
@@ -158,6 +160,10 @@ export class ShortcutService {
             case '=':
                 event.preventDefault();
                 this.zoomInShortcutSource.next();
+                break;
+            case 'Enter':
+                event.preventDefault();
+                this.resetCanvasViewShortcutSource.next();
                 break;
         }
     }

@@ -38,8 +38,8 @@ export class ToolSelectionCollisionService {
         return {
             x: (elementBounds.x - drawingRootBounds.x) / ratio - padding,
             y: (elementBounds.y - drawingRootBounds.y) / ratio - padding,
-            width: (elementBounds.width) / ratio + 2 * padding,
-            height: (elementBounds.height)  / ratio + 2 * padding,
+            width: elementBounds.width / ratio + 2 * padding,
+            height: elementBounds.height / ratio + 2 * padding,
         } as Rect;
     }
 

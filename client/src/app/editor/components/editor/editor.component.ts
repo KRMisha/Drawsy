@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ThemeService } from '@app/app/services/theme.service';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { MouseButton } from '@app/shared/enums/mouse-button.enum';
@@ -12,11 +13,12 @@ import { Subscription } from 'rxjs';
 })
 export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild('drawingContainer') drawingContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('background') background: ElementRef<HTMLDivElement>;
 
     private forceDetectChangesSubscription: Subscription;
     private drawingLoadedSubscription: Subscription;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private drawingService: DrawingService) {}
+    constructor(private changeDetectorRef: ChangeDetectorRef, private drawingService: DrawingService, private themeService: ThemeService) {}
 
     ngOnInit(): void {
         this.forceDetectChangesSubscription = this.drawingService.forceDetectChanges$.subscribe(() => {
@@ -38,6 +40,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.drawingService.drawingContainer = this.drawingContainer;
+        this.themeService.background = this.background;
     }
 
     ngOnDestroy(): void {

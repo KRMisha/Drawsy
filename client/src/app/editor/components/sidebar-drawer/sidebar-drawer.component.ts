@@ -197,6 +197,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     private zoomInShortcutSubscription: Subscription;
     private zoomOutShortcutSubscription: Subscription;
+    private resetCanvasViewShortcutSubscription: Subscription;
     private copySelectionShortcutSubscription: Subscription;
     private pasteSelectionShortcutSubscription: Subscription;
     private cutSelectionShortcutSubscription: Subscription;
@@ -290,6 +291,9 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.zoomOutShortcutSubscription = this.shortcutService.zoomOutShortcut$.subscribe(() => {
             this.zoomOut();
         });
+        this.resetCanvasViewShortcutSubscription = this.shortcutService.resetCanvasViewShortcut$.subscribe(() => {
+            this.resetCanvasView();
+        });
 
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
             this.copy();
@@ -328,6 +332,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
         this.zoomInShortcutSubscription.unsubscribe();
         this.zoomOutShortcutSubscription.unsubscribe();
+        this.resetCanvasViewShortcutSubscription.unsubscribe();
         this.copySelectionShortcutSubscription.unsubscribe();
         this.pasteSelectionShortcutSubscription.unsubscribe();
         this.cutSelectionShortcutSubscription.unsubscribe();
@@ -376,7 +381,7 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.drawingService.zoomOut();
     }
 
-    resetZoom(): void {
+    resetCanvasView(): void {
         this.drawingService.resetCanvasView();
     }
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ThemeService } from '@app/app/services/theme.service';
@@ -13,9 +13,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('background') private background: ElementRef<HTMLDivElement>;
-
+export class AppComponent implements OnInit, OnDestroy {
     private newDrawingShortcutSubscription: Subscription;
     private galleryShortcutSubscription: Subscription;
 
@@ -70,10 +68,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         this.galleryShortcutSubscription = this.shortcutService.openGalleryShortcut$.subscribe(() => {
             this.modalService.openDialog(GalleryComponent);
         });
-    }
-
-    ngAfterViewInit(): void {
-        this.themeService.background = this.background;
     }
 
     ngOnDestroy(): void {
