@@ -26,6 +26,8 @@ export class ShortcutService {
     private openSaveDrawingShortcutSource = new Subject<void>();
     private openGalleryShortcutSource = new Subject<void>();
     private selectAllShortcutSource = new Subject<void>();
+    private zoomInShortcutSource = new Subject<void>();
+    private zoomOutShortcutSource = new Subject<void>();
     private copySelectionShortcutSource = new Subject<void>();
     private pasteSelectionShortcutSource = new Subject<void>();
     private cutSelectionShortcutSource = new Subject<void>();
@@ -56,6 +58,8 @@ export class ShortcutService {
     openSaveDrawingShortcut$ = this.openSaveDrawingShortcutSource.asObservable();
     openGalleryShortcut$ = this.openGalleryShortcutSource.asObservable();
     selectAllShortcut$ = this.selectAllShortcutSource.asObservable();
+    zoomInShortcut$ = this.zoomInShortcutSource.asObservable();
+    zoomOutShortcut$ = this.zoomOutShortcutSource.asObservable();
     copySelectionShortcut$ = this.copySelectionShortcutSource.asObservable();
     pasteSelectionShortcut$ = this.pasteSelectionShortcutSource.asObservable();
     cutSelectionShortcut$ = this.cutSelectionShortcutSource.asObservable();
@@ -146,6 +150,14 @@ export class ShortcutService {
             case 'Z':
                 event.preventDefault();
                 event.shiftKey ? this.redoShortcutSource.next() : this.undoShortcutSource.next();
+                break;
+            case '-':
+                event.preventDefault();
+                this.zoomOutShortcutSource.next();
+                break;
+            case '=':
+                event.preventDefault();
+                this.zoomInShortcutSource.next();
                 break;
         }
     }

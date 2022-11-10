@@ -1,14 +1,18 @@
+// tslint:disable: max-file-line-count
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { ClipboardService } from '@app/drawing/services/clipboard.service';
+import { DrawingService } from '@app/drawing/services/drawing.service';
 import { HistoryService } from '@app/drawing/services/history.service';
 import { SizeFormControlContainer } from '@app/editor/classes/size-form-control-container';
 import Regexes from '@app/shared/constants/regexes';
 import { ErrorMessageService } from '@app/shared/services/error-message.service';
 import { ShortcutService } from '@app/shared/services/shortcut.service';
+import { TouchService } from '@app/shared/services/touch.service';
 import { ToolSettings } from '@app/tools/classes/tool-settings';
 import ToolDefaults from '@app/tools/constants/tool-defaults';
 import ToolValidation from '@app/tools/constants/tool-validation';
+import ZoomInfo from '@app/tools/constants/zoom-info';
 import { BrushTexture } from '@app/tools/enums/brush-texture.enum';
 import { ShapeType } from '@app/tools/enums/shape-type.enum';
 import { ToolSetting } from '@app/tools/enums/tool-setting.enum';
@@ -79,6 +83,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         Validators.min(ToolValidation.minimumEraserSize),
         Validators.max(ToolValidation.maximumEraserSize),
     ]);
+    zoomFormControl = new FormControl(ZoomInfo.defaultZoomPercent, [
+        Validators.required,
+        Validators.pattern(Regexes.integerRegex),
+        Validators.min(ZoomInfo.minimumZoomPercent),
+        Validators.max(ZoomInfo.maximumZoomPercent),
+    ]);
 
     readonly sizeFormControls: SizeFormControlContainer[] = [
         {
@@ -148,7 +158,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     private polygonSideCountChangedSubscription: Subscription;
     private fillDeviationChangedSubscription: Subscription;
     private eraserSizeChangedSubscription: Subscription;
+    private zoomFieldChangedSubscription: Subscription;
+    private zoomPercentChangedSubscription: Subscription;
 
+    private zoomInShortcutSubscription: Subscription;
+    private zoomOutShortcutSubscription: Subscription;
     private copySelectionShortcutSubscription: Subscription;
     private pasteSelectionShortcutSubscription: Subscription;
     private cutSelectionShortcutSubscription: Subscription;
@@ -161,7 +175,8 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         private shortcutService: ShortcutService,
         private clipboardService: ClipboardService,
         private toolSelectionService: ToolSelectionService,
-        private historyService: HistoryService
+        private historyService: HistoryService,
+        private drawingService: DrawingService
     ) {}
 
     ngOnInit(): void {
@@ -211,7 +226,21 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
                 this.currentToolSettings.eraserSize = this.eraserSizeFormControl.value;
             }
         });
+        this.zoomPercentChangedSubscription = this.zoomFormControl.valueChanges.subscribe(() => {
+            if (this.zoomFormControl.valid && this.drawingService.zoomPercent !== this.zoomFormControl.value) {
+                this.drawingService.zoomPercent = this.zoomFormControl.value;
+            }
+        });
+        this.zoomFieldChangedSubscription = this.drawingService.zoomPercentChanged$.subscribe(() => {
+            this.zoomFormControl.setValue(this.drawingService.zoomPercent);
+        });
 
+        this.zoomInShortcutSubscription = this.shortcutService.zoomInShortcut$.subscribe(() => {
+            this.zoomIn();
+        });
+        this.zoomOutShortcutSubscription = this.shortcutService.zoomOutShortcut$.subscribe(() => {
+            this.zoomOut();
+        });
         this.copySelectionShortcutSubscription = this.shortcutService.copySelectionShortcut$.subscribe(() => {
             this.copy();
         });
@@ -242,7 +271,11 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         this.polygonSideCountChangedSubscription.unsubscribe();
         this.fillDeviationChangedSubscription.unsubscribe();
         this.eraserSizeChangedSubscription.unsubscribe();
+        this.zoomPercentChangedSubscription.unsubscribe();
+        this.zoomFieldChangedSubscription.unsubscribe();
 
+        this.zoomInShortcutSubscription.unsubscribe();
+        this.zoomOutShortcutSubscription.unsubscribe();
         this.copySelectionShortcutSubscription.unsubscribe();
         this.pasteSelectionShortcutSubscription.unsubscribe();
         this.cutSelectionShortcutSubscription.unsubscribe();
@@ -279,6 +312,18 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
         if (this.currentToolSettings.eraserSize !== undefined) {
             this.eraserSizeFormControl.reset(this.currentToolSettings.eraserSize);
         }
+    }
+
+    zoomIn(): void {
+        this.drawingService.zoomIn();
+    }
+
+    zoomOut(): void {
+        this.drawingService.zoomOut();
+    }
+
+    resetZoom(): void {
+        this.drawingService.resetCanvasView();
     }
 
     copy(): void {
@@ -327,6 +372,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
 
     get currentToolSettings(): ToolSettings {
         return this.currentToolService.currentTool.settings;
+    }
+
+    get isMobileDevice(): boolean {
+        return TouchService.isMobileDevice;
     }
 
     get isSelectionAvailable(): boolean {

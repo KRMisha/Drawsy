@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     HostListener,
-    Input,
     OnDestroy,
     OnInit,
     ViewChild,
@@ -25,8 +24,6 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./drawing.component.scss'],
 })
 export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
-    @Input() ratio = 1;
-
     @ViewChild('appDrawingRoot') drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
     @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
@@ -178,11 +175,11 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     get width(): number {
-        return this.drawingService.dimensions.x * this.ratio;
+        return this.drawingService.dimensions.x * this.drawingService.zoomRatio;
     }
 
     get height(): number {
-        return this.drawingService.dimensions.y * this.ratio;
+        return this.drawingService.dimensions.y * this.drawingService.zoomRatio;
     }
 
     get viewBox(): string {

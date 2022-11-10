@@ -110,6 +110,25 @@
     padding-right: 16px;
 }
 
+.zoom-container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.zoom-input-item {
+    grid-area: input-field;
+    justify-self: right;
+    text-align: right;
+    width: 90px;
+
+    ::ng-deep .mat-form-field-wrapper {
+        margin-bottom: -1em;
+        margin-top: -0.5em;
+    }
+}
+
 .clipboard-container {
     display: flex;
     justify-content: space-between;
