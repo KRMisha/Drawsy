@@ -6,7 +6,7 @@ const dialogConfigs = new Map<string, MatDialogConfig>([
     ['ExportDrawingComponent', { width: '920px', height: 'auto' } as MatDialogConfig],
     ['SaveDrawingComponent', { width: '920px', height: 'auto' } as MatDialogConfig],
     ['GalleryComponent', { width: '1920px', height: 'auto' } as MatDialogConfig],
-    ['SettingsComponent', { width: '325px', height: 'auto' } as MatDialogConfig],
+    ['SettingsComponent', { width: 'auto', height: '600px' } as MatDialogConfig],
     ['GuideComponent', { width: '1550px', height: '100%' } as MatDialogConfig],
 ]);
 

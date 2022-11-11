@@ -1,5 +1,4 @@
-<h3 class="title">Thème</h3>
-<div class="container">
+<div class="container margin-top">
     <h4 class="color-title-item">Couleur</h4>
     <div
         *ngFor="let themeColor of themeColors"
@@ -9,7 +8,22 @@
         (click)="color = themeColor"
     ></div>
 </div>
-<div class="container">
-    <h4>Clair - Sombre</h4>
-    <mat-slide-toggle [(ngModel)]="isDarkTheme"></mat-slide-toggle>
+<div class="container margin-top">
+    <div class="container">
+        <h4 class="margin-right">Clair - Sombre</h4>
+        <mat-slide-toggle [(ngModel)]="isDarkTheme"></mat-slide-toggle>
+    </div>
+    <div class="container">
+        <h4 class="margin-right">Arrière plan</h4>
+        <mat-form-field class="dropdown-item">
+            <mat-label>Sélection</mat-label>
+            <mat-select [(value)]="currentBackgroundPattern">
+                <mat-option [value]="BackgroundPattern.None">Aucun</mat-option>
+                <mat-option [value]="BackgroundPattern.Paper">Papier</mat-option>
+                <mat-option [value]="BackgroundPattern.Boxes">Boite</mat-option>
+                <mat-option [value]="BackgroundPattern.Polka">Polka</mat-option>
+                <mat-option [value]="BackgroundPattern.Checkered">Carreaux</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </div>

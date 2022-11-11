@@ -1,14 +1,20 @@
-<h1 mat-dialog-title class="title">Paramètres</h1>
-<form [formGroup]="formGroup" autocomplete="off">
-    <mat-dialog-content>
-        <app-drawing-settings></app-drawing-settings>
-        <mat-divider></mat-divider>
-        <app-grid-settings></app-grid-settings>
-        <mat-divider></mat-divider>
-        <app-theme-settings></app-theme-settings>
+<form [formGroup]="formGroup" autocomplete="off" class="max-height">
+    <h1 mat-dialog-title class="title">Paramètres</h1>
+    <mat-dialog-content class="dialog-content">
+        <mat-tab-group [dynamicHeight]="true">
+            <mat-tab label="Surface de dessin">
+                <app-drawing-settings></app-drawing-settings>
+            </mat-tab>
+            <mat-tab label="Grille">
+                <app-grid-settings></app-grid-settings>
+            </mat-tab>
+            <mat-tab label="Thème">
+                <app-theme-settings></app-theme-settings>
+            </mat-tab>
+        </mat-tab-group>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="center">
+    <mat-dialog-actions align="center" class="dialog-actions">
         <button mat-raised-button class="button" (click)="resetInitialSettings()">Réinitialiser</button>
         <button mat-raised-button mat-dialog-close class="button" type="submit" [disabled]="formGroup.invalid">Confirmer</button>
     </mat-dialog-actions>

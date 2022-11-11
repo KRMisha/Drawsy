@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ThemeService } from '@app/app/services/theme.service';
+import { BackgroundPattern } from '@app/tools/enums/background-pattern';
 
 @Component({
     selector: 'app-theme-settings',
@@ -7,7 +8,8 @@ import { ThemeService } from '@app/app/services/theme.service';
     styleUrls: ['./theme-settings.component.scss'],
 })
 export class ThemeSettingsComponent {
-    readonly themeColors = ['pink', 'purple', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'];
+    BackgroundPattern = BackgroundPattern;
+    readonly themeColors = ['pink', 'purple', 'teal', 'blue', 'green', 'lime', 'yellow', 'orange', 'red', 'brown'];
 
     constructor(private themeService: ThemeService) {}
 
@@ -21,5 +23,14 @@ export class ThemeSettingsComponent {
 
     set isDarkTheme(isDarkTheme: boolean) {
         this.themeService.isDarkTheme = isDarkTheme;
+    }
+
+    get currentBackgroundPattern(): BackgroundPattern {
+        return this.themeService.backgroundPattern;
+    }
+
+    set currentBackgroundPattern(pattern: BackgroundPattern) {
+        this.themeService.backgroundPattern = pattern;
+        this.themeService.refreshBackgroundPattern();
     }
 }

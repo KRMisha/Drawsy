@@ -1,11 +1,14 @@
-.title {
-    margin: 4px;
-    text-align: center;
-}
-
 .container {
     display: flex;
     justify-content: space-between;
+}
+
+.margin-right {
+    margin-right: 16px;
+}
+
+.margin-top {
+    margin-top: 16px;
 }
 
 .color-title-item {
