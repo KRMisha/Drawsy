@@ -46,6 +46,7 @@ export class SettingsService {
 
     private initialThemeColor = this.themeService.color;
     private initialIsDarkTheme = this.themeService.isDarkTheme;
+    private initialBackgroundPattern = this.themeService.backgroundPattern;
 
     constructor(private drawingService: DrawingService, private gridService: GridService, private themeService: ThemeService) {}
 
@@ -61,5 +62,6 @@ export class SettingsService {
 
         this.themeService.color = this.initialThemeColor;
         this.themeService.isDarkTheme = this.initialIsDarkTheme;
+        this.themeService.backgroundPattern = this.initialBackgroundPattern;
     }
 }

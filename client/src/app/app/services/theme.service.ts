@@ -72,6 +72,7 @@ export class ThemeService implements OnDestroy {
 
     set backgroundPattern(pattern: BackgroundPattern) {
         this._backgroundPattern = pattern;
+        this.applyBackground();
         this.saveSettingsToStorage();
     }
 
