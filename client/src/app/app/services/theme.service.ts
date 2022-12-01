@@ -140,9 +140,9 @@ export class ThemeService implements OnDestroy {
                 );
                 this.background.nativeElement.style.setProperty(
                     'background-size',
-                    `${100 * ratio}px ${100 * ratio}px, ${100 * ratio}px ${100 * ratio}px, ${20 * ratio}px ${
+                    `${100 * ratio}px ${100 * ratio}px, ${100 * ratio}px ${100 * ratio}px, ${20 * ratio}px ${20 * ratio}px, ${
                         20 * ratio
-                    }px, ${20 * ratio}px ${20 * ratio}px`
+                    }px ${20 * ratio}px`
                 );
                 break;
             case BackgroundPattern.Boxes:

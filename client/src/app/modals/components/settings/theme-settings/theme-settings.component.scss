@@ -1,19 +1,14 @@
 .container {
     display: flex;
+}
+
+.space-between {
     justify-content: space-between;
-}
-
-.margin-right {
-    margin-right: 16px;
-}
-
-.margin-top {
-    margin-top: 16px;
 }
 
 .color-title-item {
     margin-bottom: 8px;
-    margin-right: 24px;
+    margin-right: 16px;
 }
 
 .circle-item {
@@ -21,4 +16,20 @@
     height: 22px;
     border-radius: 11px;
     cursor: pointer;
+}
+
+.margin-top {
+    margin-top: 16px;
+}
+
+.small-margin-right {
+    margin-right: 2px;
+}
+
+.margin-right {
+    margin-right: 16px;
+}
+
+.column {
+    flex-direction: column;
 }

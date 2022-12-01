@@ -1,20 +1,24 @@
-<div class="container margin-top">
-    <h4 class="color-title-item">Couleur</h4>
-    <div
-        *ngFor="let themeColor of themeColors"
-        class="circle-item mat-elevation-z2"
-        matRipple
-        [class]="themeColor + '-theme-color'"
-        (click)="color = themeColor"
-    ></div>
-</div>
-<div class="container margin-top">
+<div class="container space-between margin-top">
+    <div class="container">
+        <h4 class="color-title-item">Couleur</h4>
+        <div class="container">
+            <div
+                *ngFor="let themeColor of themeColors"
+                class="circle-item mat-elevation-z2 small-margin-right"
+                matRipple
+                [class]="themeColor + '-theme-color'"
+                (click)="color = themeColor"
+            ></div>
+        </div>
+    </div>
     <div class="container">
         <h4 class="margin-right">Clair - Sombre</h4>
         <mat-slide-toggle [(ngModel)]="isDarkTheme"></mat-slide-toggle>
     </div>
-    <div class="container">
-        <h4 class="margin-right">Arrière plan</h4>
+</div>
+<div class="container margin-top">
+    <div class="container column">
+        <h4 class="margin-right">Motif d'arrière plan</h4>
         <mat-form-field class="dropdown-item">
             <mat-label>Sélection</mat-label>
             <mat-select [(value)]="currentBackgroundPattern">
