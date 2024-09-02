@@ -4,6 +4,7 @@ default:
 stages:
   - install
   - test
+  - build
   - deploy
 
 workflow:
@@ -65,10 +66,12 @@ format-client:
   extends:
     - .client
     - .format
+  needs: [install-client]
 format-server:
   extends:
     - .server
     - .format
+  needs: [install-server]
 
 .lint:
   stage: test
@@ -78,10 +81,12 @@ lint-client:
   extends:
     - .client
     - .lint
+  needs: [install-client]
 lint-server:
   extends:
     - .server
     - .lint
+  needs: [install-server]
 
 test-client:
   extends:
@@ -99,21 +104,47 @@ test-server:
   script:
     - npm test
 
-# build:client:
-#     stage: build
-#     script:
-#         - pushd client
-#         - npm run build
-#         - popd
-#     artifacts:
-#         paths:
-#             - client/dist/
-# build:server:
-#     stage: build
-#     script:
-#         - pushd server
-#         - npx tsc
-#         - popd
-#     artifacts:
-#         paths:
-#            - server/out/
+# TODO: Make this generic if client also needs to build a Docker image
+.docker-server:
+  image: docker:20
+  services:
+    - docker:20-dind
+  variables:
+    CONTAINER_BUILD_IMAGE: $CI_REGISTRY_IMAGE/server:$CI_COMMIT_REF_SLUG
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE/server:latest
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build-client:
+  # TODO: extends
+  stage: build
+  needs:
+    - format-client
+    - lint-client
+    - test-client
+  script:
+    - echo TODO
+    # TODO
+
+build-server:
+  extends: .docker-server
+  stage: build
+  needs:
+    - format-server
+    - lint-server
+    - test-server
+  script:
+    - docker build --pull -t $CONTAINER_BUILD_IMAGE -f server/Dockerfile .
+    - docker push $CONTAINER_BUILD_IMAGE
+
+deploy-server:
+  extends: .docker-server
+  stage: deploy
+  script:
+    - docker pull $CONTAINER_BUILD_IMAGE
+    - docker tag $CONTAINER_BUILD_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+    # TODO: Figure out Azure
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  environment: production
