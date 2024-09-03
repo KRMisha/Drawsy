@@ -20,13 +20,13 @@ const expect = chai.expect;
 
 describe('DatabaseService', () => {
     describe('With active server', () => {
-        let mongoServer: MongoMemoryServer;
+        let mongod: MongoMemoryServer;
         let inMemoryServerUrl: string;
         let databaseService: DatabaseService;
 
         before(async () => {
-            mongoServer = new MongoMemoryServer();
-            inMemoryServerUrl = await mongoServer.getUri('database');
+            mongod = await MongoMemoryServer.create();
+            inMemoryServerUrl = await mongod.getUri('database');
         });
 
         beforeEach((done: Mocha.Done) => {
@@ -50,7 +50,7 @@ describe('DatabaseService', () => {
         });
 
         after(async () => {
-            await mongoServer.stop();
+            await mongod.stop();
         });
 
         it('should create and connect to a database if it is running', () => {
