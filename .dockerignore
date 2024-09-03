@@ -1,0 +1,24 @@
+# Git
+.git
+**/.gitattributes
+**/.gitignore
+
+# Docker
+**/Dockerfile
+**/.dockerignore
+
+# Dependencies
+**/node_modules
+
+# Build output
+**/dist
+
+# Code coverage
+**/coverage
+**/.nyc_output
+
+# Local .env file
+**/.env
+
+# Editors
+**/.vscode
