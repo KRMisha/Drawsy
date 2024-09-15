@@ -1,14 +1,14 @@
-# Build context needs to be from the project root directory
+# Build context needs to be the project's root directory
+# E.g., to build from the server subdirectory: docker build -t drawsy/server -f Dockerfile ..
 
-FROM node:12.16.1-alpine3.11
+FROM node:16-alpine
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=production
 
 WORKDIR /app/server
 
 COPY server/package*.json ./
-RUN npm install --production
+RUN npm ci
 
 COPY common /app/common
 COPY server /app/server
