@@ -2,15 +2,9 @@
 .DS_Store
 Thumbs.db
 
-# IDEs
-/.vscode/chrome
-/.vs/
-
-# Angular 9.1 ngcc bug
-__ngcc_entry_points__.json
-
-# Code coverage folders
-coverage/
-
-# Omit accidental package-lock.json on root
-package-lock.json
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
