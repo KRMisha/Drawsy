@@ -7,7 +7,7 @@ COPY client/package*.json ./
 RUN npm ci
 COPY common /app/common
 COPY client /app/client
-RUN npm run build
+RUN npm run build:prod
 
 FROM nginx:alpine AS prod
 COPY --from=build /app/client/dist/client /usr/share/nginx/html
