@@ -33,7 +33,8 @@ export class ExportDrawingComponent implements OnInit, OnDestroy {
         emailAddress: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(EmailValidation.emailRegex)]),
     });
 
-    @ViewChild('appDrawingPreview') private drawingPreview: DrawingPreviewComponent;
+    @ViewChild('appDrawingPreview')
+    private drawingPreview: DrawingPreviewComponent;
 
     private emailEnabledChangedSubscription: Subscription;
 

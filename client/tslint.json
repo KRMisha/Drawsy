@@ -1,7 +1,5 @@
 {
-    "extends": [
-        "../common/tslint.json"
-    ],
+    "extends": ["../common/tslint.json"],
     "rules": {
         "deprecation": {
             "severity": "warn"

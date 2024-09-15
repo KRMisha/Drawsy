@@ -13,7 +13,10 @@ export class SudoModeService implements OnDestroy {
 
     private toggleSudoModeSubscription: Subscription;
 
-    constructor(private shortcutService: ShortcutService, private snackbarService: SnackbarService) {
+    constructor(
+        private shortcutService: ShortcutService,
+        private snackbarService: SnackbarService
+    ) {
         this.isSudoModeEnabled = localStorage.getItem(localStorageSudoModeKey) !== null;
 
         this.toggleSudoModeSubscription = this.shortcutService.toggleSudoMode$.subscribe(() => {

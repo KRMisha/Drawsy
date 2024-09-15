@@ -11,7 +11,10 @@ import { ModalService } from '@app/modals/services/modal.service';
     styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-    constructor(private drawingService: DrawingService, private modalService: ModalService) {}
+    constructor(
+        private drawingService: DrawingService,
+        private modalService: ModalService
+    ) {}
 
     openNewDrawingModal(): void {
         this.modalService.openDialog(NewDrawingComponent);

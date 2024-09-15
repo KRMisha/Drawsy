@@ -68,9 +68,8 @@ export class ToolSelectionService extends Tool implements OnDestroy {
                 const userSelectionRect = Rect.fromPoints(this.selectionOrigin, Tool.mousePosition);
                 this.toolSelectionUiService.setUserSelectionRect(userSelectionRect);
                 if (this.currentMouseButtonDown === MouseButton.Left) {
-                    this.toolSelectionStateService.selectedElements = this.toolSelectionCollisionService.getElementsUnderArea(
-                        userSelectionRect
-                    );
+                    this.toolSelectionStateService.selectedElements =
+                        this.toolSelectionCollisionService.getElementsUnderArea(userSelectionRect);
                 } else {
                     this.selectedElementsAfterInversion = [...this.toolSelectionStateService.selectedElements];
                     const elementsToInvert = this.toolSelectionCollisionService.getElementsUnderArea(userSelectionRect);
@@ -83,7 +82,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         this.toolSelectionUiService.updateUserSelectionRectCursor(this.toolSelectionStateService.state);
-        this.previousMousePosition = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
+        this.previousMousePosition = {
+            x: Tool.mousePosition.x,
+            y: Tool.mousePosition.y,
+        };
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -103,7 +105,10 @@ export class ToolSelectionService extends Tool implements OnDestroy {
         }
 
         this.currentMouseButtonDown = event.button;
-        this.selectionOrigin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
+        this.selectionOrigin = {
+            x: Tool.mousePosition.x,
+            y: Tool.mousePosition.y,
+        };
 
         if (this.isMouseInsideSelectedElementBounds() && event.button === MouseButton.Left) {
             this.toolSelectionStateService.state = SelectionState.SelectionMoveStartClick;

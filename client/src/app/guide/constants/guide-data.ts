@@ -24,27 +24,95 @@ import { GuideWelcomeComponent } from '@app/guide/components/guide-content/guide
 // tslint:enable: max-line-length
 
 // Leaf nodes
-const guideWelcomeNode: GuideNode = { name: 'Bienvenue', guide: GuideWelcomeComponent, previousGuideNode: undefined };
+const guideWelcomeNode: GuideNode = {
+    name: 'Bienvenue',
+    guide: GuideWelcomeComponent,
+    previousGuideNode: undefined,
+};
 
-const guideSprayCanNode: GuideNode = { name: 'Aérosol', guide: GuideSprayCanComponent, previousGuideNode: guideWelcomeNode };
-const guidePencilNode: GuideNode = { name: 'Crayon', guide: GuidePencilComponent, previousGuideNode: guideSprayCanNode };
-const guidePaintbrushNode: GuideNode = { name: 'Pinceau', guide: GuidePaintbrushComponent, previousGuideNode: guidePencilNode };
+const guideSprayCanNode: GuideNode = {
+    name: 'Aérosol',
+    guide: GuideSprayCanComponent,
+    previousGuideNode: guideWelcomeNode,
+};
+const guidePencilNode: GuideNode = {
+    name: 'Crayon',
+    guide: GuidePencilComponent,
+    previousGuideNode: guideSprayCanNode,
+};
+const guidePaintbrushNode: GuideNode = {
+    name: 'Pinceau',
+    guide: GuidePaintbrushComponent,
+    previousGuideNode: guidePencilNode,
+};
 
-const guideEllipseNode: GuideNode = { name: 'Ellipse', guide: GuideEllipseComponent, previousGuideNode: guidePaintbrushNode };
-const guidePolygonNode: GuideNode = { name: 'Polygone', guide: GuidePolygonComponent, previousGuideNode: guideEllipseNode };
-const guideRectangleNode: GuideNode = { name: 'Rectangle', guide: GuideRectangleComponent, previousGuideNode: guidePolygonNode };
+const guideEllipseNode: GuideNode = {
+    name: 'Ellipse',
+    guide: GuideEllipseComponent,
+    previousGuideNode: guidePaintbrushNode,
+};
+const guidePolygonNode: GuideNode = {
+    name: 'Polygone',
+    guide: GuidePolygonComponent,
+    previousGuideNode: guideEllipseNode,
+};
+const guideRectangleNode: GuideNode = {
+    name: 'Rectangle',
+    guide: GuideRectangleComponent,
+    previousGuideNode: guidePolygonNode,
+};
 
-const guideRecolorNode: GuideNode = { name: 'Applicateur de couleur', guide: GuideRecolorComponent, previousGuideNode: guideRectangleNode };
-const guideColorNode: GuideNode = { name: 'Couleur', guide: GuideColorComponent, previousGuideNode: guideRecolorNode };
-const guideEraserNode: GuideNode = { name: 'Efface', guide: GuideEraserComponent, previousGuideNode: guideColorNode };
-const guideLineNode: GuideNode = { name: 'Ligne', guide: GuideLineComponent, previousGuideNode: guideEraserNode };
-const guideColorPickerNode: GuideNode = { name: 'Pipette', guide: GuideColorPickerComponent, previousGuideNode: guideLineNode };
-const guideClipboardNode: GuideNode = { name: 'Presse-papier', guide: GuideClipboardComponent, previousGuideNode: guideColorPickerNode };
-const guideFillNode: GuideNode = { name: 'Seau de peinture', guide: GuideFillComponent, previousGuideNode: guideClipboardNode };
-const guideSelectionNode: GuideNode = { name: 'Sélection', guide: GuideSelectionComponent, previousGuideNode: guideFillNode };
+const guideRecolorNode: GuideNode = {
+    name: 'Applicateur de couleur',
+    guide: GuideRecolorComponent,
+    previousGuideNode: guideRectangleNode,
+};
+const guideColorNode: GuideNode = {
+    name: 'Couleur',
+    guide: GuideColorComponent,
+    previousGuideNode: guideRecolorNode,
+};
+const guideEraserNode: GuideNode = {
+    name: 'Efface',
+    guide: GuideEraserComponent,
+    previousGuideNode: guideColorNode,
+};
+const guideLineNode: GuideNode = {
+    name: 'Ligne',
+    guide: GuideLineComponent,
+    previousGuideNode: guideEraserNode,
+};
+const guideColorPickerNode: GuideNode = {
+    name: 'Pipette',
+    guide: GuideColorPickerComponent,
+    previousGuideNode: guideLineNode,
+};
+const guideClipboardNode: GuideNode = {
+    name: 'Presse-papier',
+    guide: GuideClipboardComponent,
+    previousGuideNode: guideColorPickerNode,
+};
+const guideFillNode: GuideNode = {
+    name: 'Seau de peinture',
+    guide: GuideFillComponent,
+    previousGuideNode: guideClipboardNode,
+};
+const guideSelectionNode: GuideNode = {
+    name: 'Sélection',
+    guide: GuideSelectionComponent,
+    previousGuideNode: guideFillNode,
+};
 
-const guideUndoRedoNode: GuideNode = { name: 'Annuler-refaire', guide: GuideUndoRedoComponent, previousGuideNode: guideSelectionNode };
-const guideGridNode: GuideNode = { name: 'Grille', guide: GuideGridComponent, previousGuideNode: guideUndoRedoNode };
+const guideUndoRedoNode: GuideNode = {
+    name: 'Annuler-refaire',
+    guide: GuideUndoRedoComponent,
+    previousGuideNode: guideSelectionNode,
+};
+const guideGridNode: GuideNode = {
+    name: 'Grille',
+    guide: GuideGridComponent,
+    previousGuideNode: guideUndoRedoNode,
+};
 
 const guideExportDrawingNode: GuideNode = {
     name: 'Exporter le dessin',
@@ -88,7 +156,10 @@ const guideBrushToolsNode: GuideNode = {
     name: 'Outils de traçage',
     children: [guideSprayCanNode, guidePencilNode, guidePaintbrushNode],
 };
-const guideShapeToolsNode: GuideNode = { name: 'Formes', children: [guideEllipseNode, guidePolygonNode, guideRectangleNode] };
+const guideShapeToolsNode: GuideNode = {
+    name: 'Formes',
+    children: [guideEllipseNode, guidePolygonNode, guideRectangleNode],
+};
 const guideToolsNode: GuideNode = {
     name: 'Outils',
     children: [

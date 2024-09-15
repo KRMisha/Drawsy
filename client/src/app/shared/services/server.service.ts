@@ -19,7 +19,10 @@ const httpJsonOptions = {
     providedIn: 'root',
 })
 export class ServerService {
-    constructor(private httpService: HttpClient, private snackbarService: SnackbarService) {}
+    constructor(
+        private httpService: HttpClient,
+        private snackbarService: SnackbarService
+    ) {}
 
     createDrawing(fileContent: string): Observable<NewFileId> {
         const newFileContent: NewFileContent = { content: fileContent };

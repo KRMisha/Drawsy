@@ -25,8 +25,10 @@ import { Subscription } from 'rxjs';
 })
 export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     @ViewChild('appDrawingRoot') private drawingRoot: ElementRef<SVGSVGElement>;
-    @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
-    @ViewChild('appUserInterfaceContent') private svgUserInterfaceContent: ElementRef<SVGGElement>;
+    @ViewChild('appDrawingContent')
+    private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appUserInterfaceContent')
+    private svgUserInterfaceContent: ElementRef<SVGGElement>;
 
     private forceDetectChangesSubscription: Subscription;
     private toggleGridSubscription: Subscription;

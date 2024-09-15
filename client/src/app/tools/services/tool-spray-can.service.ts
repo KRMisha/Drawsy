@@ -79,7 +79,10 @@ export class ToolSprayCanService extends Tool {
     private createRandomPoint(): void {
         const angle = Math.random() * 2 * Math.PI;
         const radius = Math.random() * (this.settings.sprayDiameter! / 2); // tslint:disable-line: no-non-null-assertion
-        const position: Vec2 = { x: Math.floor(radius * Math.cos(angle)), y: Math.floor(radius * Math.sin(angle)) };
+        const position: Vec2 = {
+            x: Math.floor(radius * Math.cos(angle)),
+            y: Math.floor(radius * Math.sin(angle)),
+        };
         this.renderer.appendChild(this.group, this.createCircle(position));
     }
 

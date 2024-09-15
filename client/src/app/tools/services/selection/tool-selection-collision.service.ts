@@ -47,8 +47,14 @@ export class ToolSelectionCollisionService {
             return undefined;
         }
 
-        const minPos = { x: Number.POSITIVE_INFINITY, y: Number.POSITIVE_INFINITY };
-        const maxPos = { x: Number.NEGATIVE_INFINITY, y: Number.NEGATIVE_INFINITY };
+        const minPos = {
+            x: Number.POSITIVE_INFINITY,
+            y: Number.POSITIVE_INFINITY,
+        };
+        const maxPos = {
+            x: Number.NEGATIVE_INFINITY,
+            y: Number.NEGATIVE_INFINITY,
+        };
         for (const element of elements) {
             const currentElementBounds = this.getElementBounds(element);
             minPos.x = Math.min(minPos.x, currentElementBounds.x);
@@ -57,6 +63,11 @@ export class ToolSelectionCollisionService {
             maxPos.y = Math.max(maxPos.y, currentElementBounds.y + currentElementBounds.height);
         }
 
-        return { x: minPos.x, y: minPos.y, width: maxPos.x - minPos.x, height: maxPos.y - minPos.y } as Rect;
+        return {
+            x: minPos.x,
+            y: minPos.y,
+            width: maxPos.x - minPos.x,
+            height: maxPos.y - minPos.y,
+        } as Rect;
     }
 }

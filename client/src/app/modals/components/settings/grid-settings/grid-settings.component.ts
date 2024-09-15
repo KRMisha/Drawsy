@@ -15,7 +15,10 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
     private gridSizeChangedSubscription: Subscription;
     private gridOpacityChangedSubscription: Subscription;
 
-    constructor(private settingsService: SettingsService, private gridService: GridService) {}
+    constructor(
+        private settingsService: SettingsService,
+        private gridService: GridService
+    ) {}
 
     ngOnInit(): void {
         this.gridDisplayEnabledChangedSubscription = this.formGroup.controls.gridDisplayEnabled.valueChanges.subscribe(() => {
@@ -86,7 +89,9 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
 
     set gridSize(gridSize: number) {
         this.gridService.size = gridSize;
-        this.formGroup.controls.gridSize.setValue(gridSize, { emitEvent: false });
+        this.formGroup.controls.gridSize.setValue(gridSize, {
+            emitEvent: false,
+        });
     }
 
     get gridOpacity(): number {
@@ -95,7 +100,9 @@ export class GridSettingsComponent implements OnInit, OnDestroy {
 
     set gridOpacity(gridOpacity: number) {
         this.gridService.opacity = gridOpacity;
-        this.formGroup.controls.gridOpacity.setValue(gridOpacity, { emitEvent: false });
+        this.formGroup.controls.gridOpacity.setValue(gridOpacity, {
+            emitEvent: false,
+        });
     }
 
     get formGroup(): FormGroup {

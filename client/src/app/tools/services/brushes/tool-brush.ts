@@ -23,7 +23,9 @@ export abstract class ToolBrush extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, historyService, toolInfo);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
-        this.settings.smoothingSettings = { ...ToolDefaults.defaultSmoothingSettings };
+        this.settings.smoothingSettings = {
+            ...ToolDefaults.defaultSmoothingSettings,
+        };
         this.points = [];
     }
 

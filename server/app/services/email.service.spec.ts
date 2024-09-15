@@ -13,11 +13,11 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 describe('EmailService', () => {
-    const payloadStub = ({
+    const payloadStub = {
         buffer: 'lool',
         originalname: 'mishaWithoutFilters',
         mimetype: 'xd/xml',
-    } as unknown) as Express.Multer.File;
+    } as unknown as Express.Multer.File;
 
     let emailService: EmailService;
 
@@ -35,14 +35,14 @@ describe('EmailService', () => {
     });
 
     it("#sendEmail should throw BadRequest if 'to' field is undefined", async () => {
-        const emailRequest = ({ to: undefined, payload: undefined } as unknown) as EmailRequest;
+        const emailRequest = { to: undefined, payload: undefined } as unknown as EmailRequest;
         await expect(emailService.sendEmail(emailRequest))
             .to.eventually.be.rejectedWith(HttpException, 'Incomplete fields')
             .and.to.have.property('status', HttpStatusCode.BadRequest);
     });
 
     it('#sendEmail should throw BadRequest if the email address is invalid', async () => {
-        const emailRequest = ({ to: 'undefined', payload: undefined } as unknown) as EmailRequest;
+        const emailRequest = { to: 'undefined', payload: undefined } as unknown as EmailRequest;
         await expect(emailService.sendEmail(emailRequest))
             .to.eventually.be.rejectedWith(HttpException, 'Invalid email address')
             .and.to.have.property('status', HttpStatusCode.BadRequest);

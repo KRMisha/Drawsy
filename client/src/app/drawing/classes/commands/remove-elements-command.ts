@@ -3,7 +3,10 @@ import { ElementSiblingPair } from '@app/drawing/classes/element-sibling-pair';
 import { DrawingService } from '@app/drawing/services/drawing.service';
 
 export class RemoveElementsCommand implements Command {
-    constructor(private drawingService: DrawingService, private elements: ElementSiblingPair[]) {}
+    constructor(
+        private drawingService: DrawingService,
+        private elements: ElementSiblingPair[]
+    ) {}
 
     undo(): void {
         for (const element of this.elements) {

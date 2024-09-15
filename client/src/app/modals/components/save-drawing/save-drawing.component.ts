@@ -30,7 +30,8 @@ export class SaveDrawingComponent implements OnInit {
         ]),
     });
 
-    @ViewChild('appDrawingPreview') private drawingPreview: DrawingPreviewComponent;
+    @ViewChild('appDrawingPreview')
+    private drawingPreview: DrawingPreviewComponent;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,

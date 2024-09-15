@@ -22,20 +22,45 @@ import { Subscription } from 'rxjs';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
     readonly actionButtons: ActionButton[] = [
-        { name: 'Nouveau dessin (Ctrl+O)', icon: 'card-plus-outline', action: this.openNewDrawingModal.bind(this) },
-        { name: 'Exporter le dessin (Ctrl+E)', icon: 'download', action: this.openExportDrawingModal.bind(this) },
+        {
+            name: 'Nouveau dessin (Ctrl+O)',
+            icon: 'card-plus-outline',
+            action: this.openNewDrawingModal.bind(this),
+        },
+        {
+            name: 'Exporter le dessin (Ctrl+E)',
+            icon: 'download',
+            action: this.openExportDrawingModal.bind(this),
+        },
         {
             name: 'Sauvegarder le dessin sur le serveur (Ctrl+S)',
             icon: 'cloud-upload-outline',
             action: this.openSaveDrawingModal.bind(this),
         },
-        { name: 'Galerie de dessins (Ctrl+G)', icon: 'image-multiple-outline', action: this.openGalleryModal.bind(this) },
-        { name: 'Paramètres', icon: 'cog', action: this.openSettingsModal.bind(this) },
-        { name: 'Guide', icon: 'help-circle-outline', action: this.openGuideModal.bind(this) },
-        { name: 'Accueil', icon: 'home', action: this.navigateToHome.bind(this) },
+        {
+            name: 'Galerie de dessins (Ctrl+G)',
+            icon: 'image-multiple-outline',
+            action: this.openGalleryModal.bind(this),
+        },
+        {
+            name: 'Paramètres',
+            icon: 'cog',
+            action: this.openSettingsModal.bind(this),
+        },
+        {
+            name: 'Guide',
+            icon: 'help-circle-outline',
+            action: this.openGuideModal.bind(this),
+        },
+        {
+            name: 'Accueil',
+            icon: 'home',
+            action: this.navigateToHome.bind(this),
+        },
     ];
 
-    @ViewChild('appSidebarDrawer') private sidebarDrawer: SidebarDrawerComponent;
+    @ViewChild('appSidebarDrawer')
+    private sidebarDrawer: SidebarDrawerComponent;
 
     private selectToolPencilShortcutSubscription: Subscription;
     private selectToolPaintbrushShortcutSubscription: Subscription;

@@ -5,9 +5,15 @@ import { ShapeType } from '@app/tools/enums/shape-type.enum';
 
 export default {
     defaultLineWidth: 5,
-    defaultSmoothingSettings: { isEnabled: true, factor: 10 } as SmoothingSettings,
+    defaultSmoothingSettings: {
+        isEnabled: true,
+        factor: 10,
+    } as SmoothingSettings,
     defaultBrushTexture: BrushTexture.Graffiti,
-    defaultJunctionSettings: { isEnabled: false, diameter: 10 } as JunctionSettings,
+    defaultJunctionSettings: {
+        isEnabled: false,
+        diameter: 10,
+    } as JunctionSettings,
     defaultSprayDiameter: 50,
     defaultSprayRate: 25,
     defaultShapeType: ShapeType.FillWithBorder,

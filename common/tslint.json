@@ -24,7 +24,7 @@
         "max-file-line-count": [true, 350],
         "max-line-length": [true, 140],
         "member-access": [true, "no-public"],
-        "member-ordering": [true, {"order": "fields-first"}],
+        "member-ordering": [true, { "order": "fields-first" }],
         "no-any": true,
         "no-consecutive-blank-lines": true,
         "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
@@ -68,5 +68,3 @@
         }
     }
 }
-
-

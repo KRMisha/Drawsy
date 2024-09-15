@@ -40,7 +40,9 @@ export class ToolLineService extends Tool {
     ) {
         super(rendererFactory, drawingService, colorService, historyService, ToolInfo.Line);
         this.settings.lineWidth = ToolDefaults.defaultLineWidth;
-        this.settings.junctionSettings = { ...ToolDefaults.defaultJunctionSettings };
+        this.settings.junctionSettings = {
+            ...ToolDefaults.defaultJunctionSettings,
+        };
     }
 
     onMouseMove(event: MouseEvent): void {
