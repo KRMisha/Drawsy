@@ -37,7 +37,10 @@ export class NewDrawingComponent implements OnInit, OnDestroy {
 
     private drawingDimensionsChangedSubscription: Subscription;
 
-    constructor(private router: Router, private drawingService: DrawingService) {}
+    constructor(
+        private router: Router,
+        private drawingService: DrawingService
+    ) {}
 
     ngOnInit(): void {
         this.drawingDimensionsChangedSubscription = this.drawingFormGroup.valueChanges.subscribe(() => {
@@ -59,7 +62,10 @@ export class NewDrawingComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         const drawingLoadOptions: DrawingLoadOptions = {
-            dimensions: { x: this.drawingFormGroup.controls.width.value, y: this.drawingFormGroup.controls.height.value },
+            dimensions: {
+                x: this.drawingFormGroup.controls.width.value,
+                y: this.drawingFormGroup.controls.height.value,
+            },
             backgroundColor: this.backgroundColor,
         };
 

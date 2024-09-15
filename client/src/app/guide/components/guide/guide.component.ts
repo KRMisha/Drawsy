@@ -12,11 +12,15 @@ import { Subscription } from 'rxjs';
 })
 export class GuideComponent implements AfterViewInit, OnDestroy {
     @ViewChild('appSidebar') private sidebar: GuideSidebarComponent;
-    @ViewChild('appGuideContent', { read: ViewContainerRef }) private guideContent: ViewContainerRef;
+    @ViewChild('appGuideContent', { read: ViewContainerRef })
+    private guideContent: ViewContainerRef;
 
     private currentGuideChangedSubscription: Subscription;
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver, private guideService: GuideService) {}
+    constructor(
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private guideService: GuideService
+    ) {}
 
     ngAfterViewInit(): void {
         this.currentGuideChangedSubscription = this.guideService.currentGuideChanged$.subscribe(this.loadGuide.bind(this));

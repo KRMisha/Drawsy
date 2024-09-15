@@ -8,7 +8,9 @@
 
         <ng-container *ngFor="let formControlContainer of sizeFormControls">
             <div *ngIf="getProperty(this.currentToolSettings, formControlContainer.toolSetting) !== undefined" class="size-container">
-                <h3 class="setting-title-item">{{ formControlContainer.title }}</h3>
+                <h3 class="setting-title-item">
+                    {{ formControlContainer.title }}
+                </h3>
                 <mat-form-field
                     class="form-field-item"
                     [matTooltip]="getErrorMessage(formControlContainer.formControl)"
@@ -35,7 +37,9 @@
                 *ngIf="getProperty(this.currentToolSettings, formControlContainer.toolSetting) !== undefined"
                 class="toggle-slider-container"
             >
-                <h3 class="setting-title-item">{{ formControlContainer.title }}</h3>
+                <h3 class="setting-title-item">
+                    {{ formControlContainer.title }}
+                </h3>
                 <mat-form-field
                     class="form-field-item"
                     [matTooltip]="getErrorMessage(formControlContainer.sliderFormControl)"

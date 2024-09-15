@@ -22,7 +22,8 @@ const canvasHeight = 160;
     styleUrls: ['./color-field.component.scss'],
 })
 export class ColorFieldComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('appSaturationValuePicker') private saturationValueCanvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('appSaturationValuePicker')
+    private saturationValueCanvas: ElementRef<HTMLCanvasElement>;
 
     private context: CanvasRenderingContext2D;
 

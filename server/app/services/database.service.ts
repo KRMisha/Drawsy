@@ -70,7 +70,7 @@ export class DatabaseService {
     async getFiles(): Promise<SavedFile[]> {
         const collection = await this.collection.find().toArray();
         const convertSchemaToSavedFile = (element: FileSchema & { _id: ObjectId }) =>
-            ({ id: element._id.toString(), content: element.content } as SavedFile);
+            ({ id: element._id.toString(), content: element.content }) as SavedFile;
         return collection.map(convertSchemaToSavedFile);
     }
 

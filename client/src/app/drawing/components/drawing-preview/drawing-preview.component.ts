@@ -13,9 +13,13 @@ export class DrawingPreviewComponent implements AfterViewInit {
 
     @ViewChild('appDrawingRoot') drawingRoot: ElementRef<SVGSVGElement>;
     @ViewChild('appDefs') private svgDefs: ElementRef<SVGDefsElement>;
-    @ViewChild('appDrawingContent') private svgDrawingContent: ElementRef<SVGGElement>;
+    @ViewChild('appDrawingContent')
+    private svgDrawingContent: ElementRef<SVGGElement>;
 
-    constructor(private renderer: Renderer2, private drawingService: DrawingService) {}
+    constructor(
+        private renderer: Renderer2,
+        private drawingService: DrawingService
+    ) {}
 
     ngAfterViewInit(): void {
         for (const filter of Array.from(this.drawingService.drawingRoot.getElementsByTagName('defs')[0].getElementsByTagName('filter'))) {

@@ -39,7 +39,10 @@ export abstract class ToolShape extends Tool {
     onMouseDown(event: MouseEvent): void {
         if (Tool.isMouseInsideDrawing && event.button === MouseButton.Left) {
             this.shape = this.createShape();
-            this.shapeOrigin = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
+            this.shapeOrigin = {
+                x: Tool.mousePosition.x,
+                y: Tool.mousePosition.y,
+            };
             this.updateShapeArea();
             this.drawingService.addElement(this.shape);
         }
@@ -115,7 +118,10 @@ export abstract class ToolShape extends Tool {
         const isCurrentMouseRightOfOrigin = Tool.mousePosition.x >= this.shapeOrigin.x;
         const isCurrentMouseBelowOrigin = Tool.mousePosition.y >= this.shapeOrigin.y;
 
-        const mousePositionCopy = { x: Tool.mousePosition.x, y: Tool.mousePosition.y };
+        const mousePositionCopy = {
+            x: Tool.mousePosition.x,
+            y: Tool.mousePosition.y,
+        };
         if (this.isShiftDown || this.isShapeAlwaysRegular) {
             const dimensions: Vec2 = {
                 x: Math.abs(Tool.mousePosition.x - this.shapeOrigin.x),
@@ -127,7 +133,10 @@ export abstract class ToolShape extends Tool {
         }
 
         const shapeArea = Rect.fromPoints(this.shapeOrigin, mousePositionCopy);
-        const scale: Vec2 = { x: isCurrentMouseRightOfOrigin ? 1 : -1, y: isCurrentMouseBelowOrigin ? 1 : -1 };
+        const scale: Vec2 = {
+            x: isCurrentMouseRightOfOrigin ? 1 : -1,
+            y: isCurrentMouseBelowOrigin ? 1 : -1,
+        };
         this.updateShape(shapeArea, scale, this.shape);
     }
 

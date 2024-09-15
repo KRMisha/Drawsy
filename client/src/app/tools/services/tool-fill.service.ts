@@ -59,7 +59,10 @@ export class ToolFillService extends Tool {
         this.fillPixelsToVisit = new Queue<Vec2>();
         this.visitedFillPixels = new Set<string>();
 
-        const startPixel: Vec2 = { x: Math.round(Tool.mousePosition.x), y: Math.round(Tool.mousePosition.y) };
+        const startPixel: Vec2 = {
+            x: Math.round(Tool.mousePosition.x),
+            y: Math.round(Tool.mousePosition.y),
+        };
         await this.initializeCanvas();
         this.selectedColor = this.rasterizationService.getPixelColor(this.canvasData, this.canvasDimensions.x, startPixel);
 
@@ -181,7 +184,12 @@ export class ToolFillService extends Tool {
                     currentRectangle = undefined;
                 }
             } else if (bitmap[rowIndex][i]) {
-                currentRectangle = { x: i, y: rowIndex, width: 1, height: 1 } as Rect;
+                currentRectangle = {
+                    x: i,
+                    y: rowIndex,
+                    width: 1,
+                    height: 1,
+                } as Rect;
             }
         }
 

@@ -15,7 +15,10 @@ export class DrawingSettingsComponent implements OnInit, OnDestroy {
     private drawingWidthChangedSubscription: Subscription;
     private drawingHeightChangedSubscription: Subscription;
 
-    constructor(private settingsService: SettingsService, private drawingService: DrawingService) {}
+    constructor(
+        private settingsService: SettingsService,
+        private drawingService: DrawingService
+    ) {}
 
     ngOnInit(): void {
         this.drawingWidthChangedSubscription = this.formGroup.controls.drawingWidth.valueChanges.subscribe(() => {

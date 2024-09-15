@@ -19,7 +19,11 @@ export class CurrentToolService implements OnDestroy {
     private historyChangedSubscription: Subscription;
     private drawingLoadedSubscription: Subscription;
 
-    constructor(private colorService: ColorService, private drawingService: DrawingService, private historyService: HistoryService) {
+    constructor(
+        private colorService: ColorService,
+        private drawingService: DrawingService,
+        private historyService: HistoryService
+    ) {
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });

@@ -37,7 +37,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     ]);
     smoothingEnabledFormControl = new FormControl(ToolDefaults.defaultSmoothingSettings.isEnabled);
     smoothingFactorFormControl = new FormControl(
-        { value: ToolDefaults.defaultSmoothingSettings.factor, disabled: !ToolDefaults.defaultSmoothingSettings.isEnabled },
+        {
+            value: ToolDefaults.defaultSmoothingSettings.factor,
+            disabled: !ToolDefaults.defaultSmoothingSettings.isEnabled,
+        },
         [
             Validators.required,
             Validators.pattern(Regexes.integerRegex),
@@ -47,7 +50,10 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
     );
     junctionEnabledFormControl = new FormControl(ToolDefaults.defaultJunctionSettings.isEnabled);
     junctionDiameterFormControl = new FormControl(
-        { value: ToolDefaults.defaultJunctionSettings.diameter, disabled: !ToolDefaults.defaultJunctionSettings.isEnabled },
+        {
+            value: ToolDefaults.defaultJunctionSettings.diameter,
+            disabled: !ToolDefaults.defaultJunctionSettings.isEnabled,
+        },
         [
             Validators.required,
             Validators.pattern(Regexes.integerRegex),
@@ -209,8 +215,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.smoothingSettings!.isEnabled = this.smoothingEnabledFormControl.value;
             this.smoothingEnabledFormControl.value
-                ? this.smoothingFactorFormControl.enable({ emitEvent: false })
-                : this.smoothingFactorFormControl.disable({ emitEvent: false });
+                ? this.smoothingFactorFormControl.enable({
+                      emitEvent: false,
+                  })
+                : this.smoothingFactorFormControl.disable({
+                      emitEvent: false,
+                  });
         });
         this.smoothingFactorChangedSubscription = this.smoothingFactorFormControl.valueChanges.subscribe(() => {
             if (this.smoothingFactorFormControl.valid) {
@@ -222,8 +232,12 @@ export class SidebarDrawerComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line: no-non-null-assertion
             this.currentToolSettings.junctionSettings!.isEnabled = this.junctionEnabledFormControl.value;
             this.junctionEnabledFormControl.value
-                ? this.junctionDiameterFormControl.enable({ emitEvent: false })
-                : this.junctionDiameterFormControl.disable({ emitEvent: false });
+                ? this.junctionDiameterFormControl.enable({
+                      emitEvent: false,
+                  })
+                : this.junctionDiameterFormControl.disable({
+                      emitEvent: false,
+                  });
         });
         this.junctionDiameterChangedSubscription = this.junctionDiameterFormControl.valueChanges.subscribe(() => {
             if (this.junctionDiameterFormControl.valid) {

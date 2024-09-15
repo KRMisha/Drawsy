@@ -11,7 +11,10 @@ import { SvgFileContainer } from '@app/shared/classes/svg-file-container';
 export class DrawingSerializerService {
     private renderer: Renderer2;
 
-    constructor(rendererFactory: RendererFactory2, private rasterizationService: RasterizationService) {
+    constructor(
+        rendererFactory: RendererFactory2,
+        private rasterizationService: RasterizationService
+    ) {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -40,7 +43,10 @@ export class DrawingSerializerService {
         );
 
         const drawingLoadOptions: DrawingLoadOptions = {
-            dimensions: { x: svgFileContainer.drawingRoot.viewBox.baseVal.width, y: svgFileContainer.drawingRoot.viewBox.baseVal.height },
+            dimensions: {
+                x: svgFileContainer.drawingRoot.viewBox.baseVal.width,
+                y: svgFileContainer.drawingRoot.viewBox.baseVal.height,
+            },
             backgroundColor: backgroundRectFill,
             drawingData: {
                 id: svgFileContainer.id,

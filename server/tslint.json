@@ -1,8 +1,5 @@
 {
-    "extends": [
-        "../common/tslint.json",
-        "tslint-no-unused-expression-chai"
-    ],
+    "extends": ["../common/tslint.json", "tslint-no-unused-expression-chai"],
     "rules": {},
     "rulesDirectory": []
 }

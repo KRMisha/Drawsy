@@ -162,7 +162,10 @@ export class ClipboardService implements OnDestroy {
 
         if (nextOffset !== 0) {
             this.toolSelectionTransformService.initializeElementTransforms(this.toolSelectionStateService.selectedElements);
-            this.toolSelectionMoverService.moveSelection({ x: nextOffset, y: nextOffset });
+            this.toolSelectionMoverService.moveSelection({
+                x: nextOffset,
+                y: nextOffset,
+            });
         }
 
         if (this.initialClipboardElements === this.initialDuplicationElements) {
