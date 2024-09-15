@@ -6,8 +6,8 @@
         "start:prod": "ts-node -r tsconfig-paths/register -r dotenv/config ./app/www.ts",
         "test": "mocha",
         "coverage": "nyc mocha",
-        "format": "prettier --write . ../common",
-        "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish"
+        "lint": "tslint --project tsconfig.json",
+        "format": "prettier --write . ../common"
     },
     "private": true,
     "dependencies": {

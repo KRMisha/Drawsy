@@ -7,8 +7,8 @@
         "build": "ng build",
         "test": "ng test",
         "coverage": "ng test --code-coverage --sourceMap=true",
-        "format": "prettier --write . ../common",
-        "lint": "ng lint --type-check --format stylish"
+        "lint": "ng lint",
+        "format": "prettier --write . ../common"
     },
     "private": true,
     "dependencies": {
