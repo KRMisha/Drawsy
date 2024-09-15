@@ -1,26 +1,12 @@
-# Project dependencies which can be automatically regenerated
-.nyc_output/
+# Dependencies
 node_modules/
-false/
 
-# Javascript files
+# Build output
 out/
 
-# npm debug log
-npm-debug.log
+# Code coverage
+coverage/
+.nyc_output/
 
-# TypeScript compilation output
-*.js.map
-*.js
-
-# Keep necessary files for tests
-!systemjs.config.js
-!karma.conf.js
-!karma-test-shim.js
-!systemjs.config.extras.js
-!tslint.json
-!tsconfig.json
-!package-lock.json
-
-# dotenv
+# Local .env file
 .env
