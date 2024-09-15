@@ -4,6 +4,7 @@
     "scripts": {
         "start": "nodemon",
         "start:prod": "ts-node -r tsconfig-paths/register -r dotenv/config ./app/www.ts",
+        "build:check": "tsc --noEmit",
         "test": "mocha",
         "coverage": "nyc mocha",
         "lint": "tslint --project tsconfig.json",
