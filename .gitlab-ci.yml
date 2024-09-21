@@ -157,12 +157,14 @@ build-server:
   variables:
     CONTAINER_DEPLOY_IMAGE: $CI_REGISTRY_IMAGE/$SUBPROJECT:latest
   script:
+    - apk add --no-cache curl
     - docker pull $CONTAINER_PRODUCTION_IMAGE
     - docker tag $CONTAINER_PRODUCTION_IMAGE $CONTAINER_DEPLOY_IMAGE
     - docker push $CONTAINER_DEPLOY_IMAGE
+    - curl --request POST $WEBHOOK_URL
+  environment: production/$SUBPROJECT
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-  environment: production/$SUBPROJECT
 deploy-client:
   extends:
     - .docker-client
