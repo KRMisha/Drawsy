@@ -162,7 +162,7 @@ build-server:
     - docker push $CONTAINER_DEPLOY_IMAGE
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-  environment: production
+  environment: production/$SUBPROJECT
 deploy-client:
   extends:
     - .docker-client
