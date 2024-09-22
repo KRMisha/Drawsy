@@ -110,6 +110,30 @@
     </div>
 
     <div class="command-container">
+        <ng-container *ngIf="!isMobileDevice">
+            <mat-divider></mat-divider>
+            <div class="zoom-container">
+                <mat-form-field
+                    colspan="2"
+                    class="zoom-field-item"
+                    [matTooltip]="getErrorMessage(zoomFormControl)"
+                    [matTooltipDisabled]="zoomFormControl.valid"
+                    matTooltipClass="theme-error-tooltip"
+                >
+                    <input matInput [formControl]="zoomFormControl" />
+                    <span matSuffix>%</span>
+                </mat-form-field>
+                <button mat-icon-button class="command-item" matTooltip="Réduire le dessin (Ctrl+Scroll)" (click)="zoomOut()">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <button mat-icon-button class="command-item" matTooltip="Agrandir le dessin (Ctrl+Scroll)" (click)="zoomIn()">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button class="command-item" matTooltip="Réinitialiser la vue (Ctrl+Enter)" (click)="resetCanvasView()">
+                    <mat-icon>fullscreen</mat-icon>
+                </button>
+            </div>
+        </ng-container>
         <mat-divider></mat-divider>
         <div class="clipboard-container">
             <button mat-icon-button class="command-item" matTooltip="Copier (Ctrl+C)" [disabled]="!isSelectionAvailable" (click)="copy()">

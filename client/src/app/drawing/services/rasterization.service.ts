@@ -19,7 +19,7 @@ export class RasterizationService {
 
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
         const image = await this.getImageFromSvgRoot(drawingRoot);
-        context.drawImage(image, 0, 0);
+        context.drawImage(image, 0, 0, drawingRoot.viewBox.baseVal.width, drawingRoot.viewBox.baseVal.height);
         return canvas;
     }
 

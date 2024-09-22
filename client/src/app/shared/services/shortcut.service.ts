@@ -26,6 +26,9 @@ export class ShortcutService {
     private openSaveDrawingShortcutSource = new Subject<void>();
     private openGalleryShortcutSource = new Subject<void>();
     private selectAllShortcutSource = new Subject<void>();
+    private zoomInShortcutSource = new Subject<void>();
+    private zoomOutShortcutSource = new Subject<void>();
+    private resetZoomShortcutSource = new Subject<void>();
     private copySelectionShortcutSource = new Subject<void>();
     private pasteSelectionShortcutSource = new Subject<void>();
     private cutSelectionShortcutSource = new Subject<void>();
@@ -56,6 +59,9 @@ export class ShortcutService {
     openSaveDrawingShortcut$ = this.openSaveDrawingShortcutSource.asObservable();
     openGalleryShortcut$ = this.openGalleryShortcutSource.asObservable();
     selectAllShortcut$ = this.selectAllShortcutSource.asObservable();
+    zoomInShortcut$ = this.zoomInShortcutSource.asObservable();
+    zoomOutShortcut$ = this.zoomOutShortcutSource.asObservable();
+    resetZoomShortcut$ = this.resetZoomShortcutSource.asObservable();
     copySelectionShortcut$ = this.copySelectionShortcutSource.asObservable();
     pasteSelectionShortcut$ = this.pasteSelectionShortcutSource.asObservable();
     cutSelectionShortcut$ = this.cutSelectionShortcutSource.asObservable();
@@ -95,57 +101,61 @@ export class ShortcutService {
         }
     }
 
+    // Disable cyclomatic complexity lint error because the switch statement acts as a specialized lookup map
+    // tslint:disable-next-line: cyclomatic-complexity
     private handleCtrlShortcuts(event: KeyboardEvent): void {
+        event.preventDefault();
         switch (event.key) {
             case 'a':
             case 'A':
-                event.preventDefault();
                 this.selectAllShortcutSource.next();
                 break;
             case 'c':
             case 'C':
-                event.preventDefault();
                 this.copySelectionShortcutSource.next();
                 break;
             case 'd':
             case 'D':
-                event.preventDefault();
                 this.duplicateSelectionShortcutSource.next();
                 break;
             case 'e':
             case 'E':
-                event.preventDefault();
                 this.openExportDrawingShortcutSource.next();
                 break;
             case 'g':
             case 'G':
-                event.preventDefault();
                 this.openGalleryShortcutSource.next();
                 break;
             case 'o':
             case 'O':
-                event.preventDefault();
                 this.openNewDrawingShortcutSource.next();
                 break;
             case 's':
             case 'S':
-                event.preventDefault();
                 this.openSaveDrawingShortcutSource.next();
                 break;
             case 'v':
             case 'V':
-                event.preventDefault();
                 this.pasteSelectionShortcutSource.next();
                 break;
             case 'x':
             case 'X':
-                event.preventDefault();
                 this.cutSelectionShortcutSource.next();
                 break;
             case 'z':
             case 'Z':
-                event.preventDefault();
                 event.shiftKey ? this.redoShortcutSource.next() : this.undoShortcutSource.next();
+                break;
+            case '-':
+                this.zoomOutShortcutSource.next();
+                break;
+            case '=':
+                this.zoomInShortcutSource.next();
+                break;
+            case '0':
+                this.resetZoomShortcutSource.next();
+            case 'Enter':
+                this.resetZoomShortcutSource.next();
                 break;
         }
     }

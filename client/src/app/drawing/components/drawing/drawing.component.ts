@@ -177,15 +177,15 @@ export class DrawingComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     get width(): number {
-        return this.drawingService.dimensions.x;
+        return this.drawingService.dimensions.x * this.drawingService.zoomRatio;
     }
 
     get height(): number {
-        return this.drawingService.dimensions.y;
+        return this.drawingService.dimensions.y * this.drawingService.zoomRatio;
     }
 
     get viewBox(): string {
-        return `0 0 ${this.width} ${this.height}`;
+        return `0 0 ${this.drawingService.dimensions.x} ${this.drawingService.dimensions.y}`;
     }
 
     get drawingLabels(): string {

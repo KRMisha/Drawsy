@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
     providedIn: 'root',
 })
 export class CurrentToolService implements OnDestroy {
+    private _isUsingFirefox: boolean; // tslint:disable-line: variable-name
     private _currentTool: Tool; // tslint:disable-line: variable-name
 
     private primaryColorChangedSubscription: Subscription;
@@ -24,6 +25,9 @@ export class CurrentToolService implements OnDestroy {
         private drawingService: DrawingService,
         private historyService: HistoryService
     ) {
+        const agent = window.navigator.userAgent.toLowerCase();
+        this._isUsingFirefox = agent.includes('firefox');
+
         this.primaryColorChangedSubscription = this.colorService.primaryColorChanged$.subscribe((color: Color) => {
             this.currentTool.onPrimaryColorChange(color);
         });
@@ -128,9 +132,16 @@ export class CurrentToolService implements OnDestroy {
             return { x: 0, y: 0 } as Vec2;
         }
 
-        return {
+        let position = {
             x: (event.clientX - ctm.e) / ctm.a,
             y: (event.clientY - ctm.f) / ctm.d,
         } as Vec2;
+
+        // Firefox handles mouse position differently
+        if (this._isUsingFirefox) {
+            position = Vec2.subtract(position, Vec2.scale(1 / this.drawingService.zoomRatio, this.drawingService.translation));
+        }
+
+        return position;
     }
 }
