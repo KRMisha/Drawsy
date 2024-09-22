@@ -1,9 +1,10 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { ElementRef, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { DrawingLoadOptions } from '@app/drawing/classes/drawing-load-options';
 import { DrawingSerializerService } from '@app/drawing/services/drawing-serializer.service';
 import { Color } from '@app/shared/classes/color';
 import { Vec2 } from '@app/shared/classes/vec2';
 import { SnackbarService } from '@app/shared/services/snackbar.service';
+import ZoomInfo from '@app/tools/constants/zoom-info';
 import { Subject } from 'rxjs';
 
 const defaultDimensions: Vec2 = { x: 1300, y: 800 };
@@ -15,6 +16,7 @@ const localStorageDrawingAutosaveIdKey = 'drawingAutosaveId';
     providedIn: 'root',
 })
 export class DrawingService {
+    drawingContainer: ElementRef<HTMLDivElement>;
     drawingRoot: SVGSVGElement;
     svgDrawingContent: SVGGElement;
     svgUserInterfaceContent: SVGGElement;
@@ -30,15 +32,22 @@ export class DrawingService {
     private _backgroundColor: Color = Color.fromRgb(Color.maxRgb, Color.maxRgb, Color.maxRgb);
 
     private _elements: SVGGraphicsElement[] = [];
+
+    private _zoomPercentage = ZoomInfo.defaultZoomPercentage;
+    private _translation: Vec2 = { x: 0, y: 0 };
     // tslint:enable: variable-name
 
     private drawingLoadedSource = new Subject<void>();
     private forceDetectChangesSource = new Subject<void>();
+    private zoomPercentChangedSource = new Subject<void>();
+    private translationChangedSource = new Subject<void>();
 
     // Disable member ordering lint error for public observables initialized after private subjects
     // tslint:disable: member-ordering
     drawingLoaded$ = this.drawingLoadedSource.asObservable();
     forceDetectChanges$ = this.forceDetectChangesSource.asObservable();
+    zoomPercentChangedSubscription$ = this.zoomPercentChangedSource.asObservable();
+    translationChanged$ = this.translationChangedSource.asObservable();
     // tslint:enable: member-ordering
 
     constructor(
@@ -178,6 +187,19 @@ export class DrawingService {
         return undefined;
     }
 
+    zoomIn(): void {
+        this.zoomPercentage = Math.min(this._zoomPercentage + ZoomInfo.zoomPercentageIncrement, ZoomInfo.maximumZoomPercentage);
+    }
+
+    zoomOut(): void {
+        this.zoomPercentage = Math.max(this._zoomPercentage - ZoomInfo.zoomPercentageIncrement, ZoomInfo.minimumZoomPercentage);
+    }
+
+    resetCanvasView(): void {
+        this.zoomPercentage = ZoomInfo.defaultZoomPercentage;
+        this.translation = { x: 0, y: 0 };
+    }
+
     get id(): string | undefined {
         return this._id;
     }
@@ -225,6 +247,30 @@ export class DrawingService {
 
     get elements(): SVGGraphicsElement[] {
         return this._elements;
+    }
+
+    get translation(): Vec2 {
+        return this._translation;
+    }
+
+    set translation(translation: Vec2) {
+        this._translation = translation;
+        this.drawingContainer.nativeElement.setAttribute('style', `transform: translate(${translation.x}px, ${translation.y}px);`);
+        this.translationChangedSource.next();
+    }
+
+    get zoomRatio(): number {
+        const percents = 100;
+        return this._zoomPercentage / percents;
+    }
+
+    get zoomPercentage(): number {
+        return this._zoomPercentage;
+    }
+
+    set zoomPercentage(zoomPercent: number) {
+        this._zoomPercentage = zoomPercent;
+        this.zoomPercentChangedSource.next();
     }
 
     private loadDrawing(drawingLoadOptions: DrawingLoadOptions): void {

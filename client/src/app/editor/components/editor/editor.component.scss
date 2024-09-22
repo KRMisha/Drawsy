@@ -3,7 +3,14 @@
     display: flex;
 }
 
-.drawing-container {
+.drawing-container-desktop {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drawing-container-mobile {
     overflow: auto;
     flex: 1 1 auto;
 }

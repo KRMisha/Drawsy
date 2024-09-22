@@ -30,15 +30,15 @@ export class ToolSelectionCollisionService {
     getElementBounds(element: SVGGraphicsElement): Rect {
         const elementBounds = element.getBoundingClientRect() as DOMRect;
         const drawingRootBounds = this.drawingService.drawingRoot.getBoundingClientRect() as DOMRect;
-
         const paddingString = element.getAttribute('data-padding');
         const padding = paddingString === null ? 0 : +paddingString;
+        const zoomRatio = this.drawingService.zoomRatio;
 
         return {
-            x: elementBounds.x - drawingRootBounds.x - padding,
-            y: elementBounds.y - drawingRootBounds.y - padding,
-            width: elementBounds.width + 2 * padding,
-            height: elementBounds.height + 2 * padding,
+            x: (elementBounds.x - drawingRootBounds.x) / zoomRatio - padding,
+            y: (elementBounds.y - drawingRootBounds.y) / zoomRatio - padding,
+            width: elementBounds.width / zoomRatio + 2 * padding,
+            height: elementBounds.height / zoomRatio + 2 * padding,
         } as Rect;
     }
 

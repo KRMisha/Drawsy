@@ -1,6 +1,6 @@
-<div class="container">
+<div #appBackground class="container">
     <app-sidebar></app-sidebar>
-    <div class="drawing-container">
+    <div #appDrawingContainer [class]="isMobileDevice ? 'drawing-container-mobile' : 'drawing-container-desktop'">
         <app-drawing class="drawing mat-elevation-z8" tabindex="0"></app-drawing>
     </div>
 </div>
