@@ -1,38 +1,32 @@
 import { FileSchema } from '@app/classes/file-schema';
 import { HttpException } from '@app/classes/http-exception';
+import Types from '@app/types';
 import { HttpStatusCode } from '@common/communication/http-status-code.enum';
 import { SavedFile } from '@common/communication/saved-file';
 import MetadataValidation from '@common/validation/metadata-validation';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { JSDOM } from 'jsdom';
-import { Collection, MongoClient, MongoClientOptions, MongoError, ObjectId } from 'mongodb';
+import { Collection, MongoClient, ObjectId } from 'mongodb';
 
 // Disable require import lint errors because DOMPurify does not work without it
 const createDomPurify = require('dompurify'); // tslint:disable-line: no-require-imports no-var-requires
 
-const connectionUrl = 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD + '@' + process.env.DB_HOST;
 const databaseName = 'database';
 const collectionName = 'drawings';
+
+export const databaseUri = 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD + '@' + process.env.DB_HOST;
 
 @injectable()
 export class DatabaseService {
     private client: MongoClient;
     private collection: Collection<FileSchema>;
 
-    constructor() {
-        const options: MongoClientOptions = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        };
+    constructor(@inject(Types.DatabaseUri) uri: string) {
+        this.client = new MongoClient(uri);
+        this.collection = this.client.db(databaseName).collection(collectionName);
 
-        MongoClient.connect(connectionUrl, options, (error: MongoError, client: MongoClient) => {
-            if (error) {
-                throw error;
-            }
-
-            this.client = client;
-            this.collection = client.db(databaseName).collection(collectionName);
-        });
+        // Force the server to crash on startup if it cannot connect to the database
+        this.client.connect();
     }
 
     async disconnect(): Promise<void> {

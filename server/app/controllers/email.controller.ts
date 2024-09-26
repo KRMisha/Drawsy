@@ -25,7 +25,7 @@ export class EmailController {
 
     private setupRoutes(): void {
         this.router.post('/send-email', (req: Request, res: Response, next: NextFunction) => {
-            upload(req, res, async (error: Error) => {
+            upload(req, res, async (error: unknown) => {
                 if (error instanceof multer.MulterError) {
                     let status: HttpStatusCode;
                     switch (error.code) {
@@ -45,7 +45,7 @@ export class EmailController {
                 try {
                     const emailRequest: EmailRequest = {
                         to: req.body.to,
-                        payload: req.file,
+                        payload: req.file!, // tslint:disable-line: no-non-null-assertion
                     };
                     await this.emailService.sendEmail(emailRequest);
                     res.status(HttpStatusCode.Ok).end();
