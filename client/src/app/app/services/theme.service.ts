@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { DrawingService } from '@app/drawing/services/drawing.service';
-import { Const } from '@app/shared/constants/const';
 import { Subscription } from 'rxjs';
 
 const localStorageThemeColorKey = 'themeColor';
@@ -43,7 +42,7 @@ export class ThemeService implements OnDestroy {
         const bigSquare = 100;
         const smallSquare = 20;
         const zoomRatio = this.drawingService.zoomRatio;
-        const color = this.isDarkTheme ? Const.darkGray : Const.lightGray;
+        const color = this.isDarkTheme ? '#454545' : '#dbdbdb';
 
         this.background.nativeElement.style.opacity = '1';
         this.background.nativeElement.style.backgroundImage = `linear-gradient(${color} 2px, transparent 2px),
