@@ -153,7 +153,6 @@ export class ShortcutService {
                 this.zoomInShortcutSource.next();
                 break;
             case '0':
-                this.resetZoomShortcutSource.next();
             case 'Enter':
                 this.resetZoomShortcutSource.next();
                 break;
