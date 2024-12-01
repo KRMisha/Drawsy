@@ -5,11 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Client",
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}/client"
+        },
+        {
+            "name": "Server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run-script", "start"]
         }
     ]
 }
